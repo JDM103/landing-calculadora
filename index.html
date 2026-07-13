@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto te va a dar la pensión? · Empowered Investor</title>
+<meta name="description" content="3 preguntas, 20 segundos: descubrí cuánto te daría la pensión del IVM y cuánto te falta para el retiro que querés. Gratis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
+  .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 60px;}
+
+
+  .hero{padding:26px 0 6px; text-align:left;}
+  .hero h1{font-size:clamp(30px,8vw,40px); font-weight:700; line-height:1.12; letter-spacing:-.01em;}
+  .hero h1 em{font-style:normal; color:var(--menta);}
+  .hero p{margin-top:12px; font-size:16px; color:var(--gris); font-weight:400;}
+
+  /* Onda serpentina de la marca */
+  .onda{display:block; margin:18px 0 6px;}
+
+  .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:14px;}
+  .campo{margin-bottom:18px;}
+  .campo label{display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
+  .campo input{
+    width:100%; background:var(--tinta); border:1px solid #2E3540; border-radius:12px;
+    color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-size:22px; font-weight:500;
+    padding:14px 16px; outline:none;
+  }
+  .campo input:focus{border-color:var(--menta);}
+  .campo .hint{font-size:12px; color:var(--gris-sec); margin-top:6px; font-weight:400;}
+
+  .btn{
+    display:block; width:100%; text-align:center; cursor:pointer; border:none; border-radius:999px;
+    background:var(--menta); color:var(--tinta); font-family:'Bai Jamjuree',sans-serif;
+    font-size:18px; font-weight:700; padding:16px 20px; margin-top:6px;
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn[disabled]{opacity:.4; cursor:default;}
+
+  /* Resultado */
+  #resultado{display:none; margin-top:34px;}
+  .res-linea{display:flex; justify-content:space-between; align-items:baseline; padding:12px 2px; border-bottom:1px solid #262C34;}
+  .res-linea .k{font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec);}
+  .res-linea .v{font-size:22px; font-weight:700; color:var(--crema);}
+
+  .banda{
+    background:var(--peri); border-radius:18px; padding:26px 22px; margin-top:22px;
+    animation:entra .5s ease both;
+  }
+  @keyframes entra{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .banda{animation:none;} }
+  .banda .k{font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(254,249,243,.8);}
+  .banda .num{font-size:clamp(36px,10vw,52px); font-weight:700; line-height:1.05; color:#fff; margin-top:6px; word-break:break-word;}
+  .banda .sub{font-size:15px; color:rgba(254,249,243,.9); margin-top:10px; font-weight:400;}
+
+  .banda-ok{background:#1E7A52;}
+
+  .cta2{
+    display:block; text-align:center; text-decoration:none; border-radius:999px;
+    background:var(--crema); color:var(--tinta); font-size:17px; font-weight:700;
+    padding:16px 20px; margin-top:18px;
+  }
+  .nota-res{font-size:12px; color:var(--gris-sec); margin-top:16px; line-height:1.55; font-weight:400;}
+
+  footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
+  footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
+  footer a{color:var(--gris);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>¿Cuánto te va a dar la <em>pensión</em>?</h1>
+    <p>La mayoría no tiene ni idea. Contestá 3 preguntas y en 20 segundos ves tu número. Gratis, sin registrarte.</p>
+    <svg class="onda" width="120" height="18" viewBox="0 0 120 18" fill="none" aria-hidden="true">
+      <path d="M3 15 Q10.5 3 18 15 T33 15" stroke="#63FCAF" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M45 15 Q52.5 3 60 15 T75 15 T90 15" stroke="#556DFB" stroke-width="5" stroke-linecap="round" fill="none"/>
+    </svg>
+  </section>
+
+  <div class="card">
+    <div class="campo">
+      <label for="edad">Tu edad</label>
+      <input id="edad" type="text" inputmode="numeric" placeholder="35" maxlength="2" autocomplete="off">
+    </div>
+    <div class="campo">
+      <label for="salario">Tu salario bruto mensual (₡)</label>
+      <input id="salario" type="text" inputmode="numeric" placeholder="2,000,000" autocomplete="off">
+      <div class="hint">Antes de deducciones. Un aproximado sirve.</div>
+    </div>
+    <div class="campo">
+      <label for="meta">¿Con cuánto querés vivir por mes en tu retiro? (₡)</label>
+      <input id="meta" type="text" inputmode="numeric" placeholder="1,500,000" autocomplete="off">
+      <div class="hint">En plata de hoy. Pensalo como tu estilo de vida ideal.</div>
+    </div>
+    <button class="btn" id="calcular">Ver mi número →</button>
+  </div>
+
+  <section id="resultado">
+    <div class="res-linea"><span class="k">El Estado te daría (IVM)</span><span class="v" id="r-estado">₡0</span></div>
+    <div class="res-linea"><span class="k">Vos querés</span><span class="v" id="r-meta">₡0</span></div>
+
+    <div class="banda" id="banda">
+      <div class="k" id="banda-k">Tu brecha</div>
+      <div class="num" id="r-brecha">₡0</div>
+      <div class="sub" id="banda-sub">Eso es lo que te falta cada mes. Y no aparece solo: se construye con inversión y tiempo.</div>
+    </div>
+
+    <a class="cta2" id="cta-wizard" href="#">Hacé el cálculo completo (2 min) →</a>
+    <p class="nota-res">Estimación educativa del IVM con la normativa 2026, asumiendo cotización continua desde los 25 años y salario constante. No incluye tu ROP. El cálculo completo afina con tus cuotas reales y tu ahorro. No es una certificación de la CCSS.</p>
+  </section>
+</div>
+
+<footer>
+  <p>Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta, no desde la nuestra.<br>
+  No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. · <a href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">@joseinvestor.cr</a></p>
+</footer>
+
+<script>
+// ===== CONFIG =====
+var WIZARD_URL = "https://TODO-url-del-wizard.streamlit.app"; // TODO: URL real del wizard
+// Parámetros IVM 2026 (fuente: referencia_ivm_2026.md)
+var SALARIO_MINIMO = 373092;
+var TOPE_MAX = 1765859;
+var PENSION_MIN = 162295;
+var EDAD_RETIRO = 65;
+var EDAD_INICIO_COTIZA = 25;
+
+// ===== Formato en vivo con comas =====
+function soloDigitos(s){ return (s||"").replace(/[^0-9]/g,""); }
+function fmt(n){ return n.toLocaleString("en-US"); }
+["salario","meta"].forEach(function(id){
+  var el = document.getElementById(id);
+  el.addEventListener("input", function(){
+    var d = soloDigitos(el.value);
+    var pos = el.selectionStart, antes = el.value.length;
+    el.value = d ? fmt(parseInt(d,10)) : "";
+    var despues = el.value.length;
+    el.setSelectionRange(Math.max(0,pos+(despues-antes)), Math.max(0,pos+(despues-antes)));
+  });
+});
+document.getElementById("edad").addEventListener("input", function(){
+  this.value = soloDigitos(this.value).slice(0,2);
+});
+
+// ===== Cálculo IVM (art. 24, reforma 2024, parámetros 2026) =====
+function cuantiaBasica(salario){
+  var n = salario / SALARIO_MINIMO;
+  if (n < 2) return 0.525;
+  if (n < 3) return 0.510;
+  if (n < 4) return 0.494;
+  if (n < 5) return 0.478;
+  if (n < 6) return 0.462;
+  if (n < 8) return 0.446;
+  return 0.430;
+}
+function pensionIVM(edad, salario){
+  var aniosCot = Math.max(0, Math.min(edad, EDAD_RETIRO) - EDAD_INICIO_COTIZA) + Math.max(0, EDAD_RETIRO - Math.max(edad, EDAD_INICIO_COTIZA));
+  var cuotas = Math.round(aniosCot * 12);
+  if (cuotas < 180) return 0;
+  var cb = cuantiaBasica(salario);
+  var adicional = Math.max(0, cuotas - 300) * 0.000833;
+  var pension = salario * (cb + adicional);
+  if (cuotas < 300) pension = pension * (cuotas / 300); // proporcional 180-299
+  pension = Math.min(pension, TOPE_MAX);
+  pension = Math.max(pension, PENSION_MIN);
+  return Math.round(pension);
+}
+
+// ===== Interacción =====
+document.getElementById("calcular").addEventListener("click", function(){
+  var edad = parseInt(soloDigitos(document.getElementById("edad").value),10);
+  var salario = parseInt(soloDigitos(document.getElementById("salario").value),10);
+  var meta = parseInt(soloDigitos(document.getElementById("meta").value),10);
+  if (!edad || edad < 18 || edad > 64 || !salario || !meta){
+    alert("Completá las 3 preguntas (edad entre 18 y 64) y vemos tu número.");
+    return;
+  }
+  var pension = pensionIVM(edad, salario);
+  var brecha = meta - pension;
+
+  document.getElementById("r-estado").textContent = "₡" + fmt(pension) + "/mes";
+  document.getElementById("r-meta").textContent = "₡" + fmt(meta) + "/mes";
+
+  var banda = document.getElementById("banda");
+  if (brecha > 0){
+    banda.classList.remove("banda-ok");
+    document.getElementById("banda-k").textContent = "Tu brecha";
+    document.getElementById("r-brecha").textContent = "₡" + fmt(brecha) + "/mes";
+    document.getElementById("banda-sub").textContent = "Eso es lo que te falta cada mes. Y no aparece solo: se construye con inversión y tiempo.";
+  } else {
+    banda.classList.add("banda-ok");
+    document.getElementById("banda-k").textContent = "Buenas noticias";
+    document.getElementById("r-brecha").textContent = "Tu meta estaría cubierta";
+    document.getElementById("banda-sub").textContent = "Estás mejor que la gran mayoría. El siguiente nivel: protegerlo de la inflación y construir patrimonio.";
+  }
+
+  // Pase de datos al wizard (nunca pedir lo mismo dos veces)
+  var qs = "?edad=" + edad + "&salario=" + salario + "&meta=" + meta;
+  document.getElementById("cta-wizard").href = WIZARD_URL + qs;
+
+  var res = document.getElementById("resultado");
+  res.style.display = "block";
+  res.scrollIntoView({behavior:"smooth", block:"start"});
+
+  // TODO: evento de pixel/analytics: "numero_visto" (Meta Pixel / GA4)
+});
+// TODO: evento de pixel en click del CTA: "click_calculo_completo"
+</script>
+</body>
+</html>
