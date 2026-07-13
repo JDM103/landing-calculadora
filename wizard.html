@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tu brecha de retiro · Empowered Investor</title>
-<link rel="icon" type="image/webp" href="assets/logo-empowered.webp">
+<!-- Favicon e imagen de preview: versión con fondo negro (se lee en pestaña/WhatsApp) -->
+<link rel="icon" type="image/png" href="assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="assets/logo-fondo-negro.png">
+<meta property="og:title" content="Tu brecha de retiro · Empowered Investor">
+<meta property="og:image" content="assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="assets/logo-fondo-negro.png">
 <meta name="description" content="En 2 minutos: tu número de retiro proyectado, cuánto te da el Estado, cuánto podés construir invirtiendo y cuánto te falta. Gratis.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -173,10 +179,12 @@ function restaurar(){
     var salario = parseInt(qp.get("salario"),10);
     var meta = parseInt(qp.get("meta"),10);
     if(edad){ d.edad_hoy = edad; }
-    if(salario){ d.salario = salario; }
+    if(salario){ d.salario = salario; d.sin_estado = false; } // vino salario → incluye el Estado (limpia un "sin_estado" viejo)
     if(meta){ d.ingreso_deseado = meta; d.moneda = d.moneda || "₡"; }
     if(!d.edad_ret) d.edad_ret = 65;
     if(edad || salario || meta){ ss.paso = 1; }   // saltar portada directo al Paso 1 con los valores puestos
+    // Limpiar el query string tras consumirlo: refrescar no reinicia al Paso 1 ni re-siembra datos viejos.
+    try{ history.replaceState(null, "", location.pathname); }catch(e){}
   }
 }
 
@@ -600,6 +608,8 @@ function viewActo3(){
     +     '<div class="num" style="color:'+VERDE+'">'+fmtMetaUsd(ing8)+'</div><div class="lbl">por mes</div>'
     +     '<div class="note">Vivís del rendimiento; lo que juntaste no se toca. El ~8% viene de instrumentos conservadores con garantía real (bienes raíces), disponibles vía nuestra alianza con un puesto de bolsa. Abajo te contamos cómo 👇</div></div>'
     + '</div>'
+    + '<div class="card" style="border-color:'+AZUL+';padding:14px 16px;font-size:14.5px">👉 Estos montos parten de tu <b>Portafolio de Crecimiento</b> (nuestro sistema): ≈ '+fmtMetaUsd(r.vfMax)+'. '
+    +   'Si en cambio solo siguieras al mercado (<b>Portafolio Básico</b>, ≈ '+fmtMetaUsd(r.vfMkt)+'), ese 4% daría ≈ <b>'+fmtMetaUsd(r.vfMkt*0.04/12)+'/mes</b> en vez de '+fmtMetaUsd(ing4)+'/mes. Esa diferencia es lo que agrega el sistema.</div>'
     + '<details><summary>🤔 ¿Cómo funciona eso de retirar plata sin quedarme sin plata?</summary><div class="body">'
     +   'La lógica es más simple de lo que suena. Al llegar al retiro, tu portafolio se traslada a instrumentos <b>muy seguros</b>, como bonos del Tesoro de EE.UU., que usualmente rinden alrededor de un <b>4% al año</b>. Y entonces <b>vivís del rendimiento, no del capital</b>: sacás lo que el portafolio genera cada año, y el principal queda intacto, ahí, trabajando.<br><br>'
     +   'Por eso el 4% es la guía clásica del retiro: es el ingreso que puede darte lo más seguro del mundo <b>sin tocarte la plata</b>.<br><br>'
@@ -890,6 +900,7 @@ function drawChart(){
 
 // ── Init ──────────────────────────────────────────────────────────────
 restaurar();
+guardar();   // persistir de una lo que vino de la landing (sobrevive un refresh inmediato)
 render();
 </script>
 </body>
