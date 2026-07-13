@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>¿Cuánto te va a dar la pensión? · Empowered Investor</title>
+<link rel="icon" type="image/webp" href="assets/logo-empowered.webp">
 <meta name="description" content="3 preguntas, 20 segundos: descubrí cuánto te daría la pensión del IVM y cuánto te falta para el retiro que querés. Gratis.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,14 +22,14 @@
   }
   .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 60px;}
 
+  .marca{display:block; text-align:center; margin:34px 0 30px;}
+  .marca img{width:180px; max-width:60%; height:auto;}
+  @media (min-width:560px){ .marca img{width:220px;} }
 
   .hero{padding:26px 0 6px; text-align:left;}
   .hero h1{font-size:clamp(30px,8vw,40px); font-weight:700; line-height:1.12; letter-spacing:-.01em;}
   .hero h1 em{font-style:normal; color:var(--menta);}
   .hero p{margin-top:12px; font-size:16px; color:var(--gris); font-weight:400;}
-
-  /* Onda serpentina de la marca */
-  .onda{display:block; margin:18px 0 6px;}
 
   .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:14px;}
   .campo{margin-bottom:18px;}
@@ -64,6 +65,7 @@
   @media (prefers-reduced-motion: reduce){ .banda{animation:none;} }
   .banda .k{font-size:13px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(254,249,243,.8);}
   .banda .num{font-size:clamp(36px,10vw,52px); font-weight:700; line-height:1.05; color:#fff; margin-top:6px; word-break:break-word;}
+  .banda .num-usd{font-size:18px; font-weight:500; color:rgba(254,249,243,.85); margin-top:4px;}
   .banda .sub{font-size:15px; color:rgba(254,249,243,.9); margin-top:10px; font-weight:400;}
 
   .banda-ok{background:#1E7A52;}
@@ -73,6 +75,14 @@
     background:var(--crema); color:var(--tinta); font-size:17px; font-weight:700;
     padding:16px 20px; margin-top:18px;
   }
+  .confianza{font-size:12px; color:var(--gris-sec); text-align:center; margin-top:10px; line-height:1.5;}
+  .cta-ocupado{display:block; text-align:center; color:var(--menta); font-size:15px; text-decoration:underline; margin-top:12px;}
+  .ig-link{
+    display:block; text-align:center; text-decoration:none; margin-top:20px;
+    border:1px solid #2E3540; border-radius:999px; padding:12px 18px; font-size:14px; color:var(--gris);
+    transition:border-color .15s ease;
+  }
+  .ig-link:hover{border-color:var(--menta);}
   .nota-res{font-size:12px; color:var(--gris-sec); margin-top:16px; line-height:1.55; font-weight:400;}
 
   footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
@@ -82,13 +92,12 @@
 </head>
 <body>
 <div class="wrap">
+  <div class="marca">
+    <img src="assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220">
+  </div>
   <section class="hero">
     <h1>¿Cuánto te va a dar la <em>pensión</em>?</h1>
     <p>La mayoría no tiene ni idea. Contestá 3 preguntas y en 20 segundos ves tu número. Gratis, sin registrarte.</p>
-    <svg class="onda" width="120" height="18" viewBox="0 0 120 18" fill="none" aria-hidden="true">
-      <path d="M3 15 Q10.5 3 18 15 T33 15" stroke="#63FCAF" stroke-width="5" stroke-linecap="round" fill="none"/>
-      <path d="M45 15 Q52.5 3 60 15 T75 15 T90 15" stroke="#556DFB" stroke-width="5" stroke-linecap="round" fill="none"/>
-    </svg>
   </section>
 
   <div class="card">
@@ -98,12 +107,12 @@
     </div>
     <div class="campo">
       <label for="salario">Tu salario bruto mensual (₡)</label>
-      <input id="salario" type="text" inputmode="numeric" placeholder="2,000,000" autocomplete="off">
+      <input id="salario" type="text" inputmode="numeric" placeholder="3,500,000" autocomplete="off">
       <div class="hint">Antes de deducciones. Un aproximado sirve.</div>
     </div>
     <div class="campo">
       <label for="meta">¿Con cuánto querés vivir por mes en tu retiro? (₡)</label>
-      <input id="meta" type="text" inputmode="numeric" placeholder="1,500,000" autocomplete="off">
+      <input id="meta" type="text" inputmode="numeric" placeholder="5,000,000" autocomplete="off">
       <div class="hint">En plata de hoy. Pensalo como tu estilo de vida ideal.</div>
     </div>
     <button class="btn" id="calcular">Ver mi número →</button>
@@ -116,22 +125,28 @@
     <div class="banda" id="banda">
       <div class="k" id="banda-k">Tu brecha</div>
       <div class="num" id="r-brecha">₡0</div>
+      <div class="num-usd" id="r-brecha-usd"></div>
       <div class="sub" id="banda-sub">Eso es lo que te falta cada mes. Y no aparece solo: se construye con inversión y tiempo.</div>
     </div>
 
     <a class="cta2" id="cta-wizard" href="#">Hacé el cálculo completo (2 min) →</a>
+    <p class="confianza">Inversión en una cuenta a TU nombre, en un bróker regulado en EE.UU.</p>
+    <a class="cta-ocupado" id="cta-ocupado" href="#" target="_blank" rel="noopener">¿Ocupado? Mejor veámoslo juntos: agendá 30 min →</a>
     <p class="nota-res">Estimación educativa del IVM con la normativa 2026, asumiendo cotización continua desde los 25 años y salario constante. No incluye tu ROP. El cálculo completo afina con tus cuotas reales y tu ahorro. No es una certificación de la CCSS.</p>
+    <a class="ig-link" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">📲 Aprendé de inversión y retiro gratis en Instagram → @joseinvestor.cr</a>
   </section>
 </div>
 
 <footer>
-  <p>Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta, no desde la nuestra.<br>
+  <p>Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta.<br>
   No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. · <a href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">@joseinvestor.cr</a></p>
 </footer>
 
 <script>
 // ===== CONFIG =====
-var WIZARD_URL = "https://TODO-url-del-wizard.streamlit.app"; // TODO: URL real del wizard
+var WIZARD_URL = "/wizard.html";          // el funnel completo vive en este repo
+var TC = 460;                             // tipo de cambio ₡ por $1
+var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
 // Parámetros IVM 2026 (fuente: referencia_ivm_2026.md)
 var SALARIO_MINIMO = 373092;
 var TOPE_MAX = 1765859;
@@ -191,26 +206,35 @@ document.getElementById("calcular").addEventListener("click", function(){
   }
   var pension = pensionIVM(edad, salario);
   var brecha = meta - pension;
+  var tocoTecho = (pension === TOPE_MAX);
 
   document.getElementById("r-estado").textContent = "₡" + fmt(pension) + "/mes";
   document.getElementById("r-meta").textContent = "₡" + fmt(meta) + "/mes";
 
   var banda = document.getElementById("banda");
+  var brechaUsd = document.getElementById("r-brecha-usd");
   if (brecha > 0){
     banda.classList.remove("banda-ok");
     document.getElementById("banda-k").textContent = "Tu brecha";
     document.getElementById("r-brecha").textContent = "₡" + fmt(brecha) + "/mes";
-    document.getElementById("banda-sub").textContent = "Eso es lo que te falta cada mes. Y no aparece solo: se construye con inversión y tiempo.";
+    brechaUsd.textContent = "≈ $" + fmt(Math.round(brecha / TC)) + "/mes";
+    if (tocoTecho){
+      document.getElementById("banda-sub").textContent = "Tocaste el techo del IVM: por más que ganés o cotizés, la pensión no sube de ahí. De este punto en adelante, tu retiro depende de vos. La buena noticia: se construye con inversión y tiempo.";
+    } else {
+      document.getElementById("banda-sub").textContent = "Eso es lo que te falta cada mes. Y no aparece solo: se construye con inversión y tiempo.";
+    }
   } else {
     banda.classList.add("banda-ok");
     document.getElementById("banda-k").textContent = "Buenas noticias";
     document.getElementById("r-brecha").textContent = "Tu meta estaría cubierta";
+    brechaUsd.textContent = "";
     document.getElementById("banda-sub").textContent = "Estás mejor que la gran mayoría. El siguiente nivel: protegerlo de la inflación y construir patrimonio.";
   }
 
   // Pase de datos al wizard (nunca pedir lo mismo dos veces)
   var qs = "?edad=" + edad + "&salario=" + salario + "&meta=" + meta;
   document.getElementById("cta-wizard").href = WIZARD_URL + qs;
+  document.getElementById("cta-ocupado").href = CALENDLY_URL + "?utm_source=landing&utm_content=atajo_ocupado";
 
   var res = document.getElementById("resultado");
   res.style.display = "block";

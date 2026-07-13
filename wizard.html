@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu brecha de retiro · Empowered Investor</title>
+<link rel="icon" type="image/webp" href="assets/logo-empowered.webp">
+<meta name="description" content="En 2 minutos: tu número de retiro proyectado, cuánto te da el Estado, cuánto podés construir invirtiendo y cuánto te falta. Gratis.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
+    /* Semánticos (espejo del wizard Python) */
+    --verde:#12b886; --rojo:#e0525a; --ambar:#e0a020; --azul:#4c7ef3; --tenue:#8a94a6;
+    --card-bg:#1B2026; --card-bd:#262C34; --input-bd:#2E3540;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    min-height:100vh; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%; max-width:560px; margin:0 auto; padding:14px 20px 70px;}
+
+  /* Barra de progreso */
+  .prog{position:sticky; top:0; z-index:20; background:var(--tinta); padding:12px 0 8px;}
+  .prog-track{height:6px; background:#20262E; border-radius:999px; overflow:hidden;}
+  .prog-fill{height:100%; background:var(--menta); border-radius:999px; transition:width .35s ease;}
+
+  .marca{display:block; text-align:center; margin:8px 0 14px;}
+  .marca img{width:150px; max-width:48%; height:auto;}
+
+  .step{color:var(--gris-sec); font-size:12px; letter-spacing:.11em; text-transform:uppercase; font-weight:700; margin:6px 0 8px;}
+  .hero{font-size:clamp(26px,7vw,34px); font-weight:700; line-height:1.15; letter-spacing:-.01em; margin:2px 0 4px;}
+  .sub{color:var(--gris); font-size:17px; line-height:1.45; margin-bottom:16px; font-weight:400;}
+  p, li{font-size:16px; line-height:1.5; font-weight:400;}
+  b, strong{font-weight:600;}
+  .note{color:var(--gris-sec); font-size:14px; line-height:1.5; margin:10px 0; font-weight:400;}
+
+  .card{background:var(--card-bg); border:1px solid var(--card-bd); border-radius:16px; padding:18px 18px; margin:12px 0; font-size:15.5px; line-height:1.5;}
+  .mini{background:var(--card-bg); border:1px solid var(--card-bd); border-radius:16px; padding:15px 15px; min-height:150px;}
+
+  .big{font-size:clamp(34px,9vw,46px); font-weight:700; line-height:1.05; word-break:break-word;}
+  .num{font-size:26px; font-weight:700; line-height:1.1;}
+  .lbl{color:var(--gris-sec); font-size:14px; font-weight:500;}
+
+  .campo{margin:14px 0;}
+  .campo label{display:block; font-size:13px; font-weight:700; letter-spacing:.06em; color:var(--gris); margin-bottom:7px;}
+  .campo input, .campo select{
+    width:100%; background:var(--tinta); border:1px solid var(--input-bd); border-radius:12px;
+    color:var(--crema); font-family:inherit; font-size:20px; font-weight:500; padding:13px 14px; outline:none;
+  }
+  .campo input:focus, .campo select:focus{border-color:var(--menta);}
+  .campo .hint{font-size:12.5px; color:var(--gris-sec); margin-top:6px;}
+  .row{display:flex; gap:12px;} .row>*{flex:1;}
+  .eq{font-size:16px; font-weight:700; margin:4px 0 2px;}
+  .eqs{font-size:13px; font-weight:600; color:var(--tenue); margin:2px 0 6px;}
+
+  /* Radio de moneda / intención */
+  .seg{display:flex; gap:8px;}
+  .seg button{flex:1; background:var(--tinta); border:1px solid var(--input-bd); color:var(--crema); font-family:inherit;
+    font-size:16px; font-weight:600; padding:12px; border-radius:12px; cursor:pointer;}
+  .seg button.on{border-color:var(--menta); background:rgba(99,252,175,.10); color:var(--menta);}
+
+  .opciones{display:flex; flex-direction:column; gap:10px; margin:10px 0;}
+  .opcion{display:block; width:100%; text-align:left; background:var(--card-bg); border:1px solid var(--card-bd);
+    color:var(--crema); font-family:inherit; font-size:15.5px; line-height:1.45; font-weight:400; padding:15px 16px;
+    border-radius:14px; cursor:pointer; transition:border-color .12s ease;}
+  .opcion.on{border-color:var(--menta); background:rgba(99,252,175,.08);}
+
+  /* Botones */
+  .btns{display:flex; gap:10px; margin-top:16px;}
+  .btn{display:block; width:100%; text-align:center; cursor:pointer; border:none; border-radius:999px;
+    font-family:inherit; font-size:17px; font-weight:700; padding:15px 18px; transition:transform .12s ease, opacity .12s;}
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--menta); color:var(--tinta);}
+  .btn-ghost{background:transparent; color:var(--gris); border:1px solid var(--input-bd);}
+  .btn-back{flex:0 0 auto; width:auto; padding:15px 18px;}
+  a.btn{text-decoration:none;}
+
+  /* Barras comparativas: etiqueta+valor completos arriba, barra proporcional debajo (nunca trunca) */
+  .barwrap{margin:12px 0;}
+  .barlbl{font-size:14.5px; font-weight:600; margin-bottom:6px; color:var(--crema); line-height:1.35;}
+  .bartrack{height:14px; background:#20262E; border-radius:999px; overflow:hidden;}
+  .barfill{height:100%; border-radius:999px; transition:width .4s ease;}
+
+  /* Acordeón */
+  details{background:var(--card-bg); border:1px solid var(--card-bd); border-radius:14px; margin:10px 0; overflow:hidden;}
+  details>summary{cursor:pointer; list-style:none; padding:14px 16px; font-size:15px; font-weight:600; color:var(--crema);}
+  details>summary::-webkit-details-marker{display:none;}
+  details>summary::after{content:"▾"; float:right; color:var(--gris-sec);}
+  details[open]>summary::after{content:"▴";}
+  details .body{padding:2px 16px 16px; font-size:15px; line-height:1.5;}
+  details .body img{max-width:100%; border-radius:8px; margin:8px 0; display:block;}
+  details table{width:100%; border-collapse:collapse; margin:8px 0; font-size:13.5px;}
+  details th, details td{border:1px solid var(--card-bd); padding:7px 8px; text-align:left;}
+  details th{color:var(--gris-sec); font-weight:600;}
+  .cap{color:var(--gris-sec); font-size:12px; line-height:1.5; margin-top:8px; display:block;}
+
+  .warn{color:var(--ambar); font-size:14.5px; margin:10px 0; font-weight:500;}
+  .divider{height:1px; background:var(--card-bd); margin:22px 0;}
+  .checkline{display:flex; align-items:flex-start; gap:10px; margin:12px 0; font-size:15px;}
+  .checkline input{width:20px; height:20px; margin-top:2px; accent-color:var(--menta);}
+
+  #chart-wrap{position:relative; height:290px; width:100%; margin:6px 0 4px;}
+
+  .foot-note{text-align:center; color:var(--tenue); font-size:14px; margin-top:26px; line-height:1.5;}
+  .foot-note a{color:var(--azul); font-weight:700; text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="prog"><div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div></div>
+  <div id="app"></div>
+  <div class="foot-note" id="foot-note"></div>
+  <div class="cap" style="text-align:center; margin-top:22px; border-top:1px solid var(--card-bd); padding-top:16px">
+    Empowered Investor · Herramienta educativa, no es asesoría financiera individualizada ni una certificación de la CCSS.
+    Los parámetros del IVM/ROP son los vigentes 2026 y las tasas están sujetas a verificación.
+    <b>No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</b>
+  </div>
+</div>
+
+<script src="js/calc.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+ * wizard.html — funnel completo de retiro (Empowered Investor)
+ * Replica el flujo del wizard de Streamlit (Calculadora_de_Retiro_Lead_Magnet.py)
+ * con el MISMO copy. Motor de cálculo: js/calc.js (paridad en tests/paridad.md).
+ * ===================================================================== */
+var CFG = Calc.CFG;
+var MARCA = "Empowered Investor";
+var WHATSAPP_NUMERO = "50670558296";
+var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
+var INSTAGRAM_URL = "https://www.instagram.com/joseinvestor.cr/";
+var CALENDLY_TEL_PARAM = "a1";
+var SJC_TASA_PCT = CFG.SJC_TASA_PCT;         // 8
+var SETUP_FEE_USD = CFG.SETUP_FEE_USD;        // 2000
+var FEE_ANUAL_PCT = CFG.FEE_ANUAL_PCT;        // 1
+var TC_DEFAULT = CFG.TC_DEFAULT;              // 460
+// Webhook (Apps Script) — misma URL que .streamlit/secrets.toml del proyecto Python.
+var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+
+var VERDE="#12b886", ROJO="#e0525a", AMBAR="#e0a020", AZUL="#4c7ef3", TENUE="#8a94a6";
+
+// Métricas Faber (espejo de FABER_STATS del Python)
+var FABER = { bh:{cagr:10.8,maxdd:-50.8,calmar:0.21}, sma:{cagr:9.8,maxdd:-22.4,calmar:0.44} };
+var FABER_PERIODO = "1993–2026";
+
+// Orden real del flujo (para la barra de progreso)
+var ORDEN = [0,1,2,4,3,41,42,5];
+
+// ── Estado ────────────────────────────────────────────────────────────
+var ss = { paso:0, datos:{}, tInicio:Date.now(), leadSig:null };
+var d = ss.datos;
+
+function guardar(){
+  try{ sessionStorage.setItem("wz_state", JSON.stringify({paso:ss.paso, datos:ss.datos, tInicio:ss.tInicio})); }catch(e){}
+}
+function restaurar(){
+  try{
+    var raw = sessionStorage.getItem("wz_state");
+    if(raw){ var o=JSON.parse(raw); ss.paso=o.paso||0; ss.datos=o.datos||{}; ss.tInicio=o.tInicio||Date.now(); d=ss.datos; }
+  }catch(e){}
+  // Parámetros precargados de la landing: ?edad=&salario=&meta= → saltar la portada al Paso 1.
+  var qp = new URLSearchParams(location.search);
+  if(qp.has("edad") || qp.has("salario") || qp.has("meta")){
+    var edad = parseInt(qp.get("edad"),10);
+    var salario = parseInt(qp.get("salario"),10);
+    var meta = parseInt(qp.get("meta"),10);
+    if(edad){ d.edad_hoy = edad; }
+    if(salario){ d.salario = salario; }
+    if(meta){ d.ingreso_deseado = meta; d.moneda = d.moneda || "₡"; }
+    if(!d.edad_ret) d.edad_ret = 65;
+    if(edad || salario || meta){ ss.paso = 1; }   // saltar portada directo al Paso 1 con los valores puestos
+  }
+}
+
+function irA(paso){ ss.paso = paso; guardar(); window.scrollTo({top:0,behavior:"instant"}); render(); }
+
+// ── Helpers de formato (espejo del Python) ────────────────────────────
+function tc(){ var v = parseFloat(d.tc); return (v && v>0) ? v : TC_DEFAULT; }
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function col(m){ return "₡"+fmt(m); }
+function usd(m){ return "$"+fmt(m); }
+function fmtMeta(mc){ return d.moneda==="$" ? "$"+fmt(mc/tc()) : "₡"+fmt(mc); }
+function fmtMetaSec(mc){ return d.moneda==="$" ? "₡"+fmt(mc) : "$"+fmt(mc/tc()); }
+function fmtMetaUsd(mu){ return d.moneda==="$" ? "$"+fmt(mu) : "₡"+fmt(mu*tc()); }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function barra(valor, maximo, color, etiqueta){
+  var pct = maximo<=0 ? 0 : Math.max(2, Math.min(100, valor/maximo*100));
+  return '<div class="barwrap"><div class="barlbl">'+etiqueta+'</div>'
+    + '<div class="bartrack"><div class="barfill" style="width:'+pct.toFixed(0)+'%;background:'+color+'"></div></div></div>';
+}
+
+// ── Calendly prefill (espejo del Python) ──────────────────────────────
+function telE164cr(whats){
+  var digits = String(whats||"").replace(/\D/g,"");
+  if(!digits) return "";
+  if(digits.indexOf("506")===0) return "+"+digits;
+  if(digits.length===8) return "+506"+digits;
+  return "+"+digits;
+}
+var A4_OBJETIVO = {
+  "Acompañamiento":"Delegar el proceso porque estoy ocupado y quiero que alguien me ayude a abrir, estructurar y manejar la cuenta.",
+  "Aprender":"Aprender sobre inversiones desde cero.",
+  "Solo números":"No estoy seguro todavía, quiero entender qué opción tiene más sentido para mí.",
+};
+function a5Ingreso(salarioCol){
+  if(salarioCol<=0) return "";
+  var u = salarioCol/tc();
+  if(u<2000) return "Menos de $2,000";
+  if(u<3000) return "$2,000 a $3,000";
+  if(u<6000) return "$3,000 a $6,000";
+  return "Más de $6,000";
+}
+function a7Capacidad(capital, aporte){
+  if(capital>=25000) return "Más de $25,000 disponibles";
+  if(capital>=10000 || aporte>=500) return "$10,000–$25,000 y $500+/mes";
+  if(capital>=5000 || aporte>=250) return "$5,000–$10,000, o puedo aportar $250–$500/mes";
+  return "Menos de $5,000 y hasta $250/mes";
+}
+function calendlyPrefill(nombre, apellido, correo, whats, r, intencionCorto, corto){
+  // corto=true → solo el prefill esencial (contacto). Se usa en el link del REPORTE PDF, donde
+  // el URL se muestra como texto: sin las respuestas de opción múltiple (a4/a5/a7, que son frases
+  // largas) el link queda corto y legible. El CTA dentro del wizard usa el prefill completo.
+  var p = new URLSearchParams();
+  p.set("utm_source", corto ? "reporte" : "wizard"); p.set("utm_content","calificado");
+  if(nombre) p.set("first_name", nombre);
+  if(apellido) p.set("last_name", apellido);
+  if(correo) p.set("email", correo);
+  var tel = telE164cr(whats);
+  if(tel && CALENDLY_TEL_PARAM) p.set(CALENDLY_TEL_PARAM, tel);
+  if(!corto){
+    var obj = A4_OBJETIVO[intencionCorto]; if(obj) p.set("a4", obj);
+    var ing = a5Ingreso(parseFloat(r.salario)||0); if(ing) p.set("a5", ing);
+    var cap = a7Capacidad(parseFloat(r.capital)||0, parseFloat(r.aporte)||0); if(cap) p.set("a7", cap);
+  }
+  return CALENDLY_URL + "?" + p.toString();
+}
+
+// ── Webhook (Fase 2.5): text/plain para evitar el preflight CORS del Apps Script ──
+function enviarLead(payload){
+  try{
+    fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },   // NO application/json (muere en preflight)
+      body: JSON.stringify(payload)
+    }).then(function(res){ return res.json(); }).then(function(j){
+      if(j && j.ok){ console.log("lead ok", j); }
+    }).catch(function(e){ /* nunca romper la experiencia por el webhook */ });
+  }catch(e){}
+}
+var MESES_ES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+var PERFIL_TEXTO = {
+  "Crecimiento":"Tu brecha es grande, pero tenés tiempo. Esa combinación pide estrategias de crecimiento con riesgo administrado: más agresivas hoy, más conservadoras conforme te acercás al retiro.",
+  "Balanceado":"Tu brecha es manejable y tu horizonte lo permite. Crecimiento con moderación, sin apuestas innecesarias.",
+  "Conservador":"Estás cerca de tu meta o de tu retiro. La prioridad es proteger lo ganado y crecer sin sustos.",
+};
+function reporteSlides(r, nombre, apellido, correo, whats, intCorto){
+  var hoy = new Date();
+  var fecha = hoy.getDate()+" de "+MESES_ES[hoy.getMonth()]+" de "+hoy.getFullYear();
+  var perfil = r.perfil;
+  var veredicto = (r.totalMax >= r.desired)
+    ? "Con lo que podés aportar y un poco de constancia, tu meta es alcanzable."
+    : "Vas por buen camino. La diferencia se cierra con ajustes: aportar un poco más, mover un año el retiro o ajustar la meta.";
+  return {
+    nombre:nombre, apellido:apellido, fecha:fecha,
+    meta_mensual:fmtMeta(r.desired), edad_retiro:String(parseInt(d.edad_ret||65,10)),
+    pension_total:fmtMeta(r.pensionEstatal), brecha:fmtMeta(r.brecha),
+    vf_mercado:"$"+fmt(r.vfMkt), vf_max:"$"+fmt(r.vfMax), total_proyectado:fmtMeta(r.totalMax),
+    perfil_sugerido:perfil, veredicto_texto:veredicto, perfil_texto:PERFIL_TEXTO[perfil]||"",
+    aporte_usd:"$"+fmt(r.aporte), aportado_total:"$"+fmt(r.aportado),
+    link_calendly_utm:calendlyPrefill(nombre, apellido, correo, whats, r, intCorto, true),  // corto: link limpio para el PDF
+  };
+}
+function tiempoTranscurrido(){ var s=Math.floor((Date.now()-ss.tInicio)/1000); return Math.floor(s/60)+" min "+(s%60)+" s"; }
+function payloadLead(r, intencion, califica, etapa, extra){
+  extra = extra || {};
+  var inicioIso = new Date(ss.tInicio).toISOString();
+  var curado = {
+    inicio: inicioIso, timestamp: new Date().toISOString(),
+    etapa: etapa, califica: !!califica,
+    nombre: extra.nombre||"", apellido: extra.apellido||"", whatsapp: extra.whats||"", correo: extra.correo||"",
+    intencion: intencion,
+    edad_hoy: parseInt(d.edad_hoy||0,10), edad_retiro: parseInt(d.edad_ret||0,10),
+    anios_para_retiro: r.anios,
+    meta_col: Math.round(r.desired), meta_usd: Math.round(r.desired/tc()), moneda_meta: d.moneda||"",
+    salario_col: Math.round(r.salario||0), cuotas_cot: r.cuotasCot||0,
+    pension_estatal_col: Math.round(r.pensionEstatal),
+    ivm_col: Math.round(r.ivmMonto), rop_col: Math.round(r.ropMonto),
+    brecha_col: Math.round(r.brecha),
+    capital_usd: Math.round(r.capital), aporte_usd: Math.round(r.aporte),
+    perfil: r.perfil, tiempo_calculadora: d.tiempo_calculadora||"",
+  };
+  curado.json_completo = JSON.stringify({entrada: d, resultado: serializarResultado(r)});
+  if(extra.reporte) curado.reporte = extra.reporte;
+  return curado;
+}
+function serializarResultado(r){
+  // copia liviana (sin objetos IVM/ROP anidados enormes) — equivalente al respaldo json_completo
+  var o = {}; for(var k in r){ if(k==="ivmObj"||k==="ropObj") continue; o[k]=r[k]; } return o;
+}
+
+// ── Money input: formato en vivo con comas + placeholder sugerido ─────
+function bindMoney(el){
+  el.addEventListener("input", function(){
+    var digits = el.value.replace(/[^0-9]/g,"");
+    var pos = el.selectionStart, antes = el.value.length;
+    el.value = digits ? Number(digits).toLocaleString("en-US") : "";
+    var desp = el.value.length;
+    try{ el.setSelectionRange(Math.max(0,pos+(desp-antes)), Math.max(0,pos+(desp-antes))); }catch(e){}
+  });
+}
+function parseDinero(v){ var s=String(v||"").replace(/[^0-9.]/g,""); var n=parseFloat(s); return isNaN(n)?0:Math.max(0,n); }
+
+// ── Progreso ──────────────────────────────────────────────────────────
+function pintarProgreso(){
+  var idx = ORDEN.indexOf(ss.paso); if(idx<0) idx=0;
+  var pct = Math.round((idx)/(ORDEN.length-1)*100);
+  document.getElementById("prog-fill").style.width = pct+"%";
+}
+function pintarFooter(){
+  var f = document.getElementById("foot-note");
+  if(ss.paso===5 || ss.paso===0){ f.innerHTML=""; return; }
+  f.innerHTML = '¿Preferís saltarte la calculadora y ver tus números con nosotros directamente? '
+    + '<a href="'+CALENDLY_URL+'" target="_blank" rel="noopener">Agendá una sesión de diagnóstico →</a>';
+}
+
+// ==============================================================================
+// RENDER
+// ==============================================================================
+var chartInstance = null;
+function render(){
+  var app = document.getElementById("app");
+  var p = ss.paso;
+  if(p===0) app.innerHTML = viewPortada();
+  else if(p===1) app.innerHTML = viewMeta();
+  else if(p===2) app.innerHTML = viewEstado();
+  else if(p===4) app.innerHTML = viewActo1();
+  else if(p===3) app.innerHTML = viewCapacidad();
+  else if(p===41) app.innerHTML = viewActo2();
+  else if(p===42) app.innerHTML = viewActo3();
+  else if(p===5) app.innerHTML = viewCaptura();
+  pintarProgreso(); pintarFooter();
+  wireStep();
+}
+
+// ---- PASO 0 · Portada ----
+function viewPortada(){
+  return ''
+    + '<div class="marca"><img src="assets/logo-empowered.webp" alt="'+MARCA+'"></div>'
+    + '<div class="hero">¿Vas a poder retirarte con lo que querés? 🎯</div>'
+    + '<div class="sub">La mayoría no tiene ni idea de cuánto le va a dar la pensión. En 2 minutos te decimos tu número de retiro proyectado y cuánto te falta (o te sobra) para vivir el retiro que querés. Gratis y sin registrarte.<br>'
+    + '<span style="font-size:15px">Pensado para profesionales que ganan bien pero nunca han visto este número.</span></div>'
+    + '<div class="card">📊 1) Cuánto te va a dar el Estado por mes<br>📈 2) Cuánto podés llegar a tener si invertís<br>🎯 3) Cuánto te falta y cómo cerrarlo</div>'
+    + '<div class="note">Somos Empowered Investor. Más de 11 años de experiencia en el mercado, ayudándoles a nuestros clientes a manejar sus inversiones <b>desde su propia cuenta, no desde la nuestra</b>. Tu plata nunca pasa por nuestras manos. Por eso el nombre: acá el empoderado sos vos. Y hoy es todavía más simple, porque solo vamos a ver tus números.</div>'
+    + '<div class="btns"><button class="btn btn-primary" data-go="1">Empezar →</button></div>'
+    + '<div class="cap">Herramienta educativa de '+MARCA+'. No es asesoría financiera individualizada ni una certificación de la CCSS.</div>';
+}
+
+// ---- PASO 1 · Tu meta ----
+function viewMeta(){
+  var edadHoy = parseInt(d.edad_hoy||35,10);
+  var edadRet = Math.max(parseInt(d.edad_ret||65,10), edadHoy+1);
+  var moneda = d.moneda || "₡";
+  var tcv = parseFloat(d.tc)||TC_DEFAULT;
+  var metaGuardadaCol = d.ingreso_deseado;
+  var valGoal = "";
+  if(metaGuardadaCol){ valGoal = (moneda==="$" ? Math.round(metaGuardadaCol/Math.max(tcv,1)) : Math.round(metaGuardadaCol)).toLocaleString("en-US"); }
+  var sim = moneda==="$" ? "$" : "₡";
+  var sugerido = moneda==="$" ? "7,000" : "3,220,000";
+  return ''
+    + '<div class="step">Paso 1 de 3 · Tu meta</div>'
+    + '<div class="hero">Empecemos por el sueño 🌅</div>'
+    + '<div class="sub">Primero lo que querés; después vemos si llegás.</div>'
+    + '<div class="row">'
+    +   '<div class="campo"><label>Tu edad hoy</label><input id="f-edad" inputmode="numeric" value="'+edadHoy+'"></div>'
+    +   '<div class="campo"><label>¿A qué edad querés retirarte?</label><input id="f-edadret" inputmode="numeric" value="'+edadRet+'"></div>'
+    + '</div>'
+    + '<div class="campo"><label>Moneda de tu meta</label>'
+    +   '<div class="seg" id="seg-moneda">'
+    +     '<button data-m="₡" class="'+(moneda==="₡"?"on":"")+'">₡ Colones</button>'
+    +     '<button data-m="$" class="'+(moneda==="$"?"on":"")+'">$ Dólares</button>'
+    +   '</div>'
+    + '</div>'
+    + '<details><summary>Usamos ₡'+fmt(TC_DEFAULT)+' por $1. Podés cambiarlo aquí; se usa en toda la calculadora.</summary>'
+    +   '<div class="body"><div class="campo"><label>Tipo de cambio (₡ por $1)</label><input id="f-tc" inputmode="numeric" value="'+fmt(tcv)+'"></div></div></details>'
+    + '<div class="campo"><label>¿Cuánto querés recibir por mes en tu retiro? ('+sim+' de hoy)</label>'
+    +   '<input id="f-goal" inputmode="numeric" placeholder="ej. '+sim+sugerido+'" value="'+valGoal+'"></div>'
+    + '<div class="eq" id="goal-eq"></div>'
+    + '<details><summary>💡 ¿No sabés cuánto poner? Un dato que ayuda</summary><div class="body">'
+    +   'A los 65 lo normal es que <b>tu casa ya esté pagada</b>. Y la vivienda se come un <b>30–40% del ingreso</b> de una persona activa. Por eso mucha gente planifica su retiro con el <b>60–70% de lo que gana hoy</b>: misma vida, sin el gasto más grande. Ejemplo: si hoy vivís bien con $4,000 al mes, con $2,500–$2,800 a los 65 vivís igual.'
+    + '</div></details>'
+    + '<details><summary>¿Por qué te pregunto esto?</summary><div class="body">'
+    +   'Tu meta define todo el cálculo. Empezamos por lo que querés vivir, no por la burocracia. Poné el monto en <b>plata de hoy</b>; la inflación la ajustamos nosotros por dentro.'
+    + '</div></details>'
+    + '<div id="warn-meta" class="warn" style="display:none">✍️ Escribí tu meta mensual para continuar.</div>'
+    + '<div class="btns"><button class="btn btn-ghost btn-back" data-go="0">← Volver</button>'
+    +   '<button class="btn btn-primary" id="b1-next">Siguiente →</button></div>';
+}
+
+// ---- PASO 2 · El Estado ----
+function viewEstado(){
+  var sinEstado = !!d.sin_estado;
+  var salarioVal = d.salario ? fmt(d.salario) : "";
+  var cuotas = parseInt(d.cuotas_cot||120,10);
+  var saldoVal = d.saldo_rop ? fmt(d.saldo_rop) : "";
+  var bloque = sinEstado ? ''
+    + '<div class="card">Perfecto: calculamos tu plan solo con tu inversión. Podés volver a incluirla cuando querás.</div>'
+    : ''
+    + '<div class="campo"><label>Tu salario bruto mensual (₡)</label><input id="f-salario" inputmode="numeric" placeholder="ej. ₡3,500,000" value="'+salarioVal+'"></div>'
+    + '<div class="campo"><label>Cuotas cotizadas (meses)</label><input id="f-cuotas" inputmode="numeric" value="'+cuotas+'">'
+    +   '<div class="hint">Es el número tal cual te lo da la CCSS: cuántas cuotas (meses) has cotizado. No lo pasés a años, poné las cuotas.</div></div>'
+    + '<div class="eqs" id="cuotas-eq"></div>'
+    + '<details><summary>🔎 ¿Dónde veo mis cuotas cotizadas? (Oficina Virtual de la CCSS)</summary><div class="body">'
+    +   'Es gratis y toma 2 minutos:<br><br>'
+    +   '1. Entrá a la <b>Oficina Virtual de la CCSS</b> → <a href="https://aissfa.ccss.sa.cr/afiliacion/index.xhtml?faces-redirect=true?faces-redirect=true" target="_blank" rel="noopener" style="color:var(--azul)">aissfa.ccss.sa.cr</a> e ingresá con tu <b>usuario</b> (si no tenés, lo creás ahí con tu cédula). Así se ve la pantalla de entrada:'
+    +   '<img src="assets/ccss_home.webp" width="300" alt="Oficina Virtual CCSS — inicio">'
+    +   '2. Ya adentro, andá al menú <b>Pensiones → Reportes → «Proyección de Pensión»</b>:'
+    +   '<img src="assets/ccss_proyeccion.webp" width="380" alt="CCSS — Proyección de Pensión">'
+    +   '3. Ahí ves <b>cuántas cuotas (meses) has cotizado</b>. Poné ese número tal cual, arriba.<br><br>'
+    +   '<i>Tip: 300 cuotas = 25 años es el mínimo para la pensión completa del IVM.</i>'
+    + '</div></details>'
+    + '<div class="note">💡 <b>Vamos a estimar tu ROP</b> con tu salario y tus cuotas. Si conocés el saldo exacto, ponelo aquí abajo para más precisión.</div>'
+    + '<div class="campo"><label>Saldo actual de tu ROP (₡), opcional</label><input id="f-saldorop" inputmode="numeric" placeholder="No lo sé — dejalo vacío" value="'+saldoVal+'">'
+    +   '<div class="hint">Lo ves en tu estado de cuenta de la OPC (BN Vital, Popular, BAC, etc.).</div></div>';
+  return ''
+    + '<div class="step">Paso 2 de 3 · La pensión del Estado</div>'
+    + '<div class="hero">Lo que el Estado te va a dar 🏛️</div>'
+    + '<div class="sub">Tu pensión del IVM más tu ahorro del ROP. Con un aproximado basta; después lo afinamos juntos.</div>'
+    + '<label class="checkline"><input type="checkbox" id="f-sinestado" '+(sinEstado?"checked":"")+'>'
+    +   '<span>Prefiero no incluir la pensión del Estado (calcular solo con mi inversión)</span></label>'
+    + '<div id="estado-bloque">'+bloque+'</div>'
+    + '<div id="warn-estado" class="warn" style="display:none">✍️ Escribí tu salario bruto mensual (o marcá «calcular solo con mi inversión»).</div>'
+    + '<div class="btns"><button class="btn btn-ghost btn-back" data-go="1">← Volver</button>'
+    +   '<button class="btn btn-primary" id="b2-next">Ver mi brecha →</button></div>';
+}
+
+// ---- PASO 4 · Acto 1: la brecha ----
+function viewActo1(){
+  var r = Calc.calcular(d);
+  var mx = Math.max(r.desired, r.pensionEstatal, 1);
+  var h = ''
+    + '<div class="step">Tu resultado · Acto 1 de 3</div>'
+    + '<div class="hero">Tu brecha 🎯</div>'
+    + '<div class="sub">Tu <b>brecha</b> es el hueco entre lo que querés recibir por mes y lo que te va a dar la pensión del Estado. Es lo que <b>tu inversión</b> tiene que cubrir.</div>'
+    + barra(r.desired, mx, AZUL, 'Querés: '+fmtMeta(r.desired)+'/mes');
+  if(!r.sinEstado){
+    h += barra(r.pensionEstatal, mx, VERDE, 'Estado te da: '+fmtMeta(r.pensionEstatal)+'/mes');
+    if(r.ivmObj){
+      h += '<div class="eqs" style="font-size:12.5px">= IVM '+fmtMeta(r.ivmMonto)+' + ROP '+fmtMeta(r.ropMonto)+' por mes</div>';
+      if(d.moneda==="$"){ h += '<div class="eqs" style="font-size:12.5px">= IVM '+col(r.ivmMonto)+' + ROP '+col(r.ropMonto)+'</div>'; }
+    }
+  }
+  if(r.ivmObj){ h += breakdownEstado(r); }
+
+  if(r.brecha<=0){
+    h += '<div class="card" style="border-color:'+VERDE+'">🎉 Buenas noticias: con tu pensión proyectada, tu meta estaría cubierta. Estás mejor que la gran mayoría. El siguiente nivel es <b>proteger ese nivel de vida contra la inflación y construir un patrimonio que quede</b> para los tuyos. De eso se tratan los siguientes dos actos.</div>';
+  } else {
+    if(!r.sinEstado){
+      h += '<div class="note">El Estado cubre el <b>'+(100-r.brechaPct).toFixed(0)+'%</b> de tu meta. El otro <b>'+r.brechaPct.toFixed(0)+'%</b> te toca a vos.</div>';
+    }
+    h += '<div class="card" style="border-color:'+ROJO+'">Tu brecha a cubrir con inversión<br>'
+      + '<span class="big" style="color:'+ROJO+'">'+fmtMeta(r.brecha)+'</span><br>'
+      + '<span class="lbl">'+fmtMetaSec(r.brecha)+' por mes</span></div>';
+    h += '<div class="note">Si este número te cayó como balde de agua fría, respirá. No hiciste nada malo. A la mayoría le pasa, porque nadie nos enseñó a hacer este cálculo. Lo estás viendo con tiempo. Y con tiempo, esto se resuelve.</div>';
+  }
+  if(!r.sinEstado && !r.cumpleIvm && (parseFloat(d.salario)||0)>0){
+    h += '<div class="note">Ojo: con tus cuotas y tu horizonte no llegás al mínimo que pide la CCSS para el IVM; por eso aparece en ₡0. Tranquilo. Eso solo significa que <b>tu inversión va a ser el pilar principal</b> de tu plan.</div>';
+  }
+  var pt;
+  if(r.perfil==="Crecimiento") pt='🚀 <b>Tu perfil sugerido: Crecimiento.</b> '+PERFIL_TEXTO["Crecimiento"];
+  else if(r.perfil==="Balanceado") pt='⚖️ <b>Tu perfil sugerido: Balanceado.</b> '+PERFIL_TEXTO["Balanceado"];
+  else pt='🛡️ <b>Tu perfil sugerido: Conservador.</b> '+PERFIL_TEXTO["Conservador"];
+  h += '<div class="card" style="border-color:'+AZUL+'">'+pt+'<br><br><span class="note">Esto es una sugerencia inicial; el perfil real lo definimos juntos en tu sesión de diagnóstico.</span></div>';
+  h += '<div class="btns"><button class="btn btn-ghost btn-back" data-go="2">← Ajustar datos</button>'
+    + '<button class="btn btn-primary" data-go="3">Ahora, lo que podés poner vos →</button></div>';
+  return h;
+}
+function breakdownEstado(r){
+  var ivm=r.ivmObj, rop=r.ropObj;
+  var cuotasHoy=r.cuotasCot, mesesFut=r.anios*12;
+  var h='<details><summary>🔍 ¿Cómo se calculó tu pensión del Estado? (IVM + ROP)</summary><div class="body">';
+  h+='Tu pensión del Estado son <b>dos cheques</b> que se suman: el <b>IVM</b> (el fondo solidario de la CCSS) y el <b>ROP</b> (tu cuenta individual obligatoria). Acá se calculan con las mismas reglas que la calculadora completa de '+MARCA+':<br><br>';
+  h+='<b>1️⃣ IVM, el cheque de la CCSS</b> · <i>Reglamento del Seguro de IVM, arts. 5, 23, 24 y 27</i><br>';
+  h+='• <b>Cuotas:</b> '+fmt(cuotasHoy)+' que ya llevás (≈ '+(cuotasHoy/12).toFixed(0)+' años) + '+fmt(mesesFut)+' que faltan ('+r.anios+' años hasta tu retiro) = <b>'+fmt(ivm.cuotasTotales)+' cuotas</b>. El mínimo para la pensión completa son <b>300 cuotas (25 años)</b>.<br>';
+  if(!ivm.cumpleRequisitos) h+='• <b>Resultado:</b> con '+fmt(ivm.cuotasTotales)+' cuotas no se llega ni al mínimo de <b>180</b> para una pensión proporcional → el IVM sale en <b>₡0</b>.<br>';
+  else if(ivm.esProporcional) h+='• <b>Resultado:</b> llegás con '+fmt(ivm.cuotasTotales)+' cuotas (menos de 300) → <b>pensión proporcional</b>: el mismo % de una completa pero × <b>'+(ivm.factorProporcional*100).toFixed(0)+'%</b> (la fracción de las 300 que sí completaste).<br>';
+  else h+='• <b>Resultado:</b> con '+fmt(ivm.cuotasTotales)+' cuotas superás las 300 → <b>pensión completa</b>.<br>';
+  var extra="";
+  if(ivm.cuantiaAdicionalPct>0) extra+=' + <b>'+ivm.cuantiaAdicionalPct.toFixed(1)+'%</b> por las cuotas sobre 300 (0.0833% c/u)';
+  if(ivm.incrementoPostergacionPct>0) extra+=' + <b>'+ivm.incrementoPostergacionPct.toFixed(1)+'%</b> por postergación';
+  h+='• <b>% que te reconocen (art. 24):</b> cuantía básica <b>'+ivm.cuantiaBasicaPct.toFixed(1)+'%</b> (según tu nivel salarial frente al salario mínimo legal)'+extra+' = <b>'+ivm.porcentajeReconocido.toFixed(1)+'%</b> de tu salario.<br>';
+  h+='• <b>IVM = salario promedio '+col(r.salario)+' × '+ivm.porcentajeReconocido.toFixed(1)+'% = '+col(ivm.montoBruto)+'</b>, ajustado al piso ('+col(CFG.MONTO_MINIMO_DEFAULT)+') y techo ('+col(CFG.MONTO_MAXIMO_DEFAULT)+') vigentes 2026 → <b>'+col(ivm.montoMensual)+'/mes</b>.<br>';
+  h+='💡 <b>Un dato que casi nadie sabe:</b> por más que trabajés o suba tu salario, la pensión del IVM tiene un <b>tope máximo</b>. Hoy (2026) ese techo es <b>'+col(CFG.MONTO_MAXIMO_DEFAULT)+'/mes</b>. No importa cuánto cotizés: el IVM no paga más que eso. Una razón más para construir tu propio ingreso por fuera.<br><br>';
+  h+='<b>2️⃣ ROP, tu cuenta individual</b> · <i>Ley de Protección al Trabajador N.º 7983, art. 22</i><br>';
+  var mod = rop.modalidadAplicable==="transitoria" ? "régimen transitorio, en cuotas iguales" : "renta mensual (retiro programado)";
+  h+='• No es un % del salario: es la <b>plata acumulada en tu cuenta personal</b> (una alcancía obligatoria que invierte tu operadora). Al pensionarte te la devuelven poco a poco.<br>';
+  h+='• <b>Saldo proyectado al retiro</b> (en poder de compra de hoy): <b>'+col(rop.saldoProyectado)+'</b>, entregado como '+mod+' → <b>'+col(rop.ingresoMensualAplicable)+'/mes</b>.<br>';
+  h+='<b>➕ Total del Estado = '+col(ivm.montoMensual)+' (IVM) + '+col(rop.ingresoMensualAplicable)+' (ROP) = '+col(r.pensionEstatal)+'/mes.</b><br>';
+  h+='<span class="cap">Guía educativa con la normativa vigente (valores 2026), no una certificación oficial de la CCSS. El monto real lo define la CCSS al momento de tu pensión.</span>';
+  h+='</div></details>';
+  return h;
+}
+
+// ---- PASO 3 · Tu capacidad ----
+function viewCapacidad(){
+  var pe = Calc.pensionEstado(d);
+  var brecha3 = Math.max(0, (parseFloat(d.ingreso_deseado)||0) - pe.pensionTotal);
+  var capVal = d.capital ? fmt(d.capital) : "";
+  var apVal = d.aporte ? fmt(d.aporte) : "";
+  var h = ''
+    + '<div class="step">Paso 3 de 3 · Tu capacidad</div>'
+    + '<div class="hero">Lo que podés poner de tu lado 💪</div>';
+  if(brecha3>0){
+    h += '<div class="sub">Tu brecha a cubrir es <b>'+fmtMeta(brecha3)+'/mes</b>. Con lo que pongás vos, la empezamos a cerrar 👇</div>';
+  }
+  h += '<div class="note">💵 Tu inversión vive en <b>dólares</b>, porque el mercado de EE.UU. se opera en USD. Por eso preguntamos en dólares; al lado ves el equivalente en colones.</div>'
+    + '<div class="campo"><label>¿Con cuánto podés empezar? (US$)</label><input id="f-cap" inputmode="numeric" placeholder="ej. $50,000" value="'+capVal+'"></div>'
+    + '<div class="eqs" id="cap-eq"></div>'
+    + '<div class="campo"><label>¿Cuánto podrías aportar por mes? (US$)</label><input id="f-ap" inputmode="numeric" placeholder="ej. $1,000" value="'+apVal+'"></div>'
+    + '<div class="eqs" id="ap-eq"></div>'
+    + '<div class="card" style="border-color:'+AZUL+';padding:14px 16px;font-size:15px">🌱 Lo ideal es que esto ya sea plata que tenías <b>apartada para invertir</b>. Una guía sana: que ronde el <b>20% de lo que te entra al mes</b>. Esa es la parte que te construye el futuro.</div>'
+    + '<div class="eqs" style="font-size:12.5px">Los montos en ₡ usan ₡'+fmt(tc())+'/$1, el tipo de cambio que definiste en «Empecemos por el sueño».</div>'
+    + '<div class="note">📦 <b>Buena práctica que usamos con nuestros clientes:</b> el ahorro es mensual, pero el envío a tu cuenta se hace al <b>juntar ~$5,000</b>, para diluir el costo de la transferencia internacional (SWIFT). La primera vez te ayudamos a dejarla lista, paso a paso. Después es rutina.</div>'
+    + '<div id="warn-cap" class="warn" style="display:none">✍️ Escribí cuánto podrías aportar por mes. Podés empezar con $0; lo que pesa es el aporte mensual.</div>'
+    + '<div class="btns"><button class="btn btn-ghost btn-back" data-go="4">← Volver a mi brecha</button>'
+    +   '<button class="btn btn-primary" id="b3-next">Ver cómo crece →</button></div>';
+  return h;
+}
+
+// ---- PASO 41 · Acto 2: el crecimiento ----
+function viewActo2(){
+  var r = Calc.calcular(d);
+  var diff = r.vfMax - r.vfMkt;
+  var bh=FABER.bh, sm=FABER.sma;
+  var h = ''
+    + '<div class="step">Tu resultado · Acto 2 de 3</div>'
+    + '<div class="hero">El crecimiento 📈</div>'
+    + '<div class="sub">Así crecería tu inversión (en US$ de hoy) durante los años que te faltan:</div>'
+    + '<div id="chart-wrap"><canvas id="chart-crec"></canvas></div>'
+    + barra(r.aportado, r.vfMax, TENUE, 'Lo que aportás: $'+fmt(r.aportado))
+    + barra(r.vfMkt, r.vfMax, AZUL, 'Portafolio Básico (el mercado solo): $'+fmt(r.vfMkt))
+    + barra(r.vfMax, r.vfMax, VERDE, 'Con nuestro sistema: $'+fmt(r.vfMax))
+    + '<div class="eq" style="color:'+VERDE+'">👉 En esta proyección, la diferencia entre los dos portafolios es de ~$'+fmt(diff)+'. Un número así despierta una duda sana: <i>«¿y esto no será humo?»</i> Nos encanta el escepticismo. Abrí el cuadro de abajo y mirá un ejemplo real de una estrategia basada en reglas. Lo nuestro es eso: reglas probadas, 11 años de experiencia aplicándolas, y el riesgo ajustado al tamaño de tu meta.</div>'
+    + '<details><summary>🔍 ¿De dónde sale esa diferencia? (spoiler: no es magia)</summary><div class="body">'
+    +   'Una estrategia sistemática es una <b>regla sencilla que se aplica siempre igual</b>, sin emociones y sin cajas negras.<br><br>'
+    +   'Acá va un ejemplo real que podés investigar y hasta aplicar por tu cuenta: la <b>regla del promedio móvil de 10 meses</b> (Faber, 2007; la cita completa está al pie):<br><br>'
+    +   '1. Al final de cada mes, mirá si el mercado está <b>por encima</b> de su promedio de los últimos 10 meses → te quedás invertido.<br>'
+    +   '2. Si está <b>por debajo</b> → te pasás a efectivo y esperás.<br>'
+    +   '3. Eso es todo. Una regla, una vez al mes.<br><br>'
+    +   'Así le fue en el período '+FABER_PERIODO+':'
+    +   '<table><tr><th></th><th>Comprar y mantener</th><th>Con la regla de 10 meses</th></tr>'
+    +     '<tr><td>Retorno anual promedio (CAGR)</td><td>'+bh.cagr.toFixed(1)+'%</td><td>'+sm.cagr.toFixed(1)+'%</td></tr>'
+    +     '<tr><td>Peor caída histórica (drawdown)</td><td>'+bh.maxdd.toFixed(1)+'%</td><td>'+sm.maxdd.toFixed(1)+'%</td></tr>'
+    +     '<tr><td>Calmar (retorno ÷ peor caída)</td><td>'+bh.calmar.toFixed(2)+'</td><td>'+sm.calmar.toFixed(2)+'</td></tr></table>'
+    +   '<div class="note">Los mismos números, explicados de manera sencilla:<br>'
+    +     '😐 Un poquito menos de retorno por año ('+sm.cagr.toFixed(1)+'% vs '+bh.cagr.toFixed(1)+'%)<br>'
+    +     '😃 Menos de la mitad del peor susto (del '+Math.abs(bh.maxdd).toFixed(1)+'% al '+Math.abs(sm.maxdd).toFixed(1)+'%)<br>'
+    +     '🤩 El doble de tranquilidad por cada punto de retorno (Calmar '+bh.calmar.toFixed(2)+' vs '+sm.calmar.toFixed(2)+')</div>'
+    +   '<span class="cap">Regla original: Mebane T. Faber, «A Quantitative Approach to Tactical Asset Allocation», The Journal of Wealth Management (2007). Métricas: backtest propio de '+MARCA+' sobre el <b>S&amp;P 500, usando el ETF SPY</b> como referencia, período '+FABER_PERIODO+', con costos de transacción incluidos. Ejemplo educativo. Los resultados pasados no garantizan resultados futuros.</span>'
+    +   '<br>Ese es el «secreto» que no es secreto. Y lo podés aplicar por tu cuenta. Nosotros usamos estrategias de este tipo, con <b>pocas variables y mucha evidencia</b>, perfeccionadas durante 11 años y <b>combinadas entre sí</b>. De ahí nace la proyección de arriba. Es una proyección, no una promesa. Pero tampoco es humo: es método. Dicho eso, siempre tenemos que aclararlo: los resultados pasados no garantizan resultados futuros.'
+    + '</div></details>'
+    + '<div class="note">El S&amp;P 500 ha rendido en promedio ~9.5% nominal anual a muy largo plazo (~6.5% real, ya descontada la inflación). Nuestras estrategias apuntan a un <b>15% nominal anual</b>. El crecimiento de capital es nuestra especialidad. El riesgo lo ajustamos a tu caso: <b>tu brecha, tu horizonte y tu perfil</b>. Sistemas probados más el criterio de 11 años leyendo mercados. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</div>'
+    + '<div class="cap">Estos números ya descuentan <b>todos los costos</b> del servicio. Lo que ves es lo que te queda. Nuestro trabajo es que la diferencia entre los dos portafolios pague el servicio muchas veces.</div>'
+    + '<details><summary>¿Cuánto cuesta el servicio? (transparencia total)</summary><div class="body">'
+    +   'Nuestro modelo es simple: un <b>'+FEE_ANUAL_PCT.toFixed(0)+'% anual sobre lo que tengas en el portafolio</b>. Sin costos de salida, sin permanencias, sin comisiones ocultas.<br><br>'
+    +   'Después de 11 años en el mercado, sabemos que dejar listo un sistema de inversión completo (cuenta internacional a tu nombre, fondeo, estrategia y primer año de manejo) requiere un <b>presupuesto mínimo de ~$'+fmt(SETUP_FEE_USD)+' para empezar</b>. Ese primer año de manejo va incluido; el '+FEE_ANUAL_PCT.toFixed(0)+'% anual corre a partir del año 2.<br><br>'
+    +   '📍 Si tu presupuesto actual está por debajo de eso, no pasa nada. Empezá por nuestro <b>contenido gratuito en Instagram</b> y construí tu base primero. Publicamos educación práctica todas las semanas.<br><br>'
+    +   '📞 Y si ya viste el valor de que te acompañemos a construir tu fondo de retiro, <b>agendá una llamada</b>. Ahí revisamos tus números y definimos tu plan.<br>'
+    +   '<div class="btns"><a class="btn btn-primary" href="'+CALENDLY_URL+'" target="_blank" rel="noopener">📞 Agendar mi llamada</a>'
+    +     '<a class="btn btn-ghost" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📱 Instagram</a></div>'
+    + '</div></details>'
+    + '<div class="card">🔒 <b>¿Y dónde estaría tu plata?</b> En una cuenta <b>a TU nombre</b> en un bróker regulado en EE.UU. Nosotros solo tenemos permiso de comprar y vender dentro de tu cuenta. <b>Nadie puede retirar tu dinero excepto vos</b>. Cero letra pequeña. Y no estás solo en el trámite: <b>te guiamos paso a paso</b> en la apertura y el fondeo.</div>'
+    + '<div class="btns"><button class="btn btn-ghost btn-back" data-go="3">← Volver</button>'
+    +   '<button class="btn btn-primary" data-go="42">Acto 3: mi ingreso de retiro →</button></div>';
+  return h;
+}
+
+// ---- PASO 42 · Acto 3: el ingreso de retiro ----
+function viewActo3(){
+  var r = Calc.calcular(d);
+  var ing4=r.ingActMax, ing8=r.ingSjcMax, total=r.totalMax;
+  var h = ''
+    + '<div class="step">Tu resultado · Acto 3 de 3</div>'
+    + '<div class="hero">Tu ingreso de retiro 🏖️</div>'
+    + '<div class="sub">Ya tenés tu portafolio. Ahora la pregunta importante: ¿cuánto te puede dar cada mes, para siempre, sin que se acabe?</div>'
+    + '<div class="note">Hay <b>dos formas</b> de convertir ese portafolio en ingreso mensual. Mirá la diferencia:</div>'
+    + '<div class="row">'
+    +   '<div class="mini" style="border-color:'+AZUL+'"><div class="lbl">🟦 Sacando el 4% al año</div>'
+    +     '<div class="num" style="color:'+AZUL+'">'+fmtMetaUsd(ing4)+'</div><div class="lbl">por mes</div>'
+    +     '<div class="note">la vía prudente: tu portafolio te paga y aun así suele seguir creciendo.</div></div>'
+    +   '<div class="mini" style="border-color:'+VERDE+'"><div class="lbl">🟩 Como ingreso pasivo (~'+SJC_TASA_PCT.toFixed(0)+'%)</div>'
+    +     '<div class="num" style="color:'+VERDE+'">'+fmtMetaUsd(ing8)+'</div><div class="lbl">por mes</div>'
+    +     '<div class="note">Vivís del rendimiento; lo que juntaste no se toca. El ~8% viene de instrumentos conservadores con garantía real (bienes raíces), disponibles vía nuestra alianza con un puesto de bolsa. Abajo te contamos cómo 👇</div></div>'
+    + '</div>'
+    + '<details><summary>🤔 ¿Cómo funciona eso de retirar plata sin quedarme sin plata?</summary><div class="body">'
+    +   'La lógica es más simple de lo que suena. Al llegar al retiro, tu portafolio se traslada a instrumentos <b>muy seguros</b>, como bonos del Tesoro de EE.UU., que usualmente rinden alrededor de un <b>4% al año</b>. Y entonces <b>vivís del rendimiento, no del capital</b>: sacás lo que el portafolio genera cada año, y el principal queda intacto, ahí, trabajando.<br><br>'
+    +   'Por eso el 4% es la guía clásica del retiro: es el ingreso que puede darte lo más seguro del mundo <b>sin tocarte la plata</b>.<br><br>'
+    +   'Parte de nuestro servicio es ir un paso más allá, con herramientas conservadoras de ingreso pasivo que pueden generar cerca del doble. Ese ~'+SJC_TASA_PCT.toFixed(0)+'% de ingreso pasivo viene de una <b>alianza con un puesto de bolsa costarricense, San José Capital</b>, con instrumentos de <b>garantía real</b> (respaldados por bienes raíces) que pueden generar alrededor de un <b>'+SJC_TASA_PCT.toFixed(0)+'%</b>. Así podés tener <b>el doble de ingreso con el mismo portafolio</b>. O, visto al revés, necesitar <b>la mitad del portafolio</b> para el mismo ingreso. Si tu perfil califica, te contamos el detalle (inversión mínima US$10,000).<br>'
+    +   '<span class="cap">Tasas aproximadas e históricas, sujetas a condiciones de mercado y verificación; no constituyen una promesa de rendimiento. Tasa y condiciones de la alianza sujetas a disponibilidad y verificación.</span>'
+    + '</div></details>';
+  var desg = fmtMetaUsd(ing8)+' de tu inversión';
+  if(r.pensionEstatal>0) desg += ' + '+fmtMeta(r.pensionEstatal)+' de la pensión del Estado';
+  h += '<div class="card" style="border-color:'+VERDE+'"><b>Tu ingreso total, por mes</b><br>'
+    + '<span class="big" style="color:'+VERDE+'">'+fmtMeta(total)+'</span><br>'
+    + '<span class="lbl">'+desg+'</span><br>'
+    + '<span class="lbl">tu meta era '+fmtMeta(r.desired)+'/mes</span></div>';
+  if(total>=r.desired){
+    h += '<div class="card" style="border-color:'+VERDE+'">✅ <b>Tu meta es alcanzable.</b> Con lo que podés aportar y un poco de constancia, llegás a <b>'+fmtMeta(total)+'/mes</b>, por encima de lo que soñabas. No hace falta suerte. Hace falta un plan y sostenerlo. En eso te acompañamos.</div>';
+  } else {
+    h += '<div class="card" style="border-color:'+AMBAR+'">📍 <b>Vas por buen camino:</b> hoy tu proyección llega a '+fmtMeta(total)+'/mes y tu meta era '+fmtMeta(r.desired)+'. Para cerrar la diferencia hay tres palancas: aportar un poco más, mover un año el retiro o ajustar la meta. <b>Eso lo resolvemos juntos en tu sesión de diagnóstico.</b> No tenés que hacerlo solo.</div>';
+  }
+  h += '<div class="card">🌳 <b>Y acá está la mejor parte: el legado.</b> Como vivís del rendimiento, lo que construiste (<b>≈ '+fmtMetaUsd(r.vfMin)+'</b>) <b>queda intacto</b>. Un día pasa a tus hijos, o a quien vos querás. Así es como muchas familias en <b>EE.UU.</b> construyen patrimonio: dejan que las inversiones crezcan, año tras año, hasta volverse la herencia de la siguiente generación. Nosotros te ayudamos a hacer lo mismo desde acá.</div>';
+  h += '<div class="cap">No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. Tasas aproximadas e históricas, sujetas a condiciones de mercado y verificación. Estimación educativa; no es asesoría financiera individualizada ni una certificación de la CCSS.</div>';
+  h += '<div class="divider"></div>'
+    + '<div class="hero">📕 Un último paso</div>'
+    + '<div class="sub">Ya tenés tus números. Contanos qué querés hacer con ellos y, según tu caso, te decimos exactamente cómo seguir.</div>'
+    + '<div class="btns"><button class="btn btn-ghost btn-back" data-go="41">← Acto 2</button>'
+    +   '<button class="btn btn-primary" data-go="5">Continuar →</button></div>';
+  return h;
+}
+
+// ---- PASO 5 · Captura ----
+function viewCaptura(){
+  var r = Calc.calcular(d);
+  var califica = Calc.califica(r);
+  var intencion = d.intencion || null;
+  var h = ''
+    + '<div class="step">Último paso</div>'
+    + '<div class="hero">Ya viste tus números 🎯</div>'
+    + '<div class="sub">Última pregunta. Y es la más importante.</div>'
+    + '<div style="font-weight:700;font-size:16px;margin:6px 0 4px">¿Qué te gustaría hacer ahora?</div>'
+    + '<div class="opciones" id="opciones">'
+    +   opcionBtn("Acompañamiento", "🤝 Quiero que me acompañen porque estoy ocupado: ustedes me guían para abrir mi cuenta y se encargan de la estrategia y el manejo.", intencion)
+    +   opcionBtn("Aprender", "📚 Quiero aprender primero. Todavía no estoy listo para mover plata.", intencion)
+    +   opcionBtn("Solo números", "👀 Solo quería ver mis números, por ahora nada más.", intencion)
+    + '</div>'
+    + '<div id="rama"></div>'
+    + '<div class="btns" style="margin-top:20px"><button class="btn btn-ghost btn-back" data-go="42">← Volver al resultado</button></div>';
+  if(califica) h += '<div class="cap">Tus datos se usan solo para enviarte tu Reporte Completo. '+MARCA+' · herramienta educativa.</div>';
+  return h;
+}
+function opcionBtn(clave, texto, sel){
+  return '<button class="opcion '+(sel===clave?"on":"")+'" data-int="'+clave+'">'+texto+'</button>';
+}
+function renderRama(){
+  var r = Calc.calcular(d);
+  var califica = Calc.califica(r);
+  var intencion = d.intencion || null;
+  var cont = document.getElementById("rama");
+  if(!intencion){ cont.innerHTML=""; return; }
+  if(califica){
+    cont.innerHTML = ''
+      + '<div class="card">📕 <b>Tu Reporte Completo de Retiro</b>. Con tus números, incluye:<br><br>'
+      + '✅ <b>Tus números explicados de manera sencilla</b><span class="lbl">: tu brecha, tus escenarios y tu perfil de estrategia</span><br>'
+      + '✅ <b>El ABC de invertir afuera</b><span class="lbl">: qué es un bróker, qué es un custodio, y qué protege el SIPC (y qué no)</span><br>'
+      + '✅ <b>La transferencia internacional sin misterio</b><span class="lbl">: cómo se hace, cuánto cuesta, y las buenas prácticas para pagar lo menos posible</span><br>'
+      + '✅ <b>Los montos que funcionan</b><span class="lbl">: con cuánto conviene empezar y cuánto aportar por mes según tu capacidad</span><br>'
+      + '✅ <b>Cómo funciona nuestro servicio</b><span class="lbl">: y la alianza con San José Capital (~8% de ingreso pasivo con garantía real)</span><br>'
+      + '✅ <b>Tus primeros pasos</b><span class="lbl">: según tu situación específica</span><br><br>'
+      + 'Lo generamos con tus números y <b>te llega a tu correo</b> apenas completás tus datos.</div>'
+      + '<div class="row"><div class="campo"><label>Tu nombre</label><input id="f-nombre" autocomplete="given-name" value="'+esc(d._nombre||"")+'"></div>'
+      +   '<div class="campo"><label>Tu apellido</label><input id="f-apellido" autocomplete="family-name" value="'+esc(d._apellido||"")+'"></div></div>'
+      + '<div class="campo"><label>Tu WhatsApp</label><input id="f-whats" inputmode="tel" autocomplete="tel" placeholder="8888-8888" value="'+esc(d._whats||"")+'"></div>'
+      + '<div class="campo"><label>Tu mejor correo</label><input id="f-correo" inputmode="email" autocomplete="email" placeholder="vos@correo.com" value="'+esc(d._correo||"")+'"></div>'
+      + '<div id="cta-reporte"></div>'
+      + '<div id="cta-intencion"></div>';
+    wireRamaA();
+  } else {
+    var card = "";
+    if(intencion==="Acompañamiento") card='<div class="card">Nos encanta esa decisión. Y queremos que llegués bien preparado. Para que el servicio tenga sentido para vos (por los costos de una cuenta internacional), lo ideal es llegar con una base de capital. <b>El camino más rápido para construirla:</b> ordenar tus finanzas y ahorrar con sistema. En nuestro Instagram publicamos educación práctica y gratuita para lograr exactamente eso. Cuando tengás la base, volvé. La llamada te va a estar esperando 🤝</div>';
+    else if(intencion==="Aprender") card='<div class="card">Gran respuesta: aprender primero es invertir en vos. En nuestro <b>Instagram</b> publicamos educación práctica todas las semanas sobre finanzas personales, inversión y retiro, explicado de manera sencilla. Empezá por ahí. Es gratis.</div>';
+    else card='<div class="card">Perfecto: tus números ya son tuyos. Si querés seguir aprendiendo a tu ritmo, en nuestro Instagram publicamos contenido gratuito todas las semanas. Y si algún día el número te empieza a dar vueltas en la cabeza, ya sabés dónde encontrarnos 🤝</div>';
+    cont.innerHTML = card + '<a class="btn btn-primary" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener" style="margin-top:12px">📱 Seguirnos en Instagram → @joseinvestor.cr</a>';
+    // Registrar el lead (sin contacto) una sola vez por sesión.
+    var sigB = "B|"+intencion;
+    if(ss.leadSig !== sigB){ enviarLead(payloadLead(r, intencion, califica, "no_califica")); ss.leadSig = sigB; }
+  }
+}
+function wireRamaA(){
+  var r = Calc.calcular(d);
+  var els = { nombre:byId("f-nombre"), apellido:byId("f-apellido"), whats:byId("f-whats"), correo:byId("f-correo") };
+  function persist(){ d._nombre=els.nombre.value; d._apellido=els.apellido.value; d._whats=els.whats.value; d._correo=els.correo.value; guardar(); }
+  function refresh(){
+    persist();
+    var nombre=els.nombre.value.trim(), apellido=els.apellido.value.trim(), whats=els.whats.value.trim(), correo=els.correo.value.trim();
+    var intCorto = d.intencion;
+    var datosOk = !!(nombre && apellido && whats && correo && correo.indexOf("@")>-1);
+    d.tiempo_calculadora = tiempoTranscurrido();
+    var ctaRep = byId("cta-reporte"), ctaInt = byId("cta-intencion");
+    if(datosOk){
+      // Captura al Sheet + reporte, una sola vez por combinación de datos.
+      var sig = "A|"+nombre+"|"+apellido+"|"+whats+"|"+correo+"|"+intCorto;
+      if(ss.leadSig !== sig){
+        var rep = reporteSlides(r, nombre, apellido, correo, whats, intCorto);
+        enviarLead(payloadLead(r, intCorto, true, "reporte_solicitado", {nombre:nombre, apellido:apellido, whats:whats, correo:correo, reporte:rep}));
+        ss.leadSig = sig;
+      }
+      var msg = "Hola, soy "+nombre+" "+apellido+". Quisiera que me mandaran por aquí mi Reporte Completo de Retiro.";
+      var waUrl = "https://wa.me/"+WHATSAPP_NUMERO+"?text="+encodeURIComponent(msg);
+      ctaRep.innerHTML = '<a class="btn btn-primary" href="'+waUrl+'" target="_blank" rel="noopener">📕 Enviame mi Reporte Completo →</a>'
+        + '<div class="cap">Tu reporte va en camino a tu correo. Y si querés, pedilo también por WhatsApp con el botón de arriba.</div>';
+      // CTA condicional por intención
+      var calUrl = calendlyPrefill(nombre, apellido, correo, whats, r, intCorto);
+      if(intCorto==="Acompañamiento"){
+        ctaInt.innerHTML = '<div class="card" style="border-color:'+VERDE+'">Perfecto: <b>eso es exactamente lo que hacemos</b>. Te guiamos paso a paso en la apertura y el fondeo de tu cuenta, y la estrategia y el manejo corren por nuestra cuenta. Agendá tu <b>sesión de diagnóstico</b> (30 min, sin costo ni compromiso). Revisamos tus números juntos y te decimos con honestidad <b>si tu caso es para nosotros o no</b>.</div>'
+          + '<a class="btn btn-primary" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar mi sesión de diagnóstico</a>';
+      } else {
+        ctaInt.innerHTML = '<div class="card">Tu <b>Reporte Completo</b> te llega igual, <b>sin compromiso</b>. Y si en algún momento querés que veamos tus números juntos, la puerta está abierta:</div>'
+          + '<a class="btn btn-ghost" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar una sesión de diagnóstico</a>';
+      }
+    } else {
+      ctaRep.innerHTML = '<button class="btn btn-primary" id="b5-diag">📕 Enviame mi Reporte Completo →</button>'
+        + '<div id="warn5" class="warn" style="display:none"></div>';
+      byId("b5-diag").addEventListener("click", function(){
+        var w=byId("warn5"); w.style.display="block";
+        w.textContent = "Completá tus datos y te enviamos tu Reporte Completo. Te toma 10 segundos.";
+      });
+      ctaInt.innerHTML = "";
+    }
+  }
+  ["nombre","apellido","whats","correo"].forEach(function(k){ els[k].addEventListener("input", refresh); });
+  refresh();
+}
+
+// ==============================================================================
+// WIRING de cada paso (listeners)
+// ==============================================================================
+function byId(id){ return document.getElementById(id); }
+function wireStep(){
+  // navegación por data-go
+  Array.prototype.forEach.call(document.querySelectorAll("[data-go]"), function(el){
+    el.addEventListener("click", function(){ irA(parseInt(el.getAttribute("data-go"),10)); });
+  });
+  var p = ss.paso;
+  if(p===1) wireMeta();
+  else if(p===2) wireEstado();
+  else if(p===3) wireCapacidad();
+  else if(p===41) drawChart();
+  else if(p===5) wireCaptura();
+}
+
+function wireMeta(){
+  var goal=byId("f-goal"), tcEl=byId("f-tc");
+  bindMoney(goal); if(tcEl) bindMoney(tcEl);
+  function segActual(){ var b=document.querySelector("#seg-moneda button.on"); return b?b.getAttribute("data-m"):"₡"; }
+  function updEq(){
+    var tcv = parseDinero(tcEl?tcEl.value:"")||TC_DEFAULT;
+    var m = parseDinero(goal.value);
+    var esUsd = segActual()==="$";
+    var ic = esUsd ? m*tcv : m;
+    byId("goal-eq").innerHTML = '= ₡'+fmt(ic)+' <span style="color:'+TENUE+'">·</span> $'+fmt(ic/Math.max(tcv,1))+' <span class="lbl">por mes</span>';
+  }
+  goal.addEventListener("input", updEq); if(tcEl) tcEl.addEventListener("input", updEq);
+  // toggle moneda: reconvierte el valor mostrado
+  Array.prototype.forEach.call(document.querySelectorAll("#seg-moneda button"), function(b){
+    b.addEventListener("click", function(){
+      var nuevo=b.getAttribute("data-m"), actual=segActual();
+      if(nuevo===actual) return;
+      var tcv=parseDinero(tcEl?tcEl.value:"")||TC_DEFAULT;
+      var prev=parseDinero(goal.value);
+      if(prev>0){ goal.value = (nuevo==="$" ? Math.round(prev/Math.max(tcv,1)) : Math.round(prev*tcv)).toLocaleString("en-US"); }
+      document.querySelectorAll("#seg-moneda button").forEach(function(x){ x.classList.remove("on"); });
+      b.classList.add("on");
+      // actualizar label/placeholder de la meta
+      var lbl = byId("f-goal").previousElementSibling; // no aplica; re-render simple:
+      updEq();
+    });
+  });
+  updEq();
+  byId("b1-next").addEventListener("click", function(){
+    var edad=parseInt(parseDinero(byId("f-edad").value),10)||0;
+    var edadRet=parseInt(parseDinero(byId("f-edadret").value),10)||0;
+    var esUsd=segActual()==="$";
+    var tcv=parseDinero(tcEl?tcEl.value:"")||TC_DEFAULT;
+    var m=parseDinero(goal.value);
+    if(edad<18) edad=18; if(edad>75) edad=75;
+    if(edadRet<=edad) edadRet=edad+1; if(edadRet>80) edadRet=80;
+    if(m<=0){ byId("warn-meta").style.display="block"; return; }
+    d.edad_hoy=edad; d.edad_ret=edadRet; d.ingreso_deseado = esUsd ? m*tcv : m;
+    d.moneda = esUsd ? "$" : "₡"; d.tc = tcv;
+    irA(2);
+  });
+}
+
+function wireEstado(){
+  var chk=byId("f-sinestado");
+  function rewire(){
+    var sal=byId("f-salario"), cuo=byId("f-cuotas"), sr=byId("f-saldorop");
+    if(sal){ bindMoney(sal); }
+    if(sr){ bindMoney(sr); }
+    if(cuo){
+      cuo.addEventListener("input", function(){ cuo.value=cuo.value.replace(/[^0-9]/g,"").slice(0,3); updCuotas(); });
+      updCuotas();
+    }
+    function updCuotas(){
+      var eq=byId("cuotas-eq"); if(!eq||!cuo) return;
+      var c=parseInt(cuo.value,10)||0;
+      eq.innerHTML = '≈ '+(c/12).toFixed(1)+' años cotizados · el mínimo para la pensión completa son 300 cuotas (25 años)';
+    }
+  }
+  rewire();
+  chk.addEventListener("change", function(){
+    d.sin_estado = chk.checked;
+    // re-render del bloque
+    byId("app").innerHTML = viewEstado(); pintarProgreso(); wireStep();
+  });
+  byId("b2-next").addEventListener("click", function(){
+    var sinEstado = byId("f-sinestado").checked;
+    if(sinEstado){ d.sin_estado=true; d.salario=0; d.cuotas_cot=0; d.saldo_rop=0; irA(4); return; }
+    var salario=parseDinero(byId("f-salario").value);
+    var cuotas=parseInt(byId("f-cuotas").value,10)||0;
+    var saldo=parseDinero(byId("f-saldorop").value);
+    if(salario<=0){ byId("warn-estado").style.display="block"; return; }
+    d.sin_estado=false; d.salario=salario; d.cuotas_cot=cuotas; d.saldo_rop=saldo;
+    irA(4);
+  });
+}
+
+function wireCapacidad(){
+  var cap=byId("f-cap"), ap=byId("f-ap");
+  bindMoney(cap); bindMoney(ap);
+  function updEq(){
+    byId("cap-eq").innerHTML = '≈ ₡'+fmt(parseDinero(cap.value)*tc());
+    byId("ap-eq").innerHTML = '≈ ₡'+fmt(parseDinero(ap.value)*tc());
+  }
+  cap.addEventListener("input", updEq); ap.addEventListener("input", updEq); updEq();
+  byId("b3-next").addEventListener("click", function(){
+    var capital=parseDinero(cap.value), aporte=parseDinero(ap.value);
+    if(aporte<=0){ byId("warn-cap").style.display="block"; return; }
+    d.capital=capital; d.aporte=aporte;   // capital 0 es válido
+    irA(41);
+  });
+}
+
+function wireCaptura(){
+  Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(b){
+    b.addEventListener("click", function(){
+      d.intencion = b.getAttribute("data-int"); guardar();
+      document.querySelectorAll("#opciones .opcion").forEach(function(x){ x.classList.remove("on"); });
+      b.classList.add("on");
+      renderRama();
+    });
+  });
+  if(d.intencion) renderRama();
+}
+
+// ── Chart.js (Acto 2) — cargado desde cdnjs solo cuando se necesita ───
+function drawChart(){
+  var r = Calc.calcular(d);
+  function build(){
+    var ctx = byId("chart-crec"); if(!ctx || typeof Chart==="undefined") return;
+    var xs = r.serieMarket.map(function(p){ return p[0]; });
+    var ap = r.serieAportado.map(function(p){ return Math.round(p[1]); });
+    var ym = r.serieMarket.map(function(p){ return Math.round(p[1]); });
+    var y15 = r.serieA15.map(function(p){ return Math.round(p[1]); });
+    if(chartInstance){ chartInstance.destroy(); }
+    chartInstance = new Chart(ctx, {
+      type:"line",
+      data:{ labels:xs, datasets:[
+        { label:"Dinero aportado", data:ap, borderColor:TENUE, borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.15 },
+        { label:"Portafolio de Crecimiento", data:y15, borderColor:VERDE, backgroundColor:"rgba(18,184,134,0.20)", borderWidth:3.5, pointRadius:0, fill:true, tension:.15 },
+        { label:"Portafolio Básico", data:ym, borderColor:AZUL, borderWidth:3, pointRadius:0, tension:.15 },
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        // Forzar render a >=2x: en pantallas con escalado fraccional (Windows 125/150%) Chart.js
+        // dibujaría a DPR 1.25/1.5 y se ve borroso. Redondeamos hacia arriba, mínimo 2x → siempre nítido.
+        devicePixelRatio: Math.max(2, Math.ceil(window.devicePixelRatio || 1)),
+        interaction:{mode:"index",intersect:false},
+        plugins:{ legend:{labels:{color:"#E2E2E2",boxWidth:14,font:{size:11}}},
+          tooltip:{callbacks:{ title:function(it){return "Edad "+it[0].label;}, label:function(it){ return it.dataset.label+": $"+Number(it.raw).toLocaleString("en-US"); }}}},
+        scales:{ x:{title:{display:true,text:"Edad",color:TENUE}, ticks:{color:TENUE}, grid:{color:"rgba(140,150,170,0.18)"}},
+          y:{ ticks:{color:TENUE, callback:function(v){ return "$"+(v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?(v/1e3).toFixed(0)+"k":v); }}, grid:{color:"rgba(140,150,170,0.22)"}}}}
+    });
+  }
+  if(typeof Chart==="undefined"){
+    var s=document.createElement("script");
+    s.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+    s.onload=build; s.onerror=function(){ var w=byId("chart-wrap"); if(w) w.innerHTML='<div class="note">📈 (gráfico no disponible sin conexión)</div>'; };
+    document.head.appendChild(s);
+  } else { build(); }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+restaurar();
+render();
+</script>
+</body>
+</html>
