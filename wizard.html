@@ -671,7 +671,7 @@ function renderRama(){
       + '<div class="card">📕 <b>Tu Reporte Completo de Retiro</b>. Con tus números, incluye:<br><br>'
       + '✅ <b>Tus números explicados de manera sencilla</b><span class="lbl">: tu brecha, tus escenarios y tu perfil de estrategia</span><br>'
       + '✅ <b>El ABC de invertir afuera</b><span class="lbl">: qué es un bróker, qué es un custodio, y qué protege el SIPC (y qué no)</span><br>'
-      + '✅ <b>La transferencia internacional sin misterio</b><span class="lbl">: cómo se hace, cuánto cuesta, y las buenas prácticas para pagar lo menos posible</span><br>'
+      + '✅ <b>La transferencia internacional</b><span class="lbl">: cómo se hace, cuánto cuesta, y las buenas prácticas para pagar lo menos posible</span><br>'
       + '✅ <b>Los montos que funcionan</b><span class="lbl">: con cuánto conviene empezar y cuánto aportar por mes según tu capacidad</span><br>'
       + '✅ <b>Cómo funciona nuestro servicio</b><span class="lbl">: y la alianza con San José Capital (~8% de ingreso pasivo con garantía real)</span><br>'
       + '✅ <b>Tus primeros pasos</b><span class="lbl">: según tu situación específica</span><br><br>'
@@ -695,44 +695,65 @@ function renderRama(){
   }
 }
 function wireRamaA(){
-  var r = Calc.calcular(d);
   var els = { nombre:byId("f-nombre"), apellido:byId("f-apellido"), whats:byId("f-whats"), correo:byId("f-correo") };
   function persist(){ d._nombre=els.nombre.value; d._apellido=els.apellido.value; d._whats=els.whats.value; d._correo=els.correo.value; guardar(); }
-  function refresh(){
-    persist();
-    var nombre=els.nombre.value.trim(), apellido=els.apellido.value.trim(), whats=els.whats.value.trim(), correo=els.correo.value.trim();
+  function datos(){ return { nombre:els.nombre.value.trim(), apellido:els.apellido.value.trim(), whats:els.whats.value.trim(), correo:els.correo.value.trim() }; }
+  function datosOk(v){ return !!(v.nombre && v.apellido && v.whats && v.correo && v.correo.indexOf("@")>-1); }
+
+  // Envía el lead al Sheet + dispara el reporte. Se llama SOLO desde un click deliberado (botón del
+  // reporte o botón de agendar), NUNCA mientras se escribe. Dedupe por firma → no duplica en reintentos.
+  function enviarReporte(){
+    var v = datos();
+    if(!datosOk(v)){
+      var w=byId("warn5"); if(w){ w.style.display="block"; w.textContent="Completá tus 4 datos con un correo válido y te enviamos tu Reporte Completo."; }
+      return null;
+    }
+    var r = Calc.calcular(d);
     var intCorto = d.intencion;
-    var datosOk = !!(nombre && apellido && whats && correo && correo.indexOf("@")>-1);
     d.tiempo_calculadora = tiempoTranscurrido();
+    var sig = "A|"+v.nombre+"|"+v.apellido+"|"+v.whats+"|"+v.correo+"|"+intCorto;
+    if(ss.leadSig !== sig){
+      var rep = reporteSlides(r, v.nombre, v.apellido, v.correo, v.whats, intCorto);
+      enviarLead(payloadLead(r, intCorto, true, "reporte_solicitado", {nombre:v.nombre, apellido:v.apellido, whats:v.whats, correo:v.correo, reporte:rep}));
+      ss.leadSig = sig; guardar();
+    }
+    return v;
+  }
+
+  function refresh(){
+    persist();   // solo guarda lo tecleado en sessionStorage (para no reescribir si vuelve); NO envía nada
+    var r = Calc.calcular(d);
+    var v = datos();
+    var intCorto = d.intencion;
+    var ok = datosOk(v);
     var ctaRep = byId("cta-reporte"), ctaInt = byId("cta-intencion");
-    if(datosOk){
-      // Captura al Sheet + reporte, una sola vez por combinación de datos.
-      var sig = "A|"+nombre+"|"+apellido+"|"+whats+"|"+correo+"|"+intCorto;
-      if(ss.leadSig !== sig){
-        var rep = reporteSlides(r, nombre, apellido, correo, whats, intCorto);
-        enviarLead(payloadLead(r, intCorto, true, "reporte_solicitado", {nombre:nombre, apellido:apellido, whats:whats, correo:correo, reporte:rep}));
-        ss.leadSig = sig;
+
+    // Botón del reporte: SIEMPRE un <button> (no un enlace), así el envío ocurre en el click y recién
+    // ahí se abre WhatsApp. Mientras se escribe, nada se manda al Sheet.
+    ctaRep.innerHTML = '<button class="btn btn-primary" id="b5-rep">📕 Enviame mi Reporte Completo →</button>'
+      + '<div id="warn5" class="warn" style="display:none"></div>'
+      + (ok ? '<div class="cap">Al tocar el botón te lo enviamos al correo y se abre WhatsApp por si lo querés pedir también por ahí.</div>' : '');
+    byId("b5-rep").addEventListener("click", function(){
+      var ok2 = enviarReporte();
+      if(ok2){
+        var msg = "Hola, soy "+ok2.nombre+" "+ok2.apellido+". Quisiera que me mandaran por aquí mi Reporte Completo de Retiro.";
+        window.open("https://wa.me/"+WHATSAPP_NUMERO+"?text="+encodeURIComponent(msg), "_blank");
       }
-      var msg = "Hola, soy "+nombre+" "+apellido+". Quisiera que me mandaran por aquí mi Reporte Completo de Retiro.";
-      var waUrl = "https://wa.me/"+WHATSAPP_NUMERO+"?text="+encodeURIComponent(msg);
-      ctaRep.innerHTML = '<a class="btn btn-primary" href="'+waUrl+'" target="_blank" rel="noopener">📕 Enviame mi Reporte Completo →</a>'
-        + '<div class="cap">Tu reporte va en camino a tu correo. Y si querés, pedilo también por WhatsApp con el botón de arriba.</div>';
-      // CTA condicional por intención
-      var calUrl = calendlyPrefill(nombre, apellido, correo, whats, r, intCorto);
+    });
+
+    // CTA condicional por intención (Calendly). Solo aparece con datos válidos. Al hacer click también
+    // registra el lead (deduped) — así cualquier acción deliberada lo captura, pero escribir no.
+    if(ok){
+      var calUrl = calendlyPrefill(v.nombre, v.apellido, v.correo, v.whats, r, intCorto);
       if(intCorto==="Acompañamiento"){
         ctaInt.innerHTML = '<div class="card" style="border-color:'+VERDE+'">Perfecto: <b>eso es exactamente lo que hacemos</b>. Te guiamos paso a paso en la apertura y el fondeo de tu cuenta, y la estrategia y el manejo corren por nuestra cuenta. Agendá tu <b>sesión de diagnóstico</b> (30 min, sin costo ni compromiso). Revisamos tus números juntos y te decimos con honestidad <b>si tu caso es para nosotros o no</b>.</div>'
-          + '<a class="btn btn-primary" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar mi sesión de diagnóstico</a>';
+          + '<a class="btn btn-primary" id="b5-cal" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar mi sesión de diagnóstico</a>';
       } else {
         ctaInt.innerHTML = '<div class="card">Tu <b>Reporte Completo</b> te llega igual, <b>sin compromiso</b>. Y si en algún momento querés que veamos tus números juntos, la puerta está abierta:</div>'
-          + '<a class="btn btn-ghost" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar una sesión de diagnóstico</a>';
+          + '<a class="btn btn-ghost" id="b5-cal" href="'+calUrl+'" target="_blank" rel="noopener">📞 Agendar una sesión de diagnóstico</a>';
       }
+      var lk = byId("b5-cal"); if(lk){ lk.addEventListener("click", function(){ enviarReporte(); }); } // captura al agendar (deduped)
     } else {
-      ctaRep.innerHTML = '<button class="btn btn-primary" id="b5-diag">📕 Enviame mi Reporte Completo →</button>'
-        + '<div id="warn5" class="warn" style="display:none"></div>';
-      byId("b5-diag").addEventListener("click", function(){
-        var w=byId("warn5"); w.style.display="block";
-        w.textContent = "Completá tus datos y te enviamos tu Reporte Completo. Te toma 10 segundos.";
-      });
       ctaInt.innerHTML = "";
     }
   }
