@@ -119,8 +119,15 @@
   .pero-sub{text-align:center; color:var(--gris-sec); font-size:15px; margin-bottom:8px;}
   .resaltado{background:rgba(99,252,175,.10); border:1px solid var(--menta); border-radius:16px;
     padding:18px 18px; margin:14px 0;}
-  .lista-pasa{margin:14px 0;}
-  .lista-pasa li{list-style:none; margin:12px 0; font-size:16.5px; line-height:1.5;}
+  .hl{color:var(--menta); font-weight:700;}
+  /* La oferta del cierre: los números respiran en su propia línea */
+  .oferta-num{font-size:clamp(21px,5.8vw,27px); font-weight:700; text-align:center; line-height:1.35; margin:16px 0;}
+  .oferta-num .de{color:var(--gris-sec); font-weight:400;}
+  .oferta-num b{color:var(--menta);}
+  .oferta-cierre{margin-top:20px; font-size:20px; font-weight:700; text-align:center;}
+  /* Las 4 cosas que pasan: todas del mismo peso, todas importantes */
+  .pasa p{font-size:18px; line-height:1.5; font-weight:400;}
+  .pasa b{color:var(--menta); font-weight:700;}
   /* Paso de la escalera del Acto 3: el numero viejo tachado y el nuevo destacado */
   .paso{margin-top:14px; font-size:17px; font-weight:600; color:var(--crema); line-height:1.5;}
   .paso s{color:var(--gris-sec); font-weight:400;}
@@ -223,9 +230,9 @@
     <div class="puente">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>.<br>¿Y cómo llegamos ahí?</div>
 
     <div class="card" id="caja-pregunta">
-      <p>Si querés, antes le restamos lo que sí te va a dar la Caja y tu meta baja un poco. Toma 20 segundos y es opcional.</p>
-      <button class="btn" id="b-caja-no">Ajá ajá, ok, sigamos →</button>
-      <button class="btn btn-ghost" id="b-caja-si" style="margin-top:10px">Hmm, quiero ver si la Caja mejora mis números</button>
+      <button class="btn" id="b-caja-no">Ok, sigamos →</button>
+      <p style="margin-top:20px">Si querés, antes de seguir le restamos lo que sí te va a dar la Caja y así tu meta final baja un poco. (asumiendo que no quiebra) 😅</p>
+      <button class="btn btn-ghost" id="b-caja-si" style="margin-top:12px">Hmm, quiero ver si la Caja mejora mis números</button>
     </div>
 
     <div class="card" id="caja-form" style="display:none">
@@ -305,7 +312,7 @@
   <!-- ================= ACTO 2B ================= -->
   <section class="acto" id="acto2b">
     <div class="card" id="acto2b-form">
-      <p>Listo. Ahora sí: ¿cuánto habría que ir poniendo cada mes para llegar a esa meta? Solo faltan dos datos.</p>
+      <p>Ahora sí: ¿cuánto habría que ir poniendo cada mes para llegar a esa meta? Para eso poné aquí abajo:</p>
       <div class="campo" id="campo-edad2" style="margin-top:18px">
         <label for="edad2">Tu edad</label>
         <input id="edad2" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
@@ -345,25 +352,26 @@
     </div>
 
     <div class="titulo">Pasan muchas cosas:</div>
-    <ul class="lista-pasa">
-      <li>🚀 Tu cuota mensual al 15% pasa a tener que ser <b id="r-aporte15">$0</b>.</li>
-      <li>🌴 ¡Tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</li>
-    </ul>
 
-    <div class="resaltado">
-      <p>O sea que tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
-      <p style="margin-top:12px">O tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
+    <div class="resaltado pasa">
+      <p>🚀 Tu cuota mensual al 15% pasa a tener que ser <b id="r-aporte15">$0</b>.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>🌴 ¡Y si a eso le sumás retirarte con el 8%, tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>🎯 O sea que con <b>ambas cosas</b>, más crecimiento y mejor tasa de retiro, tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>⏱️ O, ¡ajá!, tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
     </div>
 
     <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
 
     <div class="titulo">Suena todo muy bonito, ¡¡pero tal vez demasiado!!</div>
     <div class="card">
-      <p><b>¿Esto no será humo?</b></p>
-      <p style="margin-top:10px">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y</p>
-    </div>
-    <div class="resaltado">
-      <p><b>nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></p>
+      <p style="font-size:19px; font-weight:700">¿Esto no será humo?</p>
+      <p style="margin-top:12px">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y <b class="hl">nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></p>
     </div>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8%?</summary>
@@ -374,8 +382,11 @@
   <!-- ================= CTA ================= -->
   <section class="acto" id="cta">
     <div class="card card-peri">
-      <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de <b id="r-oferta-de">$0</b> a <b id="r-oferta-a">$0</b>, y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de <b id="r-oferta-meta-de">$0</b> a <b id="r-oferta-meta-a">$0</b>.</p>
-      <p style="margin-top:12px; font-size:19px; font-weight:700">¿Te sonaría bien?</p>
+      <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de</p>
+      <p class="oferta-num"><span class="de" id="r-oferta-de">$0</span> a <b id="r-oferta-a">$0</b></p>
+      <p>y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de</p>
+      <p class="oferta-num"><span class="de" id="r-oferta-meta-de">$0</span> a <b id="r-oferta-meta-a">$0</b></p>
+      <p class="oferta-cierre">¿Te sonaría bien?</p>
     </div>
     <p class="confianza" style="margin:8px 0 0">Tocá la opción que va con vos:</p>
     <div class="opciones" id="opciones">
