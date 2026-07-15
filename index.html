@@ -84,7 +84,9 @@
 
   .res-linea{display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 2px; border-bottom:1px solid #262C34;}
   .res-linea .k{font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec);}
-  .res-linea .v{font-size:20px; font-weight:700; color:var(--crema); white-space:nowrap;}
+  .res-linea .v-wrap{text-align:right; flex:0 0 auto;}
+  .res-linea .v{font-size:20px; font-weight:700; color:var(--crema); white-space:nowrap; display:block;}
+  .res-linea .v-eq{display:block; font-size:12px; font-weight:500; color:var(--gris-sec); margin-top:2px; white-space:nowrap;}
   .techo{font-size:12px; color:var(--menta); margin:8px 2px 0; line-height:1.5; font-weight:400;}
 
   .banda{
@@ -104,6 +106,11 @@
   .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
 
   .titulo{font-size:22px; font-weight:700; line-height:1.25; margin-top:30px;}
+  /* Paso de la escalera del Acto 3: el numero viejo tachado y el nuevo destacado */
+  .paso{margin-top:14px; font-size:17px; font-weight:600; color:var(--crema); line-height:1.5;}
+  .paso s{color:var(--gris-sec); font-weight:400;}
+  .paso b{font-size:22px; color:var(--menta);}
+  .card-peri .paso b{color:var(--peri);}
   .cap{font-size:12px; color:var(--gris-sec); margin-top:14px; line-height:1.55; font-weight:400; display:block;}
   .confianza{font-size:12px; color:var(--gris-sec); margin:2px 0 14px; line-height:1.5;}
 
@@ -114,6 +121,8 @@
   details>summary::after{content:"▾"; float:right; color:var(--gris-sec);}
   details[open]>summary::after{content:"▴";}
   details .body{padding:0 16px 16px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
+  details .body a{color:var(--peri); font-weight:600;}
+  details .body img{max-width:100%; height:auto; border-radius:8px; margin:10px 0; display:block;}
 
   /* Opciones de autocalificación */
   .opciones{display:flex; flex-direction:column; gap:10px; margin-top:12px;}
@@ -187,12 +196,16 @@
 
     <details data-tg="t_por_que_4">
       <summary>🤔 ¿Por qué el 4%?</summary>
-      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que rinden alrededor de un 4% al año. Vivís de ese rendimiento y el capital queda intacto, trabajando. Por eso necesitás unas 25 veces tu gasto anual: es el tamaño de la máquina que te paga cada mes sin gastarse.</div>
+      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que rinden alrededor de un 4% al año. Vivís de ese rendimiento y el capital queda intacto, trabajando. Por eso necesitás unas 25 veces tu gasto anual: esa es la cantidad de plata que "te paga sin gastarse".</div>
     </details>
   </section>
 
   <!-- ================= ACTO 2A ================= -->
   <section class="acto" id="acto2a">
+    <div class="card card-menta" id="dato-techo">
+      <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario. No es para asustarte: es para que lo sepás con tiempo.</p>
+    </div>
+
     <div class="card" id="caja-pregunta">
       <p>¿Le metemos al cálculo lo que te daría la Caja? Capaz te sorprende.</p>
       <div class="btn-fila">
@@ -218,7 +231,7 @@
       </div>
       <label class="checkline">
         <input type="checkbox" id="f-rop">
-        <span>Sumale también mi ROP, la cuenta individual que te descuentan aparte.</span>
+        <span>Sumale también mi ROP</span>
       </label>
       <div class="campo" id="campo-rop" style="display:none">
         <label for="saldo-rop">Saldo de tu ROP, si lo sabés</label>
@@ -236,11 +249,19 @@
     </div>
 
     <div id="acto2a-res" style="display:none">
-      <div class="res-linea"><span class="k">La Caja te daría</span><span class="v" id="r-pension">$0</span></div>
+      <div class="res-linea">
+        <span class="k">La Caja te daría</span>
+        <span class="v-wrap"><span class="v" id="r-pension">$0</span><span class="v-eq" id="r-pension-eq"></span></span>
+      </div>
       <div class="desglose" id="r-desglose" style="display:none"></div>
-      <div class="techo" id="r-techo" style="display:none">Tocaste el techo del IVM: por más que ganés o cotizés, la pensión no sube de ahí.</div>
+      <div class="card card-menta" id="r-techo" style="display:none">
+        <p>🚧 <b>Y vos tocaste ese techo.</b> Tu pensión se quedó en el máximo de <b>₡1,765,859</b>. Por más que ganés o cotizés más, de ahí no sube. Todo lo que quieras arriba de eso, lo construís vos.</p>
+      </div>
       <div class="techo" id="r-antes65" style="display:none">Ojo: la Caja paga a partir de los 65. Si te retirás antes, esos años los cubre tu inversión.</div>
-      <div class="res-linea"><span class="k">Tu inversión debe cubrir</span><span class="v" id="r-cubrir">$0</span></div>
+      <div class="res-linea">
+        <span class="k">Tu inversión debe cubrir</span>
+        <span class="v-wrap"><span class="v" id="r-cubrir">$0</span><span class="v-eq" id="r-cubrir-eq"></span></span>
+      </div>
 
       <div class="banda">
         <div class="k">Tu nueva meta de capital:</div>
@@ -252,9 +273,17 @@
         <summary>🏛️ ¿Cómo calculamos tu pensión?</summary>
         <div class="body">Usamos la fórmula oficial del IVM (normativa 2026): un porcentaje de tu salario según tu nivel de ingreso (entre 43% y 52.5%), más un poquito extra por cada año cotizado sobre los 25. Asumimos que cotizás sin pausas desde los 25 años. Si sumás tu ROP, proyectamos tu cuenta individual con el 4.25% de tu salario y un rendimiento conservador, y la volvemos renta mensual. Es una estimación educativa, no una certificación de la CCSS.</div>
       </details>
-      <details data-tg="t_techo_ivm">
-        <summary>🚧 La pensión tiene techo (y casi nadie lo sabe)</summary>
-        <div class="body">Por más que ganés o cotizés, el IVM tiene un máximo: ₡1,765,859 al mes (2026). Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario. No es para asustarte: es para que lo sepás con tiempo.</div>
+      <details data-tg="t_cuotas_ccss">
+        <summary>🔎 ¿Querés ver tus cuotas reales? (Oficina Virtual de la CCSS)</summary>
+        <div class="body">
+          Acá asumimos que cotizás sin pausas desde los 25. Si querés el dato exacto, es gratis y toma 2 minutos:<br><br>
+          1. Entrá a la <b>Oficina Virtual de la CCSS</b> → <a href="https://aissfa.ccss.sa.cr/afiliacion/index.xhtml?faces-redirect=true?faces-redirect=true" target="_blank" rel="noopener">aissfa.ccss.sa.cr</a> e ingresá con tu <b>usuario</b> (si no tenés, lo creás ahí con tu cédula). Así se ve la pantalla de entrada:
+          <img src="assets/ccss_home.webp" width="300" alt="Oficina Virtual de la CCSS, pantalla de entrada" loading="lazy">
+          2. Ya adentro, andá al menú <b>Pensiones → Reportes → «Proyección de Pensión»</b>:
+          <img src="assets/ccss_proyeccion.webp" width="380" alt="CCSS, reporte de Proyección de Pensión" loading="lazy">
+          3. Ahí ves <b>cuántas cuotas (meses) has cotizado</b> y la proyección oficial de la CCSS.<br><br>
+          <i>Tip: 300 cuotas, o sea 25 años, es el mínimo para la pensión completa del IVM.</i>
+        </div>
       </details>
     </div>
   </section>
@@ -284,34 +313,44 @@
       <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
       <details data-tg="t_como_calculo_aporte">
         <summary>📈 ¿Cómo funciona este cálculo?</summary>
-        <div class="body">Es el interés compuesto trabajando al revés: en vez de preguntar cuánto tendrás, preguntamos cuánto hay que poner cada mes para llegar a tu meta a la edad que elegiste, con un crecimiento del 8% anual. Tus aportes crecen, y lo que ya ganaron también crece. Por eso empezar antes hace el aporte más pequeño.</div>
+        <div class="body">Ingeniería inversa: en vez de adivinar cuánto vas a tener, partimos de tu meta y trabajamos para atrás hasta ver qué hay que poner cada mes para llegar. De ahí sale el número. Y nuestro acompañamiento es justo eso: ir subiendo o bajando el riesgo a lo largo de los años, según tu contexto.</div>
       </details>
     </div>
   </section>
 
   <!-- ================= ACTO 3 ================= -->
   <section class="acto" id="acto3">
-    <div class="titulo">Pero ese número asume dos cosas conservadoras. Las dos se pueden mejorar:</div>
+    <div class="titulo">Ese número asume dos cosas:</div>
+    <div class="card">
+      <p>📊 Que tu plata <b>crece al 8%</b> al año, que a grandes rasgos es el histórico de la bolsa.</p>
+      <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el 4%</b> al año, que es lo que rinde un bono del Tesoro.</p>
+    </div>
+
+    <div class="titulo">Las dos se pueden mejorar:</div>
 
     <div class="card card-menta">
-      <p>🚀 <b>Crecer al 15%.</b> Asumimos que tu plata crece al 8%, que a grandes rasgos es el histórico de la bolsa. Nuestra especialidad es el crecimiento: apuntamos al <b>15%</b>, dependiendo de tu contexto. Portafolio de crecimiento: Nasdaq, compras agresivas en momentos de oportunidad, estrategias sistemáticas con 11 años de experiencia. Tu aporte bajaría a <b id="r-aporte15">$0</b>/mes.</p>
+      <p>🚀 <b>Crecer al 15%.</b> Nuestra especialidad es el crecimiento: apuntamos al <b>15%</b>, dependiendo de tu contexto. Portafolio de crecimiento: Nasdaq, compras agresivas en momentos de oportunidad, estrategias sistemáticas con 11 años de experiencia.</p>
+      <p class="paso">Tu aporte baja de <s id="r-base-1">$0</s> a <b id="r-aporte15">$0</b>/mes.</p>
     </div>
-    <details data-tg="t_humo_15">
-      <summary>🔍 ¿Y esto no será humo?</summary>
-      <div class="body">Buena pregunta. No es magia: es un portafolio concentrado en crecimiento (como el Nasdaq), compras agresivas en momentos de oportunidad, y reglas sistemáticas que venimos afinando desde hace 11 años. Es un objetivo, no una promesa. En la llamada te enseñamos la cocina por dentro.</div>
-    </details>
 
     <div class="card card-peri">
-      <p>🌴 <b>Retirarte al 8%.</b> Y además asumimos que en el retiro sacás el 4% al año, que es lo que rinde un bono del Tesoro. Si tu perfil lo permite, con nuestra alianza eso se puede hacer al <b>8%</b>, de manera conservadora y con respaldo en bienes raíces. <b>Tu meta se reduce a la mitad</b> y tu aporte baja a <b id="r-aporte-retiro8">$0</b>/mes.</p>
+      <p>🌴 <b>Y además, retirarte al 8%.</b> Si tu perfil lo permite, con nuestra alianza el retiro se hace al <b>8%</b> en vez del 4%, de manera conservadora y con respaldo en bienes raíces. <b>Tu meta se reduce a la mitad.</b></p>
+      <p class="paso">Tu aporte baja de <s id="r-de-15">$0</s> a <b id="r-aporte-combo">$0</b>/mes.</p>
     </div>
+
+    <div class="banda banda-verde">
+      <div class="sub" style="margin-top:0">Con las dos, tu aporte pasa de <b id="r-base-2">$0</b> a <b id="r-final">$0</b>/mes. Ayudarte a lograr eso es nuestro trabajo.</div>
+    </div>
+
+    <div class="titulo">¿Y cómo?</div>
+    <details data-tg="t_humo_15">
+      <summary>🚀 El 15%, ¿no será humo?</summary>
+      <div class="body">Buena pregunta. No es magia: es un portafolio concentrado en crecimiento (como el Nasdaq), compras agresivas en momentos de oportunidad, y reglas sistemáticas que venimos afinando desde hace 11 años. Es un objetivo, no una promesa. En la llamada te enseñamos la cocina por dentro.</div>
+    </details>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8%?</summary>
       <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Es parecido a invertir como el banco cuando hace un préstamo hipotecario: te presta el 80% del valor de la casa, y si no pagás se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
     </details>
-
-    <div class="banda banda-verde">
-      <div class="sub" style="margin-top:0">Con las dos juntas, el aporte queda en <b id="r-aporte-combo">$0</b>/mes. Ayudarte a lograr eso es nuestro trabajo.</div>
-    </div>
 
     <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
   </section>
@@ -625,6 +664,11 @@ function calcularCaja(){
   var cubrirEnMeta = S.metaCur==="$" ? cubrirCol/S.tc : cubrirCol;
   byId("r-pension").textContent = money(pensionEnMeta, S.metaCur) + "/mes";
   byId("r-cubrir").textContent = money(cubrirEnMeta, S.metaCur) + "/mes";
+  // Equivalencia en la otra moneda, en chiquito debajo de cada numero.
+  var pensionOtra = S.metaCur==="$" ? S.pensionCol : S.pensionCol/S.tc;
+  var cubrirOtra  = S.metaCur==="$" ? cubrirCol   : cubrirCol/S.tc;
+  byId("r-pension-eq").textContent = "≈ " + money(pensionOtra, otra(S.metaCur)) + "/mes";
+  byId("r-cubrir-eq").textContent  = "≈ " + money(cubrirOtra,  otra(S.metaCur)) + "/mes";
   byId("r-techo").style.display = S.tocoTecho ? "block" : "none";
   pintarCapital("r-capital2","r-capital2-eq");
   byId("acto2a-res").style.display = "block";
@@ -668,9 +712,14 @@ function calcularAporte(){
   function otroLado(usd){ return S.metaCur==="$" ? usd*S.tc : usd; }
   byId("r-aporte8").textContent = money(enMeta(a8), S.metaCur) + "/mes";
   byId("r-aporte8-eq").textContent = "≈ " + money(otroLado(a8), otra(S.metaCur)) + "/mes";
+  // Acto 3: escalera acumulativa. Paso 1: crecer al 15%. Paso 2: además, retirarse al 8%.
+  // Cada paso arranca donde terminó el anterior, así el número siempre baja.
+  byId("r-base-1").textContent = money(enMeta(a8), S.metaCur);
   byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur);
-  byId("r-aporte-retiro8").textContent = money(enMeta(aRet8), S.metaCur);
+  byId("r-de-15").textContent = money(enMeta(a15), S.metaCur);
   byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
+  byId("r-base-2").textContent = money(enMeta(a8), S.metaCur);
+  byId("r-final").textContent = money(enMeta(aCombo), S.metaCur);
 
   byId("acto2b-res").style.display = "block";
   S.acto = Math.max(S.acto, 4);
