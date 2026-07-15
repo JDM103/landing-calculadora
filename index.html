@@ -98,6 +98,7 @@
   .banda .num{font-size:clamp(34px,9.5vw,50px); font-weight:700; line-height:1.05; color:#fff; margin-top:8px; word-break:break-word;}
   .banda .num-eq{font-size:16px; font-weight:500; color:rgba(254,249,243,.85); margin-top:4px;}
   .banda .sub{font-size:15px; color:rgba(254,249,243,.9); margin-top:12px; font-weight:400;}
+  .banda .k s{opacity:.7;}
   .banda-verde{background:var(--verde);}
 
   .destaque{margin-top:18px;}
@@ -203,7 +204,7 @@
   <!-- ================= ACTO 2A ================= -->
   <section class="acto" id="acto2a">
     <div class="card card-menta" id="dato-techo">
-      <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario. No es para asustarte: es para que lo sepás con tiempo.</p>
+      <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
     </div>
 
     <div class="card" id="caja-pregunta">
@@ -313,7 +314,7 @@
       <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
       <details data-tg="t_como_calculo_aporte">
         <summary>📈 ¿Cómo funciona este cálculo?</summary>
-        <div class="body">Ingeniería inversa: en vez de adivinar cuánto vas a tener, partimos de tu meta y trabajamos para atrás hasta ver qué hay que poner cada mes para llegar. De ahí sale el número. Y nuestro acompañamiento es justo eso: ir subiendo o bajando el riesgo a lo largo de los años, según tu contexto.</div>
+        <div class="body">Ingeniería inversa: en vez de adivinar cuánto vas a tener, partimos de tu meta y trabajamos para atrás hasta ver qué hay que poner cada mes para llegar. De ahí sale el número.</div>
       </details>
     </div>
   </section>
@@ -339,13 +340,16 @@
     </div>
 
     <div class="banda banda-verde">
-      <div class="sub" style="margin-top:0">Con las dos, tu aporte pasa de <b id="r-base-2">$0</b> a <b id="r-final">$0</b>/mes. Ayudarte a lograr eso es nuestro trabajo.</div>
+      <div class="k">Con las dos, tu aporte pasa de <s id="r-base-2">$0</s> a:</div>
+      <div class="num" id="r-final">$0</div>
+      <div class="num-eq" id="r-final-eq"></div>
+      <div class="sub">Ayudarte a lograr eso es nuestro trabajo.</div>
     </div>
 
     <div class="titulo">¿Y cómo?</div>
     <details data-tg="t_humo_15">
       <summary>🔍 ¿Y esto no será humo?</summary>
-      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</div>
+      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</div>
     </details>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8%?</summary>
@@ -719,7 +723,8 @@ function calcularAporte(){
   byId("r-de-15").textContent = money(enMeta(a15), S.metaCur);
   byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
   byId("r-base-2").textContent = money(enMeta(a8), S.metaCur);
-  byId("r-final").textContent = money(enMeta(aCombo), S.metaCur);
+  byId("r-final").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
+  byId("r-final-eq").textContent = "≈ " + money(otroLado(aCombo), otra(S.metaCur)) + "/mes";
 
   byId("acto2b-res").style.display = "block";
   S.acto = Math.max(S.acto, 4);
