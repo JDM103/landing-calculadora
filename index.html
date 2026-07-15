@@ -105,8 +105,22 @@
   .destaque .k{font-size:15px; color:var(--gris); font-weight:400; line-height:1.5;}
   .destaque .num{font-size:clamp(34px,9.5vw,48px); font-weight:700; line-height:1.06; color:var(--crema); margin-top:6px; word-break:break-word;}
   .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
+  .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:14px; font-weight:400;}
+  .frase-aporte b{color:var(--menta); font-weight:700;}
 
   .titulo{font-size:22px; font-weight:700; line-height:1.25; margin-top:30px;}
+  /* Puente: la bisagra del relato ("¿y cómo llegamos ahí?"). Va aireado y centrado. */
+  .puente{font-size:clamp(24px,6.6vw,32px); font-weight:700; line-height:1.3; text-align:center;
+    letter-spacing:-.01em; margin:54px 0 34px;}
+  .puente span{color:var(--menta);}
+  /* El quiebre de mentalidad antes de las mejorías */
+  .pero{font-size:clamp(56px,17vw,84px); font-weight:700; text-align:center; color:var(--menta);
+    line-height:1; letter-spacing:.02em; margin:56px 0 10px;}
+  .pero-sub{text-align:center; color:var(--gris-sec); font-size:15px; margin-bottom:8px;}
+  .resaltado{background:rgba(99,252,175,.10); border:1px solid var(--menta); border-radius:16px;
+    padding:18px 18px; margin:14px 0;}
+  .lista-pasa{margin:14px 0;}
+  .lista-pasa li{list-style:none; margin:12px 0; font-size:16.5px; line-height:1.5;}
   /* Paso de la escalera del Acto 3: el numero viejo tachado y el nuevo destacado */
   .paso{margin-top:14px; font-size:17px; font-weight:600; color:var(--crema); line-height:1.5;}
   .paso s{color:var(--gris-sec); font-weight:400;}
@@ -160,7 +174,6 @@
   <!-- ================= ACTO 1 ================= -->
   <section class="hero">
     <h1>Saquemos un tema de debajo de la alfombra: tu <em>retiro</em>.</h1>
-    <p>Es una sola pregunta y toma 20 segundos. No hay que registrarse en nada.</p>
   </section>
 
   <div class="card">
@@ -175,6 +188,10 @@
     </div>
     <button class="btn" id="b-acto1">Ver cuánto necesito →</button>
     <div class="warn" id="w-meta" style="display:none">Escribí tu meta mensual para continuar.</div>
+  </div>
+
+  <div class="card card-menta" id="dato-techo">
+    <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
   </div>
 
   <section class="acto" id="acto1-res">
@@ -197,28 +214,18 @@
 
     <details data-tg="t_por_que_4">
       <summary>🤔 ¿Por qué el 4%?</summary>
-      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que rinden alrededor de un 4% al año. Vivís de ese rendimiento y el capital queda intacto, trabajando. Por eso necesitás unas 25 veces tu gasto anual: esa es la cantidad de plata que "te paga sin gastarse".</div>
+      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que te dan alrededor de un 4% al año. Vivís de los intereses y el capital queda intacto. Luego ese capital se puede usar para incrementar tu monto mensual de retiro o para heredarlo.</div>
     </details>
   </section>
 
   <!-- ================= ACTO 2A ================= -->
   <section class="acto" id="acto2a">
-    <div class="titulo">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>. ¿Y cómo llegamos ahí?</div>
-    <div class="card">
-      <p>Nadie junta esa plata de un solo, ni guardándola debajo del colchón. Se arma de una forma bastante aburrida: ponés un poco todos los meses y esa plata va creciendo sola mientras vos hacés tu vida. Con los años, lo que creció termina pesando más que lo que pusiste.</p>
-      <p style="margin-top:12px">Ya te decimos cuánto sería ese "poco todos los meses" en tu caso.</p>
-    </div>
-
-    <div class="card card-menta" id="dato-techo">
-      <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
-    </div>
+    <div class="puente">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>.<br>¿Y cómo llegamos ahí?</div>
 
     <div class="card" id="caja-pregunta">
-      <p>Por eso lo tuyo pesa tanto. Igual, si querés, le restamos lo que sí te va a dar la Caja y tu meta baja un poco. Toma 20 segundos y es opcional.</p>
-      <div class="btn-fila">
-        <button class="btn btn-ghost" id="b-caja-si">Sí, restemos</button>
-        <button class="btn btn-ghost" id="b-caja-no">Saltar este paso</button>
-      </div>
+      <p>Si querés, antes le restamos lo que sí te va a dar la Caja y tu meta baja un poco. Toma 20 segundos y es opcional.</p>
+      <button class="btn" id="b-caja-no">Ajá ajá, ok, sigamos →</button>
+      <button class="btn btn-ghost" id="b-caja-si" style="margin-top:10px">Hmm, quiero ver si la Caja mejora mis números</button>
     </div>
 
     <div class="card" id="caja-form" style="display:none">
@@ -316,63 +323,65 @@
         <div class="k">Aportando desde hoy, con un crecimiento del 8% anual:</div>
         <div class="num" id="r-aporte8">$0</div>
         <div class="num-eq" id="r-aporte8-eq"></div>
+        <p class="frase-aporte" id="r-frase-aporte"></p>
       </div>
       <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
-      <details data-tg="t_como_calculo_aporte">
-        <summary>📈 ¿Cómo funciona este cálculo?</summary>
-        <div class="body">Ingeniería inversa: en vez de adivinar cuánto vas a tener, partimos de tu meta y trabajamos para atrás hasta ver qué hay que poner cada mes para llegar. De ahí sale el número.</div>
-      </details>
     </div>
   </section>
 
   <!-- ================= ACTO 3 ================= -->
   <section class="acto" id="acto3">
-    <div class="titulo">Ese número asume dos cosas:</div>
+    <div class="pero">PERO</div>
+
+    <div class="titulo" style="margin-top:20px">Ese número asume dos cosas:</div>
     <div class="card">
       <p>📊 Que tu plata <b>crece al 8%</b> al año, que a grandes rasgos es el histórico de la bolsa.</p>
       <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el 4%</b> al año, que es lo que rinde un bono del Tesoro.</p>
     </div>
 
-    <div class="titulo">Las dos se pueden mejorar:</div>
-
     <div class="card card-menta">
-      <p>🚀 <b>Crecer al 15%.</b> Nuestra especialidad es el crecimiento: apuntamos al <b>15%</b>, dependiendo de tu contexto. Portafolio de crecimiento: Nasdaq, compras agresivas en momentos de oportunidad, estrategias sistemáticas con 11 años de experiencia.</p>
-      <p class="paso">Tu aporte baja de <s id="r-base-1">$0</s> a <b id="r-aporte15">$0</b>/mes.</p>
+      <p>Si invertís al <b>15%</b> buscando crecimiento (¡como debería ser, porque tenés el tiempo a tu favor!)</p>
+      <p style="margin-top:10px">Y te retirás al <b>8%</b>…</p>
     </div>
 
-    <div class="card card-peri">
-      <p>🌴 <b>Y además, retirarte al 8%.</b> Si tu perfil lo permite, con nuestra alianza el retiro se hace al <b>8%</b> en vez del 4%, de manera conservadora y con respaldo en bienes raíces. <b>Tu meta se reduce a la mitad.</b></p>
-      <p class="paso">Tu aporte baja de <s id="r-de-15">$0</s> a <b id="r-aporte-combo">$0</b>/mes.</p>
+    <div class="titulo">Pasan muchas cosas:</div>
+    <ul class="lista-pasa">
+      <li>🚀 Tu cuota mensual al 15% pasa a tener que ser <b id="r-aporte15">$0</b>.</li>
+      <li>🌴 ¡Tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</li>
+    </ul>
+
+    <div class="resaltado">
+      <p>O sea que tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
+      <p style="margin-top:12px">O tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
     </div>
 
-    <div class="banda banda-verde">
-      <div class="k">Con las dos, tu aporte pasa de <s id="r-base-2">$0</s> a:</div>
-      <div class="num" id="r-final">$0</div>
-      <div class="num-eq" id="r-final-eq"></div>
-      <div class="sub">Ayudarte a lograr eso es nuestro trabajo.</div>
-    </div>
+    <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
 
-    <div class="titulo">¿Y cómo?</div>
-    <details data-tg="t_humo_15">
-      <summary>🔍 ¿Y esto no será humo?</summary>
-      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</div>
-    </details>
+    <div class="titulo">Suena todo muy bonito, ¡¡pero tal vez demasiado!!</div>
+    <div class="card">
+      <p><b>¿Esto no será humo?</b></p>
+      <p style="margin-top:10px">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y</p>
+    </div>
+    <div class="resaltado">
+      <p><b>nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></p>
+    </div>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8%?</summary>
       <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Es parecido a invertir como el banco cuando hace un préstamo hipotecario: te presta el 80% del valor de la casa, y si no pagás se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
     </details>
-
-    <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
   </section>
 
   <!-- ================= CTA ================= -->
   <section class="acto" id="cta">
-    <div class="titulo">Un aporte así, ¿te parece bien?</div>
+    <div class="card card-peri">
+      <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de <b id="r-oferta-de">$0</b> a <b id="r-oferta-a">$0</b>, y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de <b id="r-oferta-meta-de">$0</b> a <b id="r-oferta-meta-a">$0</b>.</p>
+      <p style="margin-top:12px; font-size:19px; font-weight:700">¿Te sonaría bien?</p>
+    </div>
     <p class="confianza" style="margin:8px 0 0">Tocá la opción que va con vos:</p>
     <div class="opciones" id="opciones">
-      <button class="opcion" data-cal="Sí, me calza">💪 Sí, me calza</button>
-      <button class="opcion" data-cal="Con esfuerzo, pero podría">🌱 Con esfuerzo, pero podría</button>
-      <button class="opcion" data-cal="Todavía no">⏳ Todavía no</button>
+      <button class="opcion" data-cal="Suena bien, hablémoslo más">💪 Suena bien, hablémoslo más</button>
+      <button class="opcion" data-cal="Quisiera más información">📕 Quisiera más información</button>
+      <button class="opcion" data-cal="Prefiero ir cuesta arriba">🥲 No, la verdad prefiero ir cuesta arriba lo más que pueda</button>
     </div>
 
     <div id="cta-salidas"></div>
@@ -592,6 +601,13 @@ function aporteRequerido(fv, pv, anualPct, meses){
   if(falta <= 0) return 0;                 // el capital inicial ya llega solo
   return falta * i / (f - 1);
 }
+// Al revés: manteniendo la MISMA cuota, ¿en cuántos meses se llega a `fv`? Sirve para
+// decirle que, con el 15% y el retiro al 8%, su retiro se le adelanta.
+function mesesParaLlegar(fv, pmt, anualPct){
+  if(pmt <= 0 || fv <= 0) return 0;
+  var i = anualPct/100/12;
+  return Math.log(1 + fv*i/pmt) / Math.log(1+i);
+}
 
 // ===== EQUIVALENCIAS EN VIVO =====
 function pintarEquiv(inputId, cur, eqId){
@@ -721,15 +737,29 @@ function calcularAporte(){
   function otroLado(usd){ return S.metaCur==="$" ? usd*S.tc : usd; }
   byId("r-aporte8").textContent = money(enMeta(a8), S.metaCur) + "/mes";
   byId("r-aporte8-eq").textContent = "≈ " + money(otroLado(a8), otra(S.metaCur)) + "/mes";
-  // Acto 3: escalera acumulativa. Paso 1: crecer al 15%. Paso 2: además, retirarse al 8%.
-  // Cada paso arranca donde terminó el anterior, así el número siempre baja.
-  byId("r-base-1").textContent = money(enMeta(a8), S.metaCur);
-  byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur);
-  byId("r-de-15").textContent = money(enMeta(a15), S.metaCur);
+  // La frase completa, que es lo que la gente lee (el número grande solo no explica nada).
+  var anios = edadRet - edad;
+  byId("r-frase-aporte").innerHTML = "Cada mes deberías aportar <b>" + money(enMeta(a8), S.metaCur)
+    + "</b> para llegar a tu meta de <b>" + money(enMeta(c.usd), S.metaCur) + "</b> en <b>" + anios
+    + (anios===1 ? " año" : " años") + "</b>, cuando tengás <b>" + edadRet + "</b>.";
+
+  // Acto 3: qué pasa si crecés al 15% y te retirás al 8%.
+  byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur) + "/mes";
+  byId("r-meta-mitad").textContent = money(enMeta(c.usd/2), S.metaCur);
   byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
-  byId("r-base-2").textContent = money(enMeta(a8), S.metaCur);
-  byId("r-final").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
-  byId("r-final-eq").textContent = "≈ " + money(otroLado(aCombo), otra(S.metaCur)) + "/mes";
+  byId("r-meta-eco").textContent = money(S.metaVal, S.metaCur);
+
+  // Manteniendo la cuota original (a8) pero al 15% y con la meta a la mitad: el retiro se adelanta.
+  var mesesCorto = mesesParaLlegar(c.usd/2, a8, TASA_CREC);
+  var aniosCorto = Math.max(1, Math.round(mesesCorto/12));
+  byId("r-edad-corta").textContent = String(edad + aniosCorto);
+  byId("r-anios-corta").textContent = aniosCorto + (aniosCorto===1 ? " año" : " años");
+
+  // La oferta del cierre usa los mismos números.
+  byId("r-oferta-de").textContent = money(enMeta(a8), S.metaCur) + "/mes";
+  byId("r-oferta-a").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
+  byId("r-oferta-meta-de").textContent = money(enMeta(c.usd), S.metaCur);
+  byId("r-oferta-meta-a").textContent = money(enMeta(c.usd/2), S.metaCur);
 
   byId("acto2b-res").style.display = "block";
   S.acto = Math.max(S.acto, 4);
@@ -892,18 +922,22 @@ function abrirForm(modo){   // modo: "llamada" | "reporte"
 // ===== CTA =====
 function pintarSalidas(){
   var cont = byId("cta-salidas");
-  if(S.autocal === "Todavía no"){
-    cont.innerHTML = '<div class="card"><p>No pasa nada, casi nadie arranca listo. En el Instagram vamos subiendo cosas que te van a servir para ir preparándote.</p></div>'
+  byId("form-wrap").innerHTML = "";
+  if(S.autocal === "Prefiero ir cuesta arriba"){
+    cont.innerHTML = '<div class="card"><p>Respetable. Nadie tiene por qué delegar esto. Igual, en el Instagram vamos subiendo cosas que te van a servir para hacerlo por tu cuenta.</p></div>'
       + '<a class="ig-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📱 @joseinvestor.cr</a>'
       + '<span class="link-discreto" id="link-reporte">También podés pedir tu Reporte Completo</span>';
     byId("link-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
-    byId("form-wrap").innerHTML = "";
+  } else if(S.autocal === "Quisiera más información"){
+    cont.innerHTML = '<button class="btn btn-crema" id="b-reporte">📕 Enviame el Reporte Completo</button>'
+      + '<button class="btn btn-ghost" id="b-llamada" style="margin-top:10px">📞 O mejor, hablemos 30 min</button>';
+    byId("b-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
+    byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
   } else if(S.autocal){
-    cont.innerHTML = '<button class="btn" id="b-llamada">📞 Quiero una llamada para armar mi plan</button>'
-      + '<button class="btn btn-crema" id="b-reporte" style="margin-top:10px">📕 Quiero mi Reporte Completo con esto y más</button>';
+    cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
+      + '<button class="btn btn-crema" id="b-reporte" style="margin-top:10px">📕 Y mandame el Reporte Completo</button>';
     byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
     byId("b-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
-    byId("form-wrap").innerHTML = "";
   } else {
     cont.innerHTML = "";
   }
