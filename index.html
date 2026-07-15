@@ -105,7 +105,9 @@
   .destaque .k{font-size:15px; color:var(--gris); font-weight:400; line-height:1.5;}
   .destaque .num{font-size:clamp(34px,9.5vw,48px); font-weight:700; line-height:1.06; color:var(--crema); margin-top:6px; word-break:break-word;}
   .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
-  .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:14px; font-weight:400;}
+  .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:16px; font-weight:400;}
+  .frase-aporte span{display:block; margin-bottom:12px;}
+  .frase-aporte span:last-child{margin-bottom:0;}
   .frase-aporte b{color:var(--menta); font-weight:700;}
 
   .titulo{font-size:22px; font-weight:700; line-height:1.25; margin-top:30px;}
@@ -342,7 +344,7 @@
 
     <div class="titulo" style="margin-top:20px">Ese número asume dos cosas:</div>
     <div class="card">
-      <p>📊 Que tu plata <b>crece al 8%</b> al año, que a grandes rasgos es el histórico de la bolsa.</p>
+      <p>📊 Que tu plata <b>crece al 8%</b> al año, que a grandes rasgos es el histórico de la bolsa de Estados Unidos.</p>
       <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el 4%</b> al año, que es lo que rinde un bono del Tesoro.</p>
     </div>
 
@@ -750,9 +752,10 @@ function calcularAporte(){
   byId("r-aporte8-eq").textContent = "≈ " + money(otroLado(a8), otra(S.metaCur)) + "/mes";
   // La frase completa, que es lo que la gente lee (el número grande solo no explica nada).
   var anios = edadRet - edad;
-  byId("r-frase-aporte").innerHTML = "Cada mes deberías aportar <b>" + money(enMeta(a8), S.metaCur)
-    + "</b> para llegar a tu meta de <b>" + money(enMeta(c.usd), S.metaCur) + "</b> en <b>" + anios
-    + (anios===1 ? " año" : " años") + "</b>, cuando tengás <b>" + edadRet + "</b>.";
+  byId("r-frase-aporte").innerHTML =
+      "<span>Cada mes deberías aportar <b>" + money(enMeta(a8), S.metaCur) + "</b></span>"
+    + "<span>para llegar a tu meta de <b>" + money(enMeta(c.usd), S.metaCur) + "</b></span>"
+    + "<span>en <b>" + anios + (anios===1 ? " año" : " años") + "</b>, cuando tengás <b>" + edadRet + "</b>.</span>";
 
   // Acto 3: qué pasa si crecés al 15% y te retirás al 8%.
   byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur) + "/mes";
