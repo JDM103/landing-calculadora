@@ -122,11 +122,14 @@
   .resaltado{background:rgba(99,252,175,.10); border:1px solid var(--menta); border-radius:16px;
     padding:18px 18px; margin:14px 0;}
   .hl{color:var(--menta); font-weight:700;}
-  /* La oferta del cierre: los números respiran en su propia línea */
-  .oferta-num{font-size:clamp(21px,5.8vw,27px); font-weight:700; text-align:center; line-height:1.35; margin:16px 0;}
+  /* La oferta del cierre: es el remate, va al tamaño de un titular y los números respiran */
+  .oferta{padding:26px 20px;}
+  .oferta p{font-size:clamp(20px,5.4vw,23px); font-weight:700; line-height:1.35;}
+  .oferta-num{text-align:center; line-height:1.3; margin:18px 0;}
+  .oferta .oferta-num{font-size:clamp(26px,7.2vw,34px);}
   .oferta-num .de{color:var(--gris-sec); font-weight:400;}
   .oferta-num b{color:var(--menta);}
-  .oferta-cierre{margin-top:20px; font-size:20px; font-weight:700; text-align:center;}
+  .oferta .oferta-cierre{margin-top:24px; font-size:clamp(24px,6.4vw,29px); text-align:center;}
   /* Las 4 cosas que pasan: todas del mismo peso, todas importantes */
   .pasa p{font-size:18px; line-height:1.5; font-weight:400;}
   .pasa b{color:var(--menta); font-weight:700;}
@@ -383,7 +386,7 @@
 
   <!-- ================= CTA ================= -->
   <section class="acto" id="cta">
-    <div class="card card-peri">
+    <div class="card card-peri oferta">
       <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de</p>
       <p class="oferta-num"><span class="de" id="r-oferta-de">$0</span> a <b id="r-oferta-a">$0</b></p>
       <p>y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de</p>
