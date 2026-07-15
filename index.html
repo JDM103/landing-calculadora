@@ -132,6 +132,9 @@
 
   .warn{color:#e0a020; font-size:14px; margin-top:10px; font-weight:500;}
   .fila2{display:flex; gap:12px;} .fila2>*{flex:1;}
+  .checkline{display:flex; align-items:flex-start; gap:10px; margin:4px 0 16px; font-size:15px; cursor:pointer; font-weight:400;}
+  .checkline input{width:20px; height:20px; margin-top:2px; accent-color:var(--menta); flex:0 0 auto;}
+  .desglose{font-size:12px; color:var(--gris-sec); margin:8px 2px 0; line-height:1.5;}
 
   footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
   footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
@@ -157,7 +160,7 @@
         <button type="button" class="chip on" data-cur="$">$</button>
         <button type="button" class="chip" data-cur="₡">₡</button>
       </div>
-      <input id="meta" type="text" inputmode="numeric" placeholder="10,000" autocomplete="off">
+      <input id="meta" type="text" inputmode="numeric" placeholder="$10,000" autocomplete="off">
       <div class="equiv" id="meta-eq"></div>
     </div>
     <button class="btn" id="b-acto1">Ver cuánto necesito →</button>
@@ -186,10 +189,6 @@
       <summary>🤔 ¿Por qué el 4%?</summary>
       <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que rinden alrededor de un 4% al año. Vivís de ese rendimiento y el capital queda intacto, trabajando. Por eso necesitás unas 25 veces tu gasto anual: es el tamaño de la máquina que te paga cada mes sin gastarse.</div>
     </details>
-    <details data-tg="t_de_donde_numero">
-      <summary>🧮 ¿De dónde sale este número?</summary>
-      <div class="body">Matemática simple: tu meta mensual × 12 meses = lo que necesitás por año. Eso × 25 = tu capital objetivo (porque 4% es 1/25). Sin fórmulas raras, sin letra pequeña. Todo el cálculo pasa aquí, en tu navegador.</div>
-    </details>
   </section>
 
   <!-- ================= ACTO 2A ================= -->
@@ -213,9 +212,23 @@
           <button type="button" class="chip on" data-cur="$">$</button>
           <button type="button" class="chip" data-cur="₡">₡</button>
         </div>
-        <input id="salario" type="text" inputmode="numeric" placeholder="7,500" autocomplete="off">
+        <input id="salario" type="text" inputmode="numeric" placeholder="$7,500" autocomplete="off">
         <div class="equiv" id="salario-eq"></div>
         <div class="hint">Si lo pensás en colones, tocá el ₡</div>
+      </div>
+      <label class="checkline">
+        <input type="checkbox" id="f-rop">
+        <span>Sumale también mi ROP, la cuenta individual que te descuentan aparte.</span>
+      </label>
+      <div class="campo" id="campo-rop" style="display:none">
+        <label for="saldo-rop">Saldo de tu ROP, si lo sabés</label>
+        <div class="chips" data-for="saldo-rop">
+          <button type="button" class="chip on" data-cur="$">$</button>
+          <button type="button" class="chip" data-cur="₡">₡</button>
+        </div>
+        <input id="saldo-rop" type="text" inputmode="numeric" placeholder="$0" autocomplete="off">
+        <div class="equiv" id="saldo-rop-eq"></div>
+        <div class="hint">Si no lo sabés, dejalo vacío y lo estimamos con tu salario y tus años cotizados.</div>
       </div>
       <p class="confianza">Solo lo usamos para calcular tu pensión aquí, en tu navegador. No se envía a ningún lado.</p>
       <button class="btn" id="b-caja-calc">Ver mi pensión →</button>
@@ -224,7 +237,9 @@
 
     <div id="acto2a-res" style="display:none">
       <div class="res-linea"><span class="k">La Caja te daría</span><span class="v" id="r-pension">$0</span></div>
+      <div class="desglose" id="r-desglose" style="display:none"></div>
       <div class="techo" id="r-techo" style="display:none">Tocaste el techo del IVM: por más que ganés o cotizés, la pensión no sube de ahí.</div>
+      <div class="techo" id="r-antes65" style="display:none">Ojo: la Caja paga a partir de los 65. Si te retirás antes, esos años los cubre tu inversión.</div>
       <div class="res-linea"><span class="k">Tu inversión debe cubrir</span><span class="v" id="r-cubrir">$0</span></div>
 
       <div class="banda">
@@ -235,7 +250,7 @@
 
       <details data-tg="t_calculo_pension">
         <summary>🏛️ ¿Cómo calculamos tu pensión?</summary>
-        <div class="body">Usamos la fórmula oficial del IVM (normativa 2026): un porcentaje de tu salario según tu nivel de ingreso (entre 43% y 52.5%), más un poquito extra por cada año cotizado sobre los 25. Asumimos que cotizás sin pausas desde los 25 años. Es una estimación educativa, no una certificación de la CCSS.</div>
+        <div class="body">Usamos la fórmula oficial del IVM (normativa 2026): un porcentaje de tu salario según tu nivel de ingreso (entre 43% y 52.5%), más un poquito extra por cada año cotizado sobre los 25. Asumimos que cotizás sin pausas desde los 25 años. Si sumás tu ROP, proyectamos tu cuenta individual con el 4.25% de tu salario y un rendimiento conservador, y la volvemos renta mensual. Es una estimación educativa, no una certificación de la CCSS.</div>
       </details>
       <details data-tg="t_techo_ivm">
         <summary>🚧 La pensión tiene techo (y casi nadie lo sabe)</summary>
@@ -253,12 +268,11 @@
         <input id="edad2" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
       </div>
       <div class="campo">
-        <label for="capital-ini">¿Con cuánto empezarías hoy? (US$, podés poner 0)</label>
-        <input id="capital-ini" type="text" inputmode="numeric" placeholder="0" autocomplete="off">
-        <div class="equiv" id="capital-ini-eq"></div>
+        <label for="edad-ret">¿A qué edad querés retirarte?</label>
+        <input id="edad-ret" type="text" inputmode="numeric" placeholder="65" maxlength="2" autocomplete="off">
       </div>
       <button class="btn" id="b-acto2b">Ver mi aporte mensual →</button>
-      <div class="warn" id="w-2b" style="display:none">Escribí tu edad (entre 18 y 64) para calcular.</div>
+      <div class="warn" id="w-2b" style="display:none">Escribí tu edad (entre 18 y 64) y una edad de retiro mayor a esa.</div>
     </div>
 
     <div id="acto2b-res" style="display:none">
@@ -270,17 +284,17 @@
       <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
       <details data-tg="t_como_calculo_aporte">
         <summary>📈 ¿Cómo funciona este cálculo?</summary>
-        <div class="body">Es el interés compuesto trabajando al revés: en vez de preguntar cuánto tendrás, preguntamos cuánto hay que poner cada mes para llegar a tu meta a los 65, con un crecimiento del 8% anual. Tus aportes crecen, y lo que ya ganaron también crece. Por eso empezar antes hace el aporte más pequeño.</div>
+        <div class="body">Es el interés compuesto trabajando al revés: en vez de preguntar cuánto tendrás, preguntamos cuánto hay que poner cada mes para llegar a tu meta a la edad que elegiste, con un crecimiento del 8% anual. Tus aportes crecen, y lo que ya ganaron también crece. Por eso empezar antes hace el aporte más pequeño.</div>
       </details>
     </div>
   </section>
 
   <!-- ================= ACTO 3 ================= -->
   <section class="acto" id="acto3">
-    <div class="titulo">Ahora, esto se puede poner más fácil. Hay dos formas:</div>
+    <div class="titulo">Pero ese número asume dos cosas conservadoras. Las dos se pueden mejorar:</div>
 
     <div class="card card-menta">
-      <p>🚀 <b>Crecer al 15%.</b> Portafolio de crecimiento: Nasdaq, compras agresivas en momentos de oportunidad, estrategias sistemáticas con 11 años de experiencia. Tu aporte bajaría a <b id="r-aporte15">$0</b>/mes.</p>
+      <p>🚀 <b>Crecer al 15%.</b> Asumimos que tu plata crece al 8%, que a grandes rasgos es el histórico de la bolsa. Nuestra especialidad es el crecimiento: apuntamos al <b>15%</b>, dependiendo de tu contexto. Portafolio de crecimiento: Nasdaq, compras agresivas en momentos de oportunidad, estrategias sistemáticas con 11 años de experiencia. Tu aporte bajaría a <b id="r-aporte15">$0</b>/mes.</p>
     </div>
     <details data-tg="t_humo_15">
       <summary>🔍 ¿Y esto no será humo?</summary>
@@ -288,11 +302,11 @@
     </details>
 
     <div class="card card-peri">
-      <p>🌴 <b>Retirarte al 8%.</b> Instrumentos conservadores con garantía real (alianza con un puesto de bolsa): el doble de ingreso por cada dólar, o sea la mitad del capital necesario. Tu aporte bajaría a <b id="r-aporte-retiro8">$0</b>/mes.</p>
+      <p>🌴 <b>Retirarte al 8%.</b> Y además asumimos que en el retiro sacás el 4% al año, que es lo que rinde un bono del Tesoro. Si tu perfil lo permite, con nuestra alianza eso se puede hacer al <b>8%</b>, de manera conservadora y con respaldo en bienes raíces. <b>Tu meta se reduce a la mitad</b> y tu aporte baja a <b id="r-aporte-retiro8">$0</b>/mes.</p>
     </div>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8%?</summary>
-      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real (respaldados por bienes raíces). El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
+      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Es parecido a invertir como el banco cuando hace un préstamo hipotecario: te presta el 80% del valor de la casa, y si no pagás se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
     </details>
 
     <div class="banda banda-verde">
@@ -304,7 +318,8 @@
 
   <!-- ================= CTA ================= -->
   <section class="acto" id="cta">
-    <div class="titulo">Siendo honestos, ¿te calza un aporte así hoy?</div>
+    <div class="titulo">Un aporte así, ¿te parece bien?</div>
+    <p class="confianza" style="margin:8px 0 0">Tocá la opción que va con vos:</p>
     <div class="opciones" id="opciones">
       <button class="opcion" data-cal="Sí, me calza">💪 Sí, me calza</button>
       <button class="opcion" data-cal="Con esfuerzo, pero podría">🌱 Con esfuerzo, pero podría</button>
@@ -351,8 +366,10 @@ var MULT_25X = 25;        // capital = gasto anual × 25
 // ===== ESTADO =====
 var S = {
   metaVal:0, metaCur:"$", tc:TC_DEFAULT,
-  caja:null, edad:0, salVal:0, salCur:"$", pensionCol:0, tocoTecho:false,
-  capIni:0, capObjUsd:0, capObjCol:0,
+  caja:null, edad:0, edadRet:0, salVal:0, salCur:"$",
+  rop:false, saldoRopVal:0, saldoRopCur:"$", ivmCol:0, ropCol:0,
+  pensionCol:0, tocoTecho:false,
+  capObjUsd:0, capObjCol:0,
   aportes:{}, autocal:null, acto:1, toggles:[], inicio:Date.now()
 };
 function guardar(){ try{ sessionStorage.setItem("lp_state", JSON.stringify(S)); }catch(e){} }
@@ -391,7 +408,7 @@ function conv(v, de, a){ if(de===a) return v; return de==="$" ? v*S.tc : v/S.tc;
 function aUsd(v, cur){ return cur==="$" ? v : v/S.tc; }
 function aCol(v, cur){ return cur==="₡" ? v : v*S.tc; }
 
-// Comas en vivo
+// Comas en vivo (campos que NO son plata, p. ej. el tipo de cambio)
 function bindComas(el){
   el.addEventListener("input", function(){
     var d = soloDigitos(el.value);
@@ -400,6 +417,22 @@ function bindComas(el){
     var desp = el.value.length;
     try{ el.setSelectionRange(Math.max(0,pos+(desp-antes)), Math.max(0,pos+(desp-antes))); }catch(e){}
   });
+}
+// Comas en vivo + el símbolo de la moneda adelante del número ($10,000)
+function bindMoney(el, getCur){
+  el.addEventListener("input", function(){
+    var d = soloDigitos(el.value);
+    var pos = el.selectionStart, antes = el.value.length;
+    el.value = d ? (getCur() + fmt(parseInt(d,10))) : "";
+    var desp = el.value.length, np = pos + (desp - antes);
+    np = el.value ? Math.max(1, Math.min(np, el.value.length)) : 0;   // nunca antes del símbolo
+    try{ el.setSelectionRange(np, np); }catch(e){}
+  });
+}
+// Placeholder sugerido, en la moneda del chip (se guarda en US$ y se convierte)
+function pintarPlaceholder(id, baseUsd, cur){
+  var el = byId(id); if(!el) return;
+  el.placeholder = cur + fmt(conv(baseUsd, "$", cur));
 }
 function byId(id){ return document.getElementById(id); }
 
@@ -412,7 +445,7 @@ function initChips(inputId, getCur, setCur, onChange){
       var nueva = btn.getAttribute("data-cur");
       if(nueva === getCur()) return;
       var el = byId(inputId), v = num(el.value);
-      if(v > 0){ el.value = fmt(conv(v, getCur(), nueva)); }   // convertir lo ya escrito
+      if(v > 0){ el.value = nueva + fmt(conv(v, getCur(), nueva)); }   // convertir lo escrito y cambiarle el símbolo
       setCur(nueva);
       Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(c){ c.classList.toggle("on", c===btn); });
       onChange && onChange();
@@ -451,6 +484,54 @@ function pensionIVM(edad, salarioCol){
   return Math.round(pension);
 }
 
+// ===== MOTOR ROP (Ley 7983, art. 22): igual que el wizard. Todo en colones. =====
+var APORTE_ROP_PCT = 4.25;          // del salario reportado a la CCSS
+var ROP_NOMINAL_PCT = 6.0;
+var ROP_INFLACION_PCT = 3.0;
+var ROP_PLAZO_PAGO_ANIOS = 20.0;
+var ROP_ANIO_INICIO = 2000;         // el ROP arrancó ~2000: tope de cuotas
+var ROP_PISO_PCT = 20.0;            // ninguna prestación baja del 20% de la mínima del IVM
+var ROP_CORTE_TRANSITORIO = new Date(Date.UTC(2030, 1, 19));   // 2030-02-19
+
+function tasaRealAnualPct(nom, inf){ return ((1+nom/100)/(1+inf/100) - 1) * 100; }
+function valorFuturoRop(saldo, aporte, i, meses){
+  if(meses <= 0) return saldo;
+  if(i === 0) return saldo + aporte*meses;
+  var g = Math.pow(1+i, meses);
+  return saldo*g + aporte*(g-1)/i;
+}
+function pagoAnualidad(fv, i, meses){
+  if(meses <= 0) return 0;
+  if(i === 0) return fv/meses;
+  return fv * i / (1 - Math.pow(1+i, -meses));
+}
+// Devuelve la renta mensual del ROP en ₡ (poder de compra de hoy).
+function pensionROP(edad, salarioCol, saldoCol){
+  var aniosRest = Math.max(0, EDAD_RETIRO - edad);
+  var mesesFut = aniosRest * 12;
+  // Cuotas al ROP hoy: cotización continua desde los 25, pero el ROP existe desde ~2000.
+  var cuotasHoy = Math.max(0, edad - EDAD_INICIO_COTIZA) * 12;
+  var cuotasRopMax = Math.max(0, new Date().getFullYear() - ROP_ANIO_INICIO) * 12;
+  var cuotasRopHoy = Math.min(cuotasHoy, cuotasRopMax);
+  var cuotasAlRetiro = cuotasRopHoy + mesesFut;
+
+  var aporteMensual = salarioCol * APORTE_ROP_PCT / 100;
+  // Si no sabe el saldo, lo estimamos: aportes ya hechos, sin crecimiento (conservador).
+  if(saldoCol <= 0) saldoCol = aporteMensual * cuotasRopHoy;
+
+  var i = tasaRealAnualPct(ROP_NOMINAL_PCT, ROP_INFLACION_PCT) / 100 / 12;
+  var fv = valorFuturoRop(saldoCol, aporteMensual, i, mesesFut);
+
+  var transitorio = cuotasAlRetiro > 0 ? fv / cuotasAlRetiro : 0;
+  var anualidad = pagoAnualidad(fv, i, Math.max(1, Math.round(ROP_PLAZO_PAGO_ANIOS*12)));
+
+  var hoy = new Date();
+  var fechaRetiro = new Date(Date.UTC(hoy.getFullYear() + aniosRest, hoy.getMonth(), 1));
+  var aplicable = (fechaRetiro < ROP_CORTE_TRANSITORIO) ? transitorio : anualidad;
+
+  return Math.max(aplicable, PENSION_MIN * ROP_PISO_PCT / 100);
+}
+
 // ===== APORTE REQUERIDO (anualidad estándar) =====
 // Cuánto hay que poner por mes para llegar a `fv` a los 65, con `anualPct` mensualizado,
 // descontando lo que crece por su cuenta el capital inicial `pv`.
@@ -473,8 +554,7 @@ function pintarEquiv(inputId, cur, eqId){
 function refrescarEquivalencias(){
   pintarEquiv("meta", S.metaCur, "meta-eq");
   if(byId("salario")) pintarEquiv("salario", S.salCur, "salario-eq");
-  var ci = byId("capital-ini");
-  if(ci){ var v=num(ci.value); byId("capital-ini-eq").textContent = v>0 ? ("≈ ₡"+fmt(v*S.tc)) : ""; }
+  if(byId("saldo-rop")) pintarEquiv("saldo-rop", S.saldoRopCur, "saldo-rop-eq");
   var sum = byId("tc-sum");
   if(sum) sum.textContent = "Usamos ₡"+fmt(S.tc)+" por $1, tocá para cambiar";
 }
@@ -522,9 +602,22 @@ function calcularCaja(){
   if(!edad || edad < 18 || edad > 64 || sal <= 0){ byId("w-caja").style.display="block"; return; }
   byId("w-caja").style.display="none";
   S.edad = edad; S.salVal = sal; S.caja = "si";
-  var salCol = aCol(sal, S.salCur);              // el IVM corre en colones
-  S.pensionCol = pensionIVM(edad, salCol);
-  S.tocoTecho = (S.pensionCol === TOPE_MAX);
+  var salCol = aCol(sal, S.salCur);              // el IVM y el ROP corren en colones
+  S.ivmCol = pensionIVM(edad, salCol);
+  S.tocoTecho = (S.ivmCol === TOPE_MAX);         // el techo es del IVM, no del ROP
+  S.rop = byId("f-rop").checked;
+  S.saldoRopVal = num(byId("saldo-rop").value);
+  S.ropCol = S.rop ? pensionROP(edad, salCol, aCol(S.saldoRopVal, S.saldoRopCur)) : 0;
+  S.pensionCol = S.ivmCol + S.ropCol;
+
+  // Desglose IVM + ROP (solo si sumó el ROP)
+  var desg = byId("r-desglose");
+  if(S.rop){
+    function enM(col){ return money(S.metaCur==="$" ? col/S.tc : col, S.metaCur); }
+    desg.textContent = "= IVM " + enM(S.ivmCol) + " + ROP " + enM(S.ropCol) + " por mes";
+    desg.style.display = "block";
+  } else { desg.style.display = "none"; }
+
   // resultados en la moneda de la meta
   var pensionEnMeta = S.metaCur==="$" ? S.pensionCol/S.tc : S.pensionCol;
   var metaCol = aCol(S.metaVal, S.metaCur);
@@ -552,19 +645,22 @@ function saltarCaja(){
 // ===== ACTO 2B (aporte) =====
 function calcularAporte(){
   var edad = S.caja==="si" ? S.edad : num(byId("edad2").value);
-  if(!edad || edad < 18 || edad > 64){ byId("w-2b").style.display="block"; return; }
+  var edadRet = num(byId("edad-ret").value) || EDAD_RETIRO;
+  if(!edad || edad < 18 || edad > 64 || edadRet <= edad || edadRet > 80){ byId("w-2b").style.display="block"; return; }
   byId("w-2b").style.display="none";
-  S.edad = edad;
-  S.capIni = num(byId("capital-ini").value);     // US$
-  var meses = (EDAD_RETIRO - edad) * 12;
+  S.edad = edad; S.edadRet = edadRet;
+  // El IVM se cobra a los 65: si eligió retirarse antes, avisamos en el resultado de la Caja.
+  var aviso = byId("r-antes65");
+  if(aviso) aviso.style.display = (S.caja==="si" && edadRet < EDAD_RETIRO) ? "block" : "none";
+  var meses = (edadRet - edad) * 12;
   var c = capitalObjetivo();
   S.capObjUsd = c.usd; S.capObjCol = c.col;
 
-  // Todo el cálculo del aporte vive en US$ (el capital inicial se pide en US$).
-  var a8      = aporteRequerido(c.usd,     S.capIni, TASA_BASE, meses);
-  var a15     = aporteRequerido(c.usd,     S.capIni, TASA_CREC, meses);
-  var aRet8   = aporteRequerido(c.usd/2,   S.capIni, TASA_BASE, meses);
-  var aCombo  = aporteRequerido(c.usd/2,   S.capIni, TASA_CREC, meses);
+  // El aporte se calcula en US$, partiendo de cero (sin capital inicial).
+  var a8      = aporteRequerido(c.usd,     0, TASA_BASE, meses);
+  var a15     = aporteRequerido(c.usd,     0, TASA_CREC, meses);
+  var aRet8   = aporteRequerido(c.usd/2,   0, TASA_BASE, meses);
+  var aCombo  = aporteRequerido(c.usd/2,   0, TASA_CREC, meses);
   S.aportes = { a8:a8, a15:a15, aRet8:aRet8, aCombo:aCombo };
 
   // Se muestran en la moneda elegida en la meta, con la equivalencia debajo.
@@ -582,6 +678,58 @@ function calcularAporte(){
   mostrarActo("acto3"); mostrarActo("cta");
 }
 
+// ===== REPORTE (tokens del template de Google Slides) =====
+var MESES_ES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+function perfilSugerido(){
+  var metaCol = aCol(S.metaVal, S.metaCur);
+  var brechaCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
+  var ratio = brechaCol / Math.max(metaCol, 1);
+  var anios = Math.max(0, (S.edadRet||EDAD_RETIRO) - (S.edad||0));
+  if(anios >= 15 && ratio >= 0.5) return "Crecimiento";
+  if(anios >= 10 && ratio >= 0.25) return "Balanceado";
+  return "Conservador";
+}
+var PERFIL_TEXTO = {
+  "Crecimiento":"Tu brecha es grande, pero tenés tiempo. Esa combinación pide estrategias de crecimiento con riesgo administrado: más agresivas hoy, más conservadoras conforme te acercás al retiro.",
+  "Balanceado":"Tu brecha es manejable y tu horizonte lo permite. Crecimiento con moderación, sin apuestas innecesarias.",
+  "Conservador":"Estás cerca de tu meta o de tu retiro. La prioridad es proteger lo ganado y crecer sin sustos."
+};
+// Llena los tokens {{...}} del template con los números de la landing.
+function reporteTokens(c){
+  var hoy = new Date();
+  var A = S.aportes || {};
+  var meses = Math.max(0, ((S.edadRet||EDAD_RETIRO) - (S.edad||0)) * 12);
+  var metaCol = aCol(S.metaVal, S.metaCur);
+  var brechaCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
+  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
+  function m(v){ return money(v, S.metaCur); }
+  var perfil = perfilSugerido();
+  return {
+    nombre: c.nombre, apellido: c.apellido,
+    fecha: hoy.getDate() + " de " + MESES_ES[hoy.getMonth()] + " de " + hoy.getFullYear(),
+    meta_mensual: m(S.metaVal),
+    edad_retiro: String(S.edadRet || EDAD_RETIRO),
+    pension_total: S.caja==="si"
+      ? (m(S.metaCur==="$" ? S.pensionCol/S.tc : S.pensionCol) + (S.rop ? " (IVM + ROP)" : " (solo IVM)"))
+      : "No la incluiste",
+    brecha: m(S.metaCur==="$" ? brechaCol/S.tc : brechaCol),
+    // El modelo de la landing es al revés que el del wizard: la meta es fija y el aporte es el resultado.
+    // vf_mercado = el capital que necesitás; vf_max = la mitad, con la alianza al 8%.
+    vf_mercado: m(enMeta(S.capObjUsd)),
+    vf_max: m(enMeta(S.capObjUsd/2)),
+    total_proyectado: m(S.metaVal),
+    perfil_sugerido: perfil,
+    perfil_texto: PERFIL_TEXTO[perfil] || "",
+    veredicto_texto: "Para llegar a " + m(S.metaVal) + "/mes a los " + (S.edadRet||EDAD_RETIRO)
+      + " años necesitás " + m(enMeta(S.capObjUsd)) + ". Aportando desde hoy con un crecimiento del 8% son "
+      + m(enMeta(A.a8||0)) + "/mes. Apuntando al 15% baja a " + m(enMeta(A.a15||0))
+      + "/mes, y con la alianza al 8% de retiro, a " + m(enMeta(A.aCombo||0)) + "/mes.",
+    aporte_usd: m(enMeta(A.a8||0)),
+    aportado_total: m(enMeta((A.a8||0) * meses)),
+    link_calendly_utm: calendlyPrefill(c)
+  };
+}
+
 // ===== WEBHOOK =====
 function enviarLead(etapa, contacto){
   var metaCol = aCol(S.metaVal, S.metaCur), metaUsd = aUsd(S.metaVal, S.metaCur);
@@ -597,14 +745,18 @@ function enviarLead(etapa, contacto){
     autocalificacion: S.autocal || "",
     incluyo_caja: S.caja === "si",
     edad: S.edad || 0,
+    edad_retiro: S.edadRet || 0,
     tc: S.tc,
     moneda_elegida: S.metaCur,
     meta_usd: Math.round(metaUsd), meta_col: Math.round(metaCol),
     salario_usd: Math.round(salUsd), salario_col: Math.round(salCol),
     pension_usd: Math.round(S.pensionCol / S.tc), pension_col: Math.round(S.pensionCol),
+    ivm_usd: Math.round(S.ivmCol / S.tc), ivm_col: Math.round(S.ivmCol),
+    incluyo_rop: !!S.rop,
+    rop_usd: Math.round(S.ropCol / S.tc), rop_col: Math.round(S.ropCol),
+    saldo_rop_usd: Math.round(aUsd(S.saldoRopVal, S.saldoRopCur)), saldo_rop_col: Math.round(aCol(S.saldoRopVal, S.saldoRopCur)),
     toco_techo_ivm: !!S.tocoTecho,
     capital_objetivo_usd: Math.round(S.capObjUsd), capital_objetivo_col: Math.round(S.capObjCol),
-    capital_inicial_usd: Math.round(S.capIni), capital_inicial_col: Math.round(S.capIni * S.tc),
     aporte_8_usd: Math.round(A.a8||0), aporte_8_col: Math.round((A.a8||0)*S.tc),
     aporte_15_usd: Math.round(A.a15||0), aporte_15_col: Math.round((A.a15||0)*S.tc),
     aporte_retiro8_usd: Math.round(A.aRet8||0), aporte_retiro8_col: Math.round((A.aRet8||0)*S.tc),
@@ -612,6 +764,9 @@ function enviarLead(etapa, contacto){
     toggles_abiertos: togglesAbiertos.join(","),
     toggles_total: togglesAbiertos.length
   };
+  // El Apps Script usa 'reporte' para llenar el Slides, exportarlo a PDF y mandarlo al correo.
+  // Va en las dos etapas: quien pide la llamada también recibe el reporte.
+  if(contacto && contacto.correo) p.reporte = reporteTokens(contacto);
   try{
     fetch(WEBHOOK_URL, {
       method:"POST",
@@ -652,6 +807,7 @@ function abrirForm(modo){   // modo: "llamada" | "reporte"
     + '</div>'
     + '<div class="campo"><label for="f-wha">Tu WhatsApp</label><input id="f-wha" inputmode="tel" autocomplete="tel" placeholder="8888-8888"></div>'
     + '<div class="campo"><label for="f-cor">Tu mejor correo</label><input id="f-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
+    + (modo==="llamada" ? '<p class="confianza" style="margin:0 0 12px">Y el Reporte Completo te llega igual a tu correo, con llamada o sin llamada.</p>' : '')
     + '<button class="btn' + (modo==="reporte" ? " btn-crema" : "") + '" id="f-send">'
     +   (modo==="llamada" ? "Ver los horarios disponibles →" : "Enviame mi Reporte Completo →")
     + '</button>'
@@ -700,13 +856,21 @@ restaurar();
 togglesAbiertos = S.toggles || [];
 S.inicio = S.inicio || Date.now();
 
-bindComas(byId("meta")); bindComas(byId("salario")); bindComas(byId("capital-ini")); bindComas(byId("tc"));
-byId("edad").addEventListener("input", function(){ this.value = soloDigitos(this.value).slice(0,2); });
-byId("edad2").addEventListener("input", function(){ this.value = soloDigitos(this.value).slice(0,2); });
+bindMoney(byId("meta"), function(){ return S.metaCur; });
+bindMoney(byId("salario"), function(){ return S.salCur; });
+bindMoney(byId("saldo-rop"), function(){ return S.saldoRopCur; });
+bindComas(byId("tc"));
+byId("saldo-rop").addEventListener("input", refrescarEquivalencias);
+byId("f-rop").addEventListener("change", function(){
+  S.rop = this.checked; guardar();
+  byId("campo-rop").style.display = this.checked ? "block" : "none";
+});
+["edad","edad2","edad-ret"].forEach(function(id){
+  byId(id).addEventListener("input", function(){ this.value = soloDigitos(this.value).slice(0,2); });
+});
 
 byId("meta").addEventListener("input", refrescarEquivalencias);
 byId("salario").addEventListener("input", refrescarEquivalencias);
-byId("capital-ini").addEventListener("input", refrescarEquivalencias);
 byId("tc").addEventListener("input", function(){
   var v = num(byId("tc").value);
   S.tc = v>0 ? v : TC_DEFAULT;
@@ -717,8 +881,9 @@ byId("tc").addEventListener("input", function(){
   if(byId("acto2b-res").style.display==="block") calcularAporte();
 });
 
-initChips("meta", function(){return S.metaCur;}, function(c){ S.metaCur=c; guardar(); }, refrescarEquivalencias);
-initChips("salario", function(){return S.salCur;}, function(c){ S.salCur=c; guardar(); }, refrescarEquivalencias);
+initChips("meta", function(){return S.metaCur;}, function(c){ S.metaCur=c; guardar(); pintarPlaceholder("meta",10000,c); }, refrescarEquivalencias);
+initChips("salario", function(){return S.salCur;}, function(c){ S.salCur=c; guardar(); pintarPlaceholder("salario",7500,c); }, refrescarEquivalencias);
+initChips("saldo-rop", function(){return S.saldoRopCur;}, function(c){ S.saldoRopCur=c; guardar(); pintarPlaceholder("saldo-rop",0,c); }, refrescarEquivalencias);
 initToggles();
 
 byId("b-acto1").addEventListener("click", calcularActo1);
@@ -737,11 +902,16 @@ Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), fun
 // Restaurar lo ya avanzado (sobrevive refresh)
 (function restaurarUI(){
   byId("tc").value = fmt(S.tc);
-  pintarChips("meta", S.metaCur); pintarChips("salario", S.salCur);
-  if(S.metaVal>0){ byId("meta").value = fmt(S.metaVal); }
-  if(S.salVal>0){ byId("salario").value = fmt(S.salVal); }
-  if(S.capIni>0){ byId("capital-ini").value = fmt(S.capIni); }
+  pintarChips("meta", S.metaCur); pintarChips("salario", S.salCur); pintarChips("saldo-rop", S.saldoRopCur);
+  pintarPlaceholder("meta", 10000, S.metaCur);
+  pintarPlaceholder("salario", 7500, S.salCur);
+  pintarPlaceholder("saldo-rop", 0, S.saldoRopCur);
+  if(S.metaVal>0){ byId("meta").value = S.metaCur + fmt(S.metaVal); }
+  if(S.salVal>0){ byId("salario").value = S.salCur + fmt(S.salVal); }
+  if(S.rop){ byId("f-rop").checked = true; byId("campo-rop").style.display = "block"; }
+  if(S.saldoRopVal>0){ byId("saldo-rop").value = S.saldoRopCur + fmt(S.saldoRopVal); }
   if(S.edad>0){ byId("edad").value = S.edad; byId("edad2").value = S.edad; }
+  if(S.edadRet>0){ byId("edad-ret").value = S.edadRet; }
   // reabrir los toggles ya vistos
   Array.prototype.forEach.call(document.querySelectorAll("details[data-tg]"), function(el){
     if(togglesAbiertos.indexOf(el.getAttribute("data-tg")) > -1) el.open = true;

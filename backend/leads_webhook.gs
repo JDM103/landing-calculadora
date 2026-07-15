@@ -45,6 +45,12 @@ var ALERTA_SOLO_CALIFICADOS = false;
 var CALLMEBOT_PHONE  = '';   // ej. '50670558296'
 var CALLMEBOT_APIKEY = '';   // ej. '123456'
 
+// Etapas que disparan el envio del Reporte en PDF (si el payload trae 'reporte' y un correo valido).
+//   reporte_solicitado  -> wizard.html (modelo viejo)
+//   reporte_solicitada  -> landing nueva, boton del reporte
+//   llamada_solicitada  -> landing nueva, boton de la llamada (tambien le prometemos el reporte)
+var ETAPAS_CON_REPORTE = ['reporte_solicitado', 'reporte_solicitada', 'llamada_solicitada'];
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(60000);
@@ -63,8 +69,10 @@ function doPost(e) {
     //    puede impedir que el lead quede guardado ni que el reporte salga.
     try { _notificarLead(data); } catch (errA) { /* ignorar: la alerta es best-effort */ }
 
-    // 3) Reporte por correo (solo calificados con correo valido).
-    if (reporte && data.correo && String(data.correo).indexOf('@') > -1 && data.etapa === 'reporte_solicitado') {
+    // 3) Reporte por correo. Etapas que lo piden: el wizard viejo ('reporte_solicitado') y la
+    //    landing nueva ('reporte_solicitada' y 'llamada_solicitada', porque la llamada tambien
+    //    promete el reporte). Cualquier payload con 'reporte' + correo valido lo dispara.
+    if (reporte && data.correo && String(data.correo).indexOf('@') > -1 && ETAPAS_CON_REPORTE.indexOf(data.etapa) > -1) {
       try {
         _generarYEnviarReporte(reporte, data.correo);
         reporteOk = true;
@@ -105,35 +113,46 @@ function _n(v) {
  * El mensaje resume quien es el lead y sus numeros, para decidir rapido si vale la pena llamarlo.
  */
 function _notificarLead(data) {
-  var califica = (data.califica === true || String(data.califica) === 'true');
   var etapa = data.etapa || '';
-  var dioContacto = (etapa === 'reporte_solicitado');
+  var dioContacto = !!(data.correo && String(data.correo).indexOf('@') > -1);
 
   // Si solo querés alertas de leads con contacto, cortamos aca.
   if (ALERTA_SOLO_CALIFICADOS && !dioContacto) return;
 
-  var titulo = dioContacto ? '📕 LEAD CALIFICADO — pidio el Reporte'
-             : (califica ? '📥 Lead calificado (sin contacto)'
-                         : '👀 Lead (no calificado)');
+  var titulo = etapa === 'llamada_solicitada' ? '📞 LEAD: pidio una LLAMADA'
+             : (etapa === 'reporte_solicitada' || etapa === 'reporte_solicitado') ? '📕 LEAD: pidio el Reporte'
+             : (data.califica === true || String(data.califica) === 'true') ? '📥 Lead calificado (sin contacto)'
+             : '👀 Lead (sin contacto)';
 
+  // El payload cambia segun el origen (landing nueva vs wizard viejo): mostramos lo que venga.
+  var L = [titulo];
+  function add(lbl, v) {
+    if (v === undefined || v === null || v === '' || v === 0 || v === '0') return;
+    L.push(lbl + ': ' + v);
+  }
   var nombre = ((data.nombre || '') + ' ' + (data.apellido || '')).trim();
-  var lineas = [
-    titulo,
-    nombre ? ('Nombre: ' + nombre) : null,
-    data.whatsapp ? ('WhatsApp: ' + data.whatsapp) : null,
-    data.correo ? ('Correo: ' + data.correo) : null,
-    data.intencion ? ('Intencion: ' + data.intencion) : null,
-    'Edad: ' + (data.edad_hoy || '?') + ' -> retiro ' + (data.edad_retiro || '?'),
-    'Meta: CRC ' + _n(data.meta_col) + '/mes',
-    'Salario: CRC ' + _n(data.salario_col),
-    'Pension Estado: CRC ' + _n(data.pension_estatal_col) + ' (IVM ' + _n(data.ivm_col) + ' + ROP ' + _n(data.rop_col) + ')',
-    'Brecha: CRC ' + _n(data.brecha_col) + '/mes',
-    'Capital: $' + _n(data.capital_usd) + ' | Aporte: $' + _n(data.aporte_usd) + '/mes',
-    'Perfil: ' + (data.perfil || '-'),
-    'Tiempo en la calc: ' + (data.tiempo_calculadora || '-'),
-    'Cuando: ' + (data.timestamp || '')
-  ].filter(function (x) { return x; });
-  var cuerpo = lineas.join('\n');
+  add('Nombre', nombre);
+  add('WhatsApp', data.whatsapp);
+  add('Correo', data.correo);
+  add('Que quiere', data.autocalificacion || data.intencion);   // landing | wizard
+  add('Edad', (data.edad || data.edad_hoy) + (data.edad_retiro ? (' -> retiro ' + data.edad_retiro) : ''));
+  add('Meta', '$' + _n(data.meta_usd) + '/mes  (CRC ' + _n(data.meta_col) + ')');
+  add('Salario', '$' + _n(data.salario_usd) + '  (CRC ' + _n(data.salario_col) + ')');
+  add('Pension de la Caja', 'CRC ' + _n(data.pension_col || data.pension_estatal_col) + '/mes'
+      + (data.toco_techo_ivm ? '  [TOPE del IVM]' : ''));
+  // Landing nueva: meta de capital + los 4 aportes calculados.
+  add('Capital objetivo', '$' + _n(data.capital_objetivo_usd));
+  if (data.aporte_8_usd) {
+    L.push('Aportes/mes -> 8%: $' + _n(data.aporte_8_usd) + ' | 15%: $' + _n(data.aporte_15_usd)
+           + ' | retiro 8%: $' + _n(data.aporte_retiro8_usd) + ' | ambas: $' + _n(data.aporte_combo_usd));
+  }
+  // Wizard viejo.
+  add('Brecha', 'CRC ' + _n(data.brecha_col) + '/mes');
+  add('Perfil', data.perfil);
+  add('Toggles abiertos', (data.toggles_total ? (data.toggles_total + '  (' + data.toggles_abiertos + ')') : ''));
+  add('Tiempo en la calc', data.tiempo_calculadora);
+  add('Cuando', data.timestamp);
+  var cuerpo = L.join('\n');
 
   // 1) EMAIL (siempre; no requiere ningun setup)
   var para = ALERTA_EMAIL || Session.getEffectiveUser().getEmail();
@@ -167,6 +186,10 @@ function _generarYEnviarReporte(reporte, correo) {
   // se ve limpio y el link sigue funcionando (con el prefill del lead).
   _tokenAHipervinculo(pres, '{{link_calendly_utm}}', 'Reservar mi sesion de 30 min, sin costo →',
                       reporte.link_calendly_utm || 'https://calendly.com/empoweredinvestor/reunion-de-30-minutos');
+
+  // Red de seguridad: si el template tiene un token que este payload no trae, lo borramos para que
+  // el PDF NUNCA muestre un '{{algo}}' crudo. (Pasa cuando cambia el modelo de datos del funnel.)
+  _limpiarTokensSobrantes(pres, reporte);
 
   pres.saveAndClose();
 
@@ -229,6 +252,23 @@ function _linkEnTexto(textRange, label, url) {
   for (var m = 0; m < matches.length; m++) {
     matches[m].getTextStyle().setLinkUrl(url).setForegroundColor('#1155CC').setUnderline(true);
   }
+}
+
+/**
+ * Borra los tokens del template que ESTE payload no trajo, para que el PDF nunca muestre un
+ * '{{algo}}' crudo. OJO: replaceAllText es literal (no acepta regex), por eso vamos con la lista
+ * exacta de tokens del template. Si agregas un token nuevo al Slides, agregalo aca tambien.
+ */
+var TOKENS_TEMPLATE = ['nombre','apellido','fecha','meta_mensual','edad_retiro','pension_total',
+  'brecha','vf_mercado','vf_max','total_proyectado','perfil_sugerido','veredicto_texto',
+  'perfil_texto','aporte_usd','aportado_total','link_calendly_utm'];
+
+function _limpiarTokensSobrantes(pres, reporte) {
+  TOKENS_TEMPLATE.forEach(function (k) {
+    if (reporte[k] === undefined || reporte[k] === null || reporte[k] === '') {
+      try { pres.replaceAllText('{{' + k + '}}', ''); } catch (e) {}
+    }
+  });
 }
 
 function _json(obj) {
