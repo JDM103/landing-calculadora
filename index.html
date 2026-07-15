@@ -203,14 +203,20 @@
 
   <!-- ================= ACTO 2A ================= -->
   <section class="acto" id="acto2a">
+    <div class="titulo">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>. ¿Y cómo llegamos ahí?</div>
+    <div class="card">
+      <p>Nadie junta esa plata de un solo, ni guardándola debajo del colchón. Se arma de una forma bastante aburrida: ponés un poco todos los meses y esa plata va creciendo sola mientras vos hacés tu vida. Con los años, lo que creció termina pesando más que lo que pusiste.</p>
+      <p style="margin-top:12px">Ya te decimos cuánto sería ese "poco todos los meses" en tu caso.</p>
+    </div>
+
     <div class="card card-menta" id="dato-techo">
       <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
     </div>
 
     <div class="card" id="caja-pregunta">
-      <p>¿Le metemos al cálculo lo que te daría la Caja? Capaz te sorprende.</p>
+      <p>Por eso lo tuyo pesa tanto. Igual, si querés, le restamos lo que sí te va a dar la Caja y tu meta baja un poco. Toma 20 segundos y es opcional.</p>
       <div class="btn-fila">
-        <button class="btn" id="b-caja-si">Sí, calculemos</button>
+        <button class="btn btn-ghost" id="b-caja-si">Sí, restemos</button>
         <button class="btn btn-ghost" id="b-caja-no">Saltar este paso</button>
       </div>
     </div>
@@ -292,7 +298,7 @@
   <!-- ================= ACTO 2B ================= -->
   <section class="acto" id="acto2b">
     <div class="card" id="acto2b-form">
-      <p>¿Y cuánto habría que ir poniendo por mes para llegar? Veamos.</p>
+      <p>Listo. Ahora sí: ¿cuánto habría que ir poniendo cada mes para llegar a esa meta? Solo faltan dos datos.</p>
       <div class="campo" id="campo-edad2" style="margin-top:18px">
         <label for="edad2">Tu edad</label>
         <input id="edad2" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
@@ -603,12 +609,10 @@ function refrescarEquivalencias(){
 }
 
 // ===== ACTOS =====
+// Al aparecer un acto NO movemos la pantalla: el contenido crece debajo y la persona
+// baja cuando quiere. (Feedback de clientes: los saltos automaticos molestan.)
 function mostrarActo(id){
-  var el = byId(id);
-  if(!el.classList.contains("on")){
-    el.classList.add("on");
-    setTimeout(function(){ el.scrollIntoView({behavior:"smooth", block:"start"}); }, 80);
-  }
+  byId(id).classList.add("on");
 }
 
 // --- capital objetivo (en la moneda de la meta) ---
@@ -634,6 +638,7 @@ function calcularActo1(){
   byId("w-meta").style.display="none";
   S.metaVal = v; S.acto = Math.max(S.acto, 2);
   pintarCapital("r-capital","r-capital-eq");
+  byId("r-capital-eco").textContent = byId("r-capital").textContent;   // el puente repite el número
   guardar();
   mostrarActo("acto1-res"); mostrarActo("acto2a");
 }
@@ -882,7 +887,6 @@ function abrirForm(modo){   // modo: "llamada" | "reporte"
         + c.nombre.replace(/[<>&]/g,"") + '. Tu reporte va en camino a tu correo.</div></div>';
     }
   });
-  fw.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
 // ===== CTA =====
@@ -941,7 +945,7 @@ initChips("saldo-rop", function(){return S.saldoRopCur;}, function(c){ S.saldoRo
 initToggles();
 
 byId("b-acto1").addEventListener("click", calcularActo1);
-byId("b-caja-si").addEventListener("click", function(){ byId("caja-form").style.display="block"; byId("caja-form").scrollIntoView({behavior:"smooth", block:"center"}); });
+byId("b-caja-si").addEventListener("click", function(){ byId("caja-form").style.display="block"; });
 byId("b-caja-no").addEventListener("click", saltarCaja);
 byId("b-caja-calc").addEventListener("click", calcularCaja);
 byId("b-acto2b").addEventListener("click", calcularAporte);
@@ -973,6 +977,7 @@ Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), fun
   refrescarEquivalencias();
   if(S.metaVal>0 && S.acto>=2){
     pintarCapital("r-capital","r-capital-eq");
+    byId("r-capital-eco").textContent = byId("r-capital").textContent;
     byId("acto1-res").classList.add("on"); byId("acto2a").classList.add("on");
   }
   if(S.caja==="si" && S.salVal>0 && S.edad>0){
