@@ -416,9 +416,9 @@
       <summary>📞 ¿Qué pasa en la llamada?</summary>
       <div class="body">30 minutos, sin costo y sin compromiso. Revisamos tus números juntos, afinamos tu plan y te decimos con honestidad si tu caso es para nosotros o no. Si no lo es, igual te vas con claridad.</div>
     </details>
-    <details data-tg="t_reporte">
-      <summary>📕 ¿Qué trae el Reporte Completo?</summary>
-      <div class="body">Tus números explicados de manera sencilla, cómo funciona invertir con cuenta propia en EE.UU. (bróker, custodio, SIPC), cuánto cuesta una transferencia internacional, los montos que funcionan, y tus primeros pasos. Te llega al correo.</div>
+    <details data-tg="t_como_trabajamos">
+      <summary>🤝 ¿Cómo trabajan ustedes?</summary>
+      <div class="body">Tu cuenta se abre a tu nombre en un bróker regulado en Estados Unidos, protegida por el SIPC, y nosotros solo tenemos permiso de comprar y vender dentro de ella. <a href="/info">Acá lo contamos completo, con nuestras alianzas →</a></div>
     </details>
   </section>
 </div>
@@ -794,58 +794,6 @@ function calcularAporte(){
   mostrarActo("acto3"); mostrarActo("cta");
 }
 
-// ===== REPORTE (tokens del template de Google Slides) =====
-var MESES_ES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-function perfilSugerido(){
-  var metaCol = aCol(S.metaVal, S.metaCur);
-  var brechaCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
-  var ratio = brechaCol / Math.max(metaCol, 1);
-  var anios = Math.max(0, (S.edadRet||EDAD_RETIRO) - (S.edad||0));
-  if(anios >= 15 && ratio >= 0.5) return "Crecimiento";
-  if(anios >= 10 && ratio >= 0.25) return "Balanceado";
-  return "Conservador";
-}
-var PERFIL_TEXTO = {
-  "Crecimiento":"Tu brecha es grande, pero tenés tiempo. Esa combinación pide estrategias de crecimiento con riesgo administrado: más agresivas hoy, más conservadoras conforme te acercás al retiro.",
-  "Balanceado":"Tu brecha es manejable y tu horizonte lo permite. Crecimiento con moderación, sin apuestas innecesarias.",
-  "Conservador":"Estás cerca de tu meta o de tu retiro. La prioridad es proteger lo ganado y crecer sin sustos."
-};
-// Llena los tokens {{...}} del template con los números de la landing.
-function reporteTokens(c){
-  var hoy = new Date();
-  var A = S.aportes || {};
-  var meses = Math.max(0, ((S.edadRet||EDAD_RETIRO) - (S.edad||0)) * 12);
-  var metaCol = aCol(S.metaVal, S.metaCur);
-  var brechaCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
-  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
-  function m(v){ return money(v, S.metaCur); }
-  var perfil = perfilSugerido();
-  return {
-    nombre: c.nombre, apellido: c.apellido,
-    fecha: hoy.getDate() + " de " + MESES_ES[hoy.getMonth()] + " de " + hoy.getFullYear(),
-    meta_mensual: m(S.metaVal),
-    edad_retiro: String(S.edadRet || EDAD_RETIRO),
-    pension_total: S.caja==="si"
-      ? (m(S.metaCur==="$" ? S.pensionCol/S.tc : S.pensionCol) + (S.rop ? " (IVM + ROP)" : " (solo IVM)"))
-      : "No la incluiste",
-    brecha: m(S.metaCur==="$" ? brechaCol/S.tc : brechaCol),
-    // El modelo de la landing es al revés que el del wizard: la meta es fija y el aporte es el resultado.
-    // vf_mercado = el capital que necesitás; vf_max = la mitad, con la alianza al 8%.
-    vf_mercado: m(enMeta(S.capObjUsd)),
-    vf_max: m(enMeta(S.capObjUsd/2)),
-    total_proyectado: m(S.metaVal),
-    perfil_sugerido: perfil,
-    perfil_texto: PERFIL_TEXTO[perfil] || "",
-    veredicto_texto: "Para llegar a " + m(S.metaVal) + "/mes a los " + (S.edadRet||EDAD_RETIRO)
-      + " años necesitás " + m(enMeta(S.capObjUsd)) + ". Aportando desde hoy con un crecimiento del 8% son "
-      + m(enMeta(A.a8||0)) + "/mes. Apuntando al 15% baja a " + m(enMeta(A.a15||0))
-      + "/mes, y con la alianza al 8% de retiro, a " + m(enMeta(A.aCombo||0)) + "/mes.",
-    aporte_usd: m(enMeta(A.a8||0)),
-    aportado_total: m(enMeta((A.a8||0) * meses)),
-    link_calendly_utm: calendlyPrefill(c)
-  };
-}
-
 // ===== GRÁFICO DEL CRECIMIENTO AL 8% =====
 // Evidencia visual: la barra de lo aportado crece en línea recta, pero el saldo se
 // despega. Ese hueco entre las dos líneas es lo que creció solo.
@@ -949,9 +897,6 @@ function enviarLead(etapa, contacto){
     toggles_abiertos: togglesAbiertos.join(","),
     toggles_total: togglesAbiertos.length
   };
-  // El Apps Script usa 'reporte' para llenar el Slides, exportarlo a PDF y mandarlo al correo.
-  // Va en las dos etapas: quien pide la llamada también recibe el reporte.
-  if(contacto && contacto.correo) p.reporte = reporteTokens(contacto);
   try{
     fetch(WEBHOOK_URL, {
       method:"POST",
@@ -982,7 +927,7 @@ function calendlyPrefill(c){
 }
 
 // ===== MINI-FORM =====
-function abrirForm(modo){   // modo: "llamada" | "reporte"
+function abrirForm(){   // solo se usa para agendar la llamada
   var fw = byId("form-wrap");
   fw.innerHTML =
     '<div class="card">'
@@ -992,10 +937,7 @@ function abrirForm(modo){   // modo: "llamada" | "reporte"
     + '</div>'
     + '<div class="campo"><label for="f-wha">Tu WhatsApp</label><input id="f-wha" inputmode="tel" autocomplete="tel" placeholder="8888-8888"></div>'
     + '<div class="campo"><label for="f-cor">Tu mejor correo</label><input id="f-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
-    + (modo==="llamada" ? '<p class="confianza" style="margin:0 0 12px">Y el Reporte Completo te llega igual a tu correo, con llamada o sin llamada.</p>' : '')
-    + '<button class="btn' + (modo==="reporte" ? " btn-crema" : "") + '" id="f-send">'
-    +   (modo==="llamada" ? "Ver los horarios disponibles →" : "Enviame mi Reporte Completo →")
-    + '</button>'
+    + '<button class="btn" id="f-send">Ver los horarios disponibles →</button>'
     + '<div class="warn" id="f-warn" style="display:none">Completá los 4 datos con un correo válido.</div>'
     + '</div>';
   byId("f-send").addEventListener("click", function(){
@@ -1004,14 +946,8 @@ function abrirForm(modo){   // modo: "llamada" | "reporte"
     if(!(c.nombre && c.apellido && c.whats && c.correo && c.correo.indexOf("@")>-1)){
       byId("f-warn").style.display="block"; return;
     }
-    if(modo==="llamada"){
-      enviarLead("llamada_solicitada", c);
-      window.open(calendlyPrefill(c), "_blank");
-    } else {
-      enviarLead("reporte_solicitada", c);
-      fw.innerHTML = '<div class="banda banda-verde"><div class="sub" style="margin-top:0">Listo, '
-        + c.nombre.replace(/[<>&]/g,"") + '. Tu reporte va en camino a tu correo.</div></div>';
-    }
+    enviarLead("llamada_solicitada", c);
+    window.open(calendlyPrefill(c), "_blank");
   });
 }
 
@@ -1022,18 +958,15 @@ function pintarSalidas(){
   if(S.autocal === "Prefiero ir cuesta arriba"){
     cont.innerHTML = '<div class="card"><p>Respetable. Nadie tiene por qué delegar esto. Igual, en el Instagram vamos subiendo cosas que te van a servir para hacerlo por tu cuenta.</p></div>'
       + '<a class="ig-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📱 @joseinvestor.cr</a>'
-      + '<span class="link-discreto" id="link-reporte">También podés pedir tu Reporte Completo</span>';
-    byId("link-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
+      + '<a class="link-discreto" href="/info">También podés ver cómo trabajamos</a>';
   } else if(S.autocal === "Quisiera más información"){
-    cont.innerHTML = '<button class="btn btn-crema" id="b-reporte">📕 Enviame el Reporte Completo</button>'
+    cont.innerHTML = '<a class="btn btn-crema" href="/info">🤝 Conocé cómo trabajamos</a>'
       + '<button class="btn btn-ghost" id="b-llamada" style="margin-top:10px">📞 O mejor, hablemos 30 min</button>';
-    byId("b-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
     byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
   } else if(S.autocal){
     cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
-      + '<button class="btn btn-crema" id="b-reporte" style="margin-top:10px">📕 Y mandame el Reporte Completo</button>';
+      + '<a class="btn btn-ghost" href="/info" style="margin-top:10px">🤝 O conocé primero cómo trabajamos</a>';
     byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
-    byId("b-reporte").addEventListener("click", function(){ abrirForm("reporte"); });
   } else {
     cont.innerHTML = "";
   }
