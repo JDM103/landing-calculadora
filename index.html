@@ -105,6 +105,11 @@
   .destaque .k{font-size:15px; color:var(--gris); font-weight:400; line-height:1.5;}
   .destaque .num{font-size:clamp(34px,9.5vw,48px); font-weight:700; line-height:1.06; color:var(--crema); margin-top:6px; word-break:break-word;}
   .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
+  /* Gráfico del crecimiento al 8% (se dibuja al tocar "Ver mi aporte mensual") */
+  #chart-wrap{position:relative; height:280px; width:100%; margin:24px 0 6px;}
+  .chart-nota{font-size:14px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:6px;}
+  .chart-nota b{color:var(--menta); font-weight:700;}
+
   .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:16px; font-weight:400;}
   .frase-aporte span{display:block; margin-bottom:12px;}
   .frase-aporte span:last-child{margin-bottom:0;}
@@ -337,6 +342,10 @@
         <div class="num-eq" id="r-aporte8-eq"></div>
         <p class="frase-aporte" id="r-frase-aporte"></p>
       </div>
+
+      <div id="chart-wrap"><canvas id="chart-crec"></canvas></div>
+      <p class="chart-nota" id="chart-nota"></p>
+
       <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
     </div>
   </section>
@@ -779,6 +788,7 @@ function calcularAporte(){
   byId("r-oferta-meta-a").textContent = money(enMeta(c.usd/2), S.metaCur);
 
   byId("acto2b-res").style.display = "block";
+  dibujarGrafico(a8, edad, edadRet);
   S.acto = Math.max(S.acto, 4);
   guardar();
   mostrarActo("acto3"); mostrarActo("cta");
@@ -834,6 +844,75 @@ function reporteTokens(c){
     aportado_total: m(enMeta((A.a8||0) * meses)),
     link_calendly_utm: calendlyPrefill(c)
   };
+}
+
+// ===== GRÁFICO DEL CRECIMIENTO AL 8% =====
+// Evidencia visual: la barra de lo aportado crece en línea recta, pero el saldo se
+// despega. Ese hueco entre las dos líneas es lo que creció solo.
+var chartInstance = null;
+function dibujarGrafico(aporteUsd, edad, edadRet){
+  var wrap = byId("chart-wrap"); if(!wrap) return;
+  var i = TASA_BASE/100/12;
+  var anios = Math.max(1, edadRet - edad);
+  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
+
+  var edades = [], saldo = [], aportado = [];
+  for(var y=0; y<=anios; y++){
+    var m = y*12;
+    var bal = i===0 ? aporteUsd*m : aporteUsd*(Math.pow(1+i,m)-1)/i;
+    edades.push(edad + y);
+    saldo.push(Math.round(enMeta(bal)));
+    aportado.push(Math.round(enMeta(aporteUsd*m)));
+  }
+  var totalAportado = aportado[aportado.length-1];
+  var totalSaldo = saldo[saldo.length-1];
+  byId("chart-nota").innerHTML = "De esos " + money(totalSaldo, S.metaCur) + ", vos pusiste "
+    + money(totalAportado, S.metaCur) + ". El resto, <b>" + money(totalSaldo-totalAportado, S.metaCur)
+    + "</b>, lo creció la plata sola.";
+
+  function build(){
+    var ctx = byId("chart-crec"); if(!ctx || typeof Chart === "undefined") return;
+    if(chartInstance) chartInstance.destroy();
+    var sim = S.metaCur;
+    chartInstance = new Chart(ctx, {
+      type:"line",
+      data:{ labels:edades, datasets:[
+        { label:"Lo que tenés", data:saldo, borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)",
+          borderWidth:3, pointRadius:0, fill:true, tension:.15 },
+        { label:"Lo que pusiste vos", data:aportado, borderColor:"#9AA1AB", borderWidth:2,
+          borderDash:[6,4], pointRadius:0, tension:.15 }
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        // En pantallas con escalado fraccional (Windows 125/150%) el canvas se ve borroso:
+        // forzamos >=2x para que salga nítido.
+        devicePixelRatio: Math.max(2, Math.ceil(window.devicePixelRatio || 1)),
+        interaction:{mode:"index", intersect:false},
+        plugins:{
+          legend:{ labels:{ color:"#E2E2E2", boxWidth:14, font:{size:12} } },
+          tooltip:{ callbacks:{
+            title:function(it){ return "A los " + it[0].label + " años"; },
+            label:function(it){ return it.dataset.label + ": " + sim + Number(it.raw).toLocaleString("en-US"); }
+          }}
+        },
+        scales:{
+          x:{ title:{display:true, text:"Tu edad", color:"#9AA1AB"}, ticks:{color:"#9AA1AB", maxTicksLimit:8}, grid:{color:"rgba(140,150,170,.12)"} },
+          y:{ ticks:{ color:"#9AA1AB", callback:function(v){
+                return sim + (v>=1e6 ? (v/1e6).toFixed(1)+"M" : v>=1e3 ? Math.round(v/1e3)+"k" : v); } },
+              grid:{color:"rgba(140,150,170,.18)"} }
+        }
+      }
+    });
+  }
+  if(typeof Chart === "undefined"){
+    if(byId("chart-js-tag")) return;   // ya se está cargando
+    var s = document.createElement("script");
+    s.id = "chart-js-tag";
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+    s.onload = build;
+    s.onerror = function(){ wrap.style.display = "none"; };   // sin conexión: el resto del flujo sigue igual
+    document.head.appendChild(s);
+  } else { build(); }
 }
 
 // ===== WEBHOOK =====
