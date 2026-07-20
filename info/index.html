@@ -76,7 +76,7 @@
   <a href="/" class="marca"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
   <h1>Cómo trabajamos (y por qué es distinto)</h1>
-  <p class="sub">Seis cosas que nos gustaría que sepás antes de hablar con nosotros. Va sin jerga.</p>
+  <p class="sub">Seis cosas que nos gustaría que sepás antes de hablar con nosotros.</p>
 
   <section>
     <h2>Tu plata nunca pasa por nuestras manos</h2>
@@ -90,19 +90,20 @@
 
   <section>
     <h2>Nuestra especialidad: crecimiento</h2>
-    <p>Nos dedicamos a hacer crecer capital. El instrumento que más usamos es el Nasdaq, el índice de las empresas tecnológicas más grandes del mundo, y lo trabajamos con compras agresivas en momentos de oportunidad y reglas que venimos afinando desde hace más de 11 años. Nuestro objetivo es un 15% anual. Es un objetivo, no una promesa: los mercados suben y bajan, y nadie serio te puede garantizar un retorno. Lo que sí te podemos decir es cómo lo buscamos, con qué reglas, y enseñarte la cocina por dentro cuando hablemos.</p>
+    <p>Nos dedicamos a hacer crecer capital. El instrumento que más usamos es el Nasdaq, el índice de las empresas tecnológicas más grandes del mundo, y lo trabajamos con reglas que venimos afinando desde hace más de 11 años. Nuestro objetivo es un 15% anual. Es un objetivo, no una promesa: los mercados suben y bajan, y nadie serio te puede garantizar un retorno. Lo que sí te podemos decir es cómo lo buscamos, con qué reglas, y enseñarte la cocina por dentro cuando hablemos.</p>
   </section>
 
   <section>
     <h2>Una estrategia a tu medida</h2>
-    <p>No usamos la misma receta para todos. Vemos tu edad de retiro y tu perfil de riesgo, y con eso armamos tu estrategia: más agresiva si tenés tiempo y te calza, más conservadora si estás cerca de la meta o preferís dormir tranquilo. Tomamos el riesgo que tu plan necesita, ni más ni menos.</p>
+    <p>No usamos la misma receta para todos. Vemos tu edad de retiro y tu perfil de riesgo, y con eso armamos tu estrategia: más agresiva si tenés tiempo y te calza, más conservadora si estás cerca de la meta. Tomamos el riesgo que tu plan necesita.</p>
   </section>
 
   <section>
     <h2>No estamos solos: nuestras alianzas</h2>
     <p>Hay dos aliados que hacen que nuestro trabajo sea más completo.</p>
-    <p>El primero es Southland Group, una firma de finanzas corporativas con 18 años de trayectoria que ha asesorado fusiones y adquisiciones por más de $800 millones en la región. La alianza va en las dos vías: cuando un cliente nuestro tiene una empresa y llega el momento de venderla, comprarla o valorarla, tenemos a quién llamar. Y Southland está abriendo su área de wealth management para clientes de alto patrimonio, donde nosotros somos la pieza que maneja esas inversiones.</p>
+    <p>El primero es Southland Group, una firma de finanzas corporativas con 18 años de trayectoria que ha asesorado fusiones y adquisiciones por más de $800 millones en la región. Southland está abriendo su área de wealth management para clientes de alto patrimonio, donde nosotros somos la pieza fundamental para el manejo de esas inversiones.</p>
     <p>El segundo es San José Capital, un puesto de bolsa costarricense. Con ellos conocemos a fondo cada propiedad y cada proyecto detrás de sus vehículos de inversión conservadores, que pagan una buena tasa con respaldo real. Cuando un cliente calza con ese perfil, se lo recomendamos con confianza, porque sabemos exactamente qué hay adentro.</p>
+    <p>Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe.</p>
     <div class="links-alianza">
       <a class="link-alianza" href="https://www.southlandgroupcf.com/experiencia" target="_blank" rel="noopener" data-alianza="southland">Conocé Southland Group →</a>
       <a class="link-alianza" href="https://sanjose.capital/projects/" target="_blank" rel="noopener" data-alianza="san_jose_capital">Conocé San José Capital →</a>
@@ -117,7 +118,7 @@
   <div class="ctas">
     <a class="btn btn-menta" href="/calculadora" data-cta="calculadora">🎯 Calculá tu retiro</a>
     <a class="btn btn-crema" id="cta-calendly" href="#" target="_blank" rel="noopener" data-cta="calendly">📞 Agendá tu sesión de diagnóstico</a>
-    <a class="btn btn-ghost" id="cta-whatsapp" href="#" target="_blank" rel="noopener" data-cta="whatsapp">💬 Escribinos por WhatsApp</a>
+    <a class="btn btn-ghost" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener" data-cta="instagram">📲 Escribinos por Instagram</a>
   </div>
 
   <a class="volver" href="/">← Volver al inicio</a>
@@ -129,12 +130,10 @@
 
 <script>
 "use strict";
-// Mismas constantes que la calculadora.
+// Misma constante que la calculadora.
 var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
-var WHATSAPP_NUMERO = "50670558296";
 
 document.getElementById("cta-calendly").href = CALENDLY_URL + "?utm_source=info";
-document.getElementById("cta-whatsapp").href = "https://wa.me/" + WHATSAPP_NUMERO;
 
 function track(evento, datos){
   try{ if(typeof fbq === "function") fbq("trackCustom", evento, datos); }catch(e){}
