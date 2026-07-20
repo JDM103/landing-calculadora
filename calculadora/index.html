@@ -901,7 +901,8 @@ function enviarLead(etapa, contacto){
     fetch(WEBHOOK_URL, {
       method:"POST",
       headers:{ "Content-Type":"text/plain;charset=utf-8" },   // text/plain evita el preflight del Apps Script
-      body: JSON.stringify(p)
+      body: JSON.stringify(p),
+      keepalive: true    // el envío sobrevive si la persona navega a /info enseguida
     }).then(function(r){ return r.json(); }).then(function(j){ if(j && j.ok) console.log("lead ok"); })
       .catch(function(){});
   }catch(e){}
@@ -927,6 +928,29 @@ function calendlyPrefill(c){
 }
 
 // ===== MINI-FORM =====
+// Antes de mandar a /info pedimos el contacto: es la única forma de saber quién pasó
+// por acá si no agenda llamada. Dos campos para no hacerlo pesado.
+function abrirFormInfo(){
+  var fw = byId("form-wrap");
+  fw.innerHTML =
+    '<div class="card">'
+    + '<p style="margin-bottom:6px">Dejanos tu nombre y tu correo, y seguimos.</p>'
+    + '<div class="campo"><label for="i-nom">Tu nombre</label><input id="i-nom" autocomplete="given-name"></div>'
+    + '<div class="campo"><label for="i-cor">Tu mejor correo</label><input id="i-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
+    + '<button class="btn btn-crema" id="i-send">Ver cómo trabajan →</button>'
+    + '<div class="warn" id="i-warn" style="display:none">Escribí tu nombre y un correo válido.</div>'
+    + '</div>';
+  byId("i-send").addEventListener("click", function(){
+    var c = { nombre: byId("i-nom").value.trim(), apellido:"", whats:"",
+              correo: byId("i-cor").value.trim() };
+    if(!(c.nombre && c.correo && c.correo.indexOf("@") > -1)){
+      byId("i-warn").style.display = "block"; return;
+    }
+    enviarLead("info_solicitada", c);
+    window.location.href = "/info";
+  });
+}
+
 function abrirForm(){   // solo se usa para agendar la llamada
   var fw = byId("form-wrap");
   fw.innerHTML =
@@ -958,15 +982,18 @@ function pintarSalidas(){
   if(S.autocal === "Prefiero ir cuesta arriba"){
     cont.innerHTML = '<div class="card"><p>Respetable. Nadie tiene por qué delegar esto. Igual, en el Instagram vamos subiendo cosas que te van a servir para hacerlo por tu cuenta.</p></div>'
       + '<a class="ig-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📱 @joseinvestor.cr</a>'
-      + '<a class="link-discreto" href="/info">También podés ver cómo trabajamos</a>';
+      + '<span class="link-discreto" id="link-info">También podés ver cómo trabajamos</span>';
+    byId("link-info").addEventListener("click", abrirFormInfo);
   } else if(S.autocal === "Quisiera más información"){
-    cont.innerHTML = '<a class="btn btn-crema" href="/info">🤝 Conocé cómo trabajamos</a>'
+    cont.innerHTML = '<button class="btn btn-crema" id="b-info">🤝 Conocé cómo trabajamos</button>'
       + '<button class="btn btn-ghost" id="b-llamada" style="margin-top:10px">📞 O mejor, hablemos 30 min</button>';
-    byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
+    byId("b-info").addEventListener("click", abrirFormInfo);
+    byId("b-llamada").addEventListener("click", abrirForm);
   } else if(S.autocal){
     cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
-      + '<a class="btn btn-ghost" href="/info" style="margin-top:10px">🤝 O conocé primero cómo trabajamos</a>';
-    byId("b-llamada").addEventListener("click", function(){ abrirForm("llamada"); });
+      + '<button class="btn btn-ghost" id="b-info" style="margin-top:10px">🤝 O conocé primero cómo trabajamos</button>';
+    byId("b-llamada").addEventListener("click", abrirForm);
+    byId("b-info").addEventListener("click", abrirFormInfo);
   } else {
     cont.innerHTML = "";
   }
