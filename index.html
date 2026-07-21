@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
 <title>Empowered Investor</title>
 <meta name="description" content="Inversiones desde tu propia cuenta. Calculá tu retiro, conocé cómo trabajamos o seguinos en Instagram.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
@@ -76,8 +84,8 @@
 Array.prototype.forEach.call(document.querySelectorAll("[data-destino]"), function(el){
   el.addEventListener("click", function(){
     var destino = el.getAttribute("data-destino");
+    try{ if(typeof gtag === "function") gtag("event","click_linktree",{destino:destino}); }catch(e){}
     try{ if(typeof fbq === "function") fbq("trackCustom","click_linktree",{destino:destino}); }catch(e){}
-    try{ if(window.dataLayer) dataLayer.push({event:"click_linktree", destino:destino}); }catch(e){}
   });
 });
 </script>

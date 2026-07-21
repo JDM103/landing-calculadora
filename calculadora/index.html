@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
 <title>¿Cuánto necesitás para retirarte? · Empowered Investor</title>
 <meta name="description" content="Una sola pregunta y 20 segundos: cuánto capital necesitás para retirarte con lo que querés, cuánto te daría la Caja y cuánto habría que aportar por mes. Gratis.">
 <!-- Favicon e imagen de preview: versión con fondo negro (se lee en pestaña/WhatsApp) -->
@@ -471,8 +479,8 @@ function marcarToggle(id){
   togglesAbiertos.push(id);
   S.toggles = togglesAbiertos;
   guardar();
+  try{ if(typeof gtag === "function") gtag("event","toggle_abierto",{toggle:id}); }catch(e){}
   try{ if(typeof fbq === "function") fbq("trackCustom","toggle_abierto",{toggle:id}); }catch(e){}
-  try{ if(window.dataLayer) dataLayer.push({event:"toggle_abierto", toggle:id}); }catch(e){}
 }
 function initToggles(){
   var ds = document.querySelectorAll("details[data-tg]");
@@ -865,6 +873,8 @@ function dibujarGrafico(aporteUsd, edad, edadRet){
 
 // ===== WEBHOOK =====
 function enviarLead(etapa, contacto){
+  // Conversión en GA4: la llamada agendada es el evento que más importa del funnel.
+  try{ if(typeof gtag === "function") gtag("event", etapa==="llamada_solicitada" ? "generate_lead" : "lead_"+etapa, {etapa:etapa, autocal:S.autocal||""}); }catch(e){}
   var metaCol = aCol(S.metaVal, S.metaCur), metaUsd = aUsd(S.metaVal, S.metaCur);
   var salCol = S.caja==="si" ? aCol(S.salVal, S.salCur) : 0;
   var salUsd = S.caja==="si" ? aUsd(S.salVal, S.salCur) : 0;
@@ -1023,8 +1033,8 @@ Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), fun
     S.autocal = b.getAttribute("data-cal"); guardar();
     Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){ x.classList.toggle("on", x===b); });
     // Evento con guardas: qué opción eligió en el CTA.
+    try{ if(typeof gtag === "function") gtag("event","cta_respuesta",{opcion:S.autocal}); }catch(e){}
     try{ if(typeof fbq === "function") fbq("trackCustom","cta_respuesta",{opcion:S.autocal}); }catch(e){}
-    try{ if(window.dataLayer) dataLayer.push({event:"cta_respuesta", opcion:S.autocal}); }catch(e){}
     pintarSalidas();
   });
 });

@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
 <title>Cómo trabajamos · Empowered Investor</title>
 <meta name="description" content="Seis cosas que nos gustaría que sepás antes de hablar con nosotros. Tu cuenta a tu nombre, el SIPC, nuestra especialidad y nuestras alianzas.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
@@ -136,8 +144,8 @@ var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos
 document.getElementById("cta-calendly").href = CALENDLY_URL + "?utm_source=info";
 
 function track(evento, datos){
+  try{ if(typeof gtag === "function") gtag("event", evento, datos); }catch(e){}
   try{ if(typeof fbq === "function") fbq("trackCustom", evento, datos); }catch(e){}
-  try{ if(window.dataLayer) dataLayer.push(Object.assign({event:evento}, datos)); }catch(e){}
 }
 track("info_vista", {});
 Array.prototype.forEach.call(document.querySelectorAll("[data-cta]"), function(el){
