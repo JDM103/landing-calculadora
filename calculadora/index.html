@@ -986,10 +986,8 @@ function pintarSalidas(){
     byId("b-info").addEventListener("click", abrirFormInfo);
     byId("b-llamada").addEventListener("click", abrirForm);
   } else if(S.autocal){
-    cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
-      + '<button class="btn btn-ghost" id="b-info" style="margin-top:10px">🤝 O conocé primero cómo trabajamos</button>';
+    cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>';
     byId("b-llamada").addEventListener("click", abrirForm);
-    byId("b-info").addEventListener("click", abrirFormInfo);
   } else {
     cont.innerHTML = "";
   }
