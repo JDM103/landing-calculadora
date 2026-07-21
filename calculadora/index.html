@@ -170,6 +170,10 @@
   }
   .ig-link:hover{border-color:var(--menta);}
   .link-discreto{display:block; text-align:center; color:var(--gris-sec); font-size:13px; margin-top:14px; text-decoration:underline; cursor:pointer;}
+  a.link-discreto{text-decoration:underline;}
+  /* La acción del CTA aparece con la misma animación sutil de los actos */
+  .salida{animation:entra .4s ease both;}
+  @media (prefers-reduced-motion: reduce){ .salida{animation:none;} }
 
   .warn{color:#e0a020; font-size:14px; margin-top:10px; font-weight:500;}
   .fila2{display:flex; gap:12px;} .fila2>*{flex:1;}
@@ -406,12 +410,12 @@
       <p>y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de</p>
       <p class="oferta-num"><span class="de" id="r-oferta-meta-de">$0</span> a <b id="r-oferta-meta-a">$0</b></p>
       <p class="oferta-cierre">¿Te sonaría bien?</p>
+      <p class="oferta-cierre" style="color:var(--menta); margin-top:12px">Contestanos aquí abajo 👇</p>
     </div>
-    <p class="confianza" style="margin:8px 0 0">Tocá la opción que va con vos:</p>
     <div class="opciones" id="opciones">
-      <button class="opcion" data-cal="Suena bien, hablémoslo más">💪 Suena bien, hablémoslo más en una llamada de 30 minutos sin costo</button>
-      <button class="opcion" data-cal="Quisiera más información">📕 Quisiera más información</button>
-      <button class="opcion" data-cal="Prefiero ir cuesta arriba">🥲 No, la verdad prefiero ir cuesta arriba lo más que pueda</button>
+      <button class="opcion" data-cal="Suena bien, hablémoslo más">💪 Suena bien, hablémoslo más</button>
+      <button class="opcion" data-cal="Quisiera más información">🤝 Quisiera más información</button>
+      <button class="opcion" data-cal="Prefiero ir cuesta arriba">🫡 No, la verdad prefiero ir cuesta arriba lo más que pueda</button>
     </div>
 
     <div id="cta-salidas"></div>
@@ -923,31 +927,8 @@ function calendlyPrefill(c){
   return CALENDLY_URL + "?" + p.toString();
 }
 
-// ===== MINI-FORM =====
-// Antes de mandar a /info pedimos el contacto: es la única forma de saber quién pasó
-// por acá si no agenda llamada. Dos campos para no hacerlo pesado.
-function abrirFormInfo(){
-  var fw = byId("form-wrap");
-  fw.innerHTML =
-    '<div class="card">'
-    + '<p style="margin-bottom:6px">Dejanos tu nombre y tu correo, y seguimos.</p>'
-    + '<div class="campo"><label for="i-nom">Tu nombre</label><input id="i-nom" autocomplete="given-name"></div>'
-    + '<div class="campo"><label for="i-cor">Tu mejor correo</label><input id="i-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
-    + '<button class="btn btn-crema" id="i-send">Ver cómo trabajan →</button>'
-    + '<div class="warn" id="i-warn" style="display:none">Escribí tu nombre y un correo válido.</div>'
-    + '</div>';
-  byId("i-send").addEventListener("click", function(){
-    var c = { nombre: byId("i-nom").value.trim(), apellido:"", whats:"",
-              correo: byId("i-cor").value.trim() };
-    if(!(c.nombre && c.correo && c.correo.indexOf("@") > -1)){
-      byId("i-warn").style.display = "block"; return;
-    }
-    enviarLead("info_solicitada", c);
-    window.location.href = "/info";
-  });
-}
-
-function abrirForm(){   // solo se usa para agendar la llamada
+// ===== MINI-FORM (agendar la llamada) =====
+function abrirForm(){
   var fw = byId("form-wrap");
   fw.innerHTML =
     '<div class="card">'
@@ -976,17 +957,21 @@ function pintarSalidas(){
   var cont = byId("cta-salidas");
   byId("form-wrap").innerHTML = "";
   if(S.autocal === "Prefiero ir cuesta arriba"){
-    cont.innerHTML = '<div class="card"><p>Respetable. Nadie tiene por qué delegar esto. Igual, en el Instagram vamos subiendo cosas que te van a servir para hacerlo por tu cuenta.</p></div>'
-      + '<a class="ig-link" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📱 @joseinvestor.cr</a>'
-      + '<span class="link-discreto" id="link-info">También podés ver cómo trabajamos</span>';
-    byId("link-info").addEventListener("click", abrirFormInfo);
+    cont.innerHTML = '<div class="salida">'
+      + '<div class="card"><p>Respetable, esa también es una forma. Si algún día querés compañía en la subida, acá vamos a estar. Mientras tanto, en el Instagram subimos cosas que te pueden servir.</p></div>'
+      + '<a class="btn btn-ghost" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📲 Seguinos en Instagram</a>'
+      + '</div>';
   } else if(S.autocal === "Quisiera más información"){
-    cont.innerHTML = '<button class="btn btn-crema" id="b-info">🤝 Conocé cómo trabajamos</button>'
-      + '<button class="btn btn-ghost" id="b-llamada" style="margin-top:10px">📞 O mejor, hablemos 30 min</button>';
-    byId("b-info").addEventListener("click", abrirFormInfo);
-    byId("b-llamada").addEventListener("click", abrirForm);
-  } else if(S.autocal){
-    cont.innerHTML = '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>';
+    cont.innerHTML = '<div class="salida">'
+      + '<a class="btn btn-crema" href="/info">Conocé cómo trabajamos →</a>'
+      + '<span class="link-discreto" id="link-llamada">📞 O agendá una llamada de una vez</span>'
+      + '</div>';
+    byId("link-llamada").addEventListener("click", abrirForm);
+  } else if(S.autocal){   // "Suena bien, hablémoslo más"
+    cont.innerHTML = '<div class="salida">'
+      + '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
+      + '<a class="link-discreto" href="/info">🤝 O leé primero cómo trabajamos</a>'
+      + '</div>';
     byId("b-llamada").addEventListener("click", abrirForm);
   } else {
     cont.innerHTML = "";
@@ -1037,6 +1022,9 @@ Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), fun
   b.addEventListener("click", function(){
     S.autocal = b.getAttribute("data-cal"); guardar();
     Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){ x.classList.toggle("on", x===b); });
+    // Evento con guardas: qué opción eligió en el CTA.
+    try{ if(typeof fbq === "function") fbq("trackCustom","cta_respuesta",{opcion:S.autocal}); }catch(e){}
+    try{ if(window.dataLayer) dataLayer.push({event:"cta_respuesta", opcion:S.autocal}); }catch(e){}
     pintarSalidas();
   });
 });
