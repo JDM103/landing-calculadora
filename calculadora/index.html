@@ -211,6 +211,16 @@
     <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
   </div>
 
+  <details id="tc-box">
+    <summary id="tc-sum"></summary>
+    <div class="body">
+      <div class="campo" style="margin-bottom:0">
+        <label for="tc">Tipo de cambio (₡ por $1)</label>
+        <input id="tc" type="text" inputmode="numeric" value="460" autocomplete="off">
+      </div>
+    </div>
+  </details>
+
   <section class="acto" id="acto1-res">
     <div class="banda">
       <div class="k">Para sacar eso cada mes sin quedarte sin plata (la regla del 4%), necesitás acumular:</div>
@@ -218,16 +228,6 @@
       <div class="num-eq" id="r-capital-eq"></div>
       <div class="sub">Tranquilo, nadie tiene esa plata guardada de un solo. Esto se construye poco a poco. Mirá:</div>
     </div>
-
-    <details id="tc-box">
-      <summary id="tc-sum">Usamos ₡460 por $1, tocá para cambiar</summary>
-      <div class="body">
-        <div class="campo" style="margin-bottom:0">
-          <label for="tc">Tipo de cambio (₡ por $1)</label>
-          <input id="tc" type="text" inputmode="numeric" value="460" autocomplete="off">
-        </div>
-      </div>
-    </details>
 
     <details data-tg="t_por_que_4">
       <summary>🤔 ¿Por qué el 4%?</summary>
@@ -646,7 +646,7 @@ function refrescarEquivalencias(){
   if(byId("salario")) pintarEquiv("salario", S.salCur, "salario-eq");
   if(byId("saldo-rop")) pintarEquiv("saldo-rop", S.saldoRopCur, "saldo-rop-eq");
   var sum = byId("tc-sum");
-  if(sum) sum.textContent = "Usamos ₡"+fmt(S.tc)+" por $1, tocá para cambiar";
+  if(sum) sum.textContent = "Para los cálculos usamos ₡"+fmt(S.tc)+" por $1, y trabajamos todo en dólares porque las inversiones son en la bolsa de Estados Unidos. Si querés cambiar el tipo de cambio, tocá aquí.";
 }
 
 // ===== ACTOS =====
