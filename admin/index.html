@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ADMIN · Laboratorio de la calculadora</title>
+<meta name="description" content="Versión interna para experimentar con las variables. No indexar.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
+    --verde:#1E7A52;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
+  .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 60px;}
+
+  .marca{display:block; text-align:center; margin:34px 0 30px;}
+  .marca img{width:180px; max-width:60%; height:auto;}
+  @media (min-width:560px){ .marca img{width:220px;} }
+
+  .hero{padding:26px 0 6px; text-align:left;}
+  .hero h1{font-size:clamp(28px,7.4vw,38px); font-weight:700; line-height:1.14; letter-spacing:-.01em;}
+  .hero h1 em{font-style:normal; color:var(--menta);}
+  .hero p{margin-top:12px; font-size:16px; color:var(--gris); font-weight:400;}
+
+  .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:14px;}
+  .card p{font-size:16px; line-height:1.5; font-weight:400;}
+  .card-menta{border-color:var(--menta);}
+  .card-peri{border-color:var(--peri);}
+
+  .campo{margin-bottom:18px;}
+  .campo label{display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
+  .campo input{
+    width:100%; background:var(--tinta); border:1px solid #2E3540; border-radius:12px;
+    color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-size:22px; font-weight:500;
+    padding:14px 16px; outline:none;
+  }
+  .campo input:focus{border-color:var(--menta);}
+  .campo .hint{font-size:12px; color:var(--gris-sec); margin-top:6px; font-weight:400;}
+  .equiv{font-size:13px; color:var(--gris-sec); margin-top:7px; font-weight:500;}
+
+  /* Chips de moneda */
+  .chips{display:inline-flex; gap:6px; margin-bottom:8px;}
+  .chip{background:var(--tinta); border:1px solid #2E3540; color:var(--gris-sec); font-family:inherit;
+    font-size:15px; font-weight:700; width:44px; padding:7px 0; border-radius:999px; cursor:pointer;}
+  .chip.on{border-color:var(--menta); color:var(--menta); background:rgba(99,252,175,.10);}
+
+  .btn{
+    display:block; width:100%; text-align:center; cursor:pointer; border:none; border-radius:999px;
+    background:var(--menta); color:var(--tinta); font-family:'Bai Jamjuree',sans-serif;
+    font-size:18px; font-weight:700; padding:16px 20px; margin-top:6px;
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn[disabled]{opacity:.4; cursor:default;}
+  .btn-crema{background:var(--crema); color:var(--tinta);}
+  .btn-ghost{background:transparent; color:var(--gris); border:1px solid #2E3540;}
+  a.btn{text-decoration:none;}
+  .btn-fila{display:flex; gap:10px; margin-top:6px;}
+  .btn-fila .btn{margin-top:0;}
+
+  /* Actos secuenciales */
+  .acto{display:none;}
+  .acto.on{display:block; animation:entra .5s ease both;}
+  @keyframes entra{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .acto.on{animation:none;} }
+
+  .res-linea{display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 2px; border-bottom:1px solid #262C34;}
+  .res-linea .k{font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec);}
+  .res-linea .v-wrap{text-align:right; flex:0 0 auto;}
+  .res-linea .v{font-size:20px; font-weight:700; color:var(--crema); white-space:nowrap; display:block;}
+  .res-linea .v-eq{display:block; font-size:12px; font-weight:500; color:var(--gris-sec); margin-top:2px; white-space:nowrap;}
+  .techo{font-size:12px; color:var(--menta); margin:8px 2px 0; line-height:1.5; font-weight:400;}
+
+  .banda{
+    background:var(--peri); border-radius:18px; padding:26px 22px; margin-top:22px;
+    animation:entra .5s ease both;
+  }
+  @media (prefers-reduced-motion: reduce){ .banda{animation:none;} }
+  .banda .k{font-size:13px; font-weight:600; line-height:1.5; color:rgba(254,249,243,.85);}
+  .banda .num{font-size:clamp(34px,9.5vw,50px); font-weight:700; line-height:1.05; color:#fff; margin-top:8px; word-break:break-word;}
+  .banda .num-eq{font-size:16px; font-weight:500; color:rgba(254,249,243,.85); margin-top:4px;}
+  .banda .sub{font-size:15px; color:rgba(254,249,243,.9); margin-top:12px; font-weight:400;}
+  .banda .k s{opacity:.7;}
+  .banda-verde{background:var(--verde);}
+
+  .destaque{margin-top:18px;}
+  .destaque .k{font-size:15px; color:var(--gris); font-weight:400; line-height:1.5;}
+  .destaque .num{font-size:clamp(34px,9.5vw,48px); font-weight:700; line-height:1.06; color:var(--crema); margin-top:6px; word-break:break-word;}
+  .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
+  /* Gráfico del crecimiento al 8% (se dibuja al tocar "Ver mi aporte mensual") */
+  #chart-wrap{position:relative; height:280px; width:100%; margin:24px 0 6px;}
+  .chart-nota{font-size:14px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:6px;}
+  .chart-nota b{color:var(--menta); font-weight:700;}
+
+  .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:16px; font-weight:400;}
+  .frase-aporte span{display:block; margin-bottom:12px;}
+  .frase-aporte span:last-child{margin-bottom:0;}
+  .frase-aporte b{color:var(--menta); font-weight:700;}
+
+  .titulo{font-size:22px; font-weight:700; line-height:1.25; margin-top:30px;}
+  /* Puente: la bisagra del relato ("¿y cómo llegamos ahí?"). Va aireado y centrado. */
+  .puente{font-size:clamp(24px,6.6vw,32px); font-weight:700; line-height:1.3; text-align:center;
+    letter-spacing:-.01em; margin:54px 0 34px;}
+  .puente span{color:var(--menta);}
+  /* El quiebre de mentalidad antes de las mejorías */
+  .pero{font-size:clamp(56px,17vw,84px); font-weight:700; text-align:center; color:var(--menta);
+    line-height:1; letter-spacing:.02em; margin:56px 0 10px;}
+  .pero-sub{text-align:center; color:var(--gris-sec); font-size:15px; margin-bottom:8px;}
+  .resaltado{background:rgba(99,252,175,.10); border:1px solid var(--menta); border-radius:16px;
+    padding:18px 18px; margin:14px 0;}
+  .hl{color:var(--menta); font-weight:700;}
+  /* La oferta del cierre: es el remate, va al tamaño de un titular y los números respiran */
+  .oferta{padding:26px 20px;}
+  .oferta p{font-size:clamp(20px,5.4vw,23px); font-weight:700; line-height:1.35;}
+  .oferta-num{text-align:center; line-height:1.3; margin:18px 0;}
+  .oferta .oferta-num{font-size:clamp(26px,7.2vw,34px);}
+  .oferta-num .de{color:var(--gris-sec); font-weight:400;}
+  .oferta-num b{color:var(--menta);}
+  .oferta .oferta-cierre{margin-top:24px; font-size:clamp(24px,6.4vw,29px); text-align:center;}
+  /* Las 4 cosas que pasan: todas del mismo peso, todas importantes */
+  .pasa p{font-size:18px; line-height:1.5; font-weight:400;}
+  .pasa b{color:var(--menta); font-weight:700;}
+  /* Paso de la escalera del Acto 3: el numero viejo tachado y el nuevo destacado */
+  .paso{margin-top:14px; font-size:17px; font-weight:600; color:var(--crema); line-height:1.5;}
+  .paso s{color:var(--gris-sec); font-weight:400;}
+  .paso b{font-size:22px; color:var(--menta);}
+  .card-peri .paso b{color:var(--peri);}
+  .cap{font-size:12px; color:var(--gris-sec); margin-top:14px; line-height:1.55; font-weight:400; display:block;}
+  .confianza{font-size:12px; color:var(--gris-sec); margin:2px 0 14px; line-height:1.5;}
+
+  /* Toggles */
+  details{background:#1B2026; border:1px solid #262C34; border-radius:14px; margin-top:10px; overflow:hidden;}
+  details>summary{cursor:pointer; list-style:none; padding:14px 16px; font-size:15px; font-weight:600; color:var(--crema);}
+  details>summary::-webkit-details-marker{display:none;}
+  details>summary::after{content:"▾"; float:right; color:var(--gris-sec);}
+  details[open]>summary::after{content:"▴";}
+  details .body{padding:0 16px 16px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
+  details .body a{color:var(--peri); font-weight:600;}
+  details .body img{max-width:100%; height:auto; border-radius:8px; margin:10px 0; display:block;}
+
+  /* Opciones de autocalificación */
+  .opciones{display:flex; flex-direction:column; gap:10px; margin-top:12px;}
+  .opcion{display:block; width:100%; text-align:left; background:#1B2026; border:1px solid #262C34;
+    color:var(--crema); font-family:inherit; font-size:16px; font-weight:500; padding:15px 16px;
+    border-radius:14px; cursor:pointer; transition:border-color .12s ease;}
+  .opcion.on{border-color:var(--menta); background:rgba(99,252,175,.08);}
+
+  .ig-link{
+    display:block; text-align:center; text-decoration:none; margin-top:14px;
+    border:1px solid #2E3540; border-radius:999px; padding:12px 18px; font-size:14px; color:var(--gris);
+    transition:border-color .15s ease;
+  }
+  .ig-link:hover{border-color:var(--menta);}
+  .link-discreto{display:block; text-align:center; color:var(--gris-sec); font-size:13px; margin-top:14px; text-decoration:underline; cursor:pointer;}
+  a.link-discreto{text-decoration:underline;}
+  /* La acción del CTA aparece con la misma animación sutil de los actos */
+  .salida{animation:entra .4s ease both;}
+  @media (prefers-reduced-motion: reduce){ .salida{animation:none;} }
+
+  .warn{color:#e0a020; font-size:14px; margin-top:10px; font-weight:500;}
+  .fila2{display:flex; gap:12px;} .fila2>*{flex:1;}
+  .checkline{display:flex; align-items:flex-start; gap:10px; margin:4px 0 16px; font-size:15px; cursor:pointer; font-weight:400;}
+  .checkline input{width:20px; height:20px; margin-top:2px; accent-color:var(--menta); flex:0 0 auto;}
+  .desglose{font-size:12px; color:var(--gris-sec); margin:8px 2px 0; line-height:1.5;}
+
+  footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
+  footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
+  footer a{color:var(--gris);}
+
+  /* ===== ADMIN: gate de password ===== */
+  #gate{position:fixed; inset:0; z-index:9999; background:var(--tinta); display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px; padding:22px; text-align:center;}
+  #gate h2{font-size:20px; font-weight:700;}
+  #gate p{font-size:13px; color:var(--gris-sec); max-width:320px;}
+  #gate input{width:100%; max-width:280px; background:#1B2026; border:1px solid var(--input-bd); border-radius:12px;
+    color:var(--crema); font-family:inherit; font-size:18px; padding:12px 14px; outline:none; text-align:center;}
+  #gate button{max-width:280px; width:100%; background:var(--menta); color:var(--tinta); border:none; border-radius:999px;
+    font-family:inherit; font-size:16px; font-weight:700; padding:13px; cursor:pointer;}
+  #gate .err{color:#e0525a; font-size:13px; min-height:16px;}
+  body.locked{overflow:hidden;}
+
+  /* ===== ADMIN: panel de variables ===== */
+  #admin-panel{position:sticky; top:0; z-index:50; background:#0E1216; border-bottom:2px solid var(--menta);
+    max-width:520px; margin:0 auto; width:100%;}
+  #admin-panel summary{cursor:pointer; list-style:none; padding:12px 18px; font-size:14px; font-weight:700;
+    color:var(--menta); display:flex; justify-content:space-between; align-items:center;}
+  #admin-panel summary::-webkit-details-marker{display:none;}
+  #admin-panel[open] summary{border-bottom:1px solid var(--card-bd);}
+  #admin-panel .pbody{padding:14px 18px 18px;}
+  .pgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px 14px;}
+  .pcampo label{display:block; font-size:11px; color:var(--gris-sec); font-weight:600; margin-bottom:3px; letter-spacing:.02em;}
+  .pcampo input{width:100%; background:#1B2026; border:1px solid var(--input-bd); border-radius:9px; color:var(--crema);
+    font-family:inherit; font-size:16px; font-weight:600; padding:8px 10px; outline:none;}
+  .pcampo input:focus{border-color:var(--menta);}
+  .psub{font-size:11px; color:var(--menta); font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:16px 0 8px;}
+  .psub:first-child{margin-top:0;}
+  #admin-panel .pnota{font-size:11px; color:var(--gris-sec); line-height:1.5; margin-top:12px;}
+  #admin-panel .preset{margin-top:14px; width:100%; background:transparent; border:1px solid var(--input-bd);
+    color:var(--gris); border-radius:999px; font-family:inherit; font-size:13px; font-weight:600; padding:10px; cursor:pointer;}
+</style>
+</head>
+<body class="locked">
+
+<!-- ===== GATE (password: admin) ===== -->
+<div id="gate">
+  <h2>🔒 Laboratorio · Solo admin</h2>
+  <p>Versión interna para mover las variables. No es la calculadora del cliente.</p>
+  <input id="gate-pass" type="password" placeholder="Contraseña" autocomplete="off">
+  <button id="gate-btn">Entrar</button>
+  <div class="err" id="gate-err"></div>
+</div>
+
+<!-- ===== PANEL DE VARIABLES ===== -->
+<details id="admin-panel">
+  <summary>⚙️ Variables (tocá para abrir/cerrar) <span id="p-resumen" style="color:var(--gris-sec);font-weight:600;font-size:12px"></span></summary>
+  <div class="pbody">
+    <div class="psub">Crecimiento y retiro</div>
+    <div class="pgrid">
+      <div class="pcampo"><label>Crecer base %/año</label><input id="p-crecBase" inputmode="decimal"></div>
+      <div class="pcampo"><label>Crecer nuestro sistema %</label><input id="p-crecSist" inputmode="decimal"></div>
+      <div class="pcampo"><label>Retiro conservador %</label><input id="p-retBase" inputmode="decimal"></div>
+      <div class="pcampo"><label>Retiro con alianza %</label><input id="p-retAlianza" inputmode="decimal"></div>
+      <div class="pcampo"><label>Tipo de cambio ₡/$</label><input id="p-tc" inputmode="decimal"></div>
+    </div>
+
+    <div class="psub">Pensión IVM (Caja)</div>
+    <div class="pgrid">
+      <div class="pcampo"><label>Tope máximo ₡</label><input id="p-tope" inputmode="numeric"></div>
+      <div class="pcampo"><label>Pensión mínima ₡</label><input id="p-pmin" inputmode="numeric"></div>
+      <div class="pcampo"><label>Salario mínimo ₡</label><input id="p-smin" inputmode="numeric"></div>
+      <div class="pcampo"><label>Cotiza desde (edad)</label><input id="p-edadIni" inputmode="numeric"></div>
+    </div>
+
+    <div class="psub">ROP</div>
+    <div class="pgrid">
+      <div class="pcampo"><label>Rendimiento nominal %</label><input id="p-ropNom" inputmode="decimal"></div>
+      <div class="pcampo"><label>Inflación %</label><input id="p-inflac" inputmode="decimal"></div>
+      <div class="pcampo"><label>Plazo de pago (años)</label><input id="p-ropPlazo" inputmode="decimal"></div>
+    </div>
+
+    <button class="preset" id="p-reset">↺ Volver a los valores del cliente</button>
+    <div class="pnota">Los <b>números</b> del resultado (aportes, meta, capital) siempre respetan estas tasas. El texto "se baja a la mitad" da exacto solo cuando el retiro con alianza es el doble del conservador; el número de al lado siempre es el correcto.</div>
+  </div>
+</details>
+
+<div class="wrap">
+  <div class="marca">
+    <img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220">
+  </div>
+
+  <!-- ================= ACTO 1 ================= -->
+  <section class="hero">
+    <h1>Saquemos un tema de debajo de la alfombra: tu <em>retiro</em>.</h1>
+  </section>
+
+  <div class="card">
+    <div class="campo">
+      <label for="meta">¿Con cuánto querés vivir por mes cuando te retirés?</label>
+      <div class="chips" data-for="meta">
+        <button type="button" class="chip on" data-cur="$">$</button>
+        <button type="button" class="chip" data-cur="₡">₡</button>
+      </div>
+      <input id="meta" type="text" inputmode="numeric" placeholder="$10,000" autocomplete="off">
+      <div class="equiv" id="meta-eq"></div>
+    </div>
+    <button class="btn" id="b-acto1">Ver cuánto necesito →</button>
+    <div class="warn" id="w-meta" style="display:none">Escribí tu meta mensual para continuar.</div>
+  </div>
+
+  <div class="card card-menta" id="dato-techo">
+    <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
+  </div>
+
+  <details id="tc-box">
+    <summary id="tc-sum"></summary>
+    <div class="body">
+      <div class="campo" style="margin-bottom:0">
+        <label for="tc">Tipo de cambio (₡ por $1)</label>
+        <input id="tc" type="text" inputmode="numeric" value="460" autocomplete="off">
+      </div>
+    </div>
+  </details>
+
+  <details data-tg="t_inflacion">
+    <summary>🛡️ ¿Y la inflación?</summary>
+    <div class="body">Tranquilo, no tenés que preocuparte por eso acá. Asumimos una inflación del 3% anual en dólares, y de aquí en adelante todo va en <b>términos reales</b>: mantenemos la capacidad de compra del monto que pongas en tu meta a lo largo de toda la calculadora. O sea que los números que ves son de poder de compra de hoy, constante.</div>
+  </details>
+
+  <section class="acto" id="acto1-res">
+    <div class="banda">
+      <div class="k">Para sacar eso cada mes sin quedarte sin plata (la regla del <span id="lbl-retb">4</span>%), necesitás acumular:</div>
+      <div class="num" id="r-capital">$0</div>
+      <div class="num-eq" id="r-capital-eq"></div>
+      <div class="sub">Tranquilo, nadie tiene esa plata guardada de un solo. Esto se construye poco a poco. Mirá:</div>
+    </div>
+
+    <details data-tg="t_por_que_4">
+      <summary>🤔 ¿Por qué el 4%?</summary>
+      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que te dan alrededor de un 4% al año. Vivís de los intereses y el capital queda intacto. Luego ese capital se puede usar para incrementar tu monto mensual de retiro o para heredarlo.</div>
+    </details>
+  </section>
+
+  <!-- ================= ACTO 2A ================= -->
+  <section class="acto" id="acto2a">
+    <div class="puente">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>.<br>¿Y cómo llegamos ahí?</div>
+
+    <div class="card" id="caja-pregunta">
+      <button class="btn" id="b-caja-no">Ok, sigamos →</button>
+      <p style="margin-top:20px">Si querés, antes de seguir le restamos lo que sí te va a dar la Caja y así tu meta final baja un poco. (asumiendo que no quiebra) 😅</p>
+      <button class="btn btn-ghost" id="b-caja-si" style="margin-top:12px">Hmm, quiero ver si la Caja mejora mis números</button>
+    </div>
+
+    <div class="card" id="caja-form" style="display:none">
+      <div class="campo">
+        <label for="edad">Tu edad</label>
+        <input id="edad" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="salario">Tu salario bruto mensual</label>
+        <div class="chips" data-for="salario">
+          <button type="button" class="chip on" data-cur="$">$</button>
+          <button type="button" class="chip" data-cur="₡">₡</button>
+        </div>
+        <input id="salario" type="text" inputmode="numeric" placeholder="$7,500" autocomplete="off">
+        <div class="equiv" id="salario-eq"></div>
+        <div class="hint">Si lo pensás en colones, tocá el ₡</div>
+      </div>
+      <label class="checkline">
+        <input type="checkbox" id="f-rop">
+        <span>Sumale también mi ROP</span>
+      </label>
+      <div class="campo" id="campo-rop" style="display:none">
+        <label for="saldo-rop">Saldo de tu ROP, si lo sabés</label>
+        <div class="chips" data-for="saldo-rop">
+          <button type="button" class="chip on" data-cur="$">$</button>
+          <button type="button" class="chip" data-cur="₡">₡</button>
+        </div>
+        <input id="saldo-rop" type="text" inputmode="numeric" placeholder="$0" autocomplete="off">
+        <div class="equiv" id="saldo-rop-eq"></div>
+        <div class="hint">Si no lo sabés, dejalo vacío y lo estimamos con tu salario y tus años cotizados.</div>
+      </div>
+      <p class="confianza">Solo lo usamos para calcular tu pensión aquí, en tu navegador. No se envía a ningún lado.</p>
+      <button class="btn" id="b-caja-calc">Ver mi pensión →</button>
+      <div class="warn" id="w-caja" style="display:none">Escribí tu edad (entre 18 y 64) y tu salario bruto mensual.</div>
+    </div>
+
+    <div id="acto2a-res" style="display:none">
+      <div class="res-linea">
+        <span class="k">La Caja te daría</span>
+        <span class="v-wrap"><span class="v" id="r-pension">$0</span><span class="v-eq" id="r-pension-eq"></span></span>
+      </div>
+      <div class="desglose" id="r-desglose" style="display:none"></div>
+      <div class="card card-menta" id="r-techo" style="display:none">
+        <p>🚧 <b>Y vos tocaste ese techo.</b> Tu pensión se quedó en el máximo de <b>₡1,765,859</b>. Por más que ganés o cotizés más, de ahí no sube. Todo lo que quieras arriba de eso, lo construís vos.</p>
+      </div>
+      <div class="techo" id="r-antes65" style="display:none">Ojo: la Caja paga a partir de los 65. Si te retirás antes, esos años los cubre tu inversión.</div>
+      <div class="res-linea">
+        <span class="k">Tu inversión debe cubrir</span>
+        <span class="v-wrap"><span class="v" id="r-cubrir">$0</span><span class="v-eq" id="r-cubrir-eq"></span></span>
+      </div>
+
+      <div class="banda">
+        <div class="k">Tu nueva meta de capital:</div>
+        <div class="num" id="r-capital2">$0</div>
+        <div class="num-eq" id="r-capital2-eq"></div>
+      </div>
+
+      <details data-tg="t_calculo_pension">
+        <summary>🏛️ ¿Cómo calculamos tu pensión?</summary>
+        <div class="body">Usamos la fórmula oficial del IVM (normativa 2026): un porcentaje de tu salario según tu nivel de ingreso (entre 43% y 52.5%), más un poquito extra por cada año cotizado sobre los 25. Asumimos que cotizás sin pausas desde los 25 años. Si sumás tu ROP, proyectamos tu cuenta individual con el 4.25% de tu salario y un rendimiento conservador, y la volvemos renta mensual. Es una estimación educativa, no una certificación de la CCSS.</div>
+      </details>
+      <details data-tg="t_cuotas_ccss">
+        <summary>🔎 ¿Querés ver tus cuotas reales? (Oficina Virtual de la CCSS)</summary>
+        <div class="body">
+          Acá asumimos que cotizás sin pausas desde los 25. Si querés el dato exacto, es gratis y toma 2 minutos:<br><br>
+          1. Entrá a la <b>Oficina Virtual de la CCSS</b> → <a href="https://aissfa.ccss.sa.cr/afiliacion/index.xhtml?faces-redirect=true?faces-redirect=true" target="_blank" rel="noopener">aissfa.ccss.sa.cr</a> e ingresá con tu <b>usuario</b> (si no tenés, lo creás ahí con tu cédula). Así se ve la pantalla de entrada:
+          <img src="/assets/ccss_home.webp" width="300" alt="Oficina Virtual de la CCSS, pantalla de entrada" loading="lazy">
+          2. Ya adentro, andá al menú <b>Pensiones → Reportes → «Proyección de Pensión»</b>:
+          <img src="/assets/ccss_proyeccion.webp" width="380" alt="CCSS, reporte de Proyección de Pensión" loading="lazy">
+          3. Ahí ves <b>cuántas cuotas (meses) has cotizado</b> y la proyección oficial de la CCSS.<br><br>
+          <i>Tip: 300 cuotas, o sea 25 años, es el mínimo para la pensión completa del IVM.</i>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= ACTO 2B ================= -->
+  <section class="acto" id="acto2b">
+    <div class="card" id="acto2b-form">
+      <p>Ahora sí: ¿cuánto habría que ir poniendo cada mes para llegar a esa meta? Para eso poné aquí abajo:</p>
+      <div class="campo" id="campo-edad2" style="margin-top:18px">
+        <label for="edad2">Tu edad</label>
+        <input id="edad2" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="edad-ret">¿A qué edad querés retirarte?</label>
+        <input id="edad-ret" type="text" inputmode="numeric" placeholder="65" maxlength="2" autocomplete="off">
+      </div>
+      <button class="btn" id="b-acto2b">Ver mi aporte mensual →</button>
+      <div class="warn" id="w-2b" style="display:none">Escribí tu edad (entre 18 y 64) y una edad de retiro mayor a esa.</div>
+    </div>
+
+    <div id="acto2b-res" style="display:none">
+      <div class="destaque">
+        <div class="k">Aportando desde hoy, con un crecimiento del <span id="lbl-crb">8</span>% anual:</div>
+        <div class="num" id="r-aporte8">$0</div>
+        <div class="num-eq" id="r-aporte8-eq"></div>
+        <p class="frase-aporte" id="r-frase-aporte"></p>
+      </div>
+
+      <div id="chart-wrap"><canvas id="chart-crec"></canvas></div>
+      <p class="chart-nota" id="chart-nota"></p>
+
+      <span class="cap"><span id="lbl-crb2">8</span>% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
+    </div>
+  </section>
+
+  <!-- ================= ACTO 3 ================= -->
+  <section class="acto" id="acto3">
+    <div class="pero">PERO</div>
+
+    <div class="titulo" style="margin-top:20px">Ese número asume dos cosas:</div>
+    <div class="card">
+      <p>📊 Que tu plata <b>crece al <span id="lbl-crb3">8</span>%</b> al año, que a grandes rasgos es el histórico de la bolsa de Estados Unidos.</p>
+      <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el <span id="lbl-retb2">4</span>%</b> al año, que es lo que rinde un bono del Tesoro.</p>
+    </div>
+
+    <div class="card card-menta">
+      <p>Si invertís al <b>15%</b> buscando crecimiento (¡como debería ser, porque tenés el tiempo a tu favor!)</p>
+      <p style="margin-top:10px">Y te retirás al <b>8%</b>…</p>
+    </div>
+
+    <div class="titulo">Pasan muchas cosas:</div>
+
+    <div class="resaltado pasa">
+      <p>🚀 Tu cuota mensual al <span id="lbl-crs">15</span>% pasa a tener que ser <b id="r-aporte15">$0</b>.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>🌴 ¡Y si a eso le sumás retirarte con el <span id="lbl-reta">8</span>%, tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>🎯 O sea que con <b>ambas cosas</b>, más crecimiento y mejor tasa de retiro, tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
+    </div>
+    <div class="resaltado pasa">
+      <p>⏱️ O, ¡ajá!, tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
+    </div>
+
+    <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
+
+    <div class="titulo">Suena todo muy bonito, ¡¡pero tal vez demasiado!!</div>
+    <details data-tg="t_humo_15">
+      <summary>🔍 ¿Esto no será humo?</summary>
+      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y <b class="hl">nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></div>
+    </details>
+    <details data-tg="t_como_8pct">
+      <summary>🌴 ¿Cómo se logra el 8% de ingreso pasivo para el retiro?</summary>
+      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
+    </details>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="acto" id="cta">
+    <div class="card card-peri oferta">
+      <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de</p>
+      <p class="oferta-num"><span class="de" id="r-oferta-de">$0</span> a <b id="r-oferta-a">$0</b></p>
+      <p>y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de</p>
+      <p class="oferta-num"><span class="de" id="r-oferta-meta-de">$0</span> a <b id="r-oferta-meta-a">$0</b></p>
+      <p class="oferta-cierre">¿Te sonaría bien?</p>
+      <p class="oferta-cierre" style="color:var(--menta); margin-top:12px">Contestanos aquí abajo 👇</p>
+    </div>
+    <div class="opciones" id="opciones">
+      <button class="opcion" data-cal="Suena bien, hablémoslo más">💪 Suena bien, hablémoslo más</button>
+      <button class="opcion" data-cal="Quisiera más información">🤝 Quisiera más información</button>
+      <button class="opcion" data-cal="Prefiero ir cuesta arriba">🫡 No, la verdad prefiero ir cuesta arriba lo más que pueda</button>
+    </div>
+
+    <div id="cta-salidas"></div>
+    <div id="form-wrap"></div>
+  </section>
+</div>
+
+<footer>
+  <p>Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta.<br>
+  No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. · <a href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">@joseinvestor.cr</a></p>
+</footer>
+
+<script>
+"use strict";
+// ===== CONFIG =====
+var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
+var INSTAGRAM_URL = "https://www.instagram.com/joseinvestor.cr/";
+var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+var TC_DEFAULT = 460;
+// Parámetros IVM 2026 (fuente: referencia_ivm_2026.md). El IVM corre SIEMPRE en colones.
+var SALARIO_MINIMO = 373092;
+var TOPE_MAX = 1765859;
+var PENSION_MIN = 162295;
+var EDAD_RETIRO = 65;
+var EDAD_INICIO_COTIZA = 25;
+// Tasas del flujo
+// [ADMIN] Estas tasas son editables desde el panel de arriba.
+var TASA_BASE = 8;        // crecimiento de referencia (histórico de la bolsa)
+var TASA_CREC = 15;       // crecimiento con nuestro sistema
+var RET_BASE = 4;         // tasa de retiro conservadora (regla del 4% -> capital = gasto anual x 25)
+var RET_ALIANZA = 8;      // tasa de retiro con la alianza (ingreso pasivo)
+function multRetiro(){ return 100 / RET_BASE; }            // capital = gasto anual x (100/tasa de retiro)
+function factorAlianza(){ return RET_BASE / RET_ALIANZA; }  // cuánto se achica la meta con la mejor tasa
+var ADMIN = true;         // no envía leads reales al Sheet
+
+// ===== ESTADO =====
+var S = {
+  metaVal:0, metaCur:"$", tc:TC_DEFAULT,
+  caja:null, edad:0, edadRet:0, salVal:0, salCur:"$",
+  rop:false, saldoRopVal:0, saldoRopCur:"$", ivmCol:0, ropCol:0,
+  pensionCol:0, tocoTecho:false,
+  capObjUsd:0, capObjCol:0,
+  aportes:{}, autocal:null, acto:1, toggles:[], inicio:Date.now()
+};
+function guardar(){ try{ sessionStorage.setItem("lp_admin_state", JSON.stringify(S)); }catch(e){} }
+function restaurar(){
+  try{
+    var raw = sessionStorage.getItem("lp_admin_state");
+    if(raw){ var o=JSON.parse(raw); for(var k in o){ if(o.hasOwnProperty(k)) S[k]=o[k]; } }
+  }catch(e){}
+  if(!S.toggles) S.toggles = [];
+}
+
+// ===== TOGGLES: tracking =====
+var togglesAbiertos = [];
+function marcarToggle(id){
+  if(!id || togglesAbiertos.indexOf(id) > -1) return;
+  togglesAbiertos.push(id);
+  S.toggles = togglesAbiertos;
+  guardar();
+  try{ if(typeof gtag === "function") gtag("event","toggle_abierto",{toggle:id}); }catch(e){}
+  try{ if(typeof fbq === "function") fbq("trackCustom","toggle_abierto",{toggle:id}); }catch(e){}
+}
+function initToggles(){
+  var ds = document.querySelectorAll("details[data-tg]");
+  Array.prototype.forEach.call(ds, function(el){
+    el.addEventListener("toggle", function(){ if(el.open) marcarToggle(el.getAttribute("data-tg")); });
+  });
+}
+
+// ===== FORMATO =====
+function soloDigitos(s){ return (s||"").replace(/[^0-9]/g,""); }
+function num(s){ var d=soloDigitos(s); return d?parseInt(d,10):0; }
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function money(n, cur){ return (cur==="₡"?"₡":"$") + fmt(n); }
+function otra(cur){ return cur==="$" ? "₡" : "$"; }
+function conv(v, de, a){ if(de===a) return v; return de==="$" ? v*S.tc : v/S.tc; }
+function aUsd(v, cur){ return cur==="$" ? v : v/S.tc; }
+function aCol(v, cur){ return cur==="₡" ? v : v*S.tc; }
+
+// Comas en vivo (campos que NO son plata, p. ej. el tipo de cambio)
+function bindComas(el){
+  el.addEventListener("input", function(){
+    var d = soloDigitos(el.value);
+    var pos = el.selectionStart, antes = el.value.length;
+    el.value = d ? fmt(parseInt(d,10)) : "";
+    var desp = el.value.length;
+    try{ el.setSelectionRange(Math.max(0,pos+(desp-antes)), Math.max(0,pos+(desp-antes))); }catch(e){}
+  });
+}
+// Comas en vivo + el símbolo de la moneda adelante del número ($10,000)
+function bindMoney(el, getCur){
+  el.addEventListener("input", function(){
+    var d = soloDigitos(el.value);
+    var pos = el.selectionStart, antes = el.value.length;
+    el.value = d ? (getCur() + fmt(parseInt(d,10))) : "";
+    var desp = el.value.length, np = pos + (desp - antes);
+    np = el.value ? Math.max(1, Math.min(np, el.value.length)) : 0;   // nunca antes del símbolo
+    try{ el.setSelectionRange(np, np); }catch(e){}
+  });
+}
+// Placeholder sugerido, en la moneda del chip (se guarda en US$ y se convierte)
+function pintarPlaceholder(id, baseUsd, cur){
+  var el = byId(id); if(!el) return;
+  el.placeholder = cur + fmt(conv(baseUsd, "$", cur));
+}
+function byId(id){ return document.getElementById(id); }
+
+// ===== CHIPS DE MONEDA =====
+function initChips(inputId, getCur, setCur, onChange){
+  var cont = document.querySelector('.chips[data-for="'+inputId+'"]');
+  if(!cont) return;
+  Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(btn){
+    btn.addEventListener("click", function(){
+      var nueva = btn.getAttribute("data-cur");
+      if(nueva === getCur()) return;
+      var el = byId(inputId), v = num(el.value);
+      if(v > 0){ el.value = nueva + fmt(conv(v, getCur(), nueva)); }   // convertir lo escrito y cambiarle el símbolo
+      setCur(nueva);
+      Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(c){ c.classList.toggle("on", c===btn); });
+      onChange && onChange();
+    });
+  });
+}
+function pintarChips(inputId, cur){
+  var cont = document.querySelector('.chips[data-for="'+inputId+'"]');
+  if(!cont) return;
+  Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(c){
+    c.classList.toggle("on", c.getAttribute("data-cur")===cur);
+  });
+}
+
+// ===== MOTOR IVM (art. 24, parámetros 2026): SIEMPRE en colones =====
+function cuantiaBasica(salarioCol){
+  var n = salarioCol / SALARIO_MINIMO;
+  if (n < 2) return 0.525;
+  if (n < 3) return 0.510;
+  if (n < 4) return 0.494;
+  if (n < 5) return 0.478;
+  if (n < 6) return 0.462;
+  if (n < 8) return 0.446;
+  return 0.430;
+}
+function pensionIVM(edad, salarioCol){
+  var aniosCot = Math.max(0, Math.min(edad, EDAD_RETIRO) - EDAD_INICIO_COTIZA) + Math.max(0, EDAD_RETIRO - Math.max(edad, EDAD_INICIO_COTIZA));
+  var cuotas = Math.round(aniosCot * 12);
+  if (cuotas < 180) return 0;
+  var cb = cuantiaBasica(salarioCol);
+  var adicional = Math.max(0, cuotas - 300) * 0.000833;
+  var pension = salarioCol * (cb + adicional);
+  if (cuotas < 300) pension = pension * (cuotas / 300);
+  pension = Math.min(pension, TOPE_MAX);
+  pension = Math.max(pension, PENSION_MIN);
+  return Math.round(pension);
+}
+
+// ===== MOTOR ROP (Ley 7983, art. 22): igual que el wizard. Todo en colones. =====
+var APORTE_ROP_PCT = 4.25;          // del salario reportado a la CCSS
+var ROP_NOMINAL_PCT = 6.0;
+var ROP_INFLACION_PCT = 3.0;
+var ROP_PLAZO_PAGO_ANIOS = 20.0;
+var ROP_ANIO_INICIO = 2000;         // el ROP arrancó ~2000: tope de cuotas
+var ROP_PISO_PCT = 20.0;            // ninguna prestación baja del 20% de la mínima del IVM
+var ROP_CORTE_TRANSITORIO = new Date(Date.UTC(2030, 1, 19));   // 2030-02-19
+
+function tasaRealAnualPct(nom, inf){ return ((1+nom/100)/(1+inf/100) - 1) * 100; }
+function valorFuturoRop(saldo, aporte, i, meses){
+  if(meses <= 0) return saldo;
+  if(i === 0) return saldo + aporte*meses;
+  var g = Math.pow(1+i, meses);
+  return saldo*g + aporte*(g-1)/i;
+}
+function pagoAnualidad(fv, i, meses){
+  if(meses <= 0) return 0;
+  if(i === 0) return fv/meses;
+  return fv * i / (1 - Math.pow(1+i, -meses));
+}
+// Devuelve la renta mensual del ROP en ₡ (poder de compra de hoy).
+function pensionROP(edad, salarioCol, saldoCol){
+  var aniosRest = Math.max(0, EDAD_RETIRO - edad);
+  var mesesFut = aniosRest * 12;
+  // Cuotas al ROP hoy: cotización continua desde los 25, pero el ROP existe desde ~2000.
+  var cuotasHoy = Math.max(0, edad - EDAD_INICIO_COTIZA) * 12;
+  var cuotasRopMax = Math.max(0, new Date().getFullYear() - ROP_ANIO_INICIO) * 12;
+  var cuotasRopHoy = Math.min(cuotasHoy, cuotasRopMax);
+  var cuotasAlRetiro = cuotasRopHoy + mesesFut;
+
+  var aporteMensual = salarioCol * APORTE_ROP_PCT / 100;
+  // Si no sabe el saldo, lo estimamos: aportes ya hechos, sin crecimiento (conservador).
+  if(saldoCol <= 0) saldoCol = aporteMensual * cuotasRopHoy;
+
+  var i = tasaRealAnualPct(ROP_NOMINAL_PCT, ROP_INFLACION_PCT) / 100 / 12;
+  var fv = valorFuturoRop(saldoCol, aporteMensual, i, mesesFut);
+
+  var transitorio = cuotasAlRetiro > 0 ? fv / cuotasAlRetiro : 0;
+  var anualidad = pagoAnualidad(fv, i, Math.max(1, Math.round(ROP_PLAZO_PAGO_ANIOS*12)));
+
+  var hoy = new Date();
+  var fechaRetiro = new Date(Date.UTC(hoy.getFullYear() + aniosRest, hoy.getMonth(), 1));
+  var aplicable = (fechaRetiro < ROP_CORTE_TRANSITORIO) ? transitorio : anualidad;
+
+  return Math.max(aplicable, PENSION_MIN * ROP_PISO_PCT / 100);
+}
+
+// ===== APORTE REQUERIDO (anualidad estándar) =====
+// Cuánto hay que poner por mes para llegar a `fv` a los 65, con `anualPct` mensualizado,
+// descontando lo que crece por su cuenta el capital inicial `pv`.
+function aporteRequerido(fv, pv, anualPct, meses){
+  if(meses <= 0) return 0;
+  var i = anualPct/100/12;
+  var f = Math.pow(1+i, meses);
+  var falta = fv - pv*f;
+  if(falta <= 0) return 0;                 // el capital inicial ya llega solo
+  return falta * i / (f - 1);
+}
+// Al revés: manteniendo la MISMA cuota, ¿en cuántos meses se llega a `fv`? Sirve para
+// decirle que, con el 15% y el retiro al 8%, su retiro se le adelanta.
+function mesesParaLlegar(fv, pmt, anualPct){
+  if(pmt <= 0 || fv <= 0) return 0;
+  var i = anualPct/100/12;
+  return Math.log(1 + fv*i/pmt) / Math.log(1+i);
+}
+
+// ===== EQUIVALENCIAS EN VIVO =====
+function pintarEquiv(inputId, cur, eqId){
+  var v = num(byId(inputId).value);
+  var el = byId(eqId);
+  if(!el) return;
+  el.textContent = v>0 ? ("≈ " + money(conv(v, cur, otra(cur)), otra(cur))) : "";
+}
+function refrescarEquivalencias(){
+  pintarEquiv("meta", S.metaCur, "meta-eq");
+  if(byId("salario")) pintarEquiv("salario", S.salCur, "salario-eq");
+  if(byId("saldo-rop")) pintarEquiv("saldo-rop", S.saldoRopCur, "saldo-rop-eq");
+  var sum = byId("tc-sum");
+  if(sum) sum.textContent = "Para los cálculos usamos ₡"+fmt(S.tc)+" por $1, y trabajamos todo en dólares porque las inversiones son en la bolsa de Estados Unidos. Si querés cambiar el tipo de cambio, tocá aquí.";
+}
+
+// ===== ACTOS =====
+// Al aparecer un acto NO movemos la pantalla: el contenido crece debajo y la persona
+// baja cuando quiere. (Feedback de clientes: los saltos automaticos molestan.)
+function mostrarActo(id){
+  byId(id).classList.add("on");
+}
+
+// --- capital objetivo (en la moneda de la meta) ---
+function capitalObjetivo(){
+  // meta mensual menos pensión (si la calculó), × 12 × 25
+  var metaCol = aCol(S.metaVal, S.metaCur);
+  var netoCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
+  var col = netoCol * 12 * multRetiro();
+  return { col: col, usd: col / S.tc };
+}
+function pintarCapital(numId, eqId){
+  var c = capitalObjetivo();
+  S.capObjCol = c.col; S.capObjUsd = c.usd;
+  var enMeta = S.metaCur==="$" ? c.usd : c.col;
+  byId(numId).textContent = money(enMeta, S.metaCur);
+  byId(eqId).textContent = "≈ " + money(S.metaCur==="$" ? c.col : c.usd, otra(S.metaCur));
+}
+
+// ===== ACTO 1 =====
+function calcularActo1(){
+  var v = num(byId("meta").value);
+  if(v <= 0){ byId("w-meta").style.display="block"; return; }
+  byId("w-meta").style.display="none";
+  S.metaVal = v; S.acto = Math.max(S.acto, 2);
+  pintarCapital("r-capital","r-capital-eq");
+  byId("r-capital-eco").textContent = byId("r-capital").textContent;   // el puente repite el número
+  guardar();
+  mostrarActo("acto1-res"); mostrarActo("acto2a");
+}
+
+// ===== ACTO 2A (La Caja) =====
+function calcularCaja(){
+  var edad = num(byId("edad").value);
+  var sal = num(byId("salario").value);
+  if(!edad || edad < 18 || edad > 64 || sal <= 0){ byId("w-caja").style.display="block"; return; }
+  byId("w-caja").style.display="none";
+  S.edad = edad; S.salVal = sal; S.caja = "si";
+  var salCol = aCol(sal, S.salCur);              // el IVM y el ROP corren en colones
+  S.ivmCol = pensionIVM(edad, salCol);
+  S.tocoTecho = (S.ivmCol === TOPE_MAX);         // el techo es del IVM, no del ROP
+  S.rop = byId("f-rop").checked;
+  S.saldoRopVal = num(byId("saldo-rop").value);
+  S.ropCol = S.rop ? pensionROP(edad, salCol, aCol(S.saldoRopVal, S.saldoRopCur)) : 0;
+  S.pensionCol = S.ivmCol + S.ropCol;
+
+  // Desglose IVM + ROP (solo si sumó el ROP)
+  var desg = byId("r-desglose");
+  if(S.rop){
+    function enM(col){ return money(S.metaCur==="$" ? col/S.tc : col, S.metaCur); }
+    desg.textContent = "= IVM " + enM(S.ivmCol) + " + ROP " + enM(S.ropCol) + " por mes";
+    desg.style.display = "block";
+  } else { desg.style.display = "none"; }
+
+  // resultados en la moneda de la meta
+  var pensionEnMeta = S.metaCur==="$" ? S.pensionCol/S.tc : S.pensionCol;
+  var metaCol = aCol(S.metaVal, S.metaCur);
+  var cubrirCol = Math.max(0, metaCol - S.pensionCol);
+  var cubrirEnMeta = S.metaCur==="$" ? cubrirCol/S.tc : cubrirCol;
+  byId("r-pension").textContent = money(pensionEnMeta, S.metaCur) + "/mes";
+  byId("r-cubrir").textContent = money(cubrirEnMeta, S.metaCur) + "/mes";
+  // Equivalencia en la otra moneda, en chiquito debajo de cada numero.
+  var pensionOtra = S.metaCur==="$" ? S.pensionCol : S.pensionCol/S.tc;
+  var cubrirOtra  = S.metaCur==="$" ? cubrirCol   : cubrirCol/S.tc;
+  byId("r-pension-eq").textContent = "≈ " + money(pensionOtra, otra(S.metaCur)) + "/mes";
+  byId("r-cubrir-eq").textContent  = "≈ " + money(cubrirOtra,  otra(S.metaCur)) + "/mes";
+  byId("r-techo").style.display = S.tocoTecho ? "block" : "none";
+  pintarCapital("r-capital2","r-capital2-eq");
+  byId("acto2a-res").style.display = "block";
+  byId("campo-edad2").style.display = "none";   // ya dio la edad
+  S.acto = Math.max(S.acto, 3);
+  guardar();
+  mostrarActo("acto2b");
+}
+function saltarCaja(){
+  S.caja = "saltar"; S.acto = Math.max(S.acto, 3);
+  byId("caja-form").style.display="none";
+  byId("acto2a-res").style.display="none";
+  byId("campo-edad2").style.display = "";       // acá sí hay que pedir la edad
+  guardar();
+  mostrarActo("acto2b");
+}
+
+// ===== ACTO 2B (aporte) =====
+function calcularAporte(){
+  var edad = S.caja==="si" ? S.edad : num(byId("edad2").value);
+  var edadRet = num(byId("edad-ret").value) || EDAD_RETIRO;
+  if(!edad || edad < 18 || edad > 64 || edadRet <= edad || edadRet > 80){ byId("w-2b").style.display="block"; return; }
+  byId("w-2b").style.display="none";
+  S.edad = edad; S.edadRet = edadRet;
+  // El IVM se cobra a los 65: si eligió retirarse antes, avisamos en el resultado de la Caja.
+  var aviso = byId("r-antes65");
+  if(aviso) aviso.style.display = (S.caja==="si" && edadRet < EDAD_RETIRO) ? "block" : "none";
+  var meses = (edadRet - edad) * 12;
+  var c = capitalObjetivo();
+  S.capObjUsd = c.usd; S.capObjCol = c.col;
+
+  // El aporte se calcula en US$, partiendo de cero (sin capital inicial).
+  var a8      = aporteRequerido(c.usd,     0, TASA_BASE, meses);
+  var a15     = aporteRequerido(c.usd,     0, TASA_CREC, meses);
+  var aRet8   = aporteRequerido(c.usd*factorAlianza(),   0, TASA_BASE, meses);
+  var aCombo  = aporteRequerido(c.usd*factorAlianza(),   0, TASA_CREC, meses);
+  S.aportes = { a8:a8, a15:a15, aRet8:aRet8, aCombo:aCombo };
+
+  // Se muestran en la moneda elegida en la meta, con la equivalencia debajo.
+  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
+  function otroLado(usd){ return S.metaCur==="$" ? usd*S.tc : usd; }
+  byId("r-aporte8").textContent = money(enMeta(a8), S.metaCur) + "/mes";
+  byId("r-aporte8-eq").textContent = "≈ " + money(otroLado(a8), otra(S.metaCur)) + "/mes";
+  // La frase completa, que es lo que la gente lee (el número grande solo no explica nada).
+  var anios = edadRet - edad;
+  byId("r-frase-aporte").innerHTML =
+      "<span>Cada mes deberías aportar <b>" + money(enMeta(a8), S.metaCur) + "</b></span>"
+    + "<span>para llegar a tu meta de <b>" + money(enMeta(c.usd), S.metaCur) + "</b></span>"
+    + "<span>en <b>" + anios + (anios===1 ? " año" : " años") + "</b>, cuando tengás <b>" + edadRet + "</b>.</span>";
+
+  // Acto 3: qué pasa si crecés al 15% y te retirás al 8%.
+  byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur) + "/mes";
+  byId("r-meta-mitad").textContent = money(enMeta(c.usd*factorAlianza()), S.metaCur);
+  byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
+  byId("r-meta-eco").textContent = money(S.metaVal, S.metaCur);
+
+  // Manteniendo la cuota original (a8) pero al 15% y con la meta a la mitad: el retiro se adelanta.
+  var mesesCorto = mesesParaLlegar(c.usd*factorAlianza(), a8, TASA_CREC);
+  var aniosCorto = Math.max(1, Math.round(mesesCorto/12));
+  byId("r-edad-corta").textContent = String(edad + aniosCorto);
+  byId("r-anios-corta").textContent = aniosCorto + (aniosCorto===1 ? " año" : " años");
+
+  // La oferta del cierre usa los mismos números.
+  byId("r-oferta-de").textContent = money(enMeta(a8), S.metaCur) + "/mes";
+  byId("r-oferta-a").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
+  byId("r-oferta-meta-de").textContent = money(enMeta(c.usd), S.metaCur);
+  byId("r-oferta-meta-a").textContent = money(enMeta(c.usd*factorAlianza()), S.metaCur);
+
+  byId("acto2b-res").style.display = "block";
+  dibujarGrafico(a8, edad, edadRet);
+  S.acto = Math.max(S.acto, 4);
+  guardar();
+  mostrarActo("acto3"); mostrarActo("cta");
+}
+
+// ===== GRÁFICO DEL CRECIMIENTO AL 8% =====
+// Evidencia visual: la barra de lo aportado crece en línea recta, pero el saldo se
+// despega. Ese hueco entre las dos líneas es lo que creció solo.
+var chartInstance = null;
+function dibujarGrafico(aporteUsd, edad, edadRet){
+  var wrap = byId("chart-wrap"); if(!wrap) return;
+  var i = TASA_BASE/100/12;
+  var anios = Math.max(1, edadRet - edad);
+  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
+
+  var edades = [], saldo = [], aportado = [];
+  for(var y=0; y<=anios; y++){
+    var m = y*12;
+    var bal = i===0 ? aporteUsd*m : aporteUsd*(Math.pow(1+i,m)-1)/i;
+    edades.push(edad + y);
+    saldo.push(Math.round(enMeta(bal)));
+    aportado.push(Math.round(enMeta(aporteUsd*m)));
+  }
+  var totalAportado = aportado[aportado.length-1];
+  var totalSaldo = saldo[saldo.length-1];
+  byId("chart-nota").innerHTML = "De esos " + money(totalSaldo, S.metaCur) + ", vos pusiste "
+    + money(totalAportado, S.metaCur) + ". El resto, <b>" + money(totalSaldo-totalAportado, S.metaCur)
+    + "</b>, lo creció la plata sola.";
+
+  function build(){
+    var ctx = byId("chart-crec"); if(!ctx || typeof Chart === "undefined") return;
+    if(chartInstance) chartInstance.destroy();
+    var sim = S.metaCur;
+    chartInstance = new Chart(ctx, {
+      type:"line",
+      data:{ labels:edades, datasets:[
+        { label:"Lo que tenés", data:saldo, borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)",
+          borderWidth:3, pointRadius:0, fill:true, tension:.15 },
+        { label:"Lo que pusiste vos", data:aportado, borderColor:"#9AA1AB", borderWidth:2,
+          borderDash:[6,4], pointRadius:0, tension:.15 }
+      ]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        // En pantallas con escalado fraccional (Windows 125/150%) el canvas se ve borroso:
+        // forzamos >=2x para que salga nítido.
+        devicePixelRatio: Math.max(2, Math.ceil(window.devicePixelRatio || 1)),
+        interaction:{mode:"index", intersect:false},
+        plugins:{
+          legend:{ labels:{ color:"#E2E2E2", boxWidth:14, font:{size:12} } },
+          tooltip:{ callbacks:{
+            title:function(it){ return "A los " + it[0].label + " años"; },
+            label:function(it){ return it.dataset.label + ": " + sim + Number(it.raw).toLocaleString("en-US"); }
+          }}
+        },
+        scales:{
+          x:{ title:{display:true, text:"Tu edad", color:"#9AA1AB"}, ticks:{color:"#9AA1AB", maxTicksLimit:8}, grid:{color:"rgba(140,150,170,.12)"} },
+          y:{ ticks:{ color:"#9AA1AB", callback:function(v){
+                return sim + (v>=1e6 ? (v/1e6).toFixed(1)+"M" : v>=1e3 ? Math.round(v/1e3)+"k" : v); } },
+              grid:{color:"rgba(140,150,170,.18)"} }
+        }
+      }
+    });
+  }
+  if(typeof Chart === "undefined"){
+    if(byId("chart-js-tag")) return;   // ya se está cargando
+    var s = document.createElement("script");
+    s.id = "chart-js-tag";
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+    s.onload = build;
+    s.onerror = function(){ wrap.style.display = "none"; };   // sin conexión: el resto del flujo sigue igual
+    document.head.appendChild(s);
+  } else { build(); }
+}
+
+// ===== WEBHOOK =====
+function enviarLead(etapa, contacto){
+  if(ADMIN){ console.log("[ADMIN] lead NO enviado al Sheet:", etapa, contacto); return; }
+  // Conversión en GA4: la llamada agendada es el evento que más importa del funnel.
+  try{ if(typeof gtag === "function") gtag("event", etapa==="llamada_solicitada" ? "generate_lead" : "lead_"+etapa, {etapa:etapa, autocal:S.autocal||""}); }catch(e){}
+  var metaCol = aCol(S.metaVal, S.metaCur), metaUsd = aUsd(S.metaVal, S.metaCur);
+  var salCol = S.caja==="si" ? aCol(S.salVal, S.salCur) : 0;
+  var salUsd = S.caja==="si" ? aUsd(S.salVal, S.salCur) : 0;
+  var A = S.aportes || {};
+  var p = {
+    inicio: new Date(S.inicio).toISOString(),
+    timestamp: new Date().toISOString(),
+    etapa: etapa,
+    nombre: contacto.nombre||"", apellido: contacto.apellido||"",
+    whatsapp: contacto.whats||"", correo: contacto.correo||"",
+    autocalificacion: S.autocal || "",
+    incluyo_caja: S.caja === "si",
+    edad: S.edad || 0,
+    edad_retiro: S.edadRet || 0,
+    tc: S.tc,
+    moneda_elegida: S.metaCur,
+    meta_usd: Math.round(metaUsd), meta_col: Math.round(metaCol),
+    salario_usd: Math.round(salUsd), salario_col: Math.round(salCol),
+    pension_usd: Math.round(S.pensionCol / S.tc), pension_col: Math.round(S.pensionCol),
+    ivm_usd: Math.round(S.ivmCol / S.tc), ivm_col: Math.round(S.ivmCol),
+    incluyo_rop: !!S.rop,
+    rop_usd: Math.round(S.ropCol / S.tc), rop_col: Math.round(S.ropCol),
+    saldo_rop_usd: Math.round(aUsd(S.saldoRopVal, S.saldoRopCur)), saldo_rop_col: Math.round(aCol(S.saldoRopVal, S.saldoRopCur)),
+    toco_techo_ivm: !!S.tocoTecho,
+    capital_objetivo_usd: Math.round(S.capObjUsd), capital_objetivo_col: Math.round(S.capObjCol),
+    aporte_8_usd: Math.round(A.a8||0), aporte_8_col: Math.round((A.a8||0)*S.tc),
+    aporte_15_usd: Math.round(A.a15||0), aporte_15_col: Math.round((A.a15||0)*S.tc),
+    aporte_retiro8_usd: Math.round(A.aRet8||0), aporte_retiro8_col: Math.round((A.aRet8||0)*S.tc),
+    aporte_combo_usd: Math.round(A.aCombo||0), aporte_combo_col: Math.round((A.aCombo||0)*S.tc),
+    toggles_abiertos: togglesAbiertos.join(","),
+    toggles_total: togglesAbiertos.length
+  };
+  try{
+    fetch(WEBHOOK_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },   // text/plain evita el preflight del Apps Script
+      body: JSON.stringify(p),
+      keepalive: true    // el envío sobrevive si la persona navega a /info enseguida
+    }).then(function(r){ return r.json(); }).then(function(j){ if(j && j.ok) console.log("lead ok"); })
+      .catch(function(){});
+  }catch(e){}
+}
+
+// ===== CALENDLY =====
+function telE164cr(w){
+  var d = soloDigitos(w);
+  if(!d) return "";
+  if(d.indexOf("506")===0) return "+"+d;
+  if(d.length===8) return "+506"+d;
+  return "+"+d;
+}
+function calendlyPrefill(c){
+  var p = new URLSearchParams();
+  p.set("utm_source","landing_v2");
+  if(c.nombre) p.set("first_name", c.nombre);
+  if(c.apellido) p.set("last_name", c.apellido);
+  if(c.correo) p.set("email", c.correo);
+  var tel = telE164cr(c.whats);
+  if(tel) p.set("a1", tel);
+  return CALENDLY_URL + "?" + p.toString();
+}
+
+// ===== MINI-FORM (agendar la llamada) =====
+function abrirForm(){
+  var fw = byId("form-wrap");
+  fw.innerHTML =
+    '<div class="card">'
+    + '<div class="fila2">'
+    +   '<div class="campo"><label for="f-nom">Tu nombre</label><input id="f-nom" autocomplete="given-name"></div>'
+    +   '<div class="campo"><label for="f-ape">Tu apellido</label><input id="f-ape" autocomplete="family-name"></div>'
+    + '</div>'
+    + '<div class="campo"><label for="f-wha">Tu WhatsApp</label><input id="f-wha" inputmode="tel" autocomplete="tel" placeholder="8888-8888"></div>'
+    + '<div class="campo"><label for="f-cor">Tu mejor correo</label><input id="f-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
+    + '<button class="btn" id="f-send">Ver los horarios disponibles →</button>'
+    + '<div class="warn" id="f-warn" style="display:none">Completá los 4 datos con un correo válido.</div>'
+    + '</div>';
+  byId("f-send").addEventListener("click", function(){
+    var c = { nombre:byId("f-nom").value.trim(), apellido:byId("f-ape").value.trim(),
+              whats:byId("f-wha").value.trim(), correo:byId("f-cor").value.trim() };
+    if(!(c.nombre && c.apellido && c.whats && c.correo && c.correo.indexOf("@")>-1)){
+      byId("f-warn").style.display="block"; return;
+    }
+    enviarLead("llamada_solicitada", c);
+    window.open(calendlyPrefill(c), "_blank");
+  });
+}
+
+// ===== CTA =====
+function pintarSalidas(){
+  var cont = byId("cta-salidas");
+  byId("form-wrap").innerHTML = "";
+  if(S.autocal === "Prefiero ir cuesta arriba"){
+    cont.innerHTML = '<div class="salida">'
+      + '<div class="card"><p>Respetable, esa también es una forma. Si algún día querés compañía en la subida, acá vamos a estar. Mientras tanto, en el Instagram subimos cosas que te pueden servir.</p></div>'
+      + '<a class="btn btn-ghost" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📲 Seguinos en Instagram</a>'
+      + '</div>';
+  } else if(S.autocal === "Quisiera más información"){
+    cont.innerHTML = '<div class="salida">'
+      + '<a class="btn btn-crema" href="/info">Conocé cómo trabajamos →</a>'
+      + '<span class="link-discreto" id="link-llamada">📞 O agendá una llamada de una vez</span>'
+      + '</div>';
+    byId("link-llamada").addEventListener("click", abrirForm);
+  } else if(S.autocal){   // "Suena bien, hablémoslo más"
+    cont.innerHTML = '<div class="salida">'
+      + '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
+      + '<a class="link-discreto" href="/info">🤝 O leé primero cómo trabajamos</a>'
+      + '</div>';
+    byId("b-llamada").addEventListener("click", abrirForm);
+  } else {
+    cont.innerHTML = "";
+  }
+}
+
+// ===== INIT =====
+restaurar();
+togglesAbiertos = S.toggles || [];
+S.inicio = S.inicio || Date.now();
+
+bindMoney(byId("meta"), function(){ return S.metaCur; });
+bindMoney(byId("salario"), function(){ return S.salCur; });
+bindMoney(byId("saldo-rop"), function(){ return S.saldoRopCur; });
+bindComas(byId("tc"));
+byId("saldo-rop").addEventListener("input", refrescarEquivalencias);
+byId("f-rop").addEventListener("change", function(){
+  S.rop = this.checked; guardar();
+  byId("campo-rop").style.display = this.checked ? "block" : "none";
+});
+["edad","edad2","edad-ret"].forEach(function(id){
+  byId(id).addEventListener("input", function(){ this.value = soloDigitos(this.value).slice(0,2); });
+});
+
+byId("meta").addEventListener("input", refrescarEquivalencias);
+byId("salario").addEventListener("input", refrescarEquivalencias);
+// Recalcula todo lo que ya esté en pantalla (se usa desde el TC y desde el panel admin).
+function recalcTodo(){
+  refrescarEquivalencias();
+  if(byId("acto1-res").classList.contains("on")) pintarCapital("r-capital","r-capital-eq");
+  if(byId("acto2a-res").style.display==="block") calcularCaja();
+  if(byId("acto2b-res").style.display==="block") calcularAporte();
+  pintarEtiquetas();
+}
+byId("tc").addEventListener("input", function(){
+  var v = num(byId("tc").value);
+  S.tc = v>0 ? v : TC_DEFAULT;
+  guardar(); recalcTodo();
+});
+
+initChips("meta", function(){return S.metaCur;}, function(c){ S.metaCur=c; guardar(); pintarPlaceholder("meta",10000,c); }, refrescarEquivalencias);
+initChips("salario", function(){return S.salCur;}, function(c){ S.salCur=c; guardar(); pintarPlaceholder("salario",7500,c); }, refrescarEquivalencias);
+initChips("saldo-rop", function(){return S.saldoRopCur;}, function(c){ S.saldoRopCur=c; guardar(); pintarPlaceholder("saldo-rop",0,c); }, refrescarEquivalencias);
+initToggles();
+
+byId("b-acto1").addEventListener("click", calcularActo1);
+byId("b-caja-si").addEventListener("click", function(){ byId("caja-form").style.display="block"; });
+byId("b-caja-no").addEventListener("click", saltarCaja);
+byId("b-caja-calc").addEventListener("click", calcularCaja);
+byId("b-acto2b").addEventListener("click", calcularAporte);
+Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(b){
+  b.addEventListener("click", function(){
+    S.autocal = b.getAttribute("data-cal"); guardar();
+    Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){ x.classList.toggle("on", x===b); });
+    // Evento con guardas: qué opción eligió en el CTA.
+    try{ if(typeof gtag === "function") gtag("event","cta_respuesta",{opcion:S.autocal}); }catch(e){}
+    try{ if(typeof fbq === "function") fbq("trackCustom","cta_respuesta",{opcion:S.autocal}); }catch(e){}
+    pintarSalidas();
+  });
+});
+
+// Restaurar lo ya avanzado (sobrevive refresh)
+(function restaurarUI(){
+  byId("tc").value = fmt(S.tc);
+  pintarChips("meta", S.metaCur); pintarChips("salario", S.salCur); pintarChips("saldo-rop", S.saldoRopCur);
+  pintarPlaceholder("meta", 10000, S.metaCur);
+  pintarPlaceholder("salario", 7500, S.salCur);
+  pintarPlaceholder("saldo-rop", 0, S.saldoRopCur);
+  if(S.metaVal>0){ byId("meta").value = S.metaCur + fmt(S.metaVal); }
+  if(S.salVal>0){ byId("salario").value = S.salCur + fmt(S.salVal); }
+  if(S.rop){ byId("f-rop").checked = true; byId("campo-rop").style.display = "block"; }
+  if(S.saldoRopVal>0){ byId("saldo-rop").value = S.saldoRopCur + fmt(S.saldoRopVal); }
+  if(S.edad>0){ byId("edad").value = S.edad; byId("edad2").value = S.edad; }
+  if(S.edadRet>0){ byId("edad-ret").value = S.edadRet; }
+  // reabrir los toggles ya vistos
+  Array.prototype.forEach.call(document.querySelectorAll("details[data-tg]"), function(el){
+    if(togglesAbiertos.indexOf(el.getAttribute("data-tg")) > -1) el.open = true;
+  });
+  refrescarEquivalencias();
+  if(S.metaVal>0 && S.acto>=2){
+    pintarCapital("r-capital","r-capital-eq");
+    byId("r-capital-eco").textContent = byId("r-capital").textContent;
+    byId("acto1-res").classList.add("on"); byId("acto2a").classList.add("on");
+  }
+  if(S.caja==="si" && S.salVal>0 && S.edad>0){
+    byId("caja-form").style.display="block";
+    calcularCaja();
+  } else if(S.caja==="saltar"){
+    byId("campo-edad2").style.display="";
+    byId("acto2b").classList.add("on");
+  }
+  if(S.acto>=4 && S.edad>0){ calcularAporte(); }
+  if(S.autocal){
+    Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){
+      x.classList.toggle("on", x.getAttribute("data-cal")===S.autocal);
+    });
+    pintarSalidas();
+  }
+  pintarEtiquetas();
+})();
+
+// ========================================================================
+// ADMIN: etiquetas dinámicas de % + gate + panel de variables
+// ========================================================================
+function fmtPct(v){ return (Math.round(v*100)/100).toString(); }
+function pintarEtiquetas(){
+  var m = {
+    "lbl-retb":RET_BASE, "lbl-retb2":RET_BASE,
+    "lbl-crb":TASA_BASE, "lbl-crb2":TASA_BASE, "lbl-crb3":TASA_BASE,
+    "lbl-crs":TASA_CREC, "lbl-reta":RET_ALIANZA
+  };
+  for(var id in m){ var e=byId(id); if(e) e.textContent = fmtPct(m[id]); }
+  var pr = byId("p-resumen");
+  if(pr) pr.textContent = "crec " + fmtPct(TASA_BASE) + "/" + fmtPct(TASA_CREC) + "% · retiro " + fmtPct(RET_BASE) + "/" + fmtPct(RET_ALIANZA) + "%";
+}
+
+// ---- Gate (password client-side: solo esconde la vista, no es seguridad real) ----
+(function gate(){
+  var PASS = "admin";
+  function abrir(){ byId("gate").style.display="none"; document.body.classList.remove("locked"); }
+  if(sessionStorage.getItem("admin_ok")==="1"){ abrir(); return; }
+  function intentar(){
+    if(byId("gate-pass").value === PASS){ sessionStorage.setItem("admin_ok","1"); abrir(); }
+    else { byId("gate-err").textContent="Contraseña incorrecta."; byId("gate-pass").value=""; }
+  }
+  byId("gate-btn").addEventListener("click", intentar);
+  byId("gate-pass").addEventListener("keydown", function(e){ if(e.key==="Enter") intentar(); });
+})();
+
+// ---- Panel de variables ----
+(function panel(){
+  // valores por defecto (los del cliente) para el reset
+  var DEF = { crecBase:8, crecSist:15, retBase:4, retAlianza:8, tc:460,
+    tope:1765859, pmin:162295, smin:373092, edadIni:25, ropNom:6, inflac:3, ropPlazo:20 };
+  var campos = {
+    "p-crecBase": function(v){ TASA_BASE=v; }, "p-crecSist": function(v){ TASA_CREC=v; },
+    "p-retBase": function(v){ RET_BASE=v; }, "p-retAlianza": function(v){ RET_ALIANZA=v; },
+    "p-tc": function(v){ TC_DEFAULT=v; S.tc=v; byId("tc").value=fmt(v); },
+    "p-tope": function(v){ TOPE_MAX=v; }, "p-pmin": function(v){ PENSION_MIN=v; },
+    "p-smin": function(v){ SALARIO_MINIMO=v; }, "p-edadIni": function(v){ EDAD_INICIO_COTIZA=v; },
+    "p-ropNom": function(v){ ROP_NOMINAL_PCT=v; }, "p-inflac": function(v){ ROP_INFLACION_PCT=v; },
+    "p-ropPlazo": function(v){ ROP_PLAZO_PAGO_ANIOS=v; }
+  };
+  var valDef = { "p-crecBase":DEF.crecBase, "p-crecSist":DEF.crecSist, "p-retBase":DEF.retBase,
+    "p-retAlianza":DEF.retAlianza, "p-tc":DEF.tc, "p-tope":DEF.tope, "p-pmin":DEF.pmin,
+    "p-smin":DEF.smin, "p-edadIni":DEF.edadIni, "p-ropNom":DEF.ropNom, "p-inflac":DEF.inflac, "p-ropPlazo":DEF.ropPlazo };
+  function poner(){ for(var id in valDef){ byId(id).value = valDef[id]; } }
+  function aplicar(){
+    for(var id in campos){ var raw=byId(id).value.replace(/[^0-9.]/g,""); var v=parseFloat(raw); if(!isNaN(v)) campos[id](v); }
+    guardar(); recalcTodo();
+  }
+  poner();
+  for(var id in campos){ byId(id).addEventListener("input", aplicar); }
+  byId("p-reset").addEventListener("click", function(){ poner(); aplicar(); });
+  byId("admin-panel").open = true;   // arranca abierto
+})();
+</script>
+</body>
+</html>
