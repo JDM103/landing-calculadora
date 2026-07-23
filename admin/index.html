@@ -488,12 +488,17 @@ function dibujar(life){
       c.save();
       c.strokeStyle = "rgba(85,109,251,.45)"; c.lineWidth = 2; c.setLineDash([5,4]);
       c.beginPath(); c.moveTo(px, a.top); c.lineTo(px, a.bottom); c.stroke();
-      // solo el emoji de la playa, en la franja libre de arriba (sin número, sin que lo crucen las líneas)
+      // emoji de la playa + la edad de retiro en chiquito al lado, en el color de la línea/punto
       c.setLineDash([]);
+      var cy = Math.max(a.top - 12, 9), ageTxt = String(edadRet);
+      c.textBaseline = "middle"; c.textAlign = "left";
+      c.font = "700 12px 'Bai Jamjuree',sans-serif";
+      var nw = c.measureText(ageTxt).width, emojiW = 17, gap = 4, total = emojiW + gap + nw;
+      var gx = Math.min(Math.max(px - total/2, a.left + 2), a.right - total - 2);
       c.font = "16px 'Bai Jamjuree',sans-serif";
-      c.textAlign = "center"; c.textBaseline = "top";
-      var ex = Math.min(Math.max(px, a.left + 8), a.right - 8);
-      c.fillText("🏖️", ex, Math.max(a.top - 22, 0));
+      c.fillText("🏖️", gx, cy);
+      c.font = "700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle = "#556DFB";
+      c.fillText(ageTxt, gx + emojiW + gap, cy);
       c.restore();
     }
   };
@@ -751,8 +756,11 @@ function dibujarRetiro(seed, sel){
     // línea vertical + 🏖️ en la edad de retiro
     var plug={ id:"pret", afterDraw:function(ch){ var xs=ch.scales.x; if(!xs)return; var px=xs.getPixelForValue(edadRet); var a=ch.chartArea,c=ch.ctx;
       c.save(); c.strokeStyle="rgba(85,109,251,.45)"; c.lineWidth=2; c.setLineDash([5,4]); c.beginPath(); c.moveTo(px,a.top); c.lineTo(px,a.bottom); c.stroke();
-      c.setLineDash([]); c.font="16px 'Bai Jamjuree',sans-serif"; c.textAlign="center"; c.textBaseline="top";
-      c.fillText("🏖️", Math.min(Math.max(px,a.left+8),a.right-8), Math.max(a.top-22,0)); c.restore(); } };
+      c.setLineDash([]); var cy=Math.max(a.top-12,9), at=String(edadRet); c.textBaseline="middle"; c.textAlign="left";
+      c.font="700 12px 'Bai Jamjuree',sans-serif"; var nw=c.measureText(at).width, ew=17, gp=4, tot=ew+gp+nw;
+      var gx=Math.min(Math.max(px-tot/2,a.left+2),a.right-tot-2);
+      c.font="16px 'Bai Jamjuree',sans-serif"; c.fillText("🏖️", gx, cy);
+      c.font="700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle="#556DFB"; c.fillText(at, gx+ew+gp, cy); c.restore(); } };
     chartRet=new Chart(ctx,{ type:"line", data:{datasets:ds}, plugins:[plug],
       options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
         layout:{padding:{top:26}}, interaction:{mode:"index",intersect:false},
