@@ -4,1204 +4,987 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>ADMIN · Laboratorio de la calculadora</title>
-<meta name="description" content="Versión interna para experimentar con las variables. No indexar.">
+<title>ADMIN · Laboratorio de aportes</title>
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
-    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
-    --verde:#1E7A52;
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
+    --gris:#E2E2E2; --gris-sec:#9AA1AB; --card:#1B2026; --bd:#262C34; --input:#0E1216;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{
-    background:var(--tinta); color:var(--crema);
-    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
-    min-height:100vh; display:flex; flex-direction:column; align-items:center;
-  }
-  .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 60px;}
+  body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:400; min-height:100vh;
+    font-variant-numeric:tabular-nums; font-feature-settings:"tnum";}
+  body.locked{overflow:hidden;}
 
-  .marca{display:block; text-align:center; margin:34px 0 30px;}
-  .marca img{width:180px; max-width:60%; height:auto;}
-  @media (min-width:560px){ .marca img{width:220px;} }
-
-  .hero{padding:26px 0 6px; text-align:left;}
-  .hero h1{font-size:clamp(28px,7.4vw,38px); font-weight:700; line-height:1.14; letter-spacing:-.01em;}
-  .hero h1 em{font-style:normal; color:var(--menta);}
-  .hero p{margin-top:12px; font-size:16px; color:var(--gris); font-weight:400;}
-
-  .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:14px;}
-  .card p{font-size:16px; line-height:1.5; font-weight:400;}
-  .card-menta{border-color:var(--menta);}
-  .card-peri{border-color:var(--peri);}
-
-  .campo{margin-bottom:18px;}
-  .campo label{display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
-  .campo input{
-    width:100%; background:var(--tinta); border:1px solid #2E3540; border-radius:12px;
-    color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-size:22px; font-weight:500;
-    padding:14px 16px; outline:none;
-  }
-  .campo input:focus{border-color:var(--menta);}
-  .campo .hint{font-size:12px; color:var(--gris-sec); margin-top:6px; font-weight:400;}
-  .equiv{font-size:13px; color:var(--gris-sec); margin-top:7px; font-weight:500;}
-
-  /* Chips de moneda */
-  .chips{display:inline-flex; gap:6px; margin-bottom:8px;}
-  .chip{background:var(--tinta); border:1px solid #2E3540; color:var(--gris-sec); font-family:inherit;
-    font-size:15px; font-weight:700; width:44px; padding:7px 0; border-radius:999px; cursor:pointer;}
-  .chip.on{border-color:var(--menta); color:var(--menta); background:rgba(99,252,175,.10);}
-
-  .btn{
-    display:block; width:100%; text-align:center; cursor:pointer; border:none; border-radius:999px;
-    background:var(--menta); color:var(--tinta); font-family:'Bai Jamjuree',sans-serif;
-    font-size:18px; font-weight:700; padding:16px 20px; margin-top:6px;
-    transition:transform .12s ease;
-  }
-  .btn:active{transform:scale(.98);}
-  .btn[disabled]{opacity:.4; cursor:default;}
-  .btn-crema{background:var(--crema); color:var(--tinta);}
-  .btn-ghost{background:transparent; color:var(--gris); border:1px solid #2E3540;}
-  a.btn{text-decoration:none;}
-  .btn-fila{display:flex; gap:10px; margin-top:6px;}
-  .btn-fila .btn{margin-top:0;}
-
-  /* Actos secuenciales */
-  .acto{display:none;}
-  .acto.on{display:block; animation:entra .5s ease both;}
-  @keyframes entra{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
-  @media (prefers-reduced-motion: reduce){ .acto.on{animation:none;} }
-
-  .res-linea{display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 2px; border-bottom:1px solid #262C34;}
-  .res-linea .k{font-size:13px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec);}
-  .res-linea .v-wrap{text-align:right; flex:0 0 auto;}
-  .res-linea .v{font-size:20px; font-weight:700; color:var(--crema); white-space:nowrap; display:block;}
-  .res-linea .v-eq{display:block; font-size:12px; font-weight:500; color:var(--gris-sec); margin-top:2px; white-space:nowrap;}
-  .techo{font-size:12px; color:var(--menta); margin:8px 2px 0; line-height:1.5; font-weight:400;}
-
-  .banda{
-    background:var(--peri); border-radius:18px; padding:26px 22px; margin-top:22px;
-    animation:entra .5s ease both;
-  }
-  @media (prefers-reduced-motion: reduce){ .banda{animation:none;} }
-  .banda .k{font-size:13px; font-weight:600; line-height:1.5; color:rgba(254,249,243,.85);}
-  .banda .num{font-size:clamp(34px,9.5vw,50px); font-weight:700; line-height:1.05; color:#fff; margin-top:8px; word-break:break-word;}
-  .banda .num-eq{font-size:16px; font-weight:500; color:rgba(254,249,243,.85); margin-top:4px;}
-  .banda .sub{font-size:15px; color:rgba(254,249,243,.9); margin-top:12px; font-weight:400;}
-  .banda .k s{opacity:.7;}
-  .banda-verde{background:var(--verde);}
-
-  .destaque{margin-top:18px;}
-  .destaque .k{font-size:15px; color:var(--gris); font-weight:400; line-height:1.5;}
-  .destaque .num{font-size:clamp(34px,9.5vw,48px); font-weight:700; line-height:1.06; color:var(--crema); margin-top:6px; word-break:break-word;}
-  .destaque .num-eq{font-size:15px; font-weight:500; color:var(--gris-sec); margin-top:4px;}
-  /* Gráfico del crecimiento al 8% (se dibuja al tocar "Ver mi aporte mensual") */
-  #chart-wrap{position:relative; height:280px; width:100%; margin:24px 0 6px;}
-  .chart-nota{font-size:14px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:6px;}
-  .chart-nota b{color:var(--menta); font-weight:700;}
-
-  .frase-aporte{font-size:17px; line-height:1.5; color:var(--crema); margin-top:16px; font-weight:400;}
-  .frase-aporte span{display:block; margin-bottom:12px;}
-  .frase-aporte span:last-child{margin-bottom:0;}
-  .frase-aporte b{color:var(--menta); font-weight:700;}
-
-  .titulo{font-size:22px; font-weight:700; line-height:1.25; margin-top:30px;}
-  /* Puente: la bisagra del relato ("¿y cómo llegamos ahí?"). Va aireado y centrado. */
-  .puente{font-size:clamp(24px,6.6vw,32px); font-weight:700; line-height:1.3; text-align:center;
-    letter-spacing:-.01em; margin:54px 0 34px;}
-  .puente span{color:var(--menta);}
-  /* El quiebre de mentalidad antes de las mejorías */
-  .pero{font-size:clamp(56px,17vw,84px); font-weight:700; text-align:center; color:var(--menta);
-    line-height:1; letter-spacing:.02em; margin:56px 0 10px;}
-  .pero-sub{text-align:center; color:var(--gris-sec); font-size:15px; margin-bottom:8px;}
-  .resaltado{background:rgba(99,252,175,.10); border:1px solid var(--menta); border-radius:16px;
-    padding:18px 18px; margin:14px 0;}
-  .hl{color:var(--menta); font-weight:700;}
-  /* La oferta del cierre: es el remate, va al tamaño de un titular y los números respiran */
-  .oferta{padding:26px 20px;}
-  .oferta p{font-size:clamp(20px,5.4vw,23px); font-weight:700; line-height:1.35;}
-  .oferta-num{text-align:center; line-height:1.3; margin:18px 0;}
-  .oferta .oferta-num{font-size:clamp(26px,7.2vw,34px);}
-  .oferta-num .de{color:var(--gris-sec); font-weight:400;}
-  .oferta-num b{color:var(--menta);}
-  .oferta .oferta-cierre{margin-top:24px; font-size:clamp(24px,6.4vw,29px); text-align:center;}
-  /* Las 4 cosas que pasan: todas del mismo peso, todas importantes */
-  .pasa p{font-size:18px; line-height:1.5; font-weight:400;}
-  .pasa b{color:var(--menta); font-weight:700;}
-  /* Paso de la escalera del Acto 3: el numero viejo tachado y el nuevo destacado */
-  .paso{margin-top:14px; font-size:17px; font-weight:600; color:var(--crema); line-height:1.5;}
-  .paso s{color:var(--gris-sec); font-weight:400;}
-  .paso b{font-size:22px; color:var(--menta);}
-  .card-peri .paso b{color:var(--peri);}
-  .cap{font-size:12px; color:var(--gris-sec); margin-top:14px; line-height:1.55; font-weight:400; display:block;}
-  .confianza{font-size:12px; color:var(--gris-sec); margin:2px 0 14px; line-height:1.5;}
-
-  /* Toggles */
-  details{background:#1B2026; border:1px solid #262C34; border-radius:14px; margin-top:10px; overflow:hidden;}
-  details>summary{cursor:pointer; list-style:none; padding:14px 16px; font-size:15px; font-weight:600; color:var(--crema);}
-  details>summary::-webkit-details-marker{display:none;}
-  details>summary::after{content:"▾"; float:right; color:var(--gris-sec);}
-  details[open]>summary::after{content:"▴";}
-  details .body{padding:0 16px 16px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
-  details .body a{color:var(--peri); font-weight:600;}
-  details .body img{max-width:100%; height:auto; border-radius:8px; margin:10px 0; display:block;}
-
-  /* Opciones de autocalificación */
-  .opciones{display:flex; flex-direction:column; gap:10px; margin-top:12px;}
-  .opcion{display:block; width:100%; text-align:left; background:#1B2026; border:1px solid #262C34;
-    color:var(--crema); font-family:inherit; font-size:16px; font-weight:500; padding:15px 16px;
-    border-radius:14px; cursor:pointer; transition:border-color .12s ease;}
-  .opcion.on{border-color:var(--menta); background:rgba(99,252,175,.08);}
-
-  .ig-link{
-    display:block; text-align:center; text-decoration:none; margin-top:14px;
-    border:1px solid #2E3540; border-radius:999px; padding:12px 18px; font-size:14px; color:var(--gris);
-    transition:border-color .15s ease;
-  }
-  .ig-link:hover{border-color:var(--menta);}
-  .link-discreto{display:block; text-align:center; color:var(--gris-sec); font-size:13px; margin-top:14px; text-decoration:underline; cursor:pointer;}
-  a.link-discreto{text-decoration:underline;}
-  /* La acción del CTA aparece con la misma animación sutil de los actos */
-  .salida{animation:entra .4s ease both;}
-  @media (prefers-reduced-motion: reduce){ .salida{animation:none;} }
-
-  .warn{color:#e0a020; font-size:14px; margin-top:10px; font-weight:500;}
-  .fila2{display:flex; gap:12px;} .fila2>*{flex:1;}
-  .checkline{display:flex; align-items:flex-start; gap:10px; margin:4px 0 16px; font-size:15px; cursor:pointer; font-weight:400;}
-  .checkline input{width:20px; height:20px; margin-top:2px; accent-color:var(--menta); flex:0 0 auto;}
-  .desglose{font-size:12px; color:var(--gris-sec); margin:8px 2px 0; line-height:1.5;}
-
-  footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
-  footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
-  footer a{color:var(--gris);}
-
-  /* ===== ADMIN: gate de password ===== */
+  /* Gate */
   #gate{position:fixed; inset:0; z-index:9999; background:var(--tinta); display:flex; flex-direction:column;
     align-items:center; justify-content:center; gap:14px; padding:22px; text-align:center;}
-  #gate h2{font-size:20px; font-weight:700;}
-  #gate p{font-size:13px; color:var(--gris-sec); max-width:320px;}
-  #gate input{width:100%; max-width:280px; background:#1B2026; border:1px solid var(--input-bd); border-radius:12px;
+  #gate h2{font-size:20px; font-weight:700;} #gate p{font-size:13px; color:var(--gris-sec); max-width:320px;}
+  #gate input{width:100%; max-width:280px; background:var(--card); border:1px solid var(--bd); border-radius:12px;
     color:var(--crema); font-family:inherit; font-size:18px; padding:12px 14px; outline:none; text-align:center;}
   #gate button{max-width:280px; width:100%; background:var(--menta); color:var(--tinta); border:none; border-radius:999px;
     font-family:inherit; font-size:16px; font-weight:700; padding:13px; cursor:pointer;}
   #gate .err{color:#e0525a; font-size:13px; min-height:16px;}
-  body.locked{overflow:hidden;}
 
-  /* ===== ADMIN: panel de variables ===== */
-  #admin-panel{position:sticky; top:0; z-index:50; background:#0E1216; border-bottom:2px solid var(--menta);
-    max-width:520px; margin:0 auto; width:100%;}
-  #admin-panel summary{cursor:pointer; list-style:none; padding:12px 18px; font-size:14px; font-weight:700;
-    color:var(--menta); display:flex; justify-content:space-between; align-items:center;}
-  #admin-panel summary::-webkit-details-marker{display:none;}
-  #admin-panel[open] summary{border-bottom:1px solid var(--card-bd);}
-  #admin-panel .pbody{padding:14px 18px 18px;}
-  .pgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px 14px;}
-  .pcampo label{display:block; font-size:11px; color:var(--gris-sec); font-weight:600; margin-bottom:3px; letter-spacing:.02em;}
-  .pcampo input{width:100%; background:#1B2026; border:1px solid var(--input-bd); border-radius:9px; color:var(--crema);
-    font-family:inherit; font-size:16px; font-weight:600; padding:8px 10px; outline:none;}
+  /* Panel fijo arriba */
+  #panel{position:sticky; top:0; z-index:50; background:#0E1216; border-bottom:2px solid var(--menta);}
+  .panel-in{max-width:640px; margin:0 auto; padding:14px 18px 16px;}
+  .ptit{font-size:15px; font-weight:700; color:var(--menta); margin-bottom:12px; display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .ptit small{font-size:12px; color:var(--gris-sec); font-weight:500;}
+  #p-toggle{flex:0 0 auto; background:transparent; border:1px solid var(--bd); color:var(--gris); border-radius:999px;
+    font-family:inherit; font-size:11px; font-weight:700; padding:5px 12px; cursor:pointer; white-space:nowrap;}
+  #p-toggle:hover{border-color:var(--menta); color:var(--menta);}
+  #panel.colapsado .pgrid, #panel.colapsado .preset{display:none;}
+  #panel.colapsado .ptit{margin-bottom:0;}
+  .pgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px 14px;}
+  .pcampo{display:flex; flex-direction:column;}
+  .pcampo label{font-size:11px; color:var(--gris-sec); font-weight:600; margin-bottom:4px; letter-spacing:.02em;}
+  .pcampo .inrow{display:flex; gap:6px; align-items:stretch;}
+  .pcampo input{width:100%; background:var(--card); border:1px solid var(--bd); border-radius:10px; color:var(--crema);
+    font-family:inherit; font-size:18px; font-weight:600; padding:9px 11px; outline:none; min-width:0;}
   .pcampo input:focus{border-color:var(--menta);}
-  .psub{font-size:11px; color:var(--menta); font-weight:700; letter-spacing:.08em; text-transform:uppercase; margin:16px 0 8px;}
-  .psub:first-child{margin-top:0;}
-  #admin-panel .pnota{font-size:11px; color:var(--gris-sec); line-height:1.5; margin-top:12px;}
-  #admin-panel .preset{margin-top:14px; width:100%; background:transparent; border:1px solid var(--input-bd);
-    color:var(--gris); border-radius:999px; font-family:inherit; font-size:13px; font-weight:600; padding:10px; cursor:pointer;}
+  .stepper{display:flex; gap:6px; align-items:stretch;}
+  .stepper input{flex:1;}
+  .steps{display:flex; flex-direction:column; gap:3px; flex:0 0 auto;}
+  .stp{background:var(--card); border:1px solid var(--bd); color:var(--gris); border-radius:7px; width:30px;
+    flex:1; min-height:16px; font-size:10px; line-height:1; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;}
+  .stp:hover{border-color:var(--menta); color:var(--menta);}
+  .stp:active{background:var(--menta); color:var(--tinta);}
+  .chips{display:flex; gap:4px;}
+  .chip{background:var(--card); border:1px solid var(--bd); color:var(--gris-sec); font-family:inherit; font-size:15px;
+    font-weight:700; width:38px; border-radius:9px; cursor:pointer;}
+  .chip.on{border-color:var(--menta); color:var(--menta); background:rgba(99,252,175,.10);}
+  .preset{margin-top:12px; background:transparent; border:1px solid var(--bd); color:var(--gris); border-radius:999px;
+    font-family:inherit; font-size:12px; font-weight:600; padding:8px 14px; cursor:pointer;}
+
+  /* Resultados */
+  .wrap{max-width:640px; margin:0 auto; padding:18px 18px 60px;}
+  .rescard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 18px; margin-bottom:14px;}
+  .rescard.dest{border-color:var(--menta); background:rgba(99,252,175,.06);}
+  .rlbl{font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec);}
+  .rnum{font-size:clamp(32px,9vw,44px); font-weight:700; line-height:1.05; margin-top:6px; word-break:break-word;}
+  .rnum.big{font-size:clamp(40px,12vw,60px); color:var(--menta);}
+  .req{font-size:15px; color:var(--gris-sec); font-weight:500; margin-top:3px;}
+  .rtxt{font-size:15px; line-height:1.5; color:var(--gris); margin-top:12px;}
+  .rtxt b{color:var(--crema); font-weight:700;}
+  .rtxt .peligro{color:var(--crema); font-weight:700; text-decoration:underline;}
+  .warn{color:#e0a020; font-size:14px; margin-top:10px;}
+
+  #chart-wrap{position:relative; height:360px; margin:6px 0 12px;}
+
+  /* Controles rápidos debajo del gráfico */
+  .quick{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px;}
+  .qc{flex:0 0 auto; min-width:104px; background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:8px 10px;}
+  .qlbl{font-size:10px; color:var(--gris-sec); font-weight:700; text-transform:uppercase; letter-spacing:.05em;}
+  .qrow{display:flex; align-items:center; gap:8px; margin-top:3px;}
+  .qrow b{font-size:17px; font-weight:700; color:var(--menta); flex:1; white-space:nowrap;}
+  .qsteps{display:flex; flex-direction:column; gap:2px; flex:0 0 auto;}
+  .qs{width:26px; min-height:14px; flex:1; background:var(--tinta); border:1px solid var(--bd); color:var(--gris);
+    border-radius:6px; font-size:9px; line-height:1; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;}
+  .qs:hover{border-color:var(--menta); color:var(--menta);}
+  .qs:active{background:var(--menta); color:var(--tinta);}
+
+  .tsub{font-size:13px; font-weight:700; color:var(--menta); letter-spacing:.03em; margin:22px 0 8px;}
+  table{width:100%; border-collapse:collapse; font-size:14px; background:var(--card); border-radius:12px; overflow:hidden;}
+  th,td{padding:9px 12px; text-align:right; border-bottom:1px solid var(--bd);}
+  th:first-child,td:first-child{text-align:left; color:var(--gris-sec);}
+  th{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--gris-sec); font-weight:600;}
+  tr:last-child td{border-bottom:none;}
+  tr.actual{background:rgba(99,252,175,.10);}
+  tr.actual td{color:var(--menta); font-weight:700;}
+  .foot{color:var(--gris-sec); font-size:11px; line-height:1.5; margin-top:24px; text-align:center;}
+
+  /* --- Experimento con la historia --- */
+  .hist-sep{height:2px; background:linear-gradient(90deg,transparent,var(--peri),transparent); margin:46px 0 26px; opacity:.5;}
+  .htit{font-size:19px; font-weight:700; color:var(--peri); line-height:1.25; margin-bottom:8px;}
+  .hintro{font-size:14px; line-height:1.55; color:var(--gris); margin-bottom:16px;}
+  .hintro b{color:var(--crema); font-weight:700;}
+  .chip.hact{width:auto; padding:0 16px; height:36px; font-size:14px;}
+  .hstats{display:flex; flex-wrap:wrap; gap:10px; margin:2px 0 8px;}
+  .hstat{flex:1 1 0; min-width:110px; background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:10px 12px;}
+  .hstat .k{font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--gris-sec); font-weight:700;}
+  .hstat .v{font-size:21px; font-weight:700; margin-top:2px;}
+  .hstat .v.men{color:var(--menta);} .hstat .v.per{color:var(--peri);}
+  .hnote{font-size:12px; color:var(--gris-sec); margin:0 0 8px; line-height:1.45;}
+  .qc.qcw{flex:1 1 100%; min-width:100%;}
+  .chiprow{display:flex; flex-wrap:wrap; gap:5px; margin-top:5px;}
+  .chiprow .chip{width:auto; padding:0 12px; height:32px; font-size:13px; display:inline-flex; align-items:center;}
+  .chip .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px;}
+  .qtoggle{background:var(--card); border:1px solid var(--bd); color:var(--gris); border-radius:999px; font-family:inherit;
+    font-size:13px; font-weight:700; padding:8px 14px; cursor:pointer; white-space:nowrap;}
+  .qtoggle.on{border-color:var(--menta); color:var(--menta); background:rgba(99,252,175,.10);}
+  .hprot{font-size:11px; color:var(--gris-sec); margin-top:9px;} .hprot b{color:var(--crema);}
+  .hsub2{font-size:13px; font-weight:700; color:var(--gris); margin:20px 0 7px;}
+  .dostablas{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:520px){ .dostablas{grid-template-columns:1fr;} }
 </style>
 </head>
 <body class="locked">
 
-<!-- ===== GATE (password: admin) ===== -->
 <div id="gate">
   <h2>🔒 Laboratorio · Solo admin</h2>
-  <p>Versión interna para mover las variables. No es la calculadora del cliente.</p>
+  <p>Herramienta interna para despejar aportes. No es la calculadora del cliente.</p>
   <input id="gate-pass" type="password" placeholder="Contraseña" autocomplete="off">
   <button id="gate-btn">Entrar</button>
   <div class="err" id="gate-err"></div>
 </div>
 
-<!-- ===== PANEL DE VARIABLES ===== -->
-<details id="admin-panel">
-  <summary>⚙️ Variables (tocá para abrir/cerrar) <span id="p-resumen" style="color:var(--gris-sec);font-weight:600;font-size:12px"></span></summary>
-  <div class="pbody">
-    <div class="psub">Crecimiento y retiro</div>
+<header id="panel" class="colapsado">
+  <div class="panel-in">
+    <div class="ptit"><span>🧪 Laboratorio de aportes <small id="p-res"></small></span><button id="p-toggle" title="Esconder/mostrar variables">Mostrar ▼</button></div>
     <div class="pgrid">
-      <div class="pcampo"><label>Crecer base %/año</label><input id="p-crecBase" inputmode="decimal"></div>
-      <div class="pcampo"><label>Crecer nuestro sistema %</label><input id="p-crecSist" inputmode="decimal"></div>
-      <div class="pcampo"><label>Retiro conservador %</label><input id="p-retBase" inputmode="decimal"></div>
-      <div class="pcampo"><label>Retiro con alianza %</label><input id="p-retAlianza" inputmode="decimal"></div>
-      <div class="pcampo"><label>Tipo de cambio ₡/$</label><input id="p-tc" inputmode="decimal"></div>
-    </div>
-
-    <div class="psub">Pensión IVM (Caja)</div>
-    <div class="pgrid">
-      <div class="pcampo"><label>Tope máximo ₡</label><input id="p-tope" inputmode="numeric"></div>
-      <div class="pcampo"><label>Pensión mínima ₡</label><input id="p-pmin" inputmode="numeric"></div>
-      <div class="pcampo"><label>Salario mínimo ₡</label><input id="p-smin" inputmode="numeric"></div>
-      <div class="pcampo"><label>Cotiza desde (edad)</label><input id="p-edadIni" inputmode="numeric"></div>
-    </div>
-
-    <div class="psub">ROP</div>
-    <div class="pgrid">
-      <div class="pcampo"><label>Rendimiento nominal %</label><input id="p-ropNom" inputmode="decimal"></div>
-      <div class="pcampo"><label>Inflación %</label><input id="p-inflac" inputmode="decimal"></div>
-      <div class="pcampo"><label>Plazo de pago (años)</label><input id="p-ropPlazo" inputmode="decimal"></div>
-    </div>
-
-    <button class="preset" id="p-reset">↺ Volver a los valores del cliente</button>
-    <div class="pnota">Los <b>números</b> del resultado (aportes, meta, capital) siempre respetan estas tasas. El texto "se baja a la mitad" da exacto solo cuando el retiro con alianza es el doble del conservador; el número de al lado siempre es el correcto.</div>
-  </div>
-</details>
-
-<div class="wrap">
-  <div class="marca">
-    <img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220">
-  </div>
-
-  <!-- ================= ACTO 1 ================= -->
-  <section class="hero">
-    <h1>Saquemos un tema de debajo de la alfombra: tu <em>retiro</em>.</h1>
-  </section>
-
-  <div class="card">
-    <div class="campo">
-      <label for="meta">¿Con cuánto querés vivir por mes cuando te retirés?</label>
-      <div class="chips" data-for="meta">
-        <button type="button" class="chip on" data-cur="$">$</button>
-        <button type="button" class="chip" data-cur="₡">₡</button>
-      </div>
-      <input id="meta" type="text" inputmode="numeric" placeholder="$10,000" autocomplete="off">
-      <div class="equiv" id="meta-eq"></div>
-    </div>
-    <button class="btn" id="b-acto1">Ver cuánto necesito →</button>
-    <div class="warn" id="w-meta" style="display:none">Escribí tu meta mensual para continuar.</div>
-  </div>
-
-  <div class="card card-menta" id="dato-techo">
-    <p>🚧 <b>Un dato que casi nadie sabe:</b> la pensión del IVM tiene <b>techo</b>. Hoy el máximo es <b>₡1,765,859</b> al mes (2026) y de ahí no sube, por más que ganés o cotizés. Si ganás bien, tu pensión va a ser una fracción pequeña de tu salario.</p>
-  </div>
-
-  <details id="tc-box">
-    <summary id="tc-sum"></summary>
-    <div class="body">
-      <div class="campo" style="margin-bottom:0">
-        <label for="tc">Tipo de cambio (₡ por $1)</label>
-        <input id="tc" type="text" inputmode="numeric" value="460" autocomplete="off">
-      </div>
-    </div>
-  </details>
-
-  <details data-tg="t_inflacion">
-    <summary>🛡️ ¿Y la inflación?</summary>
-    <div class="body">Tranquilo, no tenés que preocuparte por eso acá. Asumimos una inflación del 3% anual en dólares, y de aquí en adelante todo va en <b>términos reales</b>: mantenemos la capacidad de compra del monto que pongas en tu meta a lo largo de toda la calculadora. O sea que los números que ves son de poder de compra de hoy, constante.</div>
-  </details>
-
-  <section class="acto" id="acto1-res">
-    <div class="banda">
-      <div class="k">Para sacar eso cada mes sin quedarte sin plata (la regla del <span id="lbl-retb">4</span>%), necesitás acumular:</div>
-      <div class="num" id="r-capital">$0</div>
-      <div class="num-eq" id="r-capital-eq"></div>
-      <div class="sub">Tranquilo, nadie tiene esa plata guardada de un solo. Esto se construye poco a poco. Mirá:</div>
-    </div>
-
-    <details data-tg="t_por_que_4">
-      <summary>🤔 ¿Por qué el 4%?</summary>
-      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que te dan alrededor de un 4% al año. Vivís de los intereses y el capital queda intacto. Luego ese capital se puede usar para incrementar tu monto mensual de retiro o para heredarlo.</div>
-    </details>
-  </section>
-
-  <!-- ================= ACTO 2A ================= -->
-  <section class="acto" id="acto2a">
-    <div class="puente">Ok. Tu meta es tener <span id="r-capital-eco">$0</span>.<br>¿Y cómo llegamos ahí?</div>
-
-    <div class="card" id="caja-pregunta">
-      <button class="btn" id="b-caja-no">Ok, sigamos →</button>
-      <p style="margin-top:20px">Si querés, antes de seguir le restamos lo que sí te va a dar la Caja y así tu meta final baja un poco. (asumiendo que no quiebra) 😅</p>
-      <button class="btn btn-ghost" id="b-caja-si" style="margin-top:12px">Hmm, quiero ver si la Caja mejora mis números</button>
-    </div>
-
-    <div class="card" id="caja-form" style="display:none">
-      <div class="campo">
-        <label for="edad">Tu edad</label>
-        <input id="edad" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
-      </div>
-      <div class="campo">
-        <label for="salario">Tu salario bruto mensual</label>
-        <div class="chips" data-for="salario">
-          <button type="button" class="chip on" data-cur="$">$</button>
-          <button type="button" class="chip" data-cur="₡">₡</button>
+      <div class="pcampo">
+        <label>Meta mensual en el retiro</label>
+        <div class="inrow">
+          <div class="chips"><button class="chip on" data-cur="$">$</button><button class="chip" data-cur="₡">₡</button></div>
+          <input id="i-meta" inputmode="numeric" value="10,000">
         </div>
-        <input id="salario" type="text" inputmode="numeric" placeholder="$7,500" autocomplete="off">
-        <div class="equiv" id="salario-eq"></div>
-        <div class="hint">Si lo pensás en colones, tocá el ₡</div>
       </div>
-      <label class="checkline">
-        <input type="checkbox" id="f-rop">
-        <span>Sumale también mi ROP</span>
-      </label>
-      <div class="campo" id="campo-rop" style="display:none">
-        <label for="saldo-rop">Saldo de tu ROP, si lo sabés</label>
-        <div class="chips" data-for="saldo-rop">
-          <button type="button" class="chip on" data-cur="$">$</button>
-          <button type="button" class="chip" data-cur="₡">₡</button>
-        </div>
-        <input id="saldo-rop" type="text" inputmode="numeric" placeholder="$0" autocomplete="off">
-        <div class="equiv" id="saldo-rop-eq"></div>
-        <div class="hint">Si no lo sabés, dejalo vacío y lo estimamos con tu salario y tus años cotizados.</div>
-      </div>
-      <p class="confianza">Solo lo usamos para calcular tu pensión aquí, en tu navegador. No se envía a ningún lado.</p>
-      <button class="btn" id="b-caja-calc">Ver mi pensión →</button>
-      <div class="warn" id="w-caja" style="display:none">Escribí tu edad (entre 18 y 64) y tu salario bruto mensual.</div>
+      <div class="pcampo"><label>Tipo de cambio ₡/$</label><input id="i-tc" inputmode="numeric" value="460"></div>
+      <div class="pcampo"><label>Crecimiento antes del retiro %/año</label><div class="stepper"><input id="i-crec" inputmode="decimal" value="8"><div class="steps"><button class="stp" data-t="i-crec" data-d="1">▲</button><button class="stp" data-t="i-crec" data-d="-1">▼</button></div></div></div>
+      <div class="pcampo"><label>Tasa de retiro %/año</label><div class="stepper"><input id="i-ret" inputmode="decimal" value="4"><div class="steps"><button class="stp" data-t="i-ret" data-d="1">▲</button><button class="stp" data-t="i-ret" data-d="-1">▼</button></div></div></div>
+      <div class="pcampo"><label>Crecimiento durante el retiro %/año</label><div class="stepper"><input id="i-crecret" inputmode="decimal" value="4"><div class="steps"><button class="stp" data-t="i-crecret" data-d="1">▲</button><button class="stp" data-t="i-crecret" data-d="-1">▼</button></div></div></div>
+      <div class="pcampo"><label>Inflación %/año</label><div class="stepper"><input id="i-infl" inputmode="decimal" value="3"><div class="steps"><button class="stp" data-t="i-infl" data-d="1">▲</button><button class="stp" data-t="i-infl" data-d="-1">▼</button></div></div></div>
+      <div class="pcampo"><label>Capital inicial (opcional)</label><input id="i-cap" inputmode="numeric" value="0"></div>
+      <div class="pcampo"><label>Edad actual</label><div class="stepper"><input id="i-edad" inputmode="numeric" value="30"><div class="steps"><button class="stp" data-t="i-edad" data-d="1">▲</button><button class="stp" data-t="i-edad" data-d="-1">▼</button></div></div></div>
+      <div class="pcampo"><label>Edad de retiro</label><div class="stepper"><input id="i-edadret" inputmode="numeric" value="65"><div class="steps"><button class="stp" data-t="i-edadret" data-d="1">▲</button><button class="stp" data-t="i-edadret" data-d="-1">▼</button></div></div></div>
     </div>
+    <button class="preset" id="i-reset">↺ Valores base (crec 8% · crec retiro 4% · infl 3% · retiro 4% · 30→65 · $10,000)</button>
+  </div>
+</header>
 
-    <div id="acto2a-res" style="display:none">
-      <div class="res-linea">
-        <span class="k">La Caja te daría</span>
-        <span class="v-wrap"><span class="v" id="r-pension">$0</span><span class="v-eq" id="r-pension-eq"></span></span>
-      </div>
-      <div class="desglose" id="r-desglose" style="display:none"></div>
-      <div class="card card-menta" id="r-techo" style="display:none">
-        <p>🚧 <b>Y vos tocaste ese techo.</b> Tu pensión se quedó en el máximo de <b>₡1,765,859</b>. Por más que ganés o cotizés más, de ahí no sube. Todo lo que quieras arriba de eso, lo construís vos.</p>
-      </div>
-      <div class="techo" id="r-antes65" style="display:none">Ojo: la Caja paga a partir de los 65. Si te retirás antes, esos años los cubre tu inversión.</div>
-      <div class="res-linea">
-        <span class="k">Tu inversión debe cubrir</span>
-        <span class="v-wrap"><span class="v" id="r-cubrir">$0</span><span class="v-eq" id="r-cubrir-eq"></span></span>
-      </div>
+<main class="wrap">
+  <div class="rescard">
+    <div class="rlbl">Necesitás acumular · en plata de hoy</div>
+    <div class="rnum" id="r-capital">$0</div>
+    <div class="req" id="r-capital-eq"></div>
+    <p class="rtxt" id="r-capital-txt"></p>
+  </div>
 
-      <div class="banda">
-        <div class="k">Tu nueva meta de capital:</div>
-        <div class="num" id="r-capital2">$0</div>
-        <div class="num-eq" id="r-capital2-eq"></div>
-      </div>
+  <div class="rescard dest">
+    <div class="rlbl">Aporte mensual · en plata de hoy</div>
+    <div class="rnum big" id="r-aporte">$0</div>
+    <div class="req" id="r-aporte-eq"></div>
+    <p class="rtxt" id="r-aporte-txt"></p>
+    <div class="warn" id="r-warn" style="display:none"></div>
+  </div>
 
-      <details data-tg="t_calculo_pension">
-        <summary>🏛️ ¿Cómo calculamos tu pensión?</summary>
-        <div class="body">Usamos la fórmula oficial del IVM (normativa 2026): un porcentaje de tu salario según tu nivel de ingreso (entre 43% y 52.5%), más un poquito extra por cada año cotizado sobre los 25. Asumimos que cotizás sin pausas desde los 25 años. Si sumás tu ROP, proyectamos tu cuenta individual con el 4.25% de tu salario y un rendimiento conservador, y la volvemos renta mensual. Es una estimación educativa, no una certificación de la CCSS.</div>
-      </details>
-      <details data-tg="t_cuotas_ccss">
-        <summary>🔎 ¿Querés ver tus cuotas reales? (Oficina Virtual de la CCSS)</summary>
-        <div class="body">
-          Acá asumimos que cotizás sin pausas desde los 25. Si querés el dato exacto, es gratis y toma 2 minutos:<br><br>
-          1. Entrá a la <b>Oficina Virtual de la CCSS</b> → <a href="https://aissfa.ccss.sa.cr/afiliacion/index.xhtml?faces-redirect=true?faces-redirect=true" target="_blank" rel="noopener">aissfa.ccss.sa.cr</a> e ingresá con tu <b>usuario</b> (si no tenés, lo creás ahí con tu cédula). Así se ve la pantalla de entrada:
-          <img src="/assets/ccss_home.webp" width="300" alt="Oficina Virtual de la CCSS, pantalla de entrada" loading="lazy">
-          2. Ya adentro, andá al menú <b>Pensiones → Reportes → «Proyección de Pensión»</b>:
-          <img src="/assets/ccss_proyeccion.webp" width="380" alt="CCSS, reporte de Proyección de Pensión" loading="lazy">
-          3. Ahí ves <b>cuántas cuotas (meses) has cotizado</b> y la proyección oficial de la CCSS.<br><br>
-          <i>Tip: 300 cuotas, o sea 25 años, es el mínimo para la pensión completa del IVM.</i>
-        </div>
-      </details>
-    </div>
-  </section>
+  <div class="tsub" style="margin-top:4px">Tu portafolio, de hoy hasta el retiro y después</div>
+  <div id="chart-wrap"><canvas id="chart"></canvas></div>
 
-  <!-- ================= ACTO 2B ================= -->
-  <section class="acto" id="acto2b">
-    <div class="card" id="acto2b-form">
-      <p>Ahora sí: ¿cuánto habría que ir poniendo cada mes para llegar a esa meta? Para eso poné aquí abajo:</p>
-      <div class="campo" id="campo-edad2" style="margin-top:18px">
-        <label for="edad2">Tu edad</label>
-        <input id="edad2" type="text" inputmode="numeric" placeholder="40" maxlength="2" autocomplete="off">
-      </div>
-      <div class="campo">
-        <label for="edad-ret">¿A qué edad querés retirarte?</label>
-        <input id="edad-ret" type="text" inputmode="numeric" placeholder="65" maxlength="2" autocomplete="off">
-      </div>
-      <button class="btn" id="b-acto2b">Ver mi aporte mensual →</button>
-      <div class="warn" id="w-2b" style="display:none">Escribí tu edad (entre 18 y 64) y una edad de retiro mayor a esa.</div>
-    </div>
+  <div class="quick" id="quick">
+    <div class="qc"><span class="qlbl">Edad hoy</span><div class="qrow"><b id="q-edad">0</b><div class="qsteps"><button class="qs" data-q="edad" data-d="1">▲</button><button class="qs" data-q="edad" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Capital hoy</span><div class="qrow"><b id="q-cap">$0</b><div class="qsteps"><button class="qs" data-q="cap" data-d="1">▲</button><button class="qs" data-q="cap" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Meta $/mes</span><div class="qrow"><b id="q-meta">$0</b><div class="qsteps"><button class="qs" data-q="meta" data-d="1">▲</button><button class="qs" data-q="meta" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Crecimiento</span><div class="qrow"><b id="q-crec">0%</b><div class="qsteps"><button class="qs" data-q="crec" data-d="1">▲</button><button class="qs" data-q="crec" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Crec. retiro</span><div class="qrow"><b id="q-crecret">0%</b><div class="qsteps"><button class="qs" data-q="crecret" data-d="1">▲</button><button class="qs" data-q="crecret" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Inflación</span><div class="qrow"><b id="q-infl">0%</b><div class="qsteps"><button class="qs" data-q="infl" data-d="1">▲</button><button class="qs" data-q="infl" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Retiro</span><div class="qrow"><b id="q-ret">0%</b><div class="qsteps"><button class="qs" data-q="ret" data-d="1">▲</button><button class="qs" data-q="ret" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Años</span><div class="qrow"><b id="q-anios">0</b><div class="qsteps"><button class="qs" data-q="anios" data-d="1">▲</button><button class="qs" data-q="anios" data-d="-1">▼</button></div></div></div>
+  </div>
 
-    <div id="acto2b-res" style="display:none">
-      <div class="destaque">
-        <div class="k">Aportando desde hoy, con un crecimiento del <span id="lbl-crb">8</span>% anual:</div>
-        <div class="num" id="r-aporte8">$0</div>
-        <div class="num-eq" id="r-aporte8-eq"></div>
-        <p class="frase-aporte" id="r-frase-aporte"></p>
-      </div>
+  <p class="rtxt" id="r-retiro-txt" style="margin-top:0"></p>
 
-      <div id="chart-wrap"><canvas id="chart-crec"></canvas></div>
-      <p class="chart-nota" id="chart-nota"></p>
+  <div class="tsub">Aporte según la tasa de crecimiento (misma meta y retiro)</div>
+  <table id="tabla-crec"><thead><tr><th>Crecimiento</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
 
-      <span class="cap"><span id="lbl-crb2">8</span>% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
-    </div>
-  </section>
+  <div class="tsub">Capital y aporte según la tasa de retiro (mismo crecimiento)</div>
+  <table id="tabla-ret"><thead><tr><th>Retiro</th><th>Capital</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
 
-  <!-- ================= ACTO 3 ================= -->
-  <section class="acto" id="acto3">
-    <div class="pero">PERO</div>
+  <div class="hist-sep"></div>
+  <h2 class="htit">🕰️ Experimento con la historia · ¿y si hubieras empezado hace años?</h2>
+  <p class="hintro">Esto ya pasó de verdad. Rendimientos <b>reales año por año</b> (con dividendos reinvertidos) de <b>SPY</b> (S&P 500), <b>QQQ</b> (Nasdaq-100) y sus versiones apalancadas <b>QLD</b> (2×) y <b>TQQQ</b> (3×), más <b>San José Capital</b> como tasa fija. Data de <b>1990 a 2025</b>, en dólares.</p>
 
-    <div class="titulo" style="margin-top:20px">Ese número asume dos cosas:</div>
-    <div class="card">
-      <p>📊 Que tu plata <b>crece al <span id="lbl-crb3">8</span>%</b> al año, que a grandes rasgos es el histórico de la bolsa de Estados Unidos.</p>
-      <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el <span id="lbl-retb2">4</span>%</b> al año, que es lo que rinde un bono del Tesoro.</p>
-    </div>
+  <!-- 1 · CRECIMIENTO -->
+  <div class="tsub" style="margin-top:6px">1 · Cómo habría crecido tu inversión, año por año</div>
+  <p class="hnote">Elegí abajo qué activos ver: los <b style="color:var(--menta)">verdes</b> se dibujan en el gráfico (podés ver varios a la vez). El último que tocás pasa a ser el protagonista de los números y del retiro. TQQQ y QLD arrancan apagados porque su escala aplasta al resto.</p>
+  <div id="chart-wrap-hist" style="position:relative; height:400px; margin:6px 0 12px;"><canvas id="chart-hist"></canvas></div>
 
-    <div class="card card-menta">
-      <p>Si invertís al <b>15%</b> buscando crecimiento (¡como debería ser, porque tenés el tiempo a tu favor!)</p>
-      <p style="margin-top:10px">Y te retirás al <b>8%</b>…</p>
-    </div>
+  <div class="quick" id="quick-hist">
+    <div class="qc qcw"><span class="qlbl">Activos en el gráfico (tocá para mostrar/ocultar)</span><div class="chiprow" id="chips-acum"></div><div class="hprot">Números y retiro: <b id="h-prot">QQQ</b></div></div>
+    <div class="qc"><span class="qlbl">Aporte $/mes</span><div class="qrow"><b id="h-aporte">$1,000</b><div class="qsteps"><button class="qs" data-h="aporte" data-d="1">▲</button><button class="qs" data-h="aporte" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Capital inicial</span><div class="qrow"><b id="h-cap">$0</b><div class="qsteps"><button class="qs" data-h="cap" data-d="1">▲</button><button class="qs" data-h="cap" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Desde</span><div class="qrow"><b id="h-y0">2005</b><div class="qsteps"><button class="qs" data-h="y0" data-d="1">▲</button><button class="qs" data-h="y0" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Hasta</span><div class="qrow"><b id="h-y1">2025</b><div class="qsteps"><button class="qs" data-h="y1" data-d="1">▲</button><button class="qs" data-h="y1" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Crec. SJC</span><div class="qrow"><b id="h-sjc">8%</b><div class="qsteps"><button class="qs" data-h="sjc" data-d="1">▲</button><button class="qs" data-h="sjc" data-d="-1">▼</button></div></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Aportes</span><div class="qrow"><button class="qtoggle" id="h-sinap">Con aportes</button></div></div>
+  </div>
 
-    <div class="titulo">Pasan muchas cosas:</div>
+  <div class="hstats">
+    <div class="hstat"><div class="k">De tu bolsillo</div><div class="v" id="h-aportado">$0</div></div>
+    <div class="hstat"><div class="k">Lo puso el mercado</div><div class="v men" id="h-ganancia">$0</div></div>
+    <div class="hstat"><div class="k">CAGR del activo</div><div class="v per" id="h-cagr">0%</div></div>
+    <div class="hstat"><div class="k">TIR de tu plata</div><div class="v men" id="h-tir">0%</div></div>
+  </div>
 
-    <div class="resaltado pasa">
-      <p>🚀 Tu cuota mensual al <span id="lbl-crs">15</span>% pasa a tener que ser <b id="r-aporte15">$0</b>.</p>
-    </div>
-    <div class="resaltado pasa">
-      <p>🌴 ¡Y si a eso le sumás retirarte con el <span id="lbl-reta">8</span>%, tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</p>
-    </div>
-    <div class="resaltado pasa">
-      <p>🎯 O sea que con <b>ambas cosas</b>, más crecimiento y mejor tasa de retiro, tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
-    </div>
-    <div class="resaltado pasa">
-      <p>⏱️ O, ¡ajá!, tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
-    </div>
+  <div class="rescard dest" style="border-color:var(--peri); background:rgba(85,109,251,.07)">
+    <div class="rlbl">Valor hoy · <span id="h-actlbl">QQQ</span></div>
+    <div class="rnum big" id="h-valor" style="color:var(--peri)">$0</div>
+    <p class="rtxt" id="h-valor-txt"></p>
+  </div>
 
-    <span class="cap">Tasas objetivo e históricas, usadas como referencia educativa. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</span>
+  <!-- 2 · RETIRO -->
+  <div class="tsub" style="margin-top:28px">2 · Tu historia real + el retiro, todo junto</div>
+  <p class="hnote">Este gráfico junta tu <b>historia real</b> (la acumulación de arriba) con la <b>proyección del retiro</b>, en el eje de tu <b>edad</b>. Elegí en qué activos te retirás: los <b style="color:var(--menta)">verdes</b> se dibujan (su escenario típico, p50). Si dejás <b>uno solo</b> del mercado, ves también su banda p10–p90. Cuando el portafolio no aguanta los retiros, la línea <b>corta</b> y un <b>punto</b> marca dónde se acabó la plata.</p>
+  <div id="chart-wrap-ret" style="position:relative; height:360px; margin:6px 0 12px;"><canvas id="chart-ret"></canvas></div>
 
-    <div class="titulo">Suena todo muy bonito, ¡¡pero tal vez demasiado!!</div>
-    <details data-tg="t_humo_15">
-      <summary>🔍 ¿Esto no será humo?</summary>
-      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y <b class="hl">nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></div>
-    </details>
-    <details data-tg="t_como_8pct">
-      <summary>🌴 ¿Cómo se logra el 8% de ingreso pasivo para el retiro?</summary>
-      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
-    </details>
-  </section>
+  <div class="quick" id="quick-ret">
+    <div class="qc qcw"><span class="qlbl">Te retirás en (podés elegir varios · verde = se ve)</span><div class="chiprow" id="chips-ret"></div></div>
+    <div class="qc"><span class="qlbl">Edad de retiro</span><div class="qrow"><b id="h-edadret">65</b><div class="qsteps"><button class="qs" data-h="edadret" data-d="1">▲</button><button class="qs" data-h="edadret" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Retirás /año</span><div class="qrow"><b id="h-retpct">8%</b><div class="qsteps"><button class="qs" data-h="retpct" data-d="1">▲</button><button class="qs" data-h="retpct" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Inflación</span><div class="qrow"><b id="h-retinfl">3%</b><div class="qsteps"><button class="qs" data-h="retinfl" data-d="1">▲</button><button class="qs" data-h="retinfl" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Años de retiro</span><div class="qrow"><b id="h-retanios">30</b><div class="qsteps"><button class="qs" data-h="retanios" data-d="1">▲</button><button class="qs" data-h="retanios" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Retiro SJC</span><div class="qrow"><b id="h-sjcret">8%</b><div class="qsteps"><button class="qs" data-h="sjcret" data-d="1">▲</button><button class="qs" data-h="sjcret" data-d="-1">▼</button></div></div></div>
+  </div>
 
-  <!-- ================= CTA ================= -->
-  <section class="acto" id="cta">
-    <div class="card card-peri oferta">
-      <p>Que trabajemos un sistema de crecimiento de capital que te ayude a bajar tu aporte mensual de</p>
-      <p class="oferta-num"><span class="de" id="r-oferta-de">$0</span> a <b id="r-oferta-a">$0</b></p>
-      <p>y que te ayudemos a conseguir un ingreso pasivo para que tu meta se reduzca de</p>
-      <p class="oferta-num"><span class="de" id="r-oferta-meta-de">$0</span> a <b id="r-oferta-meta-a">$0</b></p>
-      <p class="oferta-cierre">¿Te sonaría bien?</p>
-      <p class="oferta-cierre" style="color:var(--menta); margin-top:12px">Contestanos aquí abajo 👇</p>
-    </div>
-    <div class="opciones" id="opciones">
-      <button class="opcion" data-cal="Suena bien, hablémoslo más">💪 Suena bien, hablémoslo más</button>
-      <button class="opcion" data-cal="Quisiera más información">🤝 Quisiera más información</button>
-      <button class="opcion" data-cal="Prefiero ir cuesta arriba">🫡 No, la verdad prefiero ir cuesta arriba lo más que pueda</button>
-    </div>
+  <div class="rescard dest">
+    <div class="rlbl">Ingreso en el retiro · en plata de hoy</div>
+    <div class="rnum big" id="h-ingreso">$0/mes</div>
+    <p class="rtxt" id="h-ingreso-txt"></p>
+  </div>
 
-    <div id="cta-salidas"></div>
-    <div id="form-wrap"></div>
-  </section>
-</div>
+  <!-- 3 · MONTE CARLO -->
+  <div class="tsub" style="margin-top:28px">3 · Monte Carlo · el abanico de futuros posibles</div>
+  <p class="hnote">Mil escenarios sorteando años reales del mercado y de la inflación, con tu mismo aporte, sobre <span id="h-mcnom">QQQ</span>. La banda va del 10% peor (p10) al 10% mejor (p90); la línea del medio es el escenario típico.</p>
+  <div id="chart-wrap-mc" style="position:relative; height:340px; margin:6px 0 12px;"><canvas id="chart-mc"></canvas></div>
+  <p class="rtxt" id="h-mc-txt" style="margin-top:0"></p>
 
-<footer>
-  <p>Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta.<br>
-  No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. · <a href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">@joseinvestor.cr</a></p>
-</footer>
+  <!-- 4 · HISTORIAL DEL ACTIVO -->
+  <div class="tsub" style="margin-top:28px">4 · El historial de <span id="h-histnom">QQQ</span> (1990–2025)</div>
+  <p class="hnote">Los sustos y los extremos del activo protagonista. Cambian según cuál tengas seleccionado como protagonista arriba.</p>
+
+  <div class="hsub2">Los 10 peores sustos · caídas de pico a fondo</div>
+  <table id="tabla-dd"><thead><tr><th>Caída</th><th>Empezó</th><th>Se recuperó</th><th>Duró</th></tr></thead><tbody></tbody></table>
+
+  <div class="dostablas">
+    <div><div class="hsub2">Los 10 peores años</div>
+      <table id="tabla-peores"><thead><tr><th>Año</th><th>Retorno</th></tr></thead><tbody></tbody></table></div>
+    <div><div class="hsub2">Los 10 mejores años</div>
+      <table id="tabla-mejores"><thead><tr><th>Año</th><th>Retorno</th></tr></thead><tbody></tbody></table></div>
+  </div>
+
+  <p class="foot">Herramienta interna de Empowered Investor. Todo va en <b>plata de hoy</b> (poder de compra actual): se usan rendimientos reales, o sea el crecimiento nominal menos la inflación. La meta que ponés es de hoy y se mantiene en poder de compra a lo largo de toda la proyección. Capital objetivo = meta anual ÷ (tasa de retiro ÷ 100). En el retiro el portafolio se mantiene estable cuando su crecimiento real iguala la tasa de retiro.</p>
+</main>
 
 <script>
 "use strict";
-// ===== CONFIG =====
-var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
-var INSTAGRAM_URL = "https://www.instagram.com/joseinvestor.cr/";
-var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
-var TC_DEFAULT = 460;
-// Parámetros IVM 2026 (fuente: referencia_ivm_2026.md). El IVM corre SIEMPRE en colones.
-var SALARIO_MINIMO = 373092;
-var TOPE_MAX = 1765859;
-var PENSION_MIN = 162295;
-var EDAD_RETIRO = 65;
-var EDAD_INICIO_COTIZA = 25;
-// Tasas del flujo
-// [ADMIN] Estas tasas son editables desde el panel de arriba.
-var TASA_BASE = 8;        // crecimiento de referencia (histórico de la bolsa)
-var TASA_CREC = 15;       // crecimiento con nuestro sistema
-var RET_BASE = 4;         // tasa de retiro conservadora (regla del 4% -> capital = gasto anual x 25)
-var RET_ALIANZA = 8;      // tasa de retiro con la alianza (ingreso pasivo)
-function multRetiro(){ return 100 / RET_BASE; }            // capital = gasto anual x (100/tasa de retiro)
-function factorAlianza(){ return RET_BASE / RET_ALIANZA; }  // cuánto se achica la meta con la mejor tasa
-var ADMIN = true;         // no envía leads reales al Sheet
-
-// ===== ESTADO =====
-var S = {
-  metaVal:0, metaCur:"$", tc:TC_DEFAULT,
-  caja:null, edad:0, edadRet:0, salVal:0, salCur:"$",
-  rop:false, saldoRopVal:0, saldoRopCur:"$", ivmCol:0, ropCol:0,
-  pensionCol:0, tocoTecho:false,
-  capObjUsd:0, capObjCol:0,
-  aportes:{}, autocal:null, acto:1, toggles:[], inicio:Date.now()
-};
-function guardar(){ try{ sessionStorage.setItem("lp_admin_state", JSON.stringify(S)); }catch(e){} }
-function restaurar(){
-  try{
-    var raw = sessionStorage.getItem("lp_admin_state");
-    if(raw){ var o=JSON.parse(raw); for(var k in o){ if(o.hasOwnProperty(k)) S[k]=o[k]; } }
-  }catch(e){}
-  if(!S.toggles) S.toggles = [];
-}
-
-// ===== TOGGLES: tracking =====
-var togglesAbiertos = [];
-function marcarToggle(id){
-  if(!id || togglesAbiertos.indexOf(id) > -1) return;
-  togglesAbiertos.push(id);
-  S.toggles = togglesAbiertos;
-  guardar();
-  try{ if(typeof gtag === "function") gtag("event","toggle_abierto",{toggle:id}); }catch(e){}
-  try{ if(typeof fbq === "function") fbq("trackCustom","toggle_abierto",{toggle:id}); }catch(e){}
-}
-function initToggles(){
-  var ds = document.querySelectorAll("details[data-tg]");
-  Array.prototype.forEach.call(ds, function(el){
-    el.addEventListener("toggle", function(){ if(el.open) marcarToggle(el.getAttribute("data-tg")); });
-  });
-}
-
-// ===== FORMATO =====
-function soloDigitos(s){ return (s||"").replace(/[^0-9]/g,""); }
-function num(s){ var d=soloDigitos(s); return d?parseInt(d,10):0; }
-function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
-function money(n, cur){ return (cur==="₡"?"₡":"$") + fmt(n); }
-function otra(cur){ return cur==="$" ? "₡" : "$"; }
-function conv(v, de, a){ if(de===a) return v; return de==="$" ? v*S.tc : v/S.tc; }
-function aUsd(v, cur){ return cur==="$" ? v : v/S.tc; }
-function aCol(v, cur){ return cur==="₡" ? v : v*S.tc; }
-
-// Comas en vivo (campos que NO son plata, p. ej. el tipo de cambio)
-function bindComas(el){
-  el.addEventListener("input", function(){
-    var d = soloDigitos(el.value);
-    var pos = el.selectionStart, antes = el.value.length;
-    el.value = d ? fmt(parseInt(d,10)) : "";
-    var desp = el.value.length;
-    try{ el.setSelectionRange(Math.max(0,pos+(desp-antes)), Math.max(0,pos+(desp-antes))); }catch(e){}
-  });
-}
-// Comas en vivo + el símbolo de la moneda adelante del número ($10,000)
-function bindMoney(el, getCur){
-  el.addEventListener("input", function(){
-    var d = soloDigitos(el.value);
-    var pos = el.selectionStart, antes = el.value.length;
-    el.value = d ? (getCur() + fmt(parseInt(d,10))) : "";
-    var desp = el.value.length, np = pos + (desp - antes);
-    np = el.value ? Math.max(1, Math.min(np, el.value.length)) : 0;   // nunca antes del símbolo
-    try{ el.setSelectionRange(np, np); }catch(e){}
-  });
-}
-// Placeholder sugerido, en la moneda del chip (se guarda en US$ y se convierte)
-function pintarPlaceholder(id, baseUsd, cur){
-  var el = byId(id); if(!el) return;
-  el.placeholder = cur + fmt(conv(baseUsd, "$", cur));
-}
 function byId(id){ return document.getElementById(id); }
+function num(s){ var d=String(s||"").replace(/[^0-9.]/g,""); var n=parseFloat(d); return isNaN(n)?0:n; }
+function ent(s){ return Math.round(num(s)); }
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function fmt1(n){ return (Math.round(n*10)/10).toString(); }
+function money(n,cur){ return (cur==="₡"?"₡":"$")+fmt(n); }
+var metaCur = "$";
 
-// ===== CHIPS DE MONEDA =====
-function initChips(inputId, getCur, setCur, onChange){
-  var cont = document.querySelector('.chips[data-for="'+inputId+'"]');
-  if(!cont) return;
-  Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(btn){
-    btn.addEventListener("click", function(){
-      var nueva = btn.getAttribute("data-cur");
-      if(nueva === getCur()) return;
-      var el = byId(inputId), v = num(el.value);
-      if(v > 0){ el.value = nueva + fmt(conv(v, getCur(), nueva)); }   // convertir lo escrito y cambiarle el símbolo
-      setCur(nueva);
-      Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(c){ c.classList.toggle("on", c===btn); });
-      onChange && onChange();
-    });
-  });
-}
-function pintarChips(inputId, cur){
-  var cont = document.querySelector('.chips[data-for="'+inputId+'"]');
-  if(!cont) return;
-  Array.prototype.forEach.call(cont.querySelectorAll(".chip"), function(c){
-    c.classList.toggle("on", c.getAttribute("data-cur")===cur);
-  });
-}
-
-// ===== MOTOR IVM (art. 24, parámetros 2026): SIEMPRE en colones =====
-function cuantiaBasica(salarioCol){
-  var n = salarioCol / SALARIO_MINIMO;
-  if (n < 2) return 0.525;
-  if (n < 3) return 0.510;
-  if (n < 4) return 0.494;
-  if (n < 5) return 0.478;
-  if (n < 6) return 0.462;
-  if (n < 8) return 0.446;
-  return 0.430;
-}
-function pensionIVM(edad, salarioCol){
-  var aniosCot = Math.max(0, Math.min(edad, EDAD_RETIRO) - EDAD_INICIO_COTIZA) + Math.max(0, EDAD_RETIRO - Math.max(edad, EDAD_INICIO_COTIZA));
-  var cuotas = Math.round(aniosCot * 12);
-  if (cuotas < 180) return 0;
-  var cb = cuantiaBasica(salarioCol);
-  var adicional = Math.max(0, cuotas - 300) * 0.000833;
-  var pension = salarioCol * (cb + adicional);
-  if (cuotas < 300) pension = pension * (cuotas / 300);
-  pension = Math.min(pension, TOPE_MAX);
-  pension = Math.max(pension, PENSION_MIN);
-  return Math.round(pension);
-}
-
-// ===== MOTOR ROP (Ley 7983, art. 22): igual que el wizard. Todo en colones. =====
-var APORTE_ROP_PCT = 4.25;          // del salario reportado a la CCSS
-var ROP_NOMINAL_PCT = 6.0;
-var ROP_INFLACION_PCT = 3.0;
-var ROP_PLAZO_PAGO_ANIOS = 20.0;
-var ROP_ANIO_INICIO = 2000;         // el ROP arrancó ~2000: tope de cuotas
-var ROP_PISO_PCT = 20.0;            // ninguna prestación baja del 20% de la mínima del IVM
-var ROP_CORTE_TRANSITORIO = new Date(Date.UTC(2030, 1, 19));   // 2030-02-19
-
-function tasaRealAnualPct(nom, inf){ return ((1+nom/100)/(1+inf/100) - 1) * 100; }
-function valorFuturoRop(saldo, aporte, i, meses){
-  if(meses <= 0) return saldo;
-  if(i === 0) return saldo + aporte*meses;
-  var g = Math.pow(1+i, meses);
-  return saldo*g + aporte*(g-1)/i;
-}
-function pagoAnualidad(fv, i, meses){
-  if(meses <= 0) return 0;
-  if(i === 0) return fv/meses;
-  return fv * i / (1 - Math.pow(1+i, -meses));
-}
-// Devuelve la renta mensual del ROP en ₡ (poder de compra de hoy).
-function pensionROP(edad, salarioCol, saldoCol){
-  var aniosRest = Math.max(0, EDAD_RETIRO - edad);
-  var mesesFut = aniosRest * 12;
-  // Cuotas al ROP hoy: cotización continua desde los 25, pero el ROP existe desde ~2000.
-  var cuotasHoy = Math.max(0, edad - EDAD_INICIO_COTIZA) * 12;
-  var cuotasRopMax = Math.max(0, new Date().getFullYear() - ROP_ANIO_INICIO) * 12;
-  var cuotasRopHoy = Math.min(cuotasHoy, cuotasRopMax);
-  var cuotasAlRetiro = cuotasRopHoy + mesesFut;
-
-  var aporteMensual = salarioCol * APORTE_ROP_PCT / 100;
-  // Si no sabe el saldo, lo estimamos: aportes ya hechos, sin crecimiento (conservador).
-  if(saldoCol <= 0) saldoCol = aporteMensual * cuotasRopHoy;
-
-  var i = tasaRealAnualPct(ROP_NOMINAL_PCT, ROP_INFLACION_PCT) / 100 / 12;
-  var fv = valorFuturoRop(saldoCol, aporteMensual, i, mesesFut);
-
-  var transitorio = cuotasAlRetiro > 0 ? fv / cuotasAlRetiro : 0;
-  var anualidad = pagoAnualidad(fv, i, Math.max(1, Math.round(ROP_PLAZO_PAGO_ANIOS*12)));
-
-  var hoy = new Date();
-  var fechaRetiro = new Date(Date.UTC(hoy.getFullYear() + aniosRest, hoy.getMonth(), 1));
-  var aplicable = (fechaRetiro < ROP_CORTE_TRANSITORIO) ? transitorio : anualidad;
-
-  return Math.max(aplicable, PENSION_MIN * ROP_PISO_PCT / 100);
-}
-
-// ===== APORTE REQUERIDO (anualidad estándar) =====
-// Cuánto hay que poner por mes para llegar a `fv` a los 65, con `anualPct` mensualizado,
-// descontando lo que crece por su cuenta el capital inicial `pv`.
-function aporteRequerido(fv, pv, anualPct, meses){
-  if(meses <= 0) return 0;
+// Cuánto aportar por mes para llegar a `fv` en `meses`, a `anualPct` mensualizado,
+// descontando el crecimiento del capital inicial `pv`.
+function aporteReq(fv, pv, anualPct, meses){
+  if(meses<=0) return 0;
   var i = anualPct/100/12;
   var f = Math.pow(1+i, meses);
   var falta = fv - pv*f;
-  if(falta <= 0) return 0;                 // el capital inicial ya llega solo
-  return falta * i / (f - 1);
-}
-// Al revés: manteniendo la MISMA cuota, ¿en cuántos meses se llega a `fv`? Sirve para
-// decirle que, con el 15% y el retiro al 8%, su retiro se le adelanta.
-function mesesParaLlegar(fv, pmt, anualPct){
-  if(pmt <= 0 || fv <= 0) return 0;
-  var i = anualPct/100/12;
-  return Math.log(1 + fv*i/pmt) / Math.log(1+i);
+  if(falta<=0) return 0;
+  if(i===0) return falta/meses;
+  return falta*i/(f-1);
 }
 
-// ===== EQUIVALENCIAS EN VIVO =====
-function pintarEquiv(inputId, cur, eqId){
-  var v = num(byId(inputId).value);
-  var el = byId(eqId);
-  if(!el) return;
-  el.textContent = v>0 ? ("≈ " + money(conv(v, cur, otra(cur)), otra(cur))) : "";
-}
-function refrescarEquivalencias(){
-  pintarEquiv("meta", S.metaCur, "meta-eq");
-  if(byId("salario")) pintarEquiv("salario", S.salCur, "salario-eq");
-  if(byId("saldo-rop")) pintarEquiv("saldo-rop", S.saldoRopCur, "saldo-rop-eq");
-  var sum = byId("tc-sum");
-  if(sum) sum.textContent = "Para los cálculos usamos ₡"+fmt(S.tc)+" por $1, y trabajamos todo en dólares porque las inversiones son en la bolsa de Estados Unidos. Si querés cambiar el tipo de cambio, tocá aquí.";
-}
+function tc(){ return num(byId("i-tc").value)||460; }
+function otra(){ return metaCur==="$" ? "₡" : "$"; }
+function conv(v){ return metaCur==="$" ? v*tc() : v/tc(); }
 
-// ===== ACTOS =====
-// Al aparecer un acto NO movemos la pantalla: el contenido crece debajo y la persona
-// baja cuando quiere. (Feedback de clientes: los saltos automaticos molestan.)
-function mostrarActo(id){
-  byId(id).classList.add("on");
-}
+// Tasa REAL (neta de inflación): crecimiento del poder de compra.
+// Resta simple (nominal − inflación): directa e intuitiva. La fórmula exacta de Fisher
+// (dividir por 1+inflación) daría una brecha un pelo mayor por el término compuesto.
+function real(nominalPct, inflPct){ return nominalPct - inflPct; }
 
-// --- capital objetivo (en la moneda de la meta) ---
-function capitalObjetivo(){
-  // meta mensual menos pensión (si la calculó), × 12 × 25
-  var metaCol = aCol(S.metaVal, S.metaCur);
-  var netoCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
-  var col = netoCol * 12 * multRetiro();
-  return { col: col, usd: col / S.tc };
+function leer(){
+  return {
+    meta: num(byId("i-meta").value),   // meta mensual EN PLATA DE HOY (poder de compra actual)
+    crec: num(byId("i-crec").value),   // crecimiento nominal ANTES del retiro
+    ret:  num(byId("i-ret").value),    // tasa de retiro real (define el capital y el retiro anual)
+    crecRet: num(byId("i-crecret").value), // crecimiento nominal DURANTE el retiro
+    infl: num(byId("i-infl").value),   // inflación anual
+    edad: ent(byId("i-edad").value),
+    edadRet: ent(byId("i-edadret").value),
+    cap:  num(byId("i-cap").value)
+  };
 }
-function pintarCapital(numId, eqId){
-  var c = capitalObjetivo();
-  S.capObjCol = c.col; S.capObjUsd = c.usd;
-  var enMeta = S.metaCur==="$" ? c.usd : c.col;
-  byId(numId).textContent = money(enMeta, S.metaCur);
-  byId(eqId).textContent = "≈ " + money(S.metaCur==="$" ? c.col : c.usd, otra(S.metaCur));
-}
+// Todo se calcula en plata de hoy. El capital objetivo (real) = meta anual de hoy / tasa de retiro.
+function capitalObjetivo(d){ return d.ret>0 ? (d.meta*12)/(d.ret/100) : 0; }
 
-// ===== ACTO 1 =====
-function calcularActo1(){
-  var v = num(byId("meta").value);
-  if(v <= 0){ byId("w-meta").style.display="block"; return; }
-  byId("w-meta").style.display="none";
-  S.metaVal = v; S.acto = Math.max(S.acto, 2);
-  pintarCapital("r-capital","r-capital-eq");
-  byId("r-capital-eco").textContent = byId("r-capital").textContent;   // el puente repite el número
-  guardar();
-  mostrarActo("acto1-res"); mostrarActo("acto2a");
+var chart=null, chartHist=null, chartRet=null, chartMC=null;
+
+// Carga Chart.js una sola vez y encola los dibujos que lleguen mientras carga
+// (así el gráfico principal y el histórico no compiten por el <script>).
+var chartQueue=[];
+function whenChart(cb, wrap){
+  if(typeof Chart!=="undefined"){ cb(); return; }
+  chartQueue.push(cb);
+  if(byId("chartjs")) return;   // ya se está cargando; quedó encolado
+  var s=document.createElement("script"); s.id="chartjs";
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+  s.onload=function(){ var q=chartQueue.slice(); chartQueue=[]; q.forEach(function(f){f();}); };
+  s.onerror=function(){ if(wrap) wrap.style.display="none"; };
+  document.head.appendChild(s);
 }
 
-// ===== ACTO 2A (La Caja) =====
-function calcularCaja(){
-  var edad = num(byId("edad").value);
-  var sal = num(byId("salario").value);
-  if(!edad || edad < 18 || edad > 64 || sal <= 0){ byId("w-caja").style.display="block"; return; }
-  byId("w-caja").style.display="none";
-  S.edad = edad; S.salVal = sal; S.caja = "si";
-  var salCol = aCol(sal, S.salCur);              // el IVM y el ROP corren en colones
-  S.ivmCol = pensionIVM(edad, salCol);
-  S.tocoTecho = (S.ivmCol === TOPE_MAX);         // el techo es del IVM, no del ROP
-  S.rop = byId("f-rop").checked;
-  S.saldoRopVal = num(byId("saldo-rop").value);
-  S.ropCol = S.rop ? pensionROP(edad, salCol, aCol(S.saldoRopVal, S.saldoRopCur)) : 0;
-  S.pensionCol = S.ivmCol + S.ropCol;
+function render(){
+  var d = leer();
+  var anios = Math.max(0, d.edadRet - d.edad);
+  var meses = anios*12;
+  var gRealAcc = real(d.crec, d.infl);           // crecimiento real durante la acumulación
+  var capital = capitalObjetivo(d);              // en plata de hoy
+  var aporte = aporteReq(capital, d.cap, gRealAcc, meses);  // aporte real (constante, en plata de hoy)
 
-  // Desglose IVM + ROP (solo si sumó el ROP)
-  var desg = byId("r-desglose");
-  if(S.rop){
-    function enM(col){ return money(S.metaCur==="$" ? col/S.tc : col, S.metaCur); }
-    desg.textContent = "= IVM " + enM(S.ivmCol) + " + ROP " + enM(S.ropCol) + " por mes";
-    desg.style.display = "block";
-  } else { desg.style.display = "none"; }
+  byId("p-res").textContent = "crec " + d.crec + "% · infl " + d.infl + "% · retiro " + d.ret + "% · " + anios + " años";
+  // Resumen rápido debajo del gráfico (mismos valores que el panel)
+  byId("q-edad").textContent = d.edad;
+  byId("q-cap").textContent = money(d.cap, metaCur);
+  byId("q-meta").textContent = money(d.meta, metaCur);
+  byId("q-crec").textContent = d.crec + "%";
+  byId("q-crecret").textContent = d.crecRet + "%";
+  byId("q-infl").textContent = d.infl + "%";
+  byId("q-ret").textContent = d.ret + "%";
+  byId("q-anios").textContent = anios;
 
-  // resultados en la moneda de la meta
-  var pensionEnMeta = S.metaCur==="$" ? S.pensionCol/S.tc : S.pensionCol;
-  var metaCol = aCol(S.metaVal, S.metaCur);
-  var cubrirCol = Math.max(0, metaCol - S.pensionCol);
-  var cubrirEnMeta = S.metaCur==="$" ? cubrirCol/S.tc : cubrirCol;
-  byId("r-pension").textContent = money(pensionEnMeta, S.metaCur) + "/mes";
-  byId("r-cubrir").textContent = money(cubrirEnMeta, S.metaCur) + "/mes";
-  // Equivalencia en la otra moneda, en chiquito debajo de cada numero.
-  var pensionOtra = S.metaCur==="$" ? S.pensionCol : S.pensionCol/S.tc;
-  var cubrirOtra  = S.metaCur==="$" ? cubrirCol   : cubrirCol/S.tc;
-  byId("r-pension-eq").textContent = "≈ " + money(pensionOtra, otra(S.metaCur)) + "/mes";
-  byId("r-cubrir-eq").textContent  = "≈ " + money(cubrirOtra,  otra(S.metaCur)) + "/mes";
-  byId("r-techo").style.display = S.tocoTecho ? "block" : "none";
-  pintarCapital("r-capital2","r-capital2-eq");
-  byId("acto2a-res").style.display = "block";
-  byId("campo-edad2").style.display = "none";   // ya dio la edad
-  S.acto = Math.max(S.acto, 3);
-  guardar();
-  mostrarActo("acto2b");
-}
-function saltarCaja(){
-  S.caja = "saltar"; S.acto = Math.max(S.acto, 3);
-  byId("caja-form").style.display="none";
-  byId("acto2a-res").style.display="none";
-  byId("campo-edad2").style.display = "";       // acá sí hay que pedir la edad
-  guardar();
-  mostrarActo("acto2b");
+  byId("r-capital").textContent = money(capital, metaCur);
+  byId("r-capital-eq").textContent = capital>0 ? "≈ " + money(conv(capital), otra()) : "";
+  byId("r-capital-txt").innerHTML = "Para sacar <b>" + money(d.meta, metaCur) + "/mes en plata de hoy</b> al <b>" + d.ret +
+    "%</b> sin tocar el capital, necesitás juntar <b>" + money(capital, metaCur) + "</b> (la meta anual, " +
+    money(d.meta*12, metaCur) + ", dividida entre " + d.ret + "%). Todo en poder de compra de hoy.";
+
+  byId("r-aporte").textContent = money(aporte, metaCur) + "/mes";
+  byId("r-aporte-eq").textContent = aporte>0 ? "≈ " + money(conv(aporte), otra()) + "/mes" : "";
+  var txt = "Aportando <b>" + money(aporte, metaCur) + "/mes (en plata de hoy)</b> durante <b>" + anios + (anios===1?" año":" años") +
+    "</b> (de " + d.edad + " a " + d.edadRet + "), con un crecimiento <b>real del " + fmt1(gRealAcc) + "%</b> (nominal " + d.crec +
+    "% menos " + d.infl + "% de inflación), llegás a la meta.";
+  if(d.cap>0) txt += " Ya contás con " + money(d.cap, metaCur) + " de arranque.";
+  byId("r-aporte-txt").innerHTML = txt;
+
+  var warn = byId("r-warn"); warn.style.display="none";
+  if(d.edadRet <= d.edad){ warn.style.display="block"; warn.textContent="La edad de retiro tiene que ser mayor que la actual."; }
+  else if(d.ret<=0){ warn.style.display="block"; warn.textContent="Poné una tasa de retiro mayor que 0."; }
+  else if(aporte===0 && capital>0){ warn.style.display="block"; warn.textContent="Con el capital inicial ya llegás: no hace falta aportar nada."; }
+
+  // Ciclo completo: acumulación + retiro
+  var life = serieVida(d, aporte, capital, meses);
+  pintarRetiroTxt(d, capital, life);
+  dibujar(life);
+  tablaCrec(d, capital, meses);
+  tablaRet(d, meses);
 }
 
-// ===== ACTO 2B (aporte) =====
-function calcularAporte(){
-  var edad = S.caja==="si" ? S.edad : num(byId("edad2").value);
-  var edadRet = num(byId("edad-ret").value) || EDAD_RETIRO;
-  if(!edad || edad < 18 || edad > 64 || edadRet <= edad || edadRet > 80){ byId("w-2b").style.display="block"; return; }
-  byId("w-2b").style.display="none";
-  S.edad = edad; S.edadRet = edadRet;
-  // El IVM se cobra a los 65: si eligió retirarse antes, avisamos en el resultado de la Caja.
-  var aviso = byId("r-antes65");
-  if(aviso) aviso.style.display = (S.caja==="si" && edadRet < EDAD_RETIRO) ? "block" : "none";
-  var meses = (edadRet - edad) * 12;
-  var c = capitalObjetivo();
-  S.capObjUsd = c.usd; S.capObjCol = c.col;
-
-  // El aporte se calcula en US$, partiendo de cero (sin capital inicial).
-  var a8      = aporteRequerido(c.usd,     0, TASA_BASE, meses);
-  var a15     = aporteRequerido(c.usd,     0, TASA_CREC, meses);
-  var aRet8   = aporteRequerido(c.usd*factorAlianza(),   0, TASA_BASE, meses);
-  var aCombo  = aporteRequerido(c.usd*factorAlianza(),   0, TASA_CREC, meses);
-  S.aportes = { a8:a8, a15:a15, aRet8:aRet8, aCombo:aCombo };
-
-  // Se muestran en la moneda elegida en la meta, con la equivalencia debajo.
-  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
-  function otroLado(usd){ return S.metaCur==="$" ? usd*S.tc : usd; }
-  byId("r-aporte8").textContent = money(enMeta(a8), S.metaCur) + "/mes";
-  byId("r-aporte8-eq").textContent = "≈ " + money(otroLado(a8), otra(S.metaCur)) + "/mes";
-  // La frase completa, que es lo que la gente lee (el número grande solo no explica nada).
-  var anios = edadRet - edad;
-  byId("r-frase-aporte").innerHTML =
-      "<span>Cada mes deberías aportar <b>" + money(enMeta(a8), S.metaCur) + "</b></span>"
-    + "<span>para llegar a tu meta de <b>" + money(enMeta(c.usd), S.metaCur) + "</b></span>"
-    + "<span>en <b>" + anios + (anios===1 ? " año" : " años") + "</b>, cuando tengás <b>" + edadRet + "</b>.</span>";
-
-  // Acto 3: qué pasa si crecés al 15% y te retirás al 8%.
-  byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur) + "/mes";
-  byId("r-meta-mitad").textContent = money(enMeta(c.usd*factorAlianza()), S.metaCur);
-  byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
-  byId("r-meta-eco").textContent = money(S.metaVal, S.metaCur);
-
-  // Manteniendo la cuota original (a8) pero al 15% y con la meta a la mitad: el retiro se adelanta.
-  var mesesCorto = mesesParaLlegar(c.usd*factorAlianza(), a8, TASA_CREC);
-  var aniosCorto = Math.max(1, Math.round(mesesCorto/12));
-  byId("r-edad-corta").textContent = String(edad + aniosCorto);
-  byId("r-anios-corta").textContent = aniosCorto + (aniosCorto===1 ? " año" : " años");
-
-  // La oferta del cierre usa los mismos números.
-  byId("r-oferta-de").textContent = money(enMeta(a8), S.metaCur) + "/mes";
-  byId("r-oferta-a").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
-  byId("r-oferta-meta-de").textContent = money(enMeta(c.usd), S.metaCur);
-  byId("r-oferta-meta-a").textContent = money(enMeta(c.usd*factorAlianza()), S.metaCur);
-
-  byId("acto2b-res").style.display = "block";
-  dibujarGrafico(a8, edad, edadRet);
-  S.acto = Math.max(S.acto, 4);
-  guardar();
-  mostrarActo("acto3"); mostrarActo("cta");
-}
-
-// ===== GRÁFICO DEL CRECIMIENTO AL 8% =====
-// Evidencia visual: la barra de lo aportado crece en línea recta, pero el saldo se
-// despega. Ese hueco entre las dos líneas es lo que creció solo.
-var chartInstance = null;
-function dibujarGrafico(aporteUsd, edad, edadRet){
-  var wrap = byId("chart-wrap"); if(!wrap) return;
-  var i = TASA_BASE/100/12;
-  var anios = Math.max(1, edadRet - edad);
-  function enMeta(usd){ return S.metaCur==="$" ? usd : usd*S.tc; }
-
-  var edades = [], saldo = [], aportado = [];
+// Serie de todo el ciclo de vida del portafolio, año por año (eje X = edad).
+//   - Acumulación (edad -> edadRet): parte del capital inicial y suma aportes, creciendo a `crec`.
+//   - Retiro (edadRet -> +30 años): crece a `crecRet` y se retira la meta anual (capital x tasa de retiro).
+function serieVida(d, aporte, capital, meses){
+  // Todo en plata de hoy: usamos crecimientos REALES (netos de inflación).
+  var iAcc = real(d.crec, d.infl)/100/12;
+  var gRet = real(d.crecRet, d.infl)/100;      // crecimiento real durante el retiro
+  var edades=[], saldo=[], aportado=[];
+  var anios = Math.max(0, d.edadRet - d.edad);
+  // acumulación
   for(var y=0; y<=anios; y++){
-    var m = y*12;
-    var bal = i===0 ? aporteUsd*m : aporteUsd*(Math.pow(1+i,m)-1)/i;
-    edades.push(edad + y);
-    saldo.push(Math.round(enMeta(bal)));
-    aportado.push(Math.round(enMeta(aporteUsd*m)));
+    var m=y*12;
+    var bal = d.cap*Math.pow(1+iAcc,m) + (iAcc===0 ? aporte*m : aporte*(Math.pow(1+iAcc,m)-1)/iAcc);
+    edades.push(d.edad+y); saldo.push(Math.round(bal)); aportado.push(Math.round(d.cap + aporte*m));
   }
-  var totalAportado = aportado[aportado.length-1];
-  var totalSaldo = saldo[saldo.length-1];
-  byId("chart-nota").innerHTML = "De esos " + money(totalSaldo, S.metaCur) + ", vos pusiste "
-    + money(totalAportado, S.metaCur) + ". El resto, <b>" + money(totalSaldo-totalAportado, S.metaCur)
-    + "</b>, lo creció la plata sola.";
-
-  function build(){
-    var ctx = byId("chart-crec"); if(!ctx || typeof Chart === "undefined") return;
-    if(chartInstance) chartInstance.destroy();
-    var sim = S.metaCur;
-    chartInstance = new Chart(ctx, {
-      type:"line",
-      data:{ labels:edades, datasets:[
-        { label:"Lo que tenés", data:saldo, borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)",
-          borderWidth:3, pointRadius:0, fill:true, tension:.15 },
-        { label:"Lo que pusiste vos", data:aportado, borderColor:"#9AA1AB", borderWidth:2,
-          borderDash:[6,4], pointRadius:0, tension:.15 }
-      ]},
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        // En pantallas con escalado fraccional (Windows 125/150%) el canvas se ve borroso:
-        // forzamos >=2x para que salga nítido.
-        devicePixelRatio: Math.max(2, Math.ceil(window.devicePixelRatio || 1)),
-        interaction:{mode:"index", intersect:false},
-        plugins:{
-          legend:{ labels:{ color:"#E2E2E2", boxWidth:14, font:{size:12} } },
-          tooltip:{ callbacks:{
-            title:function(it){ return "A los " + it[0].label + " años"; },
-            label:function(it){ return it.dataset.label + ": " + sim + Number(it.raw).toLocaleString("en-US"); }
-          }}
-        },
-        scales:{
-          x:{ title:{display:true, text:"Tu edad", color:"#9AA1AB"}, ticks:{color:"#9AA1AB", maxTicksLimit:8}, grid:{color:"rgba(140,150,170,.12)"} },
-          y:{ ticks:{ color:"#9AA1AB", callback:function(v){
-                return sim + (v>=1e6 ? (v/1e6).toFixed(1)+"M" : v>=1e3 ? Math.round(v/1e3)+"k" : v); } },
-              grid:{color:"rgba(140,150,170,.18)"} }
-        }
-      }
-    });
+  // retiro: sacás la meta anual (en plata de hoy) y el capital crece a la tasa real del retiro
+  var retiroAnual = d.meta*12;
+  var totalAportado = d.cap + aporte*meses;
+  var bal2 = capital;
+  var agotaEdad = null;
+  var HORIZONTE = 30;
+  for(var k=1; k<=HORIZONTE; k++){
+    bal2 = bal2*(1+gRet) - retiroAnual;
+    if(bal2 <= 0){ bal2=0; edades.push(d.edadRet+k); saldo.push(0); aportado.push(Math.round(totalAportado)); agotaEdad=d.edadRet+k; break; }
+    edades.push(d.edadRet+k); saldo.push(Math.round(bal2)); aportado.push(Math.round(totalAportado));
   }
-  if(typeof Chart === "undefined"){
-    if(byId("chart-js-tag")) return;   // ya se está cargando
-    var s = document.createElement("script");
-    s.id = "chart-js-tag";
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
-    s.onload = build;
-    s.onerror = function(){ wrap.style.display = "none"; };   // sin conexión: el resto del flujo sigue igual
-    document.head.appendChild(s);
-  } else { build(); }
+  // tendencia: crecimiento REAL del retiro vs tasa de retiro
+  var gRetPct = real(d.crecRet, d.infl);
+  var tendencia = gRetPct > d.ret+1e-9 ? "crece" : (gRetPct < d.ret-1e-9 ? "baja" : "estable");
+  return { edades:edades, saldo:saldo, aportado:aportado, agotaEdad:agotaEdad, tendencia:tendencia, gRetReal:gRetPct };
 }
 
-// ===== WEBHOOK =====
-function enviarLead(etapa, contacto){
-  if(ADMIN){ console.log("[ADMIN] lead NO enviado al Sheet:", etapa, contacto); return; }
-  // Conversión en GA4: la llamada agendada es el evento que más importa del funnel.
-  try{ if(typeof gtag === "function") gtag("event", etapa==="llamada_solicitada" ? "generate_lead" : "lead_"+etapa, {etapa:etapa, autocal:S.autocal||""}); }catch(e){}
-  var metaCol = aCol(S.metaVal, S.metaCur), metaUsd = aUsd(S.metaVal, S.metaCur);
-  var salCol = S.caja==="si" ? aCol(S.salVal, S.salCur) : 0;
-  var salUsd = S.caja==="si" ? aUsd(S.salVal, S.salCur) : 0;
-  var A = S.aportes || {};
-  var p = {
-    inicio: new Date(S.inicio).toISOString(),
-    timestamp: new Date().toISOString(),
-    etapa: etapa,
-    nombre: contacto.nombre||"", apellido: contacto.apellido||"",
-    whatsapp: contacto.whats||"", correo: contacto.correo||"",
-    autocalificacion: S.autocal || "",
-    incluyo_caja: S.caja === "si",
-    edad: S.edad || 0,
-    edad_retiro: S.edadRet || 0,
-    tc: S.tc,
-    moneda_elegida: S.metaCur,
-    meta_usd: Math.round(metaUsd), meta_col: Math.round(metaCol),
-    salario_usd: Math.round(salUsd), salario_col: Math.round(salCol),
-    pension_usd: Math.round(S.pensionCol / S.tc), pension_col: Math.round(S.pensionCol),
-    ivm_usd: Math.round(S.ivmCol / S.tc), ivm_col: Math.round(S.ivmCol),
-    incluyo_rop: !!S.rop,
-    rop_usd: Math.round(S.ropCol / S.tc), rop_col: Math.round(S.ropCol),
-    saldo_rop_usd: Math.round(aUsd(S.saldoRopVal, S.saldoRopCur)), saldo_rop_col: Math.round(aCol(S.saldoRopVal, S.saldoRopCur)),
-    toco_techo_ivm: !!S.tocoTecho,
-    capital_objetivo_usd: Math.round(S.capObjUsd), capital_objetivo_col: Math.round(S.capObjCol),
-    aporte_8_usd: Math.round(A.a8||0), aporte_8_col: Math.round((A.a8||0)*S.tc),
-    aporte_15_usd: Math.round(A.a15||0), aporte_15_col: Math.round((A.a15||0)*S.tc),
-    aporte_retiro8_usd: Math.round(A.aRet8||0), aporte_retiro8_col: Math.round((A.aRet8||0)*S.tc),
-    aporte_combo_usd: Math.round(A.aCombo||0), aporte_combo_col: Math.round((A.aCombo||0)*S.tc),
-    toggles_abiertos: togglesAbiertos.join(","),
-    toggles_total: togglesAbiertos.length
-  };
-  try{
-    fetch(WEBHOOK_URL, {
-      method:"POST",
-      headers:{ "Content-Type":"text/plain;charset=utf-8" },   // text/plain evita el preflight del Apps Script
-      body: JSON.stringify(p),
-      keepalive: true    // el envío sobrevive si la persona navega a /info enseguida
-    }).then(function(r){ return r.json(); }).then(function(j){ if(j && j.ok) console.log("lead ok"); })
-      .catch(function(){});
-  }catch(e){}
+// Edad EXACTA a la que el portafolio llega a cero, aunque sea más allá de los 30 años
+// que muestra el gráfico. Fórmula cerrada de la recurrencia bal_k = bal*(1+g) − retiro anual.
+function edadAgotamiento(d, capital){
+  var g = real(d.crecRet, d.infl)/100;   // crecimiento real del retiro (decimal)
+  var ret = d.ret/100;                    // tasa de retiro (decimal)
+  if(g >= ret - 1e-9) return null;        // estable o crece: no se agota
+  var W = d.meta*12;                       // retiro anual (= capital × ret)
+  var k = Math.abs(g) < 1e-9 ? capital/W : Math.log(ret/(ret-g)) / Math.log(1+g);
+  if(!isFinite(k) || k <= 0) return null;
+  return d.edadRet + Math.ceil(k);
 }
 
-// ===== CALENDLY =====
-function telE164cr(w){
-  var d = soloDigitos(w);
-  if(!d) return "";
-  if(d.indexOf("506")===0) return "+"+d;
-  if(d.length===8) return "+506"+d;
-  return "+"+d;
-}
-function calendlyPrefill(c){
-  var p = new URLSearchParams();
-  p.set("utm_source","landing_v2");
-  if(c.nombre) p.set("first_name", c.nombre);
-  if(c.apellido) p.set("last_name", c.apellido);
-  if(c.correo) p.set("email", c.correo);
-  var tel = telE164cr(c.whats);
-  if(tel) p.set("a1", tel);
-  return CALENDLY_URL + "?" + p.toString();
-}
-
-// ===== MINI-FORM (agendar la llamada) =====
-function abrirForm(){
-  var fw = byId("form-wrap");
-  fw.innerHTML =
-    '<div class="card">'
-    + '<div class="fila2">'
-    +   '<div class="campo"><label for="f-nom">Tu nombre</label><input id="f-nom" autocomplete="given-name"></div>'
-    +   '<div class="campo"><label for="f-ape">Tu apellido</label><input id="f-ape" autocomplete="family-name"></div>'
-    + '</div>'
-    + '<div class="campo"><label for="f-wha">Tu WhatsApp</label><input id="f-wha" inputmode="tel" autocomplete="tel" placeholder="8888-8888"></div>'
-    + '<div class="campo"><label for="f-cor">Tu mejor correo</label><input id="f-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
-    + '<button class="btn" id="f-send">Ver los horarios disponibles →</button>'
-    + '<div class="warn" id="f-warn" style="display:none">Completá los 4 datos con un correo válido.</div>'
-    + '</div>';
-  byId("f-send").addEventListener("click", function(){
-    var c = { nombre:byId("f-nom").value.trim(), apellido:byId("f-ape").value.trim(),
-              whats:byId("f-wha").value.trim(), correo:byId("f-cor").value.trim() };
-    if(!(c.nombre && c.apellido && c.whats && c.correo && c.correo.indexOf("@")>-1)){
-      byId("f-warn").style.display="block"; return;
-    }
-    enviarLead("llamada_solicitada", c);
-    window.open(calendlyPrefill(c), "_blank");
-  });
-}
-
-// ===== CTA =====
-function pintarSalidas(){
-  var cont = byId("cta-salidas");
-  byId("form-wrap").innerHTML = "";
-  if(S.autocal === "Prefiero ir cuesta arriba"){
-    cont.innerHTML = '<div class="salida">'
-      + '<div class="card"><p>Respetable, esa también es una forma. Si algún día querés compañía en la subida, acá vamos a estar. Mientras tanto, en el Instagram subimos cosas que te pueden servir.</p></div>'
-      + '<a class="btn btn-ghost" href="'+INSTAGRAM_URL+'" target="_blank" rel="noopener">📲 Seguinos en Instagram</a>'
-      + '</div>';
-  } else if(S.autocal === "Quisiera más información"){
-    cont.innerHTML = '<div class="salida">'
-      + '<a class="btn btn-crema" href="/info">Conocé cómo trabajamos →</a>'
-      + '<span class="link-discreto" id="link-llamada">📞 O agendá una llamada de una vez</span>'
-      + '</div>';
-    byId("link-llamada").addEventListener("click", abrirForm);
-  } else if(S.autocal){   // "Suena bien, hablémoslo más"
-    cont.innerHTML = '<div class="salida">'
-      + '<button class="btn" id="b-llamada">📞 Hablémoslo: 30 min, sin costo</button>'
-      + '<a class="link-discreto" href="/info">🤝 O leé primero cómo trabajamos</a>'
-      + '</div>';
-    byId("b-llamada").addEventListener("click", abrirForm);
+function pintarRetiroTxt(d, capital, life){
+  var el = byId("r-retiro-txt"); if(!el) return;
+  var gr = fmt1(life.gRetReal);
+  var base = "En el retiro sacás <b>" + money(d.meta*12, metaCur) + "/año (en plata de hoy)</b>. El capital crece al <b>" + d.crecRet +
+    "%</b> nominal, o sea <b>" + gr + "% real</b> tras la inflación. ";
+  if(life.tendencia==="estable"){
+    el.innerHTML = base + "Como el crecimiento real (" + gr + "%) iguala la tasa de retiro (" + d.ret + "%), el portafolio se mantiene <b>estable en plata de hoy</b>: vivís de los intereses y el capital queda intacto.";
+  } else if(life.tendencia==="crece"){
+    el.innerHTML = base + "Como el crecimiento real (" + gr + "%) supera la tasa de retiro (" + d.ret + "%), el portafolio <b>sigue creciendo</b> en poder de compra. Te sobra, y queda de herencia.";
   } else {
-    cont.innerHTML = "";
+    var fin = edadAgotamiento(d, capital);
+    var edadTxt = fin ? "<span class='peligro'>a los " + fin + " años</span>" : "<span class='peligro'>en algún momento</span>";
+    var fuera = (fin && !life.agotaEdad) ? " (el gráfico muestra solo los primeros 30 años de retiro, pero se agota más adelante)" : "";
+    el.innerHTML = base + "Como el crecimiento real (" + gr + "%) es menor que la tasa de retiro (" + d.ret +
+      "%), el portafolio va perdiendo poder de compra y <b>se agota " + edadTxt + "</b>" + fuera +
+      ". Para que dure, bajá el retiro, crecé más, o juntá más capital.";
   }
 }
 
-// ===== INIT =====
-restaurar();
-togglesAbiertos = S.toggles || [];
-S.inicio = S.inicio || Date.now();
-
-bindMoney(byId("meta"), function(){ return S.metaCur; });
-bindMoney(byId("salario"), function(){ return S.salCur; });
-bindMoney(byId("saldo-rop"), function(){ return S.saldoRopCur; });
-bindComas(byId("tc"));
-byId("saldo-rop").addEventListener("input", refrescarEquivalencias);
-byId("f-rop").addEventListener("change", function(){
-  S.rop = this.checked; guardar();
-  byId("campo-rop").style.display = this.checked ? "block" : "none";
-});
-["edad","edad2","edad-ret"].forEach(function(id){
-  byId(id).addEventListener("input", function(){ this.value = soloDigitos(this.value).slice(0,2); });
-});
-
-byId("meta").addEventListener("input", refrescarEquivalencias);
-byId("salario").addEventListener("input", refrescarEquivalencias);
-// Recalcula todo lo que ya esté en pantalla (se usa desde el TC y desde el panel admin).
-function recalcTodo(){
-  refrescarEquivalencias();
-  if(byId("acto1-res").classList.contains("on")) pintarCapital("r-capital","r-capital-eq");
-  if(byId("acto2a-res").style.display==="block") calcularCaja();
-  if(byId("acto2b-res").style.display==="block") calcularAporte();
-  pintarEtiquetas();
+function tablaCrec(d, capital, meses){
+  var tasas = [4,6,8,10,12,15,20,25,30,35,40];
+  if(d.crec>0 && tasas.indexOf(d.crec)===-1) tasas.push(d.crec);
+  tasas.sort(function(a,b){return a-b;});
+  var tb = byId("tabla-crec").querySelector("tbody"); tb.innerHTML="";
+  tasas.forEach(function(t){
+    var ap = aporteReq(capital, d.cap, real(t, d.infl), meses);   // crecimiento real
+    var tr = document.createElement("tr");
+    if(t===d.crec) tr.className="actual";
+    tr.innerHTML = "<td>"+t+"%</td><td>"+money(ap,metaCur)+"</td>";
+    tb.appendChild(tr);
+  });
 }
-byId("tc").addEventListener("input", function(){
-  var v = num(byId("tc").value);
-  S.tc = v>0 ? v : TC_DEFAULT;
-  guardar(); recalcTodo();
-});
-
-initChips("meta", function(){return S.metaCur;}, function(c){ S.metaCur=c; guardar(); pintarPlaceholder("meta",10000,c); }, refrescarEquivalencias);
-initChips("salario", function(){return S.salCur;}, function(c){ S.salCur=c; guardar(); pintarPlaceholder("salario",7500,c); }, refrescarEquivalencias);
-initChips("saldo-rop", function(){return S.saldoRopCur;}, function(c){ S.saldoRopCur=c; guardar(); pintarPlaceholder("saldo-rop",0,c); }, refrescarEquivalencias);
-initToggles();
-
-byId("b-acto1").addEventListener("click", calcularActo1);
-byId("b-caja-si").addEventListener("click", function(){ byId("caja-form").style.display="block"; });
-byId("b-caja-no").addEventListener("click", saltarCaja);
-byId("b-caja-calc").addEventListener("click", calcularCaja);
-byId("b-acto2b").addEventListener("click", calcularAporte);
-Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(b){
-  b.addEventListener("click", function(){
-    S.autocal = b.getAttribute("data-cal"); guardar();
-    Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){ x.classList.toggle("on", x===b); });
-    // Evento con guardas: qué opción eligió en el CTA.
-    try{ if(typeof gtag === "function") gtag("event","cta_respuesta",{opcion:S.autocal}); }catch(e){}
-    try{ if(typeof fbq === "function") fbq("trackCustom","cta_respuesta",{opcion:S.autocal}); }catch(e){}
-    pintarSalidas();
+function tablaRet(d, meses){
+  var tasas = [3,4,5,6,8,10];
+  if(d.ret>0 && tasas.indexOf(d.ret)===-1) tasas.push(d.ret);
+  tasas.sort(function(a,b){return a-b;});
+  var tb = byId("tabla-ret").querySelector("tbody"); tb.innerHTML="";
+  tasas.forEach(function(t){
+    var cap = t>0 ? (d.meta*12)/(t/100) : 0;
+    var ap = aporteReq(cap, d.cap, real(d.crec, d.infl), meses);   // crecimiento real
+    var tr = document.createElement("tr");
+    if(t===d.ret) tr.className="actual";
+    tr.innerHTML = "<td>"+t+"%</td><td>"+money(cap,metaCur)+"</td><td>"+money(ap,metaCur)+"</td>";
+    tb.appendChild(tr);
   });
-});
+}
 
-// Restaurar lo ya avanzado (sobrevive refresh)
-(function restaurarUI(){
-  byId("tc").value = fmt(S.tc);
-  pintarChips("meta", S.metaCur); pintarChips("salario", S.salCur); pintarChips("saldo-rop", S.saldoRopCur);
-  pintarPlaceholder("meta", 10000, S.metaCur);
-  pintarPlaceholder("salario", 7500, S.salCur);
-  pintarPlaceholder("saldo-rop", 0, S.saldoRopCur);
-  if(S.metaVal>0){ byId("meta").value = S.metaCur + fmt(S.metaVal); }
-  if(S.salVal>0){ byId("salario").value = S.salCur + fmt(S.salVal); }
-  if(S.rop){ byId("f-rop").checked = true; byId("campo-rop").style.display = "block"; }
-  if(S.saldoRopVal>0){ byId("saldo-rop").value = S.saldoRopCur + fmt(S.saldoRopVal); }
-  if(S.edad>0){ byId("edad").value = S.edad; byId("edad2").value = S.edad; }
-  if(S.edadRet>0){ byId("edad-ret").value = S.edadRet; }
-  // reabrir los toggles ya vistos
-  Array.prototype.forEach.call(document.querySelectorAll("details[data-tg]"), function(el){
-    if(togglesAbiertos.indexOf(el.getAttribute("data-tg")) > -1) el.open = true;
-  });
-  refrescarEquivalencias();
-  if(S.metaVal>0 && S.acto>=2){
-    pintarCapital("r-capital","r-capital-eq");
-    byId("r-capital-eco").textContent = byId("r-capital").textContent;
-    byId("acto1-res").classList.add("on"); byId("acto2a").classList.add("on");
-  }
-  if(S.caja==="si" && S.salVal>0 && S.edad>0){
-    byId("caja-form").style.display="block";
-    calcularCaja();
-  } else if(S.caja==="saltar"){
-    byId("campo-edad2").style.display="";
-    byId("acto2b").classList.add("on");
-  }
-  if(S.acto>=4 && S.edad>0){ calcularAporte(); }
-  if(S.autocal){
-    Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(x){
-      x.classList.toggle("on", x.getAttribute("data-cal")===S.autocal);
+function dibujar(life){
+  var wrap = byId("chart-wrap"); if(!wrap) return;
+  var edadRet = ent(byId("i-edadret").value);
+  // Eje X lineal (edad) para poder poner una línea cada 5 años y ticks bien claros.
+  var saldoPts = life.edades.map(function(e,i){ return {x:e, y:life.saldo[i]}; });
+  var aportPts = life.edades.map(function(e,i){ return {x:e, y:life.aportado[i]}; });
+  var idxRet = life.edades.indexOf(edadRet);
+  var marca = idxRet>=0 ? [{x:edadRet, y:life.saldo[idxRet]}] : [];
+  // Alineamos los bordes a múltiplos de 5 para que las líneas caigan cada 5 años, parejas.
+  var minX = Math.floor(life.edades[0]/5)*5;
+  var maxX = Math.ceil(life.edades[life.edades.length-1]/5)*5;
+  // Plugin: línea vertical sutil + etiqueta con la edad de retiro (la edad objetivo).
+  var realceRetiro = {
+    id:"realceRetiro",
+    afterDraw:function(ch){
+      var xs = ch.scales.x; if(!xs) return;
+      var px = xs.getPixelForValue(edadRet);
+      var a = ch.chartArea, c = ch.ctx;
+      c.save();
+      c.strokeStyle = "rgba(85,109,251,.45)"; c.lineWidth = 2; c.setLineDash([5,4]);
+      c.beginPath(); c.moveTo(px, a.top); c.lineTo(px, a.bottom); c.stroke();
+      // solo el emoji de la playa, en la franja libre de arriba (sin número, sin que lo crucen las líneas)
+      c.setLineDash([]);
+      c.font = "16px 'Bai Jamjuree',sans-serif";
+      c.textAlign = "center"; c.textBaseline = "top";
+      var ex = Math.min(Math.max(px, a.left + 8), a.right - 8);
+      c.fillText("🏖️", ex, Math.max(a.top - 22, 0));
+      c.restore();
+    }
+  };
+  function build(){
+    var ctx = byId("chart"); if(!ctx || typeof Chart==="undefined") return;
+    if(chart) chart.destroy();
+    chart = new Chart(ctx,{ type:"line",
+      plugins:[realceRetiro],
+      data:{ datasets:[
+        {label:"Lo que tenés", data:saldoPts, borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)", borderWidth:3, pointRadius:0, fill:true, tension:.12},
+        {label:"Lo que aportaste", data:aportPts, borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.12},
+        {label:"Retiro", data:marca, borderColor:"#556DFB", backgroundColor:"#556DFB", pointRadius:7, pointHoverRadius:8, showLine:false}
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        layout:{padding:{top:26}},
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom", labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:12,filter:function(l){return l.text!=="Retiro";}}},
+          tooltip:{callbacks:{title:function(it){return "A los "+Math.round(it[0].parsed.x)+" años";},
+            label:function(it){ if(it.dataset.label==="Retiro") return "🏖️ Te retirás acá"; return it.dataset.label+": "+(metaCur==="₡"?"₡":"$")+Number(it.parsed.y).toLocaleString("en-US");}}}},
+        scales:{
+          x:{type:"linear", min:minX, max:maxX,
+             title:{display:true, text:"Edad", color:"#E2E2E2", font:{size:15, weight:"700"}},
+             ticks:{stepSize:5, autoSkip:false, callback:function(v){return v;},
+               color:function(c){ return (c.tick && c.tick.value===edadRet) ? "#8ea0ff" : "#E2E2E2"; },
+               font:function(c){ return (c.tick && c.tick.value===edadRet) ? {size:17, weight:"700"} : {size:14, weight:"600"}; }},
+             grid:{color:function(c){ return (c.tick && c.tick.value % 5 === 0) ? "rgba(140,150,170,.30)" : "rgba(140,150,170,.08)"; }}},
+          y:{ticks:{color:"#B9C0CA", font:{size:13}, callback:function(v){var s=metaCur==="₡"?"₡":"$";return s+(v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+"k":v);}},
+             grid:{color:"rgba(140,150,170,.18)"}}}}
     });
-    pintarSalidas();
   }
-  pintarEtiquetas();
-})();
-
-// ========================================================================
-// ADMIN: etiquetas dinámicas de % + gate + panel de variables
-// ========================================================================
-function fmtPct(v){ return (Math.round(v*100)/100).toString(); }
-function pintarEtiquetas(){
-  var m = {
-    "lbl-retb":RET_BASE, "lbl-retb2":RET_BASE,
-    "lbl-crb":TASA_BASE, "lbl-crb2":TASA_BASE, "lbl-crb3":TASA_BASE,
-    "lbl-crs":TASA_CREC, "lbl-reta":RET_ALIANZA
-  };
-  for(var id in m){ var e=byId(id); if(e) e.textContent = fmtPct(m[id]); }
-  var pr = byId("p-resumen");
-  if(pr) pr.textContent = "crec " + fmtPct(TASA_BASE) + "/" + fmtPct(TASA_CREC) + "% · retiro " + fmtPct(RET_BASE) + "/" + fmtPct(RET_ALIANZA) + "%";
+  whenChart(build, wrap);
 }
 
-// ---- Gate (password client-side: solo esconde la vista, no es seguridad real) ----
-(function gate(){
-  var PASS = "admin";
-  function abrir(){ byId("gate").style.display="none"; document.body.classList.remove("locked"); }
-  if(sessionStorage.getItem("admin_ok")==="1"){ abrir(); return; }
-  function intentar(){
-    if(byId("gate-pass").value === PASS){ sessionStorage.setItem("admin_ok","1"); abrir(); }
-    else { byId("gate-err").textContent="Contraseña incorrecta."; byId("gate-pass").value=""; }
-  }
-  byId("gate-btn").addEventListener("click", intentar);
-  byId("gate-pass").addEventListener("keydown", function(e){ if(e.key==="Enter") intentar(); });
-})();
+// ================== EXPERIMENTO CON LA HISTORIA ==================
+// Retornos ANUALES totales (%), con dividendos reinvertidos. Data real desde el
+// listado de cada ETF; antes, simulada sobre el índice Nasdaq-100 / S&P 500.
+// QLD (2×) y TQQQ (3×) se simularon con rebalanceo diario real y luego se
+// agregaron a retornos anuales (el "decay" del apalancamiento ya viene incluido).
+var HR={
+  SPY:{1990:-7.96,1991:26.31,1992:4.46,1993:9.45,1994:0.4,1995:38.05,1996:22.5,1997:33.48,1998:28.69,1999:20.39,2000:-9.74,2001:-11.76,2002:-21.58,2003:28.18,2004:10.7,2005:4.83,2006:15.85,2007:5.15,2008:-36.8,2009:26.35,2010:15.06,2011:1.89,2012:15.99,2013:32.31,2014:13.46,2015:1.23,2016:12.0,2017:21.71,2018:-4.57,2019:31.22,2020:18.33,2021:28.73,2022:-18.18,2023:26.18,2024:24.89,2025:17.72},
+  QQQ:{1990:-11.31,1991:64.99,1992:8.86,1993:10.58,1994:1.5,1995:42.54,1996:42.54,1997:20.63,1998:85.3,1999:97.72,2000:-36.11,2001:-33.34,2002:-37.37,2003:49.67,2004:10.54,2005:1.57,2006:7.14,2007:19.03,2008:-41.73,2009:54.68,2010:20.14,2011:3.48,2012:18.11,2013:36.63,2014:19.18,2015:9.44,2016:7.1,2017:32.66,2018:-0.13,2019:38.96,2020:48.41,2021:27.42,2022:-32.58,2023:54.86,2024:25.58,2025:20.77},
+  QLD:{1990:-28.02,1991:146.67,1992:7.9,1993:12.41,1994:-5.09,1995:83.08,1996:82.66,1997:27.99,1998:192.39,1999:232.61,2000:-72.3,2001:-68.59,2002:-68.74,2003:99.63,2004:12.32,2005:-4.01,2006:2.48,2007:29.03,2008:-72.89,2009:121.2,2010:36.9,2011:0.04,2012:34.77,2013:82.11,2014:37.59,2015:14.74,2016:10.04,2017:70.34,2018:-8.31,2019:81.69,2020:88.9,2021:54.67,2022:-60.52,2023:117.72,2024:42.81,2025:30.36},
+  TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35}
+};
+var HINF={1990:5.4,1991:4.2,1992:3.0,1993:3.0,1994:2.6,1995:2.8,1996:2.9,1997:2.3,1998:1.6,1999:2.2,2000:3.4,2001:2.8,2002:1.6,2003:2.3,2004:2.7,2005:3.4,2006:3.2,2007:2.8,2008:3.8,2009:-0.4,2010:1.6,2011:3.2,2012:2.1,2013:1.5,2014:1.6,2015:0.1,2016:1.3,2017:2.1,2018:2.4,2019:1.8,2020:1.2,2021:4.7,2022:8.0,2023:4.1,2024:2.9,2025:2.9};
+var HINCEP={SPY:1993,QQQ:1999,QLD:2006,TQQQ:2010};
+var HYMIN=1990, HYMAX=2025;
 
-// ---- Panel de variables ----
-(function panel(){
-  // valores por defecto (los del cliente) para el reset
-  var DEF = { crecBase:8, crecSist:15, retBase:4, retAlianza:8, tc:460,
-    tope:1765859, pmin:162295, smin:373092, edadIni:25, ropNom:6, inflac:3, ropPlazo:20 };
-  var campos = {
-    "p-crecBase": function(v){ TASA_BASE=v; }, "p-crecSist": function(v){ TASA_CREC=v; },
-    "p-retBase": function(v){ RET_BASE=v; }, "p-retAlianza": function(v){ RET_ALIANZA=v; },
-    "p-tc": function(v){ TC_DEFAULT=v; S.tc=v; byId("tc").value=fmt(v); },
-    "p-tope": function(v){ TOPE_MAX=v; }, "p-pmin": function(v){ PENSION_MIN=v; },
-    "p-smin": function(v){ SALARIO_MINIMO=v; }, "p-edadIni": function(v){ EDAD_INICIO_COTIZA=v; },
-    "p-ropNom": function(v){ ROP_NOMINAL_PCT=v; }, "p-inflac": function(v){ ROP_INFLACION_PCT=v; },
-    "p-ropPlazo": function(v){ ROP_PLAZO_PAGO_ANIOS=v; }
-  };
-  var valDef = { "p-crecBase":DEF.crecBase, "p-crecSist":DEF.crecSist, "p-retBase":DEF.retBase,
-    "p-retAlianza":DEF.retAlianza, "p-tc":DEF.tc, "p-tope":DEF.tope, "p-pmin":DEF.pmin,
-    "p-smin":DEF.smin, "p-edadIni":DEF.edadIni, "p-ropNom":DEF.ropNom, "p-inflac":DEF.inflac, "p-ropPlazo":DEF.ropPlazo };
-  function poner(){ for(var id in valDef){ byId(id).value = valDef[id]; } }
-  function aplicar(){
-    for(var id in campos){ var raw=byId(id).value.replace(/[^0-9.]/g,""); var v=parseFloat(raw); if(!isNaN(v)) campos[id](v); }
-    guardar(); recalcTodo();
+// 10 peores drawdowns (pico->fondo) por activo, calculados desde la serie diaria real/simulada.
+// d=caída %, i=inicio (pico), t=fondo, f=recuperación (null=aún abajo), m=meses pico->recuperación.
+var HDD={
+  SPY:[{d:-55.2,i:"2007-10",t:"2009-03",f:"2012-08",m:58},{d:-47.5,i:"2000-03",t:"2002-10",f:"2006-10",m:79},{d:-33.7,i:"2020-02",t:"2020-03",f:"2020-08",m:6},{d:-24.5,i:"2022-01",t:"2022-10",f:"2023-12",m:23},{d:-19.9,i:"1990-07",t:"1990-10",f:"1991-02",m:7},{d:-19.3,i:"2018-09",t:"2018-12",f:"2019-04",m:7},{d:-19.0,i:"1998-07",t:"1998-08",f:"1998-11",m:4},{d:-18.8,i:"2025-02",t:"2025-04",f:"2025-06",m:4},{d:-13.0,i:"2015-07",t:"2016-02",f:"2016-04",m:9},{d:-11.7,i:"1999-07",t:"1999-10",f:"1999-11",m:4}],
+  QQQ:[{d:-83.0,i:"2000-03",t:"2002-10",f:"2015-02",m:179},{d:-35.1,i:"2021-12",t:"2022-11",f:"2023-12",m:24},{d:-32.9,i:"1990-07",t:"1990-10",f:"1991-02",m:7},{d:-28.6,i:"2020-02",t:"2020-03",f:"2020-06",m:3},{d:-23.0,i:"1998-07",t:"1998-10",f:"1998-11",m:4},{d:-22.8,i:"2018-08",t:"2018-12",f:"2019-04",m:7},{d:-22.8,i:"2025-02",t:"2025-04",f:"2025-06",m:4},{d:-18.5,i:"1992-02",t:"1992-06",f:"1992-12",m:10},{d:-18.2,i:"1997-10",t:"1997-12",f:"1998-02",m:4},{d:-16.1,i:"2015-12",t:"2016-02",f:"2016-07",m:8}],
+  QLD:[{d:-99.0,i:"2000-03",t:"2009-03",f:"2021-01",m:250},{d:-63.7,i:"2021-11",t:"2022-12",f:"2024-05",m:30},{d:-56.6,i:"1990-07",t:"1990-10",f:"1991-03",m:8},{d:-44.2,i:"1998-07",t:"1998-10",f:"1998-11",m:4},{d:-42.3,i:"2024-12",t:"2025-04",f:"2025-07",m:7},{d:-37.2,i:"1992-01",t:"1992-08",f:"1993-01",m:12},{d:-36.1,i:"1997-08",t:"1997-12",f:"1998-02",m:6},{d:-31.1,i:"1994-03",t:"1994-06",f:"1995-03",m:12},{d:-29.8,i:"1997-01",t:"1997-04",f:"1997-05",m:4},{d:-29.4,i:"2000-01",t:"2000-01",f:"2000-02",m:1}],
+  TQQQ:[{d:-100.0,i:"2000-03",t:"2009-03",f:null,m:null},{d:-72.6,i:"1990-07",t:"1990-10",f:"1991-03",m:8},{d:-61.6,i:"1998-07",t:"1998-10",f:"1998-11",m:4},{d:-52.8,i:"1992-01",t:"1992-08",f:"1994-01",m:24},{d:-51.9,i:"1997-08",t:"1997-12",f:"1998-04",m:8},{d:-44.1,i:"1994-03",t:"1994-06",f:"1995-03",m:12},{d:-42.5,i:"1997-01",t:"1997-04",f:"1997-05",m:4},{d:-41.8,i:"2000-01",t:"2000-01",f:"2000-02",m:1},{d:-41.3,i:"1995-11",t:"1996-01",f:"1996-04",m:6},{d:-40.1,i:"1996-06",t:"1996-07",f:"1996-09",m:3}]
+};
+
+var A_INFO={ SPY:{nom:"SPY (S&P 500)",col:"#63FCAF"}, QQQ:{nom:"QQQ (Nasdaq-100)",col:"#556DFB"},
+  QLD:{nom:"QLD · Nasdaq 2×",col:"#E0A020"}, TQQQ:{nom:"TQQQ · Nasdaq 3×",col:"#E0525A"}, SJC:{nom:"San José Capital",col:"#FEF9F3"} };
+var ORDER_ACUM=["SPY","QQQ","QLD","TQQQ","SJC"];
+var ORDER_RET=["SPY","QQQ","SJC"];
+var MESES_ES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+var hs={ aporte:1000, cap:0, y0:2005, y1:2025, sinAportes:false, sjc:8, sjcRet:8,
+         acum:"QQQ", retpct:8, retinfl:3, retanios:30, edadRet:65,
+         vis:{SPY:true,QQQ:true,QLD:false,TQQQ:false,SJC:true},   // activos visibles en el gráfico de crecimiento
+         visRet:{SPY:true,QQQ:true,SJC:true} };                   // activos visibles en el gráfico de retiro
+
+// CAGR del activo (crecimiento anual compuesto, buy & hold) sobre la ventana [y0,y1].
+function cagrActivo(k){ var pr=1,n=0; for(var y=hs.y0;y<=hs.y1;y++){ pr*=(1+retAnual(k,y)/100); n++; } return n>0?(Math.pow(pr,1/n)-1)*100:0; }
+// TIR/XIRR: retorno anual ponderado por dinero sobre el cash aportado (aporte al fin de cada mes).
+function xirrPlata(cap, aporte, M, V){
+  if(aporte<=0){ if(cap<=0) return 0; return (Math.pow(V/cap, 12/M)-1)*100; }
+  function fv(i){ if(Math.abs(i)<1e-9) return cap+aporte*M; var f=Math.pow(1+i,M); return cap*f+aporte*(f-1)/i; }
+  var lo=-0.99, hi=1.0; if(fv(lo)>V) return -99; if(fv(hi)<V) hi=5;
+  for(var it=0; it<200; it++){ var mid=(lo+hi)/2, f=fv(mid); if(Math.abs(f-V)<1) return (Math.pow(1+mid,12)-1)*100; if(f<V) lo=mid; else hi=mid; }
+  return (Math.pow(1+(lo+hi)/2,12)-1)*100;
+}
+// Percentil (0-100) en el que cae `v` dentro de un arreglo ordenado.
+function pctlRank(sorted, v){ var c=0; for(var i=0;i<sorted.length;i++){ if(sorted[i]<=v) c++; } return Math.round(100*c/sorted.length); }
+function mesTxt(s){ if(!s) return "—"; var p=s.split("-"); return MESES_ES[(+p[1])-1]+" "+p[0]; }
+function durTxt(m){ if(m==null) return "—"; var a=Math.floor(m/12), r=m%12; return (a?a+"a ":"")+(r||!a?r+"m":""); }
+
+function yfmt(v){ var s=v<0?"-$":"$"; v=Math.abs(v); return s+(v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+"k":Math.round(v)); }
+function retAnual(k,y){ return k==="SJC" ? hs.sjc : (HR[k]&&HR[k][y]!=null?HR[k][y]:0); }
+function aniosDisp(k){ if(k==="SJC")return null; var ys=[]; for(var y=HYMIN;y<=HYMAX;y++){ if(HR[k][y]!=null) ys.push(y); } return ys; }
+function pct(sorted,p){ var i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return lo===hi?sorted[lo]:sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
+
+// DCA determinístico año por año (aporte mensual). En modo "sin aportes": aporte 0
+// y capital de arranque $10,000 (para ver la naturaleza del activo, sin contribuciones).
+function dcaSerie(k){
+  var aporte = hs.sinAportes?0:hs.aporte;
+  var cap = hs.sinAportes ? (hs.cap>0?hs.cap:10000) : hs.cap;
+  var years=[hs.y0-1], bal=[Math.round(cap)], put=[Math.round(cap)], b=cap, p=cap;
+  for(var y=hs.y0; y<=hs.y1; y++){
+    var r=retAnual(k,y)/100, mr=Math.pow(1+r,1/12)-1;
+    for(var m=0;m<12;m++){ b=b*(1+mr)+aporte; p+=aporte; }
+    years.push(y); bal.push(Math.round(b)); put.push(Math.round(p));
   }
-  poner();
-  for(var id in campos){ byId(id).addEventListener("input", aplicar); }
-  byId("p-reset").addEventListener("click", function(){ poner(); aplicar(); });
-  byId("admin-panel").open = true;   // arranca abierto
+  return {years:years, bal:bal, put:put, valor:b, aportado:p};
+}
+
+function renderHist(){
+  byId("h-aporte").textContent="$"+fmt(hs.aporte);
+  byId("h-cap").textContent="$"+fmt(hs.cap);
+  byId("h-y0").textContent=hs.y0; byId("h-y1").textContent=hs.y1;
+  byId("h-sjc").textContent=hs.sjc+"%";
+  byId("h-sinap").textContent=hs.sinAportes?"Sin aportes":"Con aportes";
+  byId("h-actlbl").textContent=A_INFO[hs.acum].nom;
+
+  var ser=dcaSerie(hs.acum);
+  var ganancia=ser.valor-ser.aportado;
+  var M=(hs.y1-hs.y0+1)*12;
+  var aporteEff=hs.sinAportes?0:hs.aporte, capEff=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
+  var cagr=cagrActivo(hs.acum), tir=xirrPlata(capEff, aporteEff, M, ser.valor);
+  byId("h-aportado").textContent="$"+fmt(ser.aportado);
+  byId("h-ganancia").textContent="$"+fmt(ganancia);
+  byId("h-cagr").textContent=fmt1(cagr)+"%";
+  byId("h-tir").textContent=fmt1(tir)+"%";
+  byId("h-valor").textContent="$"+fmt(ser.valor);
+
+  var mc=simMC();   // se reusa para el abanico y para ubicar el percentil del resultado real
+  var perc=pctlRank(mc.finals, ser.valor);
+  var rachaTxt = perc>=67 ? "una racha de las buenas" : (perc>=34 ? "una racha bastante normal" : "una racha floja");
+  var percFrase = (hs.acum==="SJC") ? "" : " Ese resultado cae en el <b>percentil "+perc+"</b> de mil secuencias posibles: los últimos "+(hs.y1-hs.y0+1)+" años fueron <b>"+rachaTxt+"</b> para "+A_INFO[hs.acum].nom+".";
+  var simNota = (hs.acum!=="SJC" && HINCEP[hs.acum] && hs.y0<HINCEP[hs.acum]) ? " (antes de "+HINCEP[hs.acum]+" es simulado sobre el índice)" : "";
+  if(hs.sinAportes){
+    var capIni=hs.cap>0?hs.cap:10000, mult=capIni>0?ser.valor/capIni:0;
+    byId("h-valor-txt").innerHTML="Sin aportes, solo <b>$"+fmt(capIni)+"</b> puestos en <b>"+A_INFO[hs.acum].nom+"</b> en "+hs.y0+" y sin tocar nada: hoy serían <b>$"+fmt(ser.valor)+"</b>, o sea <b>"+fmt1(cagr)+"%</b> anual compuesto (CAGR)"+simNota+"."+percFrase;
+  } else {
+    byId("h-valor-txt").innerHTML="Si en <b>"+hs.y0+"</b> hubieras empezado a aportar <b>$"+fmt(hs.aporte)+"/mes</b>"+(hs.cap>0?" (más $"+fmt(hs.cap)+" de arranque)":"")+" en <b>"+A_INFO[hs.acum].nom+"</b>, hoy tendrías <b>$"+fmt(ser.valor)+"</b>. Pusiste <b>$"+fmt(ser.aportado)+"</b> de tu bolsillo; el mercado le sumó <b>$"+fmt(ganancia)+"</b> (tu plata rindió <b>"+fmt1(tir)+"%</b> anual)."+simNota+percFrase;
+  }
+  dibujarHistMulti();
+  renderRet();
+  renderMC(mc);
+  dibujarTablas();
+}
+
+// Gráfico 1: solo los activos seleccionados en el dashboard "Activos en el gráfico".
+// La leyenda es solo referencia (no filtra): el filtro son los chips verdes.
+function dibujarHistMulti(){
+  var wrap=byId("chart-wrap-hist"); if(!wrap) return;
+  var vk=ORDER_ACUM.filter(function(k){ return hs.vis[k]; });
+  var series={}; vk.forEach(function(k){ series[k]=dcaSerie(k); });
+  var ref=series[hs.acum]||series[vk[0]];
+  var years=ref.years, minX=years[0], maxX=years[years.length-1];
+  function build(){
+    var ctx=byId("chart-hist"); if(!ctx||typeof Chart==="undefined") return;
+    if(chartHist) chartHist.destroy();
+    var ds=vk.map(function(k){
+      return {label:A_INFO[k].nom, data:series[k].years.map(function(y,i){return {x:y,y:series[k].bal[i]};}),
+        borderColor:A_INFO[k].col, backgroundColor:"transparent", borderWidth:k===hs.acum?3.5:2,
+        pointRadius:0, tension:.12, borderDash:k==="SJC"?[3,3]:undefined};
+    });
+    ds.push({label:"Lo que aportaste", data:ref.years.map(function(y,i){return {x:y,y:ref.put[i]};}),
+      borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.1});
+    chartHist=new Chart(ctx,{ type:"line", data:{datasets:ds},
+      options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom", onClick:function(){}, labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10}},
+          tooltip:{itemSort:function(a,b){return b.parsed.y-a.parsed.y;}, callbacks:{title:function(it){return "Fin de "+Math.round(it[0].parsed.x);},
+            label:function(it){return it.dataset.label+": "+yfmt(it.parsed.y);}}}},
+        scales:{ x:{type:"linear", min:minX, max:maxX,
+             ticks:{stepSize:5, autoSkip:true, maxTicksLimit:8, callback:function(v){return Math.round(v);}, color:"#E2E2E2", font:{size:13, weight:"600"}},
+             grid:{color:"rgba(140,150,170,.15)"}},
+          y:{ticks:{color:"#B9C0CA", font:{size:12}, callback:yfmt}, grid:{color:"rgba(140,150,170,.18)"}}}}
+    });
+  }
+  whenChart(build, wrap);
+}
+
+// Decumulación de un activo desde el capital `seed`, en plata de hoy (retorno real =
+// retorno del año − inflación del mismo año). SJC = una sola línea (tasa fija); mercado =
+// percentiles p10/p50/p90 sorteando secuencias de años reales. `agota` = año de retiro en
+// que el p50 (o la línea de SJC) llega a cero.
+function decumAsset(k, seed){
+  var N=hs.retanios, W=seed*hs.retpct/100;
+  if(k==="SJC"){
+    var rr=(hs.sjcRet-hs.retinfl)/100, path=[seed], bal=seed, agota=null;
+    for(var t=1;t<=N;t++){ bal=bal*(1+rr)-W; if(bal<=0){ path.push(0); agota=t; break; } path.push(bal); }
+    return {p50:path, single:true, agota:agota};
+  }
+  var PATHS=800, ys=aniosDisp(k), perYear=[]; for(var t=0;t<=N;t++) perYear.push([]);
+  for(var q=0;q<PATHS;q++){
+    var b=seed, vivo=true; perYear[0].push(b);
+    for(var t=1;t<=N;t++){
+      var yr=ys[(Math.random()*ys.length)|0], r2=(HR[k][yr]-HINF[yr])/100;
+      if(vivo){ b=b*(1+r2)-W; if(b<=0){ b=0; vivo=false; } }
+      perYear[t].push(b);
+    }
+  }
+  var p10=[],p50=[],p90=[], agota=null;
+  for(var t=0;t<=N;t++){ var s=perYear[t].slice().sort(function(a,b){return a-b;}); p10.push(pct(s,.1)); p50.push(pct(s,.5)); p90.push(pct(s,.9)); }
+  for(var t=1;t<=N;t++){ if(p50[t]<=0){ agota=t; break; } }
+  return {p10:p10,p50:p50,p90:p90, single:false, agota:agota};
+}
+function renderRet(){
+  byId("h-retpct").textContent=hs.retpct+"%";
+  byId("h-retinfl").textContent=hs.retinfl+"%";
+  byId("h-retanios").textContent=hs.retanios;
+  byId("h-edadret").textContent=hs.edadRet;
+  byId("h-sjcret").textContent=hs.sjcRet+"%";
+  byId("h-mcnom").textContent=A_INFO[hs.acum].nom;
+
+  var seed=dcaSerie(hs.acum).valor, W=seed*hs.retpct/100;
+  byId("h-ingreso").textContent="$"+fmt(W/12)+"/mes";
+  var sel=ORDER_RET.filter(function(k){ return hs.visRet[k]; });
+  var t="Llegás al retiro a los <b>"+hs.edadRet+"</b> con <b>$"+fmt(seed)+"</b> (lo que acumulaste en "+A_INFO[hs.acum].nom+"), retirando el <b>"+hs.retpct+"%</b> al año = <b>$"+fmt(W/12)+"/mes</b> en plata de hoy. ";
+  var frases=[];
+  sel.forEach(function(k){
+    var d=decumAsset(k, seed);
+    if(k==="SJC"){
+      if(d.agota) frases.push("con <b>SJC</b> (fijo "+hs.sjcRet+"%) se agota a los <b>"+(hs.edadRet+d.agota)+"</b>");
+      else frases.push("con <b>SJC</b> aguanta los "+hs.retanios+" años completos");
+    } else {
+      if(d.agota) frases.push("con <b>"+A_INFO[k].nom+"</b> el escenario típico se agota a los <b>"+(hs.edadRet+d.agota)+"</b>");
+      else frases.push("con <b>"+A_INFO[k].nom+"</b> el escenario típico aguanta los "+hs.retanios+" años");
+    }
+  });
+  t += frases.length ? ("Comparando: "+frases.join("; ")+". El punto marca dónde se acaba la plata.") : "Elegí al menos un activo de retiro abajo.";
+  byId("h-ingreso-txt").innerHTML=t;
+  dibujarRetiro(seed, sel);
+}
+
+// Gráfico 2: historia real (acumulación del protagonista) + proyección del retiro, eje X = EDAD.
+// La línea corta y un punto marca el agotamiento. Varios activos = solo su p50; uno solo (mercado) = banda.
+function dibujarRetiro(seed, sel){
+  var wrap=byId("chart-wrap-ret"); if(!wrap) return;
+  var acc=dcaSerie(hs.acum);
+  var edadA=function(year){ return hs.edadRet-(hs.y1-year); };  // año calendario -> edad
+  var accPts=acc.years.map(function(y,i){ return {x:edadA(y), y:acc.bal[i]}; });
+  var edadRet=hs.edadRet, unico=(sel.length===1 && sel[0]!=="SJC");
+  var minX=Math.floor(edadA(acc.years[0])/5)*5, maxX=Math.ceil((edadRet+hs.retanios)/5)*5;
+  function build(){
+    var ctx=byId("chart-ret"); if(!ctx||typeof Chart==="undefined") return;
+    if(chartRet) chartRet.destroy();
+    var ds=[];
+    if(unico){
+      var d0=decumAsset(sel[0], seed), lim=d0.agota!=null?d0.agota:hs.retanios;
+      var mk=function(a){ var p=[]; for(var t=0;t<=lim;t++) p.push({x:edadRet+t, y:Math.max(0,Math.round(a[t]))}); return p; };
+      ds.push({label:"_p10", data:mk(d0.p10), borderColor:"rgba(154,161,171,.45)", borderWidth:1, pointRadius:0, tension:.15});
+      ds.push({label:"Rango posible (10–90%)", data:mk(d0.p90), borderColor:"rgba(154,161,171,.45)", backgroundColor:"rgba(85,109,251,.12)", borderWidth:1, pointRadius:0, tension:.15, fill:"-1"});
+    }
+    ds.push({label:"Tu historia real · "+A_INFO[hs.acum].nom, data:accPts, borderColor:A_INFO[hs.acum].col, borderWidth:3.5, pointRadius:0, tension:.12});
+    var marcas=[];
+    sel.forEach(function(k){
+      var d=decumAsset(k, seed), lim=d.agota!=null?d.agota:hs.retanios;
+      var pts=[]; for(var t=0;t<=lim;t++) pts.push({x:edadRet+t, y:Math.max(0,Math.round(d.p50[t]))});
+      ds.push({label:(k==="SJC"?A_INFO[k].nom:A_INFO[k].nom+" (típico)"), data:pts, borderColor:A_INFO[k].col,
+        borderWidth:k==="SJC"?2.5:2.5, borderDash:k==="SJC"?[3,3]:undefined, pointRadius:0, tension:.12});
+      if(d.agota!=null) marcas.push({x:edadRet+d.agota, y:0, c:A_INFO[k].col});
+    });
+    if(marcas.length) ds.push({label:"_fin", data:marcas, showLine:false, pointRadius:6, pointHoverRadius:7,
+      pointStyle:"circle", pointBackgroundColor:marcas.map(function(m){return m.c;}), pointBorderColor:"#15191E", pointBorderWidth:2});
+    // línea vertical + 🏖️ en la edad de retiro
+    var plug={ id:"pret", afterDraw:function(ch){ var xs=ch.scales.x; if(!xs)return; var px=xs.getPixelForValue(edadRet); var a=ch.chartArea,c=ch.ctx;
+      c.save(); c.strokeStyle="rgba(85,109,251,.45)"; c.lineWidth=2; c.setLineDash([5,4]); c.beginPath(); c.moveTo(px,a.top); c.lineTo(px,a.bottom); c.stroke();
+      c.setLineDash([]); c.font="16px 'Bai Jamjuree',sans-serif"; c.textAlign="center"; c.textBaseline="top";
+      c.fillText("🏖️", Math.min(Math.max(px,a.left+8),a.right-8), Math.max(a.top-22,0)); c.restore(); } };
+    chartRet=new Chart(ctx,{ type:"line", data:{datasets:ds}, plugins:[plug],
+      options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        layout:{padding:{top:26}}, interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom", labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10,filter:function(l){return l.text.charAt(0)!=="_";}}},
+          tooltip:{itemSort:function(a,b){return b.parsed.y-a.parsed.y;}, filter:function(it){return it.dataset.label.charAt(0)!=="_";},
+            callbacks:{title:function(it){return "A los "+Math.round(it[0].parsed.x)+" años";}, label:function(it){return it.dataset.label+": "+yfmt(it.parsed.y);}}}},
+        scales:{ x:{type:"linear", min:minX, max:maxX, title:{display:true, text:"Edad", color:"#E2E2E2", font:{size:14,weight:"700"}},
+             ticks:{stepSize:5, autoSkip:false, color:function(c){return (c.tick&&c.tick.value===edadRet)?"#8ea0ff":"#E2E2E2";}, font:function(c){return (c.tick&&c.tick.value===edadRet)?{size:15,weight:"700"}:{size:12,weight:"600"};}},
+             grid:{color:function(c){return (c.tick&&c.tick.value%5===0)?"rgba(140,150,170,.28)":"rgba(140,150,170,.08)";}}},
+          y:{ticks:{color:"#B9C0CA", font:{size:12}, callback:yfmt}, grid:{color:"rgba(140,150,170,.15)"}}}}
+    });
+  }
+  whenChart(build, wrap);
+}
+
+// Gráfico 3: Monte Carlo de la ACUMULACIÓN sobre `acum` (mismo aporte), sorteando
+// años reales del mercado. Abanico de percentiles p10/p50/p90 en el tiempo.
+function simMC(){
+  var k=hs.acum, PATHS=1000, nY=hs.y1-hs.y0+1;
+  var aporte=hs.sinAportes?0:hs.aporte, cap=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap, ys=aniosDisp(k);
+  var perYear=[]; for(var t=0;t<=nY;t++) perYear.push([]);
+  for(var q=0;q<PATHS;q++){
+    var b=cap; perYear[0].push(b);
+    for(var t=1;t<=nY;t++){
+      var r; if(k==="SJC") r=hs.sjc/100; else { var yr=ys[(Math.random()*ys.length)|0]; r=HR[k][yr]/100; }
+      var mr=Math.pow(1+r,1/12)-1;
+      for(var m=0;m<12;m++) b=b*(1+mr)+aporte;
+      perYear[t].push(b);
+    }
+  }
+  var p10=[],p50=[],p90=[];
+  for(var t=0;t<=nY;t++){ var s=perYear[t].slice().sort(function(a,b){return a-b;}); p10.push(pct(s,.1)); p50.push(pct(s,.5)); p90.push(pct(s,.9)); }
+  return {N:nY, p10:p10,p50:p50,p90:p90, fin10:p10[nY],fin50:p50[nY],fin90:p90[nY],
+          finals:perYear[nY].slice().sort(function(a,b){return a-b;})};
+}
+function renderMC(m){
+  if(!m) m=simMC();
+  var aportado=(hs.sinAportes?0:hs.aporte)*12*(hs.y1-hs.y0+1)+(hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap);
+  byId("h-mc-txt").innerHTML="Con el mismo plan sobre <b>"+A_INFO[hs.acum].nom+"</b> ("+m.N+" años), sorteando 1,000 secuencias de años reales: en el escenario <b>típico</b> terminás con <b>$"+fmt(m.fin50)+"</b>. En el <b>10% peor</b>, ≤ <b>$"+fmt(m.fin10)+"</b>; en el <b>10% mejor</b>, ≥ <b>$"+fmt(m.fin90)+"</b>. Partiendo de los mismos $"+fmt(aportado)+" aportados. El apalancamiento abre muchísimo la banda: más techo, pero también más piso.";
+  dibujarFan("chart-mc","chart-wrap-mc",m);
+}
+
+// Abanico p10–p90 con la mediana encima. `r` trae p10/p50/p90 y N.
+function dibujarFan(canvasId, wrapId, r){
+  var wrap=byId(wrapId); if(!wrap) return;
+  var N=r.N, esRet=(canvasId==="chart-ret");
+  var mk=function(arr){ return arr.map(function(v,i){return {x:i,y:Math.max(0,Math.round(v))};}); };
+  function build(){
+    var ctx=byId(canvasId); if(!ctx||typeof Chart==="undefined") return;
+    var cur = esRet?chartRet:chartMC; if(cur) cur.destroy();
+    var ds=[
+      {label:"Peor 10% (p10)", data:mk(r.p10), borderColor:"rgba(224,82,90,.75)", backgroundColor:"transparent", borderWidth:1.5, pointRadius:0, tension:.15},
+      {label:"Mejor 10% (p90)", data:mk(r.p90), borderColor:"rgba(99,252,175,.75)", backgroundColor:"rgba(85,109,251,.14)", borderWidth:1.5, pointRadius:0, tension:.15, fill:"-1"},
+      {label:"Escenario típico", data:mk(r.p50), borderColor:"#556DFB", backgroundColor:"transparent", borderWidth:3, pointRadius:0, tension:.15}
+    ];
+    var nw=new Chart(ctx,{ type:"line", data:{datasets:ds},
+      options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom", labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10}},
+          tooltip:{itemSort:function(a,b){return b.parsed.y-a.parsed.y;}, callbacks:{title:function(it){return (esRet?"Año "+Math.round(it[0].parsed.x)+" de retiro":"Año "+Math.round(it[0].parsed.x));},
+            label:function(it){return it.dataset.label+": "+yfmt(it.parsed.y);}}}},
+        scales:{ x:{type:"linear", min:0, max:N,
+             title:{display:true, text:esRet?"Años en el retiro":"Años aportando", color:"#E2E2E2", font:{size:13, weight:"600"}},
+             ticks:{stepSize:5, color:"#E2E2E2", font:{size:12}}, grid:{color:"rgba(140,150,170,.12)"}},
+          y:{ticks:{color:"#B9C0CA", font:{size:12}, callback:yfmt}, grid:{color:"rgba(140,150,170,.15)"}}}}
+    });
+    if(esRet) chartRet=nw; else chartMC=nw;
+  }
+  whenChart(build, wrap);
+}
+
+// chips de retiro (selección única)
+function buildChips(id, order, current, cb){
+  var c=byId(id); if(!c) return; c.innerHTML="";
+  order.forEach(function(k){
+    var b=document.createElement("button");
+    b.className="chip"+(k===current?" on":"");
+    b.innerHTML='<span class="dot" style="background:'+A_INFO[k].col+'"></span>'+A_INFO[k].nom;
+    b.addEventListener("click", function(){ cb(k); });
+    c.appendChild(b);
+  });
+}
+// chips de acumulación: MULTI-selección (verdes = visibles en el gráfico).
+// El último que se enciende pasa a ser el protagonista de los números y el retiro.
+function toggleVis(k){
+  var visibles=ORDER_ACUM.filter(function(a){ return hs.vis[a]; });
+  if(hs.vis[k]){
+    if(visibles.length<=1) return;   // no dejar el gráfico vacío
+    hs.vis[k]=false;
+    if(hs.acum===k) hs.acum=ORDER_ACUM.filter(function(a){ return hs.vis[a]; })[0];
+  } else {
+    hs.vis[k]=true; hs.acum=k;        // encender = pasa a protagonista
+  }
+  refreshChips(); renderHist();
+}
+function buildAcumChips(){
+  var c=byId("chips-acum"); if(!c) return; c.innerHTML="";
+  ORDER_ACUM.forEach(function(k){
+    var b=document.createElement("button");
+    b.className="chip"+(hs.vis[k]?" on":"");
+    b.innerHTML='<span class="dot" style="background:'+A_INFO[k].col+'"></span>'+A_INFO[k].nom;
+    b.addEventListener("click", function(){ toggleVis(k); });
+    c.appendChild(b);
+  });
+  if(byId("h-prot")) byId("h-prot").textContent=A_INFO[hs.acum].nom;
+}
+// chips de retiro: MULTI-selección (verdes = se ven en el gráfico de retiro; su p50).
+function toggleVisRet(k){
+  var vis=ORDER_RET.filter(function(a){ return hs.visRet[a]; });
+  if(hs.visRet[k]){ if(vis.length<=1) return; hs.visRet[k]=false; }
+  else hs.visRet[k]=true;
+  refreshChips(); renderHist();
+}
+function buildRetChips(){
+  var c=byId("chips-ret"); if(!c) return; c.innerHTML="";
+  ORDER_RET.forEach(function(k){
+    var b=document.createElement("button");
+    b.className="chip"+(hs.visRet[k]?" on":"");
+    b.innerHTML='<span class="dot" style="background:'+A_INFO[k].col+'"></span>'+A_INFO[k].nom;
+    b.addEventListener("click", function(){ toggleVisRet(k); });
+    c.appendChild(b);
+  });
+}
+function refreshChips(){ buildAcumChips(); buildRetChips(); }
+
+// Tablas del activo protagonista: 10 peores sustos (drawdowns), 10 peores y 10 mejores años.
+function dibujarTablas(){
+  var k=hs.acum;
+  if(byId("h-histnom")) byId("h-histnom").textContent=A_INFO[k].nom;
+  var tdd=byId("tabla-dd"), tp=byId("tabla-peores"), tm=byId("tabla-mejores");
+  if(!tdd) return;
+  var bdd=tdd.querySelector("tbody"), bp=tp.querySelector("tbody"), bm=tm.querySelector("tbody");
+  if(k==="SJC"){
+    bdd.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gris-sec)">San José Capital es tasa fija: no tiene caídas ni años malos.</td></tr>';
+    bp.innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--gris-sec)">Tasa fija del '+hs.sjc+'% todos los años.</td></tr>';
+    bm.innerHTML=bp.innerHTML; return;
+  }
+  bdd.innerHTML="";
+  (HDD[k]||[]).forEach(function(e){
+    var rec = e.f ? mesTxt(e.f) : "<span class='peligro'>sin recuperar</span>";
+    var dur = e.m==null ? "—" : durTxt(e.m);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td style='color:#e0525a;font-weight:700'>"+fmt1(e.d)+"%</td><td>"+mesTxt(e.i)+"</td><td>"+rec+"</td><td>"+dur+"</td>";
+    bdd.appendChild(tr);
+  });
+  var arr=[]; for(var y in HR[k]) arr.push([+y, HR[k][y]]);
+  arr.sort(function(a,b){ return a[1]-b[1]; });
+  bp.innerHTML=""; bm.innerHTML="";
+  arr.slice(0,10).forEach(function(e){ var tr=document.createElement("tr"); tr.innerHTML="<td>"+e[0]+"</td><td style='color:#e0525a;font-weight:700'>"+fmt1(e[1])+"%</td>"; bp.appendChild(tr); });
+  arr.slice(-10).reverse().forEach(function(e){ var tr=document.createElement("tr"); tr.innerHTML="<td>"+e[0]+"</td><td style='color:var(--menta);font-weight:700'>+"+fmt1(e[1])+"%</td>"; bm.appendChild(tr); });
+}
+
+// steppers del experimento (crecimiento y retiro)
+Array.prototype.forEach.call(document.querySelectorAll("#quick-hist .qs, #quick-ret .qs"), function(btn){
+  btn.addEventListener("click", function(){
+    var h=btn.getAttribute("data-h"), dir=parseFloat(btn.getAttribute("data-d"));
+    if(h==="aporte") hs.aporte=Math.max(0, hs.aporte+dir*100);
+    else if(h==="cap") hs.cap=Math.max(0, hs.cap+dir*1000);
+    else if(h==="y0") hs.y0=Math.min(hs.y1-1, Math.max(HYMIN, hs.y0+dir));
+    else if(h==="y1") hs.y1=Math.max(hs.y0+1, Math.min(HYMAX, hs.y1+dir));
+    else if(h==="sjc") hs.sjc=Math.min(30, Math.max(1, hs.sjc+dir));
+    else if(h==="retpct") hs.retpct=Math.min(15, Math.max(1, hs.retpct+dir));
+    else if(h==="retinfl") hs.retinfl=Math.min(10, Math.max(0, hs.retinfl+dir));
+    else if(h==="retanios") hs.retanios=Math.min(50, Math.max(5, hs.retanios+dir));
+    else if(h==="edadret") hs.edadRet=Math.min(80, Math.max(40, hs.edadRet+dir));
+    else if(h==="sjcret") hs.sjcRet=Math.min(30, Math.max(1, hs.sjcRet+dir));
+    renderHist();
+  });
+});
+byId("h-sinap").addEventListener("click", function(){ hs.sinAportes=!hs.sinAportes; renderHist(); });
+refreshChips();
+
+// ---------- eventos ----------
+function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart,a=el.value.length; el.value=d?Number(d).toLocaleString("en-US"):""; var b=el.value.length; try{el.setSelectionRange(Math.max(0,p+(b-a)),Math.max(0,p+(b-a)));}catch(e){} render(); }); }
+comas(byId("i-meta")); comas(byId("i-tc")); comas(byId("i-cap"));
+["i-crec","i-ret","i-crecret","i-infl","i-edad","i-edadret"].forEach(function(id){ byId(id).addEventListener("input", render); });
+// Botón para esconder/mostrar el panel de variables (no molesta la lectura de los datos).
+byId("p-toggle").addEventListener("click", function(){
+  var col = byId("panel").classList.toggle("colapsado");
+  this.textContent = col ? "Mostrar ▼" : "Esconder ▲";
+});
+// Controles rápidos debajo del gráfico: editan las mismas variables sin abrir el panel.
+function pasoNum(id, dir){ var v=num(byId(id).value)+dir; if(v<0) v=0; byId(id).value=(Math.round(v*100)/100).toString(); }
+Array.prototype.forEach.call(document.querySelectorAll("#quick .qs"), function(btn){
+  btn.addEventListener("click", function(){
+    var q=btn.getAttribute("data-q"), dir=parseFloat(btn.getAttribute("data-d"));
+    if(q==="meta"){ var step=metaCur==="$"?500:250000; var v=num(byId("i-meta").value)+dir*step; if(v<0)v=0; byId("i-meta").value=fmt(v); }
+    else if(q==="cap"){ var stepc=metaCur==="$"?5000:2500000; var vc=num(byId("i-cap").value)+dir*stepc; if(vc<0)vc=0; byId("i-cap").value=fmt(vc); }
+    else if(q==="crec"){ pasoNum("i-crec", dir); }
+    else if(q==="crecret"){ pasoNum("i-crecret", dir); }
+    else if(q==="infl"){ pasoNum("i-infl", dir); }
+    else if(q==="ret"){ pasoNum("i-ret", dir); }
+    else if(q==="edad"){ var er=ent(byId("i-edadret").value), v2=ent(byId("i-edad").value)+dir; if(v2<0)v2=0; if(v2>=er)v2=er-1; byId("i-edad").value=v2; }
+    else if(q==="anios"){ var ed=ent(byId("i-edad").value), er2=ent(byId("i-edadret").value)+dir; if(er2<=ed) er2=ed+1; byId("i-edadret").value=er2; }
+    render();
+  });
+});
+// Flechitas ▲▼: suben/bajan de a 1 la tasa o la edad y recalculan al instante.
+Array.prototype.forEach.call(document.querySelectorAll(".stp"), function(btn){
+  btn.addEventListener("click", function(){
+    var el = byId(btn.getAttribute("data-t"));
+    var v = num(el.value) + parseFloat(btn.getAttribute("data-d"));
+    if(v < 0) v = 0;
+    el.value = (Math.round(v*100)/100).toString();
+    render();
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll(".chips .chip"), function(c){
+  c.addEventListener("click", function(){
+    var nueva=c.getAttribute("data-cur"); if(nueva===metaCur) return;
+    var t=tc(), v=num(byId("i-meta").value), cap=num(byId("i-cap").value);
+    if(v>0) byId("i-meta").value = fmt(nueva==="$"? v/t : v*t);
+    if(cap>0) byId("i-cap").value = fmt(nueva==="$"? cap/t : cap*t);
+    metaCur=nueva;
+    document.querySelectorAll(".chips .chip").forEach(function(x){x.classList.toggle("on",x===c);});
+    render();
+  });
+});
+byId("i-reset").addEventListener("click", function(){
+  metaCur="$";
+  document.querySelectorAll(".chips .chip").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-cur")==="$");});
+  byId("i-meta").value="10,000"; byId("i-tc").value="460"; byId("i-crec").value="8"; byId("i-ret").value="4";
+  byId("i-crecret").value="4"; byId("i-infl").value="3"; byId("i-edad").value="30"; byId("i-edadret").value="65"; byId("i-cap").value="0"; render();
+});
+
+// gate
+(function(){
+  function abrir(){ byId("gate").style.display="none"; document.body.classList.remove("locked"); render(); renderHist(); }
+  if(sessionStorage.getItem("admin_ok")==="1"){ abrir(); return; }
+  function go(){ if(byId("gate-pass").value==="admin"){ sessionStorage.setItem("admin_ok","1"); abrir(); } else { byId("gate-err").textContent="Contraseña incorrecta."; byId("gate-pass").value=""; } }
+  byId("gate-btn").addEventListener("click", go);
+  byId("gate-pass").addEventListener("keydown", function(e){ if(e.key==="Enter") go(); });
 })();
 </script>
 </body>
