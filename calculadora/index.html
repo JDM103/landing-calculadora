@@ -248,7 +248,7 @@
 
     <details data-tg="t_por_que_4">
       <summary>🤔 ¿Por qué el 4%?</summary>
-      <div class="body">Al llegar al retiro, tu portafolio se pasa a instrumentos muy seguros, como bonos del Tesoro de EE.UU., que te dan alrededor de un 4% al año. Vivís de los intereses y el capital queda intacto. Luego ese capital se puede usar para incrementar tu monto mensual de retiro o para heredarlo.</div>
+      <div class="body">Es la regla clásica: al retirarte, pasás tu plata a instrumentos seguros como bonos del Tesoro de EE.UU. (~4% al año) y vivís de los intereses. <b>Ojo con la trampa:</b> con una inflación del 3%, ese 4% es apenas <b>1% real</b>. O sea que tu poder de compra se encoge casi un 3% cada año, aunque el número en la cuenta no baje. Más adelante (en el «PERO») vemos por qué conviene retirarte con una tasa que <b>sí le gane a la inflación</b>.</div>
     </details>
   </section>
 
@@ -354,7 +354,7 @@
 
     <div id="acto2b-res" style="display:none">
       <div class="destaque">
-        <div class="k">Aportando desde hoy, con un crecimiento del 8% anual:</div>
+        <div class="k">Aportando desde hoy, con un crecimiento <b style="color:var(--menta)">real del 5%</b> (nominal 8% menos 3% de inflación):</div>
         <div class="num" id="r-aporte8">$0</div>
         <div class="num-eq" id="r-aporte8-eq"></div>
         <p class="frase-aporte" id="r-frase-aporte"></p>
@@ -363,7 +363,7 @@
       <div id="chart-wrap"><canvas id="chart-crec"></canvas></div>
       <p class="chart-nota" id="chart-nota"></p>
 
-      <span class="cap">8% es una referencia razonable de largo plazo para un portafolio diversificado. No se garantizan retornos.</span>
+      <span class="cap">El 8% nominal (≈5% real tras 3% de inflación) es una referencia razonable de largo plazo para un portafolio diversificado. Todo acá va en poder de compra de hoy. No se garantizan retornos.</span>
     </div>
   </section>
 
@@ -373,25 +373,25 @@
 
     <div class="titulo" style="margin-top:20px">Ese número asume dos cosas:</div>
     <div class="card">
-      <p>📊 Que tu plata <b>crece al 8%</b> al año, que a grandes rasgos es el histórico de la bolsa de Estados Unidos.</p>
-      <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el 4%</b> al año, que es lo que rinde un bono del Tesoro.</p>
+      <p>📊 Que tu plata <b>crece al 8% nominal</b> —o sea <b>5% real</b> tras la inflación— que a grandes rasgos es el histórico de la bolsa de Estados Unidos.</p>
+      <p style="margin-top:12px">🏦 Que en el retiro <b>sacás el 4%</b> de un bono del Tesoro. Pero acá está la trampa: con inflación del 3%, ese 4% es apenas <b>1% real</b>. Tu estilo de vida se encoge ~3% cada año. El 4% no le gana a la inflación: lentamente te empobrece.</p>
     </div>
 
     <div class="card card-menta">
-      <p>Si invertís al <b>15%</b> buscando crecimiento (¡como debería ser, porque tenés el tiempo a tu favor!)</p>
-      <p style="margin-top:10px">Y te retirás al <b>8%</b>…</p>
+      <p>Por eso lo inteligente es al revés: invertí al <b>15% nominal (12% real)</b> buscando crecimiento (¡como debería ser, porque tenés el tiempo a tu favor!)</p>
+      <p style="margin-top:10px">Y retirate con un ingreso pasivo del <b>8% nominal (5% real)</b>, que <b>sí le gana</b> a la inflación…</p>
     </div>
 
     <div class="titulo">Pasan muchas cosas:</div>
 
     <div class="resaltado pasa">
-      <p>🚀 Tu cuota mensual al 15% pasa a tener que ser <b id="r-aporte15">$0</b>.</p>
+      <p>🚀 Creciendo al 15% nominal (12% real), tu cuota mensual pasa a ser <b id="r-aporte15">$0</b>.</p>
     </div>
     <div class="resaltado pasa">
-      <p>🌴 ¡Y si a eso le sumás retirarte con el 8%, tu meta de retiro se baja a la mitad!: <b id="r-meta-mitad">$0</b>.</p>
+      <p>🌴 Y retirándote con un ingreso pasivo que le gana a la inflación (8% nominal, 5% real), tu meta baja a <b id="r-meta-mitad">$0</b> — y esta <b>no se erosiona</b>, a diferencia del 4%.</p>
     </div>
     <div class="resaltado pasa">
-      <p>🎯 O sea que con <b>ambas cosas</b>, más crecimiento y mejor tasa de retiro, tu nueva cuota mensual para la misma meta sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro.</p>
+      <p>🎯 O sea que con <b>ambas cosas</b>, más crecimiento y un retiro que le gana a la inflación, tu nueva cuota mensual sería <b id="r-aporte-combo">$0</b>/mes, para llegar a los mismos <b id="r-meta-eco">$0</b>/mes de retiro (en plata de hoy).</p>
     </div>
     <div class="resaltado pasa">
       <p>⏱️ O, ¡ajá!, tu edad de retiro se acorta a <b id="r-edad-corta">0</b> años, dentro de <b id="r-anios-corta">0</b>.</p>
@@ -402,11 +402,11 @@
     <div class="titulo">Suena todo muy bonito, ¡¡pero tal vez demasiado!!</div>
     <details data-tg="t_humo_15">
       <summary>🔍 ¿Esto no será humo?</summary>
-      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% aproximadamente. Pero ahí ya empezás a tomar riesgos, y <b class="hl">nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></div>
+      <div class="body">Noup. Solo cambiar de SP500 a Nasdaq 100 es precisamente el cambio de crecer al 8% o al 13% nominal aproximadamente (unos 5% a 10% reales). Pero ahí ya empezás a tomar riesgos, y <b class="hl">nuestra especialidad es acompañarte a tomar riesgos cuidadosamente. Con sistemas probados, con investigación, con 11 años de experiencia.</b></div>
     </details>
     <details data-tg="t_como_8pct">
       <summary>🌴 ¿Cómo se logra el 8% de ingreso pasivo para el retiro?</summary>
-      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe. El doble de rendimiento que la regla del 4%, así que necesitás la mitad del capital. Si tu perfil califica, te contamos el detalle.</div>
+      <div class="body">A través de una alianza con un puesto de bolsa costarricense que ofrece instrumentos conservadores con garantía real. Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe. Lo clave: al 8% nominal (≈5% real) tu retiro <b>le gana a la inflación del 3%</b>, así que tu capital no se encoge —a diferencia de un bono al 4%, que en real apenas rinde 1%—. Si tu perfil califica, te contamos el detalle.</div>
     </details>
   </section>
 
@@ -449,10 +449,19 @@ var TOPE_MAX = 1765859;
 var PENSION_MIN = 162295;
 var EDAD_RETIRO = 65;
 var EDAD_INICIO_COTIZA = 25;
-// Tasas del flujo
-var TASA_BASE = 8;        // regla del 4% invertida: crecimiento de referencia
-var TASA_CREC = 15;       // portafolio de crecimiento
-var MULT_25X = 25;        // capital = gasto anual × 25
+// Tasas del flujo. Todo en TÉRMINOS REALES: al crecimiento y al retiro nominal se les
+// resta la inflación (3%). Así "8% nominal" trabaja como 5% real y el poder de compra de
+// la meta se mantiene constante a lo largo de toda la calculadora.
+var INFLACION = 3;                          // inflación anual asumida (dólares)
+var CREC_BASE_NOM = 8;                      // crecimiento de referencia (nominal)
+var CREC_CREC_NOM = 15;                     // crecimiento agresivo / Nasdaq (nominal)
+var TASA_BASE = CREC_BASE_NOM - INFLACION;  // 5% real  (acumulación de referencia)
+var TASA_CREC = CREC_CREC_NOM - INFLACION;  // 12% real (acumulación agresiva)
+var RETIRO_BASE = 4;                        // regla del 4%: tasa de retiro
+var RETIRO_SJ_NOM = 8;                      // San José Capital (nominal)
+var RETIRO_SJ = RETIRO_SJ_NOM - INFLACION;  // 5% real, le gana a la inflación
+var MULT_BASE = 100 / RETIRO_BASE;          // 25× : capital = gasto anual ÷ 4%
+var MULT_SJ = 100 / RETIRO_SJ;              // 20× : capital = gasto anual ÷ 5% real
 
 // ===== ESTADO =====
 var S = {
@@ -669,7 +678,7 @@ function capitalObjetivo(){
   // meta mensual menos pensión (si la calculó), × 12 × 25
   var metaCol = aCol(S.metaVal, S.metaCur);
   var netoCol = Math.max(0, metaCol - (S.caja==="si" ? S.pensionCol : 0));
-  var col = netoCol * 12 * MULT_25X;
+  var col = netoCol * 12 * MULT_BASE;
   return { col: col, usd: col / S.tc };
 }
 function pintarCapital(numId, eqId){
@@ -758,11 +767,12 @@ function calcularAporte(){
   var c = capitalObjetivo();
   S.capObjUsd = c.usd; S.capObjCol = c.col;
 
-  // El aporte se calcula en US$, partiendo de cero (sin capital inicial).
-  var a8      = aporteRequerido(c.usd,     0, TASA_BASE, meses);
-  var a15     = aporteRequerido(c.usd,     0, TASA_CREC, meses);
-  var aRet8   = aporteRequerido(c.usd/2,   0, TASA_BASE, meses);
-  var aCombo  = aporteRequerido(c.usd/2,   0, TASA_CREC, meses);
+  // El aporte se calcula en US$, partiendo de cero, con crecimiento REAL (neto de inflación).
+  var metaSJusd = c.usd * MULT_SJ / MULT_BASE;   // meta con San José (5% real): menor que la base
+  var a8      = aporteRequerido(c.usd,      0, TASA_BASE, meses);
+  var a15     = aporteRequerido(c.usd,      0, TASA_CREC, meses);
+  var aRet8   = aporteRequerido(metaSJusd,  0, TASA_BASE, meses);
+  var aCombo  = aporteRequerido(metaSJusd,  0, TASA_CREC, meses);
   S.aportes = { a8:a8, a15:a15, aRet8:aRet8, aCombo:aCombo };
 
   // Se muestran en la moneda elegida en la meta, con la equivalencia debajo.
@@ -779,12 +789,12 @@ function calcularAporte(){
 
   // Acto 3: qué pasa si crecés al 15% y te retirás al 8%.
   byId("r-aporte15").textContent = money(enMeta(a15), S.metaCur) + "/mes";
-  byId("r-meta-mitad").textContent = money(enMeta(c.usd/2), S.metaCur);
+  byId("r-meta-mitad").textContent = money(enMeta(metaSJusd), S.metaCur);
   byId("r-aporte-combo").textContent = money(enMeta(aCombo), S.metaCur);
   byId("r-meta-eco").textContent = money(S.metaVal, S.metaCur);
 
-  // Manteniendo la cuota original (a8) pero al 15% y con la meta a la mitad: el retiro se adelanta.
-  var mesesCorto = mesesParaLlegar(c.usd/2, a8, TASA_CREC);
+  // Manteniendo la cuota original (a8) pero al 12% real y con la meta de San José: el retiro se adelanta.
+  var mesesCorto = mesesParaLlegar(metaSJusd, a8, TASA_CREC);
   var aniosCorto = Math.max(1, Math.round(mesesCorto/12));
   byId("r-edad-corta").textContent = String(edad + aniosCorto);
   byId("r-anios-corta").textContent = aniosCorto + (aniosCorto===1 ? " año" : " años");
@@ -793,7 +803,7 @@ function calcularAporte(){
   byId("r-oferta-de").textContent = money(enMeta(a8), S.metaCur) + "/mes";
   byId("r-oferta-a").textContent = money(enMeta(aCombo), S.metaCur) + "/mes";
   byId("r-oferta-meta-de").textContent = money(enMeta(c.usd), S.metaCur);
-  byId("r-oferta-meta-a").textContent = money(enMeta(c.usd/2), S.metaCur);
+  byId("r-oferta-meta-a").textContent = money(enMeta(metaSJusd), S.metaCur);
 
   byId("acto2b-res").style.display = "block";
   dibujarGrafico(a8, edad, edadRet);
@@ -822,9 +832,9 @@ function dibujarGrafico(aporteUsd, edad, edadRet){
   }
   var totalAportado = aportado[aportado.length-1];
   var totalSaldo = saldo[saldo.length-1];
-  byId("chart-nota").innerHTML = "De esos " + money(totalSaldo, S.metaCur) + ", vos pusiste "
+  byId("chart-nota").innerHTML = "De esos " + money(totalSaldo, S.metaCur) + " (en plata de hoy), vos pusiste "
     + money(totalAportado, S.metaCur) + ". El resto, <b>" + money(totalSaldo-totalAportado, S.metaCur)
-    + "</b>, lo creció la plata sola.";
+    + "</b>, lo creció la plata sola, ya descontada la inflación.";
 
   function build(){
     var ctx = byId("chart-crec"); if(!ctx || typeof Chart === "undefined") return;
