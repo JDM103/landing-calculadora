@@ -192,6 +192,12 @@
   footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
   footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
   footer a{color:var(--gris);}
+
+  /* Descargar plan en PDF */
+  .pdfblock{margin-top:32px; text-align:center;}
+  .pdf-intro{font-size:14px; color:var(--gris-sec); margin-bottom:10px; font-weight:400;}
+  #pdf-form{text-align:left;}
+  .pdf-status{font-size:13px; margin-top:10px; min-height:16px; font-weight:500;}
 </style>
 </head>
 <body>
@@ -428,6 +434,14 @@
 
     <div id="cta-salidas"></div>
     <div id="form-wrap"></div>
+
+    <!-- Descargar el plan en PDF (pide nombre + correo antes de descargar) -->
+    <div class="pdfblock" id="pdfblock">
+      <p class="pdf-intro">¿Querés tu plan para tenerlo a mano?</p>
+      <button class="btn btn-ghost" id="b-pdf">⬇︎ Descargar</button>
+      <div id="pdf-form"></div>
+      <div class="pdf-status" id="pdf-status"></div>
+    </div>
   </section>
 </div>
 
@@ -998,6 +1012,114 @@ function pintarSalidas(){
   }
 }
 
+// ===== DESCARGAR PLAN EN PDF (pide nombre + correo; usa el mismo webhook de leads) =====
+function loadScriptOnce(src){ return new Promise(function(res,rej){ var s=document.createElement("script"); s.src=src; s.onload=res; s.onerror=function(){ rej(new Error("No se pudo cargar "+src)); }; document.head.appendChild(s); }); }
+function ensurePdfLibs(){
+  var p=[];
+  if(!(window.jspdf && window.jspdf.jsPDF)) p.push(loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"));
+  if(!window.html2canvas) p.push(loadScriptOnce("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"));
+  return Promise.all(p);
+}
+function pdfEsc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function pdfDom(id){ var e=byId(id); return e?e.textContent.trim():""; }
+function slugNombre(s){ return (s||"plan").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"plan"; }
+// Arma un reporte (fuera de pantalla) con el look del sitio para capturarlo como imagen.
+function buildPlanReport(nombre){
+  var fecha=new Date().toLocaleDateString("es-CR",{year:"numeric",month:"long",day:"numeric"});
+  var capital=pdfDom("r-capital")||money(S.capObjUsd,"$"), capEq=pdfDom("r-capital-eq");
+  var aporte=pdfDom("r-aporte8"), aporteEq=pdfDom("r-aporte8-eq");
+  var params=[
+    ["Meta mensual en el retiro", money(S.metaVal, S.metaCur)],
+    ["Edad actual a retiro", (S.edad&&S.edadRet)?(S.edad+" a "+S.edadRet+" años"):"—"],
+    ["Incluye pensión de la CCSS", S.caja==="si"?"Sí":"No"],
+    ["Tipo de cambio usado", "₡"+fmt(S.tc)+" / $1"]
+  ];
+  var paramRows=params.map(function(p){ return '<div style="display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #262C34;padding:6px 0;"><span style="color:#9AA1AB;font-size:13px;">'+pdfEsc(p[0])+'</span><span style="color:#FEF9F3;font-weight:700;font-size:13px;white-space:nowrap;">'+pdfEsc(p[1])+'</span></div>'; }).join("");
+  function conMes(v){ v=(v||"").replace(/\s*\/\s*mes$/i,""); return v?(v+"/mes"):""; }
+  var a15=conMes(pdfDom("r-aporte15")), combo=conMes(pdfDom("r-aporte-combo"));
+  var mejoras="";
+  if(a15||combo){
+    mejoras='<div style="margin-top:20px;"><div style="font-size:13px;font-weight:700;color:#556DFB;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;">Cómo baja tu cuota</div>'+
+      (a15?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #262C34;"><span style="color:#9AA1AB;font-size:13px;">Creciendo al 15% nominal (12% real)</span><span style="font-weight:700;font-size:13px;">'+pdfEsc(a15)+'</span></div>':'')+
+      (combo?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #262C34;"><span style="color:#9AA1AB;font-size:13px;">Con más crecimiento y mejor tasa de retiro</span><span style="font-weight:700;font-size:13px;color:#63FCAF;">'+pdfEsc(combo)+'</span></div>':'')+
+      '</div>';
+  }
+  var node=document.createElement("div");
+  node.id="__planrep";
+  node.style.cssText="position:fixed;left:-10000px;top:0;width:720px;background:#15191E;color:#FEF9F3;font-family:'Bai Jamjuree',sans-serif;padding:34px;box-sizing:border-box;";
+  node.innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #63FCAF;padding-bottom:14px;margin-bottom:18px;">'+
+      '<div><div style="font-size:24px;font-weight:700;">Empowered Investor</div><div style="font-size:13px;color:#9AA1AB;margin-top:2px;">Tu plan de retiro · en plata de hoy</div></div>'+
+      '<div style="text-align:right;font-size:13px;color:#9AA1AB;">'+pdfEsc(fecha)+(nombre?'<div style="color:#FEF9F3;font-weight:700;font-size:15px;margin-top:5px;">'+pdfEsc(nombre)+'</div>':'')+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:14px;margin-bottom:18px;">'+
+      '<div style="flex:1;background:#1B2026;border:1px solid #262C34;border-radius:16px;padding:16px 18px;"><div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA1AB;">Necesitás acumular</div><div style="font-size:29px;font-weight:800;margin-top:6px;">'+pdfEsc(capital)+'</div>'+(capEq?'<div style="font-size:13px;color:#9AA1AB;margin-top:3px;">'+pdfEsc(capEq)+'</div>':'')+'</div>'+
+      '<div style="flex:1;background:rgba(99,252,175,.06);border:1px solid #63FCAF;border-radius:16px;padding:16px 18px;"><div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA1AB;">Aporte mensual</div><div style="font-size:34px;font-weight:800;color:#63FCAF;margin-top:6px;">'+pdfEsc(aporte)+'</div>'+(aporteEq?'<div style="font-size:13px;color:#9AA1AB;margin-top:3px;">'+pdfEsc(aporteEq)+'</div>':'')+'</div>'+
+    '</div>'+
+    '<div style="font-size:13px;font-weight:700;color:#556DFB;letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;">Tus datos</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 30px;">'+paramRows+'</div>'+
+    mejoras+
+    '<div style="font-size:10.5px;color:#6b7280;line-height:1.5;margin-top:24px;border-top:1px solid #262C34;padding-top:12px;">Todo en plata de hoy (rendimientos reales). Estimación educativa a partir de los datos que ingresaste; no es asesoría financiera. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo. Empowered Investor.</div>';
+  document.body.appendChild(node);
+  return node;
+}
+function makePlanPDF(nombre){
+  return ensurePdfLibs().then(function(){
+    var node=buildPlanReport(nombre);
+    var fonts=(document.fonts && document.fonts.ready)?document.fonts.ready:Promise.resolve();
+    return fonts.then(function(){ return new Promise(function(r){ setTimeout(r,60); }); }).then(function(){
+      var nodeW=node.offsetWidth, bounds=[0];
+      for(var k=0;k<node.children.length;k++){ bounds.push(node.children[k].offsetTop); }
+      bounds.push(node.scrollHeight);
+      bounds=bounds.filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(a,b){return a-b;});
+      return html2canvas(node,{backgroundColor:"#15191E",scale:3,useCORS:true,logging:false,windowWidth:nodeW,width:nodeW}).then(function(canvas){
+        node.remove();
+        var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({unit:"mm",format:"a4"});
+        var pageW=210,pageH=297,cw=canvas.width,ch=canvas.height,pxPerMm=cw/pageW,pageHpx=Math.floor(pageH*pxPerMm);
+        var factor=cw/nodeW, bpx=bounds.map(function(b){ return Math.round(b*factor); });
+        var startY=0, first=true, guard=0;
+        while(startY<ch-1 && guard++<40){
+          var maxEnd=startY+pageHpx, end=-1;
+          for(var bi=0;bi<bpx.length;bi++){ if(bpx[bi]>startY+4 && bpx[bi]<=maxEnd) end=bpx[bi]; }
+          if(end<=startY) end=Math.min(maxEnd,ch);
+          var sliceH=end-startY;
+          var tmp=document.createElement("canvas"); tmp.width=cw; tmp.height=sliceH;
+          var t=tmp.getContext("2d"); t.fillStyle="#15191E"; t.fillRect(0,0,cw,sliceH); t.drawImage(canvas,0,startY,cw,sliceH,0,0,cw,sliceH);
+          if(!first) doc.addPage();
+          doc.setFillColor(21,25,30); doc.rect(0,0,pageW,pageH,"F");
+          doc.addImage(tmp.toDataURL("image/jpeg",0.95),"JPEG",0,0,pageW,sliceH/pxPerMm);
+          first=false; startY=end;
+        }
+        return doc;
+      });
+    }).catch(function(e){ if(node&&node.parentNode) node.remove(); throw e; });
+  });
+}
+function abrirPdfForm(){
+  var b=byId("b-pdf"); if(b) b.style.display="none";
+  byId("pdf-form").innerHTML =
+    '<div class="card">'
+    + '<div class="campo"><label for="p-nom">Tu nombre</label><input id="p-nom" autocomplete="name"></div>'
+    + '<div class="campo"><label for="p-cor">Tu mejor correo</label><input id="p-cor" inputmode="email" autocomplete="email" placeholder="vos@correo.com"></div>'
+    + '<button class="btn" id="p-send">Descargar mi plan →</button>'
+    + '<div class="warn" id="p-warn" style="display:none">Poné tu nombre y un correo válido.</div>'
+    + '</div>';
+  byId("p-send").addEventListener("click", function(){
+    var nombre=byId("p-nom").value.trim(), correo=byId("p-cor").value.trim();
+    if(!(nombre && correo && correo.indexOf("@")>-1)){ byId("p-warn").style.display="block"; return; }
+    var btn=byId("p-send"); btn.disabled=true;
+    var st=byId("pdf-status"); st.textContent="Generando tu PDF…"; st.style.color="var(--gris-sec)";
+    enviarLead("descarga_pdf", { nombre:nombre, correo:correo });
+    makePlanPDF(nombre).then(function(doc){
+      doc.save("plan-de-retiro-"+slugNombre(nombre)+".pdf");
+      st.textContent="✓ ¡Listo! Revisá tu carpeta de descargas."; st.style.color="var(--menta)";
+      byId("pdf-form").innerHTML="";
+    }).catch(function(){
+      btn.disabled=false; st.textContent="No se pudo generar el PDF. Probá de nuevo."; st.style.color="#e0525a";
+    });
+  });
+}
+
 // ===== INIT =====
 restaurar();
 togglesAbiertos = S.toggles || [];
@@ -1038,6 +1160,7 @@ byId("b-caja-si").addEventListener("click", function(){ byId("caja-form").style.
 byId("b-caja-no").addEventListener("click", saltarCaja);
 byId("b-caja-calc").addEventListener("click", calcularCaja);
 byId("b-acto2b").addEventListener("click", calcularAporte);
+byId("b-pdf").addEventListener("click", abrirPdfForm);
 Array.prototype.forEach.call(document.querySelectorAll("#opciones .opcion"), function(b){
   b.addEventListener("click", function(){
     S.autocal = b.getAttribute("data-cal"); guardar();
