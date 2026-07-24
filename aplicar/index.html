@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<title>Tu plan de retiro · Empowered Investor</title>
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --card:#1B2026; --bd:#262C34; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:300; min-height:100vh;}
+  .wrap{width:100%; max-width:680px; margin:0 auto; padding:22px 20px 60px;}
+  .marca{display:block; text-align:center; margin:6px 0 24px;}
+  .marca img{width:150px; max-width:44%; height:auto;}
+  h1{font-size:clamp(26px,5.4vw,40px); font-weight:700; line-height:1.14; letter-spacing:-.01em; text-align:center;}
+  h1 em{color:var(--menta); font-style:normal;}
+  .sub{font-size:clamp(15px,2.4vw,18px); line-height:1.55; color:var(--gris); font-weight:400; text-align:center; margin:16px auto 0; max-width:600px;}
+
+  /* Reproductor */
+  .player{position:relative; margin:28px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
+  /* En desktop el video se agranda más allá de la columna de texto, centrado en la pantalla */
+  @media(min-width:860px){ .player{ width:min(1060px, calc(100vw - 60px)); margin-left:50%; transform:translateX(-50%); } }
+  .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
+  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.72), rgba(9,11,14,.94)); cursor:pointer; text-align:center; padding:20px;}
+  .poster-ov .pb{width:78px; height:78px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
+    font-size:30px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35); transition:transform .15s;}
+  .poster-ov:hover .pb{transform:scale(1.06);}
+  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
+  .poster-ov .ps{font-size:13px; color:var(--gris-sec);}
+  .vbar{position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(255,255,255,.12);}
+  .vbar-fill{height:100%; width:0; background:var(--menta); transition:width .2s linear;}
+  .mutebtn,.fsbtn{position:absolute; bottom:14px; background:rgba(9,11,14,.6); color:var(--crema); border:1px solid var(--bd);
+    border-radius:999px; width:40px; height:40px; font-size:17px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; line-height:1;}
+  .mutebtn{right:12px;} .fsbtn{right:60px; font-size:20px;}
+  .mutebtn:hover,.fsbtn:hover{border-color:var(--menta); color:var(--menta);}
+  /* Pantalla completa: el reproductor llena la pantalla */
+  .player:fullscreen{width:100vw; height:100vh; max-width:none; aspect-ratio:auto; border:none; border-radius:0; margin:0; transform:none;}
+  .player:-webkit-full-screen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0; transform:none;}
+  .player:fullscreen video,.player:-webkit-full-screen video{object-fit:contain;}
+
+  /* Gate */
+  .gate{margin:20px auto 0; max-width:560px; text-align:center; background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px;
+    transition:background .4s ease, border-color .4s ease;}
+  .gate .lk{font-size:30px;}
+  .gate .gt{font-size:17px; font-weight:700; color:var(--crema); margin-top:6px;}
+  .gate .gs{font-size:14px; color:var(--gris-sec); margin-top:6px;}
+  .gate.done{border-color:var(--menta); background:rgba(99,252,175,.07);}
+  .gate.done .gt{color:var(--menta);}
+  /* CTA que aparece al desbloquear (fade suave) */
+  .gatecta{display:inline-flex; align-items:center; justify-content:center; min-height:48px; margin-top:16px; padding:0 28px;
+    background:var(--menta); color:var(--tinta); font-family:inherit; font-size:16px; font-weight:700; text-decoration:none;
+    border-radius:999px; opacity:0; transform:translateY(8px); transition:opacity .5s ease, transform .5s ease;}
+  .gate.done .gatecta{opacity:1; transform:none;}
+  .gatecta:hover{filter:brightness(.94);}
+
+  /* Desbloqueado / form */
+  .panel{margin:26px 0 0; background:var(--card); border:1px solid var(--bd); border-radius:18px; padding:24px 22px;}
+  .panel h2{font-size:clamp(21px,3.4vw,27px); font-weight:700; line-height:1.2;}
+  .panel .lead{font-size:15.5px; line-height:1.55; color:var(--gris); font-weight:400; margin:8px 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--gris-sec); letter-spacing:.02em; margin-bottom:5px;}
+  .field input,.field select,.field textarea{width:100%; background:#0E1216; border:1px solid var(--bd); color:var(--crema);
+    font-family:inherit; font-size:16px; border-radius:11px; padding:11px 13px; outline:none;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--menta);}
+  .field textarea{min-height:80px; resize:vertical; font-weight:400;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:520px){ .row2{grid-template-columns:1fr;} }
+  .cta{width:100%; background:var(--menta); color:var(--tinta); border:none; border-radius:999px; font-family:inherit;
+    font-size:17px; font-weight:700; padding:15px 20px; cursor:pointer; margin-top:6px; transition:opacity .15s;}
+  .cta:hover{opacity:.92;} .cta:disabled{opacity:.5; cursor:default;}
+  .fstatus{font-size:13.5px; margin-top:12px; line-height:1.5; text-align:center; min-height:16px;}
+  .fstatus.err{color:#E0525A;} .fstatus.busy{color:var(--gris-sec);}
+  .hidden{display:none;}
+
+  .booking h2{text-align:center;}
+  .cal-wrap{margin-top:16px; border-radius:14px; overflow:hidden; min-height:640px;}
+  .callink{display:block; text-align:center; margin-top:14px; color:var(--menta); font-size:14px; text-decoration:none;}
+
+  /* Testimonios */
+  .testi{margin-top:46px;}
+  .testi h2{text-align:center; font-size:clamp(19px,3.2vw,25px); font-weight:700; line-height:1.25; margin-bottom:20px;}
+  /* Carrusel de testimonios (tarjetas de texto legible + foto del cliente) */
+  .tcarousel{position:relative;}
+  .tcard{display:none; gap:22px; background:#1C2127; border:1px solid var(--bd); border-radius:16px; padding:24px 24px;}
+  .tcard.active{display:flex; animation:tfade .4s ease;}
+  @keyframes tfade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .tcard .photo{flex:0 0 auto; width:112px; height:142px; margin-top:30px; border-radius:12px; object-fit:cover; object-position:top center; background:#0E1216;}
+  .tcard .body{flex:1; min-width:0;}
+  .tcard .qmark{color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:38px; line-height:.1; height:18px; font-weight:700;}
+  .tcard .quote{font-size:15px; line-height:1.62; color:var(--crema); font-weight:400; margin:12px 0 16px;}
+  .tcard .name{font-size:15.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:13px; color:var(--gris-sec); margin-top:2px;}
+  @media(max-width:560px){
+    .tcard{flex-direction:column; align-items:center; text-align:center; gap:14px; padding:22px 18px;}
+    .tcard .photo{width:74px; height:74px; margin-top:0; border-radius:50%;}
+    .tcard .qmark{height:14px; font-size:32px;}
+  }
+  .tnav{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;}
+  .tbtn{background:rgba(255,255,255,.04); border:1px solid var(--bd); color:var(--crema); width:40px; height:40px; border-radius:50%;
+    font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+  .tbtn:hover{border-color:var(--menta); color:var(--menta);}
+  .dots{display:flex; justify-content:center; flex-wrap:wrap; gap:8px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--bd); border:none; cursor:pointer; padding:0; transition:background .2s;}
+  .dot.on{background:var(--menta);}
+
+  .foot{font-size:12px; color:var(--gris-sec); line-height:1.6; text-align:center; margin-top:40px; border-top:1px solid var(--bd); padding-top:22px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="marca"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></div>
+
+  <h1>Descubrí <em>cuánto necesitás</em> para retirarte y el aporte exacto para lograrlo</h1>
+  <p class="sub">Mirá el video: te muestro, con la calculadora en pantalla, cómo sacar tu número y tu plan paso a paso.</p>
+
+  <!-- VIDEO -->
+  <div class="player" id="player">
+    <video id="vsl" playsinline preload="metadata" oncontextmenu="return false">
+      <source src="retiro.mp4" type="video/mp4">
+      Tu navegador no soporta video.
+    </video>
+    <div class="poster-ov" id="playov">
+      <div class="pb">▶</div>
+      <div class="pt">Reproducir con sonido</div>
+    </div>
+    <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+    <button class="mutebtn hidden" id="mutebtn" title="Silenciar / activar sonido">🔊</button>
+    <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
+  </div>
+
+  <!-- GATE / DESBLOQUEO (la mecánica se comunica solo aquí) -->
+  <div class="gate" id="gate">
+    <div class="lk" id="gatelk">🔒</div>
+    <div class="gt" id="gatetitle">Tu aplicación se desbloquea al final del video</div>
+    <div class="gs" id="gatesub">Reproducí el video para empezar.</div>
+    <a class="gatecta hidden" id="gatecta" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos" target="_blank" rel="noopener">Aplicar para mi llamada →</a>
+  </div>
+
+  <!-- TESTIMONIOS -->
+  <section class="testi">
+    <h2>Profesionales como vos ya confían en nosotros</h2>
+    <div class="tcarousel" id="tcarousel">
+      <div class="tcard active">
+        <img class="photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo, lo que me brindó mayor confianza y claridad. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente. Sin duda, recomendaría su servicio a cualquier persona interesada en empezar a invertir con seguridad y acompañamiento profesional.</p>
+          <div class="name">Andrés Reyes</div>
+          <div class="role">Senior Vice President, Citibank</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas. Ha sido una experiencia formativa y transformadora en mi relación con el dinero.</p>
+          <div class="name">Mariana Peña</div>
+          <div class="role">Ginecóloga UCR, CCSS</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Siempre hemos estado en una posición ventajosa para tomar decisiones y aprovechar el capital para distintas necesidades personales. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+          <div class="name">Javier Vargas</div>
+          <div class="role">Business Development, TAPP</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y puedo decir que me siento muy tranquila y confiada con su asesoría. Desde el primer encuentro se notó lo apasionado que es con el tema. El dinero siempre es delicado, y encontrar a una persona que le dé una perspectiva tan integral ha sido muy valioso. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+          <div class="name">Maricruz Linares</div>
+          <div class="role">MSc People Management · Universidad de Navarra</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Mi experiencia con Empowered Investor ha sido verdaderamente transformadora. No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso hacia los mercados bursátiles. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas con paciencia y profesionalismo. Lo que más valoro es el enfoque educativo combinado con un servicio completamente personalizado. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas y construir un futuro con mayor libertad y seguridad.</p>
+          <div class="name">Andrés Castro</div>
+          <div class="role">Founder &amp; CEO, CADMI</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+          <div class="name">Ramsés Espinoza</div>
+          <div class="role">Founder &amp; CEO, CocoJamboo</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy contenta con el servicio de Empowered Investor. Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones. Ha sido un gran paso para ampliar mi portafolio y atreverme a probar un tipo de inversión un poco más arriesgada, con la confianza de que cuento con una persona que toma decisiones inteligentes, estratégicas y procurando siempre lo mejor para mí.</p>
+          <div class="name">Mónica Blanco</div>
+          <div class="role">Strategy Director, PHD Costa Rica</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José no solo me ayudó a invertir, sino que se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Gracias a su ayuda, hoy no solo estoy invirtiendo en la bolsa, sino también en bienes raíces. Estoy demasiado contenta de haber tomado la decisión de empezar y de haber contado con un acompañamiento tan bueno y profesional.</p>
+          <div class="name">Anne Baudrit</div>
+          <div class="role">Advertising Designer, JLL Real Estate</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad. Desde que invierto con ellos ha cambiado drásticamente mi manera de planear financieramente para el futuro.</p>
+          <div class="name">Agustín Fallas</div>
+          <div class="role">Fotógrafo</div>
+        </div>
+      </div>
+    </div>
+    <div class="tnav">
+      <button class="tbtn" id="cprev" type="button" aria-label="Anterior">‹</button>
+      <div class="dots" id="dots"></div>
+      <button class="tbtn" id="cnext" type="button" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+
+  <p class="foot">Empowered Investor · Herramienta educativa. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo. Todo se muestra en plata de hoy (rendimientos reales).</p>
+</div>
+
+<script>
+"use strict";
+(function(){
+  // Segundo del video en que se desbloquea la aplicación.
+  // TODO: ajustar según la retención real del video (si el 50% de la
+  // audiencia cae antes del minuto 12, bajar este valor).
+  const UNLOCK_SECONDS = 720;
+  var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
+
+  function byId(id){ return document.getElementById(id); }
+  function track(ev, data){ try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){} }
+  function fmtT(s){ s=Math.max(0,Math.floor(s||0)); var m=Math.floor(s/60), ss=s%60; return m+":"+(ss<10?"0":"")+ss; }
+  function progressText(t){ return "Vas en "+fmtT(t)+" · Tu progreso queda guardado si volvés después"; }
+
+  var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
+  var gate=byId("gate"), gatelk=byId("gatelk"), gatetitle=byId("gatetitle"), gatesub=byId("gatesub"), gatecta=byId("gatecta");
+
+  var unlocked = localStorage.getItem("vsl_unlocked")==="true";
+  var maxReached = parseFloat(localStorage.getItem("vsl_progress")||"0") || 0;
+  var started=false, lastSave=0;
+  var miles={25:false,50:false,75:false,100:false};
+
+  // CTA del candado → Calendly existente
+  gatecta.href = CALENDLY_URL + "?utm_source=vsl";
+  gatecta.addEventListener("click", function(){ track("click_aplicar", {}); });
+
+  // Estado inicial: desbloqueado de antes, o mostrar el progreso guardado
+  if(unlocked){ showUnlocked(true); }
+  else if(maxReached>0){ gatesub.textContent = progressText(maxReached); }
+
+  // Reproducir (con sonido) desde el overlay
+  playov.addEventListener("click", function(){
+    if(!started){ started=true;
+      if(maxReached>5 && !unlocked){ try{ V.currentTime=Math.min(maxReached, UNLOCK_SECONDS-1); }catch(e){} }
+      track("vsl_play", {});
+    }
+    V.muted=false; V.play();
+    playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
+  });
+  // Click en el video = play/pausa
+  V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
+  mutebtn.addEventListener("click", function(){ V.muted=!V.muted; mutebtn.textContent=V.muted?"🔇":"🔊"; });
+  // Pantalla completa
+  fsbtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+    if(fsEl){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); return; }
+    if(player.requestFullscreen){ player.requestFullscreen(); }
+    else if(player.webkitRequestFullscreen){ player.webkitRequestFullscreen(); }
+    else if(V.webkitEnterFullscreen){ V.webkitEnterFullscreen(); } // iOS: solo el <video>
+  });
+
+  // Reanudar desde el progreso guardado (si aún no está desbloqueado)
+  V.addEventListener("loadedmetadata", function(){
+    if(!unlocked && maxReached>5){ try{ V.currentTime=Math.min(maxReached, (V.duration||UNLOCK_SECONDS)-0.5); }catch(e){} }
+  });
+
+  // Anti-salto: si intenta adelantarse más allá de lo ya visto (y no está desbloqueado), lo devolvemos
+  V.addEventListener("seeking", function(){
+    if(!unlocked && V.currentTime > maxReached + 2){ V.currentTime = maxReached; }
+  });
+
+  function saveProgress(force){
+    var now=Date.now();
+    if(force || now-lastSave>=5000){ lastSave=now; localStorage.setItem("vsl_progress", String(Math.floor(maxReached))); }
+  }
+
+  V.addEventListener("timeupdate", function(){
+    var t=V.currentTime, dur=V.duration||796;
+    if(t>maxReached) maxReached=t;
+    vfill.style.width = Math.min(100,(t/dur)*100) + "%";
+    saveProgress(false); // guarda el progreso ~cada 5 s
+    // hitos GA4
+    var pct=(t/dur)*100;
+    [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
+    // candado
+    if(!unlocked){
+      if(t>=UNLOCK_SECONDS){ unlock(); }
+      else{ gatesub.textContent = progressText(t); }
+    }
+  });
+  V.addEventListener("pause", function(){ saveProgress(true); });
+  V.addEventListener("ended", function(){
+    if(!unlocked) unlock(); // si termina el video, ya puede aplicar
+    mutebtn.classList.add("hidden"); fsbtn.classList.add("hidden");
+    playov.querySelector(".pt").textContent="Volver a ver";
+    playov.classList.remove("hidden");
+  });
+
+  function unlock(){
+    if(unlocked) return; unlocked=true;
+    localStorage.setItem("vsl_unlocked","true");
+    saveProgress(true);
+    track("vsl_desbloqueo", {});
+    showUnlocked(false);
+  }
+
+  // El cuadro del candado transiciona (fade) a estado desbloqueado con el CTA
+  function showUnlocked(silent){
+    gatelk.textContent="✅";
+    gatetitle.textContent="¡Listo! Ya podés aplicar";
+    gatesub.textContent="";
+    gatecta.classList.remove("hidden");
+    void gate.offsetWidth; // fuerza reflow para que el fade se anime
+    gate.classList.add("done");
+    if(!silent){ setTimeout(function(){ gate.scrollIntoView({behavior:"smooth", block:"center"}); }, 300); }
+  }
+
+  // ===== Carrusel de testimonios =====
+  (function(){
+    var wrap=byId("tcarousel"); if(!wrap) return;
+    var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("dots");
+    for(var k=0;k<n;k++){ (function(idx){ var d=document.createElement("button"); d.className="dot"+(idx===0?" on":""); d.setAttribute("aria-label","Testimonio "+(idx+1)); d.onclick=function(){ go(idx); reset(); }; dots.appendChild(d); })(k); }
+    function go(idx){ i=(idx+n)%n; for(var j=0;j<n;j++){ cards[j].classList.toggle("active", j===i); dots.children[j].classList.toggle("on", j===i); } }
+    byId("cprev").onclick=function(){ go(i-1); reset(); };
+    byId("cnext").onclick=function(){ go(i+1); reset(); };
+    var timer=setInterval(function(){ go(i+1); }, 12000);
+    function reset(){ clearInterval(timer); timer=setInterval(function(){ go(i+1); }, 12000); }
+    wrap.addEventListener("mouseenter", function(){ clearInterval(timer); });
+    wrap.addEventListener("mouseleave", function(){ reset(); });
+    var x0=null;
+    wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
+    wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
+  })();
+})();
+</script>
+</body>
+</html>
