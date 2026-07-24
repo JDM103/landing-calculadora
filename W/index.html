@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<title>Evidencia · Estrategia de máximos · Empowered Investor</title>
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
+    --gris:#E2E2E2; --gris-sec:#9AA1AB; --card:#1B2026; --bd:#262C34; --rojo:#E0525A; --amber:#E0A020;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:400;
+    min-height:100vh; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 20px 80px;}
+  .marca{display:block; text-align:center; margin:30px 0 8px;}
+  .marca img{width:150px; max-width:44%; height:auto;}
+
+  .hero{text-align:center; padding:26px 0 10px;}
+  .kicker{font-size:12px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--menta);}
+  h1{font-size:clamp(28px,6vw,44px); font-weight:700; line-height:1.12; letter-spacing:-.01em; margin:12px 0;}
+  h1 em{font-style:normal; color:var(--menta);}
+  .lede{font-size:clamp(16px,2.4vw,19px); color:var(--gris); line-height:1.55; max-width:680px; margin:0 auto; font-weight:400;}
+
+  .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:30px 0 8px;}
+  @media (max-width:640px){ .kpis{grid-template-columns:1fr;} }
+  .kpi{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 18px; text-align:center;}
+  .kpi .v{font-size:clamp(26px,5vw,34px); font-weight:700; color:var(--menta); line-height:1.05;}
+  .kpi .v.peri{color:var(--peri);}
+  .kpi .k{font-size:12.5px; color:var(--gris-sec); margin-top:6px; line-height:1.4;}
+
+  section{margin-top:52px;}
+  h2{font-size:clamp(21px,3.6vw,27px); font-weight:700; line-height:1.2;}
+  h2 .n{color:var(--peri); font-weight:700; margin-right:8px;}
+  .sub{font-size:15.5px; color:var(--gris); line-height:1.6; margin-top:10px; font-weight:400; max-width:760px;}
+  .sub b{color:var(--crema); font-weight:600;}
+
+  .card{background:var(--card); border:1px solid var(--bd); border-radius:18px; padding:20px; margin-top:18px;}
+  .how{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px;}
+  .how.tri{grid-template-columns:repeat(3,1fr);}
+  @media (max-width:640px){ .how, .how.tri{grid-template-columns:1fr;} }
+  .how .box{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px;}
+  .how .box .t{font-size:14px; font-weight:700; color:var(--menta); letter-spacing:.02em;}
+  .how .box.out .t{color:var(--gris-sec);}
+  .how .box p{font-size:14.5px; color:var(--gris); line-height:1.55; margin-top:8px;}
+
+  /* Controles */
+  .controls{display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; margin-bottom:6px;}
+  .cgroup .clbl{font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
+  .seg{display:inline-flex; max-width:100%; overflow-x:auto; background:var(--tinta); border:1px solid var(--bd); border-radius:999px; padding:3px; gap:2px;}
+  .seg button{background:transparent; border:none; color:var(--gris); font-family:inherit; font-size:14px; font-weight:700;
+    padding:8px 15px; border-radius:999px; cursor:pointer; white-space:nowrap; transition:all .12s ease;}
+  .seg button.on{background:var(--menta); color:var(--tinta);}
+  .seg.peri button.on{background:var(--peri); color:#fff;}
+
+  /* Tabla de métricas */
+  .mtable{width:100%; border-collapse:collapse; margin-top:18px; font-size:15px;}
+  .mtable th,.mtable td{padding:12px 10px; text-align:right; border-bottom:1px solid var(--bd);}
+  .mtable th:first-child,.mtable td:first-child{text-align:left;}
+  .mtable thead th{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--gris-sec); font-weight:700;}
+  .mtable td.lbl{color:var(--gris-sec); font-weight:600;}
+  .mtable .est{color:var(--menta); font-weight:700; font-size:17px;}
+  .mtable .bh{color:var(--gris); font-weight:600;}
+  .mtable .win{color:var(--menta);} .mtable .lose{color:var(--rojo);}
+  .chartbox{position:relative; height:360px; margin-top:20px;}
+  .chartbox.sm{height:300px;}
+  .legendrow{display:flex; gap:18px; justify-content:center; margin-top:10px; font-size:13px; color:var(--gris); flex-wrap:wrap;}
+  .legendrow .li{display:inline-flex; align-items:center; gap:7px;}
+  .legendrow .sw{width:16px; height:4px; border-radius:2px; display:inline-block;}
+  .legendrow .sw.dash{background:repeating-linear-gradient(90deg,var(--gris-sec) 0 6px,transparent 6px 10px); height:3px;}
+  .legendrow .sw.dash.a{background:repeating-linear-gradient(90deg,var(--amber) 0 6px,transparent 6px 10px);}
+  .note{font-size:13px; color:var(--gris-sec); line-height:1.55; margin-top:14px;}
+
+  /* Heatmap */
+  .heat{overflow-x:auto; margin-top:16px;}
+  table.hm{border-collapse:collapse; margin:0 auto; font-size:13px;}
+  table.hm th,table.hm td{padding:8px 9px; text-align:center; border:1px solid var(--tinta);}
+  table.hm thead th{color:var(--gris-sec); font-weight:700; font-size:11px;}
+  table.hm td.rowh{color:var(--gris-sec); font-weight:700; background:var(--card); border-color:var(--bd);}
+  table.hm td.cell{color:#0b0e12; font-weight:700; min-width:44px;}
+  .hmcap{font-size:12px; color:var(--gris-sec); text-align:center; margin-top:8px;}
+
+  /* Stocks */
+  .stable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px;}
+  .stable th,.stable td{padding:8px 8px; text-align:right; border-bottom:1px solid var(--bd);}
+  .stable th:first-child,.stable td:first-child{text-align:left;}
+  .stable thead th{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--gris-sec); font-weight:700; position:sticky; top:0; background:var(--tinta);}
+  .stable td.tk{font-weight:700; color:var(--crema);}
+  .stable .g{color:var(--menta);} .stable .r{color:var(--rojo);} .stable .muted{color:var(--gris-sec);}
+  .stwrap{max-height:520px; overflow-y:auto; margin-top:16px; border:1px solid var(--bd); border-radius:14px;}
+  .pill{display:inline-block; font-size:12px; font-weight:700; padding:3px 10px; border-radius:999px; margin:2px 4px 2px 0;}
+  .pill.g{background:rgba(99,252,175,.12); color:var(--menta); border:1px solid rgba(99,252,175,.4);}
+  .pill.a{background:rgba(224,160,32,.12); color:var(--amber); border:1px solid rgba(224,160,32,.4);}
+
+  .disc{font-size:12px; color:var(--gris-sec); line-height:1.6; margin-top:40px; border-top:1px solid var(--bd); padding-top:22px;}
+  .loading{text-align:center; color:var(--gris-sec); padding:40px; font-size:15px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="marca" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
+
+  <div class="hero">
+    <div class="kicker">Evidencia empírica · Data diaria 1990–2025</div>
+    <h1>La estrategia de <em>máximos</em>, a la luz de los datos</h1>
+    <p class="lede">Una regla simple de tendencia: seguí invertido mientras el mercado esté cerca de sus máximos, y hacete a un lado cuando la tendencia se rompe. Acá está el backtest completo, sin adornos.</p>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <!-- CÓMO FUNCIONA -->
+  <section>
+    <h2><span class="n">01</span>La regla</h2>
+    <p class="sub">Al cierre de cada período de decisión, se mide qué tan lejos está el índice de su <b>máximo de los últimos 9 meses</b>. Usa <b>dos umbrales</b> —uno para entrar, otro para salir— con una banda intermedia que evita entrar y salir por ruido. No intenta adivinar el techo ni el piso: solo sigue la tendencia.</p>
+    <div class="how">
+      <div class="box"><div class="t">▲ Entra (invertido)</div><p>Cuando el precio vuelve a <b style="color:var(--crema)">6% o menos</b> de su máximo de 9 meses, entra al activo.</p></div>
+      <div class="box out"><div class="t">■ Sale (a efectivo)</div><p>Cuando cae <b style="color:var(--crema)">más de 18%</b> por debajo de ese máximo, se pasa a <b style="color:var(--crema)">efectivo</b> (letras del Tesoro, BIL).</p></div>
+    </div>
+    <p class="note">Entre 6% y 18% mantiene la posición actual: esa banda de <b style="color:var(--gris)">histéresis</b> es la que evita el vaivén. Los retornos incluyen 0.10% de costo por operación. El efectivo rinde la tasa de las letras del Tesoro de EE. UU. (BIL; ~2% antes de 2007). Sin look-ahead: la señal de un período se ejecuta en el siguiente.</p>
+  </section>
+
+  <!-- COMPARADOR INTERACTIVO -->
+  <section>
+    <h2><span class="n">02</span>Estrategia vs. comprar y mantener</h2>
+    <p class="sub">Elegí el activo y cada cuánto se toma la decisión. Todo se compara contra <b>comprar y mantener</b> (B&amp;H) el mismo activo, sobre la misma ventana de tiempo.</p>
+    <div class="card">
+      <div class="controls">
+        <div class="cgroup"><div class="clbl">Activo</div><div class="seg" id="seg-asset"></div></div>
+        <div class="cgroup"><div class="clbl">Decisión</div><div class="seg peri" id="seg-freq"></div></div>
+      </div>
+      <table class="mtable" id="mtable"></table>
+      <div class="chartbox"><canvas id="chart-eq"></canvas></div>
+      <div class="legendrow">
+        <span class="li"><span class="sw" style="background:var(--menta)"></span> Estrategia</span>
+        <span class="li"><span class="sw dash"></span> Comprar y mantener</span>
+      </div>
+      <p class="note">Crecimiento de $100 invertidos, en escala logarítmica (cada línea de la grilla es 10×). Rendimiento total, sin ajustar por inflación.</p>
+      <div class="chartbox sm" style="margin-top:26px"><canvas id="chart-dd"></canvas></div>
+      <p class="note">Caída desde el máximo (drawdown). El área de la estrategia es mucho más superficial: ahí está el valor de hacerse a un lado.</p>
+
+      <div class="chartbox sm" style="margin-top:26px"><canvas id="chart-signal"></canvas></div>
+      <div class="legendrow">
+        <span class="li"><span class="sw" style="background:var(--menta)"></span> Subyacente invertido (dentro)</span>
+        <span class="li"><span class="sw" style="background:var(--gris-sec)"></span> En efectivo (fuera)</span>
+        <span class="li"><span class="sw dash a"></span> Umbral de salida</span>
+      </div>
+      <p class="note">El momento exacto de la señal. La línea es el <b id="sig-ref">Nasdaq</b> (crecimiento de $100); se pinta <b style="color:var(--menta)">verde cuando la estrategia está invertida</b> y <b style="color:var(--gris-sec)">gris cuando pasó a efectivo</b>. La <b style="color:var(--amber)">línea punteada</b> es el <b>umbral</b>: el máximo de 9 meses menos 18%. Cuando el subyacente cae <b>por debajo</b> del umbral se da la señal de salida (off); vuelve a entrar (on) al recuperar hasta 6% del máximo. Las bandas rojas marcan los tramos fuera del mercado.</p>
+    </div>
+  </section>
+
+  <!-- ROBUSTEZ -->
+  <section>
+    <h2><span class="n">03</span>¿Suerte o robustez? La meseta</h2>
+    <p class="sub">Una estrategia sólida no depende de un número mágico. Acá está la métrica para cada combinación de <b>umbral de entrada × umbral de salida</b> (con la ventana que elijas). No hay un pico solitario: hay una <b>meseta amplia</b> de buenos resultados alrededor de la configuración elegida (<b style="color:var(--menta)">borde verde</b>), señal de que el edge es real y no un artefacto del ajuste.</p>
+    <div class="card">
+      <div class="controls" style="margin-bottom:14px">
+        <div class="cgroup"><div class="clbl">Activo</div><div class="seg" id="seg-hm-asset"></div></div>
+        <div class="cgroup"><div class="clbl">Ventana</div><div class="seg" id="seg-hm-window"></div></div>
+        <div class="cgroup"><div class="clbl">Métrica</div><div class="seg peri" id="seg-hm-metric"></div></div>
+      </div>
+      <div class="heat" id="heatmap"></div>
+      <p class="hmcap" id="hmcap"></p>
+    </div>
+  </section>
+
+  <!-- 05 · SIN SESGO -->
+  <section>
+    <h2><span class="n">04</span>Selección de acciones sin sesgo de supervivencia</h2>
+    <p class="sub">Hasta acá, timing <b>sobre el índice</b>. Ahora la pregunta inversa: ¿se puede <b>seleccionar acciones</b> y ganarle al comprar-y-mantener? Para probarlo <b>de verdad</b>, uso el universo histórico del S&P 500 —<b id="nb-ntick">811</b> tickers que <b>incluye a los removidos y delistados</b>, no solo los sobrevivientes de hoy— y comparo contra el índice (SPY).</p>
+    <div class="card">
+      <div class="controls" style="margin-bottom:8px">
+        <div class="cgroup"><div class="clbl">Período</div><div class="seg" id="seg-nb-period"></div></div>
+      </div>
+      <div style="overflow-x:auto"><table class="mtable" id="nb-table" style="min-width:440px"></table></div>
+      <div class="chartbox"><canvas id="chart-nb-eq"></canvas></div>
+      <p class="note">Crecimiento de $100, escala logarítmica. Carteras equiponderadas, rebalanceo mensual, costo 0.10% por lado, retornos winsorizados a ±50% (para descartar errores de datos como splits sin ajustar).</p>
+      <div class="chartbox sm" style="margin-top:24px"><canvas id="chart-nb-dd"></canvas></div>
+      <p class="note">Caída desde el máximo (drawdown) de cada estrategia.</p>
+    </div>
+    <p class="note"><b style="color:var(--menta)">La prueba de que el efecto es real:</b> la estrategia de control que compra <b>las peores</b> (menor momentum) <b>siempre pierde</b> contra el índice. Si los resultados fueran un artefacto de datos, los "peores" también brillarían — no lo hacen. El momentum es una señal genuina.</p>
+  </section>
+
+  <!-- 08 · LAS TRES VARIABLES -->
+  <section>
+    <h2><span class="n">05</span>Cómo funciona: las tres variables</h2>
+    <p class="sub">La estrategia ganadora combina <b>selección por momentum</b> con un <b>filtro de tendencia</b>. Se controla con tres perillas, y cada una tiene su razón de ser:</p>
+    <div class="how tri">
+      <div class="box"><div class="t">① Ventana de momentum</div><p><b style="color:var(--crema)">Cuántos meses de retorno pasado</b> se miran para rankear. Usamos <b style="color:var(--menta)">6 meses</b>, la que dio mejor Sharpe en el barrido. El momentum de 3–12 meses persiste: lo que subió sigue subiendo un tiempo. Muy corta = ruido; muy larga = reacciona tarde.</p></div>
+      <div class="box"><div class="t">② Cantidad de acciones</div><p><b style="color:var(--crema)">Cuántas de las mejores se compran</b> cada mes, equiponderadas. Usamos las <b style="color:var(--menta)">20</b> de mayor momentum. Pocas = más retorno pero más riesgo concentrado; muchas = más diversificado, más parecido al índice.</p></div>
+      <div class="box"><div class="t">③ Filtro de tendencia</div><p><b style="color:var(--crema)">Solo invertir cuando el Nasdaq está fuerte</b>: a <b style="color:var(--menta)">≤6% de su máximo de 52 semanas</b> se entra, y si cae <b>&gt;18%</b> por debajo se pasa todo a efectivo. Evita el "momentum crash": cuando el mercado se voltea, las acciones de momentum caen más fuerte que el resto.</p></div>
+    </div>
+    <p class="note">Rebalanceo mensual, carteras equiponderadas, 0.10% de costo por lado. La señal de un mes se ejecuta el siguiente (sin mirar el futuro). Estos parámetros (6 meses · 20 acciones · filtro 52-sem) salen del barrido de la sección 09, que muestra que le ganan al índice de forma robusta.</p>
+  </section>
+
+  <!-- 09 · EL FILTRO: VERLO Y ELEGIRLO -->
+  <section>
+    <h2><span class="n">06</span>El filtro de tendencia: verlo y elegirlo</h2>
+    <p class="sub">El filtro decide cuándo estar invertido y cuándo a efectivo, según una señal del índice. Acá podés <b>ver la señal</b> en el gráfico y <b>probar distintos filtros</b> sobre la misma estrategia de momentum (6m · top 20). El que usamos —<b>máximo de 52 semanas del Nasdaq</b>— le gana al de la media móvil clásica.</p>
+    <div class="card">
+      <div class="controls" style="margin-bottom:8px"><div class="cgroup"><div class="clbl">Tipo de filtro</div><div class="seg" id="seg-nb-filter"></div></div></div>
+      <div class="how">
+        <div class="box out"><div class="t">Sin filtro (siempre invertida)</div><p>CAGR <b style="color:var(--crema)" id="nb-fn-cagr"></b> · Sharpe <b style="color:var(--crema)" id="nb-fn-sh"></b> · peor caída <b style="color:var(--rojo)" id="nb-fn-dd"></b></p></div>
+        <div class="box"><div class="t" id="nb-fs-name">—</div><p>CAGR <b style="color:var(--crema)" id="nb-fs-cagr"></b> · Sharpe <b style="color:var(--menta)" id="nb-fs-sh"></b> · peor caída <b style="color:var(--menta)" id="nb-fs-dd"></b> · invertida <b id="nb-fs-pin"></b> del tiempo</p></div>
+      </div>
+      <div class="chartbox" id="nb-filter-box" style="margin-top:20px"><canvas id="chart-nb-filter"></canvas></div>
+      <p class="note" id="nb-filter-note"></p>
+    </div>
+    <div class="hsub2" style="margin-top:22px">Con el filtro 52-sem: cada vez que se salió del mercado — y lo que evitó</div>
+    <div style="overflow-x:auto"><table class="stable" id="nb-out-table" style="min-width:460px"></table></div>
+    <p class="note">El filtro de <b>máximo de 52 semanas</b> es selectivo: en 20 años solo se salió unas pocas veces, en los grandes desplomes. La última columna es lo que hizo el índice mientras estuvo afuera: <b style="color:var(--menta)">verde = pérdida esquivada</b>, <b style="color:var(--rojo)">rojo = subida que se perdió</b> (falsa alarma).</p>
+    <div class="card" style="margin-top:18px">
+      <div class="chartbox"><canvas id="chart-nb-year"></canvas></div>
+      <p class="note">Retorno por año calendario: <b style="color:var(--menta)">la estrategia (momentum + filtro 52-sem)</b> vs <b style="color:var(--gris-sec)">índice</b>.</p>
+    </div>
+  </section>
+
+  <!-- 10 · LAS ACCIONES -->
+  <section>
+    <h2><span class="n">07</span>Las acciones que la mueven</h2>
+    <p class="sub">La estrategia no apuesta a una sola acción: rota entre cientos a lo largo de los años. Estas son las que <b>más aportaron</b> al resultado (2005–2025) y cuánto tiempo estuvieron en cartera.</p>
+    <div class="stwrap" style="max-height:none"><table class="stable" id="nb-contrib-table"></table></div>
+    <div class="card" style="margin-top:20px">
+      <div class="chartbox"><canvas id="chart-nb-dual"></canvas></div>
+      <p class="note">Crecimiento de $100: <b style="color:var(--menta)">estrategia (momentum + filtro)</b> vs <b style="color:var(--gris-sec)">índice</b>. Escala logarítmica, 2005–2025.</p>
+    </div>
+  </section>
+
+  <!-- 11 · BARRIDO AMPLIO -->
+  <section>
+    <h2><span class="n">08</span>El barrido amplio: ¿robusta o casualidad?</h2>
+    <p class="sub">Probamos <b>toda</b> combinación de ventana de momentum × cantidad de acciones. El color compara cada una contra el índice: <b style="color:var(--menta)">verde = le gana</b>, <b style="color:var(--rojo)">rojo = pierde</b>, más intenso cuanto mayor la diferencia. Si el mapa es casi todo verde, el edge <b>no depende de un ajuste fino</b>.</p>
+    <div class="card">
+      <div class="controls" style="margin-bottom:12px"><div class="cgroup"><div class="clbl">Métrica vs índice</div><div class="seg peri" id="seg-nb-metric"></div></div></div>
+      <div class="heat" id="heatmap-nb"></div>
+      <p class="hmcap" id="hmcap-nb"></p>
+    </div>
+    <p class="note" id="nb-sweep-concl"></p>
+  </section>
+
+  <!-- 12 · SEGUIRLA HOY -->
+  <section>
+    <h2><span class="n">09</span>Seguirla hoy: el estado en vivo</h2>
+    <p class="sub">Así se traduce a la práctica del día a día. Con datos a <b id="nb-asof"></b>, el semáforo del filtro y las 20 acciones que hoy estarían en cartera:</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v" id="nb-live-status"></div><div class="k" id="nb-live-status-k"></div></div>
+      <div class="kpi"><div class="v peri" id="nb-live-above"></div><div class="k">del Nasdaq bajo su máximo de 12 meses<br>(el filtro pasa a efectivo si cae 18%)</div></div>
+      <div class="kpi"><div class="v" id="nb-live-nh">20</div><div class="k">acciones en cartera<br>las de mayor momentum hoy</div></div>
+    </div>
+    <div class="stwrap"><table class="stable" id="nb-live-table"></table></div>
+    <p class="note">Retorno de cada acción a distintos plazos (su P&amp;L). Cada fin de mes se repite el proceso: si el Nasdaq sigue cerca de sus máximos, se mantienen o rotan las 20 de mayor momentum (6 meses); si cae 18% bajo su máximo de 12 meses, todo pasa a efectivo. Lista ilustrativa del universo S&P 500; los números exactos dependen de los ajustes por dividendos y splits del proveedor de datos.</p>
+  </section>
+
+  <!-- 13 · METODOLOGÍA -->
+  <section>
+    <h2><span class="n">10</span>Metodología y datos</h2>
+    <div class="card">
+      <div class="hsub2" style="color:var(--menta)">De dónde salió la data</div>
+      <p class="sub" style="margin-top:4px">Precios mensuales reales (cierre ajustado = rendimiento total, con dividendos reinvertidos), de datos históricos de mercado. Para los índices y ETFs (SPY, QQQ, QLD, TQQQ, RSP, BIL) se usa su serie diaria real; el tramo previo al listado de los apalancados (QLD, TQQQ) se simula con rebalanceo diario sobre el Nasdaq-100 y se ancla a su precio real desde que existen.</p>
+      <div class="hsub2" style="color:var(--menta); margin-top:16px">Cómo se armó el universo SIN sesgo de supervivencia</div>
+      <p class="sub" style="margin-top:4px">El error clásico es usar solo las empresas que <b>hoy</b> están en el índice — pero eso ya "sabe" quiénes ganaron. Acá el universo son <b id="nb-meth-n">811</b> tickers: <b>todas las empresas que estuvieron en el S&P 500 en algún momento entre 1990 y 2025, incluidas las que fueron removidas, quebraron o fueron adquiridas</b>, con sus precios mientras cotizaron. Así, cada mes la estrategia podía elegir una acción que después colapsó — y se come esa pérdida, igual que en la realidad. Se descartan retornos mensuales imposibles (winsorizados a ±50%; se excluye toda acción con algún mes crudo &gt;60%) para eliminar errores de datos como splits sin ajustar o reciclaje de tickers.</p>
+      <div class="hsub2" style="color:var(--menta); margin-top:16px">La prueba de los "peores" (control)</div>
+      <p class="sub" style="margin-top:4px">Para descartar que el resultado sea un artefacto, corrimos la <b>misma</b> estrategia al revés: comprar las <b>de menor momentum</b> (las peores). Si el buen resultado viniera de errores de datos o de casualidad, los "peores" también deberían brillar. En cambio <b>pierden consistentemente</b> contra el índice (CAGR <b id="nb-meth-losers"></b> vs <b id="nb-meth-spy"></b> del índice). Eso confirma que el momentum es una señal <b>direccional real</b>: lo que sube tiende a seguir subiendo, y lo que baja, a seguir bajando.</p>
+    </div>
+  </section>
+
+  <p class="disc">
+    Documento con fines educativos y de análisis. Rendimientos históricos simulados a partir de precios reales (cierre ajustado, rendimiento total). Para QLD (2×) y TQQQ (3×), el tramo anterior a su listado real se simula con rebalanceo diario sobre el Nasdaq-100. El análisis de las 96 acciones usa los constituyentes actuales del Nasdaq-100 con datos mensuales desde 2010 (muestra sujeta a sesgo de supervivencia). Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo, incluida la posible pérdida de capital. No se garantizan retornos. Los backtests no incluyen impuestos y asumen ejecución al cierre. Empowered Investor.
+  </p>
+</div>
+
+<div id="fallback" class="loading" style="display:none">Cargando la evidencia…</div>
+
+<script src="/W/wdata.js"></script>
+<script src="/W/nobias.js"></script>
+<script>
+"use strict";
+(function(){
+  var W = window.WDATA;
+  if(!W){ document.getElementById("fallback").style.display="block"; return; }
+  var A_NOM = {SPY:"SPY · S&P 500", QQQ:"QQQ · Nasdaq-100", QLD:"QLD · Nasdaq 2×", TQQQ:"TQQQ · Nasdaq 3×"};
+  var A_SHORT = {SPY:"SPY", QQQ:"QQQ", QLD:"QLD", TQQQ:"TQQQ"};
+  var FREQ_NOM = {daily:"Diaria", weekly:"Semanal", monthly:"Mensual"};
+  var ORDER = ["SPY","QQQ","QLD","TQQQ"];
+  var st = {asset:"QQQ", freq:"monthly", hmAsset:"QQQ", hmWindow:"9", hmMetric:"sharpe", csWindow:"9", csMetric:"medSharpe", nbPeriod:"20", nbMetric:"sharpe", nbFilter:"wh"};
+  var NB_NOM={SPY:"SPY · índice (comprar y mantener)", MOM25:"Momentum 6m · top 20", DUAL:"Momentum 6m/20 + filtro 52-sem", M52:"52-week high · top 30", LOSERS:"Peores (control)", RSP:"Equiponderado (RSP · ETF real)"};
+  var NB_COL={SPY:"#9AA1AB", MOM25:"#556DFB", DUAL:"#63FCAF", M52:"#E0A020", LOSERS:"#E0525A", RSP:"#7d8794"};
+  var chNbEq=null, chNbDd=null, chNbYear=null, chNbDual=null, chNbFilter=null;
+  var C = {menta:"#63FCAF", peri:"#556DFB", gris:"#9AA1AB", rojo:"#E0525A", grid:"rgba(140,150,170,.14)", txt:"#B9C0CA"};
+  var byId = function(id){ return document.getElementById(id); };
+  var dpr = Math.max(2, Math.ceil(window.devicePixelRatio||1));
+
+  // ---- helpers de formato ----
+  function pct(x){ return (x==null)?"—":(x>0?"":"")+x.toFixed(1)+"%"; }
+  function pctS(x){ return (x==null)?"—":(x>0?"+":"")+x.toFixed(1)+"%"; }
+  function two(x){ return (x==null)?"—":x.toFixed(2); }
+
+  // ---- KPIs (QQQ mensual, headline) ----
+  function buildKpis(){
+    var q=W.assets.QQQ, s=q.freq.monthly.m, b=q.bh, pin=q.freq.monthly.pin;
+    var items=[
+      {v:two(s.sharpe), k:"Sharpe de la estrategia en QQQ<br>(vs "+two(b.sharpe)+" comprando y manteniendo)", cls:""},
+      {v:pct(s.maxdd), k:"Peor caída de la estrategia<br>(vs "+pct(b.maxdd)+" en B&amp;H)", cls:"peri"},
+      {v:pin.toFixed(0)+"%", k:"del tiempo invertido<br>el resto, a salvo en efectivo", cls:""}
+    ];
+    byId("kpis").innerHTML = items.map(function(i){
+      return '<div class="kpi"><div class="v '+i.cls+'">'+i.v+'</div><div class="k">'+i.k+'</div></div>';
+    }).join("");
+  }
+
+  // ---- segmentos ----
+  function seg(container, opts, cur, cb){
+    var c=byId(container); c.innerHTML="";
+    opts.forEach(function(o){
+      var b=document.createElement("button");
+      b.textContent=o.lbl; b.className=(o.val===cur?"on":"");
+      b.onclick=function(){ cb(o.val); };
+      c.appendChild(b);
+    });
+  }
+  function segs(){
+    seg("seg-asset", ORDER.map(function(a){return {val:a,lbl:A_SHORT[a]};}), st.asset, function(v){ st.asset=v; renderCompare(); });
+    seg("seg-freq", ["daily","weekly","monthly"].map(function(f){return {val:f,lbl:FREQ_NOM[f]};}), st.freq, function(v){ st.freq=v; renderCompare(); });
+    seg("seg-hm-asset", ORDER.map(function(a){return {val:a,lbl:A_SHORT[a]};}), st.hmAsset, function(v){ st.hmAsset=v; renderHeat(); });
+    seg("seg-hm-window", W.sweep.windows.map(function(w){return {val:String(w),lbl:w+" m"};}), st.hmWindow, function(v){ st.hmWindow=v; renderHeat(); });
+    seg("seg-hm-metric", [{val:"sharpe",lbl:"Sharpe"},{val:"cagr",lbl:"CAGR"}], st.hmMetric, function(v){ st.hmMetric=v; renderHeat(); });
+  }
+
+  // ---- tabla de métricas ----
+  function cmp(est, bh, higher){ // devuelve clase win/lose comparando estrategia vs bh
+    if(est==null||bh==null) return "";
+    var better = higher ? est>bh : est<bh;
+    return better ? "win" : "lose";
+  }
+  function renderTable(){
+    var node=W.assets[st.asset], s=node.freq[st.freq].m, b=node.bh, pin=node.freq[st.freq].pin;
+    var rows=[
+      {k:"CAGR (crecimiento anual)", e:pct(s.cagr), bv:pct(b.cagr), c:cmp(s.cagr,b.cagr,true)},
+      {k:"Sharpe (retorno / riesgo)", e:two(s.sharpe), bv:two(b.sharpe), c:cmp(s.sharpe,b.sharpe,true)},
+      {k:"Calmar (retorno / peor caída)", e:two(s.calmar), bv:two(b.calmar), c:cmp(s.calmar,b.calmar,true)},
+      {k:"Peor caída (Max Drawdown)", e:pct(s.maxdd), bv:pct(b.maxdd), c:cmp(s.maxdd,b.maxdd,true)},
+      {k:"Volatilidad anual", e:pct(s.vol), bv:pct(b.vol), c:cmp(s.vol,b.vol,false)},
+      {k:"% del tiempo invertido", e:pin.toFixed(0)+"%", bv:"100%", c:""}
+    ];
+    var h='<thead><tr><th>Métrica</th><th>Estrategia</th><th>Comprar y mantener</th></tr></thead><tbody>';
+    h+=rows.map(function(r){
+      return '<tr><td class="lbl">'+r.k+'</td><td class="est '+r.c+'">'+r.e+'</td><td class="bh">'+r.bv+'</td></tr>';
+    }).join("");
+    byId("mtable").innerHTML=h+'</tbody>';
+  }
+
+  // ---- charts ----
+  var chEq=null, chDd=null, chSigM=null;
+  function pairs(arr){ // array alineado a W.dates -> [{x,y}] saltando nulos
+    var out=[]; for(var i=0;i<arr.length;i++){ if(arr[i]!=null) out.push({x:i, y:arr[i]}); } return out;
+  }
+  function yearTicks(){ // callback de eje x (índices -> año)
+    return function(v){ var d=W.dates[v]; return d?d.slice(0,4):""; };
+  }
+  function baseX(){
+    return { type:"linear", min:0, max:W.dates.length-1,
+      ticks:{color:C.txt, font:{size:11}, maxTicksLimit:9, callback:yearTicks()}, grid:{color:C.grid} };
+  }
+  function renderEq(){
+    var node=W.assets[st.asset];
+    var eqB=pairs(node.bh_eq), eqS=pairs(node.freq[st.freq].eq);
+    var data={datasets:[
+      {label:"Comprar y mantener", data:eqB, borderColor:C.gris, borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.05},
+      {label:"Estrategia", data:eqS, borderColor:C.menta, borderWidth:2.5, pointRadius:0, tension:.05}
+    ]};
+    var opts={responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+      interaction:{mode:"index",intersect:false},
+      plugins:{legend:{display:false}, tooltip:{callbacks:{
+        title:function(it){ return W.dates[it[0].parsed.x]; },
+        label:function(it){ return it.dataset.label+": $"+Math.round(it.parsed.y).toLocaleString("en-US"); }}}},
+      scales:{ x:baseX(),
+        y:{ type:"logarithmic", ticks:{color:C.txt, font:{size:11}, callback:function(v){
+          var a=Math.abs(v); if(![10,100,1000,10000,100000,1000000].includes(v)) return "";
+          return "$"+(a>=1000?(a/1000)+"k":a); }}, grid:{color:C.grid} } }};
+    if(chEq) chEq.destroy();
+    chEq=new Chart(byId("chart-eq"), {type:"line", data:data, options:opts});
+  }
+  function renderDdChart(){
+    var node=W.assets[st.asset];
+    var ddB=pairs(node.bh_dd), ddS=pairs(node.freq[st.freq].dd);
+    var data={datasets:[
+      {label:"Comprar y mantener", data:ddB, borderColor:C.gris, backgroundColor:"transparent", borderWidth:1.5, borderDash:[6,4], pointRadius:0, tension:.05, fill:false},
+      {label:"Estrategia", data:ddS, borderColor:C.menta, backgroundColor:"rgba(99,252,175,.12)", borderWidth:2, pointRadius:0, tension:.05, fill:true}
+    ]};
+    var opts={responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+      interaction:{mode:"index",intersect:false},
+      plugins:{legend:{display:false}, tooltip:{callbacks:{
+        title:function(it){ return W.dates[it[0].parsed.x]; },
+        label:function(it){ return it.dataset.label+": "+it.parsed.y.toFixed(1)+"%"; }}}},
+      scales:{ x:baseX(), y:{ max:0, ticks:{color:C.txt, font:{size:11}, callback:function(v){return v+"%";}}, grid:{color:C.grid} } }};
+    if(chDd) chDd.destroy();
+    chDd=new Chart(byId("chart-dd"), {type:"line", data:data, options:opts});
+  }
+  function renderSignal(){
+    var node=W.assets[st.asset];
+    var pos=node.freq[st.freq].pos; // string "1"/"0" alineado a W.dates
+    var inv=function(i){ return pos.charAt(i)==="1"; };
+    byId("sig-ref").textContent = node.refnom;
+    var pxD=pairs(node.px), thrD=pairs(node.thr);
+    // tramos fuera del mercado (para sombreado)
+    var bands=[], s=null;
+    for(var i=0;i<pos.length;i++){ if(!inv(i)&&s===null)s=i; if(inv(i)&&s!==null){bands.push([s,i]);s=null;} }
+    if(s!==null) bands.push([s,pos.length-1]);
+    var shade={id:"shsig",beforeDatasetsDraw:function(ch){var xs=ch.scales.x,a=ch.chartArea,c=ch.ctx;c.save();c.fillStyle="rgba(224,82,90,.10)";bands.forEach(function(b){var x0=xs.getPixelForValue(b[0]),x1=xs.getPixelForValue(b[1]);c.fillRect(x0,a.top,x1-x0,a.bottom-a.top);});c.restore();}};
+    var data={datasets:[
+      {label:node.refnom, data:pxD, borderColor:C.menta, borderWidth:2.2, pointRadius:0, tension:.05,
+        segment:{borderColor:function(ctx){ return inv(ctx.p0DataIndex)?C.menta:C.gris; }}},
+      {label:"Umbral de salida (máx 9m −18%)", data:thrD, borderColor:"#E0A020", borderWidth:1.5, borderDash:[5,4], pointRadius:0, tension:.05}
+    ]};
+    var opts={responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+      interaction:{mode:"index",intersect:false},
+      plugins:{legend:{display:false}, tooltip:{callbacks:{
+        title:function(it){ return W.dates[it[0].parsed.x]+(inv(it[0].parsed.x)?" · dentro":" · en efectivo"); },
+        label:function(it){ return it.dataset.label+": $"+Math.round(it.parsed.y).toLocaleString("en-US"); }}}},
+      scales:{ x:baseX(),
+        y:{ type:"logarithmic", ticks:{color:C.txt, font:{size:11}, callback:function(v){
+          var a=Math.abs(v); if(![10,100,1000,10000,100000,1000000].includes(v)) return "";
+          return "$"+(a>=1000?(a/1000)+"k":a); }}, grid:{color:C.grid} } }};
+    if(chSigM) chSigM.destroy();
+    chSigM=new Chart(byId("chart-signal"), {type:"line", data:data, options:opts, plugins:[shade]});
+  }
+  function renderCompare(){ segs(); renderTable(); renderEq(); renderDdChart(); renderSignal(); }
+
+  // ---- heatmap (meseta) ----
+  function heatColor(v, lo, hi){ // gris -> menta según valor
+    if(v==null) return "#20262e";
+    var t=Math.max(0, Math.min(1, (v-lo)/(hi-lo||1)));
+    // interpola de gris oscuro a menta
+    var c1=[38,44,52], c2=[99,252,175];
+    var r=Math.round(c1[0]+(c2[0]-c1[0])*t), g=Math.round(c1[1]+(c2[1]-c1[1])*t), b=Math.round(c1[2]+(c2[2]-c1[2])*t);
+    return "rgb("+r+","+g+","+b+")";
+  }
+  function renderHeat(){
+    segs();
+    var sw=W.sweep, node=sw.assets[st.hmAsset][st.hmWindow], grid=node[st.hmMetric];
+    var flat=[]; grid.forEach(function(row){ row.forEach(function(v){ if(v!=null) flat.push(v); }); });
+    var lo=Math.min.apply(null,flat), hi=Math.max.apply(null,flat);
+    var isSh=st.hmMetric==="sharpe";
+    var bestW=(String(sw.best.N)===st.hmWindow);
+    var h='<table class="hm"><thead><tr><td class="rowh">Entrada \\ Salida</td>';
+    sw.exits.forEach(function(t){ h+='<th>'+t+'%</th>'; });
+    h+='</tr></thead><tbody>';
+    sw.entries.forEach(function(en,ri){
+      h+='<tr><td class="rowh">'+en+'%</td>';
+      sw.exits.forEach(function(ex,ci){
+        var v=grid[ri][ci];
+        if(v==null){ h+='<td style="background:#181d24"></td>'; return; }
+        var col=heatColor(v,lo,hi);
+        var txt=isSh?v.toFixed(2):v.toFixed(0)+"%";
+        var isBest=bestW && en===sw.best.entry && ex===sw.best.exit;
+        var bd=isBest?';box-shadow:inset 0 0 0 3px #63FCAF;':'';
+        h+='<td class="cell" style="background:'+col+bd+'">'+txt+'</td>';
+      });
+      h+='</tr>';
+    });
+    byId("heatmap").innerHTML=h+'</tbody></table>';
+    var bh=W.assets[st.hmAsset].bh;
+    byId("hmcap").innerHTML=(isSh?"Sharpe":"CAGR")+" de la estrategia sobre "+A_NOM[st.hmAsset]+
+      " · ventana "+st.hmWindow+" meses · verde = mejor · borde verde = configuración elegida (6%/18%). "+
+      "Referencia — <b>comprar y mantener "+A_SHORT[st.hmAsset]+": Sharpe "+two(bh.sharpe)+" · CAGR "+pct(bh.cagr)+"</b>. "+
+      "La zona verde amplia (no un solo punto) muestra que el resultado es robusto al parámetro elegido.";
+  }
+
+  // ---- acciones individuales ----
+  function renderStocks(){
+    var S=W.stocks;
+    byId("st-n").textContent=S.n;
+    if(S.periodo && byId("st-per")) byId("st-per").textContent=S.periodo[0].slice(0,4)+"–"+S.periodo[1].slice(0,4);
+    var ddred=Math.abs(S.med_dd_red);
+    byId("st-pills").innerHTML=
+      '<span class="pill g">'+S.imp_dd+' de '+S.n+' reducen su peor caída</span>'+
+      '<span class="pill a">'+S.imp_sharpe+' de '+S.n+' mejoran su Sharpe</span>'+
+      '<span class="pill a">Mediana CAGR '+pct(S.med_cagr_bh)+' → '+pct(S.med_cagr_st)+'</span>';
+    byId("st-verdict").innerHTML="El resultado es honesto y esperable: en un período casi sin crisis sistémicas (2010–2025), y sobre nombres individuales, <b>la reducción de caídas se traslada a la mayoría</b> ("+S.imp_dd+"/"+S.n+"), pero el <b>premio de retorno se pierde</b> — hacerse a un lado en un mercado que casi solo subió cuesta rendimiento (mediana CAGR "+pct(S.med_cagr_bh)+" → "+pct(S.med_cagr_st)+"). Es exactamente lo que cabía esperar: el valor de esta estrategia está en <b>esquivar los grandes desplomes sistémicos</b> (2000, 2008) que golpean a TODO el índice a la vez, no el ruido idiosincrático de una acción suelta. Por eso se aplica sobre el índice, a lo largo de ciclos completos.";
+    var h='<thead><tr><th>Acción</th><th>CAGR B&amp;H</th><th>CAGR estr.</th><th>Sharpe B&amp;H</th><th>Sharpe estr.</th><th>Caída B&amp;H</th><th>Caída estr.</th></tr></thead><tbody>';
+    h+=S.rows.map(function(r){
+      var shBetter=r.st.sharpe>r.bh.sharpe, ddBetter=r.st.maxdd>r.bh.maxdd;
+      return '<tr><td class="tk">'+r.t+'</td>'+
+        '<td class="muted">'+pct(r.bh.cagr)+'</td><td>'+pct(r.st.cagr)+'</td>'+
+        '<td class="muted">'+two(r.bh.sharpe)+'</td><td class="'+(shBetter?"g":"r")+'">'+two(r.st.sharpe)+'</td>'+
+        '<td class="muted">'+pct(r.bh.maxdd)+'</td><td class="'+(ddBetter?"g":"r")+'">'+pct(r.st.maxdd)+'</td></tr>';
+    }).join("");
+    byId("stable").innerHTML=h+'</tbody>';
+  }
+
+  // ---- barrido colectivo (todas las combinaciones sobre las 96 acciones) ----
+  function renderCsHeat(){
+    if(!W.stocksweep){ return; }
+    var sw=W.stocksweep;
+    var CS=[
+      {val:"medSharpe", lbl:"Sharpe", name:"Sharpe mediano", fmt:function(v){return v.toFixed(2);}, bh:sw.bh.medSharpe, bf:two},
+      {val:"pctRedDD", lbl:"% ↓caída", name:"% de acciones que reducen su peor caída", fmt:function(v){return v.toFixed(0)+"%";}, bh:null},
+      {val:"medCagr", lbl:"CAGR", name:"CAGR mediano", fmt:function(v){return v.toFixed(0)+"%";}, bh:sw.bh.medCagr, bf:pct},
+      {val:"medMaxdd", lbl:"Caída", name:"peor caída mediana", fmt:function(v){return v.toFixed(0)+"%";}, bh:sw.bh.medMaxdd, bf:pct}
+    ];
+    seg("seg-cs-window", sw.windows.map(function(w){return {val:String(w),lbl:w+" m"};}), st.csWindow, function(v){ st.csWindow=v; renderCsHeat(); });
+    seg("seg-cs-metric", CS.map(function(m){return {val:m.val,lbl:m.lbl};}), st.csMetric, function(v){ st.csMetric=v; renderCsHeat(); });
+    var M=CS.filter(function(m){return m.val===st.csMetric;})[0];
+    var grid=sw.grid[st.csWindow][st.csMetric];
+    var flat=[], best={v:-Infinity,r:-1,c:-1};
+    grid.forEach(function(row,ri){ row.forEach(function(v,ci){ if(v!=null){ flat.push(v); if(v>best.v) best={v:v,r:ri,c:ci}; } }); });
+    var lo=Math.min.apply(null,flat), hi=Math.max.apply(null,flat);
+    var h='<table class="hm"><thead><tr><td class="rowh">Entrada \\ Salida</td>';
+    sw.exits.forEach(function(t){ h+='<th>'+t+'%</th>'; });
+    h+='</tr></thead><tbody>';
+    sw.entries.forEach(function(en,ri){
+      h+='<tr><td class="rowh">'+en+'%</td>';
+      sw.exits.forEach(function(ex,ci){
+        var v=grid[ri][ci];
+        if(v==null){ h+='<td style="background:#181d24"></td>'; return; }
+        var col=heatColor(v,lo,hi), bd=(ri===best.r&&ci===best.c)?';box-shadow:inset 0 0 0 3px #556DFB;':'';
+        h+='<td class="cell" style="background:'+col+bd+'">'+M.fmt(v)+'</td>';
+      });
+      h+='</tr>';
+    });
+    byId("heatmap-c").innerHTML=h+'</tbody></table>';
+    var bhtxt = (M.bh!=null) ? " Comprar y mantener (mediana): "+M.bf(M.bh)+"." : "";
+    byId("hmcap-c").innerHTML=M.name+" del conjunto de "+sw.n+" acciones · ventana "+st.csWindow+" meses · verde = mejor · borde azul = mejor combinación."+bhtxt+
+      " Mejor: entrada "+sw.entries[best.r]+"% / salida "+sw.exits[best.c]+"% → "+M.fmt(best.v)+".";
+  }
+
+  // ---- SIN SESGO: comparación de estrategias vs índice ----
+  function nbLine(k,dates,arr,extra){
+    var d=[]; for(var i=0;i<arr.length;i++){ if(arr[i]!=null) d.push({x:i,y:arr[i]}); }
+    return Object.assign({label:NB_NOM[k], data:d, borderColor:NB_COL[k], pointRadius:0, tension:.05}, extra);
+  }
+  function nbX(dates){ return {type:"linear", min:0, max:dates.length-1, ticks:{color:C.txt,font:{size:11},maxTicksLimit:9,callback:function(v){var d=dates[Math.round(v)];return d?d.slice(0,4):"";}}, grid:{color:C.grid}}; }
+  function renderNB(){
+    var NB=window.WNB; if(!NB) return;
+    byId("nb-ntick").textContent=NB.ntick;
+    seg("seg-nb-period", [{val:"20",lbl:NB.periods["20"].label},{val:"35",lbl:NB.periods["35"].label}], st.nbPeriod, function(v){ st.nbPeriod=v; renderNB(); });
+    var per=NB.periods[st.nbPeriod], S=per.strats, order=["SPY","MOM25","DUAL","LOSERS","RSP"], spym=S.SPY.m;
+    var h='<thead><tr><th>Estrategia</th><th>CAGR</th><th>Sharpe</th><th>Calmar</th><th>Peor caída</th></tr></thead><tbody>';
+    order.forEach(function(k){
+      var m=S[k].m, sp=(k==="SPY");
+      var cc=sp?"":(m.cagr>spym.cagr?"win":"lose"), sc=sp?"":(m.sharpe>spym.sharpe?"win":"lose");
+      h+='<tr><td class="lbl"><span style="color:'+NB_COL[k]+'">●</span> '+NB_NOM[k]+'</td>'+
+        '<td class="est '+cc+'">'+pct(m.cagr)+'</td><td class="'+sc+'" style="font-weight:700">'+two(m.sharpe)+
+        '</td><td>'+(m.calmar==null?"—":two(m.calmar))+'</td><td>'+pct(m.maxdd)+'</td></tr>';
+    });
+    byId("nb-table").innerHTML=h+'</tbody>';
+    var dates=per.dates;
+    function build(){
+      var ctx=byId("chart-nb-eq"); if(!ctx||typeof Chart==="undefined") return;
+      if(chNbEq) chNbEq.destroy();
+      var sets=[nbLine("SPY",dates,S.SPY.eq,{borderWidth:2,borderDash:[6,4]}), nbLine("LOSERS",dates,S.LOSERS.eq,{borderWidth:1.5}),
+                nbLine("MOM25",dates,S.MOM25.eq,{borderWidth:2}), nbLine("DUAL",dates,S.DUAL.eq,{borderWidth:3})];
+      chNbEq=new Chart(ctx,{type:"line",data:{datasets:sets},options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:11},padding:8}},
+          tooltip:{callbacks:{title:function(it){return dates[it[0].parsed.x];},label:function(it){return it.dataset.label+": $"+Math.round(it.parsed.y).toLocaleString("en-US");}}}},
+        scales:{x:nbX(dates), y:{type:"logarithmic",min:60,ticks:{color:C.txt,font:{size:11},callback:function(v){return [100,1000,10000,100000,1000000].includes(v)?"$"+(v>=1000?(v/1000)+"k":v):"";}},grid:{color:C.grid}}}}});
+      if(chNbDd) chNbDd.destroy();
+      var dsets=[nbLine("SPY",dates,S.SPY.dd,{borderWidth:1.5,borderDash:[6,4]}), nbLine("DUAL",dates,S.DUAL.dd,{borderWidth:2,backgroundColor:"rgba(99,252,175,.10)",fill:true}), nbLine("MOM25",dates,S.MOM25.dd,{borderWidth:1.5})];
+      chNbDd=new Chart(byId("chart-nb-dd"),{type:"line",data:{datasets:dsets},options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:11},padding:8}},
+          tooltip:{callbacks:{title:function(it){return dates[it[0].parsed.x];},label:function(it){return it.dataset.label+": "+it.parsed.y.toFixed(1)+"%";}}}},
+        scales:{x:nbX(dates), y:{max:0,ticks:{color:C.txt,font:{size:11},callback:function(v){return v+"%";}},grid:{color:C.grid}}}}});
+    }
+    whenNbChart(build);
+  }
+  function whenNbChart(cb){ if(typeof Chart!=="undefined"){cb();return;} var n=0,t=setInterval(function(){ n++; if(typeof Chart!=="undefined"){clearInterval(t);cb();} else if(n>40){clearInterval(t);} },200); }
+
+  // ---- profundizar dual-momentum ----
+  function nbColor(v){ return (v==null)?'muted':(v>=0?'g':'r'); }
+  function renderDeep(){
+    var NB=window.WNB; if(!NB) return;
+    var D=NB.deep, per20=NB.periods["20"];
+    // tabla: momentos fuera del mercado
+    var oh='<thead><tr><th>Salió</th><th>Volvió</th><th>Meses</th><th>Índice mientras afuera</th></tr></thead><tbody>';
+    D.filter.out.filter(function(o){ return o.meses>=2 || Math.abs(o.spy)>=4; }).slice(0,12).forEach(function(o){
+      oh+='<tr><td class="tk">'+o.desde+'</td><td>'+o.hasta+'</td><td class="muted">'+o.meses+'</td><td class="'+(o.spy<0?'g':'r')+'">'+pctS(o.spy)+'</td></tr>';
+    });
+    byId("nb-out-table").innerHTML=oh+'</tbody>';
+    // tabla: contribuidores
+    var ch='<thead><tr><th>Acción</th><th>% de la ganancia</th><th>% del tiempo en cartera</th><th>Meses</th></tr></thead><tbody>';
+    D.holdings.rows.forEach(function(r){
+      ch+='<tr><td class="tk">'+r.t+'</td><td class="g" style="font-weight:700">'+r.share.toFixed(1)+'%</td><td>'+r.mespct.toFixed(0)+'%</td><td class="muted">'+r.meses+'</td></tr>';
+    });
+    byId("nb-contrib-table").innerHTML=ch+'</tbody>';
+    // vivo
+    var L=D.live;
+    byId("nb-asof").textContent=L.asof;
+    byId("nb-live-status").textContent=L.inmarket?"Invertida":"En efectivo";
+    byId("nb-live-status").style.color=L.inmarket?"var(--menta)":"var(--amber)";
+    byId("nb-live-status-k").innerHTML=L.inmarket?"el Nasdaq está cerca de sus máximos<br>→ se mantienen las 20 acciones":"el Nasdaq perdió su tendencia<br>→ todo a efectivo";
+    byId("nb-live-above").textContent="−"+L.distHigh.toFixed(1)+"%";
+    var lh='<thead><tr><th>Acción</th><th>12 m</th><th>6 m</th><th>3 m</th><th>1 m</th></tr></thead><tbody>';
+    L.holdings.forEach(function(h){
+      function c(v){ return '<td class="'+nbColor(v)+'">'+(v==null?"—":pctS(v))+'</td>'; }
+      lh+='<tr><td class="tk">'+h.t+'</td>'+c(h.r12)+c(h.r6)+c(h.r3)+c(h.r1)+'</tr>';
+    });
+    byId("nb-live-table").innerHTML=lh+'</tbody>';
+    // metodología
+    byId("nb-meth-n").textContent=NB.ntick;
+    byId("nb-meth-losers").textContent=pct(per20.strats.LOSERS.m.cagr);
+    byId("nb-meth-spy").textContent=pct(per20.strats.SPY.m.cagr);
+    // barrido amplio (diverging vs índice)
+    renderWideSweep();
+    // charts
+    whenNbChart(function(){
+      // barras anuales
+      if(chNbYear) chNbYear.destroy();
+      var Y=D.yearly;
+      chNbYear=new Chart(byId("chart-nb-year"),{type:"bar",data:{labels:Y.map(function(y){return y.y;}),datasets:[
+        {label:"Momentum + filtro", data:Y.map(function(y){return y.dual;}), backgroundColor:"#63FCAF"},
+        {label:"Índice (SPY)", data:Y.map(function(y){return y.spy;}), backgroundColor:"#5a636e"}]},
+        options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+          plugins:{legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:11},padding:8}},
+            tooltip:{callbacks:{label:function(it){return it.dataset.label+": "+it.parsed.y.toFixed(1)+"%";}}}},
+          scales:{x:{ticks:{color:C.txt,font:{size:10}},grid:{display:false}},y:{ticks:{color:C.txt,font:{size:11},callback:function(v){return v+"%";}},grid:{color:C.grid}}}}});
+      // equity dual vs índice
+      if(chNbDual) chNbDual.destroy();
+      var dates=per20.dates, sets=[nbLine("SPY",dates,per20.strats.SPY.eq,{borderWidth:2,borderDash:[6,4]}), nbLine("DUAL",dates,per20.strats.DUAL.eq,{borderWidth:3})];
+      chNbDual=new Chart(byId("chart-nb-dual"),{type:"line",data:{datasets:sets},options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:11},padding:8}},
+          tooltip:{callbacks:{title:function(it){return dates[it[0].parsed.x];},label:function(it){return it.dataset.label+": $"+Math.round(it.parsed.y).toLocaleString("en-US");}}}},
+        scales:{x:nbX(dates),y:{type:"logarithmic",min:60,ticks:{color:C.txt,font:{size:11},callback:function(v){return [100,1000,10000,100000,1000000].includes(v)?"$"+(v>=1000?(v/1000)+"k":v):"";}},grid:{color:C.grid}}}}});
+    });
+  }
+  // barrido amplio: color diverge vs el índice (verde arriba, rojo abajo)
+  function divColor(v, bh, span){
+    if(v==null) return "#181d24";
+    var t=Math.max(-1,Math.min(1,(v-bh)/(span||1)));
+    if(t>=0){ return "rgb("+Math.round(38+61*t)+","+Math.round(44+208*t)+","+Math.round(52+123*t)+")"; }
+    return "rgb("+Math.round(38+186*(-t))+","+Math.round(44+38*(-t))+","+Math.round(52+38*(-t))+")";
+  }
+  function renderWideSweep(){
+    var NB=window.WNB; if(!NB) return; var sw=NB.deep.wsweep;
+    var METR=[{val:"sharpe",lbl:"Sharpe",fmt:function(v){return v.toFixed(2);},bh:sw.bhSharpe},{val:"cagr",lbl:"CAGR",fmt:function(v){return v.toFixed(0)+"%";},bh:sw.bhCagr}];
+    seg("seg-nb-metric", METR.map(function(m){return {val:m.val,lbl:m.lbl};}), st.nbMetric, function(v){ st.nbMetric=v; renderWideSweep(); });
+    var M=METR.filter(function(m){return m.val===st.nbMetric;})[0], grid=sw[st.nbMetric], bh=M.bh;
+    var chR=sw.Ls.indexOf(6), chC=sw.Ns.indexOf(20);
+    var span=0, nWin=0, nTot=0, best={v:-9,r:0,c:0};
+    grid.forEach(function(row,ri){ row.forEach(function(v,ci){ if(v!=null){ span=Math.max(span,Math.abs(v-bh)); nTot++; if(v>bh)nWin++; if(v>best.v)best={v:v,r:ri,c:ci}; } }); });
+    var h='<table class="hm"><thead><tr><td class="rowh">Ventana \\ Nº acciones</td>';
+    sw.Ns.forEach(function(n){ h+='<th>'+n+'</th>'; });
+    h+='</tr></thead><tbody>';
+    sw.Ls.forEach(function(Lm,ri){
+      h+='<tr><td class="rowh">'+Lm+' m</td>';
+      sw.Ns.forEach(function(n,ci){
+        var v=grid[ri][ci], col=divColor(v,bh,span), bd=(ri===chR&&ci===chC)?';box-shadow:inset 0 0 0 3px #63FCAF;':'';
+        h+='<td class="cell" style="background:'+col+bd+'">'+(v==null?"—":M.fmt(v))+'</td>';
+      });
+      h+='</tr>';
+    });
+    byId("heatmap-nb").innerHTML=h+'</tbody></table>';
+    var chv=(chR>=0&&chC>=0&&grid[chR][chC]!=null)?M.fmt(grid[chR][chC]):"—";
+    byId("hmcap-nb").innerHTML=M.lbl+" de la estrategia por ventana × nº de acciones (2005–2025). Referencia — <b>índice SPY: Sharpe "+two(sw.bhSharpe)+" · CAGR "+pct(sw.bhCagr)+"</b> — verde = le gana, rojo = pierde. <b style='color:var(--menta)'>Config usada: 6 m × 20 (borde verde) → "+chv+"</b>. Mejor del mapa: "+sw.Ls[best.r]+" m × "+sw.Ns[best.c]+" → "+M.fmt(best.v)+".";
+    byId("nb-sweep-concl").innerHTML="<b style='color:var(--menta)'>Conclusión:</b> la estrategia le gana al índice en <b>"+nWin+" de "+nTot+"</b> combinaciones de "+M.lbl+" — casi todo el mapa. El edge no vive en un número mágico: es robusto a la ventana de momentum y a cuántas acciones se tengan. Eso es señal de un efecto real, no de sobreajuste.";
+  }
+
+  // ---- el filtro: verlo y elegir tipo ----
+  function renderFilterSection(){
+    var NB=window.WNB; if(!NB||!NB.deep.filters) return; var F=NB.deep.filters;
+    seg("seg-nb-filter", [{val:"none",lbl:"Sin filtro"},{val:"sma",lbl:"Media 10m"},{val:"wh",lbl:"Máx 52-sem"}], st.nbFilter, function(v){ st.nbFilter=v; renderFilterSection(); });
+    var none=F.none, sel=F[st.nbFilter];
+    byId("nb-fn-cagr").textContent=pct(none.m.cagr); byId("nb-fn-sh").textContent=two(none.m.sharpe); byId("nb-fn-dd").textContent=pct(none.m.maxdd);
+    byId("nb-fs-name").textContent=sel.nom;
+    byId("nb-fs-cagr").textContent=pct(sel.m.cagr); byId("nb-fs-sh").textContent=two(sel.m.sharpe); byId("nb-fs-dd").textContent=pct(sel.m.maxdd);
+    byId("nb-fs-pin").textContent=(sel.pin==null?"100":Math.round(sel.pin))+"%";
+    var box=byId("nb-filter-box"), note=byId("nb-filter-note");
+    if(!sel.viz){ box.style.display="none";
+      note.innerHTML="Sin filtro, la estrategia está <b>siempre invertida</b>: rinde más en la subida ("+pct(none.m.cagr)+" anual) pero se come la caída completa (<b style='color:var(--rojo)'>"+pct(none.m.maxdd)+"</b>). Elegí un filtro para ver la señal y cómo protege.";
+      return; }
+    box.style.display="";
+    note.innerHTML="Se grafica "+sel.ref+" (escala log). La línea es <b style='color:var(--menta)'>verde cuando la estrategia está invertida</b> y <b style='color:var(--gris-sec)'>gris cuando está en efectivo</b>; las bandas rojas son los tramos fuera del mercado. La <b style='color:var(--amber)'>línea punteada</b> es la referencia del filtro.";
+    whenNbChart(function(){ drawFilterViz(sel.viz); });
+  }
+  function drawFilterViz(V){
+    if(chNbFilter) chNbFilter.destroy();
+    var N=V.dates.length;
+    var price=V.price.map(function(y,i){return {x:i,y:y};}), ref=V.ref.map(function(y,i){return {x:i,y:y};});
+    var bands=[], s=null;
+    for(var i=0;i<V.pos.length;i++){ if(!V.pos[i]&&s===null)s=i; if(V.pos[i]&&s!==null){bands.push([s,i]);s=null;} }
+    if(s!==null) bands.push([s,V.pos.length-1]);
+    var shade={id:"shf",beforeDatasetsDraw:function(ch){var xs=ch.scales.x,a=ch.chartArea,c=ch.ctx;c.save();c.fillStyle="rgba(224,82,90,.10)";bands.forEach(function(b){var x0=xs.getPixelForValue(b[0]),x1=xs.getPixelForValue(b[1]);c.fillRect(x0,a.top,x1-x0,a.bottom-a.top);});c.restore();}};
+    chNbFilter=new Chart(byId("chart-nb-filter"),{type:"line",data:{datasets:[
+      {label:"Índice",data:price,borderWidth:2.5,pointRadius:0,tension:.05,borderColor:C.menta,segment:{borderColor:function(ctx){return V.pos[ctx.p0DataIndex]?C.menta:C.gris;}}},
+      {label:"Referencia del filtro",data:ref,borderColor:"#E0A020",borderWidth:1.5,borderDash:[5,4],pointRadius:0,tension:.05}
+    ]},options:{responsive:true,maintainAspectRatio:false,devicePixelRatio:dpr,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:11},padding:8}},
+        tooltip:{callbacks:{title:function(it){return V.dates[it[0].parsed.x];},label:function(it){return it.dataset.label+": "+Math.round(it.parsed.y);}}}},
+      scales:{x:{type:"linear",min:0,max:N-1,ticks:{color:C.txt,font:{size:11},maxTicksLimit:9,callback:function(v){var d=V.dates[Math.round(v)];return d?d.slice(0,4):"";}},grid:{color:C.grid}},
+        y:{type:"logarithmic",ticks:{color:C.txt,font:{size:11},callback:function(v){return [50,100,200,300,500,1000,2000].includes(v)?v:"";}},grid:{color:C.grid}}}}
+    ,plugins:[shade]});
+  }
+
+  // ---- init tras cargar Chart.js ----
+  function start(){
+    buildKpis(); renderCompare(); renderHeat(); renderNB(); renderFilterSection(); renderDeep();
+  }
+  var s=document.createElement("script");
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
+  s.onload=start;
+  s.onerror=function(){ buildKpis(); renderTable(); renderHeat(); renderNB(); renderFilterSection(); renderDeep(); };
+  document.head.appendChild(s);
+})();
+</script>
+</body>
+</html>
