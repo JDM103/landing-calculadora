@@ -54,9 +54,15 @@
   .btn:active{transform:scale(.98);}
   .btn-menta{background:var(--menta); color:var(--tinta);}
   .btn-crema{background:var(--crema); color:var(--tinta);}
-  .btn-peri{background:var(--peri); color:var(--crema); line-height:1.35;}
   .btn-ghost{background:transparent; color:var(--gris); border:1px solid #2E3540;}
   .btn-ghost:hover{border-color:var(--menta);}
+  /* Botón de video: oscuro y elegante, con play verde (texto crema legible) */
+  .btn-video{display:flex; align-items:center; justify-content:center; gap:13px; line-height:1.35;
+    background:linear-gradient(180deg,#1E2530,#191E26); color:var(--crema);
+    border:1px solid rgba(99,252,175,.38); transition:border-color .15s ease, transform .12s ease;}
+  .btn-video:hover{border-color:var(--menta);}
+  .btn-video .play{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--menta); color:var(--tinta);
+    display:flex; align-items:center; justify-content:center; font-size:13px; padding-left:2px;}
 
   footer{width:100%; max-width:420px; margin:0 auto; padding:30px 22px 30px; text-align:center;}
   footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
@@ -70,7 +76,7 @@
 
   <p class="lema">Inversiones desde tu propia cuenta.</p>
 
-  <a class="btn btn-peri" href="/aplicar" data-destino="aplicar">🎬 Video: cómo planear un retiro con el mercado de EE. UU.</a>
+  <a class="btn btn-video" href="/aplicar" data-destino="aplicar"><span class="play">▶</span><span>Video: cómo planear un retiro con el mercado de EE. UU.</span></a>
   <a class="btn btn-menta" href="/calculadora" data-destino="calculadora">🎯 Calculá tu retiro</a>
   <a class="btn btn-crema" href="/info" data-destino="info">🤝 Conocé cómo trabajamos</a>
   <a class="btn btn-ghost" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener" data-destino="instagram">📲 Seguinos en Instagram</a>
