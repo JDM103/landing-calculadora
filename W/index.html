@@ -93,6 +93,38 @@
   table.hm td.cell{color:#0b0e12; font-weight:700; min-width:44px;}
   .hmcap{font-size:12px; color:var(--gris-sec); text-align:center; margin-top:8px;}
 
+  /* Barra de benchmark (grande y evidente) */
+  .benchbar{display:flex; align-items:center; justify-content:center; gap:26px 34px; flex-wrap:wrap;
+    background:linear-gradient(180deg,rgba(154,161,171,.10),rgba(154,161,171,.04)); border:1px solid var(--bd);
+    border-radius:14px; padding:16px 22px; margin:4px auto 18px; max-width:640px;}
+  .benchbar .bcol{text-align:center;}
+  .benchbar .bl{font-size:10.5px; text-transform:uppercase; letter-spacing:.09em; color:var(--gris-sec); font-weight:700; margin-bottom:3px;}
+  .benchbar .bv{font-size:30px; font-weight:800; color:var(--crema); line-height:1;}
+  .benchbar .bv small{font-size:14px; color:var(--gris-sec); font-weight:700;}
+  .benchbar .bwin{font-size:15px; font-weight:800; color:var(--menta); line-height:1.3;}
+  .benchbar .bwin b{font-size:22px;}
+  .benchbar .bsep{width:1px; align-self:stretch; background:var(--bd);}
+  @media(max-width:560px){ .benchbar{gap:14px 20px; padding:13px 14px;} .benchbar .bv{font-size:24px;} }
+
+  /* Registro de operaciones */
+  .lstats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0 8px;}
+  .lstats .ls{background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:14px 12px; text-align:center;}
+  .lstats .ls .v{font-size:24px; font-weight:800; color:var(--crema); line-height:1.1;}
+  .lstats .ls .v.g{color:var(--menta);} .lstats .ls .v.r{color:var(--rojo);}
+  .lstats .ls .k{font-size:11px; color:var(--gris-sec); margin-top:5px; line-height:1.4;}
+  @media(max-width:640px){ .lstats{grid-template-columns:repeat(2,1fr);} }
+  .lsearch{width:100%; max-width:280px; background:var(--card); border:1px solid var(--bd); color:var(--crema);
+    border-radius:10px; padding:9px 13px; font-size:14px; font-family:inherit; margin-bottom:10px;}
+  .lsearch::placeholder{color:var(--gris-sec);}
+  .lcount{font-size:12px; color:var(--gris-sec); margin-left:10px;}
+  .ledwrap{max-height:520px; overflow-y:auto; border:1px solid var(--bd); border-radius:14px;}
+  table.led{width:100%; border-collapse:collapse; font-size:13px;}
+  table.led th,table.led td{padding:7px 10px; text-align:right; border-bottom:1px solid var(--bd); white-space:nowrap;}
+  table.led th:first-child,table.led td:first-child{text-align:left;}
+  table.led thead th{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--gris-sec); font-weight:700; position:sticky; top:0; background:var(--tinta); z-index:1;}
+  table.led td.tk{font-weight:700; color:var(--crema);}
+  table.led .g{color:var(--menta);} table.led .r{color:var(--rojo);} table.led .muted{color:var(--gris-sec);}
+
   /* Stocks */
   .stable{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:8px;}
   .stable th,.stable td{padding:8px 8px; text-align:right; border-bottom:1px solid var(--bd);}
@@ -114,8 +146,7 @@
   <a class="marca" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
   <div class="hero">
-    <div class="kicker">Evidencia empírica · Data diaria 1990–2025</div>
-    <h1>La estrategia de <em>máximos</em>, a la luz de los datos</h1>
+    <h1>Estrategias <em>ganadoras</em> y su evidencia empírica</h1>
     <p class="lede">Una regla simple de tendencia: seguí invertido mientras el mercado esté cerca de sus máximos, y hacete a un lado cuando la tendencia se rompe. Acá está el backtest completo, sin adornos.</p>
   </div>
 
@@ -171,6 +202,7 @@
         <div class="cgroup"><div class="clbl">Ventana</div><div class="seg" id="seg-hm-window"></div></div>
         <div class="cgroup"><div class="clbl">Métrica</div><div class="seg peri" id="seg-hm-metric"></div></div>
       </div>
+      <div class="benchbar" id="bench-heat"></div>
       <div class="heat" id="heatmap"></div>
       <p class="hmcap" id="hmcap"></p>
     </div>
@@ -179,11 +211,8 @@
   <!-- 05 · SIN SESGO -->
   <section>
     <h2><span class="n">04</span>Selección de acciones sin sesgo de supervivencia</h2>
-    <p class="sub">Hasta acá, timing <b>sobre el índice</b>. Ahora la pregunta inversa: ¿se puede <b>seleccionar acciones</b> y ganarle al comprar-y-mantener? Para probarlo <b>de verdad</b>, uso el universo histórico del S&P 500 —<b id="nb-ntick">811</b> tickers que <b>incluye a los removidos y delistados</b>, no solo los sobrevivientes de hoy— y comparo contra el índice (SPY).</p>
+    <p class="sub">Hasta acá, timing <b>sobre el índice</b>. Ahora la pregunta inversa: ¿se puede <b>seleccionar acciones</b> y ganarle al comprar-y-mantener? Para probarlo <b>de verdad</b>, uso el universo histórico del S&P 500 —<b id="nb-ntick">811</b> tickers que <b>incluye a los removidos y delistados</b>, no solo los sobrevivientes de hoy— y comparo contra el índice (SPY) sobre la <b>muestra completa: 1990 a hoy</b>.</p>
     <div class="card">
-      <div class="controls" style="margin-bottom:8px">
-        <div class="cgroup"><div class="clbl">Período</div><div class="seg" id="seg-nb-period"></div></div>
-      </div>
       <div style="overflow-x:auto"><table class="mtable" id="nb-table" style="min-width:440px"></table></div>
       <div class="chartbox"><canvas id="chart-nb-eq"></canvas></div>
       <p class="note">Crecimiento de $100, escala logarítmica. Carteras equiponderadas, rebalanceo mensual, costo 0.10% por lado, retornos winsorizados a ±50% (para descartar errores de datos como splits sin ajustar).</p>
@@ -200,30 +229,28 @@
     <div class="how tri">
       <div class="box"><div class="t">① Ventana de momentum</div><p><b style="color:var(--crema)">Cuántos meses de retorno pasado</b> se miran para rankear. Usamos <b style="color:var(--menta)">6 meses</b>, la que dio mejor Sharpe en el barrido. El momentum de 3–12 meses persiste: lo que subió sigue subiendo un tiempo. Muy corta = ruido; muy larga = reacciona tarde.</p></div>
       <div class="box"><div class="t">② Cantidad de acciones</div><p><b style="color:var(--crema)">Cuántas de las mejores se compran</b> cada mes, equiponderadas. Usamos las <b style="color:var(--menta)">20</b> de mayor momentum. Pocas = más retorno pero más riesgo concentrado; muchas = más diversificado, más parecido al índice.</p></div>
-      <div class="box"><div class="t">③ Filtro de tendencia</div><p><b style="color:var(--crema)">Solo invertir cuando el Nasdaq está fuerte</b>: a <b style="color:var(--menta)">≤6% de su máximo de 52 semanas</b> se entra, y si cae <b>&gt;18%</b> por debajo se pasa todo a efectivo. Evita el "momentum crash": cuando el mercado se voltea, las acciones de momentum caen más fuerte que el resto.</p></div>
+      <div class="box"><div class="t">③ Filtro de tendencia</div><p><b style="color:var(--crema)">Solo invertir cuando el Nasdaq está fuerte</b>: a <b style="color:var(--menta)">≤6% de su máximo de 9 meses</b> se entra, y si cae <b>&gt;18%</b> por debajo se pasa todo a efectivo. Evita el "momentum crash": cuando el mercado se voltea, las acciones de momentum caen más fuerte que el resto.</p></div>
     </div>
-    <p class="note">Rebalanceo mensual, carteras equiponderadas, 0.10% de costo por lado. La señal de un mes se ejecuta el siguiente (sin mirar el futuro). Estos parámetros (6 meses · 20 acciones · filtro 52-sem) salen del barrido de la sección 09, que muestra que le ganan al índice de forma robusta.</p>
+    <p class="note">Rebalanceo mensual, carteras equiponderadas, 0.10% de costo por lado. La señal de un mes se ejecuta el siguiente (sin mirar el futuro). Estos parámetros (6 meses · 20 acciones · filtro de 9 meses, entra 6% / sale 18%) salen del barrido de la sección 08, que muestra que le ganan al índice de forma robusta.</p>
   </section>
 
-  <!-- 09 · EL FILTRO: VERLO Y ELEGIRLO -->
+  <!-- 09 · EL FILTRO EN ACCIÓN -->
   <section>
-    <h2><span class="n">06</span>El filtro de tendencia: verlo y elegirlo</h2>
-    <p class="sub">El filtro decide cuándo estar invertido y cuándo a efectivo, según una señal del índice. Acá podés <b>ver la señal</b> en el gráfico y <b>probar distintos filtros</b> sobre la misma estrategia de momentum (6m · top 20). El que usamos —<b>máximo de 52 semanas del Nasdaq</b>— le gana al de la media móvil clásica.</p>
+    <h2><span class="n">06</span>El filtro de tendencia, en acción</h2>
+    <p class="sub">El filtro decide cuándo estar invertido y cuándo a efectivo, según una señal del índice. Se usa el <b>máximo de 9 meses del Nasdaq</b> con doble umbral: se entra cuando está a <b>≤6%</b> de ese máximo y se pasa todo a efectivo si cae <b>&gt;18%</b> por debajo. Acá se <b>ve la señal</b> sobre la misma estrategia de momentum (6m · top 20).</p>
     <div class="card">
-      <div class="controls" style="margin-bottom:8px"><div class="cgroup"><div class="clbl">Tipo de filtro</div><div class="seg" id="seg-nb-filter"></div></div></div>
-      <div class="how">
-        <div class="box out"><div class="t">Sin filtro (siempre invertida)</div><p>CAGR <b style="color:var(--crema)" id="nb-fn-cagr"></b> · Sharpe <b style="color:var(--crema)" id="nb-fn-sh"></b> · peor caída <b style="color:var(--rojo)" id="nb-fn-dd"></b></p></div>
+      <div class="how" style="grid-template-columns:1fr">
         <div class="box"><div class="t" id="nb-fs-name">—</div><p>CAGR <b style="color:var(--crema)" id="nb-fs-cagr"></b> · Sharpe <b style="color:var(--menta)" id="nb-fs-sh"></b> · peor caída <b style="color:var(--menta)" id="nb-fs-dd"></b> · invertida <b id="nb-fs-pin"></b> del tiempo</p></div>
       </div>
       <div class="chartbox" id="nb-filter-box" style="margin-top:20px"><canvas id="chart-nb-filter"></canvas></div>
       <p class="note" id="nb-filter-note"></p>
     </div>
-    <div class="hsub2" style="margin-top:22px">Con el filtro 52-sem: cada vez que se salió del mercado — y lo que evitó</div>
+    <div class="hsub2" style="margin-top:22px">Con el filtro de 9 meses: cada vez que se salió del mercado — y lo que evitó</div>
     <div style="overflow-x:auto"><table class="stable" id="nb-out-table" style="min-width:460px"></table></div>
-    <p class="note">El filtro de <b>máximo de 52 semanas</b> es selectivo: en 20 años solo se salió unas pocas veces, en los grandes desplomes. La última columna es lo que hizo el índice mientras estuvo afuera: <b style="color:var(--menta)">verde = pérdida esquivada</b>, <b style="color:var(--rojo)">rojo = subida que se perdió</b> (falsa alarma).</p>
+    <p class="note">El filtro de <b>máximo de 9 meses</b> es selectivo: en 20 años solo se salió unas pocas veces, en los grandes desplomes. La última columna es lo que hizo el índice mientras estuvo afuera: <b style="color:var(--menta)">verde = pérdida esquivada</b>, <b style="color:var(--rojo)">rojo = subida que se perdió</b> (falsa alarma).</p>
     <div class="card" style="margin-top:18px">
       <div class="chartbox"><canvas id="chart-nb-year"></canvas></div>
-      <p class="note">Retorno por año calendario: <b style="color:var(--menta)">la estrategia (momentum + filtro 52-sem)</b> vs <b style="color:var(--gris-sec)">índice</b>.</p>
+      <p class="note">Retorno por año calendario: <b style="color:var(--menta)">la estrategia (momentum + filtro de 9 meses)</b> vs <b style="color:var(--gris-sec)">índice</b>.</p>
     </div>
   </section>
 
@@ -244,6 +271,7 @@
     <p class="sub">Probamos <b>toda</b> combinación de ventana de momentum × cantidad de acciones. El color compara cada una contra el índice: <b style="color:var(--menta)">verde = le gana</b>, <b style="color:var(--rojo)">rojo = pierde</b>, más intenso cuanto mayor la diferencia. Si el mapa es casi todo verde, el edge <b>no depende de un ajuste fino</b>.</p>
     <div class="card">
       <div class="controls" style="margin-bottom:12px"><div class="cgroup"><div class="clbl">Métrica vs índice</div><div class="seg peri" id="seg-nb-metric"></div></div></div>
+      <div class="benchbar" id="bench-nb"></div>
       <div class="heat" id="heatmap-nb"></div>
       <p class="hmcap" id="hmcap-nb"></p>
     </div>
@@ -256,16 +284,29 @@
     <p class="sub">Así se traduce a la práctica del día a día. Con datos a <b id="nb-asof"></b>, el semáforo del filtro y las 20 acciones que hoy estarían en cartera:</p>
     <div class="kpis">
       <div class="kpi"><div class="v" id="nb-live-status"></div><div class="k" id="nb-live-status-k"></div></div>
-      <div class="kpi"><div class="v peri" id="nb-live-above"></div><div class="k">del Nasdaq bajo su máximo de 12 meses<br>(el filtro pasa a efectivo si cae 18%)</div></div>
+      <div class="kpi"><div class="v peri" id="nb-live-above"></div><div class="k">del Nasdaq bajo su máximo de 9 meses<br>(el filtro pasa a efectivo si cae 18%)</div></div>
       <div class="kpi"><div class="v" id="nb-live-nh">20</div><div class="k">acciones en cartera<br>las de mayor momentum hoy</div></div>
     </div>
     <div class="stwrap"><table class="stable" id="nb-live-table"></table></div>
-    <p class="note">Retorno de cada acción a distintos plazos (su P&amp;L). Cada fin de mes se repite el proceso: si el Nasdaq sigue cerca de sus máximos, se mantienen o rotan las 20 de mayor momentum (6 meses); si cae 18% bajo su máximo de 12 meses, todo pasa a efectivo. Lista ilustrativa del universo S&P 500; los números exactos dependen de los ajustes por dividendos y splits del proveedor de datos.</p>
+    <p class="note">Retorno de cada acción a distintos plazos (su P&amp;L), ordenadas por el <b>momentum de 6 meses</b> que define la selección. Cada fin de mes se repite el proceso: si el Nasdaq sigue cerca de sus máximos, se mantienen o rotan las 20 de mayor momentum (6 meses); si cae 18% bajo su máximo de 9 meses, todo pasa a efectivo. Lista ilustrativa del universo S&P 500; los números exactos dependen de los ajustes por dividendos y splits del proveedor de datos.</p>
+  </section>
+
+  <!-- 12 · REGISTRO DE OPERACIONES -->
+  <section>
+    <h2><span class="n">10</span>El registro de operaciones</h2>
+    <p class="sub">Transparencia total: <b>cada compra y cada venta</b> de la estrategia (momentum 6m · top 20 · filtro de 9 meses) desde 2005. Los precios son <b>ajustados por splits y dividendos</b>, así que la cifra que importa es el <b>retorno</b> de cada operación —el que efectivamente capturó el backtest (retornos mensuales acotados a ±50% para neutralizar errores de datos)—; el precio de venta se deriva de ese retorno.</p>
+    <div class="lstats" id="led-stats"></div>
+    <div class="hsub2" style="margin-top:22px">Posiciones abiertas hoy (<span id="led-asof"></span>)</div>
+    <div class="ledwrap" style="max-height:none"><table class="led" id="led-open"></table></div>
+    <div class="hsub2" style="margin-top:22px">Historial completo <span class="lcount" id="led-count"></span></div>
+    <input class="lsearch" id="led-search" type="text" placeholder="Filtrar por ticker (ej. NVDA)…" autocomplete="off">
+    <div class="ledwrap"><table class="led" id="led-table"></table></div>
+    <p class="note">Round-trips (compra → venta) de la cartera. «Meses» = cuánto se sostuvo cada posición. <b style="color:var(--menta)">Verde</b> = ganancia, <b style="color:var(--rojo)">rojo</b> = pérdida. Lista completa del universo S&P 500 sin sesgo de supervivencia; los precios reflejan el ajuste por dividendos y splits del proveedor, por eso algunos valores absolutos difieren del precio nominal de pizarra.</p>
   </section>
 
   <!-- 13 · METODOLOGÍA -->
   <section>
-    <h2><span class="n">10</span>Metodología y datos</h2>
+    <h2><span class="n">11</span>Metodología y datos</h2>
     <div class="card">
       <div class="hsub2" style="color:var(--menta)">De dónde salió la data</div>
       <p class="sub" style="margin-top:4px">Precios mensuales reales (cierre ajustado = rendimiento total, con dividendos reinvertidos), de datos históricos de mercado. Para los índices y ETFs (SPY, QQQ, QLD, TQQQ, RSP, BIL) se usa su serie diaria real; el tramo previo al listado de los apalancados (QLD, TQQQ) se simula con rebalanceo diario sobre el Nasdaq-100 y se ancla a su precio real desde que existen.</p>
@@ -294,8 +335,8 @@
   var A_SHORT = {SPY:"SPY", QQQ:"QQQ", QLD:"QLD", TQQQ:"TQQQ"};
   var FREQ_NOM = {daily:"Diaria", weekly:"Semanal", monthly:"Mensual"};
   var ORDER = ["SPY","QQQ","QLD","TQQQ"];
-  var st = {asset:"QQQ", freq:"monthly", hmAsset:"QQQ", hmWindow:"9", hmMetric:"sharpe", csWindow:"9", csMetric:"medSharpe", nbPeriod:"20", nbMetric:"sharpe", nbFilter:"wh"};
-  var NB_NOM={SPY:"SPY · índice (comprar y mantener)", MOM25:"Momentum 6m · top 20", DUAL:"Momentum 6m/20 + filtro 52-sem", M52:"52-week high · top 30", LOSERS:"Peores (control)", RSP:"Equiponderado (RSP · ETF real)"};
+  var st = {asset:"QQQ", freq:"monthly", hmAsset:"QQQ", hmWindow:"9", hmMetric:"sharpe", csWindow:"9", csMetric:"medSharpe", nbPeriod:"35", nbMetric:"sharpe", nbFilter:"wh", ledQ:""};
+  var NB_NOM={SPY:"SPY · índice (comprar y mantener)", MOM25:"Momentum 6m · top 20", DUAL:"Momentum 6m/20 + filtro 9 meses", M52:"52-week high · top 30", LOSERS:"Peores (control)", RSP:"Equiponderado (RSP · ETF real)"};
   var NB_COL={SPY:"#9AA1AB", MOM25:"#556DFB", DUAL:"#63FCAF", M52:"#E0A020", LOSERS:"#E0525A", RSP:"#7d8794"};
   var chNbEq=null, chNbDd=null, chNbYear=null, chNbDual=null, chNbFilter=null;
   var C = {menta:"#63FCAF", peri:"#556DFB", gris:"#9AA1AB", rojo:"#E0525A", grid:"rgba(140,150,170,.14)", txt:"#B9C0CA"};
@@ -306,6 +347,11 @@
   function pct(x){ return (x==null)?"—":(x>0?"":"")+x.toFixed(1)+"%"; }
   function pctS(x){ return (x==null)?"—":(x>0?"+":"")+x.toFixed(1)+"%"; }
   function two(x){ return (x==null)?"—":x.toFixed(2); }
+  function benchBarHTML(label, num, metricName, winN, totN){
+    return '<div class="bcol"><div class="bl">'+label+'</div><div class="bv">'+num+' <small>'+metricName+'</small></div></div>'+
+      '<div class="bsep"></div>'+
+      '<div class="bcol"><div class="bl">La estrategia le gana en</div><div class="bwin"><b>'+winN+'</b> / '+totN+' combinaciones</div></div>';
+  }
 
   // ---- KPIs (QQQ mensual, headline) ----
   function buildKpis(){
@@ -472,9 +518,11 @@
     });
     byId("heatmap").innerHTML=h+'</tbody></table>';
     var bh=W.assets[st.hmAsset].bh;
+    var bhVal=isSh?bh.sharpe:bh.cagr, winN=flat.filter(function(v){return v>bhVal;}).length;
+    byId("bench-heat").innerHTML=benchBarHTML("Comprar y mantener "+A_SHORT[st.hmAsset],
+      isSh?two(bh.sharpe):pct(bh.cagr), isSh?"Sharpe":"CAGR", winN, flat.length);
     byId("hmcap").innerHTML=(isSh?"Sharpe":"CAGR")+" de la estrategia sobre "+A_NOM[st.hmAsset]+
       " · ventana "+st.hmWindow+" meses · verde = mejor · borde verde = configuración elegida (6%/18%). "+
-      "Referencia — <b>comprar y mantener "+A_SHORT[st.hmAsset]+": Sharpe "+two(bh.sharpe)+" · CAGR "+pct(bh.cagr)+"</b>. "+
       "La zona verde amplia (no un solo punto) muestra que el resultado es robusto al parámetro elegido.";
   }
 
@@ -545,7 +593,6 @@
   function renderNB(){
     var NB=window.WNB; if(!NB) return;
     byId("nb-ntick").textContent=NB.ntick;
-    seg("seg-nb-period", [{val:"20",lbl:NB.periods["20"].label},{val:"35",lbl:NB.periods["35"].label}], st.nbPeriod, function(v){ st.nbPeriod=v; renderNB(); });
     var per=NB.periods[st.nbPeriod], S=per.strats, order=["SPY","MOM25","DUAL","LOSERS","RSP"], spym=S.SPY.m;
     var h='<thead><tr><th>Estrategia</th><th>CAGR</th><th>Sharpe</th><th>Calmar</th><th>Peor caída</th></tr></thead><tbody>';
     order.forEach(function(k){
@@ -603,10 +650,10 @@
     byId("nb-live-status").style.color=L.inmarket?"var(--menta)":"var(--amber)";
     byId("nb-live-status-k").innerHTML=L.inmarket?"el Nasdaq está cerca de sus máximos<br>→ se mantienen las 20 acciones":"el Nasdaq perdió su tendencia<br>→ todo a efectivo";
     byId("nb-live-above").textContent="−"+L.distHigh.toFixed(1)+"%";
-    var lh='<thead><tr><th>Acción</th><th>12 m</th><th>6 m</th><th>3 m</th><th>1 m</th></tr></thead><tbody>';
-    L.holdings.forEach(function(h){
+    var lh='<thead><tr><th>Acción</th><th>6 m (selección)</th><th>3 m</th><th>1 m</th></tr></thead><tbody>';
+    L.holdings.slice().sort(function(a,b){ return (b.r6==null?-1e9:b.r6)-(a.r6==null?-1e9:a.r6); }).forEach(function(h){
       function c(v){ return '<td class="'+nbColor(v)+'">'+(v==null?"—":pctS(v))+'</td>'; }
-      lh+='<tr><td class="tk">'+h.t+'</td>'+c(h.r12)+c(h.r6)+c(h.r3)+c(h.r1)+'</tr>';
+      lh+='<tr><td class="tk">'+h.t+'</td>'+c(h.r6)+c(h.r3)+c(h.r1)+'</tr>';
     });
     byId("nb-live-table").innerHTML=lh+'</tbody>';
     // metodología
@@ -664,26 +711,20 @@
       h+='</tr>';
     });
     byId("heatmap-nb").innerHTML=h+'</tbody></table>';
+    byId("bench-nb").innerHTML=benchBarHTML("Índice SPY (comprar y mantener)",
+      st.nbMetric==="sharpe"?two(sw.bhSharpe):pct(sw.bhCagr), M.lbl, nWin, nTot);
     var chv=(chR>=0&&chC>=0&&grid[chR][chC]!=null)?M.fmt(grid[chR][chC]):"—";
-    byId("hmcap-nb").innerHTML=M.lbl+" de la estrategia por ventana × nº de acciones (2005–2025). Referencia — <b>índice SPY: Sharpe "+two(sw.bhSharpe)+" · CAGR "+pct(sw.bhCagr)+"</b> — verde = le gana, rojo = pierde. <b style='color:var(--menta)'>Config usada: 6 m × 20 (borde verde) → "+chv+"</b>. Mejor del mapa: "+sw.Ls[best.r]+" m × "+sw.Ns[best.c]+" → "+M.fmt(best.v)+".";
+    byId("hmcap-nb").innerHTML=M.lbl+" de la estrategia por ventana × nº de acciones (2005–2025). Verde = le gana al índice, rojo = pierde. <b style='color:var(--menta)'>Config usada: 6 m × 20 (borde verde) → "+chv+"</b>. Mejor del mapa: "+sw.Ls[best.r]+" m × "+sw.Ns[best.c]+" → "+M.fmt(best.v)+".";
     byId("nb-sweep-concl").innerHTML="<b style='color:var(--menta)'>Conclusión:</b> la estrategia le gana al índice en <b>"+nWin+" de "+nTot+"</b> combinaciones de "+M.lbl+" — casi todo el mapa. El edge no vive en un número mágico: es robusto a la ventana de momentum y a cuántas acciones se tengan. Eso es señal de un efecto real, no de sobreajuste.";
   }
 
   // ---- el filtro: verlo y elegir tipo ----
   function renderFilterSection(){
-    var NB=window.WNB; if(!NB||!NB.deep.filters) return; var F=NB.deep.filters;
-    seg("seg-nb-filter", [{val:"none",lbl:"Sin filtro"},{val:"sma",lbl:"Media 10m"},{val:"wh",lbl:"Máx 52-sem"}], st.nbFilter, function(v){ st.nbFilter=v; renderFilterSection(); });
-    var none=F.none, sel=F[st.nbFilter];
-    byId("nb-fn-cagr").textContent=pct(none.m.cagr); byId("nb-fn-sh").textContent=two(none.m.sharpe); byId("nb-fn-dd").textContent=pct(none.m.maxdd);
+    var NB=window.WNB; if(!NB||!NB.deep.filters) return; var sel=NB.deep.filters.wh;
     byId("nb-fs-name").textContent=sel.nom;
     byId("nb-fs-cagr").textContent=pct(sel.m.cagr); byId("nb-fs-sh").textContent=two(sel.m.sharpe); byId("nb-fs-dd").textContent=pct(sel.m.maxdd);
     byId("nb-fs-pin").textContent=(sel.pin==null?"100":Math.round(sel.pin))+"%";
-    var box=byId("nb-filter-box"), note=byId("nb-filter-note");
-    if(!sel.viz){ box.style.display="none";
-      note.innerHTML="Sin filtro, la estrategia está <b>siempre invertida</b>: rinde más en la subida ("+pct(none.m.cagr)+" anual) pero se come la caída completa (<b style='color:var(--rojo)'>"+pct(none.m.maxdd)+"</b>). Elegí un filtro para ver la señal y cómo protege.";
-      return; }
-    box.style.display="";
-    note.innerHTML="Se grafica "+sel.ref+" (escala log). La línea es <b style='color:var(--menta)'>verde cuando la estrategia está invertida</b> y <b style='color:var(--gris-sec)'>gris cuando está en efectivo</b>; las bandas rojas son los tramos fuera del mercado. La <b style='color:var(--amber)'>línea punteada</b> es la referencia del filtro.";
+    byId("nb-filter-note").innerHTML="Se grafica "+sel.ref+" (escala log). La línea es <b style='color:var(--menta)'>verde cuando la estrategia está invertida</b> y <b style='color:var(--gris-sec)'>gris cuando está en efectivo</b>; las bandas rojas son los tramos fuera del mercado. La <b style='color:var(--amber)'>línea punteada</b> es la referencia del filtro.";
     whenNbChart(function(){ drawFilterViz(sel.viz); });
   }
   function drawFilterViz(V){
@@ -705,14 +746,46 @@
     ,plugins:[shade]});
   }
 
+  // ---- registro de operaciones ----
+  function fmtP(v){ return (v>=100)?Math.round(v).toLocaleString("en-US"):v.toFixed(2); }
+  function renderLedger(){
+    var NB=window.WNB; if(!NB||!NB.deep||!NB.deep.ledger) return; var Lg=NB.deep.ledger, s=Lg.stats;
+    byId("led-stats").innerHTML=
+      '<div class="ls"><div class="v">'+s.n.toLocaleString("en-US")+'</div><div class="k">operaciones cerradas<br>(2005 – hoy)</div></div>'+
+      '<div class="ls"><div class="v g">'+Math.round(s.win)+'%</div><div class="k">terminaron en ganancia<br>(win rate)</div></div>'+
+      '<div class="ls"><div class="v '+(s.avgret>=0?'g':'r')+'">'+pctS(s.avgret)+'</div><div class="k">retorno medio<br>por operación</div></div>'+
+      '<div class="ls"><div class="v">'+s.avgmo.toFixed(1)+'</div><div class="k">meses de tenencia<br>promedio</div></div>';
+    byId("led-asof").textContent=NB.deep.live.asof;
+    var oh='<thead><tr><th>Acción</th><th>Compra</th><th>P. compra</th><th>P. actual</th><th>Retorno</th><th>Meses</th></tr></thead><tbody>';
+    Lg.open.forEach(function(r){ // [t,buy,bp,cp,ret,mo]
+      oh+='<tr><td class="tk">'+r[0]+'</td><td class="muted">'+r[1]+'</td><td>$'+fmtP(r[2])+'</td><td>$'+fmtP(r[3])+'</td><td class="'+(r[4]>=0?'g':'r')+'" style="font-weight:700">'+pctS(r[4])+'</td><td class="muted">'+r[5]+'</td></tr>';
+    });
+    byId("led-open").innerHTML=oh+'</tbody>';
+    var inp=byId("led-search");
+    if(inp && !inp._wired){ inp._wired=true; inp.addEventListener("input",function(){ st.ledQ=inp.value.trim().toUpperCase(); drawLedgerTable(); }); }
+    drawLedgerTable();
+  }
+  function drawLedgerTable(){
+    var Lg=window.WNB.deep.ledger, q=st.ledQ;
+    var rows=Lg.trades; // [t,buy,sell,pc,pv,ret,mo], más reciente primero
+    if(q) rows=rows.filter(function(r){ return r[0].indexOf(q)>=0; });
+    byId("led-count").textContent="· "+rows.length.toLocaleString("en-US")+" operaciones"+(q?(' con «'+q+'»'):"");
+    if(!rows.length){ byId("led-table").innerHTML='<tbody><tr><td class="muted" style="padding:18px">Sin operaciones para «'+q+'».</td></tr></tbody>'; return; }
+    var h='<thead><tr><th>Acción</th><th>Compra</th><th>Venta</th><th>P. compra</th><th>P. venta</th><th>Retorno</th><th>Meses</th></tr></thead><tbody>';
+    h+=rows.map(function(r){
+      return '<tr><td class="tk">'+r[0]+'</td><td class="muted">'+r[1]+'</td><td class="muted">'+r[2]+'</td><td>$'+fmtP(r[3])+'</td><td>$'+fmtP(r[4])+'</td><td class="'+(r[5]>=0?'g':'r')+'" style="font-weight:700">'+pctS(r[5])+'</td><td class="muted">'+r[6]+'</td></tr>';
+    }).join("");
+    byId("led-table").innerHTML=h+'</tbody>';
+  }
+
   // ---- init tras cargar Chart.js ----
   function start(){
-    buildKpis(); renderCompare(); renderHeat(); renderNB(); renderFilterSection(); renderDeep();
+    buildKpis(); renderCompare(); renderHeat(); renderNB(); renderFilterSection(); renderDeep(); renderLedger();
   }
   var s=document.createElement("script");
   s.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
   s.onload=start;
-  s.onerror=function(){ buildKpis(); renderTable(); renderHeat(); renderNB(); renderFilterSection(); renderDeep(); };
+  s.onerror=function(){ buildKpis(); renderTable(); renderHeat(); renderNB(); renderFilterSection(); renderDeep(); renderLedger(); };
   document.head.appendChild(s);
 })();
 </script>
