@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de retiro · Empowered Investor</title>
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Plan de retiro · Empowered Investor">
+<meta property="og:description" content="Diseñá tu plan de retiro que baja el riesgo por etapas, como los fondos de pensiones: apalancado → acciones → renta fija.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#556DFB; --oro:#E0A020; --rojo:#E0525A; }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:960px; margin:0 auto; padding:22px 16px 80px; }
+  a.logo{ display:block; text-align:center; margin-bottom:8px; }
+  a.logo img{ height:44px; }
+  h1{ font-size:26px; font-weight:800; color:var(--crema); text-align:center; margin:6px 0 2px; letter-spacing:-.5px; }
+  .sub{ text-align:center; color:var(--gris-sec); font-size:14px; margin:0 auto 22px; max-width:640px; }
+  .tsub{ font-size:19px; font-weight:800; color:var(--crema); margin:26px 0 4px; }
+  .note{ font-size:13.5px; color:var(--gris-sec); margin:2px 0 12px; }
+  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:16px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+  .field{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:9px 11px; }
+  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); margin-bottom:5px; }
+  .field .row{ display:flex; align-items:center; gap:6px; }
+  .field input{ width:100%; background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:8px;
+    padding:7px 9px; font-size:16px; font-weight:700; font-family:inherit; }
+  .field input:focus{ outline:none; border-color:var(--menta); }
+  .field .big{ font-size:19px; font-weight:800; color:var(--crema); flex:1; }
+  .steps{ display:flex; flex-direction:column; gap:2px; }
+  .stp{ width:26px; min-height:15px; flex:1; background:var(--input); border:1px solid var(--bd); color:var(--gris-sec);
+    border-radius:6px; font-size:9px; cursor:pointer; line-height:1; }
+  .stp:hover{ border-color:var(--menta); color:var(--menta); }
+  .seg{ display:inline-flex; background:var(--input); border:1px solid var(--bd); border-radius:9px; overflow:hidden; }
+  .seg button{ background:transparent; border:none; color:var(--gris-sec); padding:7px 11px; font-size:13px; font-weight:700;
+    cursor:pointer; font-family:inherit; }
+  .seg button.on{ background:var(--menta); color:var(--tinta); }
+  .btn{ background:var(--menta); color:var(--tinta); border:none; border-radius:999px; padding:12px 22px; font-size:15px;
+    font-weight:800; cursor:pointer; font-family:inherit; }
+  .btn:hover{ filter:brightness(1.05); } .btn:disabled{ opacity:.5; cursor:default; }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); }
+  .chart-wrap{ position:relative; height:300px; margin:8px 0; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; background:var(--card); border-radius:12px; overflow:hidden; }
+  th,td{ padding:9px 11px; text-align:right; border-bottom:1px solid var(--bd); }
+  th{ font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:700; }
+  td:first-child,th:first-child{ text-align:left; }
+  tr:last-child td{ border-bottom:none; }
+  tr.best{ background:rgba(99,252,175,.10); } tr.best td{ color:var(--menta); font-weight:800; }
+  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:10px 0; }
+  .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; }
+  .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; }
+  .kpi .v{ font-size:22px; font-weight:800; color:var(--crema); margin-top:2px; }
+  .kpi .v.men{ color:var(--menta); } .kpi .v.per{ color:var(--peri); } .kpi .v.rojo{ color:var(--rojo); }
+  .perfiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
+  .perfil{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px; }
+  .perfil h3{ margin:0 0 2px; font-size:17px; color:var(--crema); } .perfil .obj{ font-size:12px; color:var(--gris-sec); margin-bottom:8px; }
+  .perfil .line{ display:flex; justify-content:space-between; font-size:13px; padding:3px 0; border-bottom:1px solid rgba(42,49,64,.5); }
+  .perfil .line b{ color:var(--crema); }
+  .perfil button{ margin-top:10px; width:100%; }
+  .legend{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; font-size:12px; color:var(--gris-sec); margin-top:4px; }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; } .legend i{ width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .foot{ font-size:12px; color:var(--gris-sec); margin-top:30px; text-align:center; }
+  .hl{ color:var(--menta); } b{ color:var(--crema); }
+  .warnbox{ background:rgba(224,82,90,.10); border:1px solid rgba(224,82,90,.4); border-radius:12px; padding:11px 13px; font-size:13.5px; color:#ffb4b8; }
+  .okbox{ background:rgba(99,252,175,.08); border:1px solid rgba(99,252,175,.4); border-radius:12px; padding:12px 14px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+  <h1>Diseñá tu plan de retiro</h1>
+  <p class="sub">Un plan que <b>baja el riesgo por etapas</b> a medida que te acercás a tu meta — igual que los fondos de pensiones. Empieza agresivo (apalancado), pasa a acciones normales, y termina sobre todo en <b>renta fija</b> segura. Acá lo diseñás, lo ves, y elegís tu perfil.</p>
+
+  <!-- ===== 1. TUS DATOS ===== -->
+  <div class="tsub">1 · Tus datos</div>
+  <p class="note">Todo en dólares. La meta de capital = lo que necesitás para vivir del interés sin tocar el capital.</p>
+  <div class="grid">
+    <div class="field"><label>Edad hoy</label><div class="row"><b class="big" id="v-edad">30</b><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Edad de retiro</label><div class="row"><b class="big" id="v-edadret">65</b><div class="steps"><button class="stp" data-s="edadret" data-d="1">▲</button><button class="stp" data-s="edadret" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><input id="i-meta" inputmode="numeric" value="10,000"></div></div>
+    <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Aporte ($/mes)</label><div class="row"><input id="i-aporte" inputmode="numeric" value="1,000"></div></div>
+    <div class="field"><label>Renta fija SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Activo apalancado</label><div class="row"><div class="seg" id="seg-L"><button data-a="QLD">QLD 2×</button><button data-a="TQQQ" class="on">TQQQ 3×</button></div></div></div>
+    <div class="field"><label>Acciones (fase 2)</label><div class="row"><div class="seg" id="seg-E"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button></div></div></div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="k">Años para juntar</div><div class="v" id="k-anios">35</div></div>
+    <div class="kpi"><div class="k">Meta de capital</div><div class="v per" id="k-meta">$3.0M</div></div>
+    <div class="kpi"><div class="k">De tu bolsillo</div><div class="v" id="k-aportado">$0</div></div>
+  </div>
+
+  <!-- ===== 2. EL PLAN Y SU TRANSICIÓN ===== -->
+  <div class="tsub">2 · Cómo baja el riesgo tu plan</div>
+  <p class="note">El eje de abajo es tu <b>avance hacia la meta</b> (0% = arrancás, 100% = ya la juntaste). Cada color es en qué está tu plata en ese momento. Movés las 3 perillas y ves la transición al instante.</p>
+  <div class="card">
+    <div class="chart-wrap"><canvas id="glide-chart"></canvas></div>
+    <div class="legend">
+      <span><i style="background:var(--rojo)"></i> Apalancado (<b id="lg-L">TQQQ</b>)</span>
+      <span><i style="background:var(--peri)"></i> Acciones (<b id="lg-E">SPY</b>)</span>
+      <span><i style="background:var(--menta)"></i> San José Capital (renta fija)</span>
+    </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="field"><label>Salir del apalancado al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Renta fija al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
+    </div>
+    <p class="note" id="plan-txt" style="margin-top:10px"></p>
+  </div>
+
+  <!-- ===== 3. ESTUDIO ===== -->
+  <div class="tsub">3 · ¿Qué plan te da más valor?</div>
+  <p class="note">Probamos <b>5,000 futuros del mercado</b> (mismas rachas para todos, para comparar justo). <b>P(meta)</b> = de cada 100 futuros, en cuántos llegás a tu meta. <b>Piso (p25)</b> = con qué terminás en los años malos. <b>Típico (p50)</b> = el caso del medio. <b>Máx. caída</b> = el peor bajón que verías en la cuenta.</p>
+  <button class="btn" id="btn-estudio">▶ Correr el estudio</button>
+  <div id="estudio-out" style="margin-top:14px"></div>
+
+  <!-- ===== 4. RESTRICCIÓN ===== -->
+  <div class="tsub">4 · "Quiero jugar seguro"</div>
+  <p class="note">Fijá una probabilidad mínima de llegar a la meta y buscamos el plan que <b>más patrimonio te deja</b> cumpliendo esa seguridad.</p>
+  <div class="grid" style="max-width:420px">
+    <div class="field"><label>P(meta) mínima que querés</label><div class="row"><b class="big" id="v-pmin">70%</b><div class="steps"><button class="stp" data-s="pmin" data-d="1">▲</button><button class="stp" data-s="pmin" data-d="-1">▼</button></div></div></div>
+  </div>
+  <button class="btn ghost" id="btn-restr" style="margin-top:10px">▶ Buscar el mejor plan seguro</button>
+  <div id="restr-out" style="margin-top:12px"></div>
+
+  <!-- ===== 5. PERFILES ===== -->
+  <div class="tsub">5 · Tres perfiles de retiro</div>
+  <p class="note">Corremos un barrido grande y elegimos el mejor plan para cada estilo. Tocá <b>Usar este plan</b> y se carga arriba con su visualización.</p>
+  <button class="btn" id="btn-perfiles">▶ Calcular los 3 perfiles</button>
+  <div class="perfiles" id="perfiles-out" style="margin-top:14px"></div>
+
+  <p class="foot">Herramienta educativa de Empowered Investor. Los resultados son simulaciones sobre datos históricos (1990–2025) sorteados al azar; no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija con permanencia mínima de 3 años. Todo neto de costos de transferencias internacionales y del servicio.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+"use strict";
+// ===== Retornos anuales (total return, con dividendos). QLD/TQQQ simulados con rebalanceo diario. =====
+var HR={
+  SPY:{1990:-7.96,1991:26.31,1992:4.46,1993:9.45,1994:0.4,1995:38.05,1996:22.5,1997:33.48,1998:28.69,1999:20.39,2000:-9.74,2001:-11.76,2002:-21.58,2003:28.18,2004:10.7,2005:4.83,2006:15.85,2007:5.15,2008:-36.8,2009:26.35,2010:15.06,2011:1.89,2012:15.99,2013:32.31,2014:13.46,2015:1.23,2016:12.0,2017:21.71,2018:-4.57,2019:31.22,2020:18.33,2021:28.73,2022:-18.18,2023:26.18,2024:24.89,2025:17.72},
+  QQQ:{1990:-11.31,1991:64.99,1992:8.86,1993:10.58,1994:1.5,1995:42.54,1996:42.54,1997:20.63,1998:85.3,1999:97.72,2000:-36.11,2001:-33.34,2002:-37.37,2003:49.67,2004:10.54,2005:1.57,2006:7.14,2007:19.03,2008:-41.73,2009:54.68,2010:20.14,2011:3.48,2012:18.11,2013:36.63,2014:19.18,2015:9.44,2016:7.1,2017:32.66,2018:-0.13,2019:38.96,2020:48.41,2021:27.42,2022:-32.58,2023:54.86,2024:25.58,2025:20.77},
+  QLD:{1990:-28.02,1991:146.67,1992:7.9,1993:12.41,1994:-5.09,1995:83.08,1996:82.66,1997:27.99,1998:192.39,1999:232.61,2000:-72.3,2001:-68.59,2002:-68.74,2003:99.63,2004:12.32,2005:-4.01,2006:2.48,2007:29.03,2008:-72.89,2009:121.2,2010:36.9,2011:0.04,2012:34.77,2013:82.11,2014:37.59,2015:14.74,2016:10.04,2017:70.34,2018:-8.31,2019:81.69,2020:88.9,2021:54.67,2022:-60.52,2023:117.72,2024:42.81,2025:30.36},
+  TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35}
+};
+var NOM={SPY:"SPY (S&P 500)", QQQ:"QQQ (Nasdaq-100)", QLD:"QLD · Nasdaq 2×", TQQQ:"TQQQ · Nasdaq 3×"};
+var SWIFT=65, EI_SETUP=2000, EI_MGMT=0.01;
+
+// ===== estado =====
+var S={ edad:30, edadret:65, ret:4, sjc:8, L:"TQQQ", E:"SPY", p1:70, p2:100, ff:70, pmin:70 };
+
+// ===== helpers =====
+function byId(id){ return document.getElementById(id); }
+function ent(x){ x=parseInt(String(x).replace(/[^0-9-]/g,""),10); return isNaN(x)?0:x; }
+function num(s){ var d=String(s||"").replace(/[^0-9.]/g,""); var n=parseFloat(d); return isNaN(n)?0:n; }
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function money(n){ n=Math.round(n); if(Math.abs(n)>=1e6) return "$"+(n/1e6).toFixed(2)+"M"; if(Math.abs(n)>=1e3) return "$"+Math.round(n/1e3)+"k"; return "$"+n; }
+function fmt1(n){ return (Math.round(n*10)/10).toString(); }
+function anios(){ return Math.max(1, S.edadret-S.edad); }
+function metaMensual(){ return num(byId("i-meta").value); }
+function aporte(){ return num(byId("i-aporte").value); }
+function metaCapital(){ return S.ret>0 ? metaMensual()*12/(S.ret/100) : 0; }
+
+// pesos del glidepath por fondeo φ (fracción)
+function fwW(phi, p1, p2, Ff){
+  var wL,wE,wF; p1/=100; p2/=100; Ff/=100; if(p2<=p1)p2=p1+0.01;
+  if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; }
+  else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; }
+  else { wL=0; wF=Ff; wE=1-Ff; }
+  return [wL,wE,wF];
+}
+
+// ===== Monte Carlo de una estrategia (stratFn(phi)->[wL,wE,wF]) =====
+function poolYears(L,E){ var p=[]; for(var y=1990;y<=2025;y++){ if(HR[L][y]!=null&&HR[E][y]!=null) p.push(y); } return p; }
+function makeDraws(N,nY,np){ var d=[]; for(var q=0;q<N;q++){ var r=new Int16Array(nY+1); for(var t=1;t<=nY;t++) r[t]=(Math.random()*np)|0; d.push(r); } return d; }
+function pct(sorted,p){ var i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return lo===hi?sorted[lo]:sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
+function tir(cap,ap,M,V){ if(ap<=0){ if(cap<=0)return 0; return Math.pow(V/cap,12/M)-1; }
+  function fv(i){ if(Math.abs(i)<1e-9)return cap+ap*M; var f=Math.pow(1+i,M); return cap*f+ap*(f-1)/i; }
+  var lo=-0.99,hi=1; if(fv(hi)<V)hi=5; for(var k=0;k<120;k++){ var m=(lo+hi)/2,f=fv(m); if(Math.abs(f-V)<1)return Math.pow(1+m,12)-1; if(f<V)lo=m; else hi=m; } return Math.pow(1+(lo+hi)/2,12)-1; }
+
+function simMC(stratFn, N, draws, poolY, opt){
+  var nY=anios(), ap=aporte(), meta=metaCapital(), L=S.L, E=S.E, rF=S.sjc/100;
+  var np=poolY.length, M=nY*12, feeS=opt.costos?SWIFT:0, mgmt=opt.costos?EI_MGMT:0, setup0=opt.costos?EI_SETUP:0;
+  var finals=new Float64Array(N), maxdds=new Float64Array(N), calms=[], nMeta=0;
+  for(var q=0;q<N;q++){
+    var b=0,setup=setup0,pending=0,peak=0,maxdd=0,phiPeak=0,row=draws[q];
+    for(var t=1;t<=nY;t++){
+      var phi=meta>0?b/meta:0; if(phi>phiPeak)phiPeak=phi;
+      var w=stratFn(phiPeak), yr=poolY[row[t]];
+      var rY=w[0]*HR[L][yr]/100 + w[1]*HR[E][yr]/100 + w[2]*rF, mr=Math.pow(1+rY,1/12)-1;
+      for(var m=0;m<12;m++){
+        b=b*(1+mr); if(b>peak)peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd)maxdd=d; }
+        pending+=ap;
+        if(pending>0){ var net=pending-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; pending=0; }
+      }
+      if(mgmt) b*=(1-mgmt*(w[0]+w[1]));
+    }
+    finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta)nMeta++;
+    var ti=tir(0,ap,M,b); if(maxdd<-1e-9&&isFinite(ti)) calms.push(ti/Math.abs(maxdd));
+  }
+  finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;});
+  return { p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5), pMeta:100*nMeta/N,
+           calmarMed:calms.length?pct(calms,.5):0 };
+}
+
+// ===== barrido de frameworks =====
+function combosFW(){ var c=[]; [40,50,60,70,80,90].forEach(function(p1){ [90,100,110].forEach(function(p2){ [40,60,80,100].forEach(function(Ff){ c.push({p1:p1,p2:p2,Ff:Ff}); }); }); }); return c; }
+function sweepFW(N, opt){
+  var poolY=poolYears(S.L,S.E), draws=makeDraws(N, anios(), poolY.length), combos=combosFW(), out=[];
+  combos.forEach(function(cb){
+    var r=simMC(function(phi){ return fwW(phi,cb.p1,cb.p2,cb.Ff); }, N, draws, poolY, opt);
+    r.p1=cb.p1; r.p2=cb.p2; r.Ff=cb.Ff; out.push(r);
+  });
+  return out;
+}
+
+// ===== KPIs de datos =====
+function refresh(){
+  byId("v-edad").textContent=S.edad; byId("v-edadret").textContent=S.edadret;
+  byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
+  byId("v-p1").textContent=S.p1+"%"; byId("v-p2").textContent=S.p2+"%"; byId("v-ff").textContent=S.ff+"%";
+  byId("v-pmin").textContent=S.pmin+"%";
+  byId("k-anios").textContent=anios();
+  byId("k-meta").textContent=money(metaCapital());
+  byId("k-aportado").textContent=money(aporte()*12*anios());
+  byId("lg-L").textContent=S.L; byId("lg-E").textContent=S.E;
+  drawGlide();
+  var ap=aporte();
+  byId("plan-txt").innerHTML="Con este plan: mientras llevás <b>menos del "+S.p1+"%</b> de tu meta, tu plata está en el apalancado <b>"+S.L+"</b>. Al pasar el <b>"+S.p1+"%</b> salís a <b>"+S.E+"</b>. Después vas moviéndote de a poco a <b>San José Capital</b> hasta llegar a la meta con <b>"+S.ff+"% en renta fija</b> y <b>"+(100-S.ff)+"% en "+S.E+"</b> todavía creciendo.";
+}
+
+// ===== gráfico del glidepath (área apilada por fondeo) =====
+var glideChart=null;
+function drawGlide(){
+  var ctx=byId("glide-chart"); if(!ctx||typeof Chart==="undefined") return;
+  var xs=[], dL=[], dE=[], dF=[];
+  for(var i=0;i<=130;i+=2){ var phi=i/100, w=fwW(phi,S.p1,S.p2,S.ff);
+    xs.push(i); dL.push(Math.round(w[0]*100)); dE.push(Math.round(w[1]*100)); dF.push(Math.round(w[2]*100)); }
+  var data={ labels:xs, datasets:[
+    {label:"Apalancado", data:dL, backgroundColor:"rgba(224,82,90,.55)", borderColor:"var(--rojo)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
+    {label:"Acciones", data:dE, backgroundColor:"rgba(85,109,251,.55)", borderColor:"var(--peri)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
+    {label:"Renta fija", data:dF, backgroundColor:"rgba(99,252,175,.55)", borderColor:"var(--menta)", borderWidth:0, fill:true, pointRadius:0, tension:.15}
+  ]};
+  var opts={ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+    interaction:{mode:"index",intersect:false},
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ title:function(it){return "Avance a la meta: "+it[0].label+"%";}, label:function(it){return it.dataset.label+": "+it.raw+"%";} } } },
+    scales:{ x:{ stacked:true, title:{display:true,text:"Avance hacia tu meta (%)",color:"#9AA1AB",font:{size:12}}, ticks:{color:"#9AA1AB",maxTicksLimit:9,callback:function(v){return this.getLabelForValue(v);}}, grid:{color:"rgba(140,150,170,.10)"} },
+      y:{ stacked:true, min:0, max:100, title:{display:true,text:"% de tu plata",color:"#9AA1AB",font:{size:12}}, ticks:{color:"#9AA1AB",callback:function(v){return v+"%";}}, grid:{color:"rgba(140,150,170,.12)"} } } };
+  if(glideChart){ glideChart.data=data; glideChart.options=opts; glideChart.update(); }
+  else glideChart=new Chart(ctx,{type:"line",data:data,options:opts});
+}
+
+// ===== render de una tabla de resultados =====
+function filaMetrics(nombre, r, best){
+  return '<tr'+(best?' class="best"':'')+'><td>'+nombre+'</td><td>'+Math.round(r.pMeta)+'%</td><td>'+money(r.p25)+'</td><td>'+money(r.p50)+'</td><td>'+fmt1(r.maxddMed)+'%</td><td>'+r.calmarMed.toFixed(2)+'</td></tr>';
+}
+
+// ===== 3 · ESTUDIO: enfoques + mejor framework =====
+function correrEstudio(){
+  var out=byId("estudio-out"); out.innerHTML='<p class="note">Corriendo 5,000 futuros…</p>';
+  setTimeout(function(){
+    var poolY=poolYears(S.L,S.E), N=5000, draws=makeDraws(N, anios(), poolY.length), opt={costos:true};
+    var enfoques=[
+      {n:"Todo apalancado (nunca des-riesga)", f:function(){return [1,0,0];}},
+      {n:"Solo acciones ("+S.E+")", f:function(){return [0,1,0];}},
+      {n:"Mitad apalancado / mitad acciones", f:function(){return [.5,.5,0];}},
+      {n:"Todo en renta fija (SJC "+S.sjc+"%)", f:function(){return [0,0,1];}}
+    ];
+    var rows="";
+    enfoques.forEach(function(e){ var r=simMC(e.f,N,draws,poolY,opt); rows+=filaMetrics(e.n,r,false); });
+    // el framework que MÁS te asegura llegar a la meta (objetivo real del retiro)
+    var fw=sweepFW(4000,opt); var best=fw.reduce(function(a,b){return b.pMeta>a.pMeta?b:a;},fw[0]);
+    var rbest=simMC(function(phi){return fwW(phi,best.p1,best.p2,best.Ff);},N,draws,poolY,opt);
+    rows+=filaMetrics("<b>Framework por etapas</b> — "+S.L+"→"+S.E+"→SJC (sale al "+best.p1+"%, "+best.Ff+"% RF)",rbest,true);
+    out.innerHTML='<div style="overflow-x:auto"><table><thead><tr><th>Enfoque</th><th>P(meta)</th><th>Piso (p25)</th><th>Típico (p50)</th><th>Máx. caída</th><th>Calmar</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+      +'<p class="note" style="margin-top:8px">Para el retiro lo que más importa es <b class="hl">llegar a la meta</b>, no el techo. Ahí el <b>framework por etapas gana</b>: la mayor <b>P(meta)</b> con una caída controlada. Dejar <b>todo apalancado</b> tiene un techo altísimo, pero cae hasta <b>−97%</b> y en 1 de cada 3 futuros ni llegás. <b>Solo acciones</b> es tranquilo pero muchas veces no crece lo suficiente para juntar la meta. El framework hace lo sensato: arriesga fuerte al principio y, cuando ya casi ganaste, <b>lo protege</b>.</p>';
+  },30);
+}
+
+// ===== 4 · RESTRICCIÓN =====
+function correrRestriccion(){
+  var out=byId("restr-out"); out.innerHTML='<p class="note">Buscando…</p>';
+  setTimeout(function(){
+    var opt={costos:true}, fw=sweepFW(4000,opt);
+    var validos=fw.filter(function(r){ return r.pMeta>=S.pmin; });
+    if(!validos.length){
+      var mejorP=fw.reduce(function(a,b){return b.pMeta>a.pMeta?b:a;},fw[0]);
+      out.innerHTML='<div class="warnbox">Con estos aportes, <b>ningún plan llega al '+S.pmin+'%</b> de probabilidad — el máximo posible es <b>'+Math.round(mejorP.pMeta)+'%</b>. Para subir la seguridad: aportá más, empezá antes, o bajá la meta. La plata no se crea; el plan solo acomoda el riesgo.</div>';
+      return;
+    }
+    var best=validos.reduce(function(a,b){return b.p50>a.p50?b:a;},validos[0]);
+    S.p1=best.p1; S.p2=best.p2; S.ff=best.Ff; refresh();
+    out.innerHTML='<div class="okbox">El mejor plan que mantiene <b class="hl">P(meta) ≥ '+S.pmin+'%</b> y te deja más patrimonio: salir del apalancado al <b>'+best.p1+'%</b> de la meta y llegar con <b>'+best.Ff+'% en renta fija</b> al <b>'+best.p2+'%</b>. '
+      +'→ P(meta) <b>'+Math.round(best.pMeta)+'%</b> · típico <b>'+money(best.p50)+'</b> · piso <b>'+money(best.p25)+'</b> · máx. caída <b>'+fmt1(best.maxddMed)+'%</b>. <i>Ya lo cargué arriba en la visualización.</i></div>';
+  },30);
+}
+
+// ===== 5 · PERFILES =====
+function correrPerfiles(){
+  var out=byId("perfiles-out"); out.innerHTML='<p class="note">Corriendo un barrido grande…</p>';
+  setTimeout(function(){
+    var opt={costos:true}, fw=sweepFW(4000,opt);
+    var rapido=fw.reduce(function(a,b){return b.p50>a.p50?b:a;},fw[0]);
+    var moder=fw.reduce(function(a,b){return b.calmarMed>a.calmarMed?b:a;},fw[0]);
+    // más seguro = la MENOR caída entre los planes que todavía llegan razonablemente (P(meta) ≥ 60%)
+    var segPool=fw.filter(function(r){return r.pMeta>=60;}); if(!segPool.length) segPool=fw;
+    var seguro=segPool.reduce(function(a,b){return b.maxddMed>a.maxddMed?b:a;},segPool[0]);
+    var perfiles=[
+      {k:"rapido", ico:"🚀", n:"Más rápido", obj:"Máximo patrimonio típico (acepta sustos)", r:rapido},
+      {k:"moder", ico:"⚖️", n:"Moderado", obj:"Mejor equilibrio riesgo-retorno", r:moder},
+      {k:"seguro", ico:"🛡️", n:"Más seguro", obj:"La menor caída, sin perder chance de llegar", r:seguro}
+    ];
+    window.__perf={rapido:rapido, moder:moder, seguro:seguro};
+    var html="";
+    perfiles.forEach(function(pf){ var r=pf.r;
+      html+='<div class="perfil"><h3>'+pf.ico+' '+pf.n+'</h3><div class="obj">'+pf.obj+'</div>'
+        +'<div class="line"><span>Prob. de llegar</span><b>'+Math.round(r.pMeta)+'%</b></div>'
+        +'<div class="line"><span>Típico (p50)</span><b>'+money(r.p50)+'</b></div>'
+        +'<div class="line"><span>Piso (p25)</span><b>'+money(r.p25)+'</b></div>'
+        +'<div class="line"><span>Máx. caída</span><b>'+fmt1(r.maxddMed)+'%</b></div>'
+        +'<div class="line"><span>Sale del apal. a</span><b>'+r.p1+'% de meta</b></div>'
+        +'<div class="line"><span>Renta fija final</span><b>'+r.Ff+'%</b></div>'
+        +'<button class="btn" data-perf="'+pf.k+'">Usar este plan</button></div>';
+    });
+    out.innerHTML=html;
+    Array.prototype.forEach.call(out.querySelectorAll("button[data-perf]"), function(bt){
+      bt.addEventListener("click", function(){ var r=window.__perf[bt.getAttribute("data-perf")];
+        S.p1=r.p1; S.p2=r.p2; S.ff=r.Ff; refresh(); byId("glide-chart").scrollIntoView({behavior:"smooth",block:"center"}); });
+    });
+  },30);
+}
+
+// ===== eventos =====
+var LIM={ edad:[18,64], edadret:[40,80], ret:[2,10], sjc:[1,15], p1:[10,120], p2:[15,140], ff:[0,100], pmin:[10,95] };
+Array.prototype.forEach.call(document.querySelectorAll(".stp"), function(b){
+  b.addEventListener("click", function(){ var s=b.getAttribute("data-s"), d=parseInt(b.getAttribute("data-d"),10);
+    var step=(s==="p1"||s==="p2"||s==="ff"||s==="pmin")?5:1; var v=S[s]+d*step;
+    var lo=LIM[s][0], hi=LIM[s][1]; if(s==="edad"&&v>=S.edadret)v=S.edadret-1; if(s==="edadret"&&v<=S.edad)v=S.edad+1;
+    S[s]=Math.min(hi,Math.max(lo,v)); if(s==="p2"&&S.p2<=S.p1)S.p2=S.p1+5; refresh(); });
+});
+function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart,a=el.value.length;
+  el.value=d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a)));}catch(e){} refresh(); }); }
+comas(byId("i-meta")); comas(byId("i-aporte"));
+function initSeg(id, key){ var c=byId(id); Array.prototype.forEach.call(c.querySelectorAll("button"), function(b){
+  b.addEventListener("click", function(){ Array.prototype.forEach.call(c.querySelectorAll("button"),function(x){x.classList.remove("on");}); b.classList.add("on"); S[key]=b.getAttribute("data-a"); refresh(); }); }); }
+initSeg("seg-L","L"); initSeg("seg-E","E");
+byId("btn-estudio").addEventListener("click", correrEstudio);
+byId("btn-restr").addEventListener("click", correrRestriccion);
+byId("btn-perfiles").addEventListener("click", correrPerfiles);
+refresh();
+</script>
+</body>
+</html>
