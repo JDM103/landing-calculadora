@@ -80,6 +80,9 @@
   .qlbl{font-size:10px; color:var(--gris-sec); font-weight:700; text-transform:uppercase; letter-spacing:.05em;}
   .qrow{display:flex; align-items:center; gap:8px; margin-top:3px;}
   .qrow b{font-size:17px; font-weight:700; color:var(--menta); flex:1; white-space:nowrap;}
+  .qrow .qedit{flex:1; min-width:0; width:100%; background:transparent; border:none; border-bottom:1px dashed var(--bd);
+    outline:none; color:var(--menta); font-family:inherit; font-size:17px; font-weight:700; padding:0 0 1px;}
+  .qrow .qedit:focus{border-bottom-color:var(--menta); color:var(--crema);}
   .qsteps{display:flex; flex-direction:column; gap:2px; flex:0 0 auto;}
   .qs{width:26px; min-height:14px; flex:1; background:var(--tinta); border:1px solid var(--bd); color:var(--gris);
     border-radius:6px; font-size:9px; line-height:1; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center;}
@@ -119,6 +122,30 @@
   .hsub2{font-size:13px; font-weight:700; color:var(--gris); margin:20px 0 7px;}
   .dostablas{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
   @media (max-width:520px){ .dostablas{grid-template-columns:1fr;} }
+  /* Pesos del portafolio */
+  .wrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .wcell{display:flex; align-items:center; gap:5px; background:var(--card); border:1px solid var(--bd); border-radius:10px; padding:5px 8px;}
+  .wdot{width:9px; height:9px; border-radius:50%; flex:0 0 auto;}
+  .wnm{font-size:12px; font-weight:700; color:var(--gris-sec);}
+  .winp{width:44px; background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:7px;
+    font-family:inherit; font-size:14px; font-weight:700; padding:4px 6px; text-align:right; outline:none; min-width:0;}
+  .winp:focus{border-color:var(--menta);}
+  .wpct{font-size:12px; color:var(--gris-sec);}
+
+  /* Enviar proyección al cliente */
+  .sendcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 18px 20px; margin-top:8px;}
+  .sendcard textarea{width:100%; background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema);
+    font-family:inherit; font-size:15px; font-weight:400; line-height:1.5; padding:10px 12px; outline:none; resize:vertical; min-height:88px;}
+  .sendcard textarea:focus{border-color:var(--menta);}
+  .sendcard .pcampo input{background:var(--input); font-size:16px;}
+  .sendrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .sbtn{flex:1 1 auto; min-width:150px; background:var(--menta); color:var(--tinta); border:none; border-radius:999px;
+    font-family:inherit; font-size:15px; font-weight:700; padding:12px 18px; cursor:pointer; transition:opacity .15s;}
+  .sbtn:hover{opacity:.9;} .sbtn:disabled{opacity:.5; cursor:default;}
+  .sbtn.ghost{flex:0 1 auto; background:transparent; color:var(--gris); border:1px solid var(--bd);}
+  .sbtn.ghost:hover{border-color:var(--menta); color:var(--menta); opacity:1;}
+  .sendstatus{font-size:13px; margin-top:12px; line-height:1.5; min-height:18px;}
+  .sendstatus.ok{color:var(--menta);} .sendstatus.err{color:#E0525A;} .sendstatus.busy{color:var(--gris-sec);}
 </style>
 </head>
 <body class="locked">
@@ -187,35 +214,50 @@
 
   <p class="rtxt" id="r-retiro-txt" style="margin-top:0"></p>
 
-  <div class="tsub">Aporte según la tasa de crecimiento (misma meta y retiro)</div>
-  <table id="tabla-crec"><thead><tr><th>Crecimiento</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
-
-  <div class="tsub">Capital y aporte según la tasa de retiro (mismo crecimiento)</div>
-  <table id="tabla-ret"><thead><tr><th>Retiro</th><th>Capital</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
-
   <div class="hist-sep"></div>
   <h2 class="htit">🕰️ Experimento con la historia · ¿y si hubieras empezado hace años?</h2>
   <p class="hintro">Esto ya pasó de verdad. Rendimientos <b>reales año por año</b> (con dividendos reinvertidos) de <b>SPY</b> (S&P 500), <b>QQQ</b> (Nasdaq-100) y sus versiones apalancadas <b>QLD</b> (2×) y <b>TQQQ</b> (3×), más <b>San José Capital</b> como tasa fija. Data de <b>1990 a 2025</b>, en dólares.</p>
 
   <!-- 1 · CRECIMIENTO -->
   <div class="tsub" style="margin-top:6px">1 · Cómo habría crecido tu inversión, año por año</div>
-  <p class="hnote">Elegí abajo qué activos ver: los <b style="color:var(--menta)">verdes</b> se dibujan en el gráfico (podés ver varios a la vez). El último que tocás pasa a ser el protagonista de los números y del retiro. TQQQ y QLD arrancan apagados porque su escala aplasta al resto.</p>
+  <p class="hnote">Elegí el <b>activo</b> con los chips (el último que tocás es el protagonista: define la línea blanca, los números y el retiro/Monte Carlo). Elegí también <b>cada cuánto se gira</b> la plata (mensual, cada 3/6/12 meses o al juntar un monto) y si se cobra el <b>SWIFT ($65 por giro)</b> — así se ve el costo real de invertir de a poco. Con <b>Glide-path</b> podés simular tener el apalancado un tramo y luego desapalancar.</p>
   <div id="chart-wrap-hist" style="position:relative; height:400px; margin:6px 0 12px;"><canvas id="chart-hist"></canvas></div>
 
+  <!-- Rendimiento de los activos seleccionados (con la ventana y el filtro actuales) -->
+  <div class="hsub2" style="margin-top:6px">Rendimiento de los activos seleccionados · <span id="cmp-ctx">1990–2025</span></div>
+  <p class="hnote" style="margin-top:2px"><b>CAGR</b> = rendimiento del activo puro (buy &amp; hold). <b>TIR</b> = rendimiento de tu plata según lo que estás viendo: con aportes es el del portafolio, sin aportes es el del activo. <b>Máx. caída</b>, <b>Calmar</b> (CAGR ÷ máx. caída) y <b>Sharpe</b> (rf 2%) son del activo. Con la ventana y el filtro de abajo.</p>
+  <div style="overflow-x:auto"><table id="tabla-metrics"><thead><tr><th>Activo</th><th>CAGR</th><th>TIR</th><th>Máx. caída</th><th>Calmar</th><th>Sharpe</th></tr></thead><tbody></tbody></table></div>
+
   <div class="quick" id="quick-hist">
-    <div class="qc qcw"><span class="qlbl">Activos en el gráfico (tocá para mostrar/ocultar)</span><div class="chiprow" id="chips-acum"></div><div class="hprot">Números y retiro: <b id="h-prot">QQQ</b></div></div>
+    <div class="qc qcw"><span class="qlbl">Activo · el último que tocás es el protagonista (línea blanca, números y retiro/Monte Carlo)</span><div class="chiprow" id="chips-acum"></div><div class="hprot" id="h-prot">Protagonista: <b>QQQ</b></div></div>
     <div class="qc"><span class="qlbl">Aporte $/mes</span><div class="qrow"><b id="h-aporte">$1,000</b><div class="qsteps"><button class="qs" data-h="aporte" data-d="1">▲</button><button class="qs" data-h="aporte" data-d="-1">▼</button></div></div></div>
     <div class="qc"><span class="qlbl">Capital inicial</span><div class="qrow"><b id="h-cap">$0</b><div class="qsteps"><button class="qs" data-h="cap" data-d="1">▲</button><button class="qs" data-h="cap" data-d="-1">▼</button></div></div></div>
     <div class="qc"><span class="qlbl">Desde</span><div class="qrow"><b id="h-y0">2005</b><div class="qsteps"><button class="qs" data-h="y0" data-d="1">▲</button><button class="qs" data-h="y0" data-d="-1">▼</button></div></div></div>
     <div class="qc"><span class="qlbl">Hasta</span><div class="qrow"><b id="h-y1">2025</b><div class="qsteps"><button class="qs" data-h="y1" data-d="1">▲</button><button class="qs" data-h="y1" data-d="-1">▼</button></div></div></div>
     <div class="qc"><span class="qlbl">Crec. SJC</span><div class="qrow"><b id="h-sjc">8%</b><div class="qsteps"><button class="qs" data-h="sjc" data-d="1">▲</button><button class="qs" data-h="sjc" data-d="-1">▼</button></div></div></div>
     <div class="qc" style="min-width:auto"><span class="qlbl">Aportes</span><div class="qrow"><button class="qtoggle" id="h-sinap">Con aportes</button></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Filtro de mercado</span><div class="qrow"><button class="qtoggle" id="h-filtro">Sin filtro</button><div class="qsteps"><button class="qs" id="h-filtro-next" title="Siguiente filtro">▲</button><button class="qs" id="h-filtro-prev" title="Filtro anterior">▼</button></div></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Frecuencia de giro</span><div class="qrow"><button class="qtoggle on" id="h-freq">Cada $5,000</button></div></div>
+    <div class="qc"><span class="qlbl">Cada $ (umbral)</span><div class="qrow"><b id="h-umbral">$5,000</b><div class="qsteps"><button class="qs" data-h="umbral" data-d="1">▲</button><button class="qs" data-h="umbral" data-d="-1">▼</button></div></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Costos</span><div class="qrow"><button class="qtoggle" id="h-costos">Con Costos</button></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Glide-path</span><div class="qrow"><button class="qtoggle" id="h-glide">Off</button></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Fase 1</span><div class="qrow"><button class="qtoggle" id="h-fase1">TQQQ</button></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Fase 2</span><div class="qrow"><button class="qtoggle" id="h-fase2">SPY</button></div></div>
+    <div class="qc" style="min-width:auto"><span class="qlbl">Corte por</span><div class="qrow"><button class="qtoggle" id="h-glidemode">% Tiempo</button></div></div>
+    <div class="qc"><span class="qlbl">Corte % tiempo</span><div class="qrow"><b id="h-split">50%</b><div class="qsteps"><button class="qs" data-h="split" data-d="1">▲</button><button class="qs" data-h="split" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Corte intensidad (aporte/saldo)</span><div class="qrow"><b id="h-glideint">10%</b><div class="qsteps"><button class="qs" data-h="glideint" data-d="1">▲</button><button class="qs" data-h="glideint" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Corte fondeo (% de la meta)</span><div class="qrow"><b id="h-glidefondeo">60%</b><div class="qsteps"><button class="qs" data-h="glidefondeo" data-d="1">▲</button><button class="qs" data-h="glidefondeo" data-d="-1">▼</button></div></div></div>
+    <div class="qc"><span class="qlbl">Vol objetivo (σ anual)</span><div class="qrow"><b id="h-glidevol">25%</b><div class="qsteps"><button class="qs" data-h="glidevol" data-d="1">▲</button><button class="qs" data-h="glidevol" data-d="-1">▼</button></div></div></div>
   </div>
+
+  <div class="hsub2" style="margin-top:16px">Drawdowns · qué tan hondo y por cuánto tiempo cae cada uno</div>
+  <p class="hnote" style="margin-top:2px" id="dd-note">Cada línea es el % por debajo del máximo histórico (bajo el agua). Cuanto más profundo y más tiempo abajo, más doloroso de aguantar.</p>
+  <div id="chart-wrap-dd" style="position:relative; height:300px; margin:6px 0 12px;"><canvas id="chart-dd-cmp"></canvas></div>
 
   <div class="hstats">
     <div class="hstat"><div class="k">De tu bolsillo</div><div class="v" id="h-aportado">$0</div></div>
     <div class="hstat"><div class="k">Lo puso el mercado</div><div class="v men" id="h-ganancia">$0</div></div>
-    <div class="hstat"><div class="k">CAGR del activo</div><div class="v per" id="h-cagr">0%</div></div>
+    <div class="hstat"><div class="k">CAGR del portafolio</div><div class="v per" id="h-cagr">0%</div></div>
     <div class="hstat"><div class="k">TIR de tu plata</div><div class="v men" id="h-tir">0%</div></div>
   </div>
 
@@ -245,15 +287,31 @@
     <p class="rtxt" id="h-ingreso-txt"></p>
   </div>
 
-  <!-- 3 · MONTE CARLO -->
-  <div class="tsub" style="margin-top:28px">3 · Monte Carlo · el abanico de futuros posibles</div>
-  <p class="hnote">Mil escenarios sorteando años reales del mercado y de la inflación, con tu mismo aporte, sobre <span id="h-mcnom">QQQ</span>. La banda va del 10% peor (p10) al 10% mejor (p90); la línea del medio es el escenario típico.</p>
-  <div id="chart-wrap-mc" style="position:relative; height:340px; margin:6px 0 12px;"><canvas id="chart-mc"></canvas></div>
-  <p class="rtxt" id="h-mc-txt" style="margin-top:0"></p>
+  <!-- 3 · MONTE CARLO DEL GLIDE-PATH -->
+  <div class="tsub" style="margin-top:28px">3 · Monte Carlo del glide-path · apalancado → desapalancado</div>
+  <p class="hnote"><b>10,000</b> escenarios sorteando años reales del mercado sobre la combinación <b><span id="mcg-nom">TQQQ→SPY</span></b>: se mantiene el activo apalancado el primer <b><span id="mcg-split">50</span>%</b> del tiempo y luego se desapalanca. Usa las mismas variables del gráfico histórico (aporte, capital, frecuencia de giro, SWIFT, costo EI). La banda va del escenario <b>pesimista (p25)</b> al <b>optimista (p75)</b>; el medio es el <b>conservador (p50)</b>. Las fases y el % de corte se ajustan con los controles de <b>Glide-path</b> de arriba.</p>
+  <div class="qc" style="min-width:auto; margin:0 0 8px"><span class="qlbl">Timing 9-meses (6/18) en el Monte Carlo</span><div class="qrow"><button class="qtoggle" id="h-mcg-timing">Off</button></div></div>
+  <div id="chart-wrap-mcg" style="position:relative; height:340px; margin:6px 0 12px;"><canvas id="chart-mcg"></canvas></div>
+  <p class="rtxt" id="h-mcg-txt" style="margin-top:0"></p>
+
+  <!-- 3B · OPTIMIZACIÓN DEL UMBRAL DE DESAPALANCAMIENTO -->
+  <div class="hsub2" style="margin-top:18px">¿Cuándo conviene desapalancar? · barrido del umbral (maximiza Calmar)</div>
+  <p class="hnote" style="margin-top:2px">Compara criterios de corte con <b>5,000</b> escenarios y <b>los mismos sorteos de mercado</b> para todos. <b>Intensidad θ</b> = mantener el apalancado mientras el aporte anual sea ≥ θ% del saldo (cuando la contribución todavía puede rescatar caídas). El <b>Calmar mediano</b> (retorno ÷ máx. caída del saldo) es el criterio de decisión; se resalta el mejor. Requiere Glide-path activo y aportes.</p>
+  <button class="qtoggle" id="h-sweep-btn" style="margin:2px 0 10px">▶ Correr barrido</button>
+  <div style="overflow-x:auto"><table id="tabla-sweep"><thead><tr><th>Corte</th><th>Calmar mediano</th><th>Máx. caída mediana</th><th>p25 (pesimista)</th><th>p50 (conservador)</th></tr></thead><tbody></tbody></table></div>
+  <p class="rtxt" id="h-sweep-txt" style="margin-top:6px"></p>
+
+  <!-- 3C · FRAMEWORK DE DES-RIESGO DINÁMICO (3 activos, glidepath por fondeo) -->
+  <div class="hsub2" style="margin-top:22px">Framework de des-riesgo dinámico · des-apalancar gradual por fondeo, hacia SJC</div>
+  <p class="hnote" style="margin-top:2px">Estilo fondo de pensiones (glidepath por <b>funded status</b>), con <b>3 sleeves</b>: <b>apalancado</b> (Fase 1), <b>renta variable</b> (Fase 2) y <b>San José Capital</b> (renta fija fija al <b><span id="fw-sjc">8</span>%</b>, lock de 3 años). Según el fondeo <b>φ = saldo ÷ meta</b>, se baja el apalancado L→E hasta <b>p1</b>, luego se convierte E→SJC hasta <b>Ffinal%</b> al llegar a <b>p2</b> — con <i>ratchet</i> (solo des-riesga, respeta el lock). Se llega al retiro con la mayor parte en renta fija y una porción en renta variable creciendo. El barrido prueba muchas combinaciones y resalta el mejor <b>Calmar</b>; también verás <b>P(llegar a meta)</b>. Requiere aportes y meta fijada arriba.</p>
+  <button class="qtoggle" id="h-fw-btn" style="margin:2px 0 10px">▶ Correr barrido del framework</button>
+  <div style="overflow-x:auto"><table id="tabla-fw"><thead><tr><th>Framework (p1 → p2 · Ffinal)</th><th>Calmar med.</th><th>Máx. caída med.</th><th>P(meta)</th><th>p25</th><th>p50</th></tr></thead><tbody></tbody></table></div>
+  <p class="rtxt" id="h-fw-txt" style="margin-top:6px"></p>
 
   <!-- 4 · HISTORIAL DEL ACTIVO -->
-  <div class="tsub" style="margin-top:28px">4 · El historial de <span id="h-histnom">QQQ</span> (1990–2025)</div>
-  <p class="hnote">Los sustos y los extremos del activo protagonista. Cambian según cuál tengas seleccionado como protagonista arriba.</p>
+  <div class="tsub" style="margin-top:28px">4 · El historial de <span id="h-histnom">QQQ</span> (<span id="h-histrange">1990–2025</span>)</div>
+  <p class="hnote">Los sustos y los extremos de la estrategia que elijas abajo (cualquiera de las líneas seleccionadas, o el glide-path), sobre la ventana y el filtro que tengas arriba.</p>
+  <div class="chiprow" id="chips-hist" style="margin:2px 0 12px"></div>
 
   <div class="hsub2">Los 10 peores sustos · caídas de pico a fondo</div>
   <table id="tabla-dd"><thead><tr><th>Caída</th><th>Empezó</th><th>Se recuperó</th><th>Duró</th></tr></thead><tbody></tbody></table>
@@ -265,12 +323,45 @@
       <table id="tabla-mejores"><thead><tr><th>Año</th><th>Retorno</th></tr></thead><tbody></tbody></table></div>
   </div>
 
+  <div class="hist-sep"></div>
+  <div class="tsub">Aporte según la tasa de crecimiento (misma meta y retiro)</div>
+  <table id="tabla-crec"><thead><tr><th>Crecimiento</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
+
+  <div class="tsub">Capital y aporte según la tasa de retiro (mismo crecimiento)</div>
+  <table id="tabla-ret"><thead><tr><th>Retiro</th><th>Capital</th><th>Aporte/mes</th></tr></thead><tbody></tbody></table>
+
+  <div class="tsub">📄 Descargar la proyección en PDF</div>
+  <div class="sendcard">
+    <p class="hnote" style="margin-top:0">Genera un PDF con los parámetros, resultados y el gráfico de arriba, con el mismo diseño de la calculadora. Las notas quedan guardadas en el PDF, para que te acuerdes de lo que dijo el cliente.</p>
+    <div class="pcampo"><label>Nombre del cliente</label><input id="s-nombre" type="text" placeholder="Juan Pérez" autocomplete="off"></div>
+    <div class="pcampo" style="margin-top:10px"><label>Notas · lo que dijo el cliente</label><textarea id="s-notas"></textarea></div>
+    <div class="sendrow">
+      <button id="s-pdf" class="sbtn" type="button">⬇︎ Descargar PDF</button>
+    </div>
+    <div class="sendstatus" id="s-status"></div>
+  </div>
+
   <p class="foot">Herramienta interna de Empowered Investor. Todo va en <b>plata de hoy</b> (poder de compra actual): se usan rendimientos reales, o sea el crecimiento nominal menos la inflación. La meta que ponés es de hoy y se mantiene en poder de compra a lo largo de toda la proyección. Capital objetivo = meta anual ÷ (tasa de retiro ÷ 100). En el retiro el portafolio se mantiene estable cuando su crecimiento real iguala la tasa de retiro.</p>
 </main>
 
+<script src="/admin/pxdata.js"></script>
 <script>
 "use strict";
 function byId(id){ return document.getElementById(id); }
+// Escribe en un control rápido; si es input y está enfocado, no lo pisa (para poder tipear).
+function setQval(id, txt){ var el=byId(id); if(!el) return; if(document.activeElement===el) return; if(el.tagName==="INPUT") el.value=txt; else el.textContent=txt; }
+// Meta y Capital inicial: editables con teclado. Escribe el número al input del panel y recalcula.
+function bindQuickMoney(qid, panelId){
+  var el=byId(qid); if(!el) return;
+  el.addEventListener("input", function(){
+    var d=el.value.replace(/[^0-9]/g,""), sym=(typeof metaCur!=="undefined"&&metaCur==="₡")?"₡":"$";
+    var pos=el.selectionStart, before=el.value.length;
+    el.value = d ? (sym+Number(d).toLocaleString("en-US")) : sym;
+    var np=Math.max(1, pos+(el.value.length-before)); try{ el.setSelectionRange(np,np); }catch(e){}
+    byId(panelId).value = d ? Number(d).toLocaleString("en-US") : "";
+    render();
+  });
+}
 function num(s){ var d=String(s||"").replace(/[^0-9.]/g,""); var n=parseFloat(d); return isNaN(n)?0:n; }
 function ent(s){ return Math.round(num(s)); }
 function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
@@ -314,7 +405,7 @@ function leer(){
 // Todo se calcula en plata de hoy. El capital objetivo (real) = meta anual de hoy / tasa de retiro.
 function capitalObjetivo(d){ return d.ret>0 ? (d.meta*12)/(d.ret/100) : 0; }
 
-var chart=null, chartHist=null, chartRet=null, chartMC=null;
+var chart=null, chartHist=null, chartRet=null, chartMC=null, chartMCg=null, chartDD=null;
 
 // Carga Chart.js una sola vez y encola los dibujos que lleguen mientras carga
 // (así el gráfico principal y el histórico no compiten por el <script>).
@@ -341,8 +432,8 @@ function render(){
   byId("p-res").textContent = "crec " + d.crec + "% · infl " + d.infl + "% · retiro " + d.ret + "% · " + anios + " años";
   // Resumen rápido debajo del gráfico (mismos valores que el panel)
   byId("q-edad").textContent = d.edad;
-  byId("q-cap").textContent = money(d.cap, metaCur);
-  byId("q-meta").textContent = money(d.meta, metaCur);
+  setQval("q-cap", money(d.cap, metaCur));
+  setQval("q-meta", money(d.meta, metaCur));
   byId("q-crec").textContent = d.crec + "%";
   byId("q-crecret").textContent = d.crecRet + "%";
   byId("q-infl").textContent = d.infl + "%";
@@ -374,6 +465,7 @@ function render(){
   dibujar(life);
   tablaCrec(d, capital, meses);
   tablaRet(d, meses);
+  if(typeof updateHistMeta==="function") updateHistMeta();   // mueve el 🏖️ del histórico si cambió la meta
 }
 
 // Serie de todo el ciclo de vida del portafolio, año por año (eje X = edad).
@@ -556,16 +648,48 @@ var HDD={
   TQQQ:[{d:-100.0,i:"2000-03",t:"2009-03",f:null,m:null},{d:-72.6,i:"1990-07",t:"1990-10",f:"1991-03",m:8},{d:-61.6,i:"1998-07",t:"1998-10",f:"1998-11",m:4},{d:-52.8,i:"1992-01",t:"1992-08",f:"1994-01",m:24},{d:-51.9,i:"1997-08",t:"1997-12",f:"1998-04",m:8},{d:-44.1,i:"1994-03",t:"1994-06",f:"1995-03",m:12},{d:-42.5,i:"1997-01",t:"1997-04",f:"1997-05",m:4},{d:-41.8,i:"2000-01",t:"2000-01",f:"2000-02",m:1},{d:-41.3,i:"1995-11",t:"1996-01",f:"1996-04",m:6},{d:-40.1,i:"1996-06",t:"1996-07",f:"1996-09",m:3}]
 };
 
+// ===== FILTROS DE TIMING (backtested del dashboard) =====
+// Retornos anuales SI se hubiera usado la estrategia de timing (mercado vs efectivo/BIL).
+// T52 = "a ≤12% del máximo de 9 meses" (invertido ~81% del tiempo). Señal de QQQ para QQQ/QLD/TQQQ.
+// TMOM = momentum 12 meses del activo vs BIL (invertido ~79%). No aplica a SJC (tasa fija).
+var HR_T52={"SPY":{"1990":-6.24,"1991":18.71,"1992":6.1,"1993":8.43,"1994":0.4,"1995":38.05,"1996":25.87,"1997":25.51,"1998":6.24,"1999":21.0,"2000":-5.85,"2001":2.0,"2002":2.0,"2003":19.38,"2004":12.29,"2005":4.83,"2006":8.33,"2007":5.93,"2008":-18.94,"2009":11.38,"2010":13.99,"2011":-5.89,"2012":14.05,"2013":33.94,"2014":15.59,"2015":0.71,"2016":11.01,"2017":21.71,"2018":-8.05,"2019":18.92,"2020":6.92,"2021":30.43,"2022":-7.51,"2023":18.0,"2024":26.79,"2025":0.04},"QQQ":{"1990":-11.14,"1991":35.37,"1992":1.25,"1993":11.39,"1994":1.5,"1995":42.54,"1996":44.99,"1997":14.2,"1998":25.58,"1999":101.0,"2000":-10.79,"2001":2.0,"2002":2.0,"2003":28.65,"2004":12.42,"2005":1.57,"2006":-3.72,"2007":20.42,"2008":-20.59,"2009":15.53,"2010":19.54,"2011":-8.55,"2012":15.66,"2013":38.83,"2014":21.86,"2015":8.27,"2016":6.4,"2017":32.66,"2018":-4.69,"2019":25.59,"2020":24.78,"2021":29.14,"2022":-13.82,"2023":28.92,"2024":28.36,"2025":-2.52},"QLD":{"1990":-25.82,"1991":67.78,"1992":-4.68,"1993":13.97,"1994":-5.09,"1995":83.08,"1996":89.1,"1997":14.83,"1998":38.73,"1999":243.33,"2000":-30.21,"2001":2.0,"2002":2.0,"2003":54.28,"2004":16.06,"2005":-4.01,"2006":-16.02,"2007":31.44,"2008":-39.37,"2009":29.99,"2010":35.76,"2011":-21.28,"2012":29.53,"2013":87.65,"2014":44.02,"2015":12.17,"2016":8.58,"2017":70.34,"2018":-16.18,"2019":49.62,"2020":44.01,"2021":58.7,"2022":-28.2,"2023":54.67,"2024":49.31,"2025":-12.66},"TQQQ":{"1990":-39.08,"1991":102.08,"1992":-12.34,"1993":14.32,"1994":-12.85,"1995":125.87,"1996":136.4,"1997":8.31,"1998":41.89,"1999":431.97,"2000":-50.7,"2001":2.0,"2002":2.0,"2003":80.57,"2004":17.39,"2005":-10.01,"2006":-23.04,"2007":43.33,"2008":-54.31,"2009":41.57,"2010":41.96,"2011":-35.36,"2012":42.96,"2013":151.77,"2014":67.92,"2015":13.41,"2016":9.25,"2017":118.06,"2018":-29.0,"2019":76.11,"2020":51.62,"2021":90.47,"2022":-41.22,"2023":82.3,"2024":69.33,"2025":-24.06}};
+var HR_TMOM={"SPY":{"1990":-6.67,"1991":18.24,"1992":8.2,"1993":8.43,"1994":-2.43,"1995":32.55,"1996":25.87,"1997":25.51,"1998":32.52,"1999":21.0,"2000":-6.04,"2001":2.0,"2002":2.0,"2003":12.85,"2004":12.29,"2005":2.47,"2006":7.87,"2007":5.93,"2008":-16.65,"2009":9.89,"2010":13.99,"2011":1.89,"2012":14.05,"2013":33.94,"2014":15.59,"2015":0.71,"2016":1.13,"2017":21.71,"2018":-8.05,"2019":18.25,"2020":5.15,"2021":30.43,"2022":-6.23,"2023":16.32,"2024":26.79,"2025":11.12},"QQQ":{"1990":-10.63,"1991":41.62,"1992":12.88,"1993":11.39,"1994":-2.66,"1995":37.76,"1996":44.99,"1997":14.2,"1998":89.3,"1999":101.0,"2000":-21.27,"2001":2.0,"2002":2.0,"2003":20.08,"2004":12.42,"2005":0.16,"2006":-4.0,"2007":20.42,"2008":-16.66,"2009":12.1,"2010":19.54,"2011":3.48,"2012":15.66,"2013":38.83,"2014":21.86,"2015":8.27,"2016":-5.37,"2017":32.66,"2018":-4.69,"2019":23.6,"2020":34.03,"2021":29.14,"2022":-13.62,"2023":28.47,"2024":28.36,"2025":11.66},"QLD":{"1990":-27.77,"1991":83.21,"1992":15.93,"1993":13.97,"1994":-12.41,"1995":71.75,"1996":89.1,"1997":14.83,"1998":204.98,"1999":243.33,"2000":-55.04,"2001":2.0,"2002":2.0,"2003":34.86,"2004":16.06,"2005":-6.2,"2006":-16.53,"2007":31.44,"2008":-34.29,"2009":22.51,"2010":35.76,"2011":0.04,"2012":29.53,"2013":87.65,"2014":44.02,"2015":12.17,"2016":-13.26,"2017":70.34,"2018":-16.18,"2019":45.19,"2020":56.31,"2021":58.7,"2022":-28.72,"2023":54.37,"2024":49.31,"2025":13.58},"TQQQ":{"1990":-43.81,"1991":130.13,"1992":15.51,"1993":14.32,"1994":-22.52,"1995":105.79,"1996":136.4,"1997":8.31,"1998":344.52,"1999":431.97,"2000":-80.35,"2001":2.0,"2002":2.0,"2003":48.1,"2004":17.39,"2005":-12.76,"2006":-24.16,"2007":43.33,"2008":-49.38,"2009":30.55,"2010":41.96,"2011":-8.05,"2012":42.96,"2013":151.77,"2014":67.92,"2015":13.41,"2016":-21.22,"2017":118.06,"2018":-29.0,"2019":67.98,"2020":59.35,"2021":90.47,"2022":-42.68,"2023":82.64,"2024":69.33,"2025":11.48}};
+// Timing "máximo de 9 meses" (39 sem) con histéresis 6% entrada / 18% salida, por activo.
+var HR_9H={"SPY":{"1990":-6.24,"1991":18.71,"1992":8.2,"1993":8.43,"1994":0.4,"1995":38.05,"1996":25.87,"1997":25.51,"1998":18.84,"1999":21.0,"2000":-5.85,"2001":2.0,"2002":2.0,"2003":24.4,"2004":12.29,"2005":4.83,"2006":15.85,"2007":5.93,"2008":-8.01,"2009":24.95,"2010":13.99,"2011":1.89,"2012":14.05,"2013":33.94,"2014":15.59,"2015":0.71,"2016":11.01,"2017":21.71,"2018":-8.05,"2019":16.92,"2020":6.92,"2021":30.43,"2022":-10.13,"2023":22.02,"2024":26.79,"2025":0.04},"QQQ":{"1990":-11.14,"1991":35.37,"1992":12.88,"1993":11.39,"1994":1.5,"1995":42.54,"1996":44.99,"1997":14.2,"1998":62.09,"1999":101.0,"2000":-10.79,"2001":2.0,"2002":2.0,"2003":32.6,"2004":12.42,"2005":1.57,"2006":7.14,"2007":20.42,"2008":-13.54,"2009":28.02,"2010":19.54,"2011":3.48,"2012":15.66,"2013":38.83,"2014":21.86,"2015":8.27,"2016":6.4,"2017":32.66,"2018":-4.69,"2019":21.26,"2020":24.78,"2021":29.14,"2022":-17.15,"2023":33.04,"2024":28.36,"2025":-2.52},"QLD":{"1990":-25.82,"1991":67.78,"1992":15.93,"1993":13.97,"1994":-5.09,"1995":83.08,"1996":89.1,"1997":14.83,"1998":126.03,"1999":243.33,"2000":-30.21,"2001":2.0,"2002":2.0,"2003":61.05,"2004":16.06,"2005":-4.01,"2006":2.48,"2007":31.44,"2008":-27.45,"2009":58.79,"2010":35.76,"2011":0.04,"2012":29.53,"2013":87.65,"2014":44.02,"2015":12.17,"2016":8.58,"2017":70.34,"2018":-16.18,"2019":40.01,"2020":44.01,"2021":58.7,"2022":-33.9,"2023":64.43,"2024":49.31,"2025":-12.66},"TQQQ":{"1990":-39.08,"1991":102.08,"1992":15.51,"1993":14.32,"1994":-12.85,"1995":125.87,"1996":136.4,"1997":8.31,"1998":187.33,"1999":431.97,"2000":-50.7,"2001":2.0,"2002":2.0,"2003":89.01,"2004":17.39,"2005":-10.01,"2006":3.56,"2007":43.33,"2008":-39.47,"2009":87.08,"2010":41.96,"2011":-8.05,"2012":42.96,"2013":151.77,"2014":67.92,"2015":13.41,"2016":9.25,"2017":118.06,"2018":-29.0,"2019":59.51,"2020":51.62,"2021":90.47,"2022":-48.27,"2023":99.45,"2024":69.33,"2025":-24.06}};
+// Orden y etiquetas de los filtros (todos son señales semanales ÚNICAS sobre el Nasdaq-100).
+var FILTROS=["off","9h","faber","52","mom"];
+var FILTRO_LBL={off:"Sin filtro","9h":"Timing 9m 6/18",faber:"Faber 10m (SMA)","52":"Máx. 52 semanas",mom:"Momentum 12m"};
+var FILTRO_DESC={"9h":"máximo de 9 meses (entra a ≤6%, sale a >18%)",faber:"media móvil de 10 meses (Faber)","52":"máximo de 52 semanas (entra a ≤8%, sale a >16%)",mom:"momentum de 12 meses (precio de hoy vs 1 año atrás)"};
+var FILTRO_CORTO={"9h":"9m 6/18",faber:"Faber 10m","52":"máx. 52 sem",mom:"momentum 12m"};
+var HR_FABER={"SPY":{"1990":-13.98,"1991":18.71,"1992":7.42,"1993":5.31,"1994":-5.02,"1995":38.05,"1996":25.87,"1997":25.51,"1998":27.47,"1999":21.0,"2000":-4.99,"2001":2.0,"2002":-7.04,"2003":37.7,"2004":0.75,"2005":0.19,"2006":10.47,"2007":5.93,"2008":-10.28,"2009":21.92,"2010":9.87,"2011":5.69,"2012":12.12,"2013":29.83,"2014":15.59,"2015":-7.82,"2016":-4.22,"2017":21.71,"2018":3.53,"2019":17.72,"2020":2.34,"2021":30.43,"2022":-3.82,"2023":17.24,"2024":26.79,"2025":-0.67},"QQQ":{"1990":-21.79,"1991":35.37,"1992":1.12,"1993":8.41,"1994":-2.23,"1995":42.54,"1996":44.99,"1997":14.2,"1998":68.58,"1999":101.0,"2000":-19.46,"2001":2.0,"2002":-12.69,"2003":47.93,"2004":-6.26,"2005":-9.74,"2006":3.14,"2007":20.42,"2008":-18.54,"2009":26.6,"2010":12.13,"2011":4.19,"2012":11.75,"2013":36.92,"2014":21.86,"2015":-3.54,"2016":-11.73,"2017":32.66,"2018":9.68,"2019":23.92,"2020":25.81,"2021":29.14,"2022":-8.39,"2023":34.93,"2024":28.36,"2025":-3.96},"QLD":{"1990":-42.74,"1991":67.78,"1992":-4.87,"1993":8.42,"1994":-10.15,"1995":83.08,"1996":89.1,"1997":14.83,"1998":144.08,"1999":243.33,"2000":-49.7,"2001":2.0,"2002":-26.57,"2003":98.38,"2004":-17.63,"2005":-23.08,"2006":0.48,"2007":31.44,"2008":-35.54,"2009":54.95,"2010":19.63,"2011":3.08,"2012":21.11,"2013":82.59,"2014":44.02,"2015":-10.67,"2016":-24.81,"2017":70.34,"2018":13.03,"2019":45.72,"2020":38.03,"2021":58.7,"2022":-18.34,"2023":67.18,"2024":49.31,"2025":-14.87},"TQQQ":{"1990":-58.96,"1991":102.08,"1992":-12.64,"1993":6.38,"1994":-18.45,"1995":125.87,"1996":136.4,"1997":8.31,"1998":221.31,"1999":431.97,"2000":-74.58,"2001":2.0,"2002":-39.01,"2003":155.38,"2004":-28.73,"2005":-34.8,"2006":-2.43,"2007":43.33,"2008":-50.53,"2009":78.96,"2010":17.39,"2011":-0.72,"2012":29.17,"2013":141.95,"2014":67.92,"2015":-18.76,"2016":-36.71,"2017":118.06,"2018":12.91,"2019":69.37,"2020":33.05,"2021":90.47,"2022":-28.14,"2023":102.43,"2024":69.33,"2025":-26.8}};
+var PCTINW={"9h":82,"faber":76,"52":80,"mom":84};   // % del tiempo invertido según cada señal del Nasdaq-100
+
 var A_INFO={ SPY:{nom:"SPY (S&P 500)",col:"#63FCAF"}, QQQ:{nom:"QQQ (Nasdaq-100)",col:"#556DFB"},
   QLD:{nom:"QLD · Nasdaq 2×",col:"#E0A020"}, TQQQ:{nom:"TQQQ · Nasdaq 3×",col:"#E0525A"}, SJC:{nom:"San José Capital",col:"#FEF9F3"} };
+// Nombres cortos (sin paréntesis) para la tabla de rendimiento, para ahorrar espacio.
+var A_SHORT={ SPY:"SPY", QQQ:"QQQ", QLD:"QLD", TQQQ:"TQQQ", SJC:"San José Capital" };
 var ORDER_ACUM=["SPY","QQQ","QLD","TQQQ","SJC"];
 var ORDER_RET=["SPY","QQQ","SJC"];
 var MESES_ES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
 
+var SWIFT_FEE=65;   // costo fijo de cada giro SWIFT (US$)
+var EI_SETUP=2000, EI_MGMT=0.01;   // costo Empowered Investor: setup único + 1% anual sobre el saldo
+var FREQS=["mensual","trimestral","semestral","anual","umbral"];
+var FREQ_LBL={mensual:"Mensual",trimestral:"Trimestral",semestral:"Semestral",anual:"Anual",umbral:"Cada $"};
 var hs={ aporte:1000, cap:0, y0:2005, y1:2025, sinAportes:false, sjc:8, sjcRet:8,
-         acum:"QQQ", retpct:8, retinfl:3, retanios:30, edadRet:65,
+         acum:"QQQ", retpct:8, retinfl:3, retanios:30, edadRet:65, filtro:"off",
+         freq:"umbral", umbral:5000, swift:true, ei:true,         // un solo toggle "todos los costos" mueve SWIFT + servicios EI juntos (ON por default)
+         glide:false, fase1:"TQQQ", fase2:"SPY", split:50,        // glide-path: apalancado un tramo, desapalanca al resto
+         glideMode:"tiempo", glideIntensidad:10, glideFondeo:60, glideVol:25,   // corte: tiempo / intensidad(θ) / fondeo(% de meta) / vol-target(σ objetivo, continuo)
+         histSel:null,                                            // sección 4: cuál estrategia ver (null = protagonista)
+         mcN:10000, mcTiming:false,                               // Monte Carlo nuevo (glide + percentiles)
          vis:{SPY:true,QQQ:true,QLD:false,TQQQ:false,SJC:true},   // activos visibles en el gráfico de crecimiento
          visRet:{SPY:true,QQQ:true,SJC:true} };                   // activos visibles en el gráfico de retiro
+// Tabla de retornos/drawdowns activa según el filtro de timing (off / 52-sem / momentum vs BIL).
+function AHR(){ return hs.filtro==="52"?HR_T52:(hs.filtro==="mom"?HR_TMOM:(hs.filtro==="9h"?HR_9H:(hs.filtro==="faber"?HR_FABER:HR))); }
+// La tabla "10 peores sustos" muestra los drawdowns REALES del activo (buy & hold). El efecto
+// de los filtros sobre las caídas se ve en la sección de comparación de drawdowns de arriba.
+function AHDD(){ return HDD; }
 
 // CAGR del activo (crecimiento anual compuesto, buy & hold) sobre la ventana [y0,y1].
 function cagrActivo(k){ var pr=1,n=0; for(var y=hs.y0;y<=hs.y1;y++){ pr*=(1+retAnual(k,y)/100); n++; } return n>0?(Math.pow(pr,1/n)-1)*100:0; }
@@ -583,8 +707,8 @@ function mesTxt(s){ if(!s) return "—"; var p=s.split("-"); return MESES_ES[(+p
 function durTxt(m){ if(m==null) return "—"; var a=Math.floor(m/12), r=m%12; return (a?a+"a ":"")+(r||!a?r+"m":""); }
 
 function yfmt(v){ var s=v<0?"-$":"$"; v=Math.abs(v); return s+(v>=1e6?(v/1e6).toFixed(1)+"M":v>=1e3?Math.round(v/1e3)+"k":Math.round(v)); }
-function retAnual(k,y){ return k==="SJC" ? hs.sjc : (HR[k]&&HR[k][y]!=null?HR[k][y]:0); }
-function aniosDisp(k){ if(k==="SJC")return null; var ys=[]; for(var y=HYMIN;y<=HYMAX;y++){ if(HR[k][y]!=null) ys.push(y); } return ys; }
+function retAnual(k,y){ if(k==="SJC") return hs.sjc; var t=AHR()[k]; return (t&&t[y]!=null)?t[y]:0; }
+function aniosDisp(k){ if(k==="SJC")return null; var t=AHR()[k], ys=[]; for(var y=HYMIN;y<=HYMAX;y++){ if(t[y]!=null) ys.push(y); } return ys; }
 function pct(sorted,p){ var i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return lo===hi?sorted[lo]:sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
 
 // DCA determinístico año por año (aporte mensual). En modo "sin aportes": aporte 0
@@ -601,65 +725,286 @@ function dcaSerie(k){
   return {years:years, bal:bal, put:put, valor:b, aportado:p};
 }
 
+// ===== ACTIVO PROTAGONISTA + FRECUENCIA + SWIFT (solo sección 1) =====
+// CAGR (buy & hold) del glide-path sobre la serie SEMANAL (misma fuente que la línea, el valor
+// y la tabla de métricas): fase1 el primer split% del tiempo, luego fase2. Aplica la señal activa.
+function cagrGlideWeekly(){ return pxOk() ? statsGlide(weekSig()).cagr : 0; }
+function freqFrase(){ return hs.freq==="mensual"?"cada mes":hs.freq==="trimestral"?"cada 3 meses":
+  hs.freq==="semestral"?"cada 6 meses":hs.freq==="anual"?"una vez al año":"cada vez que juntabas $"+fmt(hs.umbral); }
+
+// Simulación realista: el aporte mensual se ACUMULA y se GIRA según la frecuencia (o al
+// juntar el umbral). Cada giro paga SWIFT; lo no girado queda ocioso (0%).
+// Dispatcher: con datos semanales reales cuando no hay filtro; si hay filtro (T52/mom)
+// o falta la data, cae a la versión anual (suave), que sí tiene retornos filtrados.
+function pxOk(){ return window.PX && window.PX.t && window.PX.sig; }
+// Señal semanal ACTIVA (sobre el índice Nasdaq-100), o null si es "Sin filtro".
+function weekSig(){ if(!pxOk()) return null;
+  return hs.filtro==="9h"?PX.sig.QQQ:(hs.filtro==="faber"?PX.sig.QQQ_faber:(hs.filtro==="52"?PX.sig.QQQ_52:(hs.filtro==="mom"?PX.sig.QQQ_mom:null))); }
+// Todos los filtros ya son semanales (señal única sobre el Nasdaq-100).
+function esSemanal(){ return true; }
+// Un solo activo (sin glide): semanal real si hay data y filtro semanal (off/9m/faber); si no, anual.
+function simular(w){ return (pxOk() && esSemanal()) ? simularPx(w,false) : simularAnual(w); }
+// Estrategia principal de la sección 1: glide-path si está activo, si no el activo protagonista.
+function simularMain(){ var w={}; w[hs.acum]=1; return (hs.glide && pxOk()) ? simularPx(null,true) : simular(w); }
+
+// Simulación value-based con precios semanales reales. glideMode=true -> 2 fases (fase1->fase2 al %corte).
+// Con filtro semanal (9m o Faber) aplica la señal única del Nasdaq-100 (invertido/efectivo) a todos.
+// Índice de la grilla semanal donde el glide desapalanca (fase1 -> fase2):
+//  · modo "tiempo": a un % fijo de la ventana.
+//  · modo "intensidad": cuando el aporte anual cae por debajo de θ% del saldo (se sostiene el
+//    apalancado mientras la contribución todavía "pesa" y puede rescatar caídas).
+function glideSplitIdx(){
+  var ix=histIdx(), i0=ix.i0, i1=ix.i1;
+  // "voltarget" es continuo (no hay un punto de corte); los binarios sí.
+  if(hs.glideMode==="tiempo" || hs.glideMode==="voltarget") return i0+Math.round((i1-i0)*hs.split/100);
+  var w={}; w[hs.fase1]=1; var s=simularPx(w, false);   // saldo en fase1 hasta el disparo
+  if(hs.glideMode==="fondeo"){
+    var meta=metaCapitalUsd(); if(!(meta>0)) return i1;
+    var thr=meta*hs.glideFondeo/100;
+    for(var j=1;j<s.bal.length;j++){ if(s.bal[j]>=thr) return i0+j; }
+    return i1;
+  }
+  // intensidad: aporte anual < θ% del saldo
+  if(hs.sinAportes || hs.aporte<=0) return i0+Math.round((i1-i0)*hs.split/100);
+  var aporteAnual=hs.aporte*12, thr2=hs.glideIntensidad/100;
+  for(var j=1;j<s.bal.length;j++){ if(s.bal[j]>0 && aporteAnual/s.bal[j] < thr2) return i0+j; }
+  return i1;
+}
+// Pesos semanales sobre la FASE 1 (apalancado) para el glide continuo "vol-target": mantiene una
+// volatilidad objetivo escalando la exposición al apalancado según su vol reciente (26 semanas).
+// Los modos binarios devuelven 1 hasta el corte y 0 después. Devuelve arreglo alineado a [i0..i1].
+function glideWlev(){
+  var ix=histIdx(), i0=ix.i0, i1=ix.i1, n=i1-i0+1, arr=new Float64Array(n);
+  if(hs.glideMode==="voltarget"){
+    var W=26, target=hs.glideVol/100, f1=hs.fase1;
+    for(var i=i0;i<=i1;i++){
+      var s=0,s2=0,cnt=0, lo=Math.max(i0+1, i-W+1);
+      for(var j=lo;j<=i;j++){ var r=PX[f1][j]/PX[f1][j-1]-1; s+=r; s2+=r*r; cnt++; }
+      var sd=cnt>1?Math.sqrt(Math.max(0,(s2-s*s/cnt)/(cnt-1))):0, volAnn=sd*Math.sqrt(52);
+      arr[i-i0]=volAnn>1e-9?Math.min(1,target/volAnn):1;
+    }
+  } else {
+    var sp=glideSplitIdx();
+    for(var i=i0;i<=i1;i++) arr[i-i0]=(i<=sp)?1:0;
+  }
+  return arr;
+}
+function simularPx(w, glideMode, sigOverride){
+  // sigOverride: undefined -> usa la señal activa (weekSig); null -> fuerza buy&hold (para las filas B&H de la tabla).
+  var PX=window.PX, T=PX.t, n=T.length, sig=(arguments.length>=3?sigOverride:weekSig()), timing=!!sig;
+  var aporte = hs.sinAportes?0:hs.aporte;
+  var cap = hs.sinAportes ? (hs.cap>0?hs.cap:10000) : hs.cap;
+  var feeS = hs.swift?SWIFT_FEE:0, mgmtW = hs.ei?EI_MGMT/52:0, setupDue = hs.ei?EI_SETUP:0;
+  var i0=0; while(i0<n-1 && Math.floor(T[i0]+1e-9) < hs.y0) i0++;
+  var i1=n-1; while(i1>0 && Math.floor(T[i1]-1e-9) > hs.y1) i1--; if(i1<i0) i1=i0;
+  var cashW=Math.pow(1.02,1/52)-1, sjcW=Math.pow(1+hs.sjc/100,1/52)-1;
+  var f1=hs.fase1, f2=hs.fase2, splitIdx=glideMode?glideSplitIdx():i0+Math.round((i1-i0)*hs.split/100);
+  var voltgt = glideMode && hs.glideMode==="voltarget", wl = voltgt ? glideWlev() : null;   // blend continuo por vol-target
+  var keys; if(glideMode){ keys = voltgt ? ["__g"] : (f2!==f1?[f1,f2]:[f1]); } else { keys=[]; for(var k in w) keys.push(k); }
+  var sleeve={}; keys.forEach(function(k){ sleeve[k]=0; });
+  function mo(t){ return Math.floor((t-Math.floor(t))*12+1e-6); }
+  // La señal de timing es ÚNICA: se calcula sobre el índice Nasdaq-100 y decide estar
+  // dentro/fuera del activo que se tenga (SPY, QLD, TQQQ). No es una señal por activo.
+  function ret(k,i){
+    var inv = !timing || sig[i-1]===1;
+    if(k==="__g"){ if(!inv) return cashW; var wv=wl[(i-1)-i0]; if(wv==null)wv=1;
+      return wv*(PX[f1][i]/PX[f1][i-1]-1)+(1-wv)*(PX[f2][i]/PX[f2][i-1]-1); }
+    if(k==="SJC") return sjcW;
+    return inv ? (PX[k][i]/PX[k][i-1]-1) : cashW; }
+  var pending=0,pocket=0,fees=0,nWires=0,feesEI=0;
+  function wireAt(i,amount){ if(amount<=0) return; var net=amount-feeS; if(feeS>0)fees+=feeS;
+    if(setupDue>0&&net>0){ var pay=Math.min(setupDue,net); net-=pay; setupDue-=pay; feesEI+=pay; }
+    if(net<0)net=0; nWires++;
+    if(glideMode){ sleeve[voltgt?"__g":(i<splitIdx?f1:f2)]+=net; } else { keys.forEach(function(k){ sleeve[k]+=net*w[k]; }); } }
+  function bal(){ var v=pending; keys.forEach(function(k){ v+=sleeve[k]; }); return v; }
+  if(cap>0){ pocket+=cap; wireAt(i0,cap); }
+  var years=[T[i0]], balA=[Math.round(bal())], put=[Math.round(pocket)], prevMo=mo(T[i0]);
+  for(var i=i0+1;i<=i1;i++){
+    keys.forEach(function(k){ sleeve[k]*=(1+ret(k,i)); if(mgmtW>0){ var f=sleeve[k]*mgmtW; feesEI+=f; sleeve[k]-=f; } });
+    if(glideMode && !voltgt && i===splitIdx && f2!==f1){ sleeve[f2]+=sleeve[f1]; sleeve[f1]=0; }
+    var cm=mo(T[i]);
+    if(cm!==prevMo){ prevMo=cm; pending+=aporte; pocket+=aporte;
+      var go = hs.freq==="mensual"?true : hs.freq==="trimestral"?((cm+1)%3===0) : hs.freq==="semestral"?((cm+1)%6===0) : hs.freq==="anual"?(cm===11) : (pending>=hs.umbral);
+      if(go&&pending>0){ wireAt(i,pending); pending=0; } }
+    years.push(T[i]); balA.push(Math.round(bal())); put.push(Math.round(pocket)); }
+  return {years:years, bal:balA, put:put, valor:bal(), aportado:pocket, fees:fees, nWires:nWires, idle:pending, feesEI:feesEI, glide:glideMode, splitYr:T[splitIdx]};
+}
+
+function simularAnual(w){
+  var aporte = hs.sinAportes?0:hs.aporte;
+  var cap = hs.sinAportes ? (hs.cap>0?hs.cap:10000) : hs.cap;
+  var fee = hs.swift?SWIFT_FEE:0, keys=[]; for(var k in w) keys.push(k);
+  var mgmtM = hs.ei ? EI_MGMT/12 : 0, setupDue = hs.ei ? EI_SETUP : 0;
+  var sleeve={}; keys.forEach(function(k){ sleeve[k]=0; });
+  var pending=0, pocket=0, fees=0, nWires=0, feesEI=0;
+  function wire(a){ if(a<=0) return; var net=a-fee; if(fee>0)fees+=fee;
+    if(setupDue>0 && net>0){ var pay=Math.min(setupDue,net); net-=pay; setupDue-=pay; feesEI+=pay; }   // paga el setup de los primeros giros
+    if(net<0)net=0; nWires++; keys.forEach(function(k){ sleeve[k]+=net*w[k]; }); }
+  function snap(){ var t=pending; keys.forEach(function(k){ t+=sleeve[k]; }); return t; }
+  if(cap>0){ pocket+=cap; wire(cap); }
+  var years=[hs.y0-1], bal=[Math.round(snap())], put=[Math.round(pocket)];
+  for(var y=hs.y0; y<=hs.y1; y++){
+    var mr={}; keys.forEach(function(k){ mr[k]=Math.pow(1+retAnual(k,y)/100,1/12)-1; });
+    for(var m=1;m<=12;m++){
+      keys.forEach(function(k){ sleeve[k]*=(1+mr[k]); if(mgmtM>0){ var g=sleeve[k]*mgmtM; sleeve[k]-=g; feesEI+=g; } });   // 1% anual = mensual sobre el saldo
+      pending+=aporte; pocket+=aporte;
+      var go = hs.freq==="mensual" ? true : hs.freq==="trimestral" ? (m%3===0) :
+               hs.freq==="semestral" ? (m%6===0) : hs.freq==="anual" ? (m===12) : (pending>=hs.umbral);
+      if(go && pending>0){ var amt=pending; pending=0; wire(amt); }
+    }
+    years.push(y); bal.push(Math.round(snap())); put.push(Math.round(pocket));
+  }
+  return {years:years, bal:bal, put:put, valor:snap(), aportado:pocket, fees:fees, nWires:nWires, idle:pending, feesEI:feesEI};
+}
+
 function renderHist(){
   byId("h-aporte").textContent="$"+fmt(hs.aporte);
   byId("h-cap").textContent="$"+fmt(hs.cap);
   byId("h-y0").textContent=hs.y0; byId("h-y1").textContent=hs.y1;
   byId("h-sjc").textContent=hs.sjc+"%";
   byId("h-sinap").textContent=hs.sinAportes?"Sin aportes":"Con aportes";
-  byId("h-actlbl").textContent=A_INFO[hs.acum].nom;
+  byId("h-filtro").textContent = FILTRO_LBL[hs.filtro];
+  byId("h-filtro").classList.toggle("on", hs.filtro!=="off");
+  // Controles de realismo
+  byId("h-freq").textContent = hs.freq==="umbral" ? ("Cada $"+fmt(hs.umbral)) : FREQ_LBL[hs.freq];
+  byId("h-umbral").textContent="$"+fmt(hs.umbral);
+  byId("h-costos").textContent = hs.swift ? "Con Costos" : "Sin costos";
+  byId("h-umbral").parentNode.parentNode.style.opacity = hs.freq==="umbral"?"1":".45";
+  byId("h-glide").textContent = hs.glide ? "On" : "Off";
+  byId("h-glide").classList.toggle("on", hs.glide);
+  byId("h-fase1").textContent = hs.fase1;
+  byId("h-fase2").textContent = hs.fase2;
+  byId("h-split").textContent = hs.split+"%";
+  var GMODE_LBL={tiempo:"% Tiempo", intensidad:"Intensidad", fondeo:"Fondeo", voltarget:"Vol-target"};
+  byId("h-glidemode").textContent = GMODE_LBL[hs.glideMode];
+  byId("h-glideint").textContent = hs.glideIntensidad+"%";
+  byId("h-glidefondeo").textContent = hs.glideFondeo+"%";
+  byId("h-glidevol").textContent = hs.glideVol+"%";
+  var gm=hs.glideMode;
+  byId("h-fase1").parentNode.parentNode.style.opacity = hs.glide?"1":".45";
+  byId("h-fase2").parentNode.parentNode.style.opacity = hs.glide?"1":".45";
+  byId("h-glidemode").parentNode.parentNode.style.opacity = hs.glide?"1":".45";
+  byId("h-split").parentNode.parentNode.style.opacity = (hs.glide&&gm==="tiempo")?"1":".45";
+  byId("h-glideint").parentNode.parentNode.style.opacity = (hs.glide&&gm==="intensidad")?"1":".45";
+  byId("h-glidefondeo").parentNode.parentNode.style.opacity = (hs.glide&&gm==="fondeo")?"1":".45";
+  byId("h-glidevol").parentNode.parentNode.style.opacity = (hs.glide&&gm==="voltarget")?"1":".45";
+  pintarProt();
 
-  var ser=dcaSerie(hs.acum);
+  var single=!hs.glide;
+  byId("h-actlbl").textContent = hs.glide ? "Glide-path" : A_INFO[hs.acum].nom;
+  var ser=simularMain();
   var ganancia=ser.valor-ser.aportado;
   var M=(hs.y1-hs.y0+1)*12;
   var aporteEff=hs.sinAportes?0:hs.aporte, capEff=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
-  var cagr=cagrActivo(hs.acum), tir=xirrPlata(capEff, aporteEff, M, ser.valor);
+  // CAGR desde la MISMA serie semanal que la línea, el valor y la tabla de métricas (evita
+  // la incongruencia de mostrar dos CAGR distintos del mismo activo/período).
+  var cagr = (pxOk() && esSemanal()) ? (hs.glide?cagrGlideWeekly():statsAsset(hs.acum, weekSig()).cagr) : cagrActivo(hs.acum);
+  var tir=xirrPlata(capEff, aporteEff, M, ser.valor);
   byId("h-aportado").textContent="$"+fmt(ser.aportado);
   byId("h-ganancia").textContent="$"+fmt(ganancia);
   byId("h-cagr").textContent=fmt1(cagr)+"%";
   byId("h-tir").textContent=fmt1(tir)+"%";
   byId("h-valor").textContent="$"+fmt(ser.valor);
 
-  var mc=simMC();   // se reusa para el abanico y para ubicar el percentil del resultado real
-  var perc=pctlRank(mc.finals, ser.valor);
-  var rachaTxt = perc>=67 ? "una racha de las buenas" : (perc>=34 ? "una racha bastante normal" : "una racha floja");
-  var percFrase = (hs.acum==="SJC") ? "" : " Ese resultado cae en el <b>percentil "+perc+"</b> de mil secuencias posibles: los últimos "+(hs.y1-hs.y0+1)+" años fueron <b>"+rachaTxt+"</b> para "+A_INFO[hs.acum].nom+".";
-  var simNota = (hs.acum!=="SJC" && HINCEP[hs.acum] && hs.y0<HINCEP[hs.acum]) ? " (antes de "+HINCEP[hs.acum]+" es simulado sobre el índice)" : "";
+  var idleTxt = (ser.idle>1) ? " Quedaron <b>$"+fmt(ser.idle)+"</b> ahorrados sin girar todavía." : "";
+  // Un solo toggle: SWIFT + servicios EI. Sin desglose de montos en el texto.
+  var costsTxt = hs.swift ? " El valor de arriba ya está <b>neto de todos los costos</b> (giros internacionales y servicios de Empowered Investor)." : "";
+  var simNota=""; if(single){ var only=hs.acum; simNota=(only!=="SJC" && HINCEP[only] && hs.y0<HINCEP[only]) ? " (antes de "+HINCEP[only]+" es simulado sobre el índice)" : ""; }
+  var corteFrase = hs.glideMode==="intensidad" ? ("hasta que el aporte anual baje del <b>"+hs.glideIntensidad+"%</b> del saldo")
+    : hs.glideMode==="fondeo" ? ("hasta llegar al <b>"+hs.glideFondeo+"%</b> de la meta de retiro")
+    : hs.glideMode==="voltarget" ? ("modulando la exposición para una volatilidad objetivo de <b>"+hs.glideVol+"%</b>")
+    : ("el primer <b>"+hs.split+"%</b> del tiempo");
+  var nom = hs.glide ? (hs.glideMode==="voltarget"
+      ? ("un glide vol-target entre <b>"+hs.fase1+"</b> y <b>"+hs.fase2+"</b>, "+corteFrase)
+      : ("un glide-path: <b>"+hs.fase1+"</b> "+corteFrase+" y luego desapalancar a <b>"+hs.fase2+"</b>")) : A_INFO[hs.acum].nom;
   if(hs.sinAportes){
-    var capIni=hs.cap>0?hs.cap:10000, mult=capIni>0?ser.valor/capIni:0;
-    byId("h-valor-txt").innerHTML="Sin aportes, solo <b>$"+fmt(capIni)+"</b> puestos en <b>"+A_INFO[hs.acum].nom+"</b> en "+hs.y0+" y sin tocar nada: hoy serían <b>$"+fmt(ser.valor)+"</b>, o sea <b>"+fmt1(cagr)+"%</b> anual compuesto (CAGR)"+simNota+"."+percFrase;
+    var capIni=hs.cap>0?hs.cap:10000;
+    byId("h-valor-txt").innerHTML="Sin aportes, solo <b>$"+fmt(capIni)+"</b> puestos en <b>"+nom+"</b> en "+hs.y0+" y sin tocar nada: hoy serían <b>$"+fmt(ser.valor)+"</b>, o sea <b>"+fmt1(cagr)+"%</b> anual compuesto (CAGR)"+simNota+"."+costsTxt;
   } else {
-    byId("h-valor-txt").innerHTML="Si en <b>"+hs.y0+"</b> hubieras empezado a aportar <b>$"+fmt(hs.aporte)+"/mes</b>"+(hs.cap>0?" (más $"+fmt(hs.cap)+" de arranque)":"")+" en <b>"+A_INFO[hs.acum].nom+"</b>, hoy tendrías <b>$"+fmt(ser.valor)+"</b>. Pusiste <b>$"+fmt(ser.aportado)+"</b> de tu bolsillo; el mercado le sumó <b>$"+fmt(ganancia)+"</b> (tu plata rindió <b>"+fmt1(tir)+"%</b> anual)."+simNota+percFrase;
+    byId("h-valor-txt").innerHTML="Si en <b>"+hs.y0+"</b> hubieras empezado a ahorrar <b>$"+fmt(hs.aporte)+"/mes</b> e invertirlo <b>"+freqFrase()+"</b>"+(hs.cap>0?" (más $"+fmt(hs.cap)+" de arranque)":"")+" en <b>"+nom+"</b>, hoy tendrías <b>$"+fmt(ser.valor)+"</b>. Pusiste <b>$"+fmt(ser.aportado)+"</b> de tu bolsillo; el mercado le sumó <b>$"+fmt(ganancia)+"</b> (tu plata rindió <b>"+fmt1(tir)+"%</b> anual)."+idleTxt+costsTxt+simNota;
+  }
+  if(hs.filtro!=="off"){
+    byId("h-valor-txt").innerHTML += " <b style='color:var(--peri)'>Con el filtro "+FILTRO_DESC[hs.filtro]+"</b>: se invierte ~"+PCTINW[hs.filtro]+"% del tiempo y se pasa a efectivo en los peores tramos. La señal se calcula sobre el índice Nasdaq-100 y se aplica al activo que tengas (incluido SPY). No aplica a San José Capital.";
   }
   dibujarHistMulti();
+  renderMetrics();
+  dibujarDDcmp();
   renderRet();
-  renderMC(mc);
+  renderMCg();
   dibujarTablas();
 }
 
 // Gráfico 1: solo los activos seleccionados en el dashboard "Activos en el gráfico".
 // La leyenda es solo referencia (no filtra): el filtro son los chips verdes.
+// Meta de retiro (de "Tu portafolio, de hoy hasta el retiro"): capital objetivo en US$.
+function metaCapitalUsd(){ var c=capitalObjetivo(leer()); return c>0?(metaCur==="$"?c:c/tc()):0; }
+var histMeta={lineas:null, meta:0, cruce:null};
+// Nivel de la meta + PRIMER cruce entre las líneas visibles (el primer activo/estrategia que la alcanza).
+// La edad = la que tendría la persona si empezara hoy (a su edad actual) y el mercado repitiera esta historia.
+function calcMetaCruce(){ var m=metaCapitalUsd(); histMeta.meta=m; histMeta.cruce=null;
+  if(!(m>0)||!histMeta.lineas) return;
+  var mejor=null;
+  histMeta.lineas.forEach(function(s){ if(!s||!s.bal) return;
+    for(var i=0;i<s.bal.length;i++){ if(s.bal[i]>=m){ if(mejor===null||s.years[i]<mejor) mejor=s.years[i]; break; } } });
+  if(mejor!==null){ var edad0=leer().edad||0; histMeta.cruce={x:mejor, edad:edad0+(Math.floor(mejor)-hs.y0)}; }
+}
+// Plugin: línea horizontal punteada morada discreta al nivel de la meta de retiro. Donde la primera
+// estrategia seleccionada la cruza, marca la EDAD que tendría el cliente (su posible edad de retiro).
+var metaHistPlug={ id:"metaHist", afterDatasetsDraw:function(ch){
+  var m=histMeta.meta; if(!(m>0)) return;
+  var xs=ch.scales.x, ys=ch.scales.y; if(!xs||!ys) return;
+  var a=ch.chartArea, c=ch.ctx, pm=ys.getPixelForValue(m);
+  if(pm<a.top-1 || pm>a.bottom+1) return;   // meta fuera del rango visible
+  c.save();
+  c.strokeStyle="rgba(85,109,251,.5)"; c.lineWidth=1.5; c.setLineDash([5,4]);
+  c.beginPath(); c.moveTo(a.left, pm); c.lineTo(a.right, pm); c.stroke();
+  c.setLineDash([]);
+  c.fillStyle="#8ea0ff"; c.textBaseline="bottom"; c.textAlign="left"; c.font="700 10px 'Bai Jamjuree',sans-serif";
+  c.fillText("Meta de retiro", a.left+4, pm-3);
+  var cr=histMeta.cruce;
+  if(cr){ var px=Math.min(Math.max(xs.getPixelForValue(cr.x), a.left+2), a.right-2), cy=Math.max(a.top-12, 9), ageTxt=String(cr.edad);
+    c.textBaseline="middle"; c.textAlign="left"; c.font="700 12px 'Bai Jamjuree',sans-serif";
+    var nw=c.measureText(ageTxt).width, emojiW=17, gap=4, total=emojiW+gap+nw;
+    var gx=Math.min(Math.max(px-total/2, a.left+2), a.right-total-2);
+    c.font="16px 'Bai Jamjuree',sans-serif"; c.fillText("🏖️", gx, cy);
+    c.font="700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle="#556DFB"; c.fillText(ageTxt, gx+emojiW+gap, cy);
+  }
+  c.restore();
+}};
+// Recalcula solo el marcador de meta (sin reconstruir el gráfico) al cambiar el calculador.
+function updateHistMeta(){ if(!chartHist||!histMeta.lineas) return; calcMetaCruce(); chartHist.update("none"); }
+
 function dibujarHistMulti(){
   var wrap=byId("chart-wrap-hist"); if(!wrap) return;
   var vk=ORDER_ACUM.filter(function(k){ return hs.vis[k]; });
-  var series={}; vk.forEach(function(k){ series[k]=dcaSerie(k); });
-  var ref=series[hs.acum]||series[vk[0]];
-  var years=ref.years, minX=years[0], maxX=years[years.length-1];
+  var series={}; vk.forEach(function(k){ var ww={}; ww[k]=1; series[k]=simular(ww); });   // línea individual (misma frecuencia/SWIFT)
+  var port=simularMain();
+  // Líneas visibles para el marcador de meta: cada activo seleccionado + el glide (si está activo).
+  histMeta.lineas=vk.map(function(k){ return series[k]; }); if(hs.glide) histMeta.lineas.push(port);
+  calcMetaCruce();
+  var ref=port, years=ref.years, minX=Math.floor(years[0]), maxX=Math.ceil(years[years.length-1]);
+  var gran=years.length>60, ten=gran?0:.12;   // con datos semanales ya es granular (sin bezier)
   function build(){
     var ctx=byId("chart-hist"); if(!ctx||typeof Chart==="undefined") return;
     if(chartHist) chartHist.destroy();
     var ds=vk.map(function(k){
+      var soloUno = (!hs.glide && k===hs.acum);   // el activo protagonista: se resalta
       return {label:A_INFO[k].nom, data:series[k].years.map(function(y,i){return {x:y,y:series[k].bal[i]};}),
-        borderColor:A_INFO[k].col, backgroundColor:"transparent", borderWidth:k===hs.acum?3.5:2,
-        pointRadius:0, tension:.12, borderDash:k==="SJC"?[3,3]:undefined};
+        borderColor:A_INFO[k].col, backgroundColor:"transparent", borderWidth:soloUno?3.5:1.6,
+        pointRadius:0, tension:ten, borderDash:k==="SJC"?[3,3]:undefined};
     });
+    if(hs.glide){
+      ds.unshift({label: hs.glide?("Glide-path ("+hs.fase1+"→"+hs.fase2+")"):"Portafolio", data:port.years.map(function(y,i){return {x:y,y:port.bal[i]};}),
+        borderColor:"#FFFFFF", backgroundColor:"transparent", borderWidth:3.5, pointRadius:0, tension:ten});
+    }
     ds.push({label:"Lo que aportaste", data:ref.years.map(function(y,i){return {x:y,y:ref.put[i]};}),
-      borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.1});
-    chartHist=new Chart(ctx,{ type:"line", data:{datasets:ds},
+      borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:ten});
+    chartHist=new Chart(ctx,{ type:"line", data:{datasets:ds}, plugins:[metaHistPlug],
       options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        layout:{padding:{top:20}},
         interaction:{mode:"index",intersect:false},
         plugins:{legend:{position:"bottom", onClick:function(){}, labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10}},
-          tooltip:{itemSort:function(a,b){return b.parsed.y-a.parsed.y;}, callbacks:{title:function(it){return "Fin de "+Math.round(it[0].parsed.x);},
+          tooltip:{itemSort:function(a,b){return b.parsed.y-a.parsed.y;}, callbacks:{title:function(it){var x=it[0].parsed.x; return gran?(MESES_ES[Math.max(0,Math.min(11,Math.floor((x-Math.floor(x))*12)))]+" "+Math.floor(x)):("Fin de "+Math.round(x));},
             label:function(it){return it.dataset.label+": "+yfmt(it.parsed.y);}}}},
         scales:{ x:{type:"linear", min:minX, max:maxX,
              ticks:{stepSize:5, autoSkip:true, maxTicksLimit:8, callback:function(v){return Math.round(v);}, color:"#E2E2E2", font:{size:13, weight:"600"}},
@@ -685,7 +1030,7 @@ function decumAsset(k, seed){
   for(var q=0;q<PATHS;q++){
     var b=seed, vivo=true; perYear[0].push(b);
     for(var t=1;t<=N;t++){
-      var yr=ys[(Math.random()*ys.length)|0], r2=(HR[k][yr]-HINF[yr])/100;
+      var yr=ys[(Math.random()*ys.length)|0], r2=(AHR()[k][yr]-HINF[yr])/100;
       if(vivo){ b=b*(1+r2)-W; if(b<=0){ b=0; vivo=false; } }
       perYear[t].push(b);
     }
@@ -701,7 +1046,6 @@ function renderRet(){
   byId("h-retanios").textContent=hs.retanios;
   byId("h-edadret").textContent=hs.edadRet;
   byId("h-sjcret").textContent=hs.sjcRet+"%";
-  byId("h-mcnom").textContent=A_INFO[hs.acum].nom;
 
   var seed=dcaSerie(hs.acum).valor, W=seed*hs.retpct/100;
   byId("h-ingreso").textContent="$"+fmt(W/12)+"/mes";
@@ -776,45 +1120,19 @@ function dibujarRetiro(seed, sel){
   whenChart(build, wrap);
 }
 
-// Gráfico 3: Monte Carlo de la ACUMULACIÓN sobre `acum` (mismo aporte), sorteando
-// años reales del mercado. Abanico de percentiles p10/p50/p90 en el tiempo.
-function simMC(){
-  var k=hs.acum, PATHS=1000, nY=hs.y1-hs.y0+1;
-  var aporte=hs.sinAportes?0:hs.aporte, cap=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap, ys=aniosDisp(k);
-  var perYear=[]; for(var t=0;t<=nY;t++) perYear.push([]);
-  for(var q=0;q<PATHS;q++){
-    var b=cap; perYear[0].push(b);
-    for(var t=1;t<=nY;t++){
-      var r; if(k==="SJC") r=hs.sjc/100; else { var yr=ys[(Math.random()*ys.length)|0]; r=HR[k][yr]/100; }
-      var mr=Math.pow(1+r,1/12)-1;
-      for(var m=0;m<12;m++) b=b*(1+mr)+aporte;
-      perYear[t].push(b);
-    }
-  }
-  var p10=[],p50=[],p90=[];
-  for(var t=0;t<=nY;t++){ var s=perYear[t].slice().sort(function(a,b){return a-b;}); p10.push(pct(s,.1)); p50.push(pct(s,.5)); p90.push(pct(s,.9)); }
-  return {N:nY, p10:p10,p50:p50,p90:p90, fin10:p10[nY],fin50:p50[nY],fin90:p90[nY],
-          finals:perYear[nY].slice().sort(function(a,b){return a-b;})};
-}
-function renderMC(m){
-  if(!m) m=simMC();
-  var aportado=(hs.sinAportes?0:hs.aporte)*12*(hs.y1-hs.y0+1)+(hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap);
-  byId("h-mc-txt").innerHTML="Con el mismo plan sobre <b>"+A_INFO[hs.acum].nom+"</b> ("+m.N+" años), sorteando 1,000 secuencias de años reales: en el escenario <b>típico</b> terminás con <b>$"+fmt(m.fin50)+"</b>. En el <b>10% peor</b>, ≤ <b>$"+fmt(m.fin10)+"</b>; en el <b>10% mejor</b>, ≥ <b>$"+fmt(m.fin90)+"</b>. Partiendo de los mismos $"+fmt(aportado)+" aportados. El apalancamiento abre muchísimo la banda: más techo, pero también más piso.";
-  dibujarFan("chart-mc","chart-wrap-mc",m);
-}
-
-// Abanico p10–p90 con la mediana encima. `r` trae p10/p50/p90 y N.
-function dibujarFan(canvasId, wrapId, r){
+// Abanico p10–p90 con la mediana encima. `r` trae p10/p50/p90 y N. `lbls` opcional {lo,hi,mid}.
+function dibujarFan(canvasId, wrapId, r, lbls){
   var wrap=byId(wrapId); if(!wrap) return;
   var N=r.N, esRet=(canvasId==="chart-ret");
+  var L=lbls||{lo:"Peor 10% (p10)", hi:"Mejor 10% (p90)", mid:"Escenario típico"};
   var mk=function(arr){ return arr.map(function(v,i){return {x:i,y:Math.max(0,Math.round(v))};}); };
   function build(){
     var ctx=byId(canvasId); if(!ctx||typeof Chart==="undefined") return;
-    var cur = esRet?chartRet:chartMC; if(cur) cur.destroy();
+    var cur = canvasId==="chart-ret"?chartRet:(canvasId==="chart-mcg"?chartMCg:chartMC); if(cur) cur.destroy();
     var ds=[
-      {label:"Peor 10% (p10)", data:mk(r.p10), borderColor:"rgba(224,82,90,.75)", backgroundColor:"transparent", borderWidth:1.5, pointRadius:0, tension:.15},
-      {label:"Mejor 10% (p90)", data:mk(r.p90), borderColor:"rgba(99,252,175,.75)", backgroundColor:"rgba(85,109,251,.14)", borderWidth:1.5, pointRadius:0, tension:.15, fill:"-1"},
-      {label:"Escenario típico", data:mk(r.p50), borderColor:"#556DFB", backgroundColor:"transparent", borderWidth:3, pointRadius:0, tension:.15}
+      {label:L.lo, data:mk(r.p10), borderColor:"rgba(224,82,90,.75)", backgroundColor:"transparent", borderWidth:1.5, pointRadius:0, tension:.15},
+      {label:L.hi, data:mk(r.p90), borderColor:"rgba(99,252,175,.75)", backgroundColor:"rgba(85,109,251,.14)", borderWidth:1.5, pointRadius:0, tension:.15, fill:"-1"},
+      {label:L.mid, data:mk(r.p50), borderColor:"#556DFB", backgroundColor:"transparent", borderWidth:3, pointRadius:0, tension:.15}
     ];
     var nw=new Chart(ctx,{ type:"line", data:{datasets:ds},
       options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
@@ -827,9 +1145,152 @@ function dibujarFan(canvasId, wrapId, r){
              ticks:{stepSize:5, color:"#E2E2E2", font:{size:12}}, grid:{color:"rgba(140,150,170,.12)"}},
           y:{ticks:{color:"#B9C0CA", font:{size:12}, callback:yfmt}, grid:{color:"rgba(140,150,170,.15)"}}}}
     });
-    if(esRet) chartRet=nw; else chartMC=nw;
+    if(canvasId==="chart-ret") chartRet=nw; else if(canvasId==="chart-mcg") chartMCg=nw; else chartMC=nw;
   }
   whenChart(build, wrap);
+}
+
+// Monte Carlo del glide-path: 10k escenarios. Fase1 (apalancado) el primer split% de años,
+// luego fase2. Sortea años reales del mercado (con o sin timing 9m). Honra aporte/cap/freq/SWIFT/EI.
+// Percentiles pesimista/conservador/optimista = p25/p50/p75.
+function simMCg(){
+  var N=hs.mcN, nY=hs.y1-hs.y0+1;
+  var aporte=hs.sinAportes?0:hs.aporte;
+  var cap=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
+  var HRf = hs.mcTiming ? HR_9H : HR;
+  var f1=hs.fase1, f2=hs.fase2, splitY=Math.max(1, Math.round(nY*hs.split/100));
+  var feeS=hs.swift?SWIFT_FEE:0, mgmt=hs.ei?EI_MGMT:0, setup0=hs.ei?EI_SETUP:0;
+  var poolY=[]; for(var y=1990;y<=2025;y++){ if(HRf[f1]&&HRf[f1][y]!=null && HRf[f2]&&HRf[f2][y]!=null) poolY.push(y); }
+  if(poolY.length===0) return null;
+  var np=poolY.length;
+  var perYear=[]; for(var t=0;t<=nY;t++) perYear.push(new Float64Array(N));
+  for(var q=0;q<N;q++){
+    var b=0, setup=setup0, pending=0;
+    // aporte inicial (capital)
+    if(cap>0){ var netc=cap-feeS; if(setup>0&&netc>0){var pc=Math.min(setup,netc);netc-=pc;setup-=pc;} if(netc>0)b+=netc; }
+    perYear[0][q]=b;
+    for(var t=1;t<=nY;t++){
+      var asset = (t<=splitY?f1:f2);
+      var yr=poolY[(Math.random()*np)|0];
+      var r=HRf[asset][yr]/100, mr=Math.pow(1+r,1/12)-1;
+      for(var m=0;m<12;m++){
+        b=b*(1+mr); pending+=aporte;
+        var go = hs.freq==="mensual"?true : hs.freq==="trimestral"?((m+1)%3===0) : hs.freq==="semestral"?((m+1)%6===0) : hs.freq==="anual"?(m===11) : (pending>=hs.umbral);
+        if(go&&pending>0){ var net=pending-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; pending=0; }
+      }
+      if(mgmt) b*=(1-mgmt);
+      perYear[t][q]=b;
+    }
+  }
+  var p25=[],p50=[],p75=[];
+  for(var t=0;t<=nY;t++){ perYear[t].sort(); var s=perYear[t]; p25.push(pct(s,.25)); p50.push(pct(s,.5)); p75.push(pct(s,.75)); }
+  return {N:nY, p10:p25,p50:p50,p90:p75, fin10:p25[nY],fin50:p50[nY],fin90:p75[nY], iters:N};
+}
+// Barrido del criterio de desapalancamiento. Cada `criterio` = {t:"tiempo"} | {t:"int",v:θ} |
+// {t:"fondeo",v:f}. Corre Nsweep caminos Monte Carlo con LOS MISMOS sorteos de mercado (números
+// aleatorios comunes) y devuelve p25/p50 del capital final, la máx. caída mediana del saldo y el
+// Calmar mediano. (Vol-target no se barre aquí: depende del clustering de vol, que el bootstrap rompe.)
+function sweepGlideCrit(criterios, Nsweep){
+  var nY=hs.y1-hs.y0+1, aporte=hs.sinAportes?0:hs.aporte, cap=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
+  var HRf=hs.mcTiming?HR_9H:HR, f1=hs.fase1, f2=hs.fase2;
+  var feeS=hs.swift?SWIFT_FEE:0, mgmt=hs.ei?EI_MGMT:0, setup0=hs.ei?EI_SETUP:0;
+  var poolY=[]; for(var y=1990;y<=2025;y++){ if(HRf[f1]&&HRf[f1][y]!=null && HRf[f2]&&HRf[f2][y]!=null) poolY.push(y); }
+  if(poolY.length===0) return null;
+  var np=poolY.length, M=nY*12, aporteAnual=aporte*12, splitY=Math.max(1,Math.round(nY*hs.split/100)), meta=metaCapitalUsd();
+  var draws=[]; for(var q=0;q<Nsweep;q++){ var row=new Int16Array(nY+1); for(var t=1;t<=nY;t++) row[t]=(Math.random()*np)|0; draws.push(row); }
+  var out=[];
+  criterios.forEach(function(cr){
+    var finals=new Float64Array(Nsweep), maxdds=new Float64Array(Nsweep), calms=[];
+    for(var q=0;q<Nsweep;q++){
+      var b=0, setup=setup0, pending=0, peak=0, maxdd=0, switched=false, row=draws[q];
+      if(cap>0){ var netc=cap-feeS; if(setup>0&&netc>0){var pc=Math.min(setup,netc);netc-=pc;setup-=pc;} if(netc>0)b+=netc; }
+      peak=b;
+      for(var t=1;t<=nY;t++){
+        if(!switched){
+          if(cr.t==="tiempo"){ if(t>splitY) switched=true; }
+          else if(cr.t==="int"){ if(b>0 && aporteAnual/b < cr.v/100) switched=true; }
+          else if(cr.t==="fondeo"){ if(meta>0 && b >= cr.v/100*meta) switched=true; }
+        }
+        var asset=switched?f2:f1, r=HRf[asset][poolY[row[t]]]/100, mr=Math.pow(1+r,1/12)-1;
+        for(var m=0;m<12;m++){
+          b=b*(1+mr); if(b>peak) peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd) maxdd=d; }
+          pending+=aporte;
+          var go=hs.freq==="mensual"?true:hs.freq==="trimestral"?((m+1)%3===0):hs.freq==="semestral"?((m+1)%6===0):hs.freq==="anual"?(m===11):(pending>=hs.umbral);
+          if(go&&pending>0){ var net=pending-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; pending=0; }
+        }
+        if(mgmt) b*=(1-mgmt);
+      }
+      finals[q]=b; maxdds[q]=maxdd*100;
+      var tir=xirrPlata(cap, aporte, M, b)/100;
+      if(maxdd<-1e-9 && isFinite(tir)) calms.push(tir/Math.abs(maxdd));
+    }
+    finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;});
+    out.push({ cr:cr, p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5),
+               calmarMed: calms.length?pct(calms,.5):0 });
+  });
+  return out;
+}
+// Pesos del framework de des-riesgo dinámico según el fondeo φ (con ratchet aplicado afuera):
+//  φ≤p1: baja apalancado L→E.  p1<φ≤p2: convierte E→SJC hasta Ffinal.  φ>p2: mezcla final.
+function fwWeights(phi, p1, p2, Ff){
+  var wL,wE,wF;
+  if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; }
+  else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; }
+  else { wL=0; wF=Ff; wE=1-Ff; }
+  return [wL,wE,wF];
+}
+// Barrido del framework de des-riesgo dinámico de 3 activos (L=apalancado, E=renta variable, F=SJC 8%).
+// Cada combo = {p1,p2,Ff}. Monte Carlo con sorteos comunes; devuelve Calmar/máx.caída medianos,
+// P(llegar a meta), p25/p50. Rebalanceo anual a los pesos por fondeo (ratchet, no vende SJC).
+function sweepFramework(combos, Nsweep){
+  var nY=hs.y1-hs.y0+1, aporte=hs.sinAportes?0:hs.aporte, cap=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
+  var HRf=hs.mcTiming?HR_9H:HR, L=hs.fase1, E=hs.fase2, rF=hs.sjc/100;
+  var feeS=hs.swift?SWIFT_FEE:0, mgmt=hs.ei?EI_MGMT:0, setup0=hs.ei?EI_SETUP:0;
+  var meta=metaCapitalUsd(); if(!(meta>0)) return null;
+  var poolY=[]; for(var y=1990;y<=2025;y++){ if(HRf[L]&&HRf[L][y]!=null && HRf[E]&&HRf[E][y]!=null) poolY.push(y); }
+  if(!poolY.length) return null;
+  var np=poolY.length, M=nY*12;
+  var draws=[]; for(var q=0;q<Nsweep;q++){ var row=new Int16Array(nY+1); for(var t=1;t<=nY;t++) row[t]=(Math.random()*np)|0; draws.push(row); }
+  var out=[];
+  combos.forEach(function(cb){
+    var p1=cb.p1, p2=cb.p2, Ff=cb.Ff;
+    var finals=new Float64Array(Nsweep), maxdds=new Float64Array(Nsweep), calms=[], nMeta=0;
+    for(var q=0;q<Nsweep;q++){
+      var b=0, setup=setup0, pending=0, peak=0, maxdd=0, phiPeak=0, row=draws[q];
+      if(cap>0){ var netc=cap-feeS; if(setup>0&&netc>0){var pc=Math.min(setup,netc);netc-=pc;setup-=pc;} if(netc>0)b+=netc; }
+      peak=b;
+      for(var t=1;t<=nY;t++){
+        var phi=b/meta; if(phi>phiPeak) phiPeak=phi;
+        var wq=fwWeights(phiPeak,p1,p2,Ff), wL=wq[0], wE=wq[1], wF=wq[2];
+        var yr=poolY[row[t]], rY=wL*HRf[L][yr]/100 + wE*HRf[E][yr]/100 + wF*rF, mr=Math.pow(1+rY,1/12)-1;
+        for(var m=0;m<12;m++){
+          b=b*(1+mr); if(b>peak) peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd) maxdd=d; }
+          pending+=aporte;
+          var go=hs.freq==="mensual"?true:hs.freq==="trimestral"?((m+1)%3===0):hs.freq==="semestral"?((m+1)%6===0):hs.freq==="anual"?(m===11):(pending>=hs.umbral);
+          if(go&&pending>0){ var net=pending-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; pending=0; }
+        }
+        if(mgmt) b*=(1 - mgmt*(wL+wE));   // costo EI solo sobre la parte riesgosa (SJC es 8% fijo, aparte)
+      }
+      finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta) nMeta++;
+      var tir=xirrPlata(cap,aporte,M,b)/100; if(maxdd<-1e-9 && isFinite(tir)) calms.push(tir/Math.abs(maxdd));
+    }
+    finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;});
+    out.push({p1:p1,p2:p2,Ff:Ff, p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5),
+              calmarMed: calms.length?pct(calms,.5):0, pMeta:100*nMeta/Nsweep});
+  });
+  return out;
+}
+function renderMCg(){
+  byId("mcg-nom").textContent = hs.fase1+"→"+hs.fase2;
+  byId("mcg-split").textContent = hs.split;
+  byId("h-mcg-timing").textContent = hs.mcTiming?"On":"Off";
+  byId("h-mcg-timing").classList.toggle("on", hs.mcTiming);
+  var m=simMCg();
+  if(!m){ byId("h-mcg-txt").innerHTML="No hay data suficiente para esta combinación."; return; }
+  var aportado=(hs.sinAportes?0:hs.aporte)*12*m.N+(hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap);
+  var tim = hs.mcTiming ? " con <b>timing 9m (6/18)</b>" : "";
+  byId("h-mcg-txt").innerHTML="Glide-path <b>"+hs.fase1+"→"+hs.fase2+"</b>"+tim+" ("+hs.split+"% del tiempo apalancado, "+m.N+" años, <b>"+fmt(m.iters)+"</b> escenarios): el <b>conservador</b> termina en <b>$"+fmt(m.fin50)+"</b>. <b>Pesimista</b> (p25) ≤ <b>$"+fmt(m.fin10)+"</b>; <b>optimista</b> (p75) ≥ <b>$"+fmt(m.fin90)+"</b>. Sobre $"+fmt(aportado)+" aportados. Desapalancar en la 2ª fase recorta el piso sin renunciar del todo al techo del apalancamiento.";
+  dibujarFan("chart-mcg","chart-wrap-mcg",m,{lo:"Pesimista (p25)", hi:"Optimista (p75)", mid:"Conservador (p50)"});
 }
 
 // chips de retiro (selección única)
@@ -865,8 +1326,12 @@ function buildAcumChips(){
     b.addEventListener("click", function(){ toggleVis(k); });
     c.appendChild(b);
   });
-  if(byId("h-prot")) byId("h-prot").textContent=A_INFO[hs.acum].nom;
+  pintarProt();
 }
+// Debajo de los chips: protagonista, o la descripción del glide-path si está activo.
+function pintarProt(){ var el=byId("h-prot"); if(!el) return;
+  el.innerHTML = hs.glide ? ("Glide-path: <b>"+hs.fase1+" → "+hs.fase2+"</b> · Protagonista (retiro): <b>"+A_INFO[hs.acum].nom+"</b>")
+                          : ("Protagonista: <b>"+A_INFO[hs.acum].nom+"</b>"); }
 // chips de retiro: MULTI-selección (verdes = se ven en el gráfico de retiro; su p50).
 function toggleVisRet(k){
   var vis=ORDER_RET.filter(function(a){ return hs.visRet[a]; });
@@ -886,28 +1351,184 @@ function buildRetChips(){
 }
 function refreshChips(){ buildAcumChips(); buildRetChips(); }
 
-// Tablas del activo protagonista: 10 peores sustos (drawdowns), 10 peores y 10 mejores años.
+// ===== COMPARACIÓN DE ACTIVOS: métricas + drawdowns (motor semanal) =====
+// Índices de la ventana [y0,y1] sobre la grilla semanal.
+function histIdx(){ var T=PX.t,n=T.length; var i0=0; while(i0<n-1&&Math.floor(T[i0]+1e-9)<hs.y0)i0++;
+  var i1=n-1; while(i1>0&&Math.floor(T[i1]-1e-9)>hs.y1)i1--; if(i1<i0)i1=i0; return {i0:i0,i1:i1}; }
+// Función de retorno semanal de un activo (con la señal activa aplicada).
+function retAssetFn(k, sig){ var cashW=Math.pow(1.02,1/52)-1;
+  return function(i){ var inv=!sig||sig[i-1]===1; return inv?(PX[k][i]/PX[k][i-1]-1):cashW; }; }
+// Función de retorno semanal del glide-path: binario (fase1→fase2 al corte) o continuo (vol-target).
+function retGlideFn(sig){ var cashW=Math.pow(1.02,1/52)-1, f1=hs.fase1, f2=hs.fase2, ix=histIdx(), i0=ix.i0;
+  if(hs.glideMode==="voltarget"){ var wl=glideWlev();
+    return function(i){ var inv=!sig||sig[i-1]===1; if(!inv) return cashW; var wv=wl[(i-1)-i0]; if(wv==null)wv=1;
+      return wv*(PX[f1][i]/PX[f1][i-1]-1)+(1-wv)*(PX[f2][i]/PX[f2][i-1]-1); }; }
+  var sp=glideSplitIdx();
+  return function(i){ var inv=!sig||sig[i-1]===1; if(!inv) return cashW; var k=i<=sp?f1:f2; return PX[k][i]/PX[k][i-1]-1; }; }
+// Motor de estadísticas sobre una serie de retornos semanales `retFn(i)`: CAGR, máx. caída, Calmar,
+// Sharpe, curva de drawdown, nº de caídas graves y % del tiempo bajo agua.
+function statsCore(retFn){
+  var PX=window.PX, T=PX.t, ix=histIdx(), i0=ix.i0, i1=ix.i1;
+  var v=1, peak=1, maxdd=0, rs=[], dd=[0], years=[T[i0]], under=0, nC=0, inDD=false;
+  for(var i=i0+1;i<=i1;i++){
+    var r=retFn(i);
+    v*=(1+r); rs.push(r);
+    if(v>peak) peak=v;
+    var d=v/peak-1;
+    if(d<maxdd) maxdd=d;
+    if(!inDD && d<=-0.20){ inDD=true; nC++; }   // "caída grave" = bajón de pico a fondo peor de 20%
+    if(inDD && d>=-1e-9) inDD=false;
+    if(d<-1e-9) under++;
+    years.push(T[i]); dd.push(d*100);
+  }
+  var yrs=T[i1]-T[i0], nr=rs.length, cagr= yrs>0?(Math.pow(v,1/yrs)-1)*100:0;
+  var mean=0; for(var j=0;j<nr;j++) mean+=rs[j]; mean/=(nr||1);
+  var m2=0; for(var j=0;j<nr;j++){ var e=rs[j]-mean; m2+=e*e; } var sd=Math.sqrt(m2/Math.max(1,nr-1));
+  var vol=sd*Math.sqrt(52), annRet=cagr/100;
+  return {cagr:cagr, maxdd:maxdd*100, calmar:maxdd<0?annRet/Math.abs(maxdd):Infinity,
+          sharpe:vol>0?(annRet-0.02)/vol:Infinity, dd:dd, years:years, nCaidas:nC, pctUnder:100*under/Math.max(1,nr)};
+}
+function statsWeekly(k, sig){ return statsCore(retAssetFn(k, sig)); }
+function statsGlide(sig){ return statsCore(retGlideFn(sig)); }
+function statsAsset(k, sig){
+  if(k==="SJC"){ var ix=histIdx(), yrs=[], zz=[]; for(var i=ix.i0;i<=ix.i1;i++){ yrs.push(PX.t[i]); zz.push(0); }
+    return {cagr:hs.sjc, maxdd:0, calmar:Infinity, sharpe:Infinity, dd:zz, years:yrs, nCaidas:0, pctUnder:0, sjc:true}; }
+  return statsWeekly(k, sig);
+}
+// TIR (money-weighted) de tu plata según el modo del gráfico: con aportes es el DCA del portafolio,
+// sin aportes es el lump sum (≈ CAGR del activo). `w`/glide + `sig` definen el activo y el filtro.
+function tirDCA(w, glideMode, sig){
+  var s=simularPx(w, glideMode, sig);
+  var M=(hs.y1-hs.y0+1)*12, aporteEff=hs.sinAportes?0:hs.aporte, capEff=hs.sinAportes?(hs.cap>0?hs.cap:10000):hs.cap;
+  return xirrPlata(capEff, aporteEff, M, s.valor);
+}
+function tirActivo(k, sig){ if(k==="SJC") return hs.sjc;
+  if(hs.sinAportes) return statsAsset(k, sig).cagr;    // sin aportes: rendimiento del activo puro (sin costos)
+  var w={}; w[k]=1; return tirDCA(w, false, sig); }     // con aportes: TIR money-weighted del portafolio (con costos)
+function renderMetrics(){
+  if(!pxOk()) return;
+  var sig=weekSig(), fname = sig ? FILTRO_CORTO[hs.filtro] : "buy & hold";
+  byId("cmp-ctx").textContent = hs.y0+"–"+hs.y1+" · "+fname+" · "+(hs.sinAportes?"sin aportes":"con aportes");
+  var vk=ORDER_ACUM.filter(function(k){ return hs.vis[k]; });
+  var tb=byId("tabla-metrics").querySelector("tbody"); tb.innerHTML="";
+  function fila(color, s, tir, nombre, opts){
+    opts=opts||{}; var tr=document.createElement("tr");
+    if(opts.destacar) tr.className="actual";
+    if(opts.tenue) tr.style.opacity=".6";
+    var calm=isFinite(s.calmar)?s.calmar.toFixed(2):"—", shp=isFinite(s.sharpe)?s.sharpe.toFixed(2):"—";
+    var tirTxt=(tir==null||!isFinite(tir))?"—":fmt1(tir)+"%";
+    tr.innerHTML='<td style="text-align:left"><span class="wdot" style="display:inline-block;background:'+color+'"></span> '+nombre+'</td>'
+      +'<td>'+fmt1(s.cagr)+'%</td><td>'+tirTxt+'</td><td>'+fmt1(s.maxdd)+'%</td><td>'+calm+'</td><td>'+shp+'</td>';
+    tb.appendChild(tr);
+  }
+  function filasActivo(k, destacar){
+    // Fila con el filtro activo (o buy & hold si no hay filtro).
+    fila(A_INFO[k].col, statsAsset(k, sig), tirActivo(k, sig), A_SHORT[k] + (sig ? " · "+FILTRO_CORTO[hs.filtro] : ""), {destacar:destacar});
+    // Con filtro activo, agregar la fila de buy & hold del mismo activo para comparar (SJC no aplica).
+    if(sig && k!=="SJC") fila(A_INFO[k].col, statsAsset(k, null), tirActivo(k, null), A_SHORT[k] + " · B&H", {tenue:true});
+  }
+  // Con glide-path activo: su fila va primero (estrategia principal), sin comparación B&H (no tiene benchmark puro).
+  if(hs.glide) fila("#FFFFFF", statsGlide(sig), (hs.sinAportes?statsGlide(sig).cagr:tirDCA(null, true, sig)), "Glide-path"+(sig?" · "+FILTRO_CORTO[hs.filtro]:""), {destacar:true});
+  vk.forEach(function(k){ filasActivo(k, !hs.glide && k===hs.acum); });
+  // Componentes del glide que NO están en la selección (ej. TQQQ): incluirlos con su B&H para comparar.
+  if(hs.glide){ var extras=[]; [hs.fase1,hs.fase2].forEach(function(k){ if(vk.indexOf(k)<0 && extras.indexOf(k)<0) extras.push(k); });
+    extras.forEach(function(k){ filasActivo(k, false); }); }
+}
+function dibujarDDcmp(){
+  var wrap=byId("chart-wrap-dd"); if(!wrap||!pxOk()) return;
+  var sig=weekSig(), vk=ORDER_ACUM.filter(function(k){ return hs.vis[k]; });
+  var stats={}; vk.forEach(function(k){ stats[k]=statsAsset(k,sig); });
+  var ref=stats[hs.acum]||stats[vk[0]]; if(!ref) return;
+  var minX=Math.floor(ref.years[0]), maxX=Math.ceil(ref.years[ref.years.length-1]);
+  byId("dd-note").innerHTML = sig ? ("Cada línea es el % por debajo del máximo, ya <b>con el filtro "+FILTRO_CORTO[hs.filtro]+"</b> aplicado. Compará con la tabla de abajo cuánto recortó las caídas.") : "Cada línea es el % por debajo del máximo histórico (bajo el agua). Cuanto más profundo y más tiempo abajo, más doloroso de aguantar.";
+  function build(){
+    var ctx=byId("chart-dd-cmp"); if(!ctx||typeof Chart==="undefined") return;
+    if(chartDD) chartDD.destroy();
+    var ds=vk.map(function(k){
+      return {label:A_INFO[k].nom, data:stats[k].years.map(function(y,i){return {x:y,y:stats[k].dd[i]};}),
+        borderColor:A_INFO[k].col, backgroundColor:"transparent", borderWidth:(!hs.glide&&k===hs.acum)?2.6:1.3,
+        pointRadius:0, tension:0, borderDash:k==="SJC"?[3,3]:undefined};
+    });
+    // Con glide-path activo, agregar su línea de drawdown (blanca, como en el gráfico principal).
+    if(hs.glide){ var g=statsGlide(sig);
+      ds.unshift({label:"Glide-path ("+hs.fase1+"→"+hs.fase2+")", data:g.years.map(function(y,i){return {x:y,y:g.dd[i]};}),
+        borderColor:"#FFFFFF", backgroundColor:"transparent", borderWidth:2.6, pointRadius:0, tension:0}); }
+    chartDD=new Chart(ctx,{ type:"line", data:{datasets:ds},
+      options:{ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+        interaction:{mode:"index",intersect:false},
+        plugins:{legend:{position:"bottom", labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10}},
+          tooltip:{itemSort:function(a,b){return a.parsed.y-b.parsed.y;}, callbacks:{title:function(it){return Math.round(it[0].parsed.x);},
+            label:function(it){return it.dataset.label+": "+fmt1(it.parsed.y)+"%";}}}},
+        scales:{ x:{type:"linear", min:minX, max:maxX, ticks:{stepSize:5, autoSkip:true, maxTicksLimit:8, callback:function(v){return Math.round(v);}, color:"#E2E2E2", font:{size:12}}, grid:{color:"rgba(140,150,170,.12)"}},
+          y:{max:0, ticks:{color:"#B9C0CA", font:{size:12}, callback:function(v){return Math.round(v)+"%";}}, grid:{color:"rgba(140,150,170,.15)"}}}}
+    });
+  }
+  whenChart(build, wrap);
+}
+
+// Año fraccional -> "YYYY-MM" (para mesTxt/durTxt).
+function fracYM(f){ var y=Math.floor(f+1e-6), m=Math.round((f-y)*12)+1; if(m>12){y++;m-=12;} if(m<1)m=1; return y+"-"+(m<10?"0"+m:m); }
+// Historial REAL de una estrategia (glide o activo con filtro) desde su curva semanal:
+// episodios de drawdown (pico→fondo→recuperación) y retornos año por año.
+function historialStrat(retFn){
+  var PX=window.PX, T=PX.t, ix=histIdx(), i0=ix.i0, i1=ix.i1;
+  var eq=[1], tt=[T[i0]];
+  for(var i=i0+1;i<=i1;i++){ eq.push(eq[eq.length-1]*(1+retFn(i))); tt.push(T[i]); }
+  var eps=[], peak=eq[0], pI=0, inDD=false, tr=eq[0], trI=0;
+  for(var j=1;j<eq.length;j++){
+    if(eq[j]>=peak){ if(inDD){ eps.push({d:(tr/peak-1)*100, i:tt[pI], t:tt[trI], f:tt[j]}); inDD=false; } peak=eq[j]; pI=j; }
+    else { if(!inDD){ inDD=true; tr=eq[j]; trI=j; } else if(eq[j]<tr){ tr=eq[j]; trI=j; } }
+  }
+  if(inDD) eps.push({d:(tr/peak-1)*100, i:tt[pI], t:tt[trI], f:null});
+  eps.sort(function(a,b){ return a.d-b.d; });
+  var dd10=eps.slice(0,10).map(function(e){ return {d:e.d, i:fracYM(e.i), t:fracYM(e.t), f:e.f!=null?fracYM(e.f):null, m:e.f!=null?Math.round((e.f-e.i)*12):null}; });
+  var yend={}; for(var j=0;j<eq.length;j++){ yend[Math.floor(tt[j]+1e-9)]=eq[j]; }
+  var yrs=Object.keys(yend).map(Number).sort(function(a,b){return a-b;}), annual=[], prev=eq[0];
+  yrs.forEach(function(y){ var v=yend[y]; annual.push([y,(v/prev-1)*100]); prev=v; });
+  return {dd10:dd10, annual:annual};
+}
+// Opciones para el selector de la sección 4: el glide (si está activo) + cada activo seleccionado.
+function histOpciones(){ var o=[]; if(hs.glide) o.push("glide"); ORDER_ACUM.forEach(function(k){ if(hs.vis[k]) o.push(k); }); return o; }
+function histActual(){ var o=histOpciones(); if(hs.histSel && o.indexOf(hs.histSel)>=0) return hs.histSel;
+  return hs.glide ? "glide" : (o.indexOf(hs.acum)>=0?hs.acum:(o[0]||hs.acum)); }
+// Sección 4: historial de la estrategia elegida (glide o activo con filtro), seleccionable con chips.
 function dibujarTablas(){
-  var k=hs.acum;
-  if(byId("h-histnom")) byId("h-histnom").textContent=A_INFO[k].nom;
-  var tdd=byId("tabla-dd"), tp=byId("tabla-peores"), tm=byId("tabla-mejores");
-  if(!tdd) return;
+  var tdd=byId("tabla-dd"), tp=byId("tabla-peores"), tm=byId("tabla-mejores"); if(!tdd) return;
   var bdd=tdd.querySelector("tbody"), bp=tp.querySelector("tbody"), bm=tm.querySelector("tbody");
-  if(k==="SJC"){
+  var sig=weekSig(), fsuf = sig ? (" · "+FILTRO_CORTO[hs.filtro]) : "";
+  var opts=histOpciones(), sel=histActual();
+  // chips selector
+  var cc=byId("chips-hist");
+  if(cc){ cc.innerHTML="";
+    opts.forEach(function(o){
+      var lbl = o==="glide" ? "Glide-path" : A_SHORT[o], col = o==="glide" ? "#FFFFFF" : A_INFO[o].col;
+      var bn=document.createElement("button"); bn.className="chip"+(o===sel?" on":"");
+      bn.innerHTML='<span class="dot" style="background:'+col+'"></span>'+lbl;
+      bn.addEventListener("click", function(){ hs.histSel=o; dibujarTablas(); });
+      cc.appendChild(bn);
+    });
+  }
+  var esGlide=(sel==="glide");
+  var nom = esGlide ? ("Glide-path ("+hs.fase1+"→"+hs.fase2+")"+fsuf) : (A_SHORT[sel]+(sel!=="SJC"?fsuf:""));
+  if(byId("h-histnom")) byId("h-histnom").textContent=nom;
+  if(byId("h-histrange")) byId("h-histrange").textContent=hs.y0+"–"+hs.y1;
+  // San José Capital: tasa fija, sin caídas ni años malos.
+  if(!esGlide && sel==="SJC"){
     bdd.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gris-sec)">San José Capital es tasa fija: no tiene caídas ni años malos.</td></tr>';
     bp.innerHTML='<tr><td colspan="2" style="text-align:center;color:var(--gris-sec)">Tasa fija del '+hs.sjc+'% todos los años.</td></tr>';
     bm.innerHTML=bp.innerHTML; return;
   }
+  var hist = esGlide ? historialStrat(retGlideFn(sig)) : historialStrat(retAssetFn(sel, sig));
   bdd.innerHTML="";
-  (HDD[k]||[]).forEach(function(e){
+  if(!hist.dd10.length) bdd.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gris-sec)">Sin caídas registradas en la ventana.</td></tr>';
+  hist.dd10.forEach(function(e){
     var rec = e.f ? mesTxt(e.f) : "<span class='peligro'>sin recuperar</span>";
     var dur = e.m==null ? "—" : durTxt(e.m);
     var tr=document.createElement("tr");
     tr.innerHTML="<td style='color:#e0525a;font-weight:700'>"+fmt1(e.d)+"%</td><td>"+mesTxt(e.i)+"</td><td>"+rec+"</td><td>"+dur+"</td>";
     bdd.appendChild(tr);
   });
-  var arr=[]; for(var y in HR[k]) arr.push([+y, HR[k][y]]);
-  arr.sort(function(a,b){ return a[1]-b[1]; });
+  var arr=hist.annual.slice(); arr.sort(function(a,b){ return a[1]-b[1]; });
   bp.innerHTML=""; bm.innerHTML="";
   arr.slice(0,10).forEach(function(e){ var tr=document.createElement("tr"); tr.innerHTML="<td>"+e[0]+"</td><td style='color:#e0525a;font-weight:700'>"+fmt1(e[1])+"%</td>"; bp.appendChild(tr); });
   arr.slice(-10).reverse().forEach(function(e){ var tr=document.createElement("tr"); tr.innerHTML="<td>"+e[0]+"</td><td style='color:var(--menta);font-weight:700'>+"+fmt1(e[1])+"%</td>"; bm.appendChild(tr); });
@@ -919,6 +1540,11 @@ Array.prototype.forEach.call(document.querySelectorAll("#quick-hist .qs, #quick-
     var h=btn.getAttribute("data-h"), dir=parseFloat(btn.getAttribute("data-d"));
     if(h==="aporte") hs.aporte=Math.max(0, hs.aporte+dir*100);
     else if(h==="cap") hs.cap=Math.max(0, hs.cap+dir*1000);
+    else if(h==="umbral") hs.umbral=Math.max(500, hs.umbral+dir*1000);
+    else if(h==="split") hs.split=Math.min(95, Math.max(5, hs.split+dir*5));
+    else if(h==="glideint") hs.glideIntensidad=Math.min(60, Math.max(1, hs.glideIntensidad+dir));
+    else if(h==="glidefondeo") hs.glideFondeo=Math.min(100, Math.max(10, hs.glideFondeo+dir*5));
+    else if(h==="glidevol") hs.glideVol=Math.min(60, Math.max(8, hs.glideVol+dir));
     else if(h==="y0") hs.y0=Math.min(hs.y1-1, Math.max(HYMIN, hs.y0+dir));
     else if(h==="y1") hs.y1=Math.max(hs.y0+1, Math.min(HYMAX, hs.y1+dir));
     else if(h==="sjc") hs.sjc=Math.min(30, Math.max(1, hs.sjc+dir));
@@ -931,11 +1557,72 @@ Array.prototype.forEach.call(document.querySelectorAll("#quick-hist .qs, #quick-
   });
 });
 byId("h-sinap").addEventListener("click", function(){ hs.sinAportes=!hs.sinAportes; renderHist(); });
+function pasoFiltro(dir){ var i=FILTROS.indexOf(hs.filtro); if(i<0)i=0; hs.filtro=FILTROS[(i+dir+FILTROS.length)%FILTROS.length]; renderHist(); }
+byId("h-filtro").addEventListener("click", function(){ pasoFiltro(1); });
+byId("h-filtro-next").addEventListener("click", function(e){ e.stopPropagation(); pasoFiltro(1); });
+byId("h-filtro-prev").addEventListener("click", function(e){ e.stopPropagation(); pasoFiltro(-1); });
+byId("h-freq").addEventListener("click", function(){ var i=FREQS.indexOf(hs.freq); hs.freq=FREQS[(i+1)%FREQS.length]; renderHist(); });
+byId("h-costos").addEventListener("click", function(){ hs.swift = hs.ei = !hs.swift; renderHist(); });
+var GKEYS=["SPY","QQQ","QLD","TQQQ"];
+byId("h-glide").addEventListener("click", function(){ hs.glide=!hs.glide; renderHist(); });
+byId("h-fase1").addEventListener("click", function(){ var i=GKEYS.indexOf(hs.fase1); hs.fase1=GKEYS[(i+1)%GKEYS.length]; renderHist(); });
+byId("h-fase2").addEventListener("click", function(){ var i=GKEYS.indexOf(hs.fase2); hs.fase2=GKEYS[(i+1)%GKEYS.length]; renderHist(); });
+var GMODES=["tiempo","intensidad","fondeo","voltarget"];
+byId("h-glidemode").addEventListener("click", function(){ var i=GMODES.indexOf(hs.glideMode); hs.glideMode=GMODES[(i+1)%GMODES.length]; renderHist(); });
+byId("h-mcg-timing").addEventListener("click", function(){ hs.mcTiming=!hs.mcTiming; renderMCg(); });
+// Barrido del umbral de desapalancamiento (on-demand; maximiza Calmar mediano).
+function renderSweep(){
+  var tb=byId("tabla-sweep").querySelector("tbody"); tb.innerHTML="";
+  if(!hs.glide || hs.sinAportes || hs.aporte<=0){ byId("h-sweep-txt").innerHTML="Activá <b>Glide-path</b> con aportes para correr el barrido."; return; }
+  byId("h-sweep-txt").textContent="Corriendo 5,000 escenarios por criterio…";
+  setTimeout(function(){
+    var crits=[{t:"tiempo"}];
+    [30,20,15,10,7,5].forEach(function(v){ crits.push({t:"int",v:v}); });
+    [80,70,60,50,40].forEach(function(v){ crits.push({t:"fondeo",v:v}); });
+    var res=sweepGlideCrit(crits, 5000);
+    if(!res){ byId("h-sweep-txt").textContent="No hay data para esta combinación de fases."; return; }
+    var best=res.reduce(function(a,b){ return b.calmarMed>a.calmarMed?b:a; }, res[0]);
+    function lblCr(c){ return c.t==="tiempo"?("Tiempo ("+hs.split+"%)"):c.t==="int"?("Intensidad "+c.v+"%"):("Fondeo "+c.v+"% de meta"); }
+    res.forEach(function(r){
+      var tr=document.createElement("tr"); if(r===best) tr.className="actual";
+      tr.innerHTML='<td style="text-align:left">'+lblCr(r.cr)+'</td><td>'+r.calmarMed.toFixed(2)+'</td><td>'+fmt1(r.maxddMed)+'%</td><td>$'+fmt(r.p25)+'</td><td>$'+fmt(r.p50)+'</td>';
+      tb.appendChild(tr);
+    });
+    var bc=best.cr, bl = bc.t==="tiempo"?("<b>corte por tiempo al "+hs.split+"%</b>"):bc.t==="int"?("<b>desapalancar cuando el aporte anual baja del "+bc.v+"% del saldo</b>"):("<b>desapalancar al llegar al "+bc.v+"% de la meta</b>");
+    var aplicar = bc.t==="int"?(" Aplicalo: <b>Corte por: Intensidad</b> = "+bc.v+"%."):bc.t==="fondeo"?(" Aplicalo: <b>Corte por: Fondeo</b> = "+bc.v+"%."):"";
+    byId("h-sweep-txt").innerHTML="Mejor Calmar mediano: "+bl+" (Calmar <b>"+best.calmarMed.toFixed(2)+"</b>, máx. caída mediana "+fmt1(best.maxddMed)+"%)."+aplicar+" <i>Vol-target no se incluye acá: depende del clustering de volatilidad, que el bootstrap anual no preserva; evalualo en la tabla de rendimiento y el gráfico de drawdowns.</i>";
+  }, 30);
+}
+byId("h-sweep-btn").addEventListener("click", renderSweep);
+// Barrido del framework de des-riesgo dinámico (3 activos, glidepath por fondeo).
+function renderFramework(){
+  var tb=byId("tabla-fw").querySelector("tbody"); tb.innerHTML="";
+  byId("fw-sjc").textContent=hs.sjc;
+  if(hs.sinAportes || hs.aporte<=0){ byId("h-fw-txt").innerHTML="Necesita <b>aportes</b> y una <b>meta</b> fijada arriba."; return; }
+  if(!(metaCapitalUsd()>0)){ byId("h-fw-txt").innerHTML="Fijá una <b>meta</b> válida en el calculador de arriba."; return; }
+  byId("h-fw-txt").textContent="Corriendo el barrido del framework (4,000 escenarios × combinación)…";
+  setTimeout(function(){
+    var combos=[]; [0.3,0.5,0.7].forEach(function(p1){ [0.9,1.0,1.1].forEach(function(p2){ [0.5,0.7,0.9].forEach(function(Ff){ combos.push({p1:p1,p2:p2,Ff:Ff}); }); }); });
+    var res=sweepFramework(combos, 4000);
+    if(!res){ byId("h-fw-txt").textContent="No hay data para estas fases."; return; }
+    res.sort(function(a,b){ return b.calmarMed-a.calmarMed; });
+    var best=res[0], bestMeta=res.reduce(function(a,b){ return b.pMeta>a.pMeta?b:a; }, res[0]);
+    res.slice(0,15).forEach(function(r){
+      var lbl = "L→E a "+Math.round(r.p1*100)+"% · "+Math.round(r.Ff*100)+"% SJC a "+Math.round(r.p2*100)+"%";
+      var tr=document.createElement("tr"); if(r===best) tr.className="actual";
+      tr.innerHTML='<td style="text-align:left">'+lbl+'</td><td>'+r.calmarMed.toFixed(2)+'</td><td>'+fmt1(r.maxddMed)+'%</td><td>'+Math.round(r.pMeta)+'%</td><td>$'+fmt(r.p25)+'</td><td>$'+fmt(r.p50)+'</td>';
+      tb.appendChild(tr);
+    });
+    byId("h-fw-txt").innerHTML="<b>"+hs.fase1+" → "+hs.fase2+" → SJC "+hs.sjc+"%</b>. Mejor <b>Calmar</b>: des-apalancar hasta <b>"+Math.round(best.p1*100)+"%</b> de fondeo, luego a <b>"+Math.round(best.Ff*100)+"% en SJC</b> al <b>"+Math.round(best.p2*100)+"%</b> (Calmar <b>"+best.calmarMed.toFixed(2)+"</b>, máx. caída "+fmt1(best.maxddMed)+"%, P(meta) "+Math.round(best.pMeta)+"%). El que más asegura llegar a la meta es "+Math.round(bestMeta.p1*100)+"%→"+Math.round(bestMeta.Ff*100)+"% SJC a "+Math.round(bestMeta.p2*100)+"% (<b>P(meta) "+Math.round(bestMeta.pMeta)+"%</b>). Se muestran los 15 mejores por Calmar.";
+  }, 30);
+}
+byId("h-fw-btn").addEventListener("click", renderFramework);
 refreshChips();
 
 // ---------- eventos ----------
 function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart,a=el.value.length; el.value=d?Number(d).toLocaleString("en-US"):""; var b=el.value.length; try{el.setSelectionRange(Math.max(0,p+(b-a)),Math.max(0,p+(b-a)));}catch(e){} render(); }); }
 comas(byId("i-meta")); comas(byId("i-tc")); comas(byId("i-cap"));
+bindQuickMoney("q-meta","i-meta"); bindQuickMoney("q-cap","i-cap");
 ["i-crec","i-ret","i-crecret","i-infl","i-edad","i-edadret"].forEach(function(id){ byId(id).addEventListener("input", render); });
 // Botón para esconder/mostrar el panel de variables (no molesta la lectura de los datos).
 byId("p-toggle").addEventListener("click", function(){
@@ -984,6 +1671,133 @@ byId("i-reset").addEventListener("click", function(){
   document.querySelectorAll(".chips .chip").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-cur")==="$");});
   byId("i-meta").value="10,000"; byId("i-tc").value="460"; byId("i-crec").value="8"; byId("i-ret").value="4";
   byId("i-crecret").value="4"; byId("i-infl").value="3"; byId("i-edad").value="30"; byId("i-edadret").value="65"; byId("i-cap").value="0"; render();
+});
+
+// ===== Enviar proyección al cliente (PDF + correo vía función serverless) =====
+function loadScript(src){ return new Promise(function(res,rej){ var s=document.createElement("script"); s.src=src; s.onload=res; s.onerror=function(){ rej(new Error("No se pudo cargar "+src)); }; document.head.appendChild(s); }); }
+function ensureLibs(){
+  var p=[];
+  if(!(window.jspdf && window.jspdf.jsPDF)) p.push(loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"));
+  if(!window.html2canvas) p.push(loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"));
+  return Promise.all(p);
+}
+function txt(id){ var e=byId(id); return e?e.textContent.trim():""; }
+function proyeccionData(){
+  var cur=(typeof metaCur!=="undefined")?metaCur:"$";
+  return {
+    fecha:new Date().toLocaleDateString("es-CR",{year:"numeric",month:"long",day:"numeric"}),
+    nombre:(byId("s-nombre").value||"").trim(),
+    notas:(byId("s-notas").value||"").trim(),
+    params:[
+      ["Meta mensual en el retiro", cur+" "+byId("i-meta").value],
+      ["Tipo de cambio ₡/$", byId("i-tc").value],
+      ["Crecimiento antes del retiro", byId("i-crec").value+" %/año"],
+      ["Tasa de retiro", byId("i-ret").value+" %/año"],
+      ["Crecimiento durante el retiro", byId("i-crecret").value+" %/año"],
+      ["Inflación", byId("i-infl").value+" %/año"],
+      ["Capital inicial", cur+" "+byId("i-cap").value],
+      ["Edad actual", byId("i-edad").value+" años"],
+      ["Edad de retiro", byId("i-edadret").value+" años"]
+    ],
+    capital:txt("r-capital"), capitalEq:txt("r-capital-eq"), capitalTxt:txt("r-capital-txt"),
+    aporte:txt("r-aporte"), aporteEq:txt("r-aporte-eq"), aporteTxt:txt("r-aporte-txt"),
+    warn:(byId("r-warn") && byId("r-warn").style.display!=="none")?txt("r-warn"):""
+  };
+}
+function slug(s){ return (s||"cliente").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"cliente"; }
+function escH(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+// Arma un "reporte" (fuera de pantalla) con el mismo look dark del sitio para capturarlo como imagen.
+function buildReportNode(d){
+  var paramRows=d.params.map(function(p){
+    return '<div style="display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #262C34;padding:6px 0;">'+
+      '<span style="color:#9AA1AB;font-size:13px;">'+escH(p[0])+'</span>'+
+      '<span style="color:#FEF9F3;font-weight:700;font-size:13px;white-space:nowrap;">'+escH(p[1])+'</span></div>';
+  }).join("");
+  var node=document.createElement("div");
+  node.id="__report";
+  node.style.cssText="position:fixed;left:-10000px;top:0;width:760px;background:#15191E;color:#FEF9F3;font-family:'Bai Jamjuree',sans-serif;padding:34px 34px 26px;box-sizing:border-box;z-index:-1;";
+  node.innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #63FCAF;padding-bottom:14px;margin-bottom:18px;">'+
+      '<div><div style="font-size:25px;font-weight:700;">Empowered Investor</div>'+
+      '<div style="font-size:13.5px;color:#9AA1AB;margin-top:2px;">Proyección de retiro · en plata de hoy</div></div>'+
+      '<div style="text-align:right;font-size:13px;color:#9AA1AB;">'+escH(d.fecha)+
+      (d.nombre?'<div style="color:#FEF9F3;font-weight:700;font-size:16px;margin-top:5px;">'+escH(d.nombre)+'</div>':'')+'</div>'+
+    '</div>'+
+    '<div style="margin-bottom:22px;">'+
+      '<div style="font-size:13px;font-weight:700;color:#556DFB;letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px;">Parámetros</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 30px;">'+paramRows+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:14px;margin-bottom:16px;">'+
+      '<div style="flex:1;background:#1B2026;border:1px solid #262C34;border-radius:16px;padding:16px 18px;">'+
+        '<div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA1AB;">Necesitás acumular</div>'+
+        '<div style="font-size:30px;font-weight:800;line-height:1.1;margin-top:6px;">'+escH(d.capital)+'</div>'+
+        (d.capitalEq?'<div style="font-size:14px;color:#9AA1AB;margin-top:3px;">'+escH(d.capitalEq)+'</div>':'')+'</div>'+
+      '<div style="flex:1;background:rgba(99,252,175,.06);border:1px solid #63FCAF;border-radius:16px;padding:16px 18px;">'+
+        '<div style="font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9AA1AB;">Aporte mensual</div>'+
+        '<div style="font-size:38px;font-weight:800;color:#63FCAF;line-height:1.1;margin-top:6px;">'+escH(d.aporte)+'</div>'+
+        (d.aporteEq?'<div style="font-size:14px;color:#9AA1AB;margin-top:3px;">'+escH(d.aporteEq)+'</div>':'')+'</div>'+
+    '</div>'+
+    (d.aporteTxt?'<div style="font-size:12.5px;color:#c9ced6;line-height:1.55;margin-bottom:6px;">'+escH(d.aporteTxt)+'</div>':'')+
+    (d.warn?'<div style="font-size:12.5px;color:#E0525A;line-height:1.5;margin-bottom:6px;">'+escH(d.warn)+'</div>':'')+
+    '<div style="margin-bottom:22px;">'+
+      '<div style="font-size:13px;font-weight:700;color:#63FCAF;margin:6px 0 8px;">Tu portafolio, de hoy hasta el retiro y después</div>'+
+      '<div style="background:#0E1216;border:1px solid #262C34;border-radius:14px;padding:12px;"><img id="__repchart" style="width:100%;display:block;border-radius:6px;"></div>'+
+    '</div>'+
+    (d.notas?'<div style="margin-bottom:4px;"><div style="font-size:13px;font-weight:700;color:#556DFB;letter-spacing:.04em;text-transform:uppercase;margin:8px 0 7px;">Notas · lo que dijo el cliente</div>'+
+      '<div style="background:#1B2026;border:1px solid #262C34;border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.6;white-space:pre-wrap;">'+escH(d.notas)+'</div></div>':'')+
+    '<div style="font-size:10.5px;color:#6b7280;line-height:1.5;margin-top:22px;border-top:1px solid #262C34;padding-top:12px;">Todo en plata de hoy (rendimientos reales, crecimiento nominal menos inflación). Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo. Herramienta interna de Empowered Investor.</div>';
+  document.body.appendChild(node);
+  return node;
+}
+function makeReportPDF(d){
+  var node=buildReportNode(d);
+  // Poné el gráfico real como imagen (los <canvas> no se clonan con su contenido)
+  var chartImg=node.querySelector("#__repchart");
+  var cv=byId("chart"); var imgReady=Promise.resolve();
+  if(cv && cv.width){ imgReady=new Promise(function(res){ chartImg.onload=res; chartImg.onerror=res; chartImg.src=cv.toDataURL("image/png"); }); }
+  else { chartImg.parentNode.style.display="none"; }
+  var fontsReady=(document.fonts && document.fonts.ready)?document.fonts.ready:Promise.resolve();
+  var nodeW, bounds;
+  return Promise.all([imgReady, fontsReady]).then(function(){
+    return new Promise(function(r){ setTimeout(r,60); }); // deja asentar el layout
+  }).then(function(){
+    // Límites de bloque (para cortar entre secciones y no partir tarjetas/tablas)
+    nodeW=node.offsetWidth; bounds=[0];
+    for(var k=0;k<node.children.length;k++){ bounds.push(node.children[k].offsetTop); }
+    bounds.push(node.scrollHeight);
+    bounds=bounds.filter(function(v,i,a){return a.indexOf(v)===i;}).sort(function(a,b){return a-b;});
+    return html2canvas(node,{backgroundColor:"#15191E",scale:3,useCORS:true,logging:false,windowWidth:nodeW,width:nodeW});
+  }).then(function(canvas){
+    node.remove();
+    var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({unit:"mm",format:"a4"});
+    var pageW=210, pageH=297, cw=canvas.width, ch=canvas.height;
+    var pxPerMm=cw/pageW, pageHpx=Math.floor(pageH*pxPerMm);
+    var factor=cw/nodeW, bpx=bounds.map(function(b){ return Math.round(b*factor); });
+    var startY=0, first=true, guard=0;
+    while(startY < ch-1 && guard++ < 40){
+      var maxEnd=startY+pageHpx, end=-1;
+      for(var bi=0;bi<bpx.length;bi++){ if(bpx[bi]>startY+4 && bpx[bi]<=maxEnd) end=bpx[bi]; }
+      if(end<=startY) end=Math.min(maxEnd, ch);   // bloque más alto que una página → corte duro
+      var sliceH=end-startY;
+      var tmp=document.createElement("canvas"); tmp.width=cw; tmp.height=sliceH;
+      var t=tmp.getContext("2d"); t.fillStyle="#15191E"; t.fillRect(0,0,cw,sliceH);
+      t.drawImage(canvas,0,startY,cw,sliceH,0,0,cw,sliceH);
+      if(!first) doc.addPage();
+      doc.setFillColor(21,25,30); doc.rect(0,0,pageW,pageH,"F");
+      doc.addImage(tmp.toDataURL("image/jpeg",0.95),"JPEG",0,0,pageW,sliceH/pxPerMm);
+      first=false; startY=end;
+    }
+    return doc;
+  }).catch(function(e){ if(node&&node.parentNode) node.remove(); throw e; });
+}
+function sStatus(msg, cls){ var e=byId("s-status"); e.className="sendstatus "+(cls||""); e.innerHTML=msg; }
+byId("s-pdf").addEventListener("click", function(){
+  var btn=byId("s-pdf"); btn.disabled=true; sStatus("Generando PDF…","busy");
+  var d=proyeccionData();
+  ensureLibs().then(function(){ return makeReportPDF(d); }).then(function(doc){
+    doc.save("proyeccion-"+slug(d.nombre)+"-"+new Date().toISOString().slice(0,10)+".pdf");
+    sStatus("PDF descargado.","ok"); btn.disabled=false;
+  }).catch(function(e){ btn.disabled=false; sStatus("Error generando el PDF: "+(e&&e.message),"err"); });
 });
 
 // gate
