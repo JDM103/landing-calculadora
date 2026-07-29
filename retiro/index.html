@@ -150,6 +150,11 @@
       <div class="field"><label>Fase 3 · llegada</label><div class="row"><div class="seg segph" id="seg-f3"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="SJC" class="on">SJC</button></div></div></div>
       <div class="field" id="field-sjc"><label>Tasa Fase 3 · SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
     </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Salir de la Fase 1 al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Fase 3 al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
+    </div>
   </div>
   <div style="overflow-x:auto;margin-top:8px"><table id="metricas-tbl"></table></div>
   <p class="note" id="metricas-txt" style="margin-top:6px"></p>
@@ -167,11 +172,6 @@
     <div class="grid">
       <div class="field"><label>Capital inicial</label><div class="row"><input id="i-cap" inputmode="numeric" value="0"></div></div>
       <div class="field"><label>Cada $ (umbral de transferencia)</label><div class="row"><b class="big" id="v-umbral">$5,000</b><div class="steps"><button class="stp" data-s="umbral" data-d="1">▲</button><button class="stp" data-s="umbral" data-d="-1">▼</button></div></div></div>
-    </div>
-    <div class="grid" style="margin-top:10px">
-      <div class="field"><label>Salir de la Fase 1 al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
-      <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
-      <div class="field"><label>Fase 3 al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
       <div class="field" style="grid-column:1/-1"><label>Frecuencia de transferencia internacional</label><div class="row"><div class="seg segph" id="seg-freq"><button data-a="mensual">Mensual</button><button data-a="trimestral">3 meses</button><button data-a="semestral">6 meses</button><button data-a="anual">Anual</button><button data-a="umbral" class="on">Al juntar $</button></div></div></div>
