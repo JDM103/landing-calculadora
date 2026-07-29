@@ -138,11 +138,19 @@
     <div class="kpi"><div class="k">Tu plata rindió (TIR)</div><div class="v men" id="h-tir">0%</div></div>
   </div>
   <!-- controles que más movés, pegados al gráfico -->
-  <div class="card" style="margin-top:6px"><div class="grid">
-    <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1993</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
-  </div></div>
+  <div class="card" style="margin-top:6px">
+    <div class="grid">
+      <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1993</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Fase 1 · arranque</label><div class="row"><div class="seg segph" id="seg-f1"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ" class="on">TQQQ</button></div></div></div>
+      <div class="field"><label>Fase 2 · intermedia</label><div class="row"><div class="seg segph" id="seg-f2"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ">TQQQ</button></div></div></div>
+      <div class="field"><label>Fase 3 · llegada</label><div class="row"><div class="seg segph" id="seg-f3"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="SJC" class="on">SJC</button></div></div></div>
+      <div class="field" id="field-sjc"><label>Tasa Fase 3 · SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
+    </div>
+  </div>
   <div style="overflow-x:auto;margin-top:8px"><table id="metricas-tbl"></table></div>
   <p class="note" id="metricas-txt" style="margin-top:6px"></p>
 
@@ -159,12 +167,6 @@
     <div class="grid">
       <div class="field"><label>Capital inicial</label><div class="row"><input id="i-cap" inputmode="numeric" value="0"></div></div>
       <div class="field"><label>Cada $ (umbral de transferencia)</label><div class="row"><b class="big" id="v-umbral">$5,000</b><div class="steps"><button class="stp" data-s="umbral" data-d="1">▲</button><button class="stp" data-s="umbral" data-d="-1">▼</button></div></div></div>
-    </div>
-    <div class="grid" style="margin-top:10px">
-      <div class="field"><label>Fase 1 · arranque</label><div class="row"><div class="seg segph" id="seg-f1"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ" class="on">TQQQ</button></div></div></div>
-      <div class="field"><label>Fase 2 · intermedia</label><div class="row"><div class="seg segph" id="seg-f2"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ">TQQQ</button></div></div></div>
-      <div class="field"><label>Fase 3 · llegada</label><div class="row"><div class="seg segph" id="seg-f3"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="SJC" class="on">SJC</button></div></div></div>
-      <div class="field" id="field-sjc"><label>Tasa Fase 3 · SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
       <div class="field"><label>Salir de la Fase 1 al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
@@ -196,7 +198,7 @@
 
   <!-- ===== 4. ESTUDIO GENERAL ===== -->
   <div class="tsub">4 · El estudio · el mejor plan según tu preferencia</div>
-  <p class="note">El barrido <b>más grande</b>: cruza <b>todos los activos</b> en Fase 1 y 2 (incluida la renta fija SJC), <b>todas las perillas del glidepath</b> y el <b>filtro de mercado</b> (con timing 9m o sin él), sobre la <b>historia completa (1990–2025)</b> y miles de futuros. La Fase 3 (llegada) solo aterriza en activos no apalancados. <b>Prob. de llegar</b> = probabilidad de juntar tu <b>freedom point</b> (poder retirar tu %/año y vivir de ese ingreso). Te propone <b class="hl">tres planes según tu preferencia</b> y te deja la tabla completa para <b>ordenar</b> por lo que te importe.</p>
+  <p class="note">El barrido <b>más grande</b>: cruza <b>todos los activos</b>, <b>todas las perillas del glidepath</b> y el <b>filtro de mercado</b> (con timing 9m o sin él), sobre la <b>historia completa (1990–2025)</b> y miles de futuros. Todo plan <b>aterriza en renta fija (SJC)</b> con lo suficiente para asegurar tu ingreso, el riesgo solo baja (Fase 1 ≥ Fase 2), y el equity que quede es upside sobre ese piso. <b>Prob. de llegar</b> = probabilidad de juntar tu <b>freedom point</b> (poder retirar tu %/año y vivir de ese ingreso). Te propone <b class="hl">tres planes según tu preferencia</b> y la tabla completa para <b>ordenar</b> por lo que te importe.</p>
   <button class="btn" id="btn-general">▶ Correr el estudio</button>
   <div id="general-out" style="margin-top:14px"></div>
 
@@ -225,8 +227,9 @@ var S={ edad:30, edadret:65, ret:4, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70,
 function faseNom(k){ return k==="SJC" ? ("SJC "+S.sjc+"%") : k; }
 // Describe el plan mostrando la MEZCLA FINAL real (ff% en Fase 3 + resto en Fase 2), no solo el activo de Fase 3.
 function planDesc(f1,f2,f3,ff){
+  if(f2===f3) return f1+" → "+f3;                 // fase 2 y llegada iguales: sin redundancia
   var fin;
-  if(ff>=100 || f2===f3) fin=f3;
+  if(ff>=100) fin=f3;
   else if(ff<=0) fin=f2;
   else fin=ff+"% "+f3+" / "+(100-ff)+"% "+f2;
   return f1+" → "+f2+" → "+fin;
@@ -337,9 +340,9 @@ function drawGlide(){
   for(var i=0;i<=130;i+=2){ var phi=i/100, w=fwW(phi,S.p1,S.p2,S.ff);
     xs.push(i); dL.push(Math.round(w[0]*100)); dE.push(Math.round(w[1]*100)); dF.push(Math.round(w[2]*100)); }
   var data={ labels:xs, datasets:[
-    {label:"Apalancado", data:dL, backgroundColor:"rgba(224,82,90,.55)", borderColor:"var(--rojo)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
-    {label:"Acciones", data:dE, backgroundColor:"rgba(85,109,251,.55)", borderColor:"var(--peri)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
-    {label:"Renta fija", data:dF, backgroundColor:"rgba(99,252,175,.55)", borderColor:"var(--menta)", borderWidth:0, fill:true, pointRadius:0, tension:.15}
+    {label:"Fase 1 · "+S.f1, data:dL, backgroundColor:"rgba(224,82,90,.55)", borderColor:"var(--rojo)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
+    {label:"Fase 2 · "+S.f2, data:dE, backgroundColor:"rgba(85,109,251,.55)", borderColor:"var(--peri)", borderWidth:0, fill:true, pointRadius:0, tension:.15},
+    {label:"Fase 3 · "+faseNom(S.f3), data:dF, backgroundColor:"rgba(99,252,175,.55)", borderColor:"var(--menta)", borderWidth:0, fill:true, pointRadius:0, tension:.15}
   ]};
   var opts={ responsive:true, maintainAspectRatio:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
     interaction:{mode:"index",intersect:false},
@@ -484,7 +487,7 @@ function renderMetricas(s, ti){
   if(peor!=="SJC" && pd<-1e-9) txt+='<b>'+faseNom(peor)+'</b> por su cuenta llegó a caer <b style="color:var(--rojo)">'+fmt1(pd)+'%</b>. ';
   txt+='Tu plan también marca caídas en % ('+fmt1(pdd)+(ps.year?' en '+ps.year:'')+'), pero '
       +(ps.year&&ps.dropUSD>0 ? 'ese golpe fue sobre <b>poca plata</b> (~'+money(ps.dropUSD)+') y tuvo años para recuperarse. ' : 'los peores pasan al principio, sobre poca plata. ');
-  txt+=(ps.hitL ? 'Ya con tu capital <b>≥40% de la meta</b>, la peor caída fue solo <b style="color:var(--menta)">'+fmt1(ps.latePct)+'%</b> — el plan ya te había movido a fases seguras.' : 'A medida que te acercás a la meta, el plan te des-riesga para <b>proteger lo ganado</b>.');
+  txt+=(ps.hitL ? 'Ya con tu capital <b>≥40% de la meta</b>, la peor caída fue solo <b style="color:var(--menta)">'+fmt1(ps.latePct)+'%</b> — el plan ya te había movido a renta fija.' : 'A medida que te acercás a la meta, el plan te mueve a renta fija para <b>proteger lo ganado</b>.');
   byId("metricas-txt").innerHTML=txt;
 }
 // Detecta los episodios de caída (pico→valle) del valor del plan; devuelve % y $.
@@ -558,7 +561,7 @@ function sortableTable(mount, cfg){
 // Columnas comunes de métricas de un plan.
 function planCols(withTiming){
   var cols=[{key:"lbl",label:"Plan (transición de fases)",align:"left",fmt:function(r){
-    return '<b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b><br><span style="font-size:11px;color:var(--gris-sec)">des-riesga entre el '+r.p1+'% y el '+r.p2+'% de tu meta</span>'; }}];
+    return '<b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b><br><span style="font-size:11px;color:var(--gris-sec)">'+Math.round(sjcFinalPct(r.f2,r.f3,r.ff))+'% final en SJC (asegura tu ingreso)</span>'; }}];
   if(withTiming) cols.push({key:"timv",label:"Timing",align:"center",fmt:function(r){ return r.tim==="9h"?'<span class="pill on">9m</span>':'<span class="pill off">no</span>'; }});
   var ny=anios();
   cols.push(
@@ -585,34 +588,44 @@ function annualTable(useTiming){
   });
   return out;
 }
-// Lista de TODAS las combinaciones a probar: activos × glidepath denso × timing.
-// La MEZCLA FINAL (ff% F3 + resto F2) nunca puede quedar en apalancado: si F2 es TQQQ/QLD, se exige ff=100 (aterriza 100% en F3, no apalancado).
+// % de SJC (renta fija) que queda en la MEZCLA FINAL de un plan.
+function sjcFinalPct(f2,f3,ff){ return (f3==="SJC"?ff:0) + (f2==="SJC"?(100-ff):0); }
+// SJC mínimo en la mezcla final para que su renta fija cubra el retiro deseado: SJC% · tasa_sjc ≥ retiro%.
+function sjcMin(){ return Math.min(100, 100*S.ret/Math.max(0.1,S.sjc)); }
+// Lista de TODAS las combinaciones a probar. Reglas para que TODO plan tenga sentido de retiro:
+//  1) La LLEGADA (Fase 3) es siempre SJC (renta fija) — nunca se vuelve a equity al final.
+//  2) El riesgo solo BAJA: Fase 1 ≥ Fase 2 (nunca subís el riesgo en el camino).
+//  3) La mezcla final debe tener suficiente SJC para que su renta cubra tu retiro (SJC% · tasa ≥ retiro%).
+// Así el equity/apalancado que quede es solo UPSIDE sobre el piso de SJC que asegura tu ingreso.
 function sweepGeneralCombos(){
-  var opts5=["SPY","QQQ","QLD","TQQQ","SJC"], f3opts=["SPY","QQQ","SJC"], lev={QLD:1,TQQQ:1};
-  var P1=[40,50,60,70,80,90], P2=[100,110,120], FF=[20,40,60,80,100];   // 6×3×5 = 90 glidepaths
+  var opts5=["SPY","QQQ","QLD","TQQQ","SJC"], RISK={SJC:0,SPY:1,QQQ:2,QLD:3,TQQQ:4}, thr=sjcMin();
+  var P1=[25,35,45,55,65,75,85,95], P2=[100,108,116,124], FF=[20,30,40,50,60,70,80,90,100];
   var combos=[];
-  ["off","9h"].forEach(function(tim){ opts5.forEach(function(f1){ opts5.forEach(function(f2){ f3opts.forEach(function(f3){
+  ["off","9h"].forEach(function(tim){ opts5.forEach(function(f1){ opts5.forEach(function(f2){
+    if(RISK[f1]<RISK[f2]) return;   // el riesgo solo baja (Fase 1 ≥ Fase 2); la llegada siempre es SJC
     P1.forEach(function(p1){ P2.forEach(function(p2){ FF.forEach(function(ff){
-      if(lev[f2] && ff<100) return;   // no dejar apalancado en la mezcla final
-      combos.push({f1:f1,f2:f2,f3:f3,p1:p1,p2:p2,ff:ff,tim:tim});
+      if(f2==="SJC"){ if(ff!==100 || p2!==100) return; }        // f2=SJC ⇒ ya es todo SJC: un solo representante
+      else if(ff < thr-1e-9) return;                            // renta fija final insuficiente para el ingreso
+      combos.push({f1:f1,f2:f2,f3:"SJC",p1:p1,p2:p2,ff:ff,tim:tim});
     }); }); });
-  }); }); }); });
+  }); }); });
   return combos;
 }
-// Describe un plan en lenguaje natural, simple.
+// Describe un plan en lenguaje natural, simple (estilo del texto de la sección 3).
 function narrar(r){
+  var sjc=Math.round(sjcFinalPct(r.f2,r.f3,r.ff));
   var fin = (r.ff>=100||r.f2===r.f3) ? ("<b>"+r.f3+"</b>")
-    : (r.ff<=0 ? "<b>"+r.f2+"</b>" : "una mezcla de <b>"+r.ff+"% "+r.f3+"</b> y <b>"+(100-r.ff)+"% "+r.f2+"</b>");
+    : (r.ff<=0 ? "<b>"+r.f2+"</b>" : "<b>"+r.ff+"% "+r.f3+"</b> y <b>"+(100-r.ff)+"% "+r.f2+"</b>");
   var tim = r.tim==="9h" ? " (con un <b>filtro de mercado</b> que sale a efectivo en los peores tramos)" : "";
-  var mid = (r.f1===r.f2) ? "" : ", y pasás a <b>"+r.f2+"</b>";
-  var lleg = r.t50>anios() ? "No siempre alcanza la meta dentro del plazo" : "Alcanzás tu freedom point en <b>~"+Math.round(r.t50)+" años</b>";
-  return "Arrancás en <b>"+r.f1+"</b>"+tim+mid+". Entre el <b>"+r.p1+"%</b> y el <b>"+r.p2+"%</b> de tu meta vas des-riesgando hasta quedar en "+fin+". "+lleg+", con una caída de hasta <b>"+Math.round(r.ddFP)+"%</b> de tu freedom point en un mal escenario.";
+  var paso = (r.f1===r.f2) ? "" : " Al pasar el <b>"+r.p1+"%</b> de tu meta te movés a <b>"+r.f2+"</b>.";
+  var lleg = r.t50>anios() ? "No siempre alcanza la meta dentro del plazo." : "Alcanzás tu freedom point en <b>~"+Math.round(r.t50)+" años</b>.";
+  return "Arrancás en <b>"+r.f1+"</b>"+tim+"."+paso+" Al llegar a tu meta quedás en "+fin+": el <b>"+sjc+"% en SJC</b> te <b>asegura el ingreso mensual</b> y el resto sigue creciendo. "+lleg+" Caída de hasta <b>"+Math.round(r.ddFP)+"%</b> de tu freedom point en un mal escenario.";
 }
 function correrGeneral(){
   var out=byId("general-out");
   if(!pxOk()){ out.innerHTML='<p class="note">Cargando datos históricos…</p>'; return; }
   var nY=anios(), poolY=[]; for(var y=1990;y<=2025;y++) poolY.push(y);
-  var N=450, draws=makeDraws(N,nY,poolY.length), tabs={"off":annualTable(false),"9h":annualTable(true)};
+  var N=550, draws=makeDraws(N,nY,poolY.length), tabs={"off":annualTable(false),"9h":annualTable(true)};
   var combos=sweepGeneralCombos(), res=[], i=0, _f1=S.f1,_f2=S.f2,_f3=S.f3;
   out.innerHTML='<p class="note">Corriendo <b>'+combos.length.toLocaleString("en-US")+' planes</b> × '+N+' escenarios cada uno, sobre toda la historia (1990–2025)… <b id="gen-prog">0%</b></p>';
   function chunk(){
@@ -626,8 +639,10 @@ function correrGeneral(){
   }
   setTimeout(chunk,20);
 }
-function finishGeneral(res){
-    var out=byId("general-out"), ny=anios();
+function finishGeneral(res){ window.__genFull=res; renderGeneralMode("all"); }
+function renderGeneralMode(mode){
+    var out=byId("general-out"), ny=anios(), full=window.__genFull||[];
+    var res = (mode==="notim") ? full.filter(function(r){return r.tim==="off";}) : full;
     var yrs=function(r){return r.t50>ny?"—":Math.round(r.t50)+" años";};
     // Solo planes que llegan de forma fiable (prob ≥90%); si no hay suficientes, tomamos los de mayor prob.
     var pool=res.filter(function(r){return r.pMeta>=90;});
@@ -638,18 +653,17 @@ function finishGeneral(res){
     attachRank("ddFP",false); attachRank("t50",false); attachRank("p50",true); attachRank("p25",true);
     // PRIORIDAD: proteger el freedom point (40%) → llegar antes (30%) → mayor típico (20%) → mejor piso (10%)
     pool.forEach(function(r){ r.score=0.40*r.s_ddFP + 0.30*r.s_t50 + 0.20*r.s_p50 + 0.10*r.s_p25; });
-    var proteger=pool.reduce(function(a,b){return b.ddFP<a.ddFP?b:a;},pool[0]);          // preferencia: máxima protección de la meta
-    var balanceado=pool.reduce(function(a,b){return b.score>a.score?b:a;},pool[0]);       // preferencia: equilibrio (recomendado)
-    var crecer=pool.reduce(function(a,b){return b.p50>a.p50?b:a;},pool[0]);               // preferencia: máximo crecimiento
-    // asegurar 3 planes distintos (si coinciden, tomar el siguiente mejor distinto)
-    function distinct(cand, taken){ for(var i=0;i<cand.length;i++){ var r=cand[i], dup=false; for(var j=0;j<taken.length;j++){ if(taken[j]&&taken[j].f1===r.f1&&taken[j].f2===r.f2&&taken[j].f3===r.f3&&taken[j].p1===r.p1&&taken[j].ff===r.ff&&taken[j].tim===r.tim){dup=true;break;} } if(!dup) return r; } return cand[0]; }
+    var proteger=pool.reduce(function(a,b){return b.ddFP<a.ddFP?b:a;},pool[0]);
+    var balanceado=pool.reduce(function(a,b){return b.score>a.score?b:a;},pool[0]);
+    var crecer=pool.reduce(function(a,b){return b.p50>a.p50?b:a;},pool[0]);
+    function distinct(cand, taken){ for(var i=0;i<cand.length;i++){ var r=cand[i], dup=false; for(var j=0;j<taken.length;j++){ if(taken[j]&&taken[j].f1===r.f1&&taken[j].f2===r.f2&&taken[j].p1===r.p1&&taken[j].p2===r.p2&&taken[j].ff===r.ff&&taken[j].tim===r.tim){dup=true;break;} } if(!dup) return r; } return cand[0]; }
     balanceado=distinct(pool.slice().sort(function(a,b){return b.score-a.score;}), [proteger]);
     crecer=distinct(pool.slice().sort(function(a,b){return b.p50-a.p50;}), [proteger,balanceado]);
     window.__gen={proteger:proteger,balanceado:balanceado,crecer:crecer};
-    function avg(arr,k){var s=0;arr.forEach(function(r){s+=r[k];});return s/arr.length;}
-    var on=res.filter(function(r){return r.tim==="9h";}), off=res.filter(function(r){return r.tim==="off";});
-    var fpOff=avg(off,"ddFP"), fpOn=avg(on,"ddFP"), tOff=avg(off,"t50"), tOn=avg(on,"t50");
-    var reach=100*res.filter(function(r){return r.pMeta>=95;}).length/res.length;
+    function avg(arr,k){var s=0;arr.forEach(function(r){s+=r[k];});return arr.length?s/arr.length:0;}
+    var fOn=full.filter(function(r){return r.tim==="9h";}), fOff=full.filter(function(r){return r.tim==="off";});
+    var fpOff=avg(fOff,"ddFP"), fpOn=avg(fOn,"ddFP"), tOff=avg(fOff,"t50"), tOn=avg(fOn,"t50");
+    var reach=100*res.filter(function(r){return r.pMeta>=95;}).length/Math.max(1,res.length);
     var cards=[
       {k:"proteger",ico:"🛡️",n:"Proteger la meta",r:proteger},
       {k:"balanceado",ico:"⚖️",n:"Balanceado",r:balanceado},
@@ -659,22 +673,28 @@ function finishGeneral(res){
       return '<div class="perfil"><h3>'+pf.ico+' '+pf.n+'</h3>'
         +'<div class="line" style="border:none;padding-bottom:2px"><span>Plan</span><b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b></div>'
         +'<p style="font-size:12.5px;color:var(--gris-sec);line-height:1.55;margin:4px 0 10px">'+narrar(r)+'</p>'
-        +'<div class="line"><span>Caída vs freedom point (mal caso)</span><b>'+Math.round(r.ddFP)+'%</b></div>'
+        +'<div class="line"><span>Caída vs freedom point</span><b>'+Math.round(r.ddFP)+'%</b></div>'
         +'<div class="line"><span>Años a la meta</span><b>'+yrs(r)+'</b></div>'
         +'<div class="line"><span>Típico</span><b>'+money(r.p50)+'</b></div>'
         +'<button class="btn" data-gen="'+pf.k+'">Ver este plan</button></div>';
     }).join("")+'</div>';
-    var concl='<div class="card" style="margin-bottom:12px"><b>Conclusión.</b> Probamos <b>'+res.length.toLocaleString("en-US")+' planes</b> sobre toda la historia (1990–2025). '
-      +'<b>Prob. de llegar</b> = juntar tu <b>freedom point</b> ('+money(metaCapital())+'): poder retirar el <b>'+S.ret+'%</b> al año y vivir con <b>$'+fmt(metaMensual())+'/mes</b>. '
-      +'Como con toda la historia casi todos los buenos planes llegan (el <b>'+Math.round(reach)+'%</b> con prob. ≥95%), la pregunta no es <i>si</i> llegás, sino <b>cómo</b>. Elegimos con esta <b>prioridad</b>: <b class="hl">1) proteger tu freedom point</b> (la menor caída medida contra tu meta, en un mal escenario) → <b>2) llegar antes</b> → <b>3) mayor típico</b> → <b>4) mejor piso</b>. '
-      +'Con <b>timing</b>, la caída vs. freedom point baja de '+Math.round(fpOff)+'% a '+Math.round(fpOn)+'% en promedio y se llega '+Math.abs(tOn-tOff).toFixed(1)+' años '+(tOn<tOff?'antes':'después')+'. '
-      +'Elegí el que va con vos:</div>';
-    out.innerHTML=concl+chtml+'<div id="general-tbl" style="margin-top:14px"></div>';
+    var toggle='<div class="sortbar" style="margin-bottom:10px">Ver: '
+      +'<button class="sortb'+(mode==="all"?" on":"")+'" data-mode="all">Todos (con y sin timing)</button>'
+      +'<button class="sortb'+(mode==="notim"?" on":"")+'" data-mode="notim">Solo SIN timing (comprar y aguantar)</button></div>';
+    var timLine = (mode==="notim")
+      ? 'Estás viendo <b>solo los planes sin filtro de timing</b>: en promedio caen <b>'+Math.round(avg(res,"ddFP"))+'%</b> vs. tu freedom point y llegan en <b>~'+avg(res,"t50").toFixed(1)+' años</b> (el filtro de timing bajaría esa caída a <b>'+Math.round(fpOn)+'%</b>). '
+      : 'Con <b>timing</b>, la caída vs. freedom point baja de '+Math.round(fpOff)+'% a '+Math.round(fpOn)+'% en promedio y se llega '+Math.abs(tOn-tOff).toFixed(1)+' años '+(tOn<tOff?'antes':'después')+'. ';
+    var concl='<div class="card" style="margin-bottom:12px"><b>Conclusión.</b> Probamos <b>'+full.length.toLocaleString("en-US")+' planes</b> sobre toda la historia (1990–2025). '
+      +'<b>Prob. de llegar</b> = juntar tu <b>freedom point</b> ('+money(metaCapital())+'): poder retirar el <b>'+S.ret+'%</b> al año y vivir con <b>$'+fmt(metaMensual())+'/mes</b>. Cada plan <b>aterriza en renta fija (SJC)</b> con lo suficiente para asegurar tu ingreso. '
+      +'Como con toda la historia casi todos los buenos planes llegan (el <b>'+Math.round(reach)+'%</b> con prob. ≥95%), la pregunta no es <i>si</i> llegás, sino <b>cómo</b>. Priorizamos: <b class="hl">1) proteger tu freedom point</b> → <b>2) llegar antes</b> → <b>3) mayor típico</b> → <b>4) mejor piso</b>. '
+      +timLine+'Elegí el que va con vos:</div>';
+    out.innerHTML=toggle+concl+chtml+'<div id="general-tbl" style="margin-top:14px"></div>';
+    Array.prototype.forEach.call(out.querySelectorAll("button[data-mode]"),function(b){ b.addEventListener("click",function(){ renderGeneralMode(b.getAttribute("data-mode")); }); });
     Array.prototype.forEach.call(out.querySelectorAll("button[data-gen]"),function(bt){ bt.addEventListener("click",function(){ var r=window.__gen[bt.getAttribute("data-gen")]; aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); }); });
     var tblRows=res.filter(function(r){return r.pMeta>=80;}); if(tblRows.length<10) tblRows=res;
     sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"ddFP", sortDir:1, cols:planCols(true),
       onClick:function(r){ aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); },
-      note:'Solo planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída vs FP</b> (nuestra prioridad: cuánto podés caer frente a tu freedom point en un mal escenario). También podés ordenar por <b>Años a la meta</b>, probabilidad, piso, típico… (tocá de nuevo para invertir). <b>Tocá una fila</b> para cargar ese plan arriba.' });
+      note:'Planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída vs FP</b> (nuestra prioridad). También por <b>Años a la meta</b>, probabilidad, piso, típico… (tocá de nuevo para invertir). <b>Tocá una fila</b> para cargarlo arriba.' });
 }
 
 // ===== eventos =====
