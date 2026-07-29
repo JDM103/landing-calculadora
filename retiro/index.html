@@ -296,29 +296,37 @@ function simMC(stratFn, N, draws, opt){
   var nY=anios(), ap=aporte(), meta=metaCapital(), f1=S.f1, f2=S.f2, f3=S.f3, MR=opt.mret;
   var M=nY*12, rF=Math.pow(1+S.sjc/100,1/12)-1, feeS=opt.costos?SWIFT:0, mgmtM=opt.costos?EI_MGMT/12:0, setup0=opt.costos?EI_SETUP:0;
   var s1=f1==="SJC", s2=f2==="SJC", s3=f3==="SJC", A1=MR[f1], A2=MR[f2], A3=MR[f3];
-  var mk1=s1?0:1, mk2=s2?0:1, mk3=s3?0:1;   // parte de mercado (para el fee EI)
-  var finals=new Float64Array(N), maxdds=new Float64Array(N), calms=[], sharps=[], times=[], ddFPs=[], nMeta=0;
+  var finals=new Float64Array(N), maxdds=new Float64Array(N), calms=[], sharps=[], times=[], ddPre=[], ddPost=[], nMeta=0;
   for(var q=0;q<N;q++){
-    var b=0,setup=setup0,peak=0,maxdd=0,mddUSD=0,phiPeak=0,row=draws[q], sr=0,sr2=0, hit=0, w=[1,0,0];
+    // eq = sleeve de mercado (equity/apalancado) · sjc = PISO de renta fija con candado (nunca se vende para recomprar equity)
+    var eq=0, sjc=0, setup=setup0, peak=0, maxdd=0, mddPre=0, mddPost=0, reached=false, phiPeak=0, row=draws[q], sr=0,sr2=0, hit=0, w=[1,0,0], eqW=1, tSJC=0;
     for(var m=0;m<M;m++){
-      if((m%12)===0){ var phi=meta>0?b/meta:0; if(phi>phiPeak)phiPeak=phi; w=stratFn(phiPeak); }  // pesos por año
+      if((m%12)===0){ var tot0=eq+sjc, phi=meta>0?tot0/meta:0; if(phi>phiPeak)phiPeak=phi; w=stratFn(phiPeak);
+        eqW=(s1?0:w[0])+(s2?0:w[1])+(s3?0:w[2]); tSJC=1-eqW; }   // fracción objetivo de SJC (sube con el fondeo)
       var mi=row[m];
       var r1=s1?rF:A1[mi], r2=s2?rF:A2[mi], r3=s3?rF:A3[mi];
-      var rM=w[0]*r1 + w[1]*r2 + w[2]*r3;
-      sr+=rM; sr2+=rM*rM;
-      b=b*(1+rM); if(b>peak)peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd)maxdd=d; var drop=peak-b; if(drop>mddUSD)mddUSD=drop; }
-      if(ap>0){ var net=ap-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; }
-      if(mgmtM) b*=(1-mgmtM*(mk1*w[0]+mk2*w[1]+mk3*w[2]));   // EI solo sobre la parte de mercado
-      if(hit===0 && b>=meta) hit=m+1;
+      var eqRet = eqW>1e-9 ? ((s1?0:w[0]*r1)+(s2?0:w[1]*r2)+(s3?0:w[2]*r3))/eqW : 0;
+      var prev=eq+sjc;
+      eq*=(1+eqRet); sjc*=(1+rF); if(mgmtM) eq*=(1-mgmtM);   // EI solo sobre el sleeve de mercado
+      var rM = prev>0 ? (eq+sjc)/prev-1 : 0; sr+=rM; sr2+=rM*rM;
+      if(ap>0){ var net=ap-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)eq+=net; }
+      var total=eq+sjc, want=tSJC*total;                       // RATCHET: subir SJC al objetivo, nunca bajarlo
+      if(want>sjc){ var mv=want-sjc; if(mv>eq)mv=eq; sjc+=mv; eq-=mv; }
+      var b=eq+sjc;
+      if(b>peak)peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd)maxdd=d; var drop=peak-b; if(reached){if(drop>mddPost)mddPost=drop;}else{if(drop>mddPre)mddPre=drop;} }
+      if(!reached && b>=meta){ reached=true; hit=m+1; }
     }
-    finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta)nMeta++; times.push(hit>0?hit/12:nY+1); ddFPs.push(meta>0?mddUSD/meta*100:0);
+    var b=eq+sjc;
+    finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta)nMeta++; times.push(hit>0?hit/12:nY+1);
+    ddPre.push(meta>0?mddPre/meta*100:0); ddPost.push(meta>0?mddPost/meta*100:0);
     var ti=tir(0,ap,M,b); if(maxdd<-1e-9&&isFinite(ti)) calms.push(ti/Math.abs(maxdd));
     var mean=sr/M, sd=Math.sqrt(Math.max(0,(sr2-sr*sr/M)/Math.max(1,M-1))); if(sd>1e-9) sharps.push((mean*12-0.02)/(sd*Math.sqrt(12)));
   }
-  finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;}); sharps.sort(function(a,b){return a-b;}); ddFPs.sort(function(a,b){return a-b;});
+  finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;}); sharps.sort(function(a,b){return a-b;}); ddPre.sort(function(a,b){return a-b;}); ddPost.sort(function(a,b){return a-b;});
   var tSum=0; for(var z=0;z<times.length;z++) tSum+=times[z];
   return { p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5), pMeta:100*nMeta/N,
-           calmarMed:calms.length?pct(calms,.5):0, sharpeMed:sharps.length?pct(sharps,.5):0, t50:tSum/times.length, ddFP:pct(ddFPs,.9) };
+           calmarMed:calms.length?pct(calms,.5):0, sharpeMed:sharps.length?pct(sharps,.5):0, t50:tSum/times.length,
+           ddFPpre:pct(ddPre,.9), ddFPpost:pct(ddPost,.9) };
 }
 
 // ===== barrido de frameworks =====
@@ -390,25 +398,31 @@ function simHistFW(){
   var f1=S.f1, f2=S.f2, f3=S.f3;
   function mo(t){ return Math.floor((t-Math.floor(t))*12+1e-6); }
   function retW(k,i){ if(k==="SJC") return sjcW; var inv=!timing||sig[i-1]===1; return inv?(PX[k][i]/PX[k][i-1]-1):cashW; }
-  var b=0, pending=0, pocket=0, phiPeak=0;
-  function wire(a){ if(a<=0)return; var net=a-feeS; if(setupL>0&&net>0){var p=Math.min(setupL,net);net-=p;setupL-=p;} if(net>0)b+=net; }
+  // eq = sleeve de mercado · sjc = PISO de renta fija con candado (nunca se vende para recomprar equity)
+  var eq=0, sjc=0, pending=0, pocket=0, phiPeak=0, q1=f1==="SJC", q2=f2==="SJC", q3=f3==="SJC";
+  function wire(a){ if(a<=0)return; var net=a-feeS; if(setupL>0&&net>0){var p=Math.min(setupL,net);net-=p;setupL-=p;} if(net>0)eq+=net; }
   if(cap>0){ pocket+=cap; wire(cap); }
-  var w0=fwW(0,S.p1,S.p2,S.ff);
-  var years=[T[i0]], bal=[Math.round(b+pending)], put=[Math.round(pocket)], prevMo=mo(T[i0]);
-  var wl=[w0[0]], we=[w0[1]], wf=[w0[2]];
+  // fracciones reales (por activo) del capital invertido, para el área bajo la curva
+  function fills(w,eqW){ var inv=eq+sjc, sf=inv>0?sjc/inv:(1-eqW), ef=1-sf;
+    var a=q1?0:(eqW>1e-9?ef*w[0]/eqW:0), c=q2?0:(eqW>1e-9?ef*w[1]/eqW:0), e=q3?0:(eqW>1e-9?ef*w[2]/eqW:0);
+    if(q3)e=sf; else if(q2)c=sf; else if(q1)a=sf; return [a,c,e]; }
+  var w0=fwW(0,S.p1,S.p2,S.ff), eqW0=(q1?0:w0[0])+(q2?0:w0[1])+(q3?0:w0[2]), f0=fills(w0,eqW0);
+  var years=[T[i0]], bal=[Math.round(eq+sjc+pending)], put=[Math.round(pocket)], prevMo=mo(T[i0]);
+  var wl=[f0[0]], we=[f0[1]], wf=[f0[2]];
   for(var i=i0+1;i<=i1;i++){
-    var phi=meta>0?(b+pending)/meta:0; if(phi>phiPeak)phiPeak=phi;
-    var w=fwW(phiPeak,S.p1,S.p2,S.ff);
-    b*=(1 + w[0]*retW(f1,i)+w[1]*retW(f2,i)+w[2]*retW(f3,i));
-    if(mgmtW>0){ var risky=(f1==="SJC"?0:w[0])+(f2==="SJC"?0:w[1])+(f3==="SJC"?0:w[2]); b-=b*risky*mgmtW; }
+    var phi=meta>0?(eq+sjc+pending)/meta:0; if(phi>phiPeak)phiPeak=phi;
+    var w=fwW(phiPeak,S.p1,S.p2,S.ff), eqW=(q1?0:w[0])+(q2?0:w[1])+(q3?0:w[2]), tSJC=1-eqW;
+    var eqRet = eqW>1e-9 ? ((q1?0:w[0]*retW(f1,i))+(q2?0:w[1]*retW(f2,i))+(q3?0:w[2]*retW(f3,i)))/eqW : 0;
+    eq*=(1+eqRet); sjc*=(1+sjcW); if(mgmtW>0) eq*=(1-mgmtW);   // EI solo sobre el sleeve de mercado
     var cm=mo(T[i]);
     if(cm!==prevMo){ prevMo=cm; pending+=ap; pocket+=ap;
       var go=S.freq==="mensual"?true:S.freq==="trimestral"?((cm+1)%3===0):S.freq==="semestral"?((cm+1)%6===0):S.freq==="anual"?(cm===11):(pending>=S.umbral);
       if(go&&pending>0){ wire(pending); pending=0; } }
-    years.push(T[i]); bal.push(Math.round(b+pending)); put.push(Math.round(pocket));
-    wl.push(w[0]); we.push(w[1]); wf.push(w[2]);
+    var inv=eq+sjc, want=tSJC*inv; if(want>sjc){ var mv=want-sjc; if(mv>eq)mv=eq; sjc+=mv; eq-=mv; }   // RATCHET
+    years.push(T[i]); bal.push(Math.round(eq+sjc+pending)); put.push(Math.round(pocket));
+    var fx=fills(w,eqW); wl.push(fx[0]); we.push(fx[1]); wf.push(fx[2]);
   }
-  return {years:years, bal:bal, put:put, wl:wl, we:we, wf:wf, valor:b+pending, aportado:pocket, mm:Math.round((i1>i0?(T[i1]-T[i0]):1)*12)};
+  return {years:years, bal:bal, put:put, wl:wl, we:we, wf:wf, valor:eq+sjc+pending, aportado:pocket, mm:Math.round((i1>i0?(T[i1]-T[i0]):1)*12)};
 }
 var histChart=null;
 // Pinta, bajo la curva del plan, cuánta plata está en cada fase en cada momento (área apilada por fase).
@@ -601,8 +615,8 @@ function planCols(withTiming){
     {key:"t50",label:"Años a la meta",sortable:true,asc:true,fmt:function(r){return r.t50>ny?'—':r.t50.toFixed(1);}},
     {key:"p25",label:"Piso",sortable:true,fmt:function(r){return money(r.p25);}},
     {key:"p50",label:"Típico",sortable:true,fmt:function(r){return money(r.p50);}},
-    {key:"maxddMed",label:"Máx. caída",sortable:true,fmt:function(r){return fmt1(r.maxddMed)+'%';}},
-    {key:"ddFP",label:"Caída vs FP",sortable:true,asc:true,fmt:function(r){return Math.round(r.ddFP)+'%';}},
+    {key:"ddFPpre",label:"Caída antes FP",sortable:true,asc:true,fmt:function(r){return Math.round(r.ddFPpre)+'%';}},
+    {key:"ddFPpost",label:"Caída después (excedente)",sortable:true,asc:true,fmt:function(r){return '<span style="color:var(--gris-sec)">'+Math.round(r.ddFPpost)+'%</span>';}},
     {key:"calmarMed",label:"Calmar",sortable:true,fmt:function(r){return r.calmarMed.toFixed(2);}},
     {key:"sharpeMed",label:"Sharpe",sortable:true,fmt:function(r){return r.sharpeMed.toFixed(2);}} );
   return cols;
@@ -651,7 +665,7 @@ function narrar(r){
   var tim = r.tim==="9h" ? " (con un <b>filtro de mercado</b> que sale a efectivo en los peores tramos)" : "";
   var paso = (r.f1===r.f2) ? "" : " Al pasar el <b>"+r.p1+"%</b> de tu meta te movés a <b>"+r.f2+"</b>.";
   var lleg = r.t50>anios() ? "No siempre alcanza la meta dentro del plazo." : "Alcanzás tu freedom point en <b>~"+Math.round(r.t50)+" años</b>.";
-  return "Arrancás en <b>"+r.f1+"</b>"+tim+"."+paso+" Al llegar a tu meta quedás en "+fin+": el <b>"+sjc+"% en SJC</b> te <b>asegura el ingreso mensual</b> y el resto sigue creciendo. "+lleg+" Caída de hasta <b>"+Math.round(r.ddFP)+"%</b> de tu freedom point en un mal escenario.";
+  return "Arrancás en <b>"+r.f1+"</b>"+tim+"."+paso+" Al llegar a tu meta quedás en "+fin+": el <b>"+sjc+"% en SJC</b> queda <b>con candado</b> y te <b>asegura el ingreso mensual</b> — solo el resto sigue como upside. "+lleg+" Antes de llegar a la meta, tu peor caída es <b>"+Math.round(r.ddFPpre)+"%</b> de tu freedom point (lo que importa); después, sobre el excedente, puede caer más pero tu ingreso ya está asegurado.";
 }
 function correrGeneral(){
   var out=byId("general-out");
@@ -683,10 +697,10 @@ function renderGeneralMode(mode){
     // ranking robusto (percentil dentro del pool) para que ninguna métrica domine por escala
     function attachRank(key,betterHigh){ var srt=pool.slice().sort(function(a,b){return a[key]-b[key];}), n=srt.length;
       srt.forEach(function(r,i){ var s=n>1?i/(n-1):1; r["s_"+key]=betterHigh?s:(1-s); }); }
-    attachRank("ddFP",false); attachRank("t50",false); attachRank("p50",true); attachRank("p25",true);
-    // PRIORIDAD: proteger el freedom point (40%) → llegar antes (30%) → mayor típico (20%) → mejor piso (10%)
-    pool.forEach(function(r){ r.score=0.40*r.s_ddFP + 0.30*r.s_t50 + 0.20*r.s_p50 + 0.10*r.s_p25; });
-    var proteger=pool.reduce(function(a,b){return b.ddFP<a.ddFP?b:a;},pool[0]);
+    attachRank("ddFPpre",false); attachRank("t50",false); attachRank("p50",true); attachRank("p25",true);
+    // PRIORIDAD: menor caída ANTES del FP (40%) → llegar antes (30%) → mayor típico (20%) → mejor piso (10%)
+    pool.forEach(function(r){ r.score=0.40*r.s_ddFPpre + 0.30*r.s_t50 + 0.20*r.s_p50 + 0.10*r.s_p25; });
+    var proteger=pool.reduce(function(a,b){return b.ddFPpre<a.ddFPpre?b:a;},pool[0]);
     var balanceado=pool.reduce(function(a,b){return b.score>a.score?b:a;},pool[0]);
     var crecer=pool.reduce(function(a,b){return b.p50>a.p50?b:a;},pool[0]);
     function distinct(cand, taken){ for(var i=0;i<cand.length;i++){ var r=cand[i], dup=false; for(var j=0;j<taken.length;j++){ if(taken[j]&&taken[j].f1===r.f1&&taken[j].f2===r.f2&&taken[j].p1===r.p1&&taken[j].p2===r.p2&&taken[j].ff===r.ff&&taken[j].tim===r.tim){dup=true;break;} } if(!dup) return r; } return cand[0]; }
@@ -695,7 +709,7 @@ function renderGeneralMode(mode){
     window.__gen={proteger:proteger,balanceado:balanceado,crecer:crecer};
     function avg(arr,k){var s=0;arr.forEach(function(r){s+=r[k];});return arr.length?s/arr.length:0;}
     var fOn=full.filter(function(r){return r.tim==="9h";}), fOff=full.filter(function(r){return r.tim==="off";});
-    var fpOff=avg(fOff,"ddFP"), fpOn=avg(fOn,"ddFP"), tOff=avg(fOff,"t50"), tOn=avg(fOn,"t50");
+    var fpOff=avg(fOff,"ddFPpre"), fpOn=avg(fOn,"ddFPpre"), tOff=avg(fOff,"t50"), tOn=avg(fOn,"t50");
     var reach=100*res.filter(function(r){return r.pMeta>=95;}).length/Math.max(1,res.length);
     var cards=[
       {k:"proteger",ico:"🛡️",n:"Proteger la meta",r:proteger},
@@ -706,7 +720,8 @@ function renderGeneralMode(mode){
       return '<div class="perfil"><h3>'+pf.ico+' '+pf.n+'</h3>'
         +'<div class="line" style="border:none;padding-bottom:2px"><span>Plan</span><b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b></div>'
         +'<p style="font-size:12.5px;color:var(--gris-sec);line-height:1.55;margin:4px 0 10px">'+narrar(r)+'</p>'
-        +'<div class="line"><span>Caída vs freedom point</span><b>'+Math.round(r.ddFP)+'%</b></div>'
+        +'<div class="line"><span>Caída vs FP <b style="color:var(--ambar)">antes</b> de la meta</span><b>'+Math.round(r.ddFPpre)+'%</b></div>'
+        +'<div class="line"><span style="color:var(--gris-sec)">Caída vs FP después (excedente)</span><b style="color:var(--gris-sec)">'+Math.round(r.ddFPpost)+'%</b></div>'
         +'<div class="line"><span>Años a la meta</span><b>'+yrs(r)+'</b></div>'
         +'<div class="line"><span>Típico</span><b>'+money(r.p50)+'</b></div>'
         +'<button class="btn" data-gen="'+pf.k+'">Ver este plan</button></div>';
@@ -715,19 +730,19 @@ function renderGeneralMode(mode){
       +'<button class="sortb'+(mode==="all"?" on":"")+'" data-mode="all">Todos (con y sin timing)</button>'
       +'<button class="sortb'+(mode==="notim"?" on":"")+'" data-mode="notim">Solo SIN timing (comprar y aguantar)</button></div>';
     var timLine = (mode==="notim")
-      ? 'Estás viendo <b>solo los planes sin filtro de timing</b>: en promedio caen <b>'+Math.round(avg(res,"ddFP"))+'%</b> vs. tu freedom point y llegan en <b>~'+avg(res,"t50").toFixed(1)+' años</b> (el filtro de timing bajaría esa caída a <b>'+Math.round(fpOn)+'%</b>). '
-      : 'Con <b>timing</b>, la caída vs. freedom point baja de '+Math.round(fpOff)+'% a '+Math.round(fpOn)+'% en promedio y se llega '+Math.abs(tOn-tOff).toFixed(1)+' años '+(tOn<tOff?'antes':'después')+'. ';
+      ? 'Estás viendo <b>solo los planes sin filtro de timing</b>: en promedio su caída <b>antes del FP</b> es <b>'+Math.round(avg(res,"ddFPpre"))+'%</b> y llegan en <b>~'+avg(res,"t50").toFixed(1)+' años</b> (el filtro de timing la bajaría a <b>'+Math.round(fpOn)+'%</b>). '
+      : 'Con <b>timing</b>, la caída <b>antes del FP</b> baja de '+Math.round(fpOff)+'% a '+Math.round(fpOn)+'% en promedio y se llega '+Math.abs(tOn-tOff).toFixed(1)+' años '+(tOn<tOff?'antes':'después')+'. ';
     var concl='<div class="card" style="margin-bottom:12px"><b>Conclusión.</b> Probamos <b>'+full.length.toLocaleString("en-US")+' planes</b> sobre toda la historia (1990–2025). '
-      +'<b>Prob. de llegar</b> = juntar tu <b>freedom point</b> ('+money(metaCapital())+'): poder retirar el <b>'+S.ret+'%</b> al año y vivir con <b>$'+fmt(metaMensual())+'/mes</b>. Cada plan <b>aterriza en renta fija (SJC)</b> con lo suficiente para asegurar tu ingreso. '
-      +'Como con toda la historia casi todos los buenos planes llegan (el <b>'+Math.round(reach)+'%</b> con prob. ≥95%), la pregunta no es <i>si</i> llegás, sino <b>cómo</b>. Priorizamos: <b class="hl">1) proteger tu freedom point</b> → <b>2) llegar antes</b> → <b>3) mayor típico</b> → <b>4) mejor piso</b>. '
+      +'<b>Prob. de llegar</b> = juntar tu <b>freedom point</b> ('+money(metaCapital())+'): poder retirar el <b>'+S.ret+'%</b> al año y vivir con <b>$'+fmt(metaMensual())+'/mes</b>. El <b>piso de SJC queda con candado</b> (nunca se vende para recomprar equity): <b>asegura tu ingreso</b> pase lo que pase; el resto es upside. '
+      +'Como casi todos los buenos planes llegan, la pregunta no es <i>si</i> llegás sino <b>cómo</b>. Priorizamos: <b class="hl">1) menor caída <span style="color:var(--ambar)">antes</span> del FP</b> (la que importa) → <b>2) llegar antes</b> → <b>3) mayor típico</b> → <b>4) mejor piso</b>. Las caídas <b>después</b> del FP son sobre el <b>excedente</b> (ya sos libre). '
       +timLine+'Elegí el que va con vos:</div>';
     out.innerHTML=toggle+concl+chtml+'<div id="general-tbl" style="margin-top:14px"></div>';
     Array.prototype.forEach.call(out.querySelectorAll("button[data-mode]"),function(b){ b.addEventListener("click",function(){ renderGeneralMode(b.getAttribute("data-mode")); }); });
     Array.prototype.forEach.call(out.querySelectorAll("button[data-gen]"),function(bt){ bt.addEventListener("click",function(){ var r=window.__gen[bt.getAttribute("data-gen")]; aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); }); });
     var tblRows=res.filter(function(r){return r.pMeta>=80;}); if(tblRows.length<10) tblRows=res;
-    sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"ddFP", sortDir:1, cols:planCols(true),
+    sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"ddFPpre", sortDir:1, cols:planCols(true),
       onClick:function(r){ aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); },
-      note:'Planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída vs FP</b> (nuestra prioridad). También por <b>Años a la meta</b>, probabilidad, piso, típico… (tocá de nuevo para invertir). <b>Tocá una fila</b> para cargarlo arriba.' });
+      note:'Planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída antes FP</b> (nuestra prioridad — la caída que puede retrasar tu meta). La columna <b>después</b> es sobre el excedente (ya sos libre). También podés ordenar por años, probabilidad, piso, típico… <b>Tocá una fila</b> para cargarlo arriba.' });
 }
 
 // ===== eventos =====
