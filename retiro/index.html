@@ -500,18 +500,28 @@ function drawdownEpisodes(bal, years){
   eps.forEach(function(e){ e.pct=(e.troughV/e.peakV-1)*100; e.usd=e.peakV-e.troughV; e.year=Math.floor(years[e.ti]); e.pyear=Math.floor(years[e.pi]); });
   return eps;
 }
-// Estudio de caídas en DÓLARES, medidas contra tu FREEDOM POINT (lo que necesitás para retirarte).
+// Estudio de caídas en DÓLARES vs FREEDOM POINT, separando ANTES vs DESPUÉS de alcanzarlo.
 function renderDDstudy(s){
   var eps=drawdownEpisodes(s.bal, s.years).filter(function(e){ return e.pct<-3 && e.usd>0; }), fp=metaCapital()||1;
   if(!eps.length){ byId("dd-lead").textContent="Con este plan y período no hubo caídas relevantes."; byId("dd-tbl").innerHTML=""; byId("dd-txt").textContent=""; return; }
-  var byFP=eps.slice().sort(function(a,b){return b.usd-a.usd;}), byPct=eps.slice().sort(function(a,b){return a.pct-b.pct;});
-  var wp=byPct[0], wu=byFP[0], top=byFP.slice(0,10);
-  byId("dd-lead").innerHTML='Una caída de <b>'+fmt1(wp.pct)+'%</b> asusta — pero lo que de verdad importa es cuánto pesa <b>en dólares</b> frente a tu <b>freedom point</b> (<b>'+money(fp)+'</b>, lo que necesitás para retirarte). Tus <b>10 peores bajones</b>, ordenados por lo que <b>costaron de verdad</b>:';
-  var head='<thead><tr><th>Época</th><th>Caída (%)</th><th>En dólares</th><th>vs. tu freedom point</th></tr></thead>';
+  eps.forEach(function(e){ e.post = e.peakV >= fp; });    // ¿el pico ya estaba SOBRE el freedom point? => sobre el excedente
+  var top=eps.slice().sort(function(a,b){return b.usd-a.usd;}).slice(0,10);
+  var pre=eps.filter(function(e){return !e.post;}).sort(function(a,b){return b.usd-a.usd;});
+  var post=eps.filter(function(e){return e.post;}).sort(function(a,b){return a.pct-b.pct;});
+  byId("dd-lead").innerHTML='Lo que de verdad importa no es el <b>%</b> sino cuánto pesa <b>en dólares frente a tu freedom point</b> (<b>'+money(fp)+'</b>) <b>y cuándo</b> pasa. Separamos las caídas <b style="color:var(--oro)">antes</b> de llegar a tu freedom point (esas pueden retrasar tu meta) de las de <b style="color:var(--gris-sec)">después</b> (sobre el <b>excedente</b> — ya sos libre). Tus <b>10 peores bajones en dólares</b>:';
+  var head='<thead><tr><th>Época</th><th>Caída (%)</th><th>En dólares</th><th>vs. tu FP</th><th>¿Cuándo?</th></tr></thead>';
   var body='<tbody>'+top.map(function(e){
-    return '<tr><td style="text-align:left">'+(e.pyear===e.year?String(e.year):e.pyear+"–"+e.year)+'</td><td>'+fmt1(e.pct)+'%</td><td>−'+money(e.usd)+'</td><td>'+(e.usd/fp*100).toFixed(0)+'%</td></tr>'; }).join("")+'</tbody>';
+    var mom = e.post ? '<span style="color:var(--gris-sec)">Después · sobre el excedente</span>' : '<span style="color:var(--oro);font-weight:700">Antes de tu FP</span>';
+    return '<tr><td style="text-align:left">'+(e.pyear===e.year?String(e.year):e.pyear+"–"+e.year)+'</td><td>'+fmt1(e.pct)+'%</td><td>−'+money(e.usd)+'</td><td>'+(e.usd/fp*100).toFixed(0)+'%</td><td style="text-align:left">'+mom+'</td></tr>'; }).join("")+'</tbody>';
   byId("dd-tbl").innerHTML=head+body;
-  byId("dd-txt").innerHTML='Tu peor caída <b>en %</b> fue <b style="color:var(--rojo)">'+fmt1(wp.pct)+'%</b> ('+wp.year+'), pero fueron <b>'+money(wp.usd)+'</b> — apenas el <b>'+(wp.usd/fp*100).toFixed(0)+'%</b> de tu freedom point. Tu peor caída <b>en dólares</b> ('+money(wu.usd)+', '+wu.year+') pesó el <b>'+(wu.usd/fp*100).toFixed(0)+'%</b> de tu freedom point. La clave: se pueden tomar riesgos <b>temprano</b> (cuando la caída vale poco frente a tu meta), pero <b>proteger</b> cuando ya estás cerca del freedom point.';
+  var t='';
+  if(pre.length){ var wpre=pre[0];
+    t+='La caída que <b>de verdad importa</b> es la peor <b style="color:var(--oro)">antes</b> de tu freedom point: <b>'+fmt1(wpre.pct)+'%</b> ('+wpre.year+') = <b>'+money(wpre.usd)+'</b>, el <b>'+(wpre.usd/fp*100).toFixed(0)+'%</b> de tu meta — es la que puede <b>retrasar tu llegada</b>. '; }
+  else t+='Ninguna caída relevante ocurrió <b>antes</b> de llegar a tu freedom point. ';
+  if(post.length){ var wpo=post[0];
+    t+='En cambio, las caídas grandes que ves <b style="color:var(--gris-sec)">después</b> (ej. <b>'+fmt1(wpo.pct)+'%</b> en '+wpo.year+') pasan cuando <b>ya superaste tu freedom point</b> — sobre el <b style="color:var(--menta)">excedente</b>: asustan en %, pero no te quitan la libertad. '; }
+  t+='Por eso el plan arriesga <b>temprano</b> (cuando la caída vale poco) y <b>protege</b> al acercarte a la meta.';
+  byId("dd-txt").innerHTML=t;
 }
 function renderHist(){
   byId("v-y0").textContent=S.y0; byId("v-y1").textContent=S.y1; byId("v-diff").textContent=(S.y1-S.y0); byId("v-umbral").textContent="$"+fmt(S.umbral);
