@@ -571,7 +571,7 @@ function sortableTable(mount, cfg){
 // Columnas comunes de métricas de un plan.
 function planCols(withTiming){
   var cols=[{key:"lbl",label:"Plan (transición de fases)",align:"left",fmt:function(r){
-    return '<b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b><br><span style="font-size:11px;color:var(--gris-sec)">'+Math.round(sjcFinalPct(r.f2,r.f3,r.ff))+'% final en SJC (asegura tu ingreso)</span>'; }}];
+    return '<b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b><br><span style="font-size:11px;color:var(--gris-sec)">salís de Fase 1 al '+r.p1+'% · mezcla final al '+r.p2+'% · '+Math.round(sjcFinalPct(r.f2,r.f3,r.ff))+'% en SJC</span>'; }}];
   if(withTiming) cols.push({key:"timv",label:"Timing",align:"center",fmt:function(r){ return r.tim==="9h"?'<span class="pill on">9m</span>':'<span class="pill off">no</span>'; }});
   var ny=anios();
   cols.push(
