@@ -8,10 +8,12 @@
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Plan de retiro · Empowered Investor">
-<meta property="og:description" content="Diseñá tu plan de retiro que baja el riesgo por etapas, como los fondos de pensiones: apalancado → acciones → renta fija.">
+<meta property="og:description" content="Freedom Point Fund: un fondo en tu propia cuenta (protegido por el SIPC), con riesgo dinámico que se ajusta a tu edad, ingresos y cercanía a tu meta de retiro.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
     --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#556DFB; --oro:#E0A020; --rojo:#E0525A; }
@@ -20,7 +22,7 @@
     line-height:1.55; -webkit-font-smoothing:antialiased; }
   .wrap{ max-width:960px; margin:0 auto; padding:22px 16px 80px; }
   a.logo{ display:block; text-align:center; margin-bottom:8px; }
-  a.logo img{ height:44px; }
+  a.logo img{ height:84px; }
   h1{ font-size:26px; font-weight:800; color:var(--crema); text-align:center; margin:6px 0 2px; letter-spacing:-.5px; }
   .sub{ text-align:center; color:var(--gris-sec); font-size:14px; margin:0 auto 22px; max-width:640px; }
   .tsub{ font-size:19px; font-weight:800; color:var(--crema); margin:26px 0 4px; }
@@ -30,7 +32,7 @@
   .field{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:9px 11px; }
   .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); margin-bottom:5px; }
   .field .row{ display:flex; align-items:center; gap:6px; }
-  .field input{ width:100%; background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:8px;
+  .field input{ width:100%; flex:1; min-width:0; background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:8px;
     padding:7px 9px; font-size:16px; font-weight:700; font-family:inherit; }
   .field input:focus{ outline:none; border-color:var(--menta); }
   .field .big{ font-size:19px; font-weight:800; color:var(--crema); flex:1; }
@@ -42,6 +44,7 @@
   .seg button{ background:transparent; border:none; color:var(--gris-sec); padding:7px 11px; font-size:13px; font-weight:700;
     cursor:pointer; font-family:inherit; }
   .seg button.on{ background:var(--menta); color:var(--tinta); }
+  .segph{ flex-wrap:wrap; } .segph button{ padding:6px 9px; font-size:12px; }
   .btn{ background:var(--menta); color:var(--tinta); border:none; border-radius:999px; padding:12px 22px; font-size:15px;
     font-weight:800; cursor:pointer; font-family:inherit; }
   .btn:hover{ filter:brightness(1.05); } .btn:disabled{ opacity:.5; cursor:default; }
@@ -53,6 +56,9 @@
   td:first-child,th:first-child{ text-align:left; }
   tr:last-child td{ border-bottom:none; }
   tr.best{ background:rgba(99,252,175,.10); } tr.best td{ color:var(--menta); font-weight:800; }
+  tr.grp td{ background:rgba(140,150,170,.10); font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:700; padding-top:7px; padding-bottom:7px; }
+  tr.port td{ background:rgba(99,252,175,.08); font-weight:800; color:var(--menta); }
+  td .dot{ display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; vertical-align:middle; }
   .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:10px 0; }
   .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; }
   .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; }
@@ -64,6 +70,11 @@
   .perfil .line{ display:flex; justify-content:space-between; font-size:13px; padding:3px 0; border-bottom:1px solid rgba(42,49,64,.5); }
   .perfil .line b{ color:var(--crema); }
   .perfil button{ margin-top:10px; width:100%; }
+  .sortbar{ font-size:12px; color:var(--gris-sec); margin-bottom:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .sortb{ background:var(--card); border:1px solid var(--bd); color:var(--gris); border-radius:8px; padding:4px 9px; font-size:12px; cursor:pointer; font-family:inherit; }
+  .sortb.on{ border-color:var(--menta); color:var(--menta); font-weight:700; }
+  tr.tim td{ } .pill{ display:inline-block; font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:999px; }
+  .pill.on{ background:rgba(99,252,175,.15); color:var(--menta); } .pill.off{ background:rgba(154,161,171,.15); color:var(--gris-sec); }
   .legend{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; font-size:12px; color:var(--gris-sec); margin-top:4px; }
   .legend span{ display:inline-flex; align-items:center; gap:6px; } .legend i{ width:12px; height:12px; border-radius:3px; display:inline-block; }
   .foot{ font-size:12px; color:var(--gris-sec); margin-top:30px; text-align:center; }
@@ -76,7 +87,7 @@
 <div class="wrap">
   <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
   <h1>Diseñá tu plan de retiro</h1>
-  <p class="sub">Un plan que <b>baja el riesgo por etapas</b> a medida que te acercás a tu meta — igual que los fondos de pensiones. Empieza agresivo (apalancado), pasa a acciones normales, y termina sobre todo en <b>renta fija</b> segura. Acá lo diseñás, lo ves, y elegís tu perfil.</p>
+  <p class="sub"><b>Freedom Point Fund</b> — un fondo <b>en tu propia cuenta</b> (protegido por el SIPC), con <b>riesgo dinámico</b> y estrategias cuantitativas. Se ajusta a tu edad, tus ingresos, tu perfil de riesgo y <b>qué tan cerca estás del Freedom Point</b>: acelera el crecimiento cuando podés y lo desacelera para <b>proteger lo ganado</b> a medida que llegás.</p>
 
   <!-- ===== 1. TUS DATOS ===== -->
   <div class="tsub">1 · Tus datos</div>
@@ -84,62 +95,116 @@
   <div class="grid">
     <div class="field"><label>Edad hoy</label><div class="row"><b class="big" id="v-edad">30</b><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Edad de retiro</label><div class="row"><b class="big" id="v-edadret">65</b><div class="steps"><button class="stp" data-s="edadret" data-d="1">▲</button><button class="stp" data-s="edadret" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><input id="i-meta" inputmode="numeric" value="10,000"></div></div>
+    <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><input id="i-meta" inputmode="numeric" value="10,000"><div class="steps"><button class="stp" data-money="i-meta" data-step="500" data-d="1">▲</button><button class="stp" data-money="i-meta" data-step="500" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Aporte ($/mes)</label><div class="row"><input id="i-aporte" inputmode="numeric" value="1,000"></div></div>
-    <div class="field"><label>Renta fija SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Activo apalancado</label><div class="row"><div class="seg" id="seg-L"><button data-a="QLD">QLD 2×</button><button data-a="TQQQ" class="on">TQQQ 3×</button></div></div></div>
-    <div class="field"><label>Acciones (fase 2)</label><div class="row"><div class="seg" id="seg-E"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button></div></div></div>
   </div>
   <div class="kpis">
     <div class="kpi"><div class="k">Años para juntar</div><div class="v" id="k-anios">35</div></div>
-    <div class="kpi"><div class="k">Meta de capital</div><div class="v per" id="k-meta">$3.0M</div></div>
-    <div class="kpi"><div class="k">De tu bolsillo</div><div class="v" id="k-aportado">$0</div></div>
+    <div class="kpi"><div class="k">Meta de capital · freedom point</div><div class="v per" id="k-meta">$3.0M</div></div>
+    <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte">$0</div></div>
+    <div class="kpi"><div class="k">De tu bolsillo (total)</div><div class="v" id="k-aportado">$0</div></div>
   </div>
 
-  <!-- ===== 2. EL PLAN Y SU TRANSICIÓN ===== -->
-  <div class="tsub">2 · Cómo baja el riesgo tu plan</div>
-  <p class="note">El eje de abajo es tu <b>avance hacia la meta</b> (0% = arrancás, 100% = ya la juntaste). Cada color es en qué está tu plata en ese momento. Movés las 3 perillas y ves la transición al instante.</p>
+  <div class="tsub" style="font-size:16px;margin-top:16px">Tu portafolio, de hoy hasta el retiro y después</div>
+  <p class="note">Con tu aporte y un crecimiento esperado, así se ve tu plata por edad (en plata de hoy): sube hasta el retiro 🏖️ y después la vas gastando. Movés cualquier variable y ves el efecto al instante — por ejemplo, adelantar la edad de retiro.</p>
+  <div class="grid" style="margin-bottom:8px">
+    <div class="field"><label>Crecimiento esperado (%/año)</label><div class="row"><b class="big" id="v-crec">12%</b><div class="steps"><button class="stp" data-s="crec" data-d="1">▲</button><button class="stp" data-s="crec" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Crecimiento en el retiro (%/año)</label><div class="row"><b class="big" id="v-crecret">8%</b><div class="steps"><button class="stp" data-s="crecret" data-d="1">▲</button><button class="stp" data-s="crecret" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Inflación (%/año)</label><div class="row"><b class="big" id="v-infl">3%</b><div class="steps"><button class="stp" data-s="infl" data-d="1">▲</button><button class="stp" data-s="infl" data-d="-1">▼</button></div></div></div>
+  </div>
+  <div class="card">
+    <div class="chart-wrap"><canvas id="proj-chart"></canvas></div>
+    <div class="legend">
+      <span><i style="background:var(--menta)"></i> Lo que tenés</span>
+      <span><i style="background:var(--gris-sec)"></i> Lo que aportaste</span>
+      <span><i style="background:var(--peri)"></i> 🏖️ Te retirás</span>
+    </div>
+    <p class="note" id="proj-txt" style="margin-top:8px"></p>
+  </div>
+
+  <!-- ===== 2. HISTÓRICO (con fases) ===== -->
+  <div class="tsub">2 · Cómo hubiera crecido tu plan, año por año</div>
+  <p class="note">Un ejemplo <b>real</b> de la historia: cómo habría crecido tu plan aportando el requerido/mes. Movés el <b>desde/hasta</b>, el <b>capital inicial</b> y elegís las <b>3 fases</b> (arranque · intermedia · llegada), y el gráfico se recalcula. La <b class="hl">línea verde</b> es tu plan; la punteada es lo que pusiste.</p>
+  <div class="chart-wrap"><canvas id="hist-chart"></canvas></div>
+  <div class="legend" style="margin-top:6px"><span style="color:var(--gris-sec);font-size:12px">Bajo la curva, en qué activo está tu plata:</span>
+    <span><i style="background:var(--rojo)"></i> Fase 1 (<b id="hl-L">TQQQ</b>)</span>
+    <span><i style="background:var(--peri)"></i> Fase 2 (<b id="hl-E">SPY</b>)</span>
+    <span><i style="background:var(--menta)"></i> Fase 3 (<b id="hl-F">SJC</b>)</span>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="k">Valor al final</div><div class="v men" id="h-valor">$0</div></div>
+    <div class="kpi"><div class="k">De tu bolsillo</div><div class="v" id="h-aportado">$0</div></div>
+    <div class="kpi"><div class="k">Lo puso el mercado</div><div class="v per" id="h-ganancia">$0</div></div>
+    <div class="kpi"><div class="k">Tu plata rindió (TIR)</div><div class="v men" id="h-tir">0%</div></div>
+  </div>
+  <!-- controles que más movés, pegados al gráfico -->
+  <div class="card" style="margin-top:6px"><div class="grid">
+    <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1993</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
+  </div></div>
+  <div style="overflow-x:auto;margin-top:8px"><table id="metricas-tbl"></table></div>
+  <p class="note" id="metricas-txt" style="margin-top:6px"></p>
+
+  <!-- estudio de caídas en dólares -->
+  <div class="card" style="margin-top:10px">
+    <div style="font-weight:700;color:var(--crema);margin-bottom:2px">🔎 Las caídas que de verdad importan: en dólares, no solo en %</div>
+    <p class="note" id="dd-lead" style="margin:2px 0 8px"></p>
+    <div style="overflow-x:auto"><table id="dd-tbl"></table></div>
+    <p class="note" id="dd-txt" style="margin-top:8px"></p>
+  </div>
+
+  <!-- controles detallados (los que uso menos) -->
+  <div class="card" style="margin-top:8px">
+    <div class="grid">
+      <div class="field"><label>Capital inicial</label><div class="row"><input id="i-cap" inputmode="numeric" value="0"></div></div>
+      <div class="field"><label>Cada $ (umbral de transferencia)</label><div class="row"><b class="big" id="v-umbral">$5,000</b><div class="steps"><button class="stp" data-s="umbral" data-d="1">▲</button><button class="stp" data-s="umbral" data-d="-1">▼</button></div></div></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Fase 1 · arranque</label><div class="row"><div class="seg segph" id="seg-f1"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ" class="on">TQQQ</button></div></div></div>
+      <div class="field"><label>Fase 2 · intermedia</label><div class="row"><div class="seg segph" id="seg-f2"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ">TQQQ</button></div></div></div>
+      <div class="field"><label>Fase 3 · llegada</label><div class="row"><div class="seg segph" id="seg-f3"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="SJC" class="on">SJC</button></div></div></div>
+      <div class="field" id="field-sjc"><label>Tasa Fase 3 · SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field"><label>Salir de la Fase 1 al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Fase 3 al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
+    </div>
+    <div class="grid" style="margin-top:10px">
+      <div class="field" style="grid-column:1/-1"><label>Frecuencia de transferencia internacional</label><div class="row"><div class="seg segph" id="seg-freq"><button data-a="mensual">Mensual</button><button data-a="trimestral">3 meses</button><button data-a="semestral">6 meses</button><button data-a="anual">Anual</button><button data-a="umbral" class="on">Al juntar $</button></div></div></div>
+      <div class="field" style="grid-column:1/-1"><label>Filtro de mercado (señal sobre el Nasdaq-100)</label><div class="row"><div class="seg segph" id="seg-filtro"><button data-a="off" class="on">Sin filtro</button><button data-a="9h">Timing 9m</button><button data-a="faber">Faber 10m</button><button data-a="52">Máx. 52 sem</button><button data-a="mom">Momentum</button></div></div></div>
+      <div class="field"><label>Aportes</label><div class="row"><div class="seg" id="seg-sinap"><button data-a="con" class="on">Con aportes</button><button data-a="sin">Sin aportes</button></div></div></div>
+      <div class="field"><label>Costos</label><div class="row"><div class="seg" id="seg-costos"><button data-a="con" class="on">Con costos</button><button data-a="sin">Sin costos</button></div></div></div>
+    </div>
+    <p class="note" style="margin-top:8px">El <b>aporte $/mes</b> y la <b>tasa de la Fase 3 (SJC)</b> se toman de <i>Tus datos</i> arriba. Las <b>3 perillas del glidepath</b> (salida, mezcla, % final) también mueven el gráfico de la sección 3. Con <b>filtro de mercado</b> se pasa a efectivo en los peores tramos (solo aplica a los ETF, no a SJC).</p>
+    <p class="note" id="hist-txt" style="margin-top:4px"></p>
+  </div>
+
+  <!-- ===== 3. GLIDEPATH ===== -->
+  <div class="tsub">3 · ¿Cómo cambia el riesgo en tu plan?</div>
+  <p class="note">El eje de abajo es tu <b>avance hacia la meta</b> (0% = arrancás, 100% = ya la juntaste). Cada color es en qué está tu plata en ese momento. Movés las <b>3 perillas del glidepath</b> (arriba, en los controles del gráfico) y ves cómo el riesgo va pasando de la Fase 1 a la 2 a la 3.</p>
   <div class="card">
     <div class="chart-wrap"><canvas id="glide-chart"></canvas></div>
     <div class="legend">
-      <span><i style="background:var(--rojo)"></i> Apalancado (<b id="lg-L">TQQQ</b>)</span>
-      <span><i style="background:var(--peri)"></i> Acciones (<b id="lg-E">SPY</b>)</span>
-      <span><i style="background:var(--menta)"></i> San José Capital (renta fija)</span>
-    </div>
-    <div class="grid" style="margin-top:12px">
-      <div class="field"><label>Salir del apalancado al (% de meta)</label><div class="row"><b class="big" id="v-p1">70%</b><div class="steps"><button class="stp" data-s="p1" data-d="1">▲</button><button class="stp" data-s="p1" data-d="-1">▼</button></div></div></div>
-      <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
-      <div class="field"><label>Renta fija al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
+      <span><i style="background:var(--rojo)"></i> Fase 1 (<b id="lg-L">TQQQ</b>)</span>
+      <span><i style="background:var(--peri)"></i> Fase 2 (<b id="lg-E">SPY</b>)</span>
+      <span><i style="background:var(--menta)"></i> Fase 3 (<b id="lg-F">SJC 8%</b>)</span>
     </div>
     <p class="note" id="plan-txt" style="margin-top:10px"></p>
   </div>
 
-  <!-- ===== 3. ESTUDIO ===== -->
-  <div class="tsub">3 · ¿Qué plan te da más valor?</div>
-  <p class="note">Probamos <b>5,000 futuros del mercado</b> (mismas rachas para todos, para comparar justo). <b>P(meta)</b> = de cada 100 futuros, en cuántos llegás a tu meta. <b>Piso (p25)</b> = con qué terminás en los años malos. <b>Típico (p50)</b> = el caso del medio. <b>Máx. caída</b> = el peor bajón que verías en la cuenta.</p>
-  <button class="btn" id="btn-estudio">▶ Correr el estudio</button>
-  <div id="estudio-out" style="margin-top:14px"></div>
-
-  <!-- ===== 4. RESTRICCIÓN ===== -->
-  <div class="tsub">4 · "Quiero jugar seguro"</div>
-  <p class="note">Fijá una probabilidad mínima de llegar a la meta y buscamos el plan que <b>más patrimonio te deja</b> cumpliendo esa seguridad.</p>
-  <div class="grid" style="max-width:420px">
-    <div class="field"><label>P(meta) mínima que querés</label><div class="row"><b class="big" id="v-pmin">70%</b><div class="steps"><button class="stp" data-s="pmin" data-d="1">▲</button><button class="stp" data-s="pmin" data-d="-1">▼</button></div></div></div>
-  </div>
-  <button class="btn ghost" id="btn-restr" style="margin-top:10px">▶ Buscar el mejor plan seguro</button>
-  <div id="restr-out" style="margin-top:12px"></div>
-
-  <!-- ===== 5. PERFILES ===== -->
-  <div class="tsub">5 · Tres perfiles de retiro</div>
-  <p class="note">Corremos un barrido grande y elegimos el mejor plan para cada estilo. Tocá <b>Usar este plan</b> y se carga arriba con su visualización.</p>
-  <button class="btn" id="btn-perfiles">▶ Calcular los 3 perfiles</button>
-  <div class="perfiles" id="perfiles-out" style="margin-top:14px"></div>
+  <!-- ===== 4. ESTUDIO GENERAL ===== -->
+  <div class="tsub">4 · El estudio · el mejor plan según tu preferencia</div>
+  <p class="note">El barrido <b>más grande</b>: cruza <b>todos los activos</b> en Fase 1 y 2 (incluida la renta fija SJC), <b>todas las perillas del glidepath</b> y el <b>filtro de mercado</b> (con timing 9m o sin él), sobre la <b>historia completa (1990–2025)</b> y miles de futuros. La Fase 3 (llegada) solo aterriza en activos no apalancados. <b>Prob. de llegar</b> = probabilidad de juntar tu <b>freedom point</b> (poder retirar tu %/año y vivir de ese ingreso). Te propone <b class="hl">tres planes según tu preferencia</b> y te deja la tabla completa para <b>ordenar</b> por lo que te importe.</p>
+  <button class="btn" id="btn-general">▶ Correr el estudio</button>
+  <div id="general-out" style="margin-top:14px"></div>
 
   <p class="foot">Herramienta educativa de Empowered Investor. Los resultados son simulaciones sobre datos históricos (1990–2025) sorteados al azar; no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija con permanencia mínima de 3 años. Todo neto de costos de transferencias internacionales y del servicio.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="/admin/pxdata.js"></script>
 <script>
 "use strict";
 // ===== Retornos anuales (total return, con dividendos). QLD/TQQQ simulados con rebalanceo diario. =====
@@ -153,7 +218,21 @@ var NOM={SPY:"SPY (S&P 500)", QQQ:"QQQ (Nasdaq-100)", QLD:"QLD · Nasdaq 2×", T
 var SWIFT=65, EI_SETUP=2000, EI_MGMT=0.01;
 
 // ===== estado =====
-var S={ edad:30, edadret:65, ret:4, sjc:8, L:"TQQQ", E:"SPY", p1:70, p2:100, ff:70, pmin:70 };
+var S={ edad:30, edadret:65, ret:4, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, pmin:70,
+  y0:1993, y1:2025, umbral:5000, freq:"umbral", filtro:"off", sinap:false, costos:true,
+  crec:12, crecret:8, infl:3 };
+// nombre corto de una fase (ETF o SJC con su tasa)
+function faseNom(k){ return k==="SJC" ? ("SJC "+S.sjc+"%") : k; }
+// Describe el plan mostrando la MEZCLA FINAL real (ff% en Fase 3 + resto en Fase 2), no solo el activo de Fase 3.
+function planDesc(f1,f2,f3,ff){
+  var fin;
+  if(ff>=100 || f2===f3) fin=f3;
+  else if(ff<=0) fin=f2;
+  else fin=ff+"% "+f3+" / "+(100-ff)+"% "+f2;
+  return f1+" → "+f2+" → "+fin;
+}
+// retorno anual (fracción) de una fase para un año dado
+function retAnualFase(k, yr){ return k==="SJC" ? S.sjc/100 : HR[k][yr]/100; }
 
 // ===== helpers =====
 function byId(id){ return document.getElementById(id); }
@@ -164,8 +243,13 @@ function money(n){ n=Math.round(n); if(Math.abs(n)>=1e6) return "$"+(n/1e6).toFi
 function fmt1(n){ return (Math.round(n*10)/10).toString(); }
 function anios(){ return Math.max(1, S.edadret-S.edad); }
 function metaMensual(){ return num(byId("i-meta").value); }
-function aporte(){ return num(byId("i-aporte").value); }
 function metaCapital(){ return S.ret>0 ? metaMensual()*12/(S.ret/100) : 0; }
+// Aporte mensual REQUERIDO (despejado) para llegar al freedom point a la edad de retiro,
+// con el crecimiento real esperado y el capital inicial. Menos años = más aporte; más crecimiento = menos.
+function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
+  var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f;
+  if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
+function aporte(){ return aporteReq(metaCapital(), capH(), S.crec-S.infl, anios()*12); }
 
 // pesos del glidepath por fondeo φ (fracción)
 function fwW(phi, p1, p2, Ff){
@@ -177,7 +261,8 @@ function fwW(phi, p1, p2, Ff){
 }
 
 // ===== Monte Carlo de una estrategia (stratFn(phi)->[wL,wE,wF]) =====
-function poolYears(L,E){ var p=[]; for(var y=1990;y<=2025;y++){ if(HR[L][y]!=null&&HR[E][y]!=null) p.push(y); } return p; }
+function avYr(k,y){ return k==="SJC"||HR[k][y]!=null; }
+function poolYears(){ var p=[]; for(var y=1990;y<=2025;y++){ if(avYr(S.f1,y)&&avYr(S.f2,y)&&avYr(S.f3,y)) p.push(y); } return p; }
 function makeDraws(N,nY,np){ var d=[]; for(var q=0;q<N;q++){ var r=new Int16Array(nY+1); for(var t=1;t<=nY;t++) r[t]=(Math.random()*np)|0; d.push(r); } return d; }
 function pct(sorted,p){ var i=(sorted.length-1)*p, lo=Math.floor(i), hi=Math.ceil(i); return lo===hi?sorted[lo]:sorted[lo]+(sorted[hi]-sorted[lo])*(i-lo); }
 function tir(cap,ap,M,V){ if(ap<=0){ if(cap<=0)return 0; return Math.pow(V/cap,12/M)-1; }
@@ -185,34 +270,40 @@ function tir(cap,ap,M,V){ if(ap<=0){ if(cap<=0)return 0; return Math.pow(V/cap,1
   var lo=-0.99,hi=1; if(fv(hi)<V)hi=5; for(var k=0;k<120;k++){ var m=(lo+hi)/2,f=fv(m); if(Math.abs(f-V)<1)return Math.pow(1+m,12)-1; if(f<V)lo=m; else hi=m; } return Math.pow(1+(lo+hi)/2,12)-1; }
 
 function simMC(stratFn, N, draws, poolY, opt){
-  var nY=anios(), ap=aporte(), meta=metaCapital(), L=S.L, E=S.E, rF=S.sjc/100;
+  var nY=anios(), ap=aporte(), meta=metaCapital(), f1=S.f1, f2=S.f2, f3=S.f3, rF=S.sjc/100, RT=opt.retTab||HR;
   var np=poolY.length, M=nY*12, feeS=opt.costos?SWIFT:0, mgmt=opt.costos?EI_MGMT:0, setup0=opt.costos?EI_SETUP:0;
-  var finals=new Float64Array(N), maxdds=new Float64Array(N), calms=[], nMeta=0;
+  var finals=new Float64Array(N), maxdds=new Float64Array(N), calms=[], sharps=[], times=[], ddFPs=[], nMeta=0;
   for(var q=0;q<N;q++){
-    var b=0,setup=setup0,pending=0,peak=0,maxdd=0,phiPeak=0,row=draws[q];
+    var b=0,setup=setup0,pending=0,peak=0,maxdd=0,mddUSD=0,phiPeak=0,row=draws[q], sr=0,sr2=0, hit=0;
     for(var t=1;t<=nY;t++){
       var phi=meta>0?b/meta:0; if(phi>phiPeak)phiPeak=phi;
       var w=stratFn(phiPeak), yr=poolY[row[t]];
-      var rY=w[0]*HR[L][yr]/100 + w[1]*HR[E][yr]/100 + w[2]*rF, mr=Math.pow(1+rY,1/12)-1;
+      var rf1=(f1==="SJC")?rF:RT[f1][yr]/100, rf2=(f2==="SJC")?rF:RT[f2][yr]/100, rf3=(f3==="SJC")?rF:RT[f3][yr]/100;
+      var rY=w[0]*rf1 + w[1]*rf2 + w[2]*rf3, mr=Math.pow(1+rY,1/12)-1;
+      sr+=rY; sr2+=rY*rY;
       for(var m=0;m<12;m++){
-        b=b*(1+mr); if(b>peak)peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd)maxdd=d; }
+        b=b*(1+mr); if(b>peak)peak=b; else if(peak>0){ var d=b/peak-1; if(d<maxdd)maxdd=d; var drop=peak-b; if(drop>mddUSD)mddUSD=drop; }
         pending+=ap;
         if(pending>0){ var net=pending-feeS; if(setup>0&&net>0){var p=Math.min(setup,net);net-=p;setup-=p;} if(net>0)b+=net; pending=0; }
       }
-      if(mgmt) b*=(1-mgmt*(w[0]+w[1]));
+      // EI solo sobre la parte de mercado (cualquier fase en SJC va aparte)
+      if(mgmt) b*=(1-mgmt*((f1==="SJC"?0:w[0])+(f2==="SJC"?0:w[1])+(f3==="SJC"?0:w[2])));
+      if(hit===0 && b>=meta) hit=t;   // primer año en que se toca la meta (llegar antes)
     }
-    finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta)nMeta++;
+    finals[q]=b; maxdds[q]=maxdd*100; if(b>=meta)nMeta++; times.push(hit>0?hit:nY+1); ddFPs.push(meta>0?mddUSD/meta*100:0);
     var ti=tir(0,ap,M,b); if(maxdd<-1e-9&&isFinite(ti)) calms.push(ti/Math.abs(maxdd));
+    var mean=sr/nY, sd=Math.sqrt(Math.max(0,(sr2-sr*sr/nY)/Math.max(1,nY-1))); if(sd>1e-9) sharps.push((mean-0.02)/sd);
   }
-  finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;});
+  finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;}); sharps.sort(function(a,b){return a-b;}); ddFPs.sort(function(a,b){return a-b;});
+  var tSum=0; for(var z=0;z<times.length;z++) tSum+=times[z];   // promedio de años a la meta (no-llega = horizonte+1, penaliza)
   return { p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5), pMeta:100*nMeta/N,
-           calmarMed:calms.length?pct(calms,.5):0 };
+           calmarMed:calms.length?pct(calms,.5):0, sharpeMed:sharps.length?pct(sharps,.5):0, t50:tSum/times.length, ddFP:pct(ddFPs,.75) };
 }
 
 // ===== barrido de frameworks =====
 function combosFW(){ var c=[]; [40,50,60,70,80,90].forEach(function(p1){ [90,100,110].forEach(function(p2){ [40,60,80,100].forEach(function(Ff){ c.push({p1:p1,p2:p2,Ff:Ff}); }); }); }); return c; }
 function sweepFW(N, opt){
-  var poolY=poolYears(S.L,S.E), draws=makeDraws(N, anios(), poolY.length), combos=combosFW(), out=[];
+  var poolY=poolYears(), draws=makeDraws(N, anios(), poolY.length), combos=combosFW(), out=[];
   combos.forEach(function(cb){
     var r=simMC(function(phi){ return fwW(phi,cb.p1,cb.p2,cb.Ff); }, N, draws, poolY, opt);
     r.p1=cb.p1; r.p2=cb.p2; r.Ff=cb.Ff; out.push(r);
@@ -225,14 +316,17 @@ function refresh(){
   byId("v-edad").textContent=S.edad; byId("v-edadret").textContent=S.edadret;
   byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
   byId("v-p1").textContent=S.p1+"%"; byId("v-p2").textContent=S.p2+"%"; byId("v-ff").textContent=S.ff+"%";
-  byId("v-pmin").textContent=S.pmin+"%";
+  byId("v-crec").textContent=S.crec+"%"; byId("v-crecret").textContent=S.crecret+"%"; byId("v-infl").textContent=S.infl+"%";
   byId("k-anios").textContent=anios();
   byId("k-meta").textContent=money(metaCapital());
+  byId("k-aporte").textContent="$"+fmt(aporte())+"/mes";
   byId("k-aportado").textContent=money(aporte()*12*anios());
-  byId("lg-L").textContent=S.L; byId("lg-E").textContent=S.E;
+  byId("lg-L").textContent=S.f1; byId("lg-E").textContent=S.f2; byId("lg-F").textContent=faseNom(S.f3);
+  byId("field-sjc").style.display = (S.f3==="SJC")?"":"none";
   drawGlide();
-  var ap=aporte();
-  byId("plan-txt").innerHTML="Con este plan: mientras llevás <b>menos del "+S.p1+"%</b> de tu meta, tu plata está en el apalancado <b>"+S.L+"</b>. Al pasar el <b>"+S.p1+"%</b> salís a <b>"+S.E+"</b>. Después vas moviéndote de a poco a <b>San José Capital</b> hasta llegar a la meta con <b>"+S.ff+"% en renta fija</b> y <b>"+(100-S.ff)+"% en "+S.E+"</b> todavía creciendo.";
+  byId("plan-txt").innerHTML="Con este plan: mientras llevás <b>menos del "+S.p1+"%</b> de tu meta, tu plata está en <b>"+S.f1+"</b> (fase 1). Al pasar el <b>"+S.p1+"%</b> salís a <b>"+S.f2+"</b> (fase 2). Después vas moviéndote de a poco a <b>"+faseNom(S.f3)+"</b> (fase 3) hasta llegar a la meta con <b>"+S.ff+"% en fase 3</b> y <b>"+(100-S.ff)+"% en "+S.f2+"</b> todavía creciendo.";
+  renderProj();
+  renderHist();
 }
 
 // ===== gráfico del glidepath (área apilada por fondeo) =====
@@ -256,103 +350,417 @@ function drawGlide(){
   else glideChart=new Chart(ctx,{type:"line",data:data,options:opts});
 }
 
-// ===== render de una tabla de resultados =====
-function filaMetrics(nombre, r, best){
-  return '<tr'+(best?' class="best"':'')+'><td>'+nombre+'</td><td>'+Math.round(r.pMeta)+'%</td><td>'+money(r.p25)+'</td><td>'+money(r.p50)+'</td><td>'+fmt1(r.maxddMed)+'%</td><td>'+r.calmarMed.toFixed(2)+'</td></tr>';
+// ===== HISTÓRICO semanal del plan (framework sobre precios reales) =====
+function capH(){ return num(byId("i-cap").value); }
+function pxOk(){ return window.PX && window.PX.t && window.PX.sig; }
+function weekSigH(){ if(!pxOk()) return null; var f=S.filtro;
+  return f==="9h"?PX.sig.QQQ:f==="faber"?PX.sig.QQQ_faber:f==="52"?PX.sig.QQQ_52:f==="mom"?PX.sig.QQQ_mom:null; }
+function simHistFW(){
+  if(!pxOk()) return null;
+  var PX=window.PX, T=PX.t, n=T.length, sig=weekSigH(), timing=!!sig;
+  var ap=S.sinap?0:aporte(), cap=S.sinap?(capH()>0?capH():10000):capH();
+  var feeS=S.costos?SWIFT:0, mgmtW=S.costos?EI_MGMT/52:0, setupL=S.costos?EI_SETUP:0;
+  var i0=0; while(i0<n-1 && Math.floor(T[i0]+1e-9)<S.y0) i0++;
+  var i1=n-1; while(i1>0 && Math.floor(T[i1]-1e-9)>S.y1) i1--; if(i1<i0) i1=i0;
+  var cashW=Math.pow(1.02,1/52)-1, sjcW=Math.pow(1+S.sjc/100,1/52)-1, meta=metaCapital();
+  var f1=S.f1, f2=S.f2, f3=S.f3;
+  function mo(t){ return Math.floor((t-Math.floor(t))*12+1e-6); }
+  function retW(k,i){ if(k==="SJC") return sjcW; var inv=!timing||sig[i-1]===1; return inv?(PX[k][i]/PX[k][i-1]-1):cashW; }
+  var b=0, pending=0, pocket=0, phiPeak=0;
+  function wire(a){ if(a<=0)return; var net=a-feeS; if(setupL>0&&net>0){var p=Math.min(setupL,net);net-=p;setupL-=p;} if(net>0)b+=net; }
+  if(cap>0){ pocket+=cap; wire(cap); }
+  var w0=fwW(0,S.p1,S.p2,S.ff);
+  var years=[T[i0]], bal=[Math.round(b+pending)], put=[Math.round(pocket)], prevMo=mo(T[i0]);
+  var wl=[w0[0]], we=[w0[1]], wf=[w0[2]];
+  for(var i=i0+1;i<=i1;i++){
+    var phi=meta>0?(b+pending)/meta:0; if(phi>phiPeak)phiPeak=phi;
+    var w=fwW(phiPeak,S.p1,S.p2,S.ff);
+    b*=(1 + w[0]*retW(f1,i)+w[1]*retW(f2,i)+w[2]*retW(f3,i));
+    if(mgmtW>0){ var risky=(f1==="SJC"?0:w[0])+(f2==="SJC"?0:w[1])+(f3==="SJC"?0:w[2]); b-=b*risky*mgmtW; }
+    var cm=mo(T[i]);
+    if(cm!==prevMo){ prevMo=cm; pending+=ap; pocket+=ap;
+      var go=S.freq==="mensual"?true:S.freq==="trimestral"?((cm+1)%3===0):S.freq==="semestral"?((cm+1)%6===0):S.freq==="anual"?(cm===11):(pending>=S.umbral);
+      if(go&&pending>0){ wire(pending); pending=0; } }
+    years.push(T[i]); bal.push(Math.round(b+pending)); put.push(Math.round(pocket));
+    wl.push(w[0]); we.push(w[1]); wf.push(w[2]);
+  }
+  return {years:years, bal:bal, put:put, wl:wl, we:we, wf:wf, valor:b+pending, aportado:pocket, mm:Math.round((i1>i0?(T[i1]-T[i0]):1)*12)};
+}
+var histChart=null;
+// Pinta, bajo la curva del plan, cuánta plata está en cada fase en cada momento (área apilada por fase).
+var histMix={s:null};
+var phaseFillPlug={ id:"phaseFill", beforeDatasetsDraw:function(ch){
+  var s=histMix.s; if(!s||!s.wl) return;
+  var xs=ch.scales.x, ys=ch.scales.y, a=ch.chartArea, c=ch.ctx, n=s.years.length; if(n<2) return;
+  function band(loFn,hiFn,color){
+    c.beginPath();
+    for(var i=0;i<n;i++){ c.lineTo(xs.getPixelForValue(s.years[i]), ys.getPixelForValue(hiFn(i))); }
+    for(var j=n-1;j>=0;j--){ c.lineTo(xs.getPixelForValue(s.years[j]), ys.getPixelForValue(loFn(j))); }
+    c.closePath(); c.fillStyle=color; c.fill();
+  }
+  var lo0=function(){return 0;}, b1=function(i){return s.wl[i]*s.bal[i];},
+      b2=function(i){return (s.wl[i]+s.we[i])*s.bal[i];}, b3=function(i){return s.bal[i];};
+  c.save(); c.beginPath(); c.rect(a.left,a.top,a.right-a.left,a.bottom-a.top); c.clip();
+  band(lo0,b1,"rgba(224,82,90,.32)");    // Fase 1
+  band(b1,b2,"rgba(85,109,251,.30)");    // Fase 2
+  band(b2,b3,"rgba(99,252,175,.26)");    // Fase 3
+  c.restore();
+}};
+// Marca la meta de retiro (línea horizontal morada) y 🏖️ con la edad en el primer cruce (como admin).
+var metaMark={meta:0, cruce:null};
+var metaHistPlug={ id:"metaHist", afterDraw:function(ch){
+  var m=metaMark.meta; if(!(m>0)) return;
+  var xs=ch.scales.x, ys=ch.scales.y; if(!xs||!ys) return;
+  var a=ch.chartArea, c=ch.ctx, pm=ys.getPixelForValue(m);
+  if(pm>=a.top-1 && pm<=a.bottom+1){
+    c.save(); c.strokeStyle="rgba(85,109,251,.55)"; c.lineWidth=1.5; c.setLineDash([5,4]);
+    c.beginPath(); c.moveTo(a.left,pm); c.lineTo(a.right,pm); c.stroke(); c.setLineDash([]);
+    c.fillStyle="#8ea0ff"; c.textBaseline="bottom"; c.textAlign="left"; c.font="700 10px 'Bai Jamjuree',sans-serif";
+    c.fillText("Meta de retiro", a.left+4, pm-3); c.restore();
+  }
+  var cr=metaMark.cruce; if(!cr) return;
+  var px=Math.min(Math.max(xs.getPixelForValue(cr.x),a.left+2),a.right-2), cy=Math.max(a.top-12,9), age=String(cr.edad);
+  c.save(); c.textBaseline="middle"; c.textAlign="left"; c.font="700 12px 'Bai Jamjuree',sans-serif";
+  var nw=c.measureText(age).width, ew=17, gap=4, tot=ew+gap+nw, gx=Math.min(Math.max(px-tot/2,a.left+2),a.right-tot-2);
+  c.font="16px 'Bai Jamjuree',sans-serif"; c.fillText("🏖️", gx, cy);
+  c.font="700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle="#556DFB"; c.fillText(age, gx+ew+gap, cy); c.restore();
+}};
+function drawHist(s){
+  var ctx=byId("hist-chart"); if(!ctx||typeof Chart==="undefined") return;
+  var gran=s.years.length>60, ten=gran?0:.12;
+  var mk=function(a){ return s.years.map(function(y,i){return {x:y,y:a[i]};}); };
+  // cruce de la meta de retiro
+  histMix.s=s;
+  var meta=metaCapital(); metaMark.meta=meta; metaMark.cruce=null;
+  if(meta>0){ for(var i=0;i<s.bal.length;i++){ if(s.bal[i]>=meta){ metaMark.cruce={x:s.years[i], edad:S.edad+(Math.floor(s.years[i])-S.y0)}; break; } } }
+  var data={ datasets:[
+    {label:"Tu plan", data:mk(s.bal), borderColor:"#63FCAF", backgroundColor:"transparent", borderWidth:3, pointRadius:0, tension:ten},
+    {label:"Lo que aportaste", data:mk(s.put), borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:ten}
+  ]};
+  var minX=Math.floor(s.years[0]), maxX=Math.ceil(s.years[s.years.length-1]);
+  var opts={ responsive:true, maintainAspectRatio:false, animation:false, devicePixelRatio:Math.max(2,Math.ceil(window.devicePixelRatio||1)),
+    layout:{padding:{top:18}}, interaction:{mode:"index",intersect:false},
+    plugins:{ legend:{position:"bottom",labels:{color:"#E2E2E2",boxWidth:14,font:{size:12},padding:10}},
+      tooltip:{ callbacks:{ title:function(it){return "Fin de "+Math.floor(it[0].parsed.x);}, label:function(it){return it.dataset.label+": "+money(it.parsed.y);} } } },
+    scales:{ x:{type:"linear",min:minX,max:maxX,ticks:{stepSize:5,maxTicksLimit:8,callback:function(v){return Math.round(v);},color:"#9AA1AB"},grid:{color:"rgba(140,150,170,.10)"}},
+      y:{ticks:{color:"#9AA1AB",callback:function(v){return money(v);}},grid:{color:"rgba(140,150,170,.12)"}} } };
+  if(histChart) histChart.destroy();
+  histChart=new Chart(ctx,{type:"line",data:data,options:opts,plugins:[phaseFillPlug,metaHistPlug]});
+}
+// Métricas de UN activo suelto (comprar y aguantar) en la ventana [y0,y1].
+function assetStats(k,y0,y1){
+  if(k==="SJC") return {cagr:S.sjc, maxdd:0};
+  var T=PX.t,n=T.length,i0=0; while(i0<n-1&&Math.floor(T[i0]+1e-9)<y0)i0++;
+  var i1=n-1; while(i1>0&&Math.floor(T[i1]-1e-9)>y1)i1--; if(i1<=i0) return {cagr:0,maxdd:0};
+  var yrs=T[i1]-T[i0], cagr=(Math.pow(PX[k][i1]/PX[k][i0],1/yrs)-1)*100, peak=PX[k][i0], mdd=0;
+  for(var i=i0;i<=i1;i++){ var v=PX[k][i]; if(v>peak)peak=v; else{ var d=v/peak-1; if(d<mdd)mdd=d; } }
+  return {cagr:cagr, maxdd:mdd*100};
+}
+// Caída REAL del portafolio: la peor (%+$+año) y, aparte, la peor ya con capital grande (>=40% de la meta).
+function portStats(bal,years,meta){
+  var peak=0,mdd=0,ddYear=null,dropUSD=0;
+  for(var i=0;i<bal.length;i++){ if(bal[i]>peak)peak=bal[i]; else if(peak>0){ var d=bal[i]/peak-1; if(d<mdd){mdd=d;ddYear=Math.floor(years[i]);dropUSD=peak-bal[i];} } }
+  var thr=0.4*(meta||0), peakL=0,mddL=0,hitL=false;
+  if(thr>0) for(var j=0;j<bal.length;j++){ if(bal[j]>=thr){ hitL=true; if(bal[j]>peakL)peakL=bal[j]; else if(peakL>0){ var e=bal[j]/peakL-1; if(e<mddL)mddL=e; } } }
+  return {pct:mdd*100, year:ddYear, dropUSD:dropUSD, latePct:mddL*100, hitL:hitL};
+}
+function renderMetricas(s, ti){
+  var col={SPY:"#9AA1AB",QQQ:"#556DFB",QLD:"#E0A020",TQQQ:"#E0525A",SJC:"#63FCAF"};
+  var phases=[["Fase 1",S.f1],["Fase 2",S.f2],["Fase 3",S.f3]], seen={}, order=[];
+  phases.forEach(function(p){ var a=p[1]; if(!seen[a]){seen[a]=[];order.push(a);} seen[a].push(p[0]); });
+  var cache={}; order.forEach(function(a){ cache[a]=assetStats(a,S.y0,S.y1); });
+  var head='<thead><tr><th></th><th>Retorno anual</th><th>Máx. caída</th><th>Calmar</th></tr></thead>';
+  var body='<tbody><tr class="grp"><td colspan="4">Los activos, por su cuenta (comprar y aguantar)</td></tr>';
+  order.forEach(function(a){ var st=cache[a], lbl=seen[a].join(" y ")+" · "+faseNom(a);
+    var cal=st.maxdd<-1e-9?(st.cagr/Math.abs(st.maxdd)).toFixed(2):"—";
+    body+='<tr><td><span class="dot" style="background:'+(col[a]||"#9AA1AB")+'"></span>'+lbl+'</td><td>'+fmt1(st.cagr)+'%</td><td>'+(a==="SJC"?"0%":fmt1(st.maxdd)+"%")+'</td><td>'+cal+'</td></tr>'; });
+  var ps=portStats(s.bal, s.years, metaCapital()), pdd=ps.pct, pcal=pdd<-1e-9?(ti/Math.abs(pdd)).toFixed(2):"—";
+  body+='<tr class="grp"><td colspan="4">Tu portafolio (el plan completo, con aportes)</td></tr>'
+      +'<tr class="port"><td>Tu plan ('+planDesc(S.f1,S.f2,S.f3,S.ff)+')</td><td>'+fmt1(ti)+'% <span style="font-weight:500;color:var(--gris-sec)">TIR</span></td><td>'+fmt1(pdd)+'%</td><td>'+pcal+'</td></tr>';
+  if(ps.hitL) body+='<tr class="port"><td style="padding-left:22px;font-weight:600;color:var(--gris-sec)">↳ ya con tu capital ≥40% de la meta</td><td>—</td><td>'+fmt1(ps.latePct)+'%</td><td>—</td></tr>';
+  byId("metricas-tbl").innerHTML=head+body+'</tbody>';
+  var peor=order.reduce(function(a,b){ return cache[b].maxdd<cache[a].maxdd?b:a; },order[0]), pd=cache[peor].maxdd;
+  var txt='Ojo: la <b>máx. caída de un activo</b> no es la tuya. ';
+  if(peor!=="SJC" && pd<-1e-9) txt+='<b>'+faseNom(peor)+'</b> por su cuenta llegó a caer <b style="color:var(--rojo)">'+fmt1(pd)+'%</b>. ';
+  txt+='Tu plan también marca caídas en % ('+fmt1(pdd)+(ps.year?' en '+ps.year:'')+'), pero '
+      +(ps.year&&ps.dropUSD>0 ? 'ese golpe fue sobre <b>poca plata</b> (~'+money(ps.dropUSD)+') y tuvo años para recuperarse. ' : 'los peores pasan al principio, sobre poca plata. ');
+  txt+=(ps.hitL ? 'Ya con tu capital <b>≥40% de la meta</b>, la peor caída fue solo <b style="color:var(--menta)">'+fmt1(ps.latePct)+'%</b> — el plan ya te había movido a fases seguras.' : 'A medida que te acercás a la meta, el plan te des-riesga para <b>proteger lo ganado</b>.');
+  byId("metricas-txt").innerHTML=txt;
+}
+// Detecta los episodios de caída (pico→valle) del valor del plan; devuelve % y $.
+function drawdownEpisodes(bal, years){
+  var eps=[], peak=bal[0]||0, peakI=0, troughV=peak, troughI=0, inDD=false;
+  for(var i=1;i<bal.length;i++){
+    if(bal[i]>=peak){ if(inDD && troughV<peak) eps.push({peakV:peak,troughV:troughV,pi:peakI,ti:troughI}); peak=bal[i]; peakI=i; troughV=bal[i]; troughI=i; inDD=false; }
+    else { inDD=true; if(bal[i]<troughV){ troughV=bal[i]; troughI=i; } } }
+  if(inDD && troughV<peak) eps.push({peakV:peak,troughV:troughV,pi:peakI,ti:troughI});
+  eps.forEach(function(e){ e.pct=(e.troughV/e.peakV-1)*100; e.usd=e.peakV-e.troughV; e.year=Math.floor(years[e.ti]); e.pyear=Math.floor(years[e.pi]); });
+  return eps;
+}
+// Estudio de caídas en DÓLARES, medidas contra tu FREEDOM POINT (lo que necesitás para retirarte).
+function renderDDstudy(s){
+  var eps=drawdownEpisodes(s.bal, s.years).filter(function(e){ return e.pct<-3 && e.usd>0; }), fp=metaCapital()||1;
+  if(!eps.length){ byId("dd-lead").textContent="Con este plan y período no hubo caídas relevantes."; byId("dd-tbl").innerHTML=""; byId("dd-txt").textContent=""; return; }
+  var byFP=eps.slice().sort(function(a,b){return b.usd-a.usd;}), byPct=eps.slice().sort(function(a,b){return a.pct-b.pct;});
+  var wp=byPct[0], wu=byFP[0], top=byFP.slice(0,10);
+  byId("dd-lead").innerHTML='Una caída de <b>'+fmt1(wp.pct)+'%</b> asusta — pero lo que de verdad importa es cuánto pesa <b>en dólares</b> frente a tu <b>freedom point</b> (<b>'+money(fp)+'</b>, lo que necesitás para retirarte). Tus <b>10 peores bajones</b>, ordenados por lo que <b>costaron de verdad</b>:';
+  var head='<thead><tr><th>Época</th><th>Caída (%)</th><th>En dólares</th><th>vs. tu freedom point</th></tr></thead>';
+  var body='<tbody>'+top.map(function(e){
+    return '<tr><td style="text-align:left">'+(e.pyear===e.year?String(e.year):e.pyear+"–"+e.year)+'</td><td>'+fmt1(e.pct)+'%</td><td>−'+money(e.usd)+'</td><td>'+(e.usd/fp*100).toFixed(0)+'%</td></tr>'; }).join("")+'</tbody>';
+  byId("dd-tbl").innerHTML=head+body;
+  byId("dd-txt").innerHTML='Tu peor caída <b>en %</b> fue <b style="color:var(--rojo)">'+fmt1(wp.pct)+'%</b> ('+wp.year+'), pero fueron <b>'+money(wp.usd)+'</b> — apenas el <b>'+(wp.usd/fp*100).toFixed(0)+'%</b> de tu freedom point. Tu peor caída <b>en dólares</b> ('+money(wu.usd)+', '+wu.year+') pesó el <b>'+(wu.usd/fp*100).toFixed(0)+'%</b> de tu freedom point. La clave: se pueden tomar riesgos <b>temprano</b> (cuando la caída vale poco frente a tu meta), pero <b>proteger</b> cuando ya estás cerca del freedom point.';
+}
+function renderHist(){
+  byId("v-y0").textContent=S.y0; byId("v-y1").textContent=S.y1; byId("v-diff").textContent=(S.y1-S.y0); byId("v-umbral").textContent="$"+fmt(S.umbral);
+  if(!pxOk()){ byId("hist-txt").textContent="Cargando datos históricos…"; return; }
+  var s=simHistFW(); if(!s) return;
+  byId("hl-L").textContent=S.f1; byId("hl-E").textContent=S.f2; byId("hl-F").textContent=faseNom(S.f3);
+  var ap=S.sinap?0:aporte(), cap=S.sinap?(capH()>0?capH():10000):capH();
+  var ti=tir(cap, ap, s.mm, s.valor)*100;
+  byId("h-valor").textContent=money(s.valor);
+  byId("h-aportado").textContent=money(s.aportado);
+  byId("h-ganancia").textContent=money(s.valor-s.aportado);
+  byId("h-tir").textContent=fmt1(ti)+"%";
+  drawHist(s);
+  renderMetricas(s, ti);
+  renderDDstudy(s);
+  var fl = S.filtro==="off"?"":({ "9h":"timing 9m", faber:"Faber 10m", "52":"máx. 52 sem", mom:"momentum" })[S.filtro];
+  byId("hist-txt").innerHTML="Con este plan ("+planDesc(S.f1,S.f2,S.f3,S.ff)+")"+(fl?", con filtro <b>"+fl+"</b>,":"")+" entre <b>"+S.y0+"</b> y <b>"+S.y1+"</b>: pusiste <b>"+money(s.aportado)+"</b> y hoy tendrías <b>"+money(s.valor)+"</b> (tu plata rindió <b>"+fmt1(ti)+"%</b> anual). Es UNA historia real, no un promedio — el estudio de abajo sortea miles de futuros.";
 }
 
-// ===== 3 · ESTUDIO: enfoques + mejor framework =====
-function correrEstudio(){
-  var out=byId("estudio-out"); out.innerHTML='<p class="note">Corriendo 5,000 futuros…</p>';
-  setTimeout(function(){
-    var poolY=poolYears(S.L,S.E), N=5000, draws=makeDraws(N, anios(), poolY.length), opt={costos:true};
-    var enfoques=[
-      {n:"Todo apalancado (nunca des-riesga)", f:function(){return [1,0,0];}},
-      {n:"Solo acciones ("+S.E+")", f:function(){return [0,1,0];}},
-      {n:"Mitad apalancado / mitad acciones", f:function(){return [.5,.5,0];}},
-      {n:"Todo en renta fija (SJC "+S.sjc+"%)", f:function(){return [0,0,1];}}
+// ===== tablas de estudio =====
+// Aplica un plan completo (activos + glidepath + filtro de timing) y lo carga arriba.
+function aplicarCombo(f1,f2,f3,p1,p2,ff,tim){
+  S.f1=f1; S.f2=f2; S.f3=f3;
+  if(p1!=null){ S.p1=+p1; S.p2=+p2; S.ff=+ff; }
+  if(tim!=null){ S.filtro=tim; var sf=byId("seg-filtro"); if(sf) Array.prototype.forEach.call(sf.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S.filtro); }); }
+  ["f1","f2","f3"].forEach(function(k){ var seg=byId("seg-"+k); if(!seg)return;
+    Array.prototype.forEach.call(seg.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S[k]); }); });
+  refresh(); var el=byId("hist-chart"); if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+}
+// Tabla ordenable reutilizable. cfg:{ cols:[{key,label,align,sortable,fmt}], rows, top, sortKey, sortDir(-1 desc), rowClass(r), onClick(r), note }
+function sortableTable(mount, cfg){
+  var st={key:cfg.sortKey, dir:cfg.sortDir||-1};
+  function render(){
+    var data=cfg.rows.slice().sort(function(a,b){ return (a[st.key]-b[st.key])*st.dir; }).slice(0,cfg.top||30);
+    var bar=cfg.cols.filter(function(c){return c.sortable;}).map(function(c){ var on=c.key===st.key;
+      return '<button class="sortb'+(on?' on':'')+'" data-k="'+c.key+'">'+c.label+(on?(st.dir<0?' ↓':' ↑'):'')+'</button>'; }).join("");
+    var head='<thead><tr>'+cfg.cols.map(function(c){return '<th style="text-align:'+(c.align||'right')+'">'+c.label+'</th>';}).join("")+'</tr></thead>';
+    var body='<tbody>'+data.map(function(r){ var cl=cfg.rowClass?cfg.rowClass(r):"";
+      return '<tr'+(cl?' class="'+cl+'"':'')+(cfg.onClick?' style="cursor:pointer"':'')+'>'+cfg.cols.map(function(c){
+        return '<td style="text-align:'+(c.align||'right')+'">'+c.fmt(r)+'</td>'; }).join("")+'</tr>'; }).join("")+'</tbody>';
+    mount.innerHTML='<div class="sortbar">Ordenar por: '+bar+'</div><div style="overflow-x:auto"><table>'+head+body+'</table></div>'+(cfg.note?'<p class="note" style="margin-top:8px">'+cfg.note+'</p>':'');
+    Array.prototype.forEach.call(mount.querySelectorAll(".sortb"),function(b){ b.addEventListener("click",function(){ var k=b.getAttribute("data-k"); if(st.key===k)st.dir=-st.dir; else{ st.key=k; var c=cfg.cols.filter(function(x){return x.key===k;})[0]; st.dir=(c&&c.asc)?1:-1; } render(); }); });
+    if(cfg.onClick) Array.prototype.forEach.call(mount.querySelectorAll("tbody tr"),function(tr,i){ tr.addEventListener("click",function(){ cfg.onClick(data[i]); }); });
+  }
+  render();
+}
+// Columnas comunes de métricas de un plan.
+function planCols(withTiming){
+  var cols=[{key:"lbl",label:"Plan (transición de fases)",align:"left",fmt:function(r){
+    return '<b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b><br><span style="font-size:11px;color:var(--gris-sec)">des-riesga entre el '+r.p1+'% y el '+r.p2+'% de tu meta</span>'; }}];
+  if(withTiming) cols.push({key:"timv",label:"Timing",align:"center",fmt:function(r){ return r.tim==="9h"?'<span class="pill on">9m</span>':'<span class="pill off">no</span>'; }});
+  var ny=anios();
+  cols.push(
+    {key:"pMeta",label:"Prob. de llegar",sortable:true,fmt:function(r){return Math.round(r.pMeta)+'%';}},
+    {key:"t50",label:"Años a la meta",sortable:true,asc:true,fmt:function(r){return r.t50>ny?'—':r.t50.toFixed(1);}},
+    {key:"p25",label:"Piso",sortable:true,fmt:function(r){return money(r.p25);}},
+    {key:"p50",label:"Típico",sortable:true,fmt:function(r){return money(r.p50);}},
+    {key:"maxddMed",label:"Máx. caída",sortable:true,fmt:function(r){return fmt1(r.maxddMed)+'%';}},
+    {key:"ddFP",label:"Caída vs FP",sortable:true,asc:true,fmt:function(r){return Math.round(r.ddFP)+'%';}},
+    {key:"calmarMed",label:"Calmar",sortable:true,fmt:function(r){return r.calmarMed.toFixed(2);}},
+    {key:"sharpeMed",label:"Sharpe",sortable:true,fmt:function(r){return r.sharpeMed.toFixed(2);}} );
+  return cols;
+}
+// ===== 4 · ESTUDIO GENERAL (activos × glidepath × timing) =====
+// Retornos anuales por activo desde PX (total return semanal). useTiming: señal 9m -> a efectivo (2%).
+function annualTable(useTiming){
+  var T=PX.t, sig=PX.sig.QQQ, cashW=Math.pow(1.02,1/52)-1, out={};
+  ["SPY","QQQ","QLD","TQQQ"].forEach(function(k){
+    var val=1, endVal={}, tab={};
+    for(var i=1;i<T.length;i++){ var inv=!useTiming||sig[i-1]===1; var r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; val*=(1+r); endVal[Math.floor(T[i])]=val; }
+    var prev=1, y0=Math.floor(T[0]);
+    for(var y=y0;y<=2025;y++){ if(endVal[y]!=null){ tab[y]=(endVal[y]/prev-1)*100; prev=endVal[y]; } }
+    out[k]=tab;
+  });
+  return out;
+}
+// Lista de TODAS las combinaciones a probar: activos × glidepath denso × timing.
+// La MEZCLA FINAL (ff% F3 + resto F2) nunca puede quedar en apalancado: si F2 es TQQQ/QLD, se exige ff=100 (aterriza 100% en F3, no apalancado).
+function sweepGeneralCombos(){
+  var opts5=["SPY","QQQ","QLD","TQQQ","SJC"], f3opts=["SPY","QQQ","SJC"], lev={QLD:1,TQQQ:1};
+  var P1=[40,50,60,70,80,90], P2=[100,110,120], FF=[20,40,60,80,100];   // 6×3×5 = 90 glidepaths
+  var combos=[];
+  ["off","9h"].forEach(function(tim){ opts5.forEach(function(f1){ opts5.forEach(function(f2){ f3opts.forEach(function(f3){
+    P1.forEach(function(p1){ P2.forEach(function(p2){ FF.forEach(function(ff){
+      if(lev[f2] && ff<100) return;   // no dejar apalancado en la mezcla final
+      combos.push({f1:f1,f2:f2,f3:f3,p1:p1,p2:p2,ff:ff,tim:tim});
+    }); }); });
+  }); }); }); });
+  return combos;
+}
+// Describe un plan en lenguaje natural, simple.
+function narrar(r){
+  var fin = (r.ff>=100||r.f2===r.f3) ? ("<b>"+r.f3+"</b>")
+    : (r.ff<=0 ? "<b>"+r.f2+"</b>" : "una mezcla de <b>"+r.ff+"% "+r.f3+"</b> y <b>"+(100-r.ff)+"% "+r.f2+"</b>");
+  var tim = r.tim==="9h" ? " (con un <b>filtro de mercado</b> que sale a efectivo en los peores tramos)" : "";
+  var mid = (r.f1===r.f2) ? "" : ", y pasás a <b>"+r.f2+"</b>";
+  var lleg = r.t50>anios() ? "No siempre alcanza la meta dentro del plazo" : "Alcanzás tu freedom point en <b>~"+Math.round(r.t50)+" años</b>";
+  return "Arrancás en <b>"+r.f1+"</b>"+tim+mid+". Entre el <b>"+r.p1+"%</b> y el <b>"+r.p2+"%</b> de tu meta vas des-riesgando hasta quedar en "+fin+". "+lleg+", con una caída de hasta <b>"+Math.round(r.ddFP)+"%</b> de tu freedom point en un mal escenario.";
+}
+function correrGeneral(){
+  var out=byId("general-out");
+  if(!pxOk()){ out.innerHTML='<p class="note">Cargando datos históricos…</p>'; return; }
+  var nY=anios(), poolY=[]; for(var y=1990;y<=2025;y++) poolY.push(y);
+  var N=450, draws=makeDraws(N,nY,poolY.length), tabs={"off":annualTable(false),"9h":annualTable(true)};
+  var combos=sweepGeneralCombos(), res=[], i=0, _f1=S.f1,_f2=S.f2,_f3=S.f3;
+  out.innerHTML='<p class="note">Corriendo <b>'+combos.length.toLocaleString("en-US")+' planes</b> × '+N+' escenarios cada uno, sobre toda la historia (1990–2025)… <b id="gen-prog">0%</b></p>';
+  function chunk(){
+    var end=Math.min(i+200, combos.length);
+    for(;i<end;i++){ var cb=combos[i]; S.f1=cb.f1;S.f2=cb.f2;S.f3=cb.f3;
+      var r=simMC(function(phi){return fwW(phi,cb.p1,cb.p2,cb.ff);},N,draws,poolY,{costos:true,retTab:tabs[cb.tim]});
+      r.f1=cb.f1;r.f2=cb.f2;r.f3=cb.f3;r.p1=cb.p1;r.p2=cb.p2;r.ff=cb.ff;r.tim=cb.tim; res.push(r); }
+    var pg=byId("gen-prog"); if(pg) pg.textContent=Math.round(100*i/combos.length)+"%";
+    if(i<combos.length) setTimeout(chunk,0);
+    else { S.f1=_f1;S.f2=_f2;S.f3=_f3; finishGeneral(res); }
+  }
+  setTimeout(chunk,20);
+}
+function finishGeneral(res){
+    var out=byId("general-out"), ny=anios();
+    var yrs=function(r){return r.t50>ny?"—":Math.round(r.t50)+" años";};
+    // Solo planes que llegan de forma fiable (prob ≥90%); si no hay suficientes, tomamos los de mayor prob.
+    var pool=res.filter(function(r){return r.pMeta>=90;});
+    if(pool.length<8) pool=res.slice().sort(function(a,b){return b.pMeta-a.pMeta;}).slice(0,Math.max(8,Math.floor(res.length*0.15)));
+    // ranking robusto (percentil dentro del pool) para que ninguna métrica domine por escala
+    function attachRank(key,betterHigh){ var srt=pool.slice().sort(function(a,b){return a[key]-b[key];}), n=srt.length;
+      srt.forEach(function(r,i){ var s=n>1?i/(n-1):1; r["s_"+key]=betterHigh?s:(1-s); }); }
+    attachRank("ddFP",false); attachRank("t50",false); attachRank("p50",true); attachRank("p25",true);
+    // PRIORIDAD: proteger el freedom point (40%) → llegar antes (30%) → mayor típico (20%) → mejor piso (10%)
+    pool.forEach(function(r){ r.score=0.40*r.s_ddFP + 0.30*r.s_t50 + 0.20*r.s_p50 + 0.10*r.s_p25; });
+    var proteger=pool.reduce(function(a,b){return b.ddFP<a.ddFP?b:a;},pool[0]);          // preferencia: máxima protección de la meta
+    var balanceado=pool.reduce(function(a,b){return b.score>a.score?b:a;},pool[0]);       // preferencia: equilibrio (recomendado)
+    var crecer=pool.reduce(function(a,b){return b.p50>a.p50?b:a;},pool[0]);               // preferencia: máximo crecimiento
+    // asegurar 3 planes distintos (si coinciden, tomar el siguiente mejor distinto)
+    function distinct(cand, taken){ for(var i=0;i<cand.length;i++){ var r=cand[i], dup=false; for(var j=0;j<taken.length;j++){ if(taken[j]&&taken[j].f1===r.f1&&taken[j].f2===r.f2&&taken[j].f3===r.f3&&taken[j].p1===r.p1&&taken[j].ff===r.ff&&taken[j].tim===r.tim){dup=true;break;} } if(!dup) return r; } return cand[0]; }
+    balanceado=distinct(pool.slice().sort(function(a,b){return b.score-a.score;}), [proteger]);
+    crecer=distinct(pool.slice().sort(function(a,b){return b.p50-a.p50;}), [proteger,balanceado]);
+    window.__gen={proteger:proteger,balanceado:balanceado,crecer:crecer};
+    function avg(arr,k){var s=0;arr.forEach(function(r){s+=r[k];});return s/arr.length;}
+    var on=res.filter(function(r){return r.tim==="9h";}), off=res.filter(function(r){return r.tim==="off";});
+    var fpOff=avg(off,"ddFP"), fpOn=avg(on,"ddFP"), tOff=avg(off,"t50"), tOn=avg(on,"t50");
+    var reach=100*res.filter(function(r){return r.pMeta>=95;}).length/res.length;
+    var cards=[
+      {k:"proteger",ico:"🛡️",n:"Proteger la meta",r:proteger},
+      {k:"balanceado",ico:"⚖️",n:"Balanceado",r:balanceado},
+      {k:"crecer",ico:"🚀",n:"Crecer al máximo",r:crecer}
     ];
-    var rows="";
-    enfoques.forEach(function(e){ var r=simMC(e.f,N,draws,poolY,opt); rows+=filaMetrics(e.n,r,false); });
-    // el framework que MÁS te asegura llegar a la meta (objetivo real del retiro)
-    var fw=sweepFW(4000,opt); var best=fw.reduce(function(a,b){return b.pMeta>a.pMeta?b:a;},fw[0]);
-    var rbest=simMC(function(phi){return fwW(phi,best.p1,best.p2,best.Ff);},N,draws,poolY,opt);
-    rows+=filaMetrics("<b>Framework por etapas</b> — "+S.L+"→"+S.E+"→SJC (sale al "+best.p1+"%, "+best.Ff+"% RF)",rbest,true);
-    out.innerHTML='<div style="overflow-x:auto"><table><thead><tr><th>Enfoque</th><th>P(meta)</th><th>Piso (p25)</th><th>Típico (p50)</th><th>Máx. caída</th><th>Calmar</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
-      +'<p class="note" style="margin-top:8px">Para el retiro lo que más importa es <b class="hl">llegar a la meta</b>, no el techo. Ahí el <b>framework por etapas gana</b>: la mayor <b>P(meta)</b> con una caída controlada. Dejar <b>todo apalancado</b> tiene un techo altísimo, pero cae hasta <b>−97%</b> y en 1 de cada 3 futuros ni llegás. <b>Solo acciones</b> es tranquilo pero muchas veces no crece lo suficiente para juntar la meta. El framework hace lo sensato: arriesga fuerte al principio y, cuando ya casi ganaste, <b>lo protege</b>.</p>';
-  },30);
-}
-
-// ===== 4 · RESTRICCIÓN =====
-function correrRestriccion(){
-  var out=byId("restr-out"); out.innerHTML='<p class="note">Buscando…</p>';
-  setTimeout(function(){
-    var opt={costos:true}, fw=sweepFW(4000,opt);
-    var validos=fw.filter(function(r){ return r.pMeta>=S.pmin; });
-    if(!validos.length){
-      var mejorP=fw.reduce(function(a,b){return b.pMeta>a.pMeta?b:a;},fw[0]);
-      out.innerHTML='<div class="warnbox">Con estos aportes, <b>ningún plan llega al '+S.pmin+'%</b> de probabilidad — el máximo posible es <b>'+Math.round(mejorP.pMeta)+'%</b>. Para subir la seguridad: aportá más, empezá antes, o bajá la meta. La plata no se crea; el plan solo acomoda el riesgo.</div>';
-      return;
-    }
-    var best=validos.reduce(function(a,b){return b.p50>a.p50?b:a;},validos[0]);
-    S.p1=best.p1; S.p2=best.p2; S.ff=best.Ff; refresh();
-    out.innerHTML='<div class="okbox">El mejor plan que mantiene <b class="hl">P(meta) ≥ '+S.pmin+'%</b> y te deja más patrimonio: salir del apalancado al <b>'+best.p1+'%</b> de la meta y llegar con <b>'+best.Ff+'% en renta fija</b> al <b>'+best.p2+'%</b>. '
-      +'→ P(meta) <b>'+Math.round(best.pMeta)+'%</b> · típico <b>'+money(best.p50)+'</b> · piso <b>'+money(best.p25)+'</b> · máx. caída <b>'+fmt1(best.maxddMed)+'%</b>. <i>Ya lo cargué arriba en la visualización.</i></div>';
-  },30);
-}
-
-// ===== 5 · PERFILES =====
-function correrPerfiles(){
-  var out=byId("perfiles-out"); out.innerHTML='<p class="note">Corriendo un barrido grande…</p>';
-  setTimeout(function(){
-    var opt={costos:true}, fw=sweepFW(4000,opt);
-    var rapido=fw.reduce(function(a,b){return b.p50>a.p50?b:a;},fw[0]);
-    var moder=fw.reduce(function(a,b){return b.calmarMed>a.calmarMed?b:a;},fw[0]);
-    // más seguro = la MENOR caída entre los planes que todavía llegan razonablemente (P(meta) ≥ 60%)
-    var segPool=fw.filter(function(r){return r.pMeta>=60;}); if(!segPool.length) segPool=fw;
-    var seguro=segPool.reduce(function(a,b){return b.maxddMed>a.maxddMed?b:a;},segPool[0]);
-    var perfiles=[
-      {k:"rapido", ico:"🚀", n:"Más rápido", obj:"Máximo patrimonio típico (acepta sustos)", r:rapido},
-      {k:"moder", ico:"⚖️", n:"Moderado", obj:"Mejor equilibrio riesgo-retorno", r:moder},
-      {k:"seguro", ico:"🛡️", n:"Más seguro", obj:"La menor caída, sin perder chance de llegar", r:seguro}
-    ];
-    window.__perf={rapido:rapido, moder:moder, seguro:seguro};
-    var html="";
-    perfiles.forEach(function(pf){ var r=pf.r;
-      html+='<div class="perfil"><h3>'+pf.ico+' '+pf.n+'</h3><div class="obj">'+pf.obj+'</div>'
-        +'<div class="line"><span>Prob. de llegar</span><b>'+Math.round(r.pMeta)+'%</b></div>'
-        +'<div class="line"><span>Típico (p50)</span><b>'+money(r.p50)+'</b></div>'
-        +'<div class="line"><span>Piso (p25)</span><b>'+money(r.p25)+'</b></div>'
-        +'<div class="line"><span>Máx. caída</span><b>'+fmt1(r.maxddMed)+'%</b></div>'
-        +'<div class="line"><span>Sale del apal. a</span><b>'+r.p1+'% de meta</b></div>'
-        +'<div class="line"><span>Renta fija final</span><b>'+r.Ff+'%</b></div>'
-        +'<button class="btn" data-perf="'+pf.k+'">Usar este plan</button></div>';
-    });
-    out.innerHTML=html;
-    Array.prototype.forEach.call(out.querySelectorAll("button[data-perf]"), function(bt){
-      bt.addEventListener("click", function(){ var r=window.__perf[bt.getAttribute("data-perf")];
-        S.p1=r.p1; S.p2=r.p2; S.ff=r.Ff; refresh(); byId("glide-chart").scrollIntoView({behavior:"smooth",block:"center"}); });
-    });
-  },30);
+    var chtml='<div class="perfiles">'+cards.map(function(pf){ var r=pf.r;
+      return '<div class="perfil"><h3>'+pf.ico+' '+pf.n+'</h3>'
+        +'<div class="line" style="border:none;padding-bottom:2px"><span>Plan</span><b>'+planDesc(r.f1,r.f2,r.f3,r.ff)+'</b></div>'
+        +'<p style="font-size:12.5px;color:var(--gris-sec);line-height:1.55;margin:4px 0 10px">'+narrar(r)+'</p>'
+        +'<div class="line"><span>Caída vs freedom point (mal caso)</span><b>'+Math.round(r.ddFP)+'%</b></div>'
+        +'<div class="line"><span>Años a la meta</span><b>'+yrs(r)+'</b></div>'
+        +'<div class="line"><span>Típico</span><b>'+money(r.p50)+'</b></div>'
+        +'<button class="btn" data-gen="'+pf.k+'">Ver este plan</button></div>';
+    }).join("")+'</div>';
+    var concl='<div class="card" style="margin-bottom:12px"><b>Conclusión.</b> Probamos <b>'+res.length.toLocaleString("en-US")+' planes</b> sobre toda la historia (1990–2025). '
+      +'<b>Prob. de llegar</b> = juntar tu <b>freedom point</b> ('+money(metaCapital())+'): poder retirar el <b>'+S.ret+'%</b> al año y vivir con <b>$'+fmt(metaMensual())+'/mes</b>. '
+      +'Como con toda la historia casi todos los buenos planes llegan (el <b>'+Math.round(reach)+'%</b> con prob. ≥95%), la pregunta no es <i>si</i> llegás, sino <b>cómo</b>. Elegimos con esta <b>prioridad</b>: <b class="hl">1) proteger tu freedom point</b> (la menor caída medida contra tu meta, en un mal escenario) → <b>2) llegar antes</b> → <b>3) mayor típico</b> → <b>4) mejor piso</b>. '
+      +'Con <b>timing</b>, la caída vs. freedom point baja de '+Math.round(fpOff)+'% a '+Math.round(fpOn)+'% en promedio y se llega '+Math.abs(tOn-tOff).toFixed(1)+' años '+(tOn<tOff?'antes':'después')+'. '
+      +'Elegí el que va con vos:</div>';
+    out.innerHTML=concl+chtml+'<div id="general-tbl" style="margin-top:14px"></div>';
+    Array.prototype.forEach.call(out.querySelectorAll("button[data-gen]"),function(bt){ bt.addEventListener("click",function(){ var r=window.__gen[bt.getAttribute("data-gen")]; aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); }); });
+    var tblRows=res.filter(function(r){return r.pMeta>=80;}); if(tblRows.length<10) tblRows=res;
+    sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"ddFP", sortDir:1, cols:planCols(true),
+      onClick:function(r){ aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); },
+      note:'Solo planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída vs FP</b> (nuestra prioridad: cuánto podés caer frente a tu freedom point en un mal escenario). También podés ordenar por <b>Años a la meta</b>, probabilidad, piso, típico… (tocá de nuevo para invertir). <b>Tocá una fila</b> para cargar ese plan arriba.' });
 }
 
 // ===== eventos =====
-var LIM={ edad:[18,64], edadret:[40,80], ret:[2,10], sjc:[1,15], p1:[10,120], p2:[15,140], ff:[0,100], pmin:[10,95] };
-Array.prototype.forEach.call(document.querySelectorAll(".stp"), function(b){
+// ===== Proyección de vida: acumulación → retiro → después (todo en plata de hoy, real) =====
+function serieVida(){
+  var edad=S.edad, edadRet=S.edadret, ap=aporte(), metaM=metaMensual(), cap0=capH();
+  var iAcc=(S.crec-S.infl)/100/12, gRet=(S.crecret-S.infl)/100;
+  var anios=Math.max(0,edadRet-edad), meses=anios*12, edades=[], saldo=[], aportado=[];
+  for(var y=0;y<=anios;y++){ var m=y*12;
+    var bal=cap0*Math.pow(1+iAcc,m) + (Math.abs(iAcc)<1e-12?ap*m:ap*(Math.pow(1+iAcc,m)-1)/iAcc);
+    edades.push(edad+y); saldo.push(Math.round(bal)); aportado.push(Math.round(cap0+ap*m)); }
+  var balRet=saldo[saldo.length-1], retiroAnual=metaM*12, totalAp=cap0+ap*meses, bal2=balRet, agota=null;
+  for(var k=1;k<=35;k++){ bal2=bal2*(1+gRet)-retiroAnual;
+    if(bal2<=0){ edades.push(edadRet+k); saldo.push(0); aportado.push(Math.round(totalAp)); agota=edadRet+k; break; }
+    edades.push(edadRet+k); saldo.push(Math.round(bal2)); aportado.push(Math.round(totalAp)); }
+  var gRetPct=S.crecret-S.infl, tend=gRetPct>S.ret+1e-9?"crece":(gRetPct<S.ret-1e-9?"baja":"estable");
+  return {edades:edades, saldo:saldo, aportado:aportado, agota:agota, balRet:balRet, tend:tend, gRetPct:gRetPct};
+}
+var projChart=null, projMark={edadRet:65};
+var projPlug={ id:"projRet", afterDraw:function(ch){
+  var xs=ch.scales.x; if(!xs) return; var a=ch.chartArea, c=ch.ctx, px=xs.getPixelForValue(projMark.edadRet);
+  c.save(); c.strokeStyle="rgba(85,109,251,.45)"; c.lineWidth=2; c.setLineDash([5,4]);
+  c.beginPath(); c.moveTo(px,a.top); c.lineTo(px,a.bottom); c.stroke(); c.setLineDash([]);
+  var cy=Math.max(a.top-12,9), age=String(projMark.edadRet); c.textBaseline="middle"; c.textAlign="left"; c.font="700 12px 'Bai Jamjuree',sans-serif";
+  var nw=c.measureText(age).width, ew=17, gap=4, tot=ew+gap+nw, gx=Math.min(Math.max(px-tot/2,a.left+2),a.right-tot-2);
+  c.font="16px 'Bai Jamjuree',sans-serif"; c.fillText("🏖️",gx,cy);
+  c.font="700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle="#556DFB"; c.fillText(age,gx+ew+gap,cy); c.restore();
+}};
+function drawProj(v){
+  var ctx=byId("proj-chart"); if(!ctx||typeof Chart==="undefined") return; projMark.edadRet=S.edadret;
+  var mk=function(a){ return v.edades.map(function(e,i){return {x:e,y:a[i]};}); };
+  var minX=Math.floor(v.edades[0]/5)*5, maxX=Math.ceil(v.edades[v.edades.length-1]/5)*5;
+  var data={datasets:[
+    {label:"Lo que tenés", data:mk(v.saldo), borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)", borderWidth:3, pointRadius:0, fill:true, tension:.12},
+    {label:"Lo que aportaste", data:mk(v.aportado), borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.12}
+  ]};
+  var opts={ responsive:true, maintainAspectRatio:false, animation:false, layout:{padding:{top:18}}, interaction:{mode:"index",intersect:false},
+    plugins:{legend:{display:false}, tooltip:{callbacks:{title:function(it){return "A los "+Math.round(it[0].parsed.x)+" años";}, label:function(it){return it.dataset.label+": "+money(it.parsed.y);}}}},
+    scales:{x:{type:"linear",min:minX,max:maxX,title:{display:true,text:"Tu edad",color:"#9AA1AB",font:{size:12}},ticks:{stepSize:5,color:"#9AA1AB"},grid:{color:"rgba(140,150,170,.10)"}},
+      y:{ticks:{color:"#9AA1AB",callback:function(v){return money(v);}},grid:{color:"rgba(140,150,170,.12)"}}} };
+  if(projChart) projChart.destroy();
+  projChart=new Chart(ctx,{type:"line",data:data,options:opts,plugins:[projPlug]});
+}
+// Edad EXACTA a la que se agota la plata (aunque sea más allá del tramo que dibuja el gráfico).
+function edadAgotamiento(){
+  var g=(S.crecret-S.infl)/100, ret=S.ret/100; if(g>=ret-1e-9) return null;
+  var capital=metaCapital(); if(capital<=0) return null; var W=metaMensual()*12;
+  var k=Math.abs(g)<1e-9 ? capital/W : Math.log(ret/(ret-g))/Math.log(1+g);
+  if(!isFinite(k)||k<=0) return null; return S.edadret+Math.ceil(k);
+}
+function renderProj(){
+  var v=serieVida(); drawProj(v);
+  var mm="$"+fmt(metaMensual()), apM="$"+fmt(aporte());
+  var t="Para retirarte a los <b>"+S.edadret+"</b> con <b>"+mm+"/mes</b> necesitás juntar <b>"+money(metaCapital())+"</b>, aportando <b class='hl'>"+apM+"/mes</b> (en plata de hoy). Si <b>adelantás el retiro</b> el aporte sube; si <b>crecés más</b>, baja. ";
+  if(v.tend==="crece") t+="En el retiro, sacando "+mm+"/mes, tu plata <b>sigue creciendo</b>: te sobra y queda de herencia.";
+  else if(v.tend==="estable") t+="En el retiro, sacando "+mm+"/mes, tu plata <b>se mantiene estable</b>: vivís de los intereses sin tocar el capital, para siempre.";
+  else { var fin=edadAgotamiento(); t+="En el retiro, sacando "+mm+"/mes, tu plata <b style='color:var(--rojo)'>te dura hasta los "+(fin?fin:"?")+" años</b>"+(fin&&fin>S.edadret+35?" (más allá de lo que muestra el gráfico)":"")+". Para que dure para siempre: bajá el retiro (%), crecé más en el retiro, o retirate más tarde."; }
+  byId("proj-txt").innerHTML=t;
+}
+
+var LIM={ edad:[18,64], edadret:[40,80], ret:[2,10], sjc:[1,15], p1:[10,120], p2:[15,140], ff:[0,100], pmin:[10,95], y0:[1990,2025], y1:[1990,2025], umbral:[1000,50000], crec:[0,40], crecret:[0,30], infl:[0,10] };
+Array.prototype.forEach.call(document.querySelectorAll(".stp[data-s]"), function(b){
   b.addEventListener("click", function(){ var s=b.getAttribute("data-s"), d=parseInt(b.getAttribute("data-d"),10);
-    var step=(s==="p1"||s==="p2"||s==="ff"||s==="pmin")?5:1; var v=S[s]+d*step;
+    var step=(s==="p1"||s==="p2"||s==="ff"||s==="pmin")?5:(s==="umbral"?1000:1); var v=S[s]+d*step;
     var lo=LIM[s][0], hi=LIM[s][1]; if(s==="edad"&&v>=S.edadret)v=S.edadret-1; if(s==="edadret"&&v<=S.edad)v=S.edad+1;
+    if(s==="y0"&&v>=S.y1)v=S.y1-1; if(s==="y1"&&v<=S.y0)v=S.y0+1;
     S[s]=Math.min(hi,Math.max(lo,v)); if(s==="p2"&&S.p2<=S.p1)S.p2=S.p1+5; refresh(); });
 });
+// Diferencia (años): mueve el "Hasta" dejando fijo el "Desde".
+Array.prototype.forEach.call(document.querySelectorAll(".stp[data-diff]"), function(b){
+  b.addEventListener("click", function(){ var d=parseInt(b.getAttribute("data-diff"),10), v=S.y1+d;
+    if(v<=S.y0)v=S.y0+1; if(v>LIM.y1[1])v=LIM.y1[1]; S.y1=v; refresh(); }); });
 function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart,a=el.value.length;
   el.value=d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a)));}catch(e){} refresh(); }); }
-comas(byId("i-meta")); comas(byId("i-aporte"));
+comas(byId("i-meta")); comas(byId("i-cap"));
+// Flechas ±paso para inputs de dinero (además de escribir manual).
+Array.prototype.forEach.call(document.querySelectorAll(".stp[data-money]"), function(b){
+  b.addEventListener("click", function(){ var el=byId(b.getAttribute("data-money")), step=parseInt(b.getAttribute("data-step"),10)||500, d=parseInt(b.getAttribute("data-d"),10);
+    var v=num(el.value)+d*step; if(v<0)v=0; el.value=fmt(v); refresh(); }); });
 function initSeg(id, key){ var c=byId(id); Array.prototype.forEach.call(c.querySelectorAll("button"), function(b){
   b.addEventListener("click", function(){ Array.prototype.forEach.call(c.querySelectorAll("button"),function(x){x.classList.remove("on");}); b.classList.add("on"); S[key]=b.getAttribute("data-a"); refresh(); }); }); }
-initSeg("seg-L","L"); initSeg("seg-E","E");
-byId("btn-estudio").addEventListener("click", correrEstudio);
-byId("btn-restr").addEventListener("click", correrRestriccion);
-byId("btn-perfiles").addEventListener("click", correrPerfiles);
+initSeg("seg-f1","f1"); initSeg("seg-f2","f2"); initSeg("seg-f3","f3"); initSeg("seg-freq","freq"); initSeg("seg-filtro","filtro");
+function initToggle(id, key, onVal){ var c=byId(id); Array.prototype.forEach.call(c.querySelectorAll("button"), function(b){
+  b.addEventListener("click", function(){ Array.prototype.forEach.call(c.querySelectorAll("button"),function(x){x.classList.remove("on");}); b.classList.add("on"); S[key]=(b.getAttribute("data-a")===onVal); refresh(); }); }); }
+initToggle("seg-sinap","sinap","sin"); initToggle("seg-costos","costos","con");
+byId("btn-general").addEventListener("click", correrGeneral);
 refresh();
 </script>
 </body>
