@@ -48,8 +48,13 @@
   .poster-ov:hover .pb{transform:scale(1.06);}
   .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
   .poster-ov .ps{font-size:13px; color:var(--gris-sec);}
-  .vbar{position:absolute; left:0; right:0; bottom:0; height:4px; background:rgba(255,255,255,.12);}
-  .vbar-fill{height:100%; width:0; background:var(--menta); transition:width .2s linear;}
+  .vbar{position:absolute; left:0; right:0; bottom:0; height:6px; background:rgba(255,255,255,.14); cursor:pointer; transition:height .12s ease;}
+  .vbar::before{content:""; position:absolute; left:0; right:0; top:-14px; height:14px;} /* zona de click más alta */
+  .vbar:hover{height:10px;}
+  .vbar-fill{position:relative; height:100%; width:0; background:var(--menta); transition:width .12s linear;}
+  .vbar-fill::after{content:""; position:absolute; right:-5px; top:50%; transform:translateY(-50%); width:12px; height:12px; border-radius:50%;
+    background:var(--menta); box-shadow:0 0 8px rgba(99,252,175,.6); opacity:0; transition:opacity .12s ease;}
+  .vbar:hover .vbar-fill::after{opacity:1;}
   .mutebtn,.fsbtn{position:absolute; bottom:14px; background:rgba(9,11,14,.6); color:var(--crema); border:1px solid var(--bd);
     border-radius:999px; width:40px; height:40px; font-size:17px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; line-height:1;}
   .mutebtn{right:12px;} .fsbtn{right:60px; font-size:20px;}
@@ -256,10 +261,8 @@
 <script>
 "use strict";
 (function(){
-  // Segundo del video en que se desbloquea la aplicación.
-  // TODO: ajustar según la retención real del video (si el 50% de la
-  // audiencia cae antes del minuto 12, bajar este valor).
-  const UNLOCK_SECONDS = 720;
+  // Segundo del video en que se desbloquea la aplicación (5 minutos).
+  const UNLOCK_SECONDS = 300;
   var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
 
   function byId(id){ return document.getElementById(id); }
@@ -294,6 +297,16 @@
   });
   // Click en el video = play/pausa
   V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
+  // Barra de progreso = buscar (seek). Hacia ATRÁS siempre; hacia adelante lo limita el anti-salto de abajo (hasta desbloquear).
+  var vbar = vfill.parentNode;
+  function seekTo(clientX){
+    if(!V.duration || !isFinite(V.duration)) return;
+    var rect = vbar.getBoundingClientRect();
+    var frac = Math.min(1, Math.max(0, (clientX - rect.left)/rect.width));
+    try{ V.currentTime = frac * V.duration; }catch(e){}
+  }
+  vbar.addEventListener("click", function(e){ e.stopPropagation(); seekTo(e.clientX); });
+  vbar.addEventListener("touchend", function(e){ if(e.changedTouches && e.changedTouches[0]){ e.preventDefault(); seekTo(e.changedTouches[0].clientX); } }, {passive:false});
   mutebtn.addEventListener("click", function(){ V.muted=!V.muted; mutebtn.textContent=V.muted?"🔇":"🔊"; });
   // Pantalla completa
   fsbtn.addEventListener("click", function(e){
