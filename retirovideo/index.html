@@ -52,9 +52,9 @@
   .vbar::before{content:""; position:absolute; left:0; right:0; top:-14px; height:14px;} /* zona de click más alta */
   .vbar:hover{height:10px;}
   .vbar-fill{position:relative; height:100%; width:0; background:var(--menta); transition:width .12s linear;}
-  .vbar-fill::after{content:""; position:absolute; right:-5px; top:50%; transform:translateY(-50%); width:12px; height:12px; border-radius:50%;
-    background:var(--menta); box-shadow:0 0 8px rgba(99,252,175,.6); opacity:0; transition:opacity .12s ease;}
-  .vbar:hover .vbar-fill::after{opacity:1;}
+  .vbar-fill::after{content:""; position:absolute; right:-9px; top:50%; transform:translateY(-50%) scale(.35); width:18px; height:18px; border-radius:50%;
+    background:var(--menta); box-shadow:0 0 12px rgba(99,252,175,.75); opacity:0; transition:opacity .14s ease, transform .14s ease;}
+  .vbar:hover .vbar-fill::after{opacity:1; transform:translateY(-50%) scale(1);}
   .mutebtn,.fsbtn{position:absolute; bottom:14px; background:rgba(9,11,14,.6); color:var(--crema); border:1px solid var(--bd);
     border-radius:999px; width:40px; height:40px; font-size:17px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; line-height:1;}
   .mutebtn{right:12px;} .fsbtn{right:60px; font-size:20px;}
@@ -157,8 +157,8 @@
   <!-- GATE / DESBLOQUEO (la mecánica se comunica solo aquí) -->
   <div class="gate" id="gate">
     <div class="lk" id="gatelk">🔒</div>
-    <div class="gt" id="gatetitle">Tu aplicación se desbloquea al final del video</div>
-    <div class="gs" id="gatesub">Reproducí el video para empezar.</div>
+    <div class="gt" id="gatetitle">No es para todos</div>
+    <div class="gs" id="gatesub">Mirá el video y vas a saber si es para vos.</div>
     <a class="gatecta hidden" id="gatecta" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos" target="_blank" rel="noopener">Aplicar para mi llamada →</a>
   </div>
 
@@ -268,7 +268,7 @@
   function byId(id){ return document.getElementById(id); }
   function track(ev, data){ try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){} }
   function fmtT(s){ s=Math.max(0,Math.floor(s||0)); var m=Math.floor(s/60), ss=s%60; return m+":"+(ss<10?"0":"")+ss; }
-  function progressText(t){ return "Vas en "+fmtT(t)+" · Tu progreso queda guardado si volvés después"; }
+  function progressText(t){ var cerca = t >= UNLOCK_SECONDS*0.55; return "Vas en "+fmtT(t)+" · "+(cerca?"seguí, ya casi":"seguí mirando"); }
 
   var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
   var gate=byId("gate"), gatelk=byId("gatelk"), gatetitle=byId("gatetitle"), gatesub=byId("gatesub"), gatecta=byId("gatecta");
@@ -366,7 +366,7 @@
   // El cuadro del candado transiciona (fade) a estado desbloqueado con el CTA
   function showUnlocked(silent){
     gatelk.textContent="✅";
-    gatetitle.textContent="¡Listo! Ya podés aplicar";
+    gatetitle.textContent="Es para vos.";
     gatesub.textContent="";
     gatecta.classList.remove("hidden");
     void gate.offsetWidth; // fuerza reflow para que el fade se anime

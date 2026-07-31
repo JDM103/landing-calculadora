@@ -36,6 +36,9 @@
     padding:7px 9px; font-size:16px; font-weight:700; font-family:inherit; }
   .field input:focus{ outline:none; border-color:var(--menta); }
   .field .big{ font-size:19px; font-weight:800; color:var(--crema); flex:1; }
+  .field .big-in{ font-size:19px; font-weight:800; color:var(--crema); flex:1; width:100%; min-width:0; background:transparent; border:1px solid transparent; border-radius:6px; padding:1px 4px; font-family:inherit; }
+  .field .big-in:hover{ border-color:var(--bd); cursor:text; }
+  .field .big-in:focus{ outline:none; border-color:var(--menta); background:var(--input); }
   .steps{ display:flex; flex-direction:column; gap:2px; }
   .stp{ width:26px; min-height:15px; flex:1; background:var(--input); border:1px solid var(--bd); color:var(--gris-sec);
     border-radius:6px; font-size:9px; cursor:pointer; line-height:1; }
@@ -59,11 +62,40 @@
   tr.grp td{ background:rgba(140,150,170,.10); font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:700; padding-top:7px; padding-bottom:7px; }
   tr.port td{ background:rgba(99,252,175,.08); font-weight:800; color:var(--menta); }
   td .dot{ display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+  /* ===== Tablas "aporte por edad" (grandes, estilo Canva, con selección cruzada) ===== */
+  .ap-hero{ font-size:clamp(30px,7vw,46px); font-weight:900; line-height:1.03; letter-spacing:-.02em; color:var(--crema); margin:4px 0 8px; text-wrap:balance; }
+  .ap-hero em{ color:var(--menta); font-style:normal; }
+  .bloquetit{ font-weight:800; color:var(--crema); font-size:clamp(20px,4.4vw,26px); letter-spacing:-.01em; margin-bottom:4px; }
+  .aptab{ font-size:clamp(16px,3.6vw,20px); font-variant-numeric:tabular-nums; }
+  .aptab thead th{ padding:8px 12px 14px; border-bottom:2px solid rgba(99,252,175,.22); vertical-align:bottom; text-align:right; }
+  .aptab thead th .ic{ display:block; font-size:20px; line-height:1; margin-bottom:6px; }
+  .aptab thead th .amt{ display:block; font-size:clamp(18px,4.4vw,25px); font-weight:900; color:var(--menta); letter-spacing:-.01em; line-height:1; }
+  .aptab thead th .amt small{ font-size:.5em; font-weight:700; color:var(--gris-sec); letter-spacing:0; }
+  .aptab thead th.age-h{ text-align:left; }
+  .aptab thead th.age-h .amt{ font-size:12px; color:var(--gris-sec); font-weight:800; text-transform:uppercase; letter-spacing:.4px; }
+  .aptab td{ padding:13px 12px; font-weight:700; color:var(--gris); border-bottom:1px solid rgba(255,255,255,.05); }
+  .aptab td:first-child{ color:var(--crema); font-weight:800; font-size:.92em; }
+  .aptab td.val{ cursor:pointer; transition:background .12s, color .12s; border-radius:8px; }
+  .aptab td.val:hover{ background:rgba(99,252,175,.09); color:var(--crema); }
+  .aptab td.sel{ background:rgba(99,252,175,.18); color:var(--menta)!important; font-weight:900; box-shadow:inset 0 0 0 2px var(--menta); }
+  .aptab thead th.selcol .amt{ text-shadow:0 0 16px rgba(99,252,175,.65); }
+  .aptab thead th.selcol .ic{ filter:drop-shadow(0 0 8px rgba(99,252,175,.5)); }
+  .aptab tr.selrow td:first-child{ color:var(--menta); }
+  .selbar{ position:sticky; top:8px; z-index:6; margin:16px 0 2px;
+    background:linear-gradient(180deg,#16231c,#0f1a14); border:1px solid rgba(99,252,175,.4); border-radius:14px; padding:13px 16px; }
+  .selbar .st{ font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--menta); font-weight:800; }
+  .selbar .sv{ font-size:clamp(14.5px,3.4vw,17px); color:var(--gris); font-weight:600; margin-top:5px; line-height:1.55; }
+  .selbar .sv b{ color:var(--crema); font-weight:800; } .selbar .sv .m{ color:var(--menta); font-weight:900; }
   .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:10px 0; }
   .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; }
   .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; }
   .kpi .v{ font-size:22px; font-weight:800; color:var(--crema); margin-top:2px; }
   .kpi .v.men{ color:var(--menta); } .kpi .v.per{ color:var(--peri); } .kpi .v.rojo{ color:var(--rojo); }
+  /* Freedom point editable dentro del KPI (se ve como el KPI pero es input) */
+  .kpi-in{ flex:1; min-width:0; width:100%; background:transparent; border:1px solid transparent; color:var(--peri);
+    font-family:inherit; font-weight:800; font-size:17px; padding:1px 3px; border-radius:6px; }
+  .kpi-in:hover{ border-color:var(--bd); cursor:text; }
+  .kpi-in:focus{ outline:none; border-color:var(--peri); background:var(--input); }
   .perfiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
   .perfil{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px; }
   .perfil h3{ margin:0 0 2px; font-size:17px; color:var(--crema); } .perfil .obj{ font-size:12px; color:var(--gris-sec); margin-bottom:8px; }
@@ -93,14 +125,20 @@
   <div class="tsub">1 · Tus datos</div>
   <p class="note">Todo en dólares. La meta de capital = lo que necesitás para vivir del interés sin tocar el capital.</p>
   <div class="grid">
-    <div class="field"><label>Edad hoy</label><div class="row"><b class="big" id="v-edad">30</b><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Edad de retiro</label><div class="row"><b class="big" id="v-edadret">65</b><div class="steps"><button class="stp" data-s="edadret" data-d="1">▲</button><button class="stp" data-s="edadret" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Edad hoy</label><div class="row"><input class="big-in" id="v-edad" inputmode="numeric" value="30" aria-label="Edad hoy (editable)"><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Edad de retiro</label><div class="row"><input class="big-in" id="v-edadret" inputmode="numeric" value="65" aria-label="Edad de retiro (editable)"><div class="steps"><button class="stp" data-s="edadret" data-d="1">▲</button><button class="stp" data-s="edadret" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><input id="i-meta" inputmode="numeric" value="10,000"><div class="steps"><button class="stp" data-money="i-meta" data-step="500" data-d="1">▲</button><button class="stp" data-money="i-meta" data-step="500" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
   </div>
   <div class="kpis">
     <div class="kpi"><div class="k">Años para juntar</div><div class="v" id="k-anios">35</div></div>
-    <div class="kpi"><div class="k">Meta de capital · freedom point</div><div class="v per" id="k-meta">$3.0M</div></div>
+    <div class="kpi"><div class="k">Meta de capital · freedom point</div>
+      <div style="display:flex; flex-wrap:nowrap; margin-top:3px; gap:3px; align-items:center">
+        <b style="color:var(--peri); font-size:17px; font-weight:800; flex:0 0 auto">$</b>
+        <input id="k-meta" class="kpi-in" inputmode="numeric" value="3,000,000" aria-label="Meta de capital (editable)">
+        <div class="steps" style="flex:0 0 auto"><button class="stp" data-fp="1">▲</button><button class="stp" data-fp="-1">▼</button></div>
+      </div>
+    </div>
     <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte">$0</div></div>
     <div class="kpi"><div class="k">De tu bolsillo (total)</div><div class="v" id="k-aportado">$0</div></div>
   </div>
@@ -202,6 +240,75 @@
   <button class="btn" id="btn-general">▶ Correr el estudio</button>
   <div id="general-out" style="margin-top:14px"></div>
 
+  <!-- ===== 5 · TABLAS DE APORTE POR EDAD ===== -->
+  <div class="tsub" style="margin-top:40px; color:var(--menta)">5 · La tabla, en su versión completa</div>
+  <div class="ap-hero">Cuánto aportar <em>por mes</em>,<br>según tu edad</div>
+  <p class="note">Circula por ahí una tabla de "cuánto invertir al mes" por edad. Está buena, pero le faltan dos cosas: <b>la inflación</b> y <b>la pregunta correcta</b>. Acá la versión completa — <b>todo en plata de hoy</b> (ya con la inflación descontada) y para retirarte a los <b>65</b>. En tres niveles.</p>
+
+  <!-- Barra de seguimiento (se actualiza al tocar un monto) -->
+  <div class="selbar" id="selbar">
+    <div class="st">👆 Tocá cualquier monto para seguirlo en las 3 tablas</div>
+    <div class="sv" id="selbar-txt">Compará el mismo objetivo con el S&amp;P, con el Nasdaq y reformulado como ingreso mensual.</div>
+  </div>
+
+  <!-- Nivel 1 · S&P 500 -->
+  <div class="card" style="margin-top:14px">
+    <div class="bloquetit">Nivel 1 · Para llegar a un <span style="color:var(--peri)">monto</span> — con el S&amp;P 500</div>
+    <p class="note" style="margin:2px 0 10px">El S&amp;P 500 (las 500 empresas más grandes de EE.&nbsp;UU.) rindió cerca de <b>8% al año</b>. Menos ~3% de inflación = <b>5% real</b>. Cuánto poner por mes para llegar a ese capital. Empezar joven es casi gratis.</p>
+    <div style="overflow-x:auto"><table class="aptab"><thead><tr><th class="age-h"><span class="ic">👤</span><span class="amt">Edad</span></th><th><span class="ic">🪙</span><span class="amt">$250k</span></th><th><span class="ic">💵</span><span class="amt">$500k</span></th><th><span class="ic">💰</span><span class="amt">$1M</span></th><th><span class="ic">🏦</span><span class="amt">$2M</span></th></tr></thead><tbody>
+      <tr><td>18</td><td>$110</td><td>$221</td><td>$442</td><td>$883</td></tr>
+      <tr><td>20</td><td>$123</td><td>$247</td><td>$493</td><td>$987</td></tr>
+      <tr><td>25</td><td>$164</td><td>$328</td><td>$655</td><td>$1,311</td></tr>
+      <tr><td>30</td><td>$220</td><td>$440</td><td>$880</td><td>$1,760</td></tr>
+      <tr><td>35</td><td>$300</td><td>$601</td><td>$1,202</td><td>$2,403</td></tr>
+      <tr><td>40</td><td>$420</td><td>$840</td><td>$1,679</td><td>$3,358</td></tr>
+      <tr><td>45</td><td>$608</td><td>$1,216</td><td>$2,433</td><td>$4,866</td></tr>
+      <tr><td>50</td><td>$935</td><td>$1,871</td><td>$3,741</td><td>$7,483</td></tr>
+      <tr><td>55</td><td>$1,610</td><td>$3,220</td><td>$6,440</td><td>$12,880</td></tr>
+    </tbody></table></div>
+    <p class="note" style="margin-top:8px">Aporte por mes, en dólares de hoy. Resaltado: <b class="hl">$1M a los 30 = $880/mes</b>.</p>
+  </div>
+
+  <!-- Nivel 2 · Nasdaq-100 -->
+  <div class="card" style="margin-top:14px">
+    <div class="bloquetit">Nivel 2 · El mismo monto — con el <span style="color:var(--menta)">Nasdaq-100</span></div>
+    <p class="note" style="margin:2px 0 10px">El Nasdaq-100 (las tecnológicas líderes) rindió cerca de <b>14% al año</b> (<b>11% real</b>). Mismo monto, <b>mucho menos aporte</b>: para <b>$1M</b> a los 30 pasás de <b>$880</b> a <b>$203</b> al mes. La tasa lo cambia todo.</p>
+    <div style="overflow-x:auto"><table class="aptab"><thead><tr><th class="age-h"><span class="ic">👤</span><span class="amt">Edad</span></th><th><span class="ic">🪙</span><span class="amt">$250k</span></th><th><span class="ic">💵</span><span class="amt">$500k</span></th><th><span class="ic">💰</span><span class="amt">$1M</span></th><th><span class="ic">🏦</span><span class="amt">$2M</span></th></tr></thead><tbody>
+      <tr><td>18</td><td>$13</td><td>$27</td><td>$54</td><td>$107</td></tr>
+      <tr><td>20</td><td>$17</td><td>$33</td><td>$67</td><td>$134</td></tr>
+      <tr><td>25</td><td>$29</td><td>$58</td><td>$116</td><td>$233</td></tr>
+      <tr><td>30</td><td>$51</td><td>$101</td><td>$203</td><td>$406</td></tr>
+      <tr><td>35</td><td>$89</td><td>$178</td><td>$357</td><td>$713</td></tr>
+      <tr><td>40</td><td>$159</td><td>$317</td><td>$634</td><td>$1,269</td></tr>
+      <tr><td>45</td><td>$289</td><td>$578</td><td>$1,155</td><td>$2,310</td></tr>
+      <tr><td>50</td><td>$550</td><td>$1,100</td><td>$2,199</td><td>$4,399</td></tr>
+      <tr><td>55</td><td>$1,152</td><td>$2,304</td><td>$4,608</td><td>$9,217</td></tr>
+    </tbody></table></div>
+    <p class="note" style="margin-top:8px">Casi <b>4× menos</b> aporte que con el S&amp;P, para el mismo monto — por 6 puntos más de retorno al año.</p>
+  </div>
+
+  <!-- Nivel 3 · Ingreso mensual -->
+  <div class="card" style="margin-top:14px; border-color:rgba(99,252,175,.28)">
+    <div class="bloquetit">Nivel 3 · El cambio de mentalidad — de un monto a un <span style="color:var(--menta)">ingreso</span></div>
+    <p class="note" style="margin:2px 0 10px">El número final <b>no es la meta</b>. La meta es un <b>ingreso mensual</b> que no se acabe. Y acá está el truco: retirando al <b>8%</b> (un instrumento de ingreso pasivo) en vez del <b>4%</b> de los bonos del tesoro, necesitás <b>la mitad del capital</b> para el mismo ingreso. Cuánto poner por mes para llegar a ese ingreso, con el Nasdaq (11% real):</p>
+    <div style="overflow-x:auto"><table class="aptab"><thead><tr><th class="age-h"><span class="ic">👤</span><span class="amt">Edad</span></th><th><span class="ic">🪙</span><span class="amt">$2k<small>/mes</small></span></th><th><span class="ic">💵</span><span class="amt">$5k<small>/mes</small></span></th><th><span class="ic">💰</span><span class="amt">$10k<small>/mes</small></span></th><th><span class="ic">🏦</span><span class="amt">$20k<small>/mes</small></span></th></tr></thead><tbody>
+      <tr><td>18</td><td>$16</td><td>$40</td><td>$80</td><td>$161</td></tr>
+      <tr><td>20</td><td>$20</td><td>$50</td><td>$100</td><td>$201</td></tr>
+      <tr><td>25</td><td>$35</td><td>$87</td><td>$174</td><td>$349</td></tr>
+      <tr><td>30</td><td>$61</td><td>$152</td><td>$304</td><td>$609</td></tr>
+      <tr><td>35</td><td>$107</td><td>$267</td><td>$535</td><td>$1,070</td></tr>
+      <tr><td>40</td><td>$190</td><td>$476</td><td>$952</td><td>$1,903</td></tr>
+      <tr><td>45</td><td>$347</td><td>$866</td><td>$1,733</td><td>$3,466</td></tr>
+      <tr><td>50</td><td>$660</td><td>$1,649</td><td>$3,299</td><td>$6,598</td></tr>
+      <tr><td>55</td><td>$1,383</td><td>$3,456</td><td>$6,913</td><td>$13,825</td></tr>
+    </tbody></table></div>
+    <div style="margin-top:12px; background:rgba(99,252,175,.09); border:1px solid rgba(99,252,175,.35); border-radius:12px; padding:14px 16px; font-size:14.5px; color:var(--crema); line-height:1.55">
+      Para <b>$10.000/mes</b> de ingreso: al <b class="hl">8%</b> son <b>$1.5M</b> (a los 30, <b>$304/mes</b>). Al <b>4%</b> serían <b>$3M</b> — el doble de capital y el doble de aporte. <b>Un retiro al 8% parte la meta a la mitad.</b>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:14px; text-align:center">Son promedios lisos por edad. Tu caso exacto — con las <b>caídas reales</b> del mercado y el <b>piso de renta fija</b> que asegura tu ingreso — lo armás con <b>la calculadora de arriba ↑</b>.</p>
+
   <p class="foot">Herramienta educativa de Empowered Investor. Los resultados son simulaciones sobre datos históricos (1990–2025) sorteados al azar; no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija con permanencia mínima de 3 años. Todo neto de costos de transferencias internacionales y del servicio.</p>
 </div>
 
@@ -225,7 +332,7 @@ function assetRGB(k){ return ASSETCOL[k]||"154,161,171"; }
 // ===== estado =====
 var S={ edad:30, edadret:65, ret:4, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, pmin:70,
   y0:1993, y1:2025, umbral:5000, freq:"umbral", filtro:"off", sinap:false, costos:true,
-  crec:12, crecret:8, infl:3 };
+  crec:12, crecret:8, infl:3, income:10000 };
 // nombre corto de una fase (ETF o SJC con su tasa)
 function faseNom(k){ return k==="SJC" ? ("SJC "+S.sjc+"%") : k; }
 // Describe el plan mostrando la MEZCLA FINAL real (ff% en Fase 3 + resto en Fase 2), no solo el activo de Fase 3.
@@ -248,8 +355,10 @@ function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
 function money(n){ n=Math.round(n); if(Math.abs(n)>=1e6) return "$"+(n/1e6).toFixed(2)+"M"; if(Math.abs(n)>=1e3) return "$"+Math.round(n/1e3)+"k"; return "$"+n; }
 function fmt1(n){ return (Math.round(n*10)/10).toString(); }
 function anios(){ return Math.max(1, S.edadret-S.edad); }
-function metaMensual(){ return num(byId("i-meta").value); }
-function metaCapital(){ return S.ret>0 ? metaMensual()*12/(S.ret/100) : 0; }
+// S.income = ingreso mensual deseado, en precisión completa (fuente de verdad).
+// El input i-meta sólo lo muestra redondeado; así editar el freedom point no arrastra el redondeo del ingreso.
+function metaMensual(){ return S.income; }
+function metaCapital(){ return S.ret>0 ? S.income*12/(S.ret/100) : 0; }
 // Aporte mensual REQUERIDO (despejado) para llegar al freedom point a la edad de retiro,
 // con el crecimiento real esperado y el capital inicial. Menos años = más aporte; más crecimiento = menos.
 function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
@@ -342,12 +451,14 @@ function sweepFW(N, opt){
 
 // ===== KPIs de datos =====
 function refresh(){
-  byId("v-edad").textContent=S.edad; byId("v-edadret").textContent=S.edadret;
+  var vedad=byId("v-edad"); if(document.activeElement!==vedad) vedad.value=S.edad;
+  var vedadret=byId("v-edadret"); if(document.activeElement!==vedadret) vedadret.value=S.edadret;
   byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
   byId("v-p1").textContent=S.p1+"%"; byId("v-p2").textContent=S.p2+"%"; byId("v-ff").textContent=S.ff+"%";
   byId("v-crec").textContent=S.crec+"%"; byId("v-crecret").textContent=S.crecret+"%"; byId("v-infl").textContent=S.infl+"%";
   byId("k-anios").textContent=anios();
-  byId("k-meta").textContent=money(metaCapital());
+  var kmeta=byId("k-meta"); if(document.activeElement!==kmeta) kmeta.value=fmt(metaCapital());  // no pisar mientras se edita
+  var imeta=byId("i-meta"); if(document.activeElement!==imeta) imeta.value=fmt(S.income);       // ingreso derivado del estado
   byId("k-aporte").textContent="$"+fmt(aporte())+"/mes";
   byId("k-aportado").textContent=money(aporte()*12*anios());
   byId("lg-L").textContent=S.f1; byId("lg-E").textContent=S.f2; byId("lg-F").textContent=faseNom(S.f3);
@@ -811,17 +922,39 @@ Array.prototype.forEach.call(document.querySelectorAll(".stp[data-s]"), function
     if(s==="y0"&&v>=S.y1)v=S.y1-1; if(s==="y1"&&v<=S.y0)v=S.y0+1;
     S[s]=Math.min(hi,Math.max(lo,v)); if(s==="p2"&&S.p2<=S.p1)S.p2=S.p1+5; refresh(); });
 });
+// Edades editables a mano: mientras escribe recalcula en vivo; al perder foco aplica los límites.
+function editAge(id, key){ var el=byId(id);
+  el.addEventListener("input", function(){ var v=parseInt(el.value.replace(/[^0-9]/g,""),10); if(isNaN(v))return; S[key]=v; refresh(); });
+  el.addEventListener("blur", function(){ var lo=LIM[key][0], hi=LIM[key][1], v=S[key];
+    if(key==="edad"&&v>=S.edadret)v=S.edadret-1; if(key==="edadret"&&v<=S.edad)v=S.edad+1;
+    S[key]=Math.min(hi,Math.max(lo,v)); el.value=S[key]; refresh(); });
+}
+editAge("v-edad","edad"); editAge("v-edadret","edadret");
 // Diferencia (años): mueve el "Hasta" dejando fijo el "Desde".
 Array.prototype.forEach.call(document.querySelectorAll(".stp[data-diff]"), function(b){
   b.addEventListener("click", function(){ var d=parseInt(b.getAttribute("data-diff"),10), v=S.y1+d;
     if(v<=S.y0)v=S.y0+1; if(v>LIM.y1[1])v=LIM.y1[1]; S.y1=v; refresh(); }); });
 function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart,a=el.value.length;
   el.value=d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a)));}catch(e){} refresh(); }); }
-comas(byId("i-meta")); comas(byId("i-cap"));
-// Flechas ±paso para inputs de dinero (además de escribir manual).
+comas(byId("i-cap"));
+// Única fuente de verdad del ingreso: precisión completa, así el freedom point round-trip queda exacto.
+function setIncome(x){ S.income=Math.max(0,x); refresh(); }
+// Ingreso mensual editable a mano.
+byId("i-meta").addEventListener("input", function(){ var el=byId("i-meta"), d=el.value.replace(/[^0-9]/g,""), p=el.selectionStart, a=el.value.length;
+  el.value = d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a)));}catch(e){}
+  setIncome(num(el.value)); });
+// Freedom point EDITABLE: al cambiarlo, ajusta el ingreso mensual (según la tasa de retiro) y recalcula todo.
+function fpToIncome(fp){ setIncome(S.ret>0 ? fp*(S.ret/100)/12 : 0); }
+byId("k-meta").addEventListener("input", function(){ var el=byId("k-meta"), d=el.value.replace(/[^0-9]/g,""), p=el.selectionStart, a=el.value.length;
+  el.value = d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a)));}catch(e){}
+  fpToIncome(num(el.value)); });
+Array.prototype.forEach.call(document.querySelectorAll(".stp[data-fp]"), function(b){
+  b.addEventListener("click", function(){ var d=parseInt(b.getAttribute("data-fp"),10), step=250000;
+    var fp=Math.round(metaCapital()/step)*step + d*step; if(fp<0)fp=0; fpToIncome(fp); }); });
+// Flechas ±paso para el ingreso mensual (además de escribir manual).
 Array.prototype.forEach.call(document.querySelectorAll(".stp[data-money]"), function(b){
-  b.addEventListener("click", function(){ var el=byId(b.getAttribute("data-money")), step=parseInt(b.getAttribute("data-step"),10)||500, d=parseInt(b.getAttribute("data-d"),10);
-    var v=num(el.value)+d*step; if(v<0)v=0; el.value=fmt(v); refresh(); }); });
+  b.addEventListener("click", function(){ var step=parseInt(b.getAttribute("data-step"),10)||500, d=parseInt(b.getAttribute("data-d"),10);
+    setIncome(S.income + d*step); }); });
 function initSeg(id, key){ var c=byId(id); Array.prototype.forEach.call(c.querySelectorAll("button"), function(b){
   b.addEventListener("click", function(){ Array.prototype.forEach.call(c.querySelectorAll("button"),function(x){x.classList.remove("on");}); b.classList.add("on"); S[key]=b.getAttribute("data-a"); refresh(); }); }); }
 initSeg("seg-f1","f1"); initSeg("seg-f2","f2"); initSeg("seg-f3","f3"); initSeg("seg-freq","freq"); initSeg("seg-filtro","filtro");
@@ -830,6 +963,33 @@ function initToggle(id, key, onVal){ var c=byId(id); Array.prototype.forEach.cal
 initToggle("seg-sinap","sinap","sin"); initToggle("seg-costos","costos","con");
 byId("btn-general").addEventListener("click", correrGeneral);
 refresh();
+
+// ===== Selección cruzada en las tablas de aporte por edad =====
+(function(){
+  var tabs=document.querySelectorAll(".aptab"); if(!tabs.length) return;
+  var GOALS=["$250k","$500k","$1M","$2M"], INCS=["$2.000","$5.000","$10.000","$20.000"];
+  var txt=byId("selbar-txt");
+  function rowOf(t,r){ return tabs[t].querySelectorAll("tbody tr")[r]; }
+  function valOf(t,r,c){ var tr=rowOf(t,r); return tr?tr.children[c+1].textContent:""; }
+  function selectCell(r,c){
+    Array.prototype.forEach.call(tabs, function(tab){
+      Array.prototype.forEach.call(tab.querySelectorAll("tbody tr"), function(tr,ri){ tr.classList.toggle("selrow", ri===r);
+        for(var k=1;k<tr.children.length;k++) tr.children[k].classList.toggle("sel", ri===r && (k-1)===c); });
+      Array.prototype.forEach.call(tab.querySelectorAll("thead th"), function(th,ti){ th.classList.toggle("selcol",(ti-1)===c); });
+    });
+    var age=(rowOf(0,r)||{children:[{textContent:""}]}).children[0].textContent;
+    txt.innerHTML = "A los <b>"+age+"</b> · objetivo <b>"+GOALS[c]+"</b> → con el S&P <span class='m'>"+valOf(0,r,c)+"/mes</span> · con el Nasdaq <span class='m'>"+valOf(1,r,c)+"/mes</span>. "
+      + "Pensado como <b>ingreso de "+INCS[c]+"/mes</b> → <span class='m'>"+valOf(2,r,c)+"/mes</span> (Nasdaq).";
+  }
+  Array.prototype.forEach.call(tabs, function(tab){
+    Array.prototype.forEach.call(tab.querySelectorAll("tbody tr"), function(tr,ri){
+      for(var c=1;c<tr.children.length;c++){ (function(td,rr,cc){ td.classList.add("val");
+        td.addEventListener("click", function(){ selectCell(rr,cc); }); })(tr.children[c], ri, c-1);
+      }
+    });
+  });
+  selectCell(3,2); // por defecto: 30 años · $1M / $10k/mes
+})();
 </script>
 </body>
 </html>
