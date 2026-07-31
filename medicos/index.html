@@ -155,6 +155,43 @@
   .legal{ margin-top:34px; font-size:11.5px; color:var(--gris-sec); line-height:1.55; text-align:center; }
   .foot-note{ font-size:13.5px; color:var(--gris-sec); text-align:center; margin-top:16px; }
   .foot-note a{ color:var(--menta); }
+
+  /* ===== Testimonios ===== */
+  .testi{ margin-top:46px; }
+  .testi-h{ text-align:center; font-size:clamp(22px,5vw,32px); font-weight:900; color:var(--crema); letter-spacing:-.02em; margin:4px 0 22px; text-wrap:balance; }
+  /* Destacado (fijo): la colega médica */
+  .tfeat{ position:relative; background:linear-gradient(180deg,#16231c,#141821); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 24px 22px; display:flex; gap:22px; align-items:flex-start; box-shadow:0 0 40px rgba(99,252,175,.06); }
+  .tfeat-badge{ position:absolute; top:-12px; left:24px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px; }
+  .tfeat-photo{ flex:0 0 auto; width:98px; height:122px; border-radius:14px; object-fit:cover; object-position:top center; background:var(--input); }
+  .tfeat-body{ flex:1; min-width:0; }
+  .tfeat .qmark{ color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:40px; line-height:.1; height:16px; font-weight:700; }
+  .tfeat .quote{ font-size:clamp(15px,3.4vw,17px); line-height:1.62; color:var(--crema); font-weight:400; margin:14px 0 14px; }
+  .tname{ font-size:15.5px; font-weight:800; color:var(--crema); }
+  .tname .role{ color:var(--gris-sec); font-weight:600; }
+  /* Rotativo: los demás */
+  .tmore{ text-align:center; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec); margin:30px 0 12px; }
+  .tcarousel{ position:relative; }
+  .tcard{ display:none; gap:20px; background:var(--card2); border:1px solid var(--bd); border-radius:16px; padding:22px 22px; }
+  .tcard.active{ display:flex; animation:tfade .4s ease; }
+  @keyframes tfade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  .tcard .photo{ flex:0 0 auto; width:84px; height:104px; border-radius:12px; object-fit:cover; object-position:top center; background:var(--input); }
+  .tcard .body{ flex:1; min-width:0; }
+  .tcard .qmark{ color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:34px; line-height:.1; height:14px; font-weight:700; }
+  .tcard .quote{ font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400; margin:12px 0 12px; }
+  .tcard .name{ font-size:15px; font-weight:800; color:var(--crema); }
+  .tcard .role{ font-size:12.5px; color:var(--gris-sec); margin-top:2px; }
+  .tnav{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px; }
+  .tbtn{ background:rgba(255,255,255,.04); border:1px solid var(--bd); color:var(--crema); width:38px; height:38px; border-radius:50%; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .tbtn:hover{ border-color:var(--menta); color:var(--menta); }
+  .dots{ display:flex; justify-content:center; flex-wrap:wrap; gap:7px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--bd); border:none; cursor:pointer; padding:0; transition:background .2s; }
+  .dot.on{ background:var(--menta); }
+  @media(max-width:560px){
+    .tfeat{ flex-direction:column; align-items:center; text-align:center; gap:14px; }
+    .tfeat-photo{ width:88px; height:88px; border-radius:50%; }
+    .tcard{ flex-direction:column; align-items:center; text-align:center; gap:14px; padding:20px 18px; }
+    .tcard .photo{ width:72px; height:72px; border-radius:50%; }
+  }
 </style>
 </head>
 <body>
@@ -264,6 +301,106 @@
       <div class="eo-antes" id="e-nota">Ahí cobrás <b>$10,000/mes</b> de por vida, con el capital <b>intacto para heredar</b>.</div>
     </div>
   </div>
+
+  <!-- ===== TESTIMONIOS: destacado fijo (la colega médica) + carrusel rotativo ===== -->
+  <section class="testi">
+    <div class="tsub" style="margin-top:0; text-align:center">Historias reales</div>
+    <h2 class="testi-h">No sos el primero en dar el paso</h2>
+
+    <!-- Fijo: la colega médica -->
+    <div class="tfeat">
+      <span class="tfeat-badge">★ Una colega</span>
+      <img class="tfeat-photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
+      <div class="tfeat-body">
+        <div class="qmark">“</div>
+        <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas. Ha sido una experiencia formativa y transformadora en mi relación con el dinero.</p>
+        <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
+      </div>
+    </div>
+
+    <div class="tmore">Y muchos profesionales más</div>
+
+    <!-- Rotativo: los demás -->
+    <div class="tcarousel" id="tcarousel">
+      <div class="tcard active">
+        <img class="photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo, lo que me brindó mayor confianza y claridad. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente. Sin duda, recomendaría su servicio a cualquier persona interesada en empezar a invertir con seguridad y acompañamiento profesional.</p>
+          <div class="name">Andrés Reyes</div>
+          <div class="role">Senior Vice President, Citibank</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Siempre hemos estado en una posición ventajosa para tomar decisiones y aprovechar el capital para distintas necesidades personales. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+          <div class="name">Javier Vargas</div>
+          <div class="role">Business Development, TAPP</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y puedo decir que me siento muy tranquila y confiada con su asesoría. Desde el primer encuentro se notó lo apasionado que es con el tema. El dinero siempre es delicado, y encontrar a una persona que le dé una perspectiva tan integral ha sido muy valioso. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+          <div class="name">Maricruz Linares</div>
+          <div class="role">MSc People Management · Universidad de Navarra</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Mi experiencia con Empowered Investor ha sido verdaderamente transformadora. No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso hacia los mercados bursátiles. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas con paciencia y profesionalismo. Lo que más valoro es el enfoque educativo combinado con un servicio completamente personalizado. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas y construir un futuro con mayor libertad y seguridad.</p>
+          <div class="name">Andrés Castro</div>
+          <div class="role">Founder &amp; CEO, CADMI</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+          <div class="name">Ramsés Espinoza</div>
+          <div class="role">Founder &amp; CEO, CocoJamboo</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy contenta con el servicio de Empowered Investor. Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones. Ha sido un gran paso para ampliar mi portafolio y atreverme a probar un tipo de inversión un poco más arriesgada, con la confianza de que cuento con una persona que toma decisiones inteligentes, estratégicas y procurando siempre lo mejor para mí.</p>
+          <div class="name">Mónica Blanco</div>
+          <div class="role">Strategy Director, PHD Costa Rica</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José no solo me ayudó a invertir, sino que se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Gracias a su ayuda, hoy no solo estoy invirtiendo en la bolsa, sino también en bienes raíces. Estoy demasiado contenta de haber tomado la decisión de empezar y de haber contado con un acompañamiento tan bueno y profesional.</p>
+          <div class="name">Anne Baudrit</div>
+          <div class="role">Advertising Designer, JLL Real Estate</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad. Desde que invierto con ellos ha cambiado drásticamente mi manera de planear financieramente para el futuro.</p>
+          <div class="name">Agustín Fallas</div>
+          <div class="role">Fotógrafo</div>
+        </div>
+      </div>
+    </div>
+    <div class="tnav">
+      <button class="tbtn" id="cprev" type="button" aria-label="Anterior">‹</button>
+      <div class="dots" id="dots"></div>
+      <button class="tbtn" id="cnext" type="button" aria-label="Siguiente">›</button>
+    </div>
+  </section>
 
   <!-- ===== CTA / CAPTURA ===== -->
   <div class="cta">
@@ -389,6 +526,23 @@ byId("m-send").addEventListener("click", function(){
     });
   });
   selectCell(10,2); // por defecto: 30 años · $1M
+})();
+
+// ===== Carrusel de testimonios (rotan los demás; el destacado queda fijo) =====
+(function(){
+  var wrap=byId("tcarousel"); if(!wrap) return;
+  var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("dots"); if(!n) return;
+  for(var k=0;k<n;k++){ (function(idx){ var d=document.createElement("button"); d.className="dot"+(idx===0?" on":""); d.setAttribute("aria-label","Testimonio "+(idx+1)); d.onclick=function(){ go(idx); reset(); }; dots.appendChild(d); })(k); }
+  function go(idx){ i=(idx+n)%n; for(var j=0;j<n;j++){ cards[j].classList.toggle("active", j===i); dots.children[j].classList.toggle("on", j===i); } }
+  byId("cprev").onclick=function(){ go(i-1); reset(); };
+  byId("cnext").onclick=function(){ go(i+1); reset(); };
+  var timer=setInterval(function(){ go(i+1); }, 11000);
+  function reset(){ clearInterval(timer); timer=setInterval(function(){ go(i+1); }, 11000); }
+  wrap.addEventListener("mouseenter", function(){ clearInterval(timer); });
+  wrap.addEventListener("mouseleave", function(){ reset(); });
+  var x0=null;
+  wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
+  wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
 })();
 </script>
 </body>
