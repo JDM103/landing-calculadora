@@ -63,6 +63,15 @@
   .btn-video:hover{border-color:var(--menta);}
   .btn-video .play{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--menta); color:var(--tinta);
     display:flex; align-items:center; justify-content:center; font-size:13px; padding-left:2px;}
+  /* Newsletter: mismo peso visual que el video, en peri, para no competir con el menta
+     de la calculadora (que sigue siendo la conversión principal). */
+  .btn-news{display:flex; align-items:center; justify-content:center; gap:11px; line-height:1.35;
+    background:linear-gradient(180deg,#1E2530,#191E26); color:var(--crema);
+    border:1px solid rgba(85,109,251,.45); transition:border-color .15s ease, transform .12s ease;}
+  .btn-news:hover{border-color:var(--peri);}
+  .btn-news .sobre{flex:0 0 auto; width:32px; height:32px; border-radius:50%; background:var(--peri); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .btn-news small{display:block; font-size:12px; font-weight:400; color:var(--gris-sec); margin-top:2px;}
 
   footer{width:100%; max-width:420px; margin:0 auto; padding:30px 22px 30px; text-align:center;}
   footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
@@ -78,6 +87,7 @@
 
   <a class="btn btn-video" href="/retirovideo" data-destino="retirovideo"><span class="play">▶</span><span>Video: cómo planear un retiro con el mercado de EE. UU.</span></a>
   <a class="btn btn-menta" href="/calculadora" data-destino="calculadora">🎯 Calculá tu retiro</a>
+  <a class="btn btn-news" id="btn-news" href="/newsletter/" data-destino="newsletter"><span class="sobre">✉</span><span>Suscribite al newsletter<small>Cada lunes: los números y mi lectura</small></span></a>
   <a class="btn btn-crema" href="/info" data-destino="info">🤝 Conocé cómo trabajamos</a>
   <a class="btn btn-ghost" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener" data-destino="instagram">📲 Seguinos en Instagram</a>
 </div>
@@ -88,6 +98,26 @@
 
 <script>
 "use strict";
+// El botón del newsletter arrastra el origen REAL de la visita. Si alguien llegó a esta
+// página desde un story (?utm_source=instagram) y de acá se va al newsletter, queremos que
+// MailerLite lo registre como instagram y no como "linktree", que sería perder la pista.
+// Sin UTM en la URL, cae a linktree, que es lo correcto para quien abrió el link de la bio.
+(function(){
+  var a = document.getElementById("btn-news");
+  if(!a) return;
+  try{
+    var q = new URLSearchParams(location.search);
+    var fuente = q.get("utm_source") || "";
+    var medio  = q.get("utm_medium")  || "";
+    if(!fuente && /instagram\.com|l\.instagram|ig\.me/i.test(document.referrer||"")){
+      fuente = "instagram"; medio = "referral";
+    }
+    if(!fuente){ fuente = "linktree"; medio = medio || "home"; }
+    var p = new URLSearchParams({utm_source:fuente, utm_medium:medio || "home", utm_campaign:"newsletter"});
+    a.href = "/newsletter/?" + p.toString();
+  }catch(e){ /* si algo falla, el href original ya apunta a /newsletter/ */ }
+})();
+
 // Evento por botón, con guardas: si no hay pixel ni dataLayer, no pasa nada.
 Array.prototype.forEach.call(document.querySelectorAll("[data-destino]"), function(el){
   el.addEventListener("click", function(){
