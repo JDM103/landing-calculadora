@@ -49,10 +49,13 @@
   .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:18px;}
 
   /* Qué llega en cada edición */
-  .items{list-style:none; display:flex; flex-direction:column; gap:16px;}
-  .items li{display:grid; grid-template-columns:22px 1fr; gap:0 12px; font-size:16px; line-height:1.5; font-weight:400;}
-  .items .mk{color:var(--menta); font-weight:700; line-height:1.5;}
+  .items{list-style:none; display:flex; flex-direction:column; gap:14px;}
+  .items li{display:grid; grid-template-columns:24px 1fr; gap:0 12px; font-size:17px; line-height:1.4; font-weight:400;}
+  .items .mk{color:var(--menta); font-weight:700; font-size:14px; line-height:1.65;}
   .items b{color:var(--crema); font-weight:600;}
+  /* La firma va separada de la lista: no es un punto más, es cómo se hace. */
+  .artesanal{margin-top:20px; padding-top:16px; border-top:1px solid #262C34;
+    font-size:14px; line-height:1.55; color:var(--gris-sec); font-weight:400;}
 
   .campo{margin-bottom:18px;}
   .campo label{display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
@@ -105,10 +108,11 @@
 
     <div class="card">
       <ul class="items">
-        <li><span class="mk">01</span><span><b>Dónde está el mercado.</b> Qué hicieron el S&amp;P 500 y el Nasdaq, y a qué distancia quedaron de su máximo. Con el estado de la señal cuantitativa que uso para mi propio sistema.</span></li>
-        <li><span class="mk">02</span><span><b>Qué dicen los grandes.</b> Lo que publicaron esa semana Goldman Sachs y JP Morgan, parafraseado en español y siempre con la fuente.</span></li>
-        <li><span class="mk">03</span><span><b>Escrito a mano, palabra por palabra.</b> Artesanal, libre de gluten.</span></li>
+        <li><span class="mk">01</span><span><b>Dónde está el mercado.</b></span></li>
+        <li><span class="mk">02</span><span><b>Qué leímos interesante.</b></span></li>
+        <li><span class="mk">03</span><span><b>Nuestro propio research y opinión.</b></span></li>
       </ul>
+      <p class="artesanal">Escrito a mano, palabra por palabra. Artesanal, libre de gluten.</p>
     </div>
 
     <div class="card">
