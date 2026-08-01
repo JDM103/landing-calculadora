@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<title>El análisis semanal de mercado · Empowered Investor</title>
+<meta name="description" content="Cada lunes: qué hizo el mercado, qué publicaron Goldman Sachs y JP Morgan, y mi lectura propia. Gratis, y te salís con un clic.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="El análisis semanal de mercado · Empowered Investor">
+<meta property="og:description" content="Cada lunes: qué hizo el mercado, qué publicaron Goldman Sachs y JP Morgan, y mi lectura propia.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
+    --verde:#1E7A52;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  }
+  .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 60px;}
+
+  .marca{display:block; text-align:center; margin:34px 0 26px;}
+  .marca img{width:180px; max-width:60%; height:auto;}
+  @media (min-width:560px){ .marca img{width:220px;} }
+
+  .hero{padding:20px 0 6px;}
+  .hero h1{font-size:clamp(28px,7.4vw,38px); font-weight:700; line-height:1.14; letter-spacing:-.01em;}
+  .hero h1 em{font-style:normal; color:var(--menta);}
+  .hero p{margin-top:12px; font-size:16px; color:var(--gris); font-weight:400;}
+
+  .card{background:#1B2026; border:1px solid #262C34; border-radius:18px; padding:22px 20px; margin-top:18px;}
+
+  /* Qué llega cada lunes */
+  .items{list-style:none; display:flex; flex-direction:column; gap:16px;}
+  .items li{display:grid; grid-template-columns:22px 1fr; gap:0 12px; font-size:16px; line-height:1.5; font-weight:400;}
+  .items .mk{color:var(--menta); font-weight:700; line-height:1.5;}
+  .items b{color:var(--crema); font-weight:600;}
+
+  .campo{margin-bottom:18px;}
+  .campo label{display:block; font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gris-sec); margin-bottom:8px;}
+  .campo input{
+    width:100%; background:var(--tinta); border:1px solid #2E3540; border-radius:12px;
+    color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-size:18px; font-weight:500;
+    padding:14px 16px; outline:none;
+  }
+  .campo input:focus{border-color:var(--menta);}
+
+  .btn{
+    display:block; width:100%; text-align:center; cursor:pointer; border:none; border-radius:999px;
+    background:var(--menta); color:var(--tinta); font-family:'Bai Jamjuree',sans-serif;
+    font-size:18px; font-weight:700; padding:16px 20px; margin-top:6px;
+    transition:transform .12s ease;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn[disabled]{opacity:.4; cursor:default;}
+  .btn:focus-visible{outline:2px solid var(--crema); outline-offset:3px;}
+
+  .consent{font-size:13px; line-height:1.5; color:var(--gris-sec); font-weight:400; margin-top:14px;}
+  .warn{display:none; font-size:14px; color:#e0525a; font-weight:500; margin-top:12px;}
+
+  /* Estado de éxito */
+  .listo{display:none; text-align:center;}
+  .listo.on{display:block; animation:entra .5s ease both;}
+  .listo .tick{font-size:44px; line-height:1;}
+  .listo h2{font-size:24px; font-weight:700; margin-top:12px; line-height:1.25;}
+  .listo p{font-size:16px; color:var(--gris); font-weight:400; margin-top:10px; line-height:1.5;}
+  .listo .btn{margin-top:22px;}
+  a.btn{text-decoration:none;}
+  .btn-ghost{background:transparent; color:var(--gris); border:1px solid #2E3540;}
+
+  #form-box.off{display:none;}
+  @keyframes entra{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion: reduce){ .listo.on{animation:none;} }
+
+  .legal{font-size:12px; line-height:1.6; color:var(--gris-sec); font-weight:400; margin-top:30px; text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="marca" href="/"><img src="/assets/logo-fondo-negro.png" alt="Empowered Investor"></a>
+
+  <div class="hero">
+    <h1>Cada lunes te mando <em>lo que de verdad movió el mercado</em>.</h1>
+    <p>Sin ruido de noticias y sin tecnicismos vacíos. Los números, las fuentes, y mi lectura.</p>
+  </div>
+
+  <div id="form-box">
+
+    <div class="card">
+      <ul class="items">
+        <li><span class="mk">01</span><span><b>Dónde está el mercado.</b> Qué hicieron el S&amp;P 500 y el Nasdaq, y a qué distancia quedaron de su máximo. Con el estado de la señal cuantitativa que uso para mi propio sistema.</span></li>
+        <li><span class="mk">02</span><span><b>Qué dicen los grandes.</b> Lo que publicaron esa semana Goldman Sachs y JP Morgan, parafraseado en español y siempre con la fuente.</span></li>
+        <li><span class="mk">03</span><span><b>Mi lectura.</b> La parte que no vas a encontrar en la prensa: qué veo yo en esos números como asesor.</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="campo">
+        <label for="n-nom">Tu nombre</label>
+        <input id="n-nom" autocomplete="given-name" placeholder="José">
+      </div>
+      <div class="campo">
+        <label for="n-cor">Tu mejor correo</label>
+        <input id="n-cor" type="email" inputmode="email" autocomplete="email" placeholder="vos@correo.com">
+      </div>
+      <button class="btn" id="n-send">Quiero recibirlo cada lunes →</button>
+      <div class="warn" id="n-warn">Poné tu nombre y un correo válido.</div>
+      <p class="consent">Al suscribirte aceptás recibir el análisis semanal de mercado. Nada más. Te podés salir con un clic desde cualquier correo, y tu dirección no se comparte con nadie.</p>
+    </div>
+
+  </div>
+
+  <div class="listo" id="listo">
+    <div class="card">
+      <div class="tick">✓</div>
+      <h2>Listo, ya quedaste dentro.</h2>
+      <p>El próximo lunes te llega la primera edición. Revisá también tu carpeta de promociones por si acaso, y arrastralo a tu bandeja principal para que no se pierda.</p>
+      <a class="btn btn-ghost" href="/calculadora/">Mientras tanto, calculá tu retiro →</a>
+    </div>
+  </div>
+
+  <p class="legal">No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. Este contenido es educativo y no constituye una recomendación de inversión.</p>
+
+</div>
+
+<script>
+"use strict";
+var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+
+function byId(id){ return document.getElementById(id); }
+
+// De dónde llegó la persona. Se lee de la URL y, si Instagram se come los parámetros,
+// cae al referrer. Mismo criterio que usa la calculadora.
+var ORIGEN = (function(){
+  try{
+    var q = new URLSearchParams(location.search);
+    var o = {
+      utm_source: q.get("utm_source") || "",
+      utm_medium: q.get("utm_medium") || "",
+      utm_campaign: q.get("utm_campaign") || ""
+    };
+    if(!o.utm_source && /instagram\.com|l\.instagram|ig\.me/i.test(document.referrer||"")){
+      o.utm_source = "instagram"; o.utm_medium = "referral";
+    }
+    if(!o.utm_source) o.utm_source = "directo";
+    return o;
+  }catch(e){ return {utm_source:"", utm_medium:"", utm_campaign:""}; }
+})();
+
+byId("n-send").addEventListener("click", function(){
+  var nombre = byId("n-nom").value.trim();
+  var correo = byId("n-cor").value.trim();
+  if(!(nombre && correo && correo.indexOf("@") > 0 && correo.indexOf(".") > -1)){
+    byId("n-warn").style.display = "block";
+    return;
+  }
+  byId("n-warn").style.display = "none";
+  var btn = byId("n-send");
+  btn.disabled = true;
+  btn.textContent = "Suscribiendo…";
+
+  var payload = {
+    timestamp: new Date().toISOString(),
+    etapa: "newsletter",
+    nombre: nombre,
+    correo: correo,
+    utm_source: ORIGEN.utm_source,
+    utm_medium: ORIGEN.utm_medium,
+    utm_campaign: ORIGEN.utm_campaign
+  };
+
+  try{ if(typeof gtag === "function") gtag("event", "newsletter_signup", {origen: ORIGEN.utm_source}); }catch(e){}
+
+  // text/plain evita el preflight CORS del Apps Script. keepalive por si navega enseguida.
+  fetch(WEBHOOK_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+    keepalive: true
+  }).catch(function(){ /* el modo no-cors no deja leer la respuesta; el alta ya salió */ });
+
+  // Confirmamos de inmediato: el POST es fire-and-forget y el Sheet nunca pierde un lead.
+  byId("form-box").className = "off";
+  byId("listo").className = "listo on";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// Enter en cualquiera de los dos campos envía.
+["n-nom","n-cor"].forEach(function(id){
+  byId(id).addEventListener("keydown", function(ev){
+    if(ev.key === "Enter"){ ev.preventDefault(); byId("n-send").click(); }
+  });
+});
+</script>
+</body>
+</html>

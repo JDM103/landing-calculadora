@@ -1,11 +1,12 @@
 /**
  * Empowered Investor — Webhook de leads del wizard de retiro (landing-calculadora/wizard.html).
  *
- * Hace TRES cosas al recibir un POST:
+ * Hace CUATRO cosas al recibir un POST:
  *   1) Agrega la fila del lead al Google Sheet (header-driven: crea columnas solas).
  *   2) Te AVISA que entró un lead: email siempre + WhatsApp (CallMeBot) si está configurado.
  *   3) Si el payload trae 'reporte' (leads calificados con correo): copia el template de Google Slides,
  *      reemplaza los tokens {{...}} con los numeros del cliente, lo exporta a PDF y se lo manda al correo.
+ *   4) Da de alta el lead en MailerLite (solo si dio correo), con su origen y sus numeros como campos.
  *
  * DESPLEGAR / ACTUALIZAR:
  *  1. Google Sheet -> Extensiones -> Apps Script. Borra lo que haya, pega TODO esto, Guarda.
@@ -13,6 +14,8 @@
  *  3. La primera vez pide mas permisos (Slides, Drive, Gmail, conexiones externas): autorizalos.
  *  4. Corre verAlias() y probarReporte() desde el editor para verificar.
  *  5. Para la ALERTA por WhatsApp: segui las instrucciones de CallMeBot mas abajo y corre probarAlerta().
+ *  6. Para MAILERLITE: corre guardarTokenMailerLite() una vez, despues verGruposMailerLite() para
+ *     sacar los IDs de tus grupos, pegalos en GRUPOS_ML, y proba con probarMailerLite().
  */
 
 var SHEET_NAME = 'Leads';
@@ -51,10 +54,43 @@ var CALLMEBOT_APIKEY = '';   // ej. '123456'
 //   llamada_solicitada  -> landing nueva, boton de la llamada (tambien le prometemos el reporte)
 var ETAPAS_CON_REPORTE = ['reporte_solicitado', 'reporte_solicitada', 'llamada_solicitada'];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// MAILERLITE: alta automatica del lead en la lista
+// ─────────────────────────────────────────────────────────────────────────────
+// El token NO va en este archivo: el repo landing-calculadora es PUBLICO. Vive en las
+// Propiedades del script (Configuracion del proyecto -> Propiedades del script), que no
+// se commitean. Para guardarlo, corre guardarTokenMailerLite() una vez desde el editor.
+//
+// SETUP (una vez):
+//  1. MailerLite -> Integrations -> MailerLite API -> Generate new token. Copialo.
+//  2. En el editor de Apps Script, abri guardarTokenMailerLite(), pega el token en la
+//     linea que dice PEGA_TU_TOKEN_AQUI, corre la funcion, y despues BORRA el token de
+//     la funcion y guarda. Queda almacenado en las propiedades del script.
+//  3. Corre verGruposMailerLite() y mira el log: te lista tus grupos con sus IDs.
+//  4. Pega esos IDs en GRUPOS_ML abajo.
+//  5. Corre probarMailerLite() para dar de alta un correo de prueba.
+
+var ML_API = 'https://connect.mailerlite.com/api';
+
+// A que grupo entra cada lead segun lo que hizo. Dejar '' = no asignar grupo (entra a la
+// lista general igual). Podes usar el mismo ID en los tres si no querés segmentar todavia.
+// IDs reales de la cuenta (creados el 29/07/2026). Para verlos de nuevo: verGruposMailerLite().
+var GRUPOS_ML = {
+  llamada:    '194371895936681787',   // "Calculadora - Pidio llamada"  <- el lead mas caliente
+  reporte:    '194371896334091324',   // "Calculadora - Descargo plan"
+  newsletter: '194371895531931055',   // "Newsletter"  <- se suscribio desde /newsletter/
+  otro:       '194371896334091324'    // cualquier otra etapa con correo (ej. descarga_pdf)
+};
+
+// true  = solo dar de alta leads que pidieron reporte o llamada.
+// false = dar de alta a cualquiera que haya dejado un correo valido.
+var ML_SOLO_CALIFICADOS = false;
+
 function doPost(e) {
   var lock = LockService.getScriptLock();
   lock.waitLock(60000);
   var reporteOk = null;
+  var mlOk = null;
   try {
     var data = JSON.parse(e.postData.contents);
 
@@ -69,6 +105,10 @@ function doPost(e) {
     //    puede impedir que el lead quede guardado ni que el reporte salga.
     try { _notificarLead(data); } catch (errA) { /* ignorar: la alerta es best-effort */ }
 
+    // 2b) Alta en MailerLite. Tambien best-effort por la misma razon: si MailerLite esta caido
+    //     o el token expiro, el lead ya quedo en el Sheet y el reporte igual sale.
+    try { mlOk = _syncMailerLite(data); } catch (errM) { mlOk = 'error: ' + errM; }
+
     // 3) Reporte por correo. Etapas que lo piden: el wizard viejo ('reporte_solicitado') y la
     //    landing nueva ('reporte_solicitada' y 'llamada_solicitada', porque la llamada tambien
     //    promete el reporte). Cualquier payload con 'reporte' + correo valido lo dispara.
@@ -80,7 +120,7 @@ function doPost(e) {
         reporteOk = 'error: ' + err2;   // el lead igual quedo guardado en el Sheet
       }
     }
-    return _json({ ok: true, reporte: reporteOk });
+    return _json({ ok: true, reporte: reporteOk, mailerlite: mlOk });
   } catch (err) {
     return _json({ ok: false, error: String(err) });
   } finally {
@@ -168,6 +208,150 @@ function _notificarLead(data) {
       + '&text=' + encodeURIComponent(cuerpo);
     UrlFetchApp.fetch(url, { muteHttpExceptions: true });
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAILERLITE
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Lee el token de las Propiedades del script. Devuelve '' si no esta configurado. */
+function _tokenML() {
+  return PropertiesService.getScriptProperties().getProperty('MAILERLITE_TOKEN') || '';
+}
+
+/** Llamada cruda a la API de MailerLite. Devuelve {code, body}. */
+function _ml(metodo, ruta, payload) {
+  var token = _tokenML();
+  if (!token) throw new Error('Falta MAILERLITE_TOKEN. Corre guardarTokenMailerLite() una vez.');
+  var opciones = {
+    method: metodo,
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/json'
+    },
+    contentType: 'application/json',
+    muteHttpExceptions: true
+  };
+  if (payload) opciones.payload = JSON.stringify(payload);
+  var res = UrlFetchApp.fetch(ML_API + ruta, opciones);
+  return { code: res.getResponseCode(), body: res.getContentText() };
+}
+
+/**
+ * Da de alta (o actualiza) el lead en MailerLite.
+ *
+ * El endpoint es un upsert no destructivo: 201 si es nuevo, 200 si ya existia, y no borra
+ * campos ni grupos que no vengan en el payload. Asi que si la misma persona vuelve a llenar
+ * la calculadora, se actualizan sus numeros sin perder el historial ni sacarla de sus grupos.
+ *
+ * Devuelve un string corto para el log/respuesta, o null si no habia nada que hacer.
+ */
+function _syncMailerLite(data) {
+  var correo = String(data.correo || '').trim();
+  if (correo.indexOf('@') === -1) return null;          // sin correo no hay nada que dar de alta
+  if (!_tokenML()) return 'sin token';
+
+  var etapa = data.etapa || '';
+  var esLlamada = etapa === 'llamada_solicitada';
+  var esReporte = etapa === 'reporte_solicitada' || etapa === 'reporte_solicitado';
+  var esNewsletter = etapa === 'newsletter';
+
+  // El del newsletter pidio explicitamente los correos, asi que nunca se filtra.
+  if (ML_SOLO_CALIFICADOS && !esLlamada && !esReporte && !esNewsletter) return 'omitido (no calificado)';
+
+  var grupo = esLlamada ? GRUPOS_ML.llamada
+            : esReporte ? GRUPOS_ML.reporte
+            : esNewsletter ? GRUPOS_ML.newsletter
+            : GRUPOS_ML.otro;
+
+  // Los campos deben existir en MailerLite (Subscribers -> Fields) o se ignoran en silencio.
+  // 'name' y 'last_name' son campos por defecto y siempre existen.
+  var campos = {
+    name: data.nombre || '',
+    last_name: data.apellido || '',
+    phone: data.whatsapp || ''
+  };
+  function set(k, v) {
+    if (v === undefined || v === null || v === '' || v === 0) return;
+    campos[k] = v;
+  }
+  set('origen', data.utm_source);                        // instagram, bio, story, whatsapp...
+  set('campana', data.utm_campaign);
+  set('etapa_funnel', etapa);
+  set('que_quiere', data.autocalificacion || data.intencion);
+  set('edad', data.edad || data.edad_hoy);
+  set('edad_retiro', data.edad_retiro);
+  set('meta_mensual_usd', data.meta_usd);
+  set('capital_objetivo_usd', data.capital_objetivo_usd);
+
+  var r = _ml('post', '/subscribers', { email: correo, fields: campos, groups: grupo ? [grupo] : [] });
+
+  if (r.code === 200) return 'actualizado';
+  if (r.code === 201) return 'creado';
+  if (r.code === 401) return 'error 401: token invalido o revocado';
+  if (r.code === 422) return 'error 422 (validacion): ' + r.body.slice(0, 200);
+  return 'error ' + r.code + ': ' + r.body.slice(0, 200);
+}
+
+/**
+ * SETUP, correr UNA VEZ: guarda el token de MailerLite en las Propiedades del script.
+ * Pega tu token abajo, corre la funcion, y DESPUES borra el token de aca y guarda.
+ * Nunca dejes el token escrito en este archivo: el repo es publico.
+ */
+function guardarTokenMailerLite() {
+  // Pega tu token entre las comillas de esta linea, y SOLO de esta linea.
+  var TOKEN = 'PEGA_TU_TOKEN_AQUI';
+
+  // La validacion NO compara contra el texto completo del placeholder a proposito: si comparara,
+  // un "reemplazar todo" en el editor cambiaria las dos ocurrencias, la condicion daria verdadero
+  // siempre y la funcion tiraria el error aunque el token estuviera bien pegado.
+  if (!TOKEN || TOKEN.indexOf('PEGA_TU') === 0 || TOKEN.length < 40) {
+    throw new Error('Pega tu token de MailerLite en la variable TOKEN (la linea de arriba) antes de correr esto.');
+  }
+  PropertiesService.getScriptProperties().setProperty('MAILERLITE_TOKEN', TOKEN.trim());
+  Logger.log('Token guardado (' + TOKEN.length + ' caracteres). Ahora borra el token de esta');
+  Logger.log('funcion, guarda, y corre probarMailerLite() para verificar.');
+}
+
+/**
+ * DIAGNOSTICO: lista tus grupos de MailerLite con sus IDs y cuanta gente tiene cada uno.
+ * Copia los IDs que te interesen a GRUPOS_ML arriba.
+ */
+function verGruposMailerLite() {
+  var r = _ml('get', '/groups?limit=100');
+  if (r.code !== 200) {
+    Logger.log('Error ' + r.code + ': ' + r.body);
+    return;
+  }
+  var grupos = JSON.parse(r.body).data || [];
+  if (!grupos.length) {
+    Logger.log('No tenes grupos creados en MailerLite. Podes dejar GRUPOS_ML vacio: los leads');
+    Logger.log('entran igual a la lista general y los segmentas despues por el campo "origen".');
+    return;
+  }
+  Logger.log('Tus grupos de MailerLite (pega el ID en GRUPOS_ML):');
+  grupos.forEach(function (g) {
+    Logger.log('  ID ' + g.id + '  ->  "' + g.name + '"  (' + (g.active_count || 0) + ' activos)');
+  });
+}
+
+/**
+ * PRUEBA: da de alta un correo de prueba en MailerLite con la misma ruta que usa un lead real.
+ * Cambia el correo por uno tuyo. Despues borralo desde el panel de MailerLite.
+ */
+function probarMailerLite() {
+  var resultado = _syncMailerLite({
+    etapa: 'llamada_solicitada',
+    nombre: 'Prueba', apellido: 'MailerLite',
+    correo: 'prueba+ml@investorcr.com',      // <- cambialo por un correo tuyo
+    whatsapp: '8888-8888',
+    utm_source: 'instagram', utm_campaign: 'prueba_manual',
+    autocalificacion: 'Acompanamiento',
+    edad: 40, edad_retiro: 65,
+    meta_usd: 4000, capital_objetivo_usd: 650000
+  });
+  Logger.log('Resultado: ' + resultado);
+  Logger.log('Si dice "creado" o "actualizado", la integracion quedo lista.');
 }
 
 /** Copia el template, reemplaza los tokens {{...}} con los valores de `reporte`, exporta PDF y lo manda por correo. */

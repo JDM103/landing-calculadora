@@ -1,1 +1,3 @@
 /aplicar/*    /retirovideo/:splat    301
+# Atajo corto para stickers de Instagram (los UTM se conservan solos)
+/news         /newsletter/           301

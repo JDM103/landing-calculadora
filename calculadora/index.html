@@ -457,6 +457,36 @@ var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos
 var INSTAGRAM_URL = "https://www.instagram.com/joseinvestor.cr/";
 var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
 var TC_DEFAULT = 460;
+
+// ===== ORIGEN DEL TRÁFICO =====
+// De dónde llegó la persona, para saber qué canal trae los leads que sí agendan.
+// Se lee de la URL (?utm_source=instagram&utm_medium=bio) y se guarda en sessionStorage,
+// porque los UTM se pierden en cuanto navega a otra sección y el lead se manda después.
+// Si Instagram no manda UTM, cae al referrer: cualquier dominio de IG cuenta como instagram.
+var ORIGEN = (function () {
+  var GUARDADO = "ei_origen";
+  try {
+    var q = new URLSearchParams(location.search);
+    var o = {
+      utm_source: q.get("utm_source") || "",
+      utm_medium: q.get("utm_medium") || "",
+      utm_campaign: q.get("utm_campaign") || ""
+    };
+    if (!o.utm_source && /instagram\.com|l\.instagram|ig\.me/i.test(document.referrer || "")) {
+      o.utm_source = "instagram";
+      o.utm_medium = "referral";
+    }
+    if (o.utm_source) {                       // llegada nueva con origen: manda y se guarda
+      sessionStorage.setItem(GUARDADO, JSON.stringify(o));
+      return o;
+    }
+    var previo = sessionStorage.getItem(GUARDADO);   // navegación interna: recuperamos el original
+    if (previo) return JSON.parse(previo);
+    return { utm_source: "directo", utm_medium: "", utm_campaign: "" };
+  } catch (e) {
+    return { utm_source: "", utm_medium: "", utm_campaign: "" };
+  }
+})();
 // Parámetros IVM 2026 (fuente: referencia_ivm_2026.md). El IVM corre SIEMPRE en colones.
 var SALARIO_MINIMO = 373092;
 var TOPE_MAX = 1765859;
@@ -909,6 +939,7 @@ function enviarLead(etapa, contacto){
     etapa: etapa,
     nombre: contacto.nombre||"", apellido: contacto.apellido||"",
     whatsapp: contacto.whats||"", correo: contacto.correo||"",
+    utm_source: ORIGEN.utm_source, utm_medium: ORIGEN.utm_medium, utm_campaign: ORIGEN.utm_campaign,
     autocalificacion: S.autocal || "",
     incluyo_caja: S.caja === "si",
     edad: S.edad || 0,
