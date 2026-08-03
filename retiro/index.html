@@ -245,7 +245,8 @@
   <div class="ap-hero">Cuánto aportar <em>por mes</em>,<br>según tu edad</div>
   <p class="note">Circula por ahí una tabla de "cuánto invertir al mes" por edad. Está buena, pero le faltan dos cosas: <b>la inflación</b> y <b>la pregunta correcta</b>. Acá la versión completa — <b>todo en plata de hoy</b> (ya con la inflación descontada) y para retirarte a los <b>65</b>. En tres niveles.</p>
 
-  <!-- Barra de seguimiento (se actualiza al tocar un monto) -->
+  <!-- Barra de seguimiento (sticky acotado a las 3 tablas por el contenedor) -->
+  <div>
   <div class="selbar" id="selbar">
     <div class="st">👆 Tocá cualquier monto para seguirlo en las 3 tablas</div>
     <div class="sv" id="selbar-txt">Compará el mismo objetivo con el S&amp;P, con el Nasdaq y reformulado como ingreso mensual.</div>
@@ -290,24 +291,61 @@
   <!-- Nivel 3 · Ingreso mensual -->
   <div class="card" style="margin-top:14px; border-color:rgba(99,252,175,.28)">
     <div class="bloquetit">Nivel 3 · El cambio de mentalidad — de un monto a un <span style="color:var(--menta)">ingreso</span> a los 65</div>
-    <p class="note" style="margin:2px 0 10px">El número final <b>no es la meta</b>. La meta es un <b>ingreso mensual</b> que no se acabe. Y acá está el truco: retirando al <b>8%</b> (un instrumento de ingreso pasivo) en vez del <b>4%</b> de los bonos del tesoro, necesitás <b>la mitad del capital</b> para el mismo ingreso. Cuánto poner por mes para llegar a ese ingreso, con el Nasdaq (11% real):</p>
+    <p class="note" style="margin:2px 0 10px">El número final <b>no es la meta</b>. La meta es un <b>ingreso mensual</b> que no se acabe y que la inflación no devore. Con un instrumento de ingreso pasivo al <b>8%</b>, un <b>3% se reinvierte</b> para que tu ingreso no pierda valor y te dejás el <b>5% neto</b>: necesitás <b>20×</b> tu gasto anual, no las 25× de la regla clásica del 4%. Cuánto poner por mes para llegar a ese ingreso, con el Nasdaq (11% real):</p>
     <div style="overflow-x:auto"><table class="aptab"><thead><tr><th class="age-h"><span class="ic">👤</span><span class="amt">Edad</span></th><th><span class="ic">🪙</span><span class="amt">$2k<small>/mes</small></span></th><th><span class="ic">💵</span><span class="amt">$5k<small>/mes</small></span></th><th><span class="ic">💰</span><span class="amt">$10k<small>/mes</small></span></th><th><span class="ic">🏦</span><span class="amt">$20k<small>/mes</small></span></th></tr></thead><tbody>
-      <tr><td>18</td><td>$16</td><td>$40</td><td>$80</td><td>$161</td></tr>
-      <tr><td>20</td><td>$20</td><td>$50</td><td>$100</td><td>$201</td></tr>
-      <tr><td>25</td><td>$35</td><td>$87</td><td>$174</td><td>$349</td></tr>
-      <tr><td>30</td><td>$61</td><td>$152</td><td>$304</td><td>$609</td></tr>
-      <tr><td>35</td><td>$107</td><td>$267</td><td>$535</td><td>$1,070</td></tr>
-      <tr><td>40</td><td>$190</td><td>$476</td><td>$952</td><td>$1,903</td></tr>
-      <tr><td>45</td><td>$347</td><td>$866</td><td>$1,733</td><td>$3,466</td></tr>
-      <tr><td>50</td><td>$660</td><td>$1,649</td><td>$3,299</td><td>$6,598</td></tr>
-      <tr><td>55</td><td>$1,383</td><td>$3,456</td><td>$6,913</td><td>$13,825</td></tr>
+      <tr><td>18</td><td>$26</td><td>$64</td><td>$129</td><td>$258</td></tr>
+      <tr><td>20</td><td>$32</td><td>$80</td><td>$161</td><td>$321</td></tr>
+      <tr><td>25</td><td>$56</td><td>$140</td><td>$279</td><td>$558</td></tr>
+      <tr><td>30</td><td>$97</td><td>$243</td><td>$487</td><td>$974</td></tr>
+      <tr><td>35</td><td>$171</td><td>$428</td><td>$856</td><td>$1,712</td></tr>
+      <tr><td>40</td><td>$305</td><td>$761</td><td>$1,523</td><td>$3,045</td></tr>
+      <tr><td>45</td><td>$555</td><td>$1,386</td><td>$2,773</td><td>$5,545</td></tr>
+      <tr><td>50</td><td>$1,056</td><td>$2,639</td><td>$5,278</td><td>$10,557</td></tr>
+      <tr><td>55</td><td>$2,212</td><td>$5,530</td><td>$11,060</td><td>$22,120</td></tr>
     </tbody></table></div>
     <div style="margin-top:12px; background:rgba(99,252,175,.09); border:1px solid rgba(99,252,175,.35); border-radius:12px; padding:14px 16px; font-size:14.5px; color:var(--crema); line-height:1.55">
-      Para <b>$10.000/mes</b> de ingreso: al <b class="hl">8%</b> son <b>$1.5M</b> (a los 30, <b>$304/mes</b>). Al <b>4%</b> serían <b>$3M</b> — el doble de capital y el doble de aporte. <b>Un retiro al 8% parte la meta a la mitad.</b>
+      Para <b>$10.000/mes</b> de por vida, con la inflación cubierta: necesitás <b class="hl">$2.4M</b> (20× tu gasto anual), y a los 30 son <b>$487/mes</b> con el Nasdaq. La regla clásica del <b>4%</b> pediría <b>$3M</b> (25×).
     </div>
   </div>
+  </div><!-- /ámbito sticky del selbar -->
 
   <p class="note" style="margin-top:14px; text-align:center">Son promedios lisos por edad. Tu caso exacto — con las <b>caídas reales</b> del mercado y el <b>piso de renta fija</b> que asegura tu ingreso — lo armás con <b>la calculadora de arriba ↑</b>.</p>
+
+  <!-- ===== 6. EL ESTUDIO: por qué el plan es así ===== -->
+  <div class="tsub" style="margin-top:44px; color:var(--menta)">6 · El estudio: por qué el plan es así</div>
+  <div class="ap-hero">Lo probamos contra <em>todo</em> lo que la industria vende</div>
+  <p class="note">Corrimos el mismo examen para seis estrategias: miles de escenarios sorteados de la historia real, mismos aportes, mismos costos. Y no solo con la era reciente: también con <b>55 años de historia en plata de hoy</b> (desde 1971) y con un stress test usando solo <b>la peor época</b> (el crash del 73–74 y la inflación de los setenta). La pregunta es una sola: ¿qué probabilidad tenés de llegar a tu freedom point?</p>
+
+  <div class="card" style="margin-top:14px">
+    <div class="bloquetit">Probabilidad de llegar a la meta, en tres futuros posibles</div>
+    <p class="note" style="margin:2px 0 10px">Caso base: 30 → 65 años, meta $3M (ingreso de $10.000/mes), aporte fijo de ~$1.000/mes. "Filtro" = la señal de tendencia que sale del mercado en las caídas grandes.</p>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Estrategia</th><th>Si el futuro es como<br>1990–2025</th><th>Como los últimos<br>55 años (real)</th><th>Como la<br>peor época</th></tr></thead>
+      <tbody>
+        <tr style="color:var(--menta); font-weight:800"><td style="text-align:left">Freedom Point Fund dinámico (apalancado)</td><td>93.6%</td><td>66.6%</td><td>31.0%</td></tr>
+        <tr style="color:var(--menta); font-weight:800"><td style="text-align:left">Freedom Point Fund dinámico + filtro</td><td>100%</td><td>78.1%</td><td>34.4%</td></tr>
+        <tr><td style="text-align:left">El mismo sistema, sin apalancar</td><td>77.0%</td><td>17.3%</td><td>1.4%</td></tr>
+        <tr><td style="text-align:left">QQQ comprar y mantener</td><td>77.5%</td><td>18.9%</td><td>0.4%</td></tr>
+        <tr><td style="text-align:left">S&amp;P 500 comprar y mantener</td><td>46.7%</td><td>10.8%</td><td>3.5%</td></tr>
+        <tr style="color:var(--gris-sec)"><td style="text-align:left">Fondo target-date típico (el default de los 401k)</td><td>37.4%</td><td>4.8%</td><td>3.6%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:8px">En la era buena, el plan dinámico llega <b>9 de cada 10 veces</b> y el target-date típico menos de <b>4 de cada 10</b>. En las épocas duras nadie llega con ese aporte, pero el orden no cambia: el sistema mantiene <b>7 a 20 veces más probabilidad</b> que los planes clásicos. Ahí la respuesta es subir el aporte, no cambiar el diseño.</p>
+  </div>
+
+  <div class="card" style="margin-top:14px; border-color:rgba(99,252,175,.28)">
+    <div class="bloquetit">La lógica del plan, en tres ideas</div>
+    <p class="note" style="margin:6px 0 8px"><b>1 · Medimos el riesgo como un fondo de pensiones.</b> El riesgo no es cuánto fluctúa tu cuenta este mes. El riesgo es no tener tu capital objetivo a los 65. Por eso todo el plan gira alrededor de una aguja: qué porcentaje de tu meta ya juntaste.</p>
+    <p class="note" style="margin:0 0 8px"><b>2 · Fuerte al arranque, porque tu verdadero activo son tus aportes futuros.</b> A los 30, con poco capital y 35 años de aportes por delante, una caída grande casi no mueve tu probabilidad de retiro. La misma caída a los 60 sería fatal. Por eso el plan es agresivo cuando el golpe no duele y se desapalanca a medida que avanzás. Nunca al revés.</p>
+    <p class="note" style="margin:0"><b>3 · Lo ganado se asegura con candado.</b> El piso de renta fija solo puede subir: jamás se vende para volver a arriesgar. Y el filtro de tendencia agrega una red que probamos en datos que la señal nunca vio (1971–1989) y también ahí multiplicó por 6 la protección en los peores escenarios.</p>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="bloquetit">Esto no lo inventamos nosotros</div>
+    <p class="note" style="margin:6px 0 8px">Cada pieza tiene respaldo publicado: <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener" style="color:var(--menta)">Ayres y Nalebuff (Yale)</a> mostraron que apalancarse de joven y desapalancar según el avance a la meta <b>reduce</b> el riesgo de retiro. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2741701" target="_blank" rel="noopener" style="color:var(--menta)">Gayed y Bilello</a> ganaron el Dow Award 2016 demostrando que apalancamiento más filtro de tendencia le gana a comprar y mantener. Y <a href="https://www.researchaffiliates.com/content/dam/ra/publications/pdf/241-the-glidepath-illusion.pdf" target="_blank" rel="noopener" style="color:var(--menta)">Arnott (Research Affiliates)</a> demostró con 141 años de datos que el glidepath de los target-date está al revés. Nosotros juntamos las piezas y las pusimos a prueba con 100 años de historia.</p>
+    <p class="note" style="margin:0 0 8px"><b>¿Y por qué Vanguard no lo ofrece?</b> Porque un fondo masivo no puede: la regulación limita el apalancamiento en fondos default, un producto para millones no puede mostrar −60% en pantalla sin demandas, y nadie está al lado de cada cliente para sostener el plan en el fondo del ciclo. Ninguna de esas tres cosas aplica a una cartera personal con asesor. La matemática está publicada hace 15 años; el vehículo masivo es lo que no existe.</p>
+    <p class="note" style="margin:0">Lo honesto: los apalancados caen fuerte en el camino (el plan lo asume y lo administra), las probabilidades dependen de la época que te toque, y el piso depende de que el emisor cumpla. Todo eso está simulado o dicho acá arriba. Jugá con la calculadora y pedí el estudio completo si querés el detalle.</p>
+  </div>
 
   <p class="foot">Herramienta educativa de Empowered Investor. Los resultados son simulaciones sobre datos históricos (1990–2025) sorteados al azar; no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija con permanencia mínima de 3 años. Todo neto de costos de transferencias internacionales y del servicio.</p>
 </div>
