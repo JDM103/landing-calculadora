@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<title>Freedom Point Funds · La ciencia detrás del plan · Empowered Investor</title>
+<meta name="description" content="Lo que Yale y un Dow Award descubrieron sobre apalancarse de joven, explicado en lenguaje sencillo. En qué coincidimos, en qué nos separamos, y por qué Vanguard no puede ofrecerte esto.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Freedom Point Funds · La ciencia detrás del plan">
+<meta property="og:description" content="Dos papers premiados dicen que el plan de retiro típico está mal armado. Los leímos a fondo y te los explicamos como un amigo.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --ambar:#E0B07A; --rojo:#E0525A; }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    line-height:1.68; font-size:16.5px; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:760px; margin:0 auto; padding:26px 18px 90px; }
+  a.logo{ display:block; text-align:center; margin-bottom:16px; }
+  a.logo img{ height:88px; }
+  .eyebrow{ text-align:center; font-size:12px; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; color:var(--menta); }
+  h1{ font-size:clamp(30px,6.6vw,46px); font-weight:700; color:var(--crema); text-align:center; letter-spacing:-.02em; line-height:1.08; margin:10px 0 14px; text-wrap:balance; }
+  h1 em{ color:var(--menta); font-style:normal; }
+  .lede{ text-align:center; color:var(--gris-sec); font-size:clamp(15.5px,3.4vw,18px); max-width:56ch; margin:0 auto 8px; }
+  .lede b{ color:var(--gris); }
+  .meta{ text-align:center; font-size:12.5px; color:var(--gris-sec); margin-bottom:34px; }
+  h2{ font-size:clamp(22px,4.8vw,30px); font-weight:700; color:var(--crema); letter-spacing:-.015em; line-height:1.15; margin:52px 0 8px; text-wrap:balance; }
+  h2 .n{ color:var(--menta); margin-right:8px; font-variant-numeric:tabular-nums; }
+  h3{ font-size:18.5px; font-weight:700; color:var(--crema); margin:26px 0 6px; }
+  p{ margin:12px 0; }
+  p b{ color:var(--crema); font-weight:700; }
+  .note{ font-size:14px; color:var(--gris-sec); }
+  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 20px; margin:18px 0; }
+  .cita{ border-left:3px solid var(--menta); background:var(--card); border-radius:0 14px 14px 0; padding:16px 18px; margin:18px 0; }
+  .cita p{ margin:0; font-size:16px; color:var(--crema); font-style:italic; }
+  .cita .src{ display:block; margin-top:8px; font-size:12.5px; color:var(--gris-sec); font-style:normal; }
+  .cita .src a{ color:var(--menta); text-decoration:none; }
+  .tblwrap{ overflow-x:auto; background:var(--card); border:1px solid var(--bd); border-radius:14px; margin:16px 0; }
+  table{ border-collapse:collapse; width:100%; font-size:14px; font-variant-numeric:tabular-nums; }
+  th,td{ padding:10px 12px; text-align:left; border-bottom:1px solid var(--bd); vertical-align:top; }
+  th{ font-size:11.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; }
+  tr:last-child td{ border-bottom:none; }
+  td.num, th.num{ text-align:right; white-space:nowrap; }
+  .good{ color:var(--menta); font-weight:700; }
+  .bad{ color:var(--rojo); font-weight:700; }
+  .obj{ border:1px solid var(--bd); border-radius:16px; margin:20px 0; overflow:hidden; }
+  .obj .q{ background:var(--card2); padding:14px 18px; font-weight:700; color:var(--crema); font-size:16.5px; border-left:4px solid var(--rojo); }
+  .obj .a{ padding:6px 18px 14px; background:var(--card); }
+  ul{ margin:10px 0; padding-left:22px; }
+  li{ margin:8px 0; }
+  li::marker{ color:var(--menta); }
+  .punchline{ background:linear-gradient(180deg,#16231c,#111722); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:20px 22px; margin:22px 0; }
+  .punchline p{ margin:0; font-size:clamp(16.5px,3.6vw,19px); color:var(--crema); font-weight:600; line-height:1.55; }
+  .punchline p b{ color:var(--menta); }
+  .cta{ display:flex; flex-wrap:wrap; gap:12px; margin:30px 0 8px; }
+  .btn{ flex:1 1 240px; text-align:center; background:var(--menta); color:#082018; border:none; border-radius:12px;
+    padding:14px 18px; font-size:16px; font-weight:700; font-family:inherit; cursor:pointer; text-decoration:none; }
+  .btn:hover{ filter:brightness(1.06); }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); }
+  .btn.ghost:hover{ border-color:var(--menta); color:var(--crema); }
+  .refs{ font-size:13px; color:var(--gris-sec); line-height:1.7; }
+  .refs a{ color:var(--menta); text-decoration:none; }
+  .foot{ font-size:12px; color:var(--gris-sec); line-height:1.6; text-align:center; margin-top:44px; border-top:1px solid var(--bd); padding-top:22px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+
+  <div class="eyebrow">Documento de investigación · Se lee en ~15 minutos</div>
+  <h1>La ciencia detrás de los <em>Freedom Point Funds</em></h1>
+  <p class="lede">Dos papers premiados (uno de Yale, otro ganador del Dow Award) llegaron a la misma conclusión incómoda: <b>el plan de retiro típico está armado al revés</b>. Acá te los explicamos como un amigo, citamos dónde coincidimos, marcamos dónde nos separamos, y respondemos la pregunta obvia: si esto es tan bueno, ¿por qué no lo hace Vanguard?</p>
+  <p class="meta">Empowered Investor · Agosto 2026 · Fuentes citadas al final, todas públicas y verificables</p>
+
+  <!-- ============================================ -->
+  <h2><span class="n">1</span>La idea en 60 segundos</h2>
+  <p>Cuando tenés 30 años y $20,000 ahorrados, tu verdadera riqueza no son esos $20,000. Son los cientos de miles que vas a aportar en las próximas décadas. Visto así, tener el 100% de tu cuentita en acciones equivale a tener <b>menos del 10% de tu riqueza real</b> expuesta al mercado. Estás subinvertido justo cuando una caída menos te duele.</p>
+  <p>De ahí salen las tres piezas de este documento:</p>
+  <ul>
+    <li><b>Yale dice:</b> apalancate de joven y desapalancate según tu avance a la meta. Eso <b>reduce</b> el riesgo de retiro, no lo aumenta.</li>
+    <li><b>El Dow Award dice:</b> el apalancamiento no "se pudre" con el tiempo. Lo mata la volatilidad. Y hay una forma sistemática de esquivar los regímenes de volatilidad alta.</li>
+    <li><b>Nosotros agregamos:</b> un piso de renta fija con candado que asegura lo ganado, la medición del riesgo como la hace un fondo de pensiones, y una estructura donde todo pasa en <b>tu propia cuenta</b>, con protección SIPC y sin penalidades de retiro.</li>
+  </ul>
+
+  <!-- ============================================ -->
+  <h2><span class="n">2</span>El paper de Yale: te faltaba diversificar en el tiempo</h2>
+  <p class="note">Ian Ayres y Barry Nalebuff, "Life-Cycle Investing and Leverage: Buying Stock on Margin Can Reduce Retirement Risk" (NBER Working Paper 14094, 2008; después el libro <i>Lifecycle Investing</i>, 2010). Datos desde 1871.</p>
+
+  <p>El paper abre sin anestesia:</p>
+  <div class="cita">
+    <p>"La decisión típica de cómo invertir los ahorros de retiro está fundamentalmente errada."</p>
+    <span class="src">Ayres y Nalebuff (2008), p. 1. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener">SSRN 1149340</a></span>
+  </div>
+  <p>Su argumento es de una lógica que da rabia no haber visto antes. Todos aceptamos diversificar entre acciones y entre países. Pero hay una dimensión que casi nadie diversifica: <b>el tiempo</b>. La persona típica tiene poquísimo invertido a los 25 y muchísimo a los 60. El resultado es que tu retiro termina dependiendo de cómo le vaya al mercado en tus últimos 10 años de trabajo, que es exactamente cuando menos margen de maniobra tenés.</p>
+  <p>¿Y cómo invertís más cuando sos joven y no tenés plata? Con la misma herramienta que usás para comprar casa:</p>
+  <div class="cita">
+    <p>"Es el patrón típico de los bienes raíces: el joven saca una hipoteca y compra la casa apalancado. Proponemos que la gente siga un modelo similar con las acciones."</p>
+    <span class="src">Ayres y Nalebuff (2008), p. 2</span>
+  </div>
+  <p>Nadie llama "apostador" al que compra casa con 20% de prima y 80% de deuda. Pero decí que vas a comprar acciones 2 a 1 y te miran raro. Los autores proponen exactamente eso: <b>2:1 de joven</b>, y después bajar el apalancamiento en fases, según cuánto llevás de <b>tu meta final</b>. No según tu edad. Según tu avance.</p>
+
+  <h3>Los resultados (y esto es lo fuerte)</h3>
+  <p>Simularon 94 generaciones de trabajadores desde 1871, cada una con sus 44 años reales de mercado. Contra el fondo life-cycle típico (90% acciones de joven bajando a 50%) y contra el 100% acciones:</p>
+  <ul>
+    <li>Riqueza esperada al retiro: <b>+90%</b> contra el life-cycle y <b>+19%</b> contra 100% acciones. Suficiente para <b>retirarse casi 6 años antes</b>, o mantener el nivel de vida 27 años más (Abstract).</li>
+    <li>Le ganó al life-cycle en <b>las 94 de 94 generaciones</b>. Al 100% acciones, en 89 de 94 (Tabla VIII).</li>
+    <li>Y el dato que desarma la objeción de riesgo: <b>el peor caso también mejoró</b>. El mínimo histórico fue 7.4% más alto, y el percentil 10 quedó 23.4% más alto (Tabla V). En términos técnicos: dominancia estocástica de primer orden. En términos de amigo: mejor en los mundos buenos <b>y</b> en los malos.</li>
+  </ul>
+  <p>¿Y la Gran Depresión? Es su mejor ejemplo, no su excepción. El trabajador que empezó a trabajar en 1931 perdió <b>86.5% en su primer año</b>, apalancado y todo. ¿Sabés qué era eso? Un porcentaje enorme de un monto diminuto. Siguió el plan, y se retiró en 1974 con $441,636, por encima de la mediana de quien fue 100% acciones toda la vida (p. 23). Y el que se retiró en 1932, en plena catástrofe, ya estaba desapalancado desde años antes, porque el sistema desapalanca <b>al acercarte a la meta</b>. Ahí está la clave que repetimos en todo nuestro trabajo: el orden de las caídas importa menos que el tamaño de tu cuenta cuando llegan.</p>
+  <p>Probaron robustez con saña: le recortaron 2.5 puntos al retorno de las acciones y la ventaja se mantuvo (Tabla XIII). Lo corrieron sobre el FTSE inglés y el Nikkei japonés, y la ventaja se mantuvo (Tabla XIV). El Nikkei, el mercado que colapsó 30 años, dio +29.9% de riqueza media.</p>
+
+  <!-- ============================================ -->
+  <h2><span class="n">3</span>El paper del Dow Award: al apalancamiento no lo mata el tiempo, lo mata la volatilidad</h2>
+  <p class="note">Michael Gayed, "Leverage for the Long Run" (ganador del Charles H. Dow Award 2016, actualizado a 2020). Datos diarios del S&P 500 desde 1928.</p>
+
+  <p>Este paper destruye el mito favorito de los que odian los ETFs apalancados: el famoso "decay". La creencia de que un 3× diario, por pura matemática, tiende a cero con el tiempo. Gayed lo midió desde 1928:</p>
+  <div class="cita">
+    <p>"No existe una forma natural de decay del apalancamiento per se... Un dólar en el S&P 500 desde 1928 se convirtió en $4,059. En el 3× diario, en $2,763,322: 681 veces más que el índice sin apalancar."</p>
+    <span class="src">Gayed (2016), p. 3 y Tabla 1. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2741701" target="_blank" rel="noopener">SSRN 2741701</a></span>
+  </div>
+  <p>Entonces, ¿de dónde sale la mala fama? De algo real: la <b>trampa del apalancamiento constante</b>. Cuando el mercado serrucha (sube, baja, sube, baja), el rebalanceo diario te hace comprar caro y vender barato una y otra vez. Su ejemplo de agosto 2011 es brutal: en seis días el S&P terminó +0.51%, y el 3× terminó <b>−2.02%</b> (Tabla 2). La volatilidad extrema convierte al apalancado en una picadora.</p>
+  <p>Su hallazgo central: eso pasa en regímenes de volatilidad alta, y los regímenes se pueden identificar de forma sistemática con algo tan viejo como un promedio móvil. Con datos desde 1928: cuando el S&P está arriba de su promedio de 200 días, la volatilidad anualizada ronda el 14.6%. Abajo, salta a 26.9% (Gráfico 3). Y el 65-74% de los peores días de la historia, incluidos el 28 de octubre de 1929 y el 19 de octubre de 1987, llegaron con el mercado <b>ya abajo</b> de sus promedios móviles (Gráfico 6).</p>
+  <div class="cita">
+    <p>"La volatilidad es la enemiga del apalancamiento... Las condiciones bajo las cuales el apalancamiento logra retornos superiores son los ambientes de baja volatilidad, que tienden a encadenar retornos positivos consecutivos."</p>
+    <span class="src">Gayed (2016), Abstract</span>
+  </div>
+  <p>Su estrategia (la llama LRS): apalancado cuando el índice está arriba del promedio móvil, a letras del tesoro cuando está abajo. El resultado desde 1928 (Tabla 8): el 3× con filtro rindió <b>26.7% anual</b> contra 9.4% del S&P, con mejor Sharpe (0.61 vs 0.32) y con drawdowns <b>menores que el S&P sin apalancar</b> en los cuatro peores mercados bajistas de la historia (Tabla 9): en 1929-32 el S&P cayó 86.2% y el 3× con filtro cayó 49.6%; en 2000-02, 47.4% contra 27.3%; en 2008, 55.2% contra 31.1%.</p>
+  <p>Y una honestidad que le da credibilidad: admite que el filtro <b>pierde</b> contra comprar y mantener en los mercados alcistas puros (Tabla 4), y que su valor casi entero está en la defensa:</p>
+  <div class="cita">
+    <p>"Ahí está el mayor valor del promedio móvil: minimizar el riesgo y aumentar la probabilidad de mantenerse en la estrategia a lo largo del tiempo... porque la falla no dicha del buy and hold es que casi nadie aguanta los drawdowns grandes."</p>
+    <span class="src">Gayed (2016), p. 14</span>
+  </div>
+  <p>Su sección "Risk of Ruin" lo ilustra con el número más aterrador del documento: $10,000 puestos en el 3× sin filtro en el pico de 1929 valían <b>$5.74</b> en 1942 (p. 19). El apalancamiento sin sistema es exactamente la ruleta que la gente teme. Con sistema, es otra cosa.</p>
+
+  <!-- ============================================ -->
+  <h2><span class="n">4</span>Y el tercero en discordia: los target-date funds están al revés</h2>
+  <p>Rob Arnott (Research Affiliates) lo mostró en "The Glidepath Illusion" (2012) con 141 años de datos: el diseño estándar de los fondos con fecha objetivo, mucha acción de joven pobre y poca de viejo con plata acumulada, es tan malo que hasta el glidepath <b>invertido</b> termina con más plata. No le dedicamos más espacio porque, francamente, después de leer a Yale el punto es evidente: si tu exposición al mercado depende de tu edad y no de tu avance a la meta, estás mirando la aguja equivocada. Nuestro propio estudio lo confirmó: con el mismo aporte mensual, el target-date típico llegó a la meta el <b>37%</b> de las veces en la mejor era de la historia. Nuestro sistema, el 94%.</p>
+
+  <!-- ============================================ -->
+  <h2><span class="n">5</span>Dónde coincidimos (con cita) y dónde nos separamos</h2>
+
+  <h3>Las coincidencias</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Lo que hacemos</th><th>Quién lo respalda</th></tr></thead>
+    <tbody>
+      <tr><td>Empezar la vida inversora <b>apalancado</b>, porque tu activo real son tus aportes futuros</td><td>Ayres-Nalebuff: "cualquier ahorro de retiro que exista debería invertirse inicialmente de forma apalancada" (p. 3)</td></tr>
+      <tr><td>Desapalancar <b>por avance a la meta</b>, no por edad</td><td>Ayres-Nalebuff: sus 4 fases se definen por el % del objetivo alcanzado, exactamente como nuestro φ (pp. 10-11)</td></tr>
+      <tr><td>Apalancado <b>solo</b> en régimen de tendencia; a resguardo cuando el mercado quiebra su promedio</td><td>Gayed: la LRS completa, y "la volatilidad es la enemiga del apalancamiento" (Abstract, Tablas 8-9)</td></tr>
+      <tr><td>El riesgo real es <b>conductual</b>: abandonar en el fondo</td><td>Gayed: "casi nadie aguanta los drawdowns grandes" (p. 14); Ayres-Nalebuff: "fuerte aversión psicológica a hipotecar el retiro" (p. 31)</td></tr>
+      <tr><td>El diseño por edad de los TDF no resiste los datos</td><td>Arnott (2012), 141 años</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Las diferencias (y por qué)</h3>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Tema</th><th>Ellos</th><th>Nosotros</th></tr></thead>
+    <tbody>
+      <tr><td><b>Nivel de apalancamiento</b></td><td>Yale propone máximo 2:1, en parte por los costos de margen de su época y porque el costo marginal de pasar de 3:1 a 4:1 se les disparaba (Tabla II)</td><td>Usamos 3× vía ETF listado (TQQQ), pero <b>solo en la fase inicial</b> y con el filtro de tendencia encima. Las dos protecciones que a ellos les faltaban hacen tolerable el escalón extra. Y para el perfil conservador, el sistema baja a 2× o desapalanca antes: es una perilla, no un dogma.</td></tr>
+      <tr><td><b>Qué pasa con lo ganado</b></td><td>Ninguno de los dos papers asegura las ganancias: el portafolio queda expuesto de por vida</td><td>Piso de renta fija con <b>candado</b>: lo que entra al piso no vuelve a arriesgarse jamás. Es la práctica de los fondos de pensiones (asegurar el pasivo, dejar crecer el excedente) llevada a una persona.</td></tr>
+      <tr><td><b>La señal del filtro</b></td><td>Gayed: promedio móvil de 200 días sobre el propio S&P, decisión diaria</td><td>Máximo de 39 semanas con histéresis (salir a −18%, reentrar a −6%), señal calculada sobre el Nasdaq y ejecutada en todo el portafolio, decisión semanal. Menos señales falsas, y validada fuera de muestra en 1971-1989, datos que la señal jamás vio.</td></tr>
+      <tr><td><b>Qué se optimiza</b></td><td>Riqueza esperada y utilidad (Yale); retorno ajustado por riesgo (Gayed)</td><td><b>Probabilidad de fondear tu ingreso</b> a una fecha. Como un fondo de pensiones: la aguja es el funded ratio, no el retorno. Cambia las decisiones en los bordes.</td></tr>
+      <tr><td><b>Vehículo</b></td><td>Yale sugiere margen, futuros u opciones LEAP; Gayed, ETFs apalancados</td><td>ETFs listados y renta fija, en <b>tu cuenta a tu nombre</b>. Nada de margen directo, sin margin calls, sin derivados exóticos.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="punchline"><p>En una frase: tomamos el <b>cuándo apalancar</b> de Yale, el <b>cuándo esconderse</b> de Gayed, y les agregamos lo que un fondo de pensiones le exigiría a cualquier plan: <b>un piso que asegure lo prometido</b>.</p></div>
+
+  <!-- ============================================ -->
+  <h2><span class="n">6</span>Pensemos en contra: las objeciones fuertes</h2>
+  <p>Un documento así solo sirve si ataca sus propios puntos débiles. Van las siete que más escuchamos, con la mejor respuesta que tenemos y con lo que queda honestamente en el debe.</p>
+
+  <div class="obj">
+    <div class="q">1 · "Los ETFs apalancados se desgastan solos. Son para traders, no para años."</div>
+    <div class="a"><p>Es el mito que Gayed midió y desarmó: $1 → $2.7 millones en el 3× desde 1928, 681 veces el índice (Tabla 1). Lo que sí existe es la trampa de la volatilidad: el serrucho destruye al apalancado (su ejemplo de 2011: índice +0.51%, 3× −2.02%). Por eso el apalancado de nuestro sistema vive bajo dos guardianes: el filtro de tendencia que lo saca en los regímenes malos, y el glidepath que lo abandona por completo cuando tu capital ya es grande. El decay sin sistema es real y letal. Con sistema, está cobrado en los números que mostramos.</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">2 · "Nadie aguanta ver su cuenta cayendo 60 u 80 por ciento."</div>
+    <div class="a"><p>Cierto, y los dos papers lo dicen con todas las letras: casi nadie aguanta los drawdowns grandes (Gayed, p. 14). Nuestra respuesta tiene tres capas. Primera: las caídas grandes del sistema ocurren <b>temprano, cuando el monto en dólares es chico</b>; el trabajador de Yale que perdió 86.5% en 1931 perdió casi nada en plata y se retiró millonario (p. 23). Segunda: el piso con candado te muestra una parte de la cuenta que <b>solo sube</b>, algo que ningún paper de los citados ofrece. Tercera: el filtro reduce la caída típica de −81% a −47% en nuestra simulación. Y aun así, esta objeción es la más seria de todas. Por eso el perfil se elige con vos y no para vos, y por eso existe un asesor que te contesta el teléfono en el fondo del ciclo. Gayed lo dijo mejor: el valor del sistema es "aumentar la probabilidad de mantenerse en la estrategia".</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">3 · "Todo backtest es bonito. El futuro puede ser distinto."</div>
+    <div class="a"><p>De acuerdo, y por eso importa qué tan lejos se estiró la prueba. Yale le recortó 2.5 puntos al retorno accionario y la conclusión aguantó; la corrió en Inglaterra y en Japón y aguantó (Tablas XIII-XIV). Nosotros estiramos nuestra propia simulación a 100 años de datos reales, incluyendo 1929, la estanflación y financiamiento a tasas históricas, y encontramos dos cosas: las probabilidades absolutas bajan para todos si la era es mala (ahí la perilla es el aporte mensual), pero <b>el orden nunca cambia</b>: el sistema le ganó a las alternativas clásicas en todas las épocas probadas. Y el filtro pasó el examen más duro que se le puede poner: parámetros congelados, corrido sobre 1971-1989, años que jamás vio, y funcionó.</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">4 · "Si es tan bueno, ¿por qué no lo hace todo el mundo?"</div>
+    <div class="a"><p>Los propios papers contestan. Gayed dedica su introducción a la "aversión al apalancamiento": la palabra margen evoca 1929, 1987, 2008, y esa memoria disponible espanta, aunque la matemática diga otra cosa (pp. 1-2). Y Ayres-Nalebuff cierran su paper con la frase que mejor lo resume:</p>
+    <div class="cita" style="margin:12px 0">
+      <p>"Nos enseñaron a pensar las inversiones apalancadas como especulación de corto plazo, y no como diversificación de largo plazo. El resultado es que la mayoría tiene muy poca diversificación en el tiempo... y el costo de ese error es sustancial."</p>
+      <span class="src">Ayres y Nalebuff (2008), p. 31</span>
+    </div>
+    <p>La anomalía persiste precisamente porque es incómoda. Las que se arbitran rápido son las cómodas.</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">5 · "¿Y por qué Vanguard no lo hace mejor y más barato?"</div>
+    <div class="a"><p>Porque legalmente no puede, y comercialmente no le conviene. No lo decimos nosotros, lo dice Yale:</p>
+    <div class="cita" style="margin:12px 0">
+      <p>"Las regulaciones actuales efectivamente impiden que la gente siga nuestro consejo en sus 401(k)... el empleador podría perder su inmunidad legal si un juez considera imprudente alguna de las opciones del plan... Bajo la Investment Company Act, los fondos mutuos tienen prohibido comprar cualquier valor a margen."</p>
+      <span class="src">Ayres y Nalebuff (2008), pp. 3 y 13</span>
+    </div>
+    <p>Gayed agrega la otra mitad: planes de pensión, fondos mutuos y endowments "simplemente no pueden endeudarse más allá del valor de sus activos por mandato y regulación" (p. 1). Sumale que el fondo default de un 401(k) se diseña para no ser demandado, no para maximizar tu probabilidad de retiro; que TQQQ entero es una gota para los billones de Vanguard; y que un producto de masas no puede sentarse con cada cliente cuando la pantalla marca −60%. Ninguna de esas cuatro barreras aplica a una cartera individual con asesor. La matemática lleva 15 años publicada y premiada. El vehículo masivo es lo que la ley no deja construir. Ayres y Nalebuff hasta se quejan de la ironía: dos tercios de los 401(k) te dejan endeudarte para consumir hoy, pero ninguno para invertir en tu futuro (p. 31).</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">6 · "¿Y el piso? ¿Qué pasa si el emisor no paga?"</div>
+    <div class="a"><p>La objeción más justa contra nuestra pieza propia. El piso de renta fija es una promesa contractual de un emisor, y nuestro estudio le puso número al supuesto: cumplirse vale entre 6 y 12 puntos de probabilidad contra usar bonos corporativos de mercado. Lo decimos de frente en vez de esconderlo: es el supuesto más fuerte del sistema, se diversifica dosificándolo, y el resto del portafolio (la parte de mercado) vive en instrumentos listados en tu propia cuenta, donde el riesgo del emisor no existe.</p></div>
+  </div>
+
+  <div class="obj">
+    <div class="q">7 · "Esto lo puedo armar yo solo leyendo los papers."</div>
+    <div class="a"><p>Podés, y ojalá más gente lo hiciera: las fuentes están al final. Lo que la evidencia sugiere es que el eslabón débil nunca fue el acceso a la información. Es ejecutar la señal todas las semanas durante 25 años, desapalancar cuando toca aunque el mercado esté eufórico, no vender en el pánico, y recalibrar el plan cuando tu vida cambia. Gayed lo repite: el sistema vale por la probabilidad de <b>quedarte</b> en él. Nuestro trabajo es exactamente ese: el sistema más la disciplina, con alguien del otro lado.</p></div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2><span class="n">7</span>Cómo funciona con Empowered Investor</h2>
+  <p>Todo lo anterior sería teoría sin una estructura donde ejecutarlo. La nuestra es deliberadamente aburrida:</p>
+  <ul>
+    <li><b>La cuenta es tuya, a tu nombre.</b> No es un fondo común donde entrás y salís según las reglas de otro. Abrimos una cuenta de corretaje internacional a tu nombre, con protección <b>SIPC de hasta $500,000</b> ante quiebra del custodio. Nosotros asesoramos y ejecutamos la estrategia; la plata nunca deja de ser tuya.</li>
+    <li><b>Sin penalidades de retiro.</b> Un 401(k) o IRA te encierra hasta los 59½ años con multa del 10% por salir antes. Irónico para un plan cuyo objetivo es retirarte a los 48 o 52. Tu cuenta no tiene edad mínima: cuando llegás a tu freedom point, empezás a vivir de él, tengas la edad que tengas.</li>
+    <li><b>Instrumentos listados, nada exótico.</b> ETFs que cotizan en bolsa americana (los mismos SSO/UPRO/TQQQ que estudia el paper del Dow Award) más el piso de renta fija. Sin margen directo, sin margin calls, sin derivados a medida.</li>
+    <li><b>La parte que la ley le prohíbe al fondo masivo, a tu cuenta personal no se la prohíbe nadie.</b> Esa es la asimetría completa de la objeción 5, y es la razón de que este plan exista como asesoría y no como fondo de Vanguard.</li>
+    <li><b>Costos a la vista.</b> Los mismos que usa la calculadora pública de este sitio en todas sus simulaciones: nada que descubras en la letra chica del año 3.</li>
+    <li><b>Y el perfil se elige con vos.</b> Desde "no quiero sorpresas" (desapalancar temprano) hasta "quiero retirarme lo antes posible". El sistema es el mismo; las perillas son tuyas.</li>
+  </ul>
+
+  <div class="punchline"><p>El resumen del resumen: Yale demostró el <b>cuándo apalancar</b>. El Dow Award demostró el <b>cuándo esconderse</b>. Los fondos de pensiones llevan décadas asegurando el pasivo con un piso. Nosotros juntamos las tres piezas en tu propia cuenta, y la ley que le impide esto a los fondos gigantes no tiene nada que decir sobre la tuya.</p></div>
+
+  <div class="cta">
+    <a class="btn" href="/retiro/">Armá tu plan en la calculadora →</a>
+    <a class="btn ghost" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos" target="_blank" rel="noopener">Conversemos tu caso (30 min) →</a>
+  </div>
+
+  <!-- ============================================ -->
+  <h2><span class="n">8</span>Fuentes</h2>
+  <p class="refs">
+    Ayres, I. y Nalebuff, B. (2008). <i>Life-Cycle Investing and Leverage: Buying Stock on Margin Can Reduce Retirement Risk.</i> NBER Working Paper 14094. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener">SSRN 1149340</a> · <a href="https://www.nber.org/papers/w14094" target="_blank" rel="noopener">NBER</a>. Versión libro: <i>Lifecycle Investing</i> (Basic Books, 2010).<br>
+    Gayed, M. (2016, act. 2020). <i>Leverage for the Long Run: A Systematic Approach to Managing Risk and Magnifying Returns in Stocks.</i> Charles H. Dow Award 2016. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2741701" target="_blank" rel="noopener">SSRN 2741701</a>.<br>
+    Arnott, R., Sherrerd, K. y Wu, L. (2013). <i>The Glidepath Illusion... and Potential Solutions.</i> The Journal of Retirement 1(2). <a href="https://www.researchaffiliates.com/content/dam/ra/publications/pdf/241-the-glidepath-illusion.pdf" target="_blank" rel="noopener">PDF público</a>.<br>
+    Nuestro estudio interno (simulaciones con el motor de la calculadora, 1990-2025 y 1926-2026, timing fuera de muestra): resumen publicado al pie de <a href="/retiro/">investorcr.com/retiro</a>; detalle completo disponible a quien lo pida.
+  </p>
+
+  <p class="foot">Empowered Investor · Documento educativo. Las citas de los papers son traducciones nuestras de los originales en inglés, con página y tabla indicadas para que las verifiqués. Los resultados pasados y simulados no garantizan resultados futuros; toda inversión implica riesgo, y los instrumentos apalancados pueden caer con violencia en el camino. Nada de esto constituye una recomendación individual de inversión: para eso está la conversación, no la página.</p>
+</div>
+</body>
+</html>
