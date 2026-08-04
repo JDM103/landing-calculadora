@@ -54,14 +54,6 @@
   .firma{ margin-top:26px; color:var(--crema); font-weight:600; }
   .pd{ font-size:15px; color:var(--gris-sec); border-left:3px solid var(--bd); padding-left:14px; margin:18px 0; }
   .pd b{ color:var(--gris); }
-  details{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; margin:26px 0; }
-  summary{ cursor:pointer; font-weight:700; color:var(--crema); font-size:15px; }
-  .tabla-wrap{ overflow-x:auto; margin-top:12px; max-height:420px; overflow-y:auto; }
-  table{ width:100%; border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums; }
-  th,td{ text-align:right; padding:6px 10px; border-bottom:1px solid var(--bd); white-space:nowrap; }
-  th:first-child,td:first-child{ text-align:left; }
-  th{ font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); position:sticky; top:0; background:var(--card); }
-  td{ color:var(--gris); }
   .cta{ display:block; text-align:center; background:var(--menta); color:#082018; border-radius:12px; padding:14px 18px;
     font-size:16px; font-weight:700; text-decoration:none; margin:30px 0 8px; }
   .cta:hover{ filter:brightness(1.06); }
@@ -143,13 +135,6 @@
   <div class="pd"><b>P.D:</b> Pronto les voy a estar escribiendo más sobre cómo vamos a plantear nuestros servicios no solo para crecer por crecer, como lo hemos estado haciendo, sino en cómo implementar estrategias en los portafolios basadas en llegar a una meta concreta, su Freedom Point, o "punto de libertad", donde el portafolio es suficientemente grande para cubrir sus gastos de vida.</div>
 
   <div class="pd"><b>P.D de la P.D:</b> No me gusta mucho lo que evoca normalmente todo lo relacionado a la "Libertad Financiera", pero bien entendida y con una buena estrategia de portafolios detrás, sí es exactamente llegar a una meta que cambia las cosas en la vida laboral.</div>
-
-  <details>
-    <summary>La data, por si querés escarbar (último dato de cada mes)</summary>
-    <div class="tabla-wrap">
-      <table id="tabla"><thead><tr><th>Mes</th><th>Tasa FED</th><th>Bono 2 años</th><th>Diferencia</th></tr></thead><tbody></tbody></table>
-    </div>
-  </details>
 
   <a class="cta" href="/newsletter/">¿Te lo reenviaron? Suscribite al newsletter →</a>
 
@@ -236,20 +221,6 @@ document.getElementById("rangos").addEventListener("click", e=>{
   draw();
 });
 
-// ===== tabla: último dato de cada mes =====
-(function(){
-  const tb = document.querySelector("#tabla tbody");
-  const meses=["ene","feb","mar","abr","may","jun","jul","ago","set","oct","nov","dic"];
-  const porMes = new Map();
-  for(const r of D){ const f=fecha(r); porMes.set(f.getFullYear()*12+f.getMonth(), r); }
-  const filas=[...porMes.entries()].sort((a,b)=>b[0]-a[0]);
-  let html="";
-  for(const [k,r] of filas){
-    const y=Math.floor(k/12), m=k%12, s=(r[2]-r[1])/100;
-    html += "<tr><td>"+meses[m]+" "+y+"</td><td>"+fmtPct(r[1])+"</td><td>"+fmtPct(r[2])+"</td><td>"+(s>=0?"+":"")+s.toFixed(2)+"</td></tr>";
-  }
-  tb.innerHTML=html;
-})();
 </script>
 </body>
 </html>
