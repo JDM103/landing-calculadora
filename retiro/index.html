@@ -889,7 +889,7 @@ function renderGeneralMode(mode){
     Array.prototype.forEach.call(out.querySelectorAll("button[data-mode]"),function(b){ b.addEventListener("click",function(){ renderGeneralMode(b.getAttribute("data-mode")); }); });
     Array.prototype.forEach.call(out.querySelectorAll("button[data-gen]"),function(bt){ bt.addEventListener("click",function(){ var r=window.__gen[bt.getAttribute("data-gen")]; aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); }); });
     var tblRows=res.filter(function(r){return r.pMeta>=80;}); if(tblRows.length<10) tblRows=res;
-    sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"ddFPpre", sortDir:1, cols:planCols(true),
+    sortableTable(byId("general-tbl"), { rows:tblRows, top:50, sortKey:"pMeta", sortDir:-1, cols:planCols(true),
       onClick:function(r){ aplicarCombo(r.f1,r.f2,r.f3,r.p1,r.p2,r.ff,r.tim); },
       note:'Planes que llegan de forma fiable (prob. ≥80%), top 50. Ordenada por <b>Caída antes FP</b> (nuestra prioridad — la caída que puede retrasar tu meta). La columna <b>después</b> es sobre el excedente (ya sos libre). También podés ordenar por años, probabilidad, piso, típico… <b>Tocá una fila</b> para cargarlo arriba.' });
 }
