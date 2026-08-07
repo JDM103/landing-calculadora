@@ -143,7 +143,7 @@
 "use strict";
 var BASE="https://jsjhfiakinodosesdqum.supabase.co/functions/v1";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzamhmaWFraW5vZG9zZXNkcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNjY5NTQsImV4cCI6MjEwMTY0Mjk1NH0.MfXXQ6QFx_OudI5Bj9Sr7yw5PRTv_O45NQ_X24tuqLU";
-var DATOS=null, SELECC=null, HORIZONTE="1A", MODOG="cap", CACHE_HIST={};
+var DATOS=null, SELECC=null, HORIZONTE="1A", MODOG="cap", CACHE_HIST={}, CACHE_ORD={};
 var SORT={k:"nombre", d:1};
 var PRIV=sessionStorage.getItem("panel_priv")==="1";
 function nomDe(c){ return PRIV ? "••••••••" : c.nombre; }
@@ -177,7 +177,13 @@ function faseDe(phi, plan){
   return {t:"Llegada", c:"f3"};
 }
 function capIniDe(c){ return (c.meta && +c.meta.capital_inicial) || 0; }
-function aportadoDe(c){ return c.snap ? c.snap.aportado_total + capIniDe(c) : 0; }
+function aportadoDe(c){ if(!c.snap) return 0;
+  var fo=c.snap.cuenta && c.snap.cuenta.fondeos;
+  var base = (fo && fo.length && typeof fo[0].c!=="undefined")
+    ? fo.reduce(function(s,x){ return s + (x.c ? x.m : 0); }, 0)
+    : c.snap.aportado_total;
+  return base + capIniDe(c); }
+function escapa(t){ return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function diaDe(c){ if(!c.snap||!c.snap.cuenta||!c.snap.cuenta.last_equity) return null;
   var d=c.snap.equity-c.snap.cuenta.last_equity;
   return {usd:d, pct:c.snap.cuenta.last_equity>0? d/c.snap.cuenta.last_equity*100:0}; }
@@ -250,7 +256,7 @@ async function serieDe(alias, hz){
   if(pf.length){ var b=pf[0]; pf=pf.map(function(v){return v/b*100;}); }
   return {t:t, eq:eq, perf:pf};
 }
-function dibujar(h){
+function dibujar(h, hover){
   var cv=$("cv-hist"); if(!cv) return;
   var msg=document.querySelector(".grafico .msg"); if(msg) msg.remove();
   var dpr=Math.max(1,window.devicePixelRatio||1), W=cv.clientWidth, H=cv.clientHeight;
@@ -278,6 +284,28 @@ function dibujar(h){
   x.fillText(esPerf? "rendimiento "+pct(ch) : money(v1)+" ("+pct(ch)+")", W-padR-2, 14);
   x.textAlign="left"; x.fillStyle="#9AA1AB"; x.font="10px 'Bai Jamjuree'";
   x.fillText(f1, W-padR-70, H-6);
+  // crosshair con el valor bajo el mouse
+  if(typeof hover==="number" && hover>=0 && hover<serie.length){
+    var hx=X(hover), hy=Y(serie[hover]);
+    x.strokeStyle="rgba(255,255,255,.25)"; x.setLineDash([3,3]);
+    x.beginPath(); x.moveTo(hx,padT); x.lineTo(hx,H-padB); x.stroke(); x.setLineDash([]);
+    x.fillStyle="#FEF9F3"; x.beginPath(); x.arc(hx,hy,3.5,0,7); x.fill();
+    var fh=new Date(h.t[hover]*1000).toISOString().slice(0,10);
+    var txt= esPerf ? fh+"  "+pct((serie[hover]/serie[0]-1)*100) : fh+"  "+fmt(serie[hover]);
+    x.font="700 12px 'Bai Jamjuree'";
+    var tw=x.measureText(txt).width+14, bx=Math.min(Math.max(hx-tw/2, padL), W-padR-tw), by=padT+4;
+    x.fillStyle="rgba(13,15,20,.92)"; x.strokeStyle="#2a3140";
+    x.beginPath(); x.roundRect(bx,by,tw,20,6); x.fill(); x.stroke();
+    x.fillStyle= esPerf ? ((serie[hover]>=serie[0])?"#63FCAF":"#E0525A") : "#FEF9F3";
+    x.textAlign="left"; x.fillText(txt, bx+7, by+14);
+  }
+  cv.onmousemove=function(ev){
+    var r=cv.getBoundingClientRect(), mx_=ev.clientX-r.left;
+    var i=Math.round((mx_-padL)/Math.max(1,(W-padL-padR))*(serie.length-1));
+    i=Math.max(0,Math.min(serie.length-1,i));
+    dibujar(h, i);
+  };
+  cv.onmouseleave=function(){ dibujar(h); };
 }
 async function cargarGrafico(){
   var c=DATOS.clientes.filter(function(x){return x.alias===SELECC;})[0]; if(!c) return;
@@ -343,21 +371,28 @@ function renderDet(){
             +'<td class="num '+(typeof p.hoy==="number"?cls(p.hoy):"")+'">'+(typeof p.hoy==="number"?pct(p.hoy):"—")+'</td></tr>';
         }).join("")+'</tbody></table></div>'
         : '<div class="sub">Sin posiciones (todo en efectivo).</div>')
+      +'<div id="ordenes-box"><div class="sub">Cargando órdenes…</div></div>'
       +((cta.fondeos&&cta.fondeos.length)?
-        '<div class="sec">Fondeos (historial completo)</div>'
-        +'<div style="max-height:170px; overflow-y:auto"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th></tr></thead><tbody>'
-        +cta.fondeos.slice().reverse().map(function(x){
+        '<div class="sec">Fondeos (historial completo) <span style="font-weight:400;text-transform:none;letter-spacing:0">— tocá "sí/no" para contar una conversión cripto como fondeo</span></div>'
+        +'<div style="max-height:190px; overflow-y:auto"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th><th>¿Fondeo?</th></tr></thead><tbody>'
+        +cta.fondeos.slice().reverse().map(function(x,ix){
+          var marca = x.t==="cripto" && x.id
+            ? '<button class="fmark" data-fid="'+x.id+'" data-cur="'+(x.c?1:0)+'" style="background:'+(x.c?'rgba(99,252,175,.15)':'var(--input)')+';border:1px solid '+(x.c?'var(--menta)':'var(--bd)')+';color:'+(x.c?'var(--menta)':'var(--gris-sec)')+';border-radius:999px;padding:2px 10px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer">'+(x.c?'✔ sí':'✖ no')+'</button>'
+            : '<span style="color:var(--gris-sec);font-size:11px">✔ sí</span>';
           return '<tr><td class="num" style="font-weight:600">'+x.f+'</td>'
-            +'<td style="text-align:right">'+(x.t==="cripto"?"🪙 cripto → USD":"💵 transferencia")+'</td>'
-            +'<td class="num '+cls(x.m)+'">'+fmt(x.m)+'</td></tr>';
-        }).join("")+'</tbody></table></div>'
+            +'<td style="text-align:right">'+(x.t==="cripto"?"🪙 "+(x.sym||"cripto")+" → USD":"💵 transferencia")+'</td>'
+            +'<td class="num '+cls(x.m)+'">'+fmt(x.m)+'</td>'
+            +'<td style="text-align:right">'+marca+'</td></tr>';
+        }).join("")+'</tbody></table></div><div class="sub" id="fmark-msg"></div>'
         : (trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':''))
       : '<div class="sub">Sin snapshot: dale a Actualizar datos.</div>')
     +'<div class="editcap">Capital inicial (base manual, se suma a las transferencias de Alpaca): '
       +'<span>$</span><input id="capini" inputmode="numeric" value="'+(capIni>0?capIni.toLocaleString("en-US"):"")+'" placeholder="0">'
       +'<button id="capini-go">Guardar</button><span id="capini-msg"></span></div>'
     +'<div class="accion'+(a.calma?' calma':'')+'">'+a.t+'</div>'
-    +((c.notas&&!PRIV)?'<div class="notas">📝 '+c.notas+'</div>':'');
+    +(!PRIV? '<div class="sec">Notas</div>'
+      +'<textarea id="notas-ed" rows="2" style="width:100%;background:var(--input);border:1px solid var(--bd);border-radius:8px;color:var(--ambar);font-family:inherit;font-size:12.5px;padding:8px" placeholder="Notas privadas de este cliente…">'+escapa(c.notas)+'</textarea>'
+      +'<div class="editcap" style="margin-top:6px"><button id="notas-go">Guardar notas</button><span id="notas-msg"></span></div>' : '');
   det.classList.add("abierto");
   var v=$("volver"); if(v) v.addEventListener("click", function(){ det.classList.remove("abierto"); SELECC=null; renderLista(); });
   Array.prototype.forEach.call(document.querySelectorAll(".hbtns button[data-hz]"), function(b){
@@ -380,7 +415,61 @@ function renderDet(){
       renderLista(); renderDet();
     }catch(e){ $("capini-msg").textContent="❌ "+(e.message||e); }
   });
+  Array.prototype.forEach.call(document.querySelectorAll(".fmark"), function(b){
+    b.addEventListener("click", async function(){
+      var id=b.getAttribute("data-fid"), cur=b.getAttribute("data-cur")==="1";
+      var meta=JSON.parse(JSON.stringify(c.meta||{}));
+      meta.fondeos_marcados=meta.fondeos_marcados||{}; meta.fondeos_marcados[id]=!cur;
+      $("fmark-msg").textContent="Guardando…";
+      try{ await llamar("guardar-cliente",{alias:c.alias, meta:meta});
+        c.meta=meta;
+        (c.snap.cuenta.fondeos||[]).forEach(function(x){ if(x.id===id) x.c=!cur?1:0; });
+        renderLista(); renderDet();
+        var m2=$("fmark-msg"); if(m2) m2.textContent="✅ Guardado. TIR e YTD se recalculan al Actualizar datos.";
+      }catch(e){ $("fmark-msg").textContent="❌ "+(e.message||e); }
+    });
+  });
+  var ng=$("notas-go");
+  if(ng) ng.addEventListener("click", async function(){
+    var val=$("notas-ed").value.trim();
+    $("notas-msg").textContent="Guardando…";
+    try{ await llamar("guardar-cliente",{alias:c.alias, notas:val});
+      c.notas=val; $("notas-msg").textContent="✅ Notas guardadas.";
+    }catch(e){ $("notas-msg").textContent="❌ "+(e.message||e); }
+  });
   if(c.snap) cargarGrafico();
+  cargarOrdenes(c);
+}
+function tablaOrd(lista, vacio){
+  if(!lista.length) return '<div class="sub">'+vacio+'</div>';
+  return '<div style="max-height:190px; overflow-y:auto"><table><thead><tr><th>Fecha</th><th>Símbolo</th><th>Lado</th><th>Cant.</th><th>Precio</th><th>Estado</th></tr></thead><tbody>'
+    +lista.map(function(o){
+      var lado=o.lado==="buy"?'<span class="up">compra</span>':'<span class="down">venta</span>';
+      var cant=o.qty? (+o.qty).toLocaleString("en-US") : (o.notional? fmt(o.notional):"—");
+      return '<tr><td class="num" style="font-weight:600">'+o.fecha+'</td><td style="text-align:right;color:var(--crema);font-weight:800">'+o.sym+'</td>'
+        +'<td style="text-align:right">'+lado+'</td><td class="num">'+cant+'</td>'
+        +'<td class="num">'+(o.px?fmt(o.px):"—")+'</td>'
+        +'<td style="text-align:right;color:var(--gris-sec);font-size:11px">'+o.estado+'</td></tr>';
+    }).join("")+'</tbody></table></div>';
+}
+async function cargarOrdenes(c){
+  var box=$("ordenes-box"); if(!box) return;
+  try{
+    if(!CACHE_ORD[c.alias]){
+      CACHE_ORD[c.alias] = location.hash==="#demo"
+        ? {abiertas:[{fecha:"2026-08-07 13:02",sym:"TQQQ",lado:"buy",qty:45,px:null,estado:"accepted"}],
+           historicas:[{fecha:"2026-08-03 14:31",sym:"TQQQ",lado:"buy",qty:11,px:91.8,estado:"filled"},
+                       {fecha:"2026-07-01 14:30",sym:"TQQQ",lado:"buy",qty:10,px:84.2,estado:"filled"}]}
+        : await llamar("ordenes",{alias:c.alias});
+    }
+    var o=CACHE_ORD[c.alias];
+    if(SELECC!==c.alias) return;
+    box.innerHTML=
+      '<div class="sec">Órdenes abiertas'+(o.abiertas.length?' ('+o.abiertas.length+')':'')+'</div>'
+      +tablaOrd(o.abiertas,"Sin órdenes abiertas.")
+      +'<div class="sec">Órdenes históricas (últimas '+Math.min(100,o.historicas.length)+')</div>'
+      +tablaOrd(o.historicas,"Sin órdenes todavía.");
+  }catch(e){ box.innerHTML='<div class="sub">Órdenes: error '+(e.message||e)+'</div>'; }
 }
 
 async function cargar(){
@@ -427,7 +516,7 @@ function demo(){
       {alias:"mv-07",activo:true,nombre:"María Vargas",notas:"Quiere subir aporte en enero.",
         meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
-          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto"},{f:"2023-01-05",m:20000,t:"cash"},{f:"2026-08-03",m:1000,t:"cash"}]},
+          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},
           posiciones:[{s:"TQQQ",q:1890,px:92.4,entrada:61.2,v:174636,pnl:58968,pnlp:51.0,hoy:1.37},
                       {s:"SPY",q:15,px:571.1,entrada:512.4,v:8566,pnl:880,pnlp:11.5,hoy:0.42}],
           transferencias_mes:[{fecha:"2026-08-03",monto:1000}]}},
