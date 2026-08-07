@@ -37,16 +37,16 @@
   .toolbar .tot{ font-size:12.5px; color:var(--gris-sec); margin-left:auto; }
   .toolbar .tot b{ color:var(--crema); }
   #estado{ font-size:12px; color:var(--gris-sec); margin:0 0 8px; }
-  .layout{ display:grid; grid-template-columns:minmax(440px,560px) 1fr; gap:14px; align-items:start; }
+  .layout{ display:grid; grid-template-columns:minmax(470px,600px) 1fr; gap:14px; align-items:start; }
   .lista{ background:var(--card); border:1px solid var(--bd); border-radius:14px; overflow:hidden; }
-  .cab, .fila{ display:grid; grid-template-columns:1.25fr .8fr .55fr .55fr .6fr .72fr .62fr; gap:5px; padding:8px 11px; align-items:center; }
+  .cab, .fila{ display:grid; grid-template-columns:1.22fr .76fr .52fr .52fr .56fr .68fr .58fr .42fr; gap:5px; padding:8px 11px; align-items:center; }
   .cab{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800;
     border-bottom:1px solid var(--bd); background:var(--card2); }
   .cab span{ cursor:pointer; user-select:none; }
   .cab span:hover{ color:var(--crema); }
   .cab span.on{ color:var(--menta); }
   @media(max-width:560px){
-    .cab, .fila{ grid-template-columns:1.35fr .85fr .6fr .6fr .7fr; }
+    .cab, .fila{ grid-template-columns:1.3fr .85fr .6fr .6fr .65fr .45fr; }
     .cab span:nth-child(5), .fila > span:nth-child(5),
     .cab span:nth-child(6), .fila > span:nth-child(6){ display:none; }
   }
@@ -131,7 +131,7 @@
     <div class="lista">
       <div class="cab" id="cab">
         <span data-k="nombre">Cliente</span><span data-k="equity">Capital</span><span data-k="dia">Día</span>
-        <span data-k="ytd">YTD</span><span data-k="total">Total</span><span data-k="inicio">Desde</span><span data-k="cash">Cash</span>
+        <span data-k="ytd">YTD</span><span data-k="total">Total</span><span data-k="inicio">Desde</span><span data-k="cash">Cash</span><span data-k="acc">Acc.</span>
       </div>
       <div id="filas"></div>
     </div>
@@ -188,15 +188,15 @@ function diaDe(c){ if(!c.snap||!c.snap.cuenta||!c.snap.cuenta.last_equity) retur
   var d=c.snap.equity-c.snap.cuenta.last_equity;
   return {usd:d, pct:c.snap.cuenta.last_equity>0? d/c.snap.cuenta.last_equity*100:0}; }
 function accionDe(c, senal){
-  if(!c.snap) return {t:"Sin datos todavía.", calma:true};
+  if(!c.snap) return {t:"Sin datos todavía.", calma:true, n:0};
   var plan=c.meta&&c.meta.plan, acc=[];
   if(senal && senal.estado==="fuera" && plan && plan.timing) acc.push("🔴 Señal FUERA: la parte de mercado va a efectivo.");
   if(c.snap.cash>1000) acc.push("Hay "+fmt(c.snap.cash)+" en efectivo para invertir según su fase.");
   var pact=c.meta&&c.meta.aporte_pactado||0;
   var delMes=(c.snap.transferencias_mes||[]).reduce(function(s,t){return s+(t.monto||0);},0);
   if(pact>0 && delMes<pact*0.9) acc.push("Aporte del mes: "+fmt(delMes)+" de "+fmt(pact)+" pactados.");
-  if(!acc.length) return {t:"Sin acciones pendientes.", calma:true};
-  return {t:acc.join(" "), calma:false};
+  if(!acc.length) return {t:"Sin acciones pendientes.", calma:true, n:0};
+  return {t:acc.join(" "), calma:false, n:acc.length};
 }
 
 function renderLista(){
@@ -213,12 +213,16 @@ function renderLista(){
       equity:c.snap?+c.snap.equity:null, cash:c.snap?+c.snap.cash:null,
       dia:dia?dia.pct:null, ytd:(typeof cta.ytd_pct==="number")?cta.ytd_pct:null,
       total:(c.snap&&ap>0)?(c.snap.equity-ap)/ap*100:null,
-      inicio:cta.inicio||null };
+      inicio:cta.inicio||null,
+      acc:accionDe(c, d.senal).n||0 };
   });
   filas.sort(function(a,b){
     var x=a[SORT.k], y=b[SORT.k];
     if(x===null&&y===null) return 0; if(x===null) return 1; if(y===null) return -1;
-    if(x<y) return -SORT.d; if(x>y) return SORT.d; return 0;
+    if(x<y) return -SORT.d; if(x>y) return SORT.d;
+    // empate en acciones pendientes: manda el capital (atender primero la plata grande)
+    if(SORT.k==="acc") return (b.equity||0)-(a.equity||0);
+    return 0;
   });
   Array.prototype.forEach.call(document.querySelectorAll("#cab span"), function(s){
     var on=s.getAttribute("data-k")===SORT.k;
@@ -235,6 +239,7 @@ function renderLista(){
       +'<span class="num '+(r.total!==null?cls(r.total):"")+'">'+(r.total!==null?pct(r.total):"—")+'</span>'
       +'<span class="num" style="font-size:11px">'+(r.inicio?(PRIV?'•••':r.inicio.slice(0,7)):"—")+'</span>'
       +'<span class="num">'+(r.cash!==null?money(r.cash):"—")+'</span>'
+      +'<span class="num">'+(r.acc>0?'<span style="background:rgba(99,252,175,.15);color:var(--menta);font-weight:800;border-radius:999px;padding:1px 8px">⚡'+r.acc+'</span>':'<span style="color:var(--gris-sec)">—</span>')+'</span>'
       +'</div>';
   }).join("") || '<div style="padding:14px" class="ali">Sin clientes.</div>';
   Array.prototype.forEach.call(document.querySelectorAll(".fila"), function(f){
