@@ -331,18 +331,27 @@ function renderDet(){
       +'<div class="grafico"><canvas id="cv-hist"></canvas></div>'
       +'<div class="sec">Posiciones</div>'
       +(pos.length?
-        '<div style="overflow-x:auto"><table><thead><tr><th>Símbolo</th><th>Cant.</th><th>Precio</th><th>Entrada</th><th>Valor</th><th>P&L</th><th>P&L %</th><th>Hoy</th></tr></thead><tbody>'
+        '<div style="overflow-x:auto"><table><thead><tr><th>Símbolo</th><th>Cant.</th><th>Precio</th><th>Entrada</th><th>Valor</th><th>% Port.</th><th>P&L $</th><th>P&L %</th><th>Hoy</th></tr></thead><tbody>'
         +pos.map(function(p){
           var tp=typeof p.pnl==="number";
           return '<tr><td>'+p.s+'</td><td class="num">'+(+p.q).toLocaleString("en-US")+'</td>'
             +'<td class="num">'+(p.px?fmt(p.px):"—")+'</td><td class="num">'+(p.entrada?fmt(p.entrada):"—")+'</td>'
             +'<td class="num">'+fmt(p.v)+'</td>'
+            +'<td class="num" style="color:var(--gris-sec)">'+(c.snap.equity>0?(p.v/c.snap.equity*100).toFixed(1)+"%":"—")+'</td>'
             +'<td class="num '+(tp?cls(p.pnl):"")+'">'+(tp?fmt(p.pnl):"—")+'</td>'
             +'<td class="num '+(tp?cls(p.pnl):"")+'">'+(tp?pct(p.pnlp):"—")+'</td>'
             +'<td class="num '+(typeof p.hoy==="number"?cls(p.hoy):"")+'">'+(typeof p.hoy==="number"?pct(p.hoy):"—")+'</td></tr>';
         }).join("")+'</tbody></table></div>'
         : '<div class="sub">Sin posiciones (todo en efectivo).</div>')
-      +(trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':'')
+      +((cta.fondeos&&cta.fondeos.length)?
+        '<div class="sec">Fondeos (historial completo)</div>'
+        +'<div style="max-height:170px; overflow-y:auto"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th></tr></thead><tbody>'
+        +cta.fondeos.slice().reverse().map(function(x){
+          return '<tr><td class="num" style="font-weight:600">'+x.f+'</td>'
+            +'<td style="text-align:right">'+(x.t==="cripto"?"🪙 cripto → USD":"💵 transferencia")+'</td>'
+            +'<td class="num '+cls(x.m)+'">'+fmt(x.m)+'</td></tr>';
+        }).join("")+'</tbody></table></div>'
+        : (trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':''))
       : '<div class="sub">Sin snapshot: dale a Actualizar datos.</div>')
     +'<div class="editcap">Capital inicial (base manual, se suma a las transferencias de Alpaca): '
       +'<span>$</span><input id="capini" inputmode="numeric" value="'+(capIni>0?capIni.toLocaleString("en-US"):"")+'" placeholder="0">'
@@ -418,7 +427,7 @@ function demo(){
       {alias:"mv-07",activo:true,nombre:"María Vargas",notas:"Quiere subir aporte en enero.",
         meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
-          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2},
+          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto"},{f:"2023-01-05",m:20000,t:"cash"},{f:"2026-08-03",m:1000,t:"cash"}]},
           posiciones:[{s:"TQQQ",q:1890,px:92.4,entrada:61.2,v:174636,pnl:58968,pnlp:51.0,hoy:1.37},
                       {s:"SPY",q:15,px:571.1,entrada:512.4,v:8566,pnl:880,pnlp:11.5,hoy:0.42}],
           transferencias_mes:[{fecha:"2026-08-03",monto:1000}]}},
