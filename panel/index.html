@@ -94,6 +94,10 @@
     padding:8px 11px; font-size:12.5px; color:var(--crema); }
   .accion.calma{ background:rgba(154,161,171,.07); border-color:var(--bd); color:var(--gris-sec); }
   .notas{ margin-top:8px; font-size:12px; color:var(--ambar); }
+  .cap-in{ width:100%; min-width:0; background:transparent; border:1px solid transparent; color:var(--crema);
+    font-family:inherit; font-weight:800; font-size:16px; padding:1px 4px; border-radius:6px; }
+  .cap-in:hover{ border-color:var(--bd); cursor:text; }
+  .cap-in:focus{ outline:none; border-color:var(--menta); background:var(--input); }
   .editcap{ display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12px; color:var(--gris-sec); flex-wrap:wrap; }
   .editcap input{ width:110px; background:var(--input); border:1px solid var(--bd); border-radius:8px; color:var(--crema);
     font-family:inherit; font-size:13px; font-weight:700; padding:5px 8px; text-align:right; }
@@ -352,7 +356,11 @@ function renderDet(){
           ?'<div class="v num '+cls(cta.tir)+'">'+pct(cta.tir)+'</div><div class="s" style="color:var(--gris-sec)">TIR con sus fechas de aporte</div>'
           :'<div class="v num">—</div>')+'</div>'
       +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(c.snap.cash)+'</div></div>'
-      +'<div class="tile"><div class="k">Aportado</div><div class="v num">'+fmt(aportado)+'</div>'+(capIni>0?'<div class="s" style="color:var(--gris-sec)">incluye base manual '+fmt(capIni)+'</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">Aportado</div><div class="v num">'+fmt(aportado)+'</div>'+(capIni>0?'<div class="s" style="color:var(--gris-sec)">incluye el capital inicial</div>':'')+'</div>'
+      +'<div class="tile" style="border-color:rgba(224,176,122,.45)"><div class="k" style="color:var(--ambar)">Capital inicial (editable)</div>'
+        +'<div style="display:flex;align-items:center;gap:2px;margin-top:1px"><b style="font-size:16px;font-weight:800;color:var(--crema)">$</b>'
+        +'<input id="capini" class="cap-in num" inputmode="numeric" value="'+(capIni>0?capIni.toLocaleString("en-US"):"")+'" placeholder="0" aria-label="Capital inicial manual"></div>'
+        +'<div class="s" id="capini-msg" style="color:var(--gris-sec)">escribí y Enter · entra en todos los cálculos</div></div>'
       +'</div>'
       +(fp>0? '<div class="barra"><i style="width:'+Math.min(100,phi*100).toFixed(1)+'%"></i></div>'
         +'<div class="sub num">Avance al freedom point ('+money(fp)+'): <b style="color:var(--crema)">'+(phi*100).toFixed(1)+'%</b></div>'
@@ -413,16 +421,21 @@ function renderDet(){
       Array.prototype.forEach.call(document.querySelectorAll(".hbtns button[data-mg]"),function(x){x.classList.toggle("on",x===b);});
       cargarGrafico(); });
   });
-  var cg=$("capini-go");
-  if(cg) cg.addEventListener("click", async function(){
-    var val=parseInt(($("capini").value||"0").replace(/[^0-9]/g,""),10)||0;
-    var meta=JSON.parse(JSON.stringify(c.meta||{})); meta.capital_inicial=val;
-    $("capini-msg").textContent="Guardando…";
-    try{ await llamar("guardar-cliente",{alias:c.alias, meta:meta});
-      c.meta=meta; $("capini-msg").textContent="✅ Guardado. TIR e YTD se recalculan al Actualizar datos.";
-      renderLista(); renderDet();
-    }catch(e){ $("capini-msg").textContent="❌ "+(e.message||e); }
-  });
+  var ci=$("capini");
+  if(ci){
+    ci.addEventListener("input", function(){ var d2=ci.value.replace(/[^0-9]/g,""); ci.value=d2?Number(d2).toLocaleString("en-US"):""; });
+    ci.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); ci.blur(); } });
+    ci.addEventListener("blur", async function(){
+      var val=parseInt((ci.value||"0").replace(/[^0-9]/g,""),10)||0;
+      if(val===capIniDe(c)) return;
+      var meta=JSON.parse(JSON.stringify(c.meta||{})); meta.capital_inicial=val;
+      $("capini-msg").textContent="Guardando…";
+      try{ await llamar("guardar-cliente",{alias:c.alias, meta:meta});
+        c.meta=meta; renderLista(); renderDet();
+        var m2=$("capini-msg"); if(m2) m2.textContent="✅ guardado · TIR e YTD al Actualizar datos";
+      }catch(e){ var m3=$("capini-msg"); if(m3) m3.textContent="❌ "+(e.message||e); }
+    });
+  }
   Array.prototype.forEach.call(document.querySelectorAll(".fmark"), function(b){
     b.addEventListener("click", async function(){
       var id=b.getAttribute("data-fid"), cur=b.getAttribute("data-cur")==="1";
