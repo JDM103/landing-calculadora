@@ -146,7 +146,7 @@ var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I
 var DATOS=null, SELECC=null, HORIZONTE="1A", CACHE_HIST={};
 var SORT={k:"nombre", d:1};
 var PRIV=sessionStorage.getItem("panel_priv")==="1";
-function nomDe(c){ return PRIV ? c.alias.toUpperCase() : c.nombre; }
+function nomDe(c){ return PRIV ? "••••••••" : c.nombre; }
 document.addEventListener("click", function(e){
   var s=e.target.closest("#cab span"); if(!s||!DATOS) return;
   var k=s.getAttribute("data-k");
@@ -227,7 +227,7 @@ function renderLista(){
       +'<span class="num '+(r.dia!==null?cls(r.dia):"")+'">'+(r.dia!==null?pct(r.dia):"—")+'</span>'
       +'<span class="num '+(r.ytd!==null?cls(r.ytd):"")+'">'+(r.ytd!==null?pct(r.ytd):"—")+'</span>'
       +'<span class="num '+(r.total!==null?cls(r.total):"")+'">'+(r.total!==null?pct(r.total):"—")+'</span>'
-      +'<span class="num" style="font-size:11px">'+(r.inicio?r.inicio.slice(0,7):"—")+'</span>'
+      +'<span class="num" style="font-size:11px">'+(r.inicio?(PRIV?'•••':r.inicio.slice(0,7)):"—")+'</span>'
       +'<span class="num">'+(r.cash!==null?money(r.cash):"—")+'</span>'
       +'</div>';
   }).join("") || '<div style="padding:14px" class="ali">Sin clientes.</div>';
@@ -298,8 +298,8 @@ function renderDet(){
   det.innerHTML=
     '<button class="volver" id="volver">← Volver a la lista</button>'
     +'<h2>'+nomDe(c)+'<span class="chip '+f.c+'">'+f.t+'</span></h2>'
-    +'<div class="sub">'+c.alias+(c.snap?' · dato al '+c.snap.mes:' · sin datos')
-      +(cta.inicio?' · cliente desde '+cta.inicio:'')
+    +'<div class="sub">'+(PRIV?'••••':c.alias)+(c.snap?' · dato al '+c.snap.mes:' · sin datos')
+      +(cta.inicio&&!PRIV?' · cliente desde '+cta.inicio:'')
       +(m.plan?' · plan '+m.plan.f1+"→"+m.plan.f2+"→"+m.plan.f3+" "+m.plan.p1+"/"+m.plan.p2+"/"+m.plan.ff+(m.plan.timing?" + timing":""):'')+'</div>'
     +(c.snap?
       '<div class="tiles">'
