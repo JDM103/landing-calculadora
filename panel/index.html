@@ -402,9 +402,6 @@ function renderDet(){
         }).join("")+'</tbody></table></div><div class="sub" id="fmark-msg"></div>'
         : (trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':''))
       : '<div class="sub">Sin snapshot: dale a Actualizar datos.</div>')
-    +'<div class="editcap">Capital inicial (base manual, se suma a las transferencias de Alpaca): '
-      +'<span>$</span><input id="capini" inputmode="numeric" value="'+(capIni>0?capIni.toLocaleString("en-US"):"")+'" placeholder="0">'
-      +'<button id="capini-go">Guardar</button><span id="capini-msg"></span></div>'
     +'<div class="accion'+(a.calma?' calma':'')+'">'+a.t+'</div>'
     +(!PRIV? '<div class="sec">Notas</div>'
       +'<textarea id="notas-ed" rows="2" style="width:100%;background:var(--input);border:1px solid var(--bd);border-radius:8px;color:var(--ambar);font-family:inherit;font-size:12.5px;padding:8px" placeholder="Notas privadas de este cliente…">'+escapa(c.notas)+'</textarea>'
