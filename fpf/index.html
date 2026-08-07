@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plan de retiro · Empowered Investor</title>
+<title>Freedom Point Funds · Empowered Investor</title>
 <meta name="robots" content="noindex">
-
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Plan de retiro · Empowered Investor">
-<meta property="og:description" content="Freedom Point Fund: un fondo en tu propia cuenta (protegido por el SIPC), con riesgo dinámico que se ajusta a tu edad, ingresos y cercanía a tu meta de retiro.">
+<meta property="og:title" content="Freedom Point Funds · Empowered Investor">
+<meta property="og:description" content="El plan de retiro de principio a fin: la idea, la industria, la solución, el timing, el estudio y todas las objeciones.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
@@ -95,16 +94,137 @@
   .hl{ color:var(--menta); } b{ color:var(--crema); }
   .warnbox{ background:rgba(224,82,90,.10); border:1px solid rgba(224,82,90,.4); border-radius:12px; padding:11px 13px; font-size:13.5px; color:#ffb4b8; }
   .okbox{ background:rgba(99,252,175,.08); border:1px solid rgba(99,252,175,.4); border-radius:12px; padding:12px 14px; font-size:14px; }
+
+  /* ===== FPF: narrativa ===== */
+  .sec{ margin-top:60px; scroll-margin-top:14px; }
+  .sec .eyeb{ font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); }
+  .sec .big{ font-size:clamp(26px,6vw,40px); font-weight:900; line-height:1.06; letter-spacing:-.02em; color:var(--crema); margin:6px 0 10px; text-wrap:balance; }
+  .sec .lede{ font-size:15px; color:var(--gris-sec); max-width:74ch; line-height:1.6; margin:0 0 14px; }
+  .sec .lede b{ color:var(--crema); }
+  .toc{ display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:16px 0 6px; }
+  .toc a{ font-size:12.5px; font-weight:700; color:var(--gris-sec); background:var(--card); border:1px solid var(--bd); border-radius:999px; padding:6px 13px; text-decoration:none; }
+  .toc a:hover{ border-color:var(--menta); color:var(--menta); }
+  .toc a b{ color:var(--menta); margin-right:4px; }
+  .ideas{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin:14px 0; }
+  .idea{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 15px; }
+  .idea .n{ font-size:22px; }
+  .idea h3{ margin:6px 0 4px; font-size:15.5px; color:var(--crema); }
+  .idea p{ margin:0; font-size:13px; color:var(--gris-sec); line-height:1.55; }
+  .idea p b{ color:var(--crema); }
+  .psetbar{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 14px; }
+  .pset{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:999px; padding:9px 16px;
+    font-size:13.5px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .pset:hover{ border-color:var(--menta); color:var(--menta); }
+  .pset small{ display:block; font-size:10.5px; font-weight:600; color:var(--gris-sec); }
+  .objx{ border:1px solid var(--bd); border-radius:14px; overflow:hidden; margin:12px 0; }
+  .objx .q{ background:var(--card2); padding:11px 15px; font-weight:700; color:var(--crema); border-left:3px solid var(--rojo); font-size:14.5px; }
+  .objx.apo .q{ border-left-color:var(--ambar); }
+  .objx .a{ padding:11px 15px; font-size:13.5px; color:var(--gris-sec); background:var(--card); line-height:1.6; }
+  .objx .a b{ color:var(--crema); }
+  .paperes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin:14px 0; }
+  .papel{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 15px; }
+  .papel .src{ font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--menta); }
+  .papel h3{ margin:5px 0 5px; font-size:15px; color:var(--crema); line-height:1.35; }
+  .papel p{ margin:0; font-size:12.5px; color:var(--gris-sec); line-height:1.55; }
+  .papel p b{ color:var(--crema); }
+  .papel a{ color:var(--menta); }
+  .papel ol{ margin:8px 0 0; padding-left:18px; }
+  .papel ol li{ font-size:12.5px; color:var(--gris-sec); line-height:1.6; margin:7px 0; }
+  .papel ol li::marker{ color:var(--menta); font-weight:800; }
+  .papel ol li b{ color:var(--crema); }
+  .papel .logobox{ height:116px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    padding:16px 18px; margin-bottom:12px; background:#F7F3EA; }
+  .papel .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); }
+  .papel .logobox img{ max-height:78px; max-width:92%; }
+  .papel.academia .src, .papel.academia h3{ text-align:center; }
+  .papel.solo{ grid-column:1/-1; justify-self:center; width:100%; max-width:430px; }
+  .papel .cab{ display:flex; gap:14px; align-items:center; margin-bottom:9px; }
+  .sello{ width:78px; height:78px; border-radius:50%; flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; line-height:1; box-shadow:0 0 0 3px rgba(255,255,255,.045), 0 6px 16px rgba(0,0,0,.45); }
+  .sello small{ display:block; font-size:7.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-top:4px; opacity:.9; }
+  .sello-yale{ background:#F5F0E6; border:2.5px solid #00356B; }
+  .sello-yale b{ font-family:Georgia,'Times New Roman',serif; color:#00356B; font-size:29px; font-weight:700; }
+  .sello-yale small{ color:#00356B; }
+  .sello-dow{ background:radial-gradient(circle at 35% 28%, #33280f, #17120a); border:2.5px solid #E0A020; color:#F0C75E; }
+  .sello-dow b{ font-size:17px; font-weight:900; letter-spacing:1.5px; }
+  .sello-dow .est{ font-size:9px; letter-spacing:2px; color:#E0A020; margin-bottom:3px; }
+  .sello-ra{ background:#0C2340; border:2.5px solid #4E7CA6; color:#EAF2F8; }
+  .sello-ra b{ font-size:26px; font-weight:900; letter-spacing:.5px; }
+  .sello-ldi{ background:#141B26; border:2.5px solid #55637A; font-size:28px; }
+  .sello-ldi small{ color:#9AA1AB; }
+  .cierre{ background:linear-gradient(180deg,#16231c,#111722); border:1px solid rgba(99,252,175,.45); border-radius:18px; padding:22px 20px; margin-top:20px; }
+  .cierre h2{ margin:0 0 8px; color:var(--crema); font-size:clamp(20px,4.6vw,27px); letter-spacing:-.01em; }
+  .subedad{ display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--gris-sec); margin-top:6px;
+    text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
+  .subedad input{ width:46px; background:var(--input); border:1px solid var(--bd); border-radius:6px; color:var(--crema);
+    font-weight:800; font-size:14px; padding:3px 6px; font-family:inherit; text-align:center; }
+  .subedad input:focus{ outline:none; border-color:var(--menta); }
+  /* ===== Testimonios (de /medicos; puntos renombrados a .cdot) ===== */
+  .testi{ margin-top:20px; }
+  .testi-h{ text-align:center; font-size:clamp(22px,5vw,32px); font-weight:900; color:var(--crema); letter-spacing:-.02em; margin:4px 0 22px; text-wrap:balance; }
+  .tfeat{ position:relative; background:linear-gradient(180deg,#16231c,#141821); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 24px 22px; display:flex; gap:22px; align-items:flex-start; box-shadow:0 0 40px rgba(99,252,175,.06); }
+  .tfeat-badge{ position:absolute; top:-12px; left:24px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px; }
+  .tfeat-photo{ flex:0 0 auto; width:98px; height:122px; border-radius:14px; object-fit:cover; object-position:top center; background:var(--input); }
+  .tfeat-body{ flex:1; min-width:0; }
+  .tfeat .qmark{ color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:40px; line-height:.1; height:16px; font-weight:700; }
+  .tfeat .quote{ font-size:clamp(15px,3.4vw,17px); line-height:1.62; color:var(--crema); font-weight:400; margin:14px 0 14px; }
+  .tname{ font-size:15.5px; font-weight:800; color:var(--crema); }
+  .tname .role{ color:var(--gris-sec); font-weight:600; }
+  .tmore{ text-align:center; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec); margin:30px 0 12px; }
+  .tcarousel{ position:relative; }
+  .tcard{ display:none; gap:20px; background:var(--card2); border:1px solid var(--bd); border-radius:16px; padding:22px 22px; }
+  .tcard.active{ display:flex; animation:tfade .4s ease; }
+  @keyframes tfade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  .tcard .photo{ flex:0 0 auto; width:84px; height:104px; border-radius:12px; object-fit:cover; object-position:top center; background:var(--input); }
+  .tcard .body{ flex:1; min-width:0; }
+  .tcard .qmark{ color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:34px; line-height:.1; height:14px; font-weight:700; }
+  .tcard .quote{ font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400; margin:12px 0 12px; }
+  .tcard .name{ font-size:15px; font-weight:800; color:var(--crema); }
+  .tcard .role{ font-size:12.5px; color:var(--gris-sec); margin-top:2px; }
+  .tnav{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px; }
+  .tbtn{ background:rgba(255,255,255,.04); border:1px solid var(--bd); color:var(--crema); width:38px; height:38px; border-radius:50%; font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .tbtn:hover{ border-color:var(--menta); color:var(--menta); }
+  .cdots{ display:flex; justify-content:center; flex-wrap:wrap; gap:7px; }
+  .cdot{ width:8px; height:8px; border-radius:50%; background:var(--bd); border:none; cursor:pointer; padding:0; transition:background .2s; }
+  .cdot.on{ background:var(--menta); }
+  @media(max-width:560px){
+    .tfeat{ flex-direction:column; align-items:center; text-align:center; gap:14px; }
+    .tfeat-photo{ width:88px; height:88px; border-radius:50%; }
+    .tcard{ flex-direction:column; align-items:center; text-align:center; gap:14px; padding:20px 18px; }
+    .tcard .photo{ width:72px; height:72px; border-radius:50%; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
-  <h1>Diseñá tu plan de retiro</h1>
-  <p class="sub"><b>Freedom Point Fund</b> — un fondo <b>en tu propia cuenta</b> (protegido por el SIPC), con <b>riesgo dinámico</b> y estrategias cuantitativas. Se ajusta a tu edad, tus ingresos, tu perfil de riesgo y <b>qué tan cerca estás del Freedom Point</b>: acelera el crecimiento cuando podés y lo desacelera para <b>proteger lo ganado</b> a medida que llegás.</p>
 
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+  <div style="text-align:center; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta)">Empowered Investor · Freedom Point Funds</div>
+  <h1>El plan de retiro, de principio a fin</h1>
+  <p class="sub">Una sola página para recorrerla juntos: la idea del retiro, lo que vende la industria y lo que cuesta de verdad, nuestra solución con su respaldo académico, la prueba con 100 años de historia, y todas las objeciones respondidas con números.</p>
+  <div class="toc">
+    <a href="#s1"><b>1</b> La idea</a>
+    <a href="#s2"><b>2</b> La industria</a>
+    <a href="#s3"><b>3</b> La solución</a>
+    <a href="#s4"><b>4</b> El timing</a>
+    <a href="#s5"><b>5</b> El estudio</a>
+    <a href="#s6"><b>6</b> Objeciones</a>
+    <a href="#s7"><b>7</b> Historias</a>
+  </div>
+
+  <div class="sec" id="s1">
+    <div class="eyeb">Sección 1 · La base, sencilla</div>
+    <div class="big">El retiro empieza por un número</div>
+    <p class="lede">Antes de hablar de estrategias, la mecánica pura. Tres piezas y dos tasas. Todo lo demás de esta página se construye sobre esto.</p>
+    <div class="ideas">
+      <div class="idea"><div class="n">🌱</div><h3>Primero crecés</h3><p>Aportás todos los meses y el capital crece a una tasa. El interés compuesto hace la mayoría del trabajo si le das <b>tiempo</b> y <b>tasa</b>.</p></div>
+      <div class="idea"><div class="n">🎯</div><h3>Llegás a tu freedom point</h3><p>El capital que te deja <b>vivir del interés sin tocar el capital</b>. Retirando 4% al año necesitás <b>25×</b> tu gasto anual; retirando 5%, <b>20×</b>. La tasa de retiro define la meta.</p></div>
+      <div class="idea"><div class="n">🎈</div><h3>La inflación descuenta todo</h3><p>Un millón dentro de 30 años no es un millón de hoy. Por eso acá <b>todo está en plata de hoy</b>: la meta, el aporte y los resultados ya traen la inflación descontada.</p></div>
+    </div>
+    <p class="note" style="font-size:14px">Ahora jugá con esto abajo: subí y bajá el <b>crecimiento esperado</b> y mirá el <b>aporte requerido</b>. Del 8% al 12% el aporte se desploma. Esa diferencia de tasa es exactamente de lo que trata el resto de la página.</p>
+  </div>
   <!-- ===== 1. TUS DATOS ===== -->
-  <div class="tsub">1 · Tus datos</div>
+  <div class="tsub">Tus datos</div>
   <p class="note">Todo en dólares. La meta de capital = lo que necesitás para vivir del interés sin tocar el capital.</p>
   <div class="grid">
     <div class="field"><label>Edad hoy</label><div class="row"><input class="big-in" id="v-edad" inputmode="numeric" value="30" aria-label="Edad hoy (editable)"><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
@@ -142,8 +262,21 @@
     <p class="note" id="proj-txt" style="margin-top:8px"></p>
   </div>
 
+
+  <div class="okbox" style="margin-top:14px">Hasta acá, matemática neutral: cualquier asesor honesto te muestra lo mismo. La pregunta que separa un plan de otro es una sola: <b>¿qué tasa es alcanzable, con qué riesgo real, y qué pasa si el mercado se pone feo justo antes de tu retiro?</b> Sigamos.</div>
+
+  <div class="sec" id="s2">
+    <div class="eyeb">Sección 2 · Lo que vende la industria</div>
+    <div class="big">Comprar, mantener y rezar</div>
+    <p class="lede">La oferta estándar tiene tres sabores: <b>S&amp;P 500</b> ("lo prudente"), <b>Nasdaq</b> ("lo agresivo"), y el default de los planes de retiro gringos: el <b>target-date fund</b>, que baja el riesgo por calendario según tu edad, sin mirar cuánta plata llevás. Probálos vos mismo sobre la historia real — un click y el laboratorio de abajo los carga:</p>
+    <div class="psetbar">
+      <button class="pset" data-preset="spy">Solo S&amp;P 500 <small>comprar y mantener</small></button>
+      <button class="pset" data-preset="qqq">Solo Nasdaq (QQQ) <small>comprar y mantener</small></button>
+      <button class="pset" data-preset="tdf">Espíritu target-date <small>desapalanca temprano, por calendario</small></button>
+    </div>
+  </div>
   <!-- ===== 2. HISTÓRICO (con fases) ===== -->
-  <div class="tsub">2 · Cómo hubiera crecido tu plan, año por año</div>
+  <div class="tsub">El laboratorio: tu plan sobre la historia real, año por año</div>
   <p class="note">Un ejemplo <b>real</b> de la historia: cómo habría crecido tu plan aportando el requerido/mes. Movés el <b>desde/hasta</b>, el <b>capital inicial</b> y elegís las <b>3 fases</b> (arranque · intermedia · llegada), y el gráfico se recalcula. La <b class="hl">línea verde</b> es tu plan; la punteada es lo que pusiste.</p>
   <div class="chart-wrap"><canvas id="hist-chart"></canvas></div>
   <div class="legend" style="margin-top:6px"><span style="color:var(--gris-sec);font-size:12px">Bajo la curva, en qué activo está tu plata:</span>
@@ -160,8 +293,8 @@
   <!-- controles que más movés, pegados al gráfico -->
   <div class="card" style="margin-top:6px">
     <div class="grid">
-      <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1993</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div></div>
-      <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1990</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div><div class="subedad">tu edad ese año <input id="e-y0" inputmode="numeric" value="30" aria-label="Edad en el año desde"></div></div>
+      <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div><div class="subedad">tu edad ese año <input id="e-y1" inputmode="numeric" value="65" aria-label="Edad en el año hasta"></div></div>
       <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
@@ -175,6 +308,11 @@
       <div class="field"><label>Mezcla final al (% de meta)</label><div class="row"><b class="big" id="v-p2">100%</b><div class="steps"><button class="stp" data-s="p2" data-d="1">▲</button><button class="stp" data-s="p2" data-d="-1">▼</button></div></div></div>
       <div class="field"><label>Fase 3 al final (%)</label><div class="row"><b class="big" id="v-ff">70%</b><div class="steps"><button class="stp" data-s="ff" data-d="1">▲</button><button class="stp" data-s="ff" data-d="-1">▼</button></div></div></div>
     </div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="k">Querés vivir con ($/mes)</div><div style="display:flex;align-items:center;gap:3px;margin-top:3px"><b style="color:var(--crema);font-size:17px;font-weight:800">$</b><input id="i-meta2" class="kpi-in" style="color:var(--crema)" inputmode="numeric" value="10,000" aria-label="Ingreso mensual deseado (espejo)"></div></div>
+    <div class="kpi"><div class="k">Freedom point</div><div style="display:flex;align-items:center;gap:3px;margin-top:3px"><b style="color:var(--peri);font-size:17px;font-weight:800">$</b><input id="k-meta2" class="kpi-in" inputmode="numeric" value="3,000,000" aria-label="Freedom point (espejo editable)"></div></div>
+    <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte2">$0</div></div>
   </div>
   <div style="overflow-x:auto;margin-top:8px"><table id="metricas-tbl"></table></div>
   <p class="note" id="metricas-txt" style="margin-top:6px"></p>
@@ -195,17 +333,52 @@
     </div>
     <div class="grid" style="margin-top:10px">
       <div class="field" style="grid-column:1/-1"><label>Frecuencia de transferencia internacional</label><div class="row"><div class="seg segph" id="seg-freq"><button data-a="mensual">Mensual</button><button data-a="trimestral">3 meses</button><button data-a="semestral">6 meses</button><button data-a="anual">Anual</button><button data-a="umbral" class="on">Al juntar $</button></div></div></div>
-      <div class="field" style="grid-column:1/-1"><label>Filtro de mercado (señal sobre el Nasdaq-100)</label><div class="row"><div class="seg segph" id="seg-filtro"><button data-a="off" class="on">Sin filtro</button><button data-a="9h">Timing 9m</button><button data-a="faber">Faber 10m</button><button data-a="52">Máx. 52 sem</button><button data-a="mom">Momentum</button></div></div></div>
+      <div class="field" style="grid-column:1/-1"><label>Filtro de mercado (señal sobre el Nasdaq-100)</label><div class="row"><div class="seg segph" id="seg-filtro"><button data-a="off" class="on">Sin filtro</button><button data-a="9h">Timing 9m</button><button data-a="faber">Faber 10m</button></div></div></div>
       <div class="field"><label>Aportes</label><div class="row"><div class="seg" id="seg-sinap"><button data-a="con" class="on">Con aportes</button><button data-a="sin">Sin aportes</button></div></div></div>
       <div class="field"><label>Costos</label><div class="row"><div class="seg" id="seg-costos"><button data-a="con" class="on">Con costos</button><button data-a="sin">Sin costos</button></div></div></div>
     </div>
-    <p class="note" style="margin-top:8px">El <b>aporte $/mes</b> y la <b>tasa de la Fase 3 (SJC)</b> se toman de <i>Tus datos</i> arriba. Las <b>3 perillas del glidepath</b> (salida, mezcla, % final) también mueven el gráfico de la sección 3. Con <b>filtro de mercado</b> se pasa a efectivo en los peores tramos (solo aplica a los ETF, no a SJC).</p>
+    <p class="note" style="margin-top:8px">El <b>aporte $/mes</b> y la <b>tasa de la Fase 3 (SJC)</b> se toman de <i>Tus datos</i> arriba. Las <b>3 controles del glidepath</b> (salida, mezcla, % final) también mueven el gráfico de la sección 3. Con <b>filtro de mercado</b> se pasa a efectivo en los peores tramos (solo aplica a los ETF, no a SJC).</p>
     <p class="note" id="hist-txt" style="margin-top:4px"></p>
   </div>
 
+
+  <div class="card" style="margin-top:16px; border-color:rgba(224,82,90,.35)">
+    <div class="bloquetit">La cuenta que nadie te muestra</div>
+    <p class="note" style="margin:2px 0 10px">Miles de futuros sorteados de la historia real, mismos costos, mismo aporte del caso base (30 → 65 años, meta $3M para $10.000/mes). ¿Qué probabilidad tenés de <b>llegar</b> con cada plan de la industria?</p>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Plan clásico</th><th>Era buena<br>(1990–2025)</th><th>55 años de historia<br>(1971–2026, real)</th><th>La peor época<br>(1971–1989)</th><th>Años a la meta<br>típico / pesimista</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left">QQQ comprar y mantener</td><td>77.5%</td><td>18.9%</td><td class="hl" style="color:var(--rojo)">0.4%</td><td>26 / &gt;35</td></tr>
+        <tr><td style="text-align:left">S&amp;P 500 comprar y mantener</td><td style="color:var(--rojo);font-weight:800">46.7%</td><td>10.8%</td><td>3.5%</td><td>35 / &gt;35</td></tr>
+        <tr><td style="text-align:left">Target-date fund típico (el default de los 401k)</td><td style="color:var(--rojo);font-weight:800">37.4%</td><td style="color:var(--rojo);font-weight:800">4.8%</td><td>3.6%</td><td>&gt;35 / &gt;35</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:10px">Leelo despacio: con el aporte del caso base, <b>"lo prudente" es una moneda al aire</b> (47%) y el default de la industria llega <b>menos de 4 de cada 10 veces en la mejor era de la historia</b>. En la historia completa, 5%. El target-date está diseñado para <b>fallar suavemente</b>, no para lograr tu meta.</p>
+    <p class="note" style="margin:6px 0 8px">¿Y si querés que esos planes lleguen igual? Se puede — <b>pagando</b>:</p>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Para llegar con ~95%…</th><th>$1,020/mes</th><th>$1,500</th><th>$2,000</th><th>$2,640</th></tr></thead>
+      <tbody>
+        <tr style="color:var(--menta);font-weight:800"><td style="text-align:left">Freedom Point Fund</td><td>93.6%</td><td>96.2%</td><td>97.8%</td><td>98.9%</td></tr>
+        <tr><td style="text-align:left">Escalera clásica QQQ→SPY→renta fija</td><td>77.4%</td><td>89.3%</td><td>94.5%</td><td>97.8%</td></tr>
+        <tr><td style="text-align:left">Solo S&amp;P 500</td><td style="color:var(--rojo);font-weight:800">51.8%</td><td>75.0%</td><td>88.0%</td><td>95.1%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:10px"><b>El plan clásico cobra en aporte o cobra en años:</b> la misma probabilidad cuesta el doble de esfuerzo mensual (~$2,000 vs $1,020) o unos diez años más de trabajo. Ese es el problema que la siguiente sección resuelve con diseño.</p>
+  </div>
+
+  <div class="sec" id="s3">
+    <div class="eyeb">Sección 3 · Nuestra solución</div>
+    <div class="big">El Freedom Point Fund: manejar el riesgo desde la meta</div>
+    <p class="lede">Los fondos de pensiones institucionales miden su <b>funded ratio</b>: cuánto tengo ÷ cuánto necesito. Para ellos, el riesgo es quedar cortos frente a lo prometido. Nosotros medimos igual, a escala personal. La aguja del plan es una sola: <b>qué porcentaje de tu freedom point ya juntaste</b>. Y de esa aguja salen tres reglas:</p>
+    <div class="ideas">
+      <div class="idea"><div class="n">🚀</div><h3>1 · Fuerte al arranque</h3><p>A los 30, tu verdadero activo son tus <b>aportes futuros</b> (~$428k en el caso base), no tu cuenta. Una caída grande temprano casi no mueve tu probabilidad de retiro. La misma caída a los 60 sería fatal — <b>por eso a los 60 el sistema ya no te deja estar ahí</b>.</p></div>
+      <div class="idea"><div class="n">📉</div><h3>2 · El riesgo solo baja</h3><p>Al cruzar ciertos niveles de avance, tu plata migra de la fase agresiva a la intermedia y de ahí a la renta fija. <b>De una sola vía</b>: nunca subís el riesgo en el camino.</p></div>
+      <div class="idea"><div class="n">🔒</div><h3>3 · Lo ganado, con candado</h3><p>El piso de renta fija tiene <b>ratchet</b>: solo puede subir, jamás se vende para volver a arriesgar. Cuando llegás, el piso <b>asegura tu ingreso</b> y el equity que quede es upside puro.</p></div>
+    </div>
+  </div>
   <!-- ===== 3. GLIDEPATH ===== -->
-  <div class="tsub">3 · ¿Cómo cambia el riesgo en tu plan?</div>
-  <p class="note">El eje de abajo es tu <b>avance hacia la meta</b> (0% = arrancás, 100% = ya la juntaste). Cada color es en qué está tu plata en ese momento. Movés las <b>3 perillas del glidepath</b> (arriba, en los controles del gráfico) y ves cómo el riesgo va pasando de la Fase 1 a la 2 a la 3.</p>
+  <div class="tsub">Así se ve el riesgo dinámico</div>
+  <p class="note">El eje de abajo es tu <b>avance hacia la meta</b> (0% = arrancás, 100% = ya la juntaste). Cada color es en qué está tu plata en ese momento. Movés las <b>3 controles del glidepath</b> (arriba, en los controles del gráfico) y ves cómo el riesgo va pasando de la Fase 1 a la 2 a la 3.</p>
   <div class="card">
     <div class="chart-wrap"><canvas id="glide-chart"></canvas></div>
     <div class="legend">
@@ -216,53 +389,332 @@
     <p class="note" id="plan-txt" style="margin-top:10px"></p>
   </div>
 
-  <!-- ===== 4. ESTUDIO GENERAL ===== -->
-  <div class="tsub">4 · El estudio · el mejor plan según tu preferencia</div>
-  <p class="note">El barrido <b>más grande</b>: cruza <b>todos los activos</b>, <b>todas las perillas del glidepath</b> y el <b>filtro de mercado</b> (con timing 9m o sin él), sobre la <b>historia completa (1990–2025)</b> y miles de futuros. Todo plan <b>aterriza en renta fija (SJC)</b> con lo suficiente para asegurar tu ingreso, el riesgo solo baja (Fase 1 ≥ Fase 2), y el equity que quede es upside sobre ese piso. <b>Prob. de llegar</b> = probabilidad de juntar tu <b>freedom point</b> (poder retirar tu %/año y vivir de ese ingreso). Te propone <b class="hl">tres planes según tu preferencia</b> y la tabla completa para <b>ordenar</b> por lo que te importe.</p>
-  <button class="btn" id="btn-general">▶ Correr el estudio</button>
-  <div id="general-out" style="margin-top:14px"></div>
 
-  <!-- ===== 5. EL ESTUDIO: por qué el plan es así ===== -->
-  <div class="tsub" style="margin-top:44px; color:var(--menta)">5 · El estudio: por qué el plan es así</div>
-  <div class="ap-hero">Lo probamos contra <em>todo</em> lo que la industria vende</div>
-  <p class="note">Corrimos el mismo examen para seis estrategias: miles de escenarios sorteados de la historia real, mismos aportes, mismos costos. Y no solo con la era reciente: también con <b>55 años de historia en plata de hoy</b> (desde 1971) y con un stress test usando solo <b>la peor época</b> (el crash del 73–74 y la inflación de los setenta). La pregunta es una sola: ¿qué probabilidad tenés de llegar a tu freedom point?</p>
+  <div class="tsub" style="margin-top:26px">Esto no lo inventamos nosotros</div>
+  <p class="note">Cada pieza del sistema tiene respaldo publicado de primer nivel. Lo inusual es juntarlas en un producto para una persona:</p>
+  <div class="paperes">
+    <div class="papel academia"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University"></div><div class="src">Yale · Ayres &amp; Nalebuff</div><h3>Apalancarse de joven reduce el riesgo de retiro</h3><p>"Life-Cycle Investing and Leverage" (SSRN 1149340, luego el libro <i>Lifecycle Investing</i>): 2:1 de joven y desapalancar en fases <b>según el % de tu meta alcanzado</b>: la misma lógica de avance de este sistema. Su argumento es el nuestro: tu verdadera riqueza de joven son los aportes futuros, y diversificar en el tiempo exige más exposición temprana.</p></div>
+    <div class="papel academia"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association"></div><div class="src">CMT Association · Dow Award 2016 · Gayed &amp; Bilello</div><h3>Apalancamiento + filtro de tendencia le gana a comprar y mantener</h3><p>"Leverage for the Long Run": la volatilidad es la enemiga del apalancamiento, y los promedios móviles identifican los regímenes donde el apalancamiento paga. Es la validación premiada de nuestra pieza de filtro más apalancado, con otra señal de la misma familia.</p></div>
+    <div class="papel academia"><div class="logobox"><img src="/assets/logos-academia/ra.svg" alt="Research Affiliates"></div><div class="src">Research Affiliates · Arnott</div><h3>El glidepath de los target-date está al revés</h3><p>"The Glidepath Illusion" (141 años de datos): mucha acción de joven-pobre y poca de viejo-rico no maximiza riqueza ni reduce incertidumbre — hasta el glidepath <b>invertido</b> lo vence. Nuestro estudio confirma lo mismo con otra métrica: el TDF es el peor en probabilidad de llegar, en las tres épocas.</p></div>
+    <div class="papel academia solo"><div class="logobox oscuro"><div class="sello sello-ldi" style="width:92px;height:92px;box-shadow:none;font-size:36px">🏛️<small>Pensiones · LDI</small></div></div><div class="src">Práctica institucional · LDI</div><h3>Los fondos de pensiones ya administran así</h3><p>Funded ratio, triggers de desriesgo al cruzar niveles de fondeo y lock-in del superávit: la práctica estándar de los fondos de beneficio definido hace dos décadas. Nuestro avance a la meta, las fases y el candado son eso pero en tu propia cuenta, manejado por nosotros.</p></div>
+  </div>
+  <p class="note">La lectura profunda de los papers, con citas textuales y preguntas frecuentes respondidas, está en <a href="/FreedomFunds/" style="color:var(--menta)">investorcr.com/FreedomFunds</a>.</p>
 
-  <div class="card" style="margin-top:14px">
-    <div class="bloquetit">Probabilidad de llegar a la meta, en tres futuros posibles</div>
-    <p class="note" style="margin:2px 0 10px">Caso base: 30 → 65 años, meta $3M (ingreso de $10.000/mes), aporte fijo de ~$1.000/mes. "Filtro" = la señal de tendencia que sale del mercado en las caídas grandes.</p>
+  <div class="tsub" style="margin-top:26px">Los planes de la casa. Tocá uno y mirá cómo hubiera sido en la historia</div>
+  <p class="note">Las mejores combinaciones según el estudio (probabilidad en la era 1990–2025, con el aporte del caso base; <b>años a la meta</b>: típico = la mitad de los mundos llega antes; pesimista = el 90% llega antes de eso). Un click lo carga en el gráfico histórico de arriba para moverlo a mano.</p>
+  <div class="perfiles">
+    <div class="perfil"><h3>⚖️ El punto medio <span style="font-size:11px;color:var(--gris-sec)">(default de la casa)</span></h3>
+      <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>92.6%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>19 / 32</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$156k · $10.8M</b></div>
+      <button class="btn" data-preset="fpf">Ver este plan</button></div>
+    <div class="perfil"><h3>🛡️ No quiero sorpresas</h3>
+      <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 40/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>90.6%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>23 / 35</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$331k · $8.0M</b></div>
+      <button class="btn" data-preset="sorpresas">Ver este plan</button></div>
+    <div class="perfil"><h3>🚀 Lo antes posible</h3>
+      <div class="line"><span>Plan</span><b>TQQQ → QQQ → SJC · 70/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>93.7%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>18 / 30</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$132k · $15.3M</b></div>
+      <button class="btn" data-preset="antes">Ver este plan</button></div>
+    <div class="perfil"><h3>✋ Sin 3× por regla propia</h3>
+      <div class="line"><span>Plan</span><b>QLD (2×) → SPY → SJC · 70/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>89.6%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>23 / &gt;35</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$230k · $8.2M</b></div>
+      <button class="btn" data-preset="qld">Ver este plan</button></div>
+    <div class="perfil"><h3>🏁 Blindar la llegada</h3>
+      <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/100</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>92.8%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>19 / 32</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$156k · $10.3M</b></div>
+      <button class="btn" data-preset="blindar">Ver este plan</button></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="bloquetit">La comprobación: el apalancamiento dinámico es lo que compra la probabilidad</div>
+    <p class="note" style="margin:2px 0 10px">El mismo sistema (glidepath por fondeo + piso con candado), con y sin apalancar. Mismos sorteos, mismo aporte:</p>
     <div style="overflow-x:auto"><table>
-      <thead><tr><th style="text-align:left">Estrategia</th><th>Si el futuro es como<br>1990–2025</th><th>Como los últimos<br>55 años (real)</th><th>Como la<br>peor época</th></tr></thead>
+      <thead><tr><th style="text-align:left">Sistema</th><th>Era buena<br>(1990–2025)</th><th>55 años, real<br>(1971–2026)</th><th>Peor época<br>(1971–1989)</th></tr></thead>
       <tbody>
-        <tr style="color:var(--menta); font-weight:800"><td style="text-align:left">Freedom Point Fund dinámico (apalancado)</td><td>93.6%</td><td>66.6%</td><td>31.0%</td></tr>
-        <tr style="color:var(--menta); font-weight:800"><td style="text-align:left">Freedom Point Fund dinámico + filtro</td><td>100%</td><td>78.1%</td><td>34.4%</td></tr>
-        <tr><td style="text-align:left">El mismo sistema, sin apalancar</td><td>77.0%</td><td>17.3%</td><td>1.4%</td></tr>
-        <tr><td style="text-align:left">QQQ comprar y mantener</td><td>77.5%</td><td>18.9%</td><td>0.4%</td></tr>
-        <tr><td style="text-align:left">S&amp;P 500 comprar y mantener</td><td>46.7%</td><td>10.8%</td><td>3.5%</td></tr>
-        <tr style="color:var(--gris-sec)"><td style="text-align:left">Fondo target-date típico (el default de los 401k)</td><td>37.4%</td><td>4.8%</td><td>3.6%</td></tr>
+        <tr style="color:var(--menta);font-weight:800"><td style="text-align:left">FPF dinámico apalancado (TQQQ→SPY→piso)</td><td>93.6%</td><td>66.6%</td><td>31.0%</td></tr>
+        <tr><td style="text-align:left">El mismo sistema, sin apalancar (QQQ→SPY→piso)</td><td>77.0%</td><td>17.3%</td><td>1.4%</td></tr>
+        <tr style="color:var(--gris-sec)"><td style="text-align:left">QQQ comprar y mantener (referencia)</td><td>77.5%</td><td>18.9%</td><td>0.4%</td></tr>
       </tbody>
     </table></div>
-    <p class="note" style="margin-top:8px">En la era buena, el plan dinámico llega <b>9 de cada 10 veces</b> y el target-date típico menos de <b>4 de cada 10</b>. En las épocas duras nadie llega con ese aporte, pero el orden no cambia: el sistema mantiene <b>7 a 20 veces más probabilidad</b> que los planes clásicos. Ahí la respuesta es subir el aporte, no cambiar el diseño.</p>
+    <p class="note" style="margin-top:10px">Las dos piezas se necesitan: <b>apalancamiento sin sistema es lotería</b> (TQQQ solo: 1 de cada 3 mundos no llega y su peor 1% promedia $9k) y <b>sistema sin apalancamiento es lento</b> (rinde como QQQ solo). El glidepath por fondeo convierte la volatilidad del 3× en probabilidad: cuando toca la meta temprano, el candado la asegura.</p>
   </div>
 
-  <div class="card" style="margin-top:14px; border-color:rgba(99,252,175,.28)">
-    <div class="bloquetit">La lógica del plan, en tres ideas</div>
-    <p class="note" style="margin:6px 0 8px"><b>1 · Medimos el riesgo como un fondo de pensiones.</b> El riesgo no es cuánto fluctúa tu cuenta este mes. El riesgo es no tener tu capital objetivo a los 65. Por eso todo el plan gira alrededor de una aguja: qué porcentaje de tu meta ya juntaste.</p>
-    <p class="note" style="margin:0 0 8px"><b>2 · Fuerte al arranque, porque tu verdadero activo son tus aportes futuros.</b> A los 30, con poco capital y 35 años de aportes por delante, una caída grande casi no mueve tu probabilidad de retiro. La misma caída a los 60 sería fatal. Por eso el plan es agresivo cuando el golpe no duele y se desapalanca a medida que avanzás. Nunca al revés.</p>
-    <p class="note" style="margin:0"><b>3 · Lo ganado se asegura con candado.</b> El piso de renta fija solo puede subir: jamás se vende para volver a arriesgar. Y el filtro de tendencia agrega una red que probamos en datos que la señal nunca vio (1971–1989) y también ahí multiplicó por 6 la protección en los peores escenarios.</p>
+  <div class="sec" id="s4">
+    <div class="eyeb">Sección 4 · La milla extra</div>
+    <div class="big">El timing es la milla extra: corta los peores caminos</div>
+    <p class="lede">Regla de la casa: <b>el sistema tiene que sostenerse sin timing</b>, y se sostiene (todo lo de arriba es sin filtro). El filtro de mercado es un <b>seguro</b>: su trabajo es recortar los peores mundos, y el retorno típico casi ni se mueve. Además es un trabajo sencillo: una decisión por semana, mecánica, sin interpretar nada.</p>
+    <div class="paperes" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <div class="papel"><div class="src">Nuestro filtro · Timing 9m</div><h3>Dos umbrales sobre el máximo de 39 semanas</h3>
+      <p>La señal se calcula <b>solo sobre el Nasdaq</b> y se ejecuta sobre todos los activos del plan. La rutina, paso a paso:</p>
+      <ol>
+        <li><b>Viernes, al cierre de la semana:</b> se anota el precio de cierre semanal del Nasdaq y el máximo de los cierres de las últimas <b>39 semanas</b> (unos 9 meses).</li>
+        <li><b>Se compara contra dos umbrales.</b> Si estás adentro y el cierre quedó más de un <b>18% por debajo</b> de ese máximo, la decisión es <b>salir</b>. Si estás afuera y el cierre volvió a estar a un <b>6% o menos</b> del máximo, la decisión es <b>volver a entrar</b>. En cualquier otro caso no se hace nada, que es lo que pasa la mayoría de las semanas.</li>
+        <li><b>La ejecución es la semana siguiente:</b> lo que se decidió con el cierre del viernes se opera al arrancar la semana que sigue. Nunca la misma semana: la señal jamás usa información que todavía no existía.</li>
+        <li><b>Mientras estás afuera,</b> la plata espera en efectivo hasta que llegue la señal de reentrada.</li>
+      </ol></div>
+      <div class="papel"><div class="src">El de los papers · Faber 10 meses</div><h3>La media móvil que premió el Dow Award</h3><p>Si el cierre está <b>arriba del promedio de 10 meses</b>, adentro; abajo, afuera. Es la familia de señales de Gayed y Bilello. La tenemos precalculada en el laboratorio ("Faber 10m") para que valides el paper con nuestros propios datos. Dos señales distintas que cuentan la misma historia.</p></div>
+    </div>
+    <div class="psetbar">
+      <button class="pset" data-preset="fpf" data-stay="1">El plan, sin filtro <small>la base que se defiende sola</small></button>
+      <button class="pset" data-preset="fpftim" data-stay="1">Con nuestro timing 9m <small>sale a −18% · vuelve a −6%</small></button>
+      <button class="pset" data-preset="fpffaber" data-stay="1">Con Faber 10m <small>el filtro de los papers</small></button>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-weight:700;color:var(--crema);margin-bottom:2px">El espejo del laboratorio: mismo plan, tocá los filtros y mirá la diferencia acá mismo</div>
+      <div class="chart-wrap"><canvas id="hist-chart2"></canvas></div>
+      <p class="note" id="hist-txt2" style="margin-top:6px"></p>
+    </div>
+    <div class="card">
+      <div class="bloquetit">La evidencia del timing</div>
+      <p class="note" style="margin:2px 0 10px">Los parámetros del timing se eligieron con datos 1990–2025. El test que importa: correrla sobre <b>1971–1989</b>, 19 años que jamás vio, con el crash del 73–74 y la estanflación adentro.</p>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th style="text-align:left">Qué mide</th><th>Sin filtro</th><th>Con filtro</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="3">Era buena (1990–2025, motor de la página)</td></tr>
+          <tr><td style="text-align:left">Probabilidad de llegar (plan default)</td><td>92.9%</td><td style="color:var(--menta);font-weight:800">100%</td></tr>
+          <tr><td style="text-align:left">Peor mundo · peor 1%</td><td>$19k · $274k</td><td style="color:var(--menta);font-weight:800">$2.79M · $4.56M</td></tr>
+          <tr><td style="text-align:left">Caída típica de la parte invertida</td><td>−81%</td><td style="color:var(--menta);font-weight:800">−47%</td></tr>
+          <tr class="grp"><td colspan="3">Fuera de muestra puro (1971–1989: la señal nunca vio estos datos)</td></tr>
+          <tr><td style="text-align:left">Nasdaq 3× (retorno anual)</td><td>4.3%</td><td style="color:var(--menta);font-weight:800">11.8%</td></tr>
+          <tr><td style="text-align:left">La señal de Nasdaq ejecutada sobre S&amp;P 3×</td><td>10.1%</td><td style="color:var(--menta);font-weight:800">13.5%</td></tr>
+          <tr><td style="text-align:left">A nivel plan: peor mundo · peor 1%</td><td>$11k · $33k</td><td style="color:var(--menta);font-weight:800">$99k (9×) · $201k (6×)</td></tr>
+          <tr class="grp"><td colspan="3">55 años completos (1971–2026, términos reales)</td></tr>
+          <tr><td style="text-align:left">Probabilidad del plan ancla</td><td>61.0%</td><td style="color:var(--menta);font-weight:800">72.0%</td></tr>
+          <tr><td style="text-align:left">Nasdaq 3× (retorno real anual)</td><td>5.6%</td><td style="color:var(--menta);font-weight:800">15.2%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note" style="margin-top:10px"><b>Dónde funciona y dónde no:</b> el filtro rinde donde el sistema lo usa: <b>sobre el Nasdaq apalancado</b>. Aplicado al S&amp;P sin apalancar casi no cambia el retorno (10.9% con y sin filtro). Y como antes de 1971 el Nasdaq no existía, para la prueba del siglo completo calculamos la señal sobre el propio S&amp;P: esa versión protege las peores rachas pero baja la probabilidad de llegar, así que el filtro se usa solo donde tiene su ventaja. Su costo es conocido: recorta el techo de los mejores mundos ($60M → $33M) a cambio de multiplicar el piso de los peores.</p>
+    </div>
+    <div class="tsub" style="margin-top:26px">Los planes de la casa, con la red puesta</div>
+    <p class="note">Los planes de la sección 3 son <b>sin timing</b>. Estos son los mismos, con el filtro semanal encima (era 1990–2025, mismo aporte). Tocá uno y compará en el espejo de arriba.</p>
+    <div class="perfiles">
+      <div class="perfil"><h3>⚖️ El punto medio + red</h3>
+        <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/70 + filtro</b></div>
+        <div class="line"><span>Prob. de llegar</span><b>100%</b></div>
+        <div class="line"><span>Años a la meta (típico / pesimista)</span><b>18 / 24</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$4.7M · $12.8M</b></div>
+        <button class="btn" data-preset="fpftim">Ver este plan</button></div>
+      <div class="perfil"><h3>🛡️ No quiero sorpresas + red</h3>
+        <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 40/100/70 + filtro</b></div>
+        <div class="line"><span>Prob. de llegar</span><b>99.9%</b></div>
+        <div class="line"><span>Años a la meta (típico / pesimista)</span><b>22 / 27</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$3.7M · $9.4M</b></div>
+        <button class="btn" data-preset="sorpresastim">Ver este plan</button></div>
+      <div class="perfil"><h3>🚀 Lo antes posible + red</h3>
+        <div class="line"><span>Plan</span><b>TQQQ → QQQ → SJC · 70/100/70 + filtro</b></div>
+        <div class="line"><span>Prob. de llegar</span><b>100%</b></div>
+        <div class="line"><span>Años a la meta (típico / pesimista)</span><b>17 / 22</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$5.7M · $18.9M</b></div>
+        <button class="btn" data-preset="antestim">Ver este plan</button></div>
+    </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
-    <div class="bloquetit">Esto no lo inventamos nosotros</div>
-    <p class="note" style="margin:6px 0 8px">Cada pieza tiene respaldo publicado: <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener" style="color:var(--menta)">Ayres y Nalebuff (Yale)</a> mostraron que apalancarse de joven y desapalancar según el avance a la meta <b>reduce</b> el riesgo de retiro. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2741701" target="_blank" rel="noopener" style="color:var(--menta)">Gayed y Bilello</a> ganaron el Dow Award 2016 demostrando que apalancamiento más filtro de tendencia le gana a comprar y mantener. Y <a href="https://www.researchaffiliates.com/content/dam/ra/publications/pdf/241-the-glidepath-illusion.pdf" target="_blank" rel="noopener" style="color:var(--menta)">Arnott (Research Affiliates)</a> demostró con 141 años de datos que el glidepath de los target-date está al revés. Nosotros juntamos las piezas y las pusimos a prueba con 100 años de historia.</p>
-    <p class="note" style="margin:0 0 8px"><b>¿Y por qué Vanguard no lo ofrece?</b> Porque un fondo masivo no puede: la regulación limita el apalancamiento en fondos default, un producto para millones no puede mostrar −60% en pantalla sin demandas, y nadie está al lado de cada cliente para sostener el plan en el fondo del ciclo. Ninguna de esas tres cosas aplica a una cartera personal con asesor. La matemática está publicada hace 15 años; el vehículo masivo es lo que no existe.</p>
-    <p class="note" style="margin:0">Lo honesto: los apalancados caen fuerte en el camino (el plan lo asume y lo administra), las probabilidades dependen de la época que te toque, y el piso depende de que el emisor cumpla. Todo eso está simulado o dicho acá arriba. Jugá con la calculadora, y si querés la lectura profunda de los papers con citas y objeciones respondidas, está en <a href="/FreedomFunds/" style="color:var(--menta)">investorcr.com/FreedomFunds</a>.</p>
+  <div class="sec" id="s5">
+    <div class="eyeb">Sección 5 · Conclusiones finales</div>
+    <div class="big">Todos los estudios completos, corriendo en vivo</div>
+    <p class="lede">Nada de esto pide fe: al llegar acá la página corre sola los estudios completos, <b>con y sin timing, apalancados y sin apalancar</b>. Primero el barrido de la era 1990–2025 con el motor de la página; después el estudio profundo sobre <b>toda la historia del Nasdaq (1971–2025), en plata de hoy</b>. Cualquier plan del barrido se carga en el laboratorio con un click.</p>
+  </div>
+  <!-- ===== 4. ESTUDIO GENERAL ===== -->
+  <div class="tsub">El barrido completo: todos los planes, ordenados por lo que te importe</div>
+  <p class="note">El barrido <b>más grande</b>: cruza <b>todos los activos</b>, <b>todas las controles del glidepath</b> y el <b>filtro de mercado</b> (con timing 9m o sin él), sobre la <b>historia completa (1990–2025)</b> y miles de futuros. Todo plan <b>aterriza en renta fija (SJC)</b> con lo suficiente para asegurar tu ingreso, el riesgo solo baja (Fase 1 ≥ Fase 2), y el equity que quede es upside sobre ese piso. <b>Prob. de llegar</b> = probabilidad de juntar tu <b>freedom point</b> (poder retirar tu %/año y vivir de ese ingreso). Te propone <b class="hl">tres planes según tu preferencia</b> y la tabla completa para <b>ordenar</b> por lo que te importe.</p>
+  <div id="general-out" style="margin-top:14px"></div>
+
+
+  <div class="card" style="margin-top:16px">
+    <div style="font-weight:700;color:var(--crema);margin-bottom:2px">El espejo del laboratorio: el plan que toques en la tabla o en los perfiles se dibuja acá</div>
+    <div class="chart-wrap"><canvas id="hist-chart3"></canvas></div>
+    <p class="note" id="hist-txt3" style="margin-top:6px"></p>
   </div>
 
-  <p class="foot">Herramienta educativa de Empowered Investor. Los resultados son simulaciones sobre datos históricos (1990–2025) sorteados al azar; no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija con permanencia mínima de 3 años. Todo neto de costos de transferencias internacionales y del servicio.</p>
+  <div class="card" style="margin-top:18px; border-color:rgba(99,252,175,.3)">
+    <div class="bloquetit">El estudio profundo: toda la historia del Nasdaq (1971–2025), en plata de hoy</div>
+    <p class="note" style="margin:2px 0 10px">El mismo examen, con la historia completa: retornos reales (inflación descontada mes a mes), apalancados pagando el costo de financiamiento real de cada época, aporte de $1,020/mes y meta de $3M de hoy. En dos etapas, en el orden que importa:</p>
+    <div id="deep-out"><p class="note">El estudio arranca solo al llegar acá…</p></div>
+    <p class="note" style="margin-top:8px">Los caminos se arman con bloques de 4 años de historia real y los sorteos son los mismos para todas las estrategias. "Peor época" = solo bloques de 1971–1989 (el crash del 73–74 y la estanflación). Son los mismos números del estudio interno, recalculados acá en tu navegador.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="bloquetit">El estudio conclusivo: seis estrategias, tres futuros posibles</div>
+    <p class="note" style="margin:2px 0 10px">Probabilidad de llegar al freedom point. Mismos sorteos, mismos costos, mismo aporte ($1,020/mes). Al TDF le regalamos nuestro piso de 8% como su renta fija — más de lo que un TDF real paga.</p>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Estrategia</th><th>Era reciente<br>(1990–2025)</th><th>55 años<br>(1971–2026, real)</th><th>Peor época<br>(1971–1989)</th></tr></thead>
+      <tbody>
+        <tr style="color:var(--menta);font-weight:800"><td style="text-align:left">FPF dinámico apalancado + filtro</td><td>100%</td><td>78.1%</td><td>34.4%</td></tr>
+        <tr style="color:var(--menta);font-weight:800"><td style="text-align:left">FPF dinámico apalancado</td><td>93.6%</td><td>66.6%</td><td>31.0%</td></tr>
+        <tr><td style="text-align:left">FPF dinámico sin apalancar</td><td>77.0%</td><td>17.3%</td><td>1.4%</td></tr>
+        <tr><td style="text-align:left">QQQ comprar y mantener</td><td>77.5%</td><td>18.9%</td><td>0.4%</td></tr>
+        <tr><td style="text-align:left">S&amp;P 500 comprar y mantener</td><td>46.7%</td><td>10.8%</td><td>3.5%</td></tr>
+        <tr style="color:var(--gris-sec)"><td style="text-align:left">Target-date fund típico</td><td>37.4%</td><td>4.8%</td><td>3.6%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:10px">La jerarquía es <b>idéntica en las tres épocas</b>. Lo que cambia entre épocas es el nivel absoluto, y eso se corrige subiendo el aporte:</p>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Prob. de $3M reales según aporte (siglo completo)</th><th>$1,020</th><th>$1,500</th><th>$2,000</th><th>$2,640</th><th>$3,500</th></tr></thead>
+      <tbody>
+        <tr style="color:var(--menta);font-weight:800"><td style="text-align:left">Sistema Nasdaq 3× + timing (1971–2026)</td><td>73%</td><td>84%</td><td>90%</td><td>95%</td><td>97%</td></tr>
+        <tr><td style="text-align:left">Sistema Nasdaq 3× (1971–2026)</td><td>62%</td><td>73%</td><td>81%</td><td>88%</td><td>93%</td></tr>
+        <tr><td style="text-align:left">Sistema 3× (siglo completo 1926–2026)</td><td>56%</td><td>67%</td><td>76%</td><td>85%</td><td>91%</td></tr>
+        <tr style="color:var(--gris-sec)"><td style="text-align:left">Target-date clásico (siglo)</td><td>11%</td><td>26%</td><td>44%</td><td>61%</td><td>78%</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:10px">A cada nivel de esfuerzo, el sistema rinde <b>25–45 puntos de probabilidad más</b> que el plan clásico. El clásico ni con $3,500/mes alcanza lo que el sistema logra con $2,000.</p>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="bloquetit">Guía de perfiles</div>
+    <div style="overflow-x:auto"><table>
+      <thead><tr><th style="text-align:left">Si esto te suena</th><th style="text-align:left">Tu perfil</th><th style="text-align:left">Tu plan</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left">"No soporto la idea de perder"</td><td style="text-align:left">No quiero sorpresas + red</td><td style="text-align:left">TQQQ→SPY→SJC 40/100/70 + filtro</td></tr>
+        <tr><td style="text-align:left">"Quiero un buen plan y dormir tranquilo"</td><td style="text-align:left"><b>El punto medio + red</b></td><td style="text-align:left"><b>TQQQ→SPY→SJC 70/100/70 + filtro</b></td></tr>
+        <tr><td style="text-align:left">"Quiero retirarme lo más joven posible"</td><td style="text-align:left">Lo antes posible + red</td><td style="text-align:left">TQQQ→QQQ→SJC 70/100/70 + filtro</td></tr>
+        <tr><td style="text-align:left">"Con 3× no me meto"</td><td style="text-align:left">Sin 3× por regla propia</td><td style="text-align:left">QLD→SPY→SJC 70/100/70 (+ filtro)</td></tr>
+        <tr><td style="text-align:left">"Cuando llegue, no quiero volver a arriesgar"</td><td style="text-align:left">Blindar la llegada</td><td style="text-align:left">TQQQ→SPY→SJC 70/100/100</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="bloquetit">Cómo se calculó</div>
+    <p class="note" style="margin:6px 0 6px"><b>Los futuros:</b> cada camino de 35 años se arma pegando <b>bloques de 48 meses consecutivos</b> de la historia real (block bootstrap). Eso preserva los racimos de crisis — 2000–02 entra completo — y permite mundos <b>peores que la historia</b> (dos punto-com seguidas). Los sorteos son <b>los mismos para todos los planes</b>: cuando decimos "A le gana a B en el 97% de los mundos", es con la misma historia para ambos.</p>
+    <p class="note" style="margin:0 0 6px"><b>Los números que ves:</b> probabilidad = % de mundos donde juntás tu freedom point antes de la edad de retiro. Años a la meta: <b>optimista</b> = el 25% de los mundos llega antes; <b>típico</b> = la mitad; <b>pesimista</b> = el 90% llega antes de eso. Las caídas se miden <b>contra tu meta</b> (y no contra el pico de la cuenta), porque esa es la que puede retrasar tu retiro.</p>
+    <p class="note" style="margin:0 0 6px"><b>Los costos están adentro:</b> SWIFT $65/mes, setup $2,000, 1% anual sobre la parte invertida en mercado. Los apalancados (QLD/TQQQ) se simulan con <b>rebalanceo diario</b>, con el costo del decay ya incluido en los números. En la prueba de siglo, además: financiamiento flotante (T-bill + 0.6% + 0.95%) y todo <b>deflactado por CPI</b>.</p>
+    <p class="note" style="margin:0"><b>Réplica disponible:</b> datos públicos (Ken French/CRSP, FRED), scripts documentados. Cualquier tercero puede reproducir cada número.</p>
+  </div>
+
+  <div class="sec" id="s6">
+    <div class="eyeb">Sección 6 · Todas las objeciones</div>
+    <div class="big">Preguntas frecuentes</div>
+    <p class="lede">Primero las comunes, después las apocalípticas. Ninguna se esquiva.</p>
+
+    <div class="objx"><div class="q">"Con TQQQ hasta el 70% de la meta, en el peor caso hay riesgo de ruina."</div>
+      <div class="a"><b>Ruina literal no existe en acumulación:</b> seguís aportando todos los meses, comprando barato; el peor caso es llegar tarde o corto a la meta. El peor 1% del plan promedia <b>$274k</b> vs $458k de la escalera conservadora: ese colchón de ~$180k en 1 de cada 100 mundos es el precio real de la objeción — a cambio de perder en los otros 99 (2.2× menos mediana, 10 años más tarde). Y si esa cola te pesa: <b>desapalancá antes (perfil "sin sorpresas")</b> — su peor 1% ($513k) es <i>mejor</i> que el de la escalera, con 90.4% de llegada. O poné el filtro y la cola desaparece ($4.56M).</div></div>
+
+    <div class="objx"><div class="q">"Mejor la escalera clásica: QQQ, después SPY, después renta fija."</div>
+      <div class="a">Legítima para quien quiera <b>pagarla</b>: con el mismo aporte llega 76% (1 de cada 4 mundos no se retira) y a los 60, no a los 50. Igualar al sistema cuesta ~<b>$2,000/mes — el doble</b>. La "seguridad" extra se paga: en aporte mensual o en años de trabajo.</div></div>
+
+    <div class="objx"><div class="q">"Yo prefiero lo seguro: S&amp;P 500 y ya."</div>
+      <div class="a">¿Seguro medido en qué? En pantalla, sí: cae −44% vs −81%. En lo que importa — tener tu ingreso a los 65 — <b>falla la mitad de los mundos</b>. En los mundos donde falla, el plan dinámico sí llega en el 86%. Un portafolio calmado que no te fondea el retiro es el activo más riesgoso de la lista, solo que su riesgo no se ve hasta el final.</div></div>
+
+    <div class="objx"><div class="q">"Los ETFs apalancados tienen decay; a largo plazo te destruyen."</div>
+      <div class="a">El decay <b>está simulado</b> con rebalanceo diario: la serie de TQQQ marca −91%, −89%, −87% encadenados en 2000–02. Comprar y aguantar apalancado para siempre sí te destruye: la fila "TQQQ siempre" lo muestra (67%, cola de $9k), y es justo lo que el glidepath prohíbe. Usado como fase de arranque, con capital chico y horizonte largo, ese costo ya está pagado dentro de los números que ves.</div></div>
+
+    <div class="objx"><div class="q">"1990–2025 fue la era dorada del Nasdaq; el futuro puede ser distinto."</div>
+      <div class="a"><b>Concedida a medias — y por eso existe la prueba de 100 años.</b> El tamaño del upside sí es apuesta al Nasdaq; la arquitectura de protección no. En el siglo completo el mismo plan da 56–66%, y la dominancia relativa sobre los planes clásicos se mantiene en todas las ventanas (~90% de los mundos). Si el futuro es duro, la respuesta es subir el aporte; el diseño queda igual.</div></div>
+
+    <div class="objx"><div class="q">"El timing es curve-fitting; en vivo no va a funcionar."</div>
+      <div class="a">La regla de la casa es que el sistema se sostiene <b>sin</b> timing. Y la señal pasó el test <b>fuera de muestra</b> (1971–89, datos que jamás vio): cola del plan 6–9× mejor, Nasdaq 3× de 4.3% a 11.8% anual. Tratala como un seguro de cola con evidencia; la base del plan se defiende sin ella.</div></div>
+
+    <div class="objx"><div class="q">"Nadie aguanta ver su cuenta −80%. Te vas a salir en el peor momento."</div>
+      <div class="a">La más seria de todas, porque es conductual. Tres cosas reales: la caída grande pasa <b>temprano, sobre poca plata</b> (medida contra tu meta, la mediana es 19%); el piso con candado hace que una parte de tu cuenta <b>solo suba</b>; y hay perfiles para cada estómago sin cambiar de filosofía. La asesoría es <b>el mecanismo que hace ejecutable el sistema</b>. La peor decisión es venderle el plan agresivo a quien va a abandonarlo en el fondo del ciclo.</div></div>
+
+    <div class="objx"><div class="q">"Si esto funciona, ¿por qué Vanguard no lo ofrece?"</div>
+      <div class="a">Cuatro razones — ninguna es "la matemática está mal": <b>(1) Regulación:</b> un fondo default no puede llevar 3× adentro (límites de apalancamiento del '40 Act, regla 18f-4). <b>(2) Litigio:</b> el TDF es el default legal de los 401k; su diseño optimiza defendibilidad en juicio — fracasar despacio no se demanda. <b>(3) Escala:</b> Vanguard mueve billones; TQQQ entero es ~$20B. <b>(4) Comportamiento:</b> sin asesor al lado, el inversionista promedio abandona en el fondo del ciclo. La matemática está publicada (Yale, Dow Award, Research Affiliates); lo que no existe es el vehículo masivo. Ninguna de las cuatro razones aplica a una cartera personal con asesor.</div></div>
+
+    <div class="tsub" style="margin-top:30px">Las apocalípticas</div>
+    <div class="objx apo"><div class="q">"¿Y si viene hiperinflación del dólar?"</div>
+      <div class="a">Honesto: <b>en hiperinflación todo lo financiero muere</b> — bonos, efectivo, salarios, y ningún backtest te salva porque no está en ningún bloque de 100 años de historia de EE. UU. La respuesta correcta es un <b>seguro catastrófico chico fuera del sistema</b>: algo de oro o bitcoin, dimensionado como una póliza. Para la inflación normal (incluida la de los años 70, que sí está simulada), el plan ya corre en términos reales y la meta se ajusta sola.</div></div>
+
+    <div class="objx apo"><div class="q">"¿Y si San José Capital quiebra?"</div>
+      <div class="a">El piso es deuda <b>respaldada por bienes raíces a valor presente</b>: si el emisor falla, la tierra sigue existiendo y responde por lo invertido. De ahí viene la seguridad. Además el estudio le puso número al supuesto: el piso SJC vale <b>+6–12 puntos de probabilidad si el emisor cumple</b>, y el sistema también corre con bonos corporativos de mercado como piso (es la versión que probamos en el siglo completo). Y el resto del plan — toda la parte invertida en mercado — está en <b>tu propia cuenta</b>, con protección SIPC de $500k, no en la nuestra.</div></div>
+
+    <div class="objx apo"><div class="q">"Un crash de −95% en días puede cerrar el ETF 3×."</div>
+      <div class="a">Riesgo real y no modelado, así que se dice de frente: en un crash extremo un ETF 3× puede cerrar o hacer reverse-splits destructivos. Mitigación honesta: el filtro suele sacar antes (por eso existe), y el glidepath acota cuántos años del plan se pasan ahí.</div></div>
+
+    <div class="objx apo"><div class="q">"¿Y si EE. UU. deja de ser el ganador del siglo?"</div>
+      <div class="a">Sesgo real del estudio: elegimos Nasdaq y S&amp;P — los ganadores del siglo americano — y un futuro donde EE. UU. no gana no está en ningún bloque. Lo que no depende de EE. UU.: la arquitectura (avance a la meta, fases, candado) corre con el índice que sea. Si la creencia cambia, se cambia el activo y el sistema queda igual; la tabla del estudio dice cuánto cuesta cada creencia.</div></div>
+  </div>
+
+  <div class="sec" id="s7">
+    <div class="eyeb">Sección 7 · Historias reales</div>
+    <div class="big" style="text-align:center">No sos el primero en dar el paso</div>
+  </div>
+  <section class="testi">
+    <div class="tfeat">
+      <span class="tfeat-badge">★ Historias reales</span>
+      <img class="tfeat-photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
+      <div class="tfeat-body">
+        <div class="qmark">“</div>
+        <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo, lo que me brindó mayor confianza y claridad. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente. Sin duda, recomendaría su servicio a cualquier persona interesada en empezar a invertir con seguridad y acompañamiento profesional.</p>
+        <div class="tname">Andrés Reyes <span class="role">· Senior Vice President, Citibank</span></div>
+      </div>
+    </div>
+    <div class="tmore">Y muchos más</div>
+    <div class="tcarousel" id="tcarousel">
+      <div class="tcard active">
+        <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Siempre hemos estado en una posición ventajosa para tomar decisiones y aprovechar el capital para distintas necesidades personales. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+          <div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas.</p>
+          <div class="name">Mariana Peña</div><div class="role">Ginecóloga UCR, CCSS</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y puedo decir que me siento muy tranquila y confiada con su asesoría. Desde el primer encuentro se notó lo apasionado que es con el tema. El dinero siempre es delicado, y encontrar a una persona que le dé una perspectiva tan integral ha sido muy valioso. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+          <div class="name">Maricruz Linares</div><div class="role">MSc People Management · Universidad de Navarra</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Mi experiencia con Empowered Investor ha sido verdaderamente transformadora. No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso hacia los mercados bursátiles. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas con paciencia y profesionalismo. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas y construir un futuro con mayor libertad y seguridad.</p>
+          <div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+          <div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Estoy muy contenta con el servicio de Empowered Investor. Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones. Ha sido un gran paso para ampliar mi portafolio y atreverme a probar un tipo de inversión un poco más arriesgada, con la confianza de que cuento con una persona que toma decisiones inteligentes y estratégicas.</p>
+          <div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José no solo me ayudó a invertir, sino que se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Gracias a su ayuda, hoy no solo estoy invirtiendo en la bolsa, sino también en bienes raíces.</p>
+          <div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
+        <div class="body"><div class="qmark">“</div>
+          <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad.</p>
+          <div class="name">Agustín Fallas</div><div class="role">Fotógrafo</div></div>
+      </div>
+    </div>
+    <div class="tnav">
+      <button class="tbtn" id="cprev" type="button" aria-label="Anterior">‹</button>
+      <div class="cdots" id="cdots"></div>
+      <button class="tbtn" id="cnext" type="button" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+
+  <div class="cierre">
+    <h2>Conclusión final</h2>
+    <p class="note" style="font-size:14.5px; margin:0 0 6px">Recorriste el camino completo: tu meta, lo que cuesta el plan clásico, el sistema, el filtro, el estudio y las preguntas difíciles. Lo que queda en pie es el <b style="color:var(--menta)">Timing Freedom Point Fund</b>: el plan que maneja el riesgo desde tu meta, asegura lo ganado con candado, se apalanca cuando el golpe casi no duele, y usa el filtro semanal como seguro. En los tres futuros posibles llega más veces que todo lo que la industria vende. Y en los mundos duros donde queda corto, los planes clásicos quedaron más cortos todavía.</p>
+  </div>
+  <p class="foot">Herramienta interna de trabajo de Empowered Investor para sesiones asesoradas. Los resultados son simulaciones sobre datos históricos sorteados al azar (1990–2025 el motor de la página; 1926–2026 la prueba de siglo, en términos reales); no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija, respaldada por bienes raíces, con permanencia mínima de 3 años. Todo neto de costos de transferencias y del servicio.</p>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/admin/pxdata.js"></script>
+<script src="/fpf/deepdata.js"></script>
 <script>
 "use strict";
 // ===== Retornos anuales (total return, con dividendos). QLD/TQQQ simulados con rebalanceo diario. =====
@@ -280,7 +732,7 @@ function assetRGB(k){ return ASSETCOL[k]||"154,161,171"; }
 
 // ===== estado =====
 var S={ edad:30, edadret:65, ret:4, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, pmin:70,
-  y0:1993, y1:2025, umbral:5000, freq:"umbral", filtro:"off", sinap:false, costos:true,
+  y0:1990, y1:2025, umbral:5000, freq:"umbral", filtro:"off", sinap:false, costos:true,
   crec:12, crecret:8, infl:3, income:10000 };
 // nombre corto de una fase (ETF o SJC con su tasa)
 function faseNom(k){ return k==="SJC" ? ("SJC "+S.sjc+"%") : k; }
@@ -416,6 +868,11 @@ function refresh(){
   var imeta=byId("i-meta"); if(document.activeElement!==imeta) imeta.value=fmt(S.income);       // ingreso derivado del estado
   byId("k-aporte").textContent="$"+fmt(aporte())+"/mes";
   byId("k-aportado").textContent=money(aporte()*12*anios());
+  var im2=byId("i-meta2"); if(im2 && document.activeElement!==im2) im2.value=fmt(S.income);
+  var km2=byId("k-meta2"); if(km2 && document.activeElement!==km2) km2.value=fmt(metaCapital());
+  var ka2=byId("k-aporte2"); if(ka2) ka2.textContent="$"+fmt(aporte())+"/mes";
+  var ey0=byId("e-y0"); if(ey0 && document.activeElement!==ey0) ey0.value=S.edad;
+  var ey1=byId("e-y1"); if(ey1 && document.activeElement!==ey1) ey1.value=S.edad+(S.y1-S.y0);
   byId("lg-L").textContent=S.f1; byId("lg-E").textContent=S.f2; byId("lg-F").textContent=faseNom(S.f3);
   byId("lg-cL").style.background="rgb("+assetRGB(S.f1)+")"; byId("lg-cE").style.background="rgb("+assetRGB(S.f2)+")"; byId("lg-cF").style.background="rgb("+assetRGB(S.f3)+")";
   byId("field-sjc").style.display = (S.f3==="SJC")?"":"none";
@@ -490,7 +947,7 @@ function simHistFW(){
   }
   return {years:years, bal:bal, put:put, wl:wl, we:we, wf:wf, valor:eq+sjc+pending, aportado:pocket, mm:Math.round((i1>i0?(T[i1]-T[i0]):1)*12)};
 }
-var histChart=null;
+var histChart=null, histMirrors={};
 // Pinta, bajo la curva del plan, cuánta plata está en cada fase en cada momento (área apilada por fase).
 var histMix={s:null};
 var phaseFillPlug={ id:"phaseFill", beforeDatasetsDraw:function(ch){
@@ -550,6 +1007,12 @@ function drawHist(s){
       y:{ticks:{color:"#9AA1AB",callback:function(v){return money(v);}},grid:{color:"rgba(140,150,170,.12)"}} } };
   if(histChart) histChart.destroy();
   histChart=new Chart(ctx,{type:"line",data:data,options:opts,plugins:[phaseFillPlug,metaHistPlug]});
+  ["hist-chart2","hist-chart3"].forEach(function(mid){
+    var mc=byId(mid); if(!mc) return;
+    var data2={datasets:data.datasets.map(function(d){ var c={}; for(var k in d) c[k]=d[k]; c.data=d.data.slice(); return c; })};
+    if(histMirrors[mid]) histMirrors[mid].destroy();
+    histMirrors[mid]=new Chart(mc,{type:"line",data:data2,options:opts,plugins:[phaseFillPlug,metaHistPlug]});
+  });
 }
 // Métricas de UN activo suelto (comprar y aguantar) en la ventana [y0,y1].
 function assetStats(k,y0,y1){
@@ -641,6 +1104,7 @@ function renderHist(){
   renderDDstudy(s);
   var fl = S.filtro==="off"?"":({ "9h":"timing 9m", faber:"Faber 10m", "52":"máx. 52 sem", mom:"momentum" })[S.filtro];
   byId("hist-txt").innerHTML="Con este plan ("+planDesc(S.f1,S.f2,S.f3,S.ff)+")"+(fl?", con filtro <b>"+fl+"</b>,":"")+" entre <b>"+S.y0+"</b> y <b>"+S.y1+"</b>: pusiste <b>"+money(s.aportado)+"</b> y hoy tendrías <b>"+money(s.valor)+"</b> (tu plata rindió <b>"+fmt1(ti)+"%</b> anual). Es UNA historia real, no un promedio — el estudio de abajo sortea miles de futuros.";
+  ["hist-txt2","hist-txt3"].forEach(function(tid){ var mt=byId(tid); if(mt) mt.innerHTML=byId("hist-txt").innerHTML; });
 }
 
 // ===== tablas de estudio =====
@@ -651,7 +1115,7 @@ function aplicarCombo(f1,f2,f3,p1,p2,ff,tim){
   if(tim!=null){ S.filtro=tim; var sf=byId("seg-filtro"); if(sf) Array.prototype.forEach.call(sf.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S.filtro); }); }
   ["f1","f2","f3"].forEach(function(k){ var seg=byId("seg-"+k); if(!seg)return;
     Array.prototype.forEach.call(seg.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S[k]); }); });
-  refresh(); var el=byId("hist-chart"); if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+  refresh(); if(!window.__noScroll){ var ids=["hist-chart","hist-chart2","hist-chart3"], best=null, bestD=1e15, mid=window.scrollY+window.innerHeight/2; ids.forEach(function(id){ var el=byId(id); if(!el) return; var r=el.getBoundingClientRect(), c=r.top+window.scrollY+r.height/2, d=Math.abs(c-mid); if(d<bestD){ bestD=d; best=el; } }); if(best) best.scrollIntoView({behavior:"smooth",block:"center"}); } window.__noScroll=false;
 }
 // Tabla ordenable reutilizable. cfg:{ cols:[{key,label,align,sortable,fmt}], rows, top, sortKey, sortDir(-1 desc), rowClass(r), onClick(r), note }
 function sortableTable(mount, cfg){
@@ -916,8 +1380,154 @@ initSeg("seg-f1","f1"); initSeg("seg-f2","f2"); initSeg("seg-f3","f3"); initSeg(
 function initToggle(id, key, onVal){ var c=byId(id); Array.prototype.forEach.call(c.querySelectorAll("button"), function(b){
   b.addEventListener("click", function(){ Array.prototype.forEach.call(c.querySelectorAll("button"),function(x){x.classList.remove("on");}); b.classList.add("on"); S[key]=(b.getAttribute("data-a")===onVal); refresh(); }); }); }
 initToggle("seg-sinap","sinap","sin"); initToggle("seg-costos","costos","con");
-byId("btn-general").addEventListener("click", correrGeneral);
+(function(){ var t=byId("general-out"); if(!t){ return; }
+  if(!("IntersectionObserver" in window)){ correrGeneral(); return; }
+  var done=false, ob=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&!done){ done=true; ob.disconnect(); correrGeneral(); } }); },{rootMargin:"900px"});
+  ob.observe(t); })();
 refresh();
+</script>
+
+<script>
+"use strict";
+// ===== Presets de la narrativa: cargan un plan completo en el laboratorio =====
+var PRESETS={
+  spy:      {f1:"SPY", f2:"SPY", f3:"SPY", p1:70,p2:100,ff:70, tim:"off"},
+  qqq:      {f1:"QQQ", f2:"QQQ", f3:"QQQ", p1:70,p2:100,ff:70, tim:"off"},
+  tdf:      {f1:"SPY", f2:"SPY", f3:"SJC", p1:25,p2:100,ff:100,tim:"off"},
+  fpf:      {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
+  sorpresas:{f1:"TQQQ",f2:"SPY", f3:"SJC", p1:40,p2:100,ff:70, tim:"off"},
+  antes:    {f1:"TQQQ",f2:"QQQ", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
+  qld:      {f1:"QLD", f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
+  blindar:  {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:100,tim:"off"},
+  fpftim:   {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
+  sorpresastim:{f1:"TQQQ",f2:"SPY", f3:"SJC", p1:40,p2:100,ff:70, tim:"9h"},
+  antestim: {f1:"TQQQ",f2:"QQQ", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
+  fpffaber: {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"faber"}
+};
+Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), function(b){
+  b.addEventListener("click", function(){
+    var p=PRESETS[b.getAttribute("data-preset")]; if(!p) return;
+    if(b.hasAttribute("data-stay")) window.__noScroll=true;
+    aplicarCombo(p.f1,p.f2,p.f3,p.p1,p.p2,p.ff,p.tim);
+  });
+});
+// ===== Espejo de "Tus datos" dentro del laboratorio =====
+(function(){
+  var im2=byId("i-meta2"), km2=byId("k-meta2"), ey0=byId("e-y0"), ey1=byId("e-y1");
+  function limpio(el){ var d=el.value.replace(/[^0-9]/g,""); el.value=d?Number(d).toLocaleString("en-US"):""; return num(el.value); }
+  if(im2) im2.addEventListener("input", function(){ setIncome(limpio(im2)); });
+  if(km2) km2.addEventListener("input", function(){ fpToIncome(limpio(km2)); });
+  // La ventana del laboratorio y las edades cuentan la misma historia: desde = tu edad hoy, hasta = tu edad de retiro.
+  function syncVentana(){ var dif=Math.max(1, Math.min(S.edadret-S.edad, 2025-S.y0)); S.y1=S.y0+dif; refresh(); }
+  function syncEdades(){ var dif=S.y1-S.y0; S.edadret=Math.min(80, Math.max(S.edad+1, S.edad+dif)); refresh(); }
+  if(ey0) ey0.addEventListener("input", function(){ var v=parseInt(ey0.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S.edad=Math.min(64,Math.max(18,v)); if(S.edadret<=S.edad) S.edadret=S.edad+1; syncVentana(); });
+  if(ey1) ey1.addEventListener("input", function(){ var v=parseInt(ey1.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S.edadret=Math.min(80,Math.max(S.edad+1,v)); syncVentana(); });
+  Array.prototype.forEach.call(document.querySelectorAll('.stp[data-s="y0"],.stp[data-s="y1"],.stp[data-diff]'), function(b){ b.addEventListener("click", syncEdades); });
+  Array.prototype.forEach.call(document.querySelectorAll('.stp[data-s="edad"],.stp[data-s="edadret"]'), function(b){ b.addEventListener("click", syncVentana); });
+  ["v-edad","v-edadret"].forEach(function(id){ var el=byId(id); if(el) el.addEventListener("input", function(){ setTimeout(syncVentana,0); }); });
+})();
+// ===== Estudio profundo 1971–2025 en vivo (replica exacta del estudio interno) =====
+(function(){
+  var mount=document.getElementById("deep-out"); if(!mount||!window.DEEP) return;
+  var YEARS=35, M=420, META=3e6, AP=1020, FEE=65, SETUP0=2000, MGMT=0.01/12, BLOCK=48, N=5000;
+  var T={}; for(var k in DEEP.assets) T[k]=DEEP.assets[k];
+  var sjcM=Math.pow(1.05,1/12)-1, SJC5=[]; for(var i=0;i<DEEP.n;i++) SJC5.push(sjcM); T.SJC5=SJC5;
+  function fw(phi,p1,p2,Ff){ p1/=100;p2/=100;Ff/=100; if(p2<=p1)p2=p1+0.01;
+    if(phi<=p1) return [1-phi/p1,phi/p1,0];
+    if(phi<=p2){ var u=(phi-p1)/(p2-p1); return [0,1-Ff*u,Ff*u]; }
+    return [0,1-Ff,Ff]; }
+  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function mkDraws(np,seed){ var rng=mulberry32(seed), d=[], B=BLOCK>np?np:BLOCK;
+    for(var q=0;q<N;q++){ var r=new Int32Array(M), pos=0;
+      while(pos<M){ var st=(rng()*(np-B+1))|0; for(var kk=0;kk<B&&pos<M;kk++) r[pos++]=st+kk; }
+      d.push(r); } return d; }
+  function pctl(a,pp){ var srt=a.slice().sort(function(x,y){return x-y;}), i=(srt.length-1)*pp, lo=Math.floor(i), hi=Math.ceil(i); return lo===hi?srt[lo]:srt[lo]+(srt[hi]-srt[lo])*(i-lo); }
+  function runFPF(TT,dr,a1,a2){ var A1=TT[a1],A2=TT[a2],A3=TT.SJC5,fin=[],tim=[],nM=0;
+    for(var q=0;q<dr.length;q++){ var eq=0,fl=0,setup=SETUP0,phiPeak=0,w=[1,0,0],eqW=1,tFl=0,reached=false,hit=0,row=dr[q];
+      for(var m=0;m<M;m++){
+        if((m%12)===0){ var phi=(eq+fl)/META; if(phi>phiPeak)phiPeak=phi; w=fw(phiPeak,70,100,70); eqW=w[0]+w[1]; tFl=w[2]; }
+        var mi=row[m], rE=eqW>1e-9?(w[0]*A1[mi]+w[1]*A2[mi])/eqW:0;
+        eq*=(1+rE); fl*=(1+A3[mi]); eq*=(1-MGMT);
+        var net=AP-FEE; if(setup>0&&net>0){ var pg=Math.min(setup,net); net-=pg; setup-=pg; } if(net>0)eq+=net;
+        var tot=eq+fl, want=tFl*tot; if(want>fl){ var mv=want-fl; if(mv>eq)mv=eq; fl+=mv; eq-=mv; }
+        var b=eq+fl; if(!reached&&b>=META){ reached=true; hit=m+1; }
+      }
+      var bf=eq+fl; fin.push(bf); tim.push(hit>0?hit/12:YEARS+1); if(bf>=META)nM++;
+    }
+    return {fin:fin,tim:tim,p:100*nM/dr.length};
+  }
+  function runBH(TT,dr,mixFn){ var fin=[],tim=[],nM=0;
+    for(var q=0;q<dr.length;q++){ var v=0,setup=SETUP0,reached=false,hit=0,row=dr[q];
+      for(var m=0;m<M;m++){ v*=(1+mixFn(m,row[m])); v*=(1-MGMT);
+        var net=AP-FEE; if(setup>0&&net>0){ var pg=Math.min(setup,net); net-=pg; setup-=pg; } if(net>0)v+=net;
+        if(!reached&&v>=META){ reached=true; hit=m+1; } }
+      fin.push(v); tim.push(hit>0?hit/12:YEARS+1); if(v>=META)nM++;
+    }
+    return {fin:fin,tim:tim,p:100*nM/dr.length};
+  }
+  function stats(r){ var srt=r.fin.slice().sort(function(x,y){return x-y;}), n1=Math.max(1,Math.round(N*0.01)), c=0;
+    for(var i=0;i<n1;i++) c+=srt[i];
+    var t50=pctl(r.tim,.5), t90=pctl(r.tim,.9);
+    return { p:r.p, t:(t50>YEARS?">35":Math.round(t50))+" / "+(t90>YEARS?">35":Math.round(t90)),
+      c1:money(c/n1), med:money(pctl(r.fin,.5)) };
+  }
+  var ESTR=[
+    {id:"fpf3x",  et:1, hi:true,  nom:"FPF dinámico apalancado (Nasdaq 3× → mercado → piso)", f:function(TT,dr){return runFPF(TT,dr,"NDQ3","MKT1");}},
+    {id:"fpf1x",  et:1, hi:false, nom:"El mismo sistema, sin apalancar", f:function(TT,dr){return runFPF(TT,dr,"NDQ1","MKT1");}},
+    {id:"qqq",    et:1, hi:false, nom:"Nasdaq comprar y mantener", f:function(TT,dr){return runBH(TT,dr,function(m,mi){return TT.NDQ1[mi];});}},
+    {id:"spy",    et:1, hi:false, nom:"S&P 500 comprar y mantener", f:function(TT,dr){return runBH(TT,dr,function(m,mi){return TT.MKT1[mi];});}},
+    {id:"tdf",    et:1, hi:false, nom:"Target-date fund típico (por edad)", f:function(TT,dr){return runBH(TT,dr,function(m,mi){ var edad=30+m/12, w=edad<40?0.90:Math.max(0.55,0.90-(edad-40)*(0.35/25)); return w*TT.MKT1[mi]+(1-w)*TT.CORP[mi]; });}},
+    {id:"fpf3xf", et:2, hi:true,  nom:"FPF apalancado + timing", f:function(TT,dr){return runFPF(TT,dr,"NDQ3T","MKT1TN");}},
+    {id:"fpf1xf", et:2, hi:false, nom:"FPF sin apalancar + timing (el timing aislado)", f:function(TT,dr){return runFPF(TT,dr,"NDQ1T","MKT1TN");}}
+  ];
+  var Tstress={}; for(var kk in T) Tstress[kk]=T[kk].slice(0,DEEP.stressEnd);
+  var drH=null, drS=null, RES={}, cola=[], corriendo=false;
+  ESTR.forEach(function(e){ cola.push({e:e,win:"h"}); cola.push({e:e,win:"s"}); });
+  function paso(idx){
+    if(idx>=cola.length){ render(); return; }
+    var it=cola[idx], r=it.win==="h"?it.e.f(T,drH):it.e.f(Tstress,drS);
+    RES[it.e.id+it.win]=r;
+    mount.innerHTML='<p class="note">Corriendo el estudio profundo (1971–2025, 5,000 futuros por estrategia)… <b>'+Math.round(100*(idx+1)/cola.length)+'%</b></p>';
+    setTimeout(function(){ paso(idx+1); }, 10);
+  }
+  function fila(e){ var h=stats(RES[e.id+"h"]), sx=stats(RES[e.id+"s"]);
+    return '<tr'+(e.hi?' style="color:var(--menta);font-weight:800"':'')+'><td style="text-align:left">'+e.nom+'</td><td>'+h.p.toFixed(1)+'%</td><td>'+sx.p.toFixed(1)+'%</td><td>'+h.t+'</td><td>'+h.c1+'</td><td>'+h.med+'</td></tr>';
+  }
+  function tabla(et){ var head='<thead><tr><th style="text-align:left">Estrategia</th><th>Prob. 1971–2025</th><th>Prob. peor época</th><th>Años a la meta<br>típico / pesimista</th><th>Peor 1%</th><th>Mediana a los 65</th></tr></thead>';
+    var rows=ESTR.filter(function(e){return e.et===et;}).map(fila).join("");
+    return '<div style="overflow-x:auto"><table>'+head+'<tbody>'+rows+'</tbody></table></div>';
+  }
+  function render(){
+    mount.innerHTML=
+      '<div class="tsub" style="font-size:15px;margin:8px 0 2px">Etapa 1 · Sin timing: la superioridad del apalancamiento dinámico</div>'+tabla(1)
+      +'<p class="note" style="margin:8px 0 14px">Con el mismo aporte, el apalancamiento dinámico multiplica la probabilidad por 4 a 20 veces según la época. El sistema sin apalancar rinde parecido al Nasdaq solo: el glidepath y el piso protegen, y la probabilidad la compra el <b>apalancamiento temprano</b>.</p>'
+      +'<div class="tsub" style="font-size:15px;margin:14px 0 2px">Etapa 2 · Con timing: la milla extra</div>'+tabla(2)
+      +'<p class="note" style="margin-top:8px">El timing le suma <b>11 puntos</b> al plan apalancado y multiplica la cola por 9. Y el detalle que cierra la discusión: el <b>timing aislado</b> (sin apalancamiento) protege la cola pero <b>baja</b> la probabilidad de llegar. El filtro no es magia por sí solo: su trabajo es hacer seguro el apalancamiento. Las dos piezas se necesitan.</p>';
+  }
+  function arrancar(){ if(corriendo) return; corriendo=true;
+    mount.innerHTML='<p class="note">Preparando datos…</p>';
+    setTimeout(function(){ drH=mkDraws(T.MKT1.length,19710203); drS=mkDraws(Tstress.MKT1.length,19891231); paso(0); },30);
+  }
+  if(!("IntersectionObserver" in window)){ arrancar(); }
+  else { var ob=new IntersectionObserver(function(es){ es.forEach(function(e2){ if(e2.isIntersecting){ ob.disconnect(); arrancar(); } }); },{rootMargin:"900px"});
+    ob.observe(mount); }
+})();
+// ===== Carrusel de testimonios =====
+(function(){
+  var wrap=byId("tcarousel"); if(!wrap) return;
+  var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("cdots"); if(!n) return;
+  for(var k=0;k<n;k++){ (function(idx){ var d=document.createElement("button"); d.className="cdot"+(idx===0?" on":""); d.setAttribute("aria-label","Testimonio "+(idx+1)); d.onclick=function(){ go(idx); reset(); }; dots.appendChild(d); })(k); }
+  function go(idx){ i=(idx+n)%n; for(var j=0;j<n;j++){ cards[j].classList.toggle("active", j===i); dots.children[j].classList.toggle("on", j===i); } }
+  byId("cprev").onclick=function(){ go(i-1); reset(); };
+  byId("cnext").onclick=function(){ go(i+1); reset(); };
+  var timer=setInterval(function(){ go(i+1); }, 11000);
+  function reset(){ clearInterval(timer); timer=setInterval(function(){ go(i+1); }, 11000); }
+  wrap.addEventListener("mouseenter", function(){ clearInterval(timer); });
+  wrap.addEventListener("mouseleave", function(){ reset(); });
+  var x0=null;
+  wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
+  wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
+})();
 </script>
 </body>
 </html>
