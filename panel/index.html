@@ -38,7 +38,9 @@
   .toolbar .tot b{ color:var(--crema); }
   #estado{ font-size:12px; color:var(--gris-sec); margin:0 0 8px; }
   .layout{ display:grid; grid-template-columns:minmax(470px,600px) 1fr; gap:14px; align-items:start; }
-  .lista{ background:var(--card); border:1px solid var(--bd); border-radius:14px; overflow:hidden; }
+  .lista{ background:var(--card); border:1px solid var(--bd); border-radius:14px; overflow:hidden;
+    max-height:calc(100vh - 150px); overflow-y:auto; overscroll-behavior:contain; }
+  .cab{ position:sticky; top:0; z-index:2; }
   .cab, .fila{ display:grid; grid-template-columns:1.22fr .76fr .52fr .52fr .56fr .68fr .58fr .42fr; gap:5px; padding:8px 11px; align-items:center; }
   .cab{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800;
     border-bottom:1px solid var(--bd); background:var(--card2); }
@@ -57,7 +59,8 @@
   .fila .nom{ color:var(--crema); font-weight:700; line-height:1.15; }
   .fila .ali{ font-size:10px; color:var(--gris-sec); font-weight:400; }
   .up{ color:var(--menta); } .down{ color:var(--rojo); }
-  .det{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; position:sticky; top:10px; }
+  .det{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; position:sticky; top:10px;
+    max-height:calc(100vh - 20px); overflow-y:auto; overscroll-behavior:contain; }
   .det .vacio{ color:var(--gris-sec); font-size:13.5px; text-align:center; padding:60px 0; }
   .det h2{ margin:0; font-size:19px; color:var(--crema); }
   .det .sub{ font-size:12px; color:var(--gris-sec); margin-bottom:8px; }
