@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Te duele gastar? · Quiz de 2 minutos · Empowered Investor</title>
+<link rel="canonical" href="https://investorcr.com/quiz/">
+<meta name="description" content="Descubrí tu perfil con la plata en 4 preguntas: tacaño, equilibrado o gastador. Adaptado de la escala Spendthrift–Tightwad (2008).">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿Te duele gastar la plata… o no te duele lo suficiente?">
+<meta property="og:description" content="Quiz de 2 minutos: descubrí si sos tacaño, equilibrado o gastador — y qué significa para tus finanzas.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --rojo:#E0525A; }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  .wrap{ max-width:560px; margin:0 auto; padding:18px 18px 60px; }
+  a.logo{ display:block; text-align:center; margin-bottom:6px; }
+  a.logo img{ height:72px; }
+  .chip{ display:inline-block; font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase;
+    color:var(--menta); background:rgba(99,252,175,.1); border:1px solid rgba(99,252,175,.35); border-radius:999px; padding:5px 14px; }
+  h1{ font-size:clamp(26px,7vw,34px); font-weight:800; color:var(--crema); line-height:1.12; letter-spacing:-.5px; margin:14px 0 10px; text-wrap:balance; }
+  h2{ font-size:clamp(21px,5.6vw,26px); font-weight:800; color:var(--crema); line-height:1.2; letter-spacing:-.3px; margin:4px 0 6px; text-wrap:balance; }
+  .sub{ font-size:15.5px; color:var(--gris-sec); margin:0 0 18px; }
+  .sub b{ color:var(--crema); }
+  .nota{ font-size:12px; color:var(--gris-sec); margin-top:16px; }
+  .btn{ display:block; width:100%; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer;
+    border-radius:999px; font-family:inherit; font-size:17px; font-weight:800; padding:16px 20px; transition:transform .12s ease; text-decoration:none; }
+  .btn:active{ transform:scale(.98); }
+  .btn:disabled{ opacity:.6; cursor:default; }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; }
+  .btn.ghost:hover{ border-color:var(--menta); }
+  .btn:focus-visible, .opcion:focus-visible, input:focus-visible, .rango:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
+  /* progreso */
+  .prog{ display:none; margin:4px 0 20px; }
+  .prog .ptxt{ font-size:12px; font-weight:700; color:var(--gris-sec); letter-spacing:.4px; text-transform:uppercase; margin-bottom:7px; }
+  .prog .pbar{ height:6px; background:var(--card2); border-radius:999px; overflow:hidden; }
+  .prog .pbar i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#2f7d5a,var(--menta)); border-radius:999px; transition:width .3s ease; }
+  /* pantallas */
+  .pantalla{ display:none; animation:entra .35s ease both; }
+  .pantalla.activa{ display:block; }
+  @keyframes entra{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .pantalla{ animation:none; } }
+  /* slider */
+  .rango{ width:100%; margin:26px 0 6px; accent-color:var(--menta); height:34px; }
+  .extremos{ display:flex; justify-content:space-between; gap:14px; font-size:12.5px; color:var(--gris-sec); }
+  .extremos span{ max-width:45%; } .extremos span:last-child{ text-align:right; }
+  .valorlbl{ text-align:center; margin:18px 0 22px; }
+  .valorlbl b{ display:inline-block; font-size:19px; color:var(--crema); background:var(--card); border:1px solid var(--bd);
+    border-radius:12px; padding:9px 22px; min-width:200px; }
+  /* opciones tarjeta */
+  .opciones{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .opcion{ width:100%; text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer;
+    border-radius:14px; font-family:inherit; font-size:16px; font-weight:600; padding:15px 18px; transition:border-color .12s, background .12s; }
+  .opcion:hover{ border-color:var(--menta); }
+  .opcion.sel{ background:rgba(99,252,175,.12); border-color:var(--menta); }
+  /* escenario */
+  .persona{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; font-size:14.5px; margin-bottom:10px; }
+  .persona b{ color:var(--crema); }
+  .preguntita{ font-size:16.5px; font-weight:700; color:var(--crema); margin:16px 0 2px; }
+  /* correo */
+  label.lbl{ display:block; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; margin:16px 0 6px; }
+  input[type=email]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:12px; color:var(--crema);
+    font-family:inherit; font-size:17px; padding:14px 16px; }
+  input[type=email]:focus{ outline:none; border-color:var(--menta); }
+  .error{ display:none; color:var(--rojo); font-size:13.5px; font-weight:600; margin:8px 0 0; }
+  .micro{ font-size:12px; color:var(--gris-sec); text-align:center; margin-top:12px; }
+  /* resultado */
+  .badge{ display:inline-block; font-size:13px; font-weight:800; letter-spacing:1px; text-transform:uppercase;
+    border-radius:999px; padding:7px 18px; margin-bottom:12px; }
+  .badge.tacano{ background:rgba(124,143,247,.15); color:var(--peri); border:1px solid rgba(124,143,247,.5); }
+  .badge.equilibrado{ background:rgba(99,252,175,.12); color:var(--menta); border:1px solid rgba(99,252,175,.5); }
+  .badge.gastador{ background:rgba(224,82,90,.14); color:#ff9ea4; border:1px solid rgba(224,82,90,.5); }
+  .espectro{ margin:20px 0 6px; }
+  .banda{ position:relative; height:12px; border-radius:999px;
+    background:linear-gradient(90deg, var(--peri) 0%, var(--menta) 50%, var(--rojo) 100%); }
+  .banda i{ position:absolute; top:50%; width:22px; height:22px; border-radius:50%; background:var(--crema);
+    border:4px solid var(--tinta); box-shadow:0 0 0 2px var(--crema); transform:translate(-50%,-50%); }
+  .polos{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--gris-sec); margin-top:8px;
+    text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
+  .puntajetxt{ font-size:13px; color:var(--gris-sec); margin:10px 0 20px; }
+  .res-p{ font-size:15.5px; color:var(--gris); margin:0 0 12px; }
+  .res-p b{ color:var(--crema); }
+  .footerchico{ font-size:11.5px; color:var(--gris-sec); margin-top:26px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+
+  <div class="prog" id="prog">
+    <div class="ptxt" id="prog-txt">Pregunta 1 de 4</div>
+    <div class="pbar"><i id="prog-bar"></i></div>
+  </div>
+
+  <!-- 1 · INTRO -->
+  <section class="pantalla activa" id="p-intro">
+    <span class="chip">Quiz · 2 minutos · 4 preguntas</span>
+    <h1>¿Te duele gastar la plata… o no te duele lo suficiente?</h1>
+    <p class="sub">Un estudio con más de <b>13,000 personas</b> encontró que casi todos caemos en uno de tres perfiles: <b>tacaño, equilibrado o gastador</b> — y que tu perfil predice tu deuda y tus ahorros mejor que tu ingreso.</p>
+    <button class="btn" id="btn-empezar">Descubrir mi perfil</button>
+    <p class="nota">Adaptado de la escala de Rick, Cryder y Loewenstein (2008)</p>
+  </section>
+
+  <!-- 2 · PREGUNTA 1: slider -->
+  <section class="pantalla" id="p-1">
+    <h2>¿Cuál descripción se parece más a vos?</h2>
+    <input type="range" class="rango" id="r1" min="1" max="11" step="1" value="6"
+      aria-label="Del 1, me cuesta gastar aunque debería, al 11, me cuesta controlar lo que gasto"
+      aria-valuemin="1" aria-valuemax="11" aria-valuenow="6">
+    <div class="extremos"><span>Me cuesta gastar, aunque debería</span><span>Me cuesta controlar lo que gasto</span></div>
+    <div class="valorlbl"><b id="r1-lbl">Un punto medio</b></div>
+    <button class="btn" id="btn-p1">Siguiente</button>
+  </section>
+
+  <!-- 3 · PREGUNTA 2a -->
+  <section class="pantalla" id="p-2a">
+    <h2>¿Te cuesta limitar tus gastos?</h2>
+    <p class="sub">Comprás ropa, salidas, viajes o antojos aun sabiendo que te convendría no hacerlo.</p>
+    <div class="opciones" id="op-2a"></div>
+  </section>
+
+  <!-- 4 · PREGUNTA 2b -->
+  <section class="pantalla" id="p-2b">
+    <h2>¿Te cuesta gastar la plata?</h2>
+    <p class="sub">Dejás pasar compras que valen la pena — y después te arrepentís de no haberlas hecho.</p>
+    <div class="opciones" id="op-2b"></div>
+  </section>
+
+  <!-- 5 · PREGUNTA 3 -->
+  <section class="pantalla" id="p-3">
+    <h2>Dos amigos, la misma promoción</h2>
+    <div class="persona"><b>Andrés</b> acompaña a un amigo al mall un sábado. En una tienda hay descuentos de hasta 60% solo por ese día. No necesita nada, pero no se resiste: sale con ₡50,000 en cosas que no tenía planeadas.</div>
+    <div class="persona"><b>Marcela</b> ve la misma promoción y encuentra buen precio en varias cosas que sí necesita. Pero la idea de soltar la plata la frena, y al final no compra nada.</div>
+    <p class="preguntita">¿A quién te parecés más?</p>
+    <div class="opciones" id="op-3"></div>
+  </section>
+
+  <!-- 6 · CORREO -->
+  <section class="pantalla" id="p-correo">
+    <span class="chip">Listo — tu resultado está calculado</span>
+    <h2 style="margin-top:14px">¿A dónde te enviamos tu perfil?</h2>
+    <p class="sub">Poné tu correo para ver tu resultado ahora mismo. Además te enviaremos qué significa tu perfil para tus finanzas y cómo sacarle ventaja.</p>
+    <label class="lbl" for="correo">Tu correo</label>
+    <input type="email" id="correo" inputmode="email" autocomplete="email" placeholder="vos@correo.com">
+    <p class="error" id="correo-err">Revisá el correo — parece incompleto.</p>
+    <button class="btn" id="btn-ver" style="margin-top:16px">Ver mi resultado</button>
+    <p class="micro">Sin spam. Podés darte de baja cuando querás.</p>
+  </section>
+
+  <!-- 7 · RESULTADO -->
+  <section class="pantalla" id="p-res">
+    <span class="badge" id="res-badge"></span>
+    <h2 id="res-titulo"></h2>
+    <div class="espectro">
+      <div class="banda"><i id="res-dot" style="left:50%"></i></div>
+      <div class="polos"><span>Tacaño</span><span>Equilibrado</span><span>Gastador</span></div>
+    </div>
+    <p class="puntajetxt" id="res-puntaje"></p>
+    <p class="res-p" id="res-p1"></p>
+    <p class="res-p" id="res-p2"></p>
+    <a class="btn" id="res-cta" href="#" style="margin-top:20px">Quiero mejorar mi relación con la plata →</a>
+    <button class="btn ghost" id="btn-denuevo" style="margin-top:10px">Volver a hacer el quiz</button>
+    <p class="footerchico">Quiz adaptado de la escala Spendthrift–Tightwad de Rick, Cryder y Loewenstein (2008), <i>Journal of Consumer Research</i>. Este quiz es educativo y no constituye asesoría financiera personalizada.</p>
+  </section>
+</div>
+
+<script>
+"use strict";
+// ===== configuración =====
+var WEBHOOK_URL = "";                 // URL del webhook para el lead (vacía = solo log en consola)
+var OFERTA_URL  = "/info";            // a dónde apunta el CTA final (oferta/agenda)
+
+// ===== estado (en memoria; rehacer el quiz lo resetea) =====
+var Q = { p1:6, p2a:null, p2b:null, p3:null, puntaje:null, categoria:null };
+
+var LBL_P1 = {1:"Muy tacaño",2:"Bastante tacaño",3:"Tacaño",4:"Algo tacaño",5:"Levemente tacaño",
+  6:"Un punto medio",7:"Levemente gastador",8:"Algo gastador",9:"Gastador",10:"Bastante gastador",11:"Muy gastador"};
+var OPS_FREQ = ["Nunca","Rara vez","A veces","Con frecuencia","Siempre"];
+var OPS_P3 = ["Definitivamente a Andrés","Un poco más a Andrés","A los dos por igual","Un poco más a Marcela","Definitivamente a Marcela"];
+
+var COPYS = {
+  "Tacaño": {
+    badge:"tacano",
+    titulo:"Gastar te duele — a veces más de la cuenta.",
+    p1:"Sentís el 'dolor de pago' con intensidad: antes de comprar, tu cerebro ya está protestando. Eso te protege de la deuda (en el estudio original, los tacaños tenían el doble de probabilidad de superar los $250,000 en ahorros), pero tiene un costo escondido: dejás pasar gastos e inversiones que sí valen la pena, y te arrepentís después.",
+    p2:"Tu reto no es ahorrar más — eso ya lo hacés. Es aprender a soltar la plata cuando la matemática dice que conviene: invertir, comprar tiempo, o disfrutar sin culpa."
+  },
+  "Equilibrado": {
+    badge:"equilibrado",
+    titulo:"Tu gasto y tus intenciones van bastante alineados.",
+    p1:"Sentís suficiente 'dolor de pago' para frenarte cuando toca, pero no tanto como para privarte de lo que vale la pena. En el estudio original, la mayoría de las personas (alrededor del 60%) cae en este grupo.",
+    p2:"Tu oportunidad está en pasar del control al crecimiento: que la plata que no se te escapa empiece a trabajar por vos con una estrategia de inversión clara."
+  },
+  "Gastador": {
+    badge:"gastador",
+    titulo:"El gasto no te duele lo suficiente — y eso sale caro.",
+    p1:"Comprar te resulta fácil, casi indoloro… hasta que llega el estado de cuenta. En el estudio original, los gastadores tenían el triple de probabilidad de andar endeudados con la tarjeta que los tacaños — sin importar cuánto ganaran.",
+    p2:"La buena noticia: no es falta de disciplina, es cómo estás cableado. Con fricción artificial (reglas, automatización, separar cuentas) podés compensarlo y convertir tu ingreso en patrimonio."
+  }
+};
+
+// ===== navegación de pantallas =====
+var ORDEN = ["p-intro","p-1","p-2a","p-2b","p-3","p-correo","p-res"];
+function $(id){ return document.getElementById(id); }
+function irA(id){
+  ORDEN.forEach(function(p){ $(p).classList.toggle("activa", p===id); });
+  var idx = ORDEN.indexOf(id);
+  var prog = $("prog");
+  if(idx>=1 && idx<=4){
+    prog.style.display="block";
+    $("prog-txt").textContent = "Pregunta "+idx+" de 4";
+    $("prog-bar").style.width = ((idx-1)/4*100)+"%";
+  } else if(id==="p-correo"){
+    prog.style.display="block";
+    $("prog-txt").textContent = "Último paso";
+    $("prog-bar").style.width = "100%";
+  } else {
+    prog.style.display="none";
+  }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ===== pregunta 1: slider =====
+var r1=$("r1");
+function pintarR1(){ $("r1-lbl").textContent = LBL_P1[+r1.value]; r1.setAttribute("aria-valuenow", r1.value); }
+r1.addEventListener("input", pintarR1);
+$("btn-empezar").addEventListener("click", function(){ irA("p-1"); });
+$("btn-p1").addEventListener("click", function(){ Q.p1=+r1.value; irA("p-2a"); });
+
+// ===== opciones tarjeta (avance automático al seleccionar) =====
+function montarOpciones(contId, textos, guardar, siguiente){
+  var cont=$(contId);
+  cont.innerHTML="";
+  textos.forEach(function(txt,i){
+    var b=document.createElement("button");
+    b.type="button"; b.className="opcion"; b.textContent=txt;
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(cont.children, function(x){ x.classList.remove("sel"); });
+      b.classList.add("sel");
+      guardar(i+1);
+      setTimeout(siguiente, 260);
+    });
+    cont.appendChild(b);
+  });
+}
+
+// ===== scoring (2b y 3 son ítems invertidos) =====
+function calcular(){
+  Q.puntaje = Q.p1 + Q.p2a + (6-Q.p2b) + (6-Q.p3);
+  Q.categoria = Q.puntaje<=11 ? "Tacaño" : Q.puntaje<=18 ? "Equilibrado" : "Gastador";
+}
+
+// ===== correo y envío =====
+function correoValido(c){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(c); }
+$("btn-ver").addEventListener("click", async function(){
+  var el=$("correo"), correo=el.value.trim(), err=$("correo-err");
+  if(!correoValido(correo)){ err.style.display="block"; el.focus(); return; }
+  err.style.display="none";
+  var btn=$("btn-ver"); btn.disabled=true; btn.textContent="Un momento…";
+  var lead={ correo:correo, puntaje:Q.puntaje, categoria:Q.categoria, fecha:new Date().toISOString() };
+  try{
+    if(WEBHOOK_URL){
+      await fetch(WEBHOOK_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(lead) });
+    } else {
+      console.log("QUIZ lead (WEBHOOK_URL vacía):", lead);
+    }
+  }catch(e){ console.log("QUIZ webhook falló:", e, lead); }
+  btn.disabled=false; btn.textContent="Ver mi resultado";
+  mostrarResultado();
+});
+$("correo").addEventListener("keydown", function(e){ if(e.key==="Enter") $("btn-ver").click(); });
+
+// ===== resultado =====
+function mostrarResultado(){
+  var c=COPYS[Q.categoria];
+  var badge=$("res-badge");
+  badge.className="badge "+c.badge;
+  badge.textContent=Q.categoria;
+  $("res-titulo").textContent=c.titulo;
+  $("res-p1").textContent=c.p1;
+  $("res-p2").textContent=c.p2;
+  var pct=(Q.puntaje-4)/(26-4)*100;
+  $("res-dot").style.left=Math.max(2,Math.min(98,pct))+"%";
+  $("res-puntaje").textContent="Puntaje: "+Q.puntaje+" de 26 (4 = extremo tacaño · 26 = extremo gastador)";
+  $("res-cta").href=OFERTA_URL;
+  irA("p-res");
+}
+
+// ===== rehacer =====
+$("btn-denuevo").addEventListener("click", function(){
+  Q={ p1:6, p2a:null, p2b:null, p3:null, puntaje:null, categoria:null };
+  r1.value=6; pintarR1();
+  $("correo").value=""; $("correo-err").style.display="none";
+  montar();
+  irA("p-intro");
+});
+
+// ===== armar todo =====
+function montar(){
+  montarOpciones("op-2a", OPS_FREQ, function(v){ Q.p2a=v; }, function(){ irA("p-2b"); });
+  montarOpciones("op-2b", OPS_FREQ, function(v){ Q.p2b=v; }, function(){ irA("p-3"); });
+  montarOpciones("op-3", OPS_P3, function(v){ Q.p3=v; calcular(); }, function(){ irA("p-correo"); });
+}
+pintarR1();
+montar();
+</script>
+</body>
+</html>
