@@ -76,16 +76,46 @@
   .refs{ font-size:13px; color:var(--gris-sec); line-height:1.7; }
   .refs a{ color:var(--menta); text-decoration:none; }
   .foot{ font-size:12px; color:var(--gris-sec); line-height:1.6; text-align:center; margin-top:44px; border-top:1px solid var(--bd); padding-top:22px; }
+
+  /* ===== sellos académicos (mismos de /fpf) ===== */
+  .paperes{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin:14px 0; }
+  .papel{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 15px; }
+  .papel .src{ font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--menta); }
+  .papel h3{ margin:5px 0 5px; font-size:15px; color:var(--crema); line-height:1.35; }
+  .papel p{ margin:0; font-size:12.5px; color:var(--gris-sec); line-height:1.55; }
+  .papel p b{ color:var(--crema); }
+  .papel a{ color:var(--menta); }
+  .papel .logobox{ height:116px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    padding:16px 18px; margin-bottom:12px; background:#F7F3EA; }
+  .papel .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); }
+  .papel .logobox img{ max-height:78px; max-width:92%; }
+  .papel.academia .src, .papel.academia h3{ text-align:center; }
+  .papel.solo{ grid-column:1/-1; justify-self:center; width:100%; max-width:430px; }
+  .sello{ width:78px; height:78px; border-radius:50%; flex:0 0 auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; line-height:1; box-shadow:0 0 0 3px rgba(255,255,255,.045), 0 6px 16px rgba(0,0,0,.45); }
+  .sello small{ display:block; font-size:7.5px; font-weight:800; letter-spacing:1px; text-transform:uppercase; margin-top:4px; opacity:.9; }
+  .sello-ldi{ background:#141B26; border:2.5px solid #55637A; font-size:28px; }
+  .sello-ldi small{ color:#9AA1AB; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
 
-  <div class="eyebrow">Documento de investigación · Se lee en ~15 minutos</div>
+  <div class="eyebrow">Documento de investigación</div>
   <h1>La ciencia detrás de los <em>Freedom Point Funds</em></h1>
   <p class="lede">Dos papers premiados (uno de Yale, otro ganador del Dow Award) llegaron a la misma conclusión incómoda a la que llegamos con nuestro propio research: <b>apalancarse en las etapas tempranas del plan de retiro aumenta la probabilidad de llegar a la meta, mejora los retornos, y en la historia real mejoró incluso los peores escenarios</b>. Detrás hay una idea más grande: manejar el riesgo desde la meta, como lo hace un fondo de pensiones, y no desde el sube-y-baja de la cuenta este mes, es simplemente un estado superior de manejo de fondos de retiro. Acá te los explicamos en el lenguaje más sencillo posible, citamos dónde coincidimos, marcamos dónde nos separamos, y respondemos la pregunta que nos pareció obvia: si esto es tan bueno, ¿por qué no lo hace Vanguard?</p>
   <p class="meta">Empowered Investor · Fuentes citadas al final, todas públicas y verificables</p>
+
+  <!-- ============================================ -->
+  <h2 style="margin-top:10px">Los tres papers, de un vistazo</h2>
+  <p class="note">Cada pieza del sistema tiene respaldo publicado de primer nivel. Lo inusual es juntarlas en un producto para una persona:</p>
+  <div class="paperes">
+    <div class="papel academia"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University"></div><div class="src">Yale · Ayres &amp; Nalebuff</div><h3>Apalancarse de joven reduce el riesgo de retiro</h3><p>"Life-Cycle Investing and Leverage" (SSRN 1149340, luego el libro <i>Lifecycle Investing</i>): 2:1 de joven y desapalancar en fases <b>según el % de tu meta alcanzado</b>: la misma lógica de avance de este sistema. Su argumento es el nuestro: tu verdadera riqueza de joven son los aportes futuros, y diversificar en el tiempo exige más exposición temprana.</p></div>
+    <div class="papel academia"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association"></div><div class="src">CMT Association · Dow Award 2016 · Gayed &amp; Bilello</div><h3>Apalancamiento + filtro de tendencia le gana a comprar y mantener</h3><p>"Leverage for the Long Run": la volatilidad es la enemiga del apalancamiento, y los promedios móviles identifican los regímenes donde el apalancamiento paga. Es la validación premiada de nuestra pieza de filtro más apalancado, con otra señal de la misma familia.</p></div>
+    <div class="papel academia"><div class="logobox"><img src="/assets/logos-academia/ra.svg" alt="Research Affiliates"></div><div class="src">Research Affiliates · Arnott</div><h3>El glidepath de los target-date está al revés</h3><p>"The Glidepath Illusion" (141 años de datos): mucha acción de joven-pobre y poca de viejo-rico no maximiza riqueza ni reduce incertidumbre — hasta el glidepath <b>invertido</b> lo vence. Nuestro estudio confirma lo mismo con otra métrica: el TDF es el peor en probabilidad de llegar, en las tres épocas.</p></div>
+    <div class="papel academia solo"><div class="logobox oscuro"><div class="sello sello-ldi" style="width:92px;height:92px;box-shadow:none;font-size:36px">🏛️<small>Pensiones · LDI</small></div></div><div class="src">Práctica institucional · LDI</div><h3>Los fondos de pensiones ya administran así</h3><p>Funded ratio, triggers de desriesgo al cruzar niveles de fondeo y lock-in del superávit: la práctica estándar de los fondos de beneficio definido hace dos décadas. Nuestro avance a la meta, las fases y el candado son eso pero en tu propia cuenta, manejado por nosotros.</p></div>
+  </div>
 
   <!-- ============================================ -->
   <h2><span class="n">1</span>La idea en 60 segundos</h2>
@@ -308,8 +338,7 @@
   <p class="refs">
     Ayres, I. y Nalebuff, B. (2008). <i>Life-Cycle Investing and Leverage: Buying Stock on Margin Can Reduce Retirement Risk.</i> NBER Working Paper 14094. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener">SSRN 1149340</a> · <a href="https://www.nber.org/papers/w14094" target="_blank" rel="noopener">NBER</a>. Versión libro: <i>Lifecycle Investing</i> (Basic Books, 2010).<br>
     Gayed, M. (2016, act. 2020). <i>Leverage for the Long Run: A Systematic Approach to Managing Risk and Magnifying Returns in Stocks.</i> Charles H. Dow Award 2016. <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2741701" target="_blank" rel="noopener">SSRN 2741701</a>.<br>
-    Arnott, R., Sherrerd, K. y Wu, L. (2013). <i>The Glidepath Illusion... and Potential Solutions.</i> The Journal of Retirement 1(2). <a href="https://www.researchaffiliates.com/content/dam/ra/publications/pdf/241-the-glidepath-illusion.pdf" target="_blank" rel="noopener">PDF público</a>.<br>
-    Nuestro estudio interno (simulaciones con datos 1990-2025 y 1926-2026, timing fuera de muestra): detalle completo disponible a quien lo pida.
+    Arnott, R., Sherrerd, K. y Wu, L. (2013). <i>The Glidepath Illusion... and Potential Solutions.</i> The Journal of Retirement 1(2). <a href="https://www.researchaffiliates.com/content/dam/ra/publications/pdf/241-the-glidepath-illusion.pdf" target="_blank" rel="noopener">PDF público</a>.
   </p>
 
   <p class="foot">Empowered Investor · Documento educativo. Las citas de los papers son traducciones nuestras de los originales en inglés, con página y tabla indicadas para que las verifiqués. Los resultados pasados y simulados no garantizan resultados futuros; toda inversión implica riesgo, y los instrumentos apalancados pueden caer con violencia en el camino. Nada de esto constituye una recomendación individual de inversión: para eso está la conversación.</p>
