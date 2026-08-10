@@ -167,7 +167,7 @@
     <p class="puntajetxt" id="res-puntaje"></p>
     <p class="res-p" id="res-p1"></p>
     <p class="res-p" id="res-p2"></p>
-    <a class="btn" id="res-cta" href="#" style="margin-top:20px">Quiero mejorar mi relación con la plata →</a>
+    <a class="btn" id="res-cta" href="#" target="_blank" rel="noopener" style="margin-top:20px">Quiero mejorar mi relación con la plata →</a>
     <button class="btn ghost" id="btn-denuevo" style="margin-top:10px">Volver a hacer el quiz</button>
     <p class="footerchico">Quiz adaptado de la escala Spendthrift–Tightwad de Rick, Cryder y Loewenstein (2008), <i>Journal of Consumer Research</i>. Este quiz es educativo y no constituye asesoría financiera personalizada.</p>
   </section>
@@ -177,7 +177,7 @@
 "use strict";
 // ===== configuración =====
 var WEBHOOK_URL = "";                 // URL del webhook para el lead (vacía = solo log en consola)
-var OFERTA_URL  = "/info";            // a dónde apunta el CTA final (oferta/agenda)
+var OFERTA_URL  = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";  // CTA final: agendar la llamada
 
 // ===== estado (en memoria; rehacer el quiz lo resetea) =====
 var Q = { p1:6, p2a:null, p2b:null, p3:null, puntaje:null, categoria:null };
@@ -291,7 +291,10 @@ function mostrarResultado(){
   var pct=(Q.puntaje-4)/(26-4)*100;
   $("res-dot").style.left=Math.max(2,Math.min(98,pct))+"%";
   $("res-puntaje").textContent="Puntaje: "+Q.puntaje+" de 26 (4 = extremo tacaño · 26 = extremo gastador)";
-  $("res-cta").href=OFERTA_URL;
+  // el perfil y el puntaje viajan en la URL para saber con quién estás hablando antes de la llamada
+  $("res-cta").href = OFERTA_URL + (OFERTA_URL.indexOf("?")<0?"?":"&")
+    + "utm_source=quiz&utm_medium=cta&utm_campaign=te-duele-gastar&utm_content="
+    + encodeURIComponent(Q.categoria.toLowerCase()+"-"+Q.puntaje);
   irA("p-res");
 }
 
