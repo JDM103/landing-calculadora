@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+CARTA SEMANAL · SOUTHLAND CORPORATE FINANCE
+Cómo actualizar la carta cada semana (menos de 5 minutos):
+
+1. HERO: en <header class="hero"> cambiá:
+   - el <h1>  → título de la nueva edición
+   - <p class="fecha"> → "Lunes X de MES de AAAA · Datos al cierre del viernes X de MES"
+
+2. CONTENIDO: todo el cuerpo vive entre los marcadores
+      INICIO CONTENIDO   y   FIN CONTENIDO
+   Borrá lo viejo y pegá la nueva edición usando estos bloques (copiar de la edición actual):
+   - Sección:         <h2>Título de la sección</h2>   (el guion dorado sale solo)
+   - Párrafo:         <p>Texto…</p>   (negritas con <strong>)
+   - Tabla:           copiá un bloque <div class="tabla"><table>…</table></div> entero
+                      y cambiale las filas; valores negativos con class="neg" (gris sobrio)
+   - Nota de señal:   el bloque <div class="senal">…</div>
+   - Agenda:          <ul class="agenda"><li><strong>Día:</strong> texto</li></ul>
+
+3. El disclaimer y el footer no se tocan. Guardar y publicar como siempre.
+
+(La edición de muestra anterior, con los gráficos, quedó preservada en /sg/muestra/)
+============================================================================= -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta semanal de mercado · Southland Corporate Finance</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23124c91'/%3E%3Ctext x='32' y='44' font-family='Arial' font-size='36' font-weight='bold' fill='%23f2bd0f' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Identidad Southland (extraída del CSS de southlandgroupcf.com):
+     tipografía Raleway; azul corporativo #124c91; dorado #f2bd0f.
+     Sin la paleta de Empowered Investor. */
+  :root{
+    --azul:#124c91; --azul-oscuro:#0d3768; --dorado:#f2bd0f;
+    --texto:#3a3f47; --texto-suave:#6b7077; --linea:#e3e6ea; --fondo:#ffffff; --fondo-suave:#f6f8fa;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--fondo); color:var(--texto); font-family:'Raleway',Arial,sans-serif;
+    font-size:16.5px; line-height:1.75; -webkit-font-smoothing:antialiased; }
+
+  /* ===== encabezado de marca ===== */
+  .marca{ text-align:center; padding:26px 20px 18px; border-bottom:1px solid var(--linea); }
+  .marca .logo{ font-size:clamp(21px,4.6vw,27px); font-weight:800; letter-spacing:4px;
+    color:var(--azul); text-transform:uppercase; }
+  .marca .logo small{ display:block; font-size:.5em; font-weight:600; letter-spacing:5px;
+    color:var(--texto-suave); margin-top:3px; }
+  .marca .sub{ font-size:11.5px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase;
+    color:var(--texto-suave); margin-top:12px; }
+  .marca .sub b{ color:var(--azul); font-weight:700; }
+
+  /* ===== hero ===== */
+  .hero{ background:linear-gradient(160deg, var(--azul) 0%, var(--azul-oscuro) 100%); color:#fff; padding:44px 20px 40px; }
+  .hero .in{ max-width:720px; margin:0 auto; }
+  .hero .kicker{ font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+    color:var(--dorado); margin-bottom:12px; }
+  .hero .kicker::before{ content:"— "; }
+  .hero h1{ font-size:clamp(24px,5vw,33px); font-weight:800; line-height:1.24; letter-spacing:-.2px; text-wrap:balance; }
+  .hero .fecha{ font-size:13px; font-weight:500; letter-spacing:.6px; color:rgba(255,255,255,.78); margin-top:14px; }
+
+  /* ===== cuerpo editorial ===== */
+  .cuerpo{ max-width:720px; margin:0 auto; padding:38px 20px 26px; }
+  .cuerpo p{ margin:0 0 19px; font-weight:400; }
+  .cuerpo strong{ font-weight:700; color:#22262c; }
+  h2{ font-size:clamp(16px,3.6vw,19px); font-weight:800; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--azul); margin:40px 0 15px; line-height:1.4; }
+  h2::before{ content:"—"; color:var(--dorado); margin-right:10px; }
+
+  /* ===== tablas ===== */
+  .tabla{ overflow-x:auto; margin:6px 0 24px; border:1px solid var(--linea); border-radius:6px; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; min-width:520px; }
+  thead th{ background:var(--azul); color:#fff; font-weight:700; letter-spacing:.4px; text-align:left;
+    padding:11px 14px; white-space:nowrap; }
+  thead th:not(:first-child){ text-align:right; }
+  tbody td{ padding:10px 14px; border-bottom:1px solid var(--linea); font-variant-numeric:tabular-nums; }
+  tbody td:not(:first-child){ text-align:right; white-space:nowrap; }
+  tbody td:first-child{ font-weight:600; color:#22262c; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover td{ background:var(--fondo-suave); }
+  .neg{ color:var(--texto-suave); }
+
+  /* ===== nota de señal ===== */
+  .senal{ background:var(--fondo-suave); border-left:3px solid var(--dorado); padding:16px 18px;
+    margin:0 0 24px; font-size:15px; }
+  .senal b{ color:var(--azul); font-weight:700; }
+
+  /* ===== agenda ===== */
+  .agenda{ list-style:none; margin:0 0 20px; }
+  .agenda li{ padding:9px 0 9px 24px; border-bottom:1px solid var(--linea); position:relative; }
+  .agenda li::before{ content:"—"; position:absolute; left:0; color:var(--dorado); font-weight:800; }
+  .agenda li:last-child{ border-bottom:none; }
+
+  /* ===== disclaimer y footer ===== */
+  .disclaimer{ max-width:720px; margin:0 auto; padding:22px 20px 40px; font-size:11.5px; line-height:1.7;
+    color:var(--texto-suave); border-top:1px solid var(--linea); }
+  footer{ background:var(--azul-oscuro); color:rgba(255,255,255,.85); text-align:center; padding:26px 20px;
+    font-size:12.5px; letter-spacing:.4px; }
+  footer b{ color:#fff; }
+  footer .anio{ color:var(--dorado); font-weight:700; }
+  @media(max-width:560px){ body{ font-size:15.5px; } }
+</style>
+</head>
+<body>
+
+<div class="marca">
+  <div class="logo">Southland<small>Corporate Finance</small></div>
+  <div class="sub">Carta semanal de mercado · preparada por <b>Empowered Investor</b></div>
+</div>
+
+<header class="hero">
+  <div class="in">
+    <div class="kicker">Carta semanal de mercado</div>
+    <h1>El consenso llegó a donde dijo que llegaría, cinco meses antes de lo previsto</h1>
+    <p class="fecha">Lunes 10 de agosto de 2026 · Datos al cierre del viernes 7 de agosto</p>
+  </div>
+</header>
+
+<main class="cuerpo">
+<!-- ================= INICIO CONTENIDO (pegar la nueva edición aquí) ================= -->
+
+  <p>El S&amp;P 500 cerró la semana en <strong>7,757.64</strong>, su máximo histórico de cierre. El objetivo que Wall Street fijó en enero para todo 2026 implicaba un avance de 13.4%. El mercado ya acumula 13.3% y falta casi medio año.</p>
+
+  <h2>El empleo se dio vuelta</h2>
+  <p>El viernes salió el reporte de julio y fue débil. La economía perdió <strong>23,000 empleos</strong> cuando el consenso esperaba entre 80,000 y 95,000 de ganancia. El desempleo bajó a 4.1%, pero bajó por la razón equivocada: menos gente buscando trabajo. Además, las cifras de mayo y junio se revisaron a la baja por 103,000 empleos combinados. El crecimiento salarial anual quedó en 3.2%, el más bajo desde mayo de 2021.</p>
+  <p>La reacción del mercado fue reveladora. El S&amp;P 500 subió 3.58% en la semana y el Nasdaq 100 subió 5.12%. Malas noticias del empleo, buenas noticias para las acciones. La lógica es directa: la Fed venía perfilada para subir tasas en setiembre y ese escenario se desinfló. Las probabilidades de alza cayeron a 44% según los futuros de CME.</p>
+
+  <h2>Dónde está el mercado</h2>
+  <p>El S&amp;P 500 cerró en su nivel más alto de la historia. El Nasdaq 100 quedó en 29,722.30, todavía 3.06% debajo del máximo que marcó el 2 de junio.</p>
+  <p>El movimiento de la semana estuvo en los metales. El oro subió 7.20% en cinco sesiones, hasta 4,340.70 dólares la onza, su mejor semana desde enero. El detonante fue el reporte de empleo, con el dólar y los rendimientos del Tesoro cayendo. La tensión en el Estrecho de Ormuz y la compra de bancos centrales le sostienen el piso. Aun con ese salto, queda 18.38% debajo del máximo que registró el 29 de enero. Vino de una corrección profunda y esto todavía es recuperación.</p>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Indicador</th><th>Nivel</th><th>Contexto</th></tr></thead>
+    <tbody>
+      <tr><td>S&amp;P 500</td><td>7,757.64</td><td>Máximo histórico de cierre. +3.58% en la semana</td></tr>
+      <tr><td>Nasdaq 100</td><td>29,722.30</td><td>3.06% debajo del máximo. +5.12% en la semana</td></tr>
+      <tr><td>Índice dólar</td><td>99.60</td><td class="neg">−0.20% en la semana</td></tr>
+      <tr><td>Oro</td><td>4,340.70</td><td>18.38% debajo del máximo. +7.20% en la semana</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="senal"><b>Señal de momentum: sin activar.</b> Seguimos la distancia de cada índice al máximo de cierre de las últimas 39 semanas, con umbral en 18%. El S&amp;P 500 está en 0.00% de ese máximo y el Nasdaq 100 en 3.06%. Ninguno se acerca al umbral. Esta lectura va en cada edición, activada o no, porque su valor está en la consistencia del seguimiento.</div>
+
+  <h2>Inflación: el dato del miércoles manda</h2>
+  <p>El reporte de precios al consumidor de julio se publica el miércoles. La lectura de junio fue amable: el CPI general bajó a 3.5% anual y el subyacente quedó en 2.6%, bastante debajo del 2.9% que esperaba el consenso.</p>
+  <p>Si la inflación sigue cediendo, la Fed tiene espacio para quedarse quieta pese a un mercado laboral que se enfrió. Si rebota, vuelve la presión del alza y el rally de la semana pasada queda sin piso. Es el dato más cargado del mes. No hay reunión de la Fed esta semana ni la próxima; la siguiente es el 15 y 16 de setiembre.</p>
+
+  <h2>La factura de la inteligencia artificial se está financiando con deuda</h2>
+  <p>Según Goldman Sachs Research, las empresas ya emitieron cerca de <strong>500,000 millones de dólares</strong> en deuda ligada a inteligencia artificial en lo que va de 2026. Los hyperscalers pusieron el 40% de esa emisión. Goldman calcula que podrían levantar 2 billones más sin perder su grado de inversión, y ahí aparece la pregunta: el mercado de grado de inversión no absorbe ese tamaño, de modo que el financiamiento tendría que migrar hacia crédito privado y mercados de alto rendimiento.</p>
+  <p>Un dato de amplitud que equilibra el cuadro: el S&amp;P 500 en versión equal weight lleva 13.3% en el año contra 11% de la versión tradicional. Las ganancias dejaron de venir solo de las más grandes.</p>
+
+  <h2>Objetivos de Wall Street: diez firmas, un recorrido mediano de 3.1%</h2>
+  <p>Con el índice en máximos, los objetivos publicados para el cierre de 2026 se agrupan en una banda estrecha. Ocho de las diez firmas que seguimos están entre 7,800 y 8,150. La mediana queda en 8,000, que desde el cierre del viernes implica 3.12% de recorrido para lo que resta del año.</p>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Firma</th><th>Estratega</th><th>Objetivo 2026</th><th>Recorrido implícito</th></tr></thead>
+    <tbody>
+      <tr><td>RBC</td><td>Calvasina</td><td>8,150</td><td>+5.06%</td></tr>
+      <tr><td>Citi</td><td>Chronert</td><td>8,100</td><td>+4.41%</td></tr>
+      <tr><td>J.P. Morgan</td><td>Lakos-Bujas</td><td>8,000</td><td>+3.12%</td></tr>
+      <tr><td>Goldman Sachs</td><td>Snider</td><td>8,000</td><td>+3.12%</td></tr>
+      <tr><td>Morgan Stanley</td><td>Wilson</td><td>8,000</td><td>+3.12%</td></tr>
+      <tr><td>Deutsche Bank</td><td>Chadha</td><td>8,000</td><td>+3.12%</td></tr>
+      <tr><td>Wells Fargo</td><td>Kwon</td><td>7,950</td><td>+2.48%</td></tr>
+      <tr><td>UBS</td><td>CIO</td><td>7,900</td><td>+1.84%</td></tr>
+      <tr><td>Barclays</td><td>Krishna</td><td>7,800</td><td>+0.55%</td></tr>
+      <tr><td>Bank of America</td><td>Subramanian</td><td>7,100</td><td class="neg">−8.48%</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>El motor que todas citan es el mismo: la inversión de capital en inteligencia artificial y el crecimiento de utilidades que la acompaña. Las estimaciones de utilidad por acción para 2026 van de 335 dólares en UBS a 365 en J.P. Morgan. Conviene notar de dónde viene el optimismo: casi todas las revisiones al alza de este año se apoyan en subir la estimación de utilidades, no en pagar un múltiplo más alto por ellas.</p>
+
+  <h2>La lección del historial: en ocho años, el consenso no acertó ninguno</h2>
+  <p>Entre 2018 y 2025 el objetivo de consenso fijado en enero se desvió del resultado real todos los años. El error absoluto promedio fue de 15.7 puntos porcentuales de rendimiento. Solo 2025 cayó dentro de una banda de cinco puntos.</p>
+  <p>Los extremos muestran que el sesgo no corre en una sola dirección. En 2022 el consenso implicaba un avance de 3.9% y el mercado cayó 19.4%. En 2024 implicaba 1.9% y el mercado subió 23.3%.</p>
+  <p>De ahí sale nuestra forma de presentar estos números. Un objetivo de precio es la opinión de un estratega en una fecha, sujeta a revisión constante. J.P. Morgan movió su objetivo de 2026 entre 7,200 y 8,000 en el transcurso de un mismo año. Presentamos el abanico completo y el historial de acierto, para que su decisión se ancle en su horizonte y en su diversificación, no en una cifra puntual.</p>
+
+  <h2>J.P. Morgan: objetivo en 8,000 y una Fed que podría subir tasas en diciembre</h2>
+  <p>El equipo de Dubravko Lakos-Bujas elevó su objetivo de fin de 2026 a 8,000 desde 7,800, con el 87% de las empresas del S&amp;P 500 ya reportadas. La firma subió su estimación de utilidad por acción a 365 dólares para 2026 y a 420 para 2027, manteniendo el múltiplo cerca de 20 veces.</p>
+  <p>El cambio de postura más relevante está en la Fed. J.P. Morgan pasó de esperar pausa a proyectar un alza de tasas en diciembre de 2026. Eso importa por una vía concreta: un alza tiende a comprimir los múltiplos, y todos los objetivos de 8,000 o más dependen de que las utilidades sostengan la valuación actual.</p>
+  <p>En el resto de los activos, la firma proyecta el rendimiento del Tesoro a 2 años hacia 4.20% y el de 10 años hacia 4.70% al cierre del año. En oro mantiene una lectura constructiva, con la posibilidad de 6,000 dólares la onza en diciembre. Entre los riesgos que la propia firma señala está la aglomeración extrema en el factor de momentum, que describe como riesgo de reversión brusca.</p>
+
+  <h2>El contrapunto: Bank of America y Vanguard</h2>
+  <p>Savita Subramanian mantiene el objetivo más bajo de Wall Street en 7,100, que implicaría una caída de 8.48%. Su argumento es de valuación y concentración: siete de los diez indicadores bajistas que su equipo monitorea estaban activados en mayo, el nivel promedio observado antes de los mercados bajistas desde 1990. Su preferencia sectorial va a salud e inmobiliario.</p>
+  <p>Vanguard aporta el otro contrapeso. Su modelo de mercados de capital proyecta rendimientos anualizados de 3.9% a 5.9% para la renta variable estadounidense en los próximos diez años. La utilidad de esa cifra está en la escala de tiempo: ordena la expectativa de largo plazo de quien hoy ve el índice en máximos.</p>
+  <p>Incluimos estas posiciones con el mismo espacio que las alcistas. Un cliente que solo escucha el lado constructivo del consenso no está recibiendo el consenso.</p>
+
+  <h2>David Kelly: la inteligencia artificial carga la economía y los salarios se quedaron atrás</h2>
+  <p>David Kelly, estratega global jefe de J.P. Morgan Asset Management, publicó su lectura para el resto del año. Su tesis es que el auge de la inteligencia artificial sostiene la economía casi solo, y que debajo de ese motor hay bastante debilidad.</p>
+  <p>Kelly apunta que el crecimiento del empleo del último año es apenas positivo según la encuesta de nóminas y negativo según la de hogares. Por estimación de su equipo, el crecimiento salarial quedó debajo de la inflación por cuarto mes consecutivo. Lee esa combinación como un mercado laboral apretado por falta de trabajadores, sin poder de negociación para quien ya tiene empleo.</p>
+  <p>Sobre las utilidades del segundo trimestre deja una advertencia de lectura. FactSet reportó un salto cercano al 50% anual en utilidad por acción. Kelly señala que más de 150 mil millones de dólares de esa cifra corresponden a ganancias de capital no realizadas de dos empresas grandes de tecnología. Sin ese efecto, el avance ronda 20%, que sigue siendo fuerte para una economía que crece despacio, con un 85% de empresas superando expectativas.</p>
+  <p>En valuación deja una comparación que vale tener presente. Kelly calcula que el valor de mercado de todas las acciones corporativas de Estados Unidos supera el 400% del producto interno bruto. Antes de la pandemia iba en 244%. En el pico de la burbuja de las empresas de internet llegó a 204%. Su argumento es que el valor de las empresas depende del trabajo y del gasto de la población, de modo que le cuesta ver a las acciones sostener el ritmo si la situación del consumidor no mejora. Su conclusión no es salir del mercado, es diversificar: internacionales más baratas que sus pares de EE.UU., renta fija bien valorada si la inflación cede, y alternativos como diversificación adicional.</p>
+  <p>Su proyección para el miércoles: CPI de julio en 3.4% anual, contra 3.5% en junio. Y su llamada para setiembre: la Fed se mantiene quieta. Aunque el chairman Warsh ha expresado impaciencia con la inflación sobre la meta, Kelly cree que el comité verá suficiente evidencia de que va en camino descendente.</p>
+
+  <h2>La semana entrante</h2>
+  <ul class="agenda">
+    <li><strong>Miércoles 12:</strong> CPI de julio. Es el dato que define la discusión de setiembre.</li>
+    <li><strong>Jueves 13:</strong> PPI de julio.</li>
+    <li>Ninguna de las gigantes reporta en esta ventana. Nvidia va el 26 de agosto.</li>
+  </ul>
+  <p>Con la temporada de resultados por encima del 85% de la capitalización del índice ya reportada, la atención se traslada de las utilidades hacia la trayectoria de tasas.</p>
+
+<!-- ================= FIN CONTENIDO ================= -->
+</main>
+
+<div class="disclaimer">
+  Este material fue preparado por Empowered Investor con fines exclusivamente informativos y educativos para Southland Corporate Finance y sus clientes. No constituye una recomendación de inversión, una oferta ni una solicitud de compra o venta de valor alguno. Los datos provienen de fuentes públicas consideradas confiables al cierre del viernes indicado; su exactitud y vigencia no están garantizadas. Los objetivos de precio citados son opiniones de sus respectivos estrategas, sujetas a revisión sin previo aviso. El desempeño pasado no garantiza resultados futuros. Toda decisión de inversión debe evaluarse a la luz de los objetivos, el horizonte y la tolerancia al riesgo de cada inversionista, idealmente con asesoría profesional.
+</div>
+
+<footer>
+  Preparado por <b>Empowered Investor</b> para <b>Southland Corporate Finance</b> · <span class="anio">2026</span>
+</footer>
+
+</body>
+</html>

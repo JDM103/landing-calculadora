@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta semanal de mercado · Muestra para Southland Group</title>
+<meta name="description" content="Muestra de la carta semanal de mercado que Empowered Investor prepararía para los clientes de Southland Group Corporate Finance. Objetivos de Wall Street para el cierre de 2026 y el historial de acierto de esos objetivos.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ---------------------------------------------------------------------------
+   Registro tipografico tomado de southlandgroupcf.com: Futura LT Light para
+   titulos y Helvetica para texto corrido. Futura no esta en Google Fonts, asi
+   que se usa Jost, que es un homenaje geometrico a Futura y sostiene el mismo
+   peso ligero en mayusculas. El cuerpo va en Helvetica nativa, que es
+   literalmente la que usa Southland.
+   --------------------------------------------------------------------------- */
+:root{
+  --papel:#FCFCFB;  --tinta:#14202E;  --tinta-2:#4A5563;  --tinta-3:#7C8593;
+  --linea:#E4E2DD;  --linea-2:#EFEDE9; --realce:#F5F4F0;
+  --mercado:#2C55A8;    /* validado: L .506, ΔE 24.0 protan vs laton */
+  --consenso:#9A6410;   /* validado: L .541 */
+  --sello:#1E7A52;
+  --display:'Jost','Century Gothic','Futura',sans-serif;
+  --texto:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --papel:#14181D; --tinta:#EDEFF2; --tinta-2:#A8B0BB; --tinta-3:#79818D;
+    --linea:#262C34; --linea-2:#1E242B; --realce:#1A1F26;
+    --mercado:#6D8FD8; --consenso:#C68128; --sello:#4FBF8B;
+  }
+}
+:root[data-theme="light"]{
+  --papel:#FCFCFB; --tinta:#14202E; --tinta-2:#4A5563; --tinta-3:#7C8593;
+  --linea:#E4E2DD; --linea-2:#EFEDE9; --realce:#F5F4F0;
+  --mercado:#2C55A8; --consenso:#9A6410; --sello:#1E7A52;
+}
+:root[data-theme="dark"]{
+  --papel:#14181D; --tinta:#EDEFF2; --tinta-2:#A8B0BB; --tinta-3:#79818D;
+  --linea:#262C34; --linea-2:#1E242B; --realce:#1A1F26;
+  --mercado:#6D8FD8; --consenso:#C68128; --sello:#4FBF8B;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--papel); color:var(--tinta);
+  font-family:var(--texto); font-size:16.5px; line-height:1.62;
+  font-weight:400; -webkit-font-smoothing:antialiased;
+}
+.hoja{max-width:1080px; margin:0 auto; padding:0 32px 80px;}
+.col{max-width:660px;}
+@media (max-width:640px){ .hoja{padding:0 20px 60px;} body{font-size:16px;} }
+
+/* --- Tipografia --- */
+.rotulo{
+  font-family:var(--display); font-weight:400; font-size:11px;
+  letter-spacing:.19em; text-transform:uppercase; color:var(--tinta-3);
+}
+h1,h2,h3{font-family:var(--display); font-weight:300; letter-spacing:-.005em; text-wrap:balance;}
+h1{font-size:clamp(30px,4.6vw,46px); line-height:1.1; margin-bottom:18px;}
+h2{
+  font-size:clamp(21px,2.6vw,27px); line-height:1.22; font-weight:300;
+  margin:0 0 14px; padding-top:4px;
+}
+h3{font-size:17px; font-weight:500; letter-spacing:.01em; margin-bottom:8px;}
+p{margin-bottom:16px;}
+p.pie{font-size:13.5px; line-height:1.55; color:var(--tinta-3); margin-bottom:0;}
+em{font-style:italic;}
+strong{font-weight:600;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* --- Cabecera --- */
+.aviso{
+  border-bottom:1px solid var(--linea); background:var(--realce);
+  padding:11px 0; margin-bottom:0;
+}
+.aviso .hoja{padding-bottom:0;}
+.aviso p{
+  font-family:var(--display); font-size:11.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--tinta-2); margin:0; line-height:1.5;
+}
+.aviso b{color:var(--tinta); font-weight:500;}
+
+.masthead{padding:46px 0 0;}
+.firma{
+  font-family:var(--display); font-size:15px; font-weight:500;
+  letter-spacing:.26em; text-transform:uppercase; color:var(--tinta);
+}
+.masthead .linea{height:1px; background:var(--tinta); margin:14px 0 30px; opacity:.85;}
+.fecha{margin-top:20px; display:flex; gap:26px; flex-wrap:wrap; align-items:baseline;}
+.bajada{font-size:18px; line-height:1.55; color:var(--tinta-2); max-width:620px; margin-top:6px;}
+
+/* --- Nota de encuadre --- */
+.encuadre{
+  border:1px solid var(--linea); border-left:2px solid var(--mercado);
+  padding:26px 28px; margin:38px 0 0; max-width:700px;
+}
+.encuadre h3{font-family:var(--display); font-weight:400; font-size:15px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--tinta-3); margin-bottom:12px;}
+.encuadre p:last-child{margin-bottom:0;}
+
+/* --- Secciones --- */
+section{padding-top:52px;}
+section > .rotulo{display:block; margin-bottom:11px;}
+.regla{height:1px; background:var(--linea); margin:0;}
+
+/* --- Radar --- */
+.radar{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  gap:1px; background:var(--linea); border:1px solid var(--linea); margin:6px 0 20px;
+}
+.radar div{background:var(--papel); padding:17px 18px;}
+.radar dt{font-family:var(--display); font-size:10.5px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--tinta-3); margin-bottom:7px;}
+.radar dd{font-family:var(--display); font-size:25px; font-weight:300;
+  font-variant-numeric:tabular-nums; line-height:1.1;}
+.radar .sub{font-size:12.5px; color:var(--tinta-2); margin-top:6px; line-height:1.45;
+  font-family:var(--texto); font-variant-numeric:tabular-nums;}
+
+/* --- Señal --- */
+.senal{
+  display:flex; gap:14px; align-items:flex-start; border:1px solid var(--linea);
+  padding:18px 20px; margin:0 0 6px; max-width:700px;
+}
+.senal .marca{
+  flex:0 0 auto; width:9px; height:9px; border-radius:50%;
+  background:var(--sello); margin-top:7px;
+}
+.senal p{margin:0; font-size:15px; line-height:1.55;}
+
+/* --- Figuras --- */
+figure{margin:26px 0 0;}
+.lienzo{width:100%; display:block;}
+figcaption{font-size:13px; line-height:1.55; color:var(--tinta-3); margin-top:14px; max-width:760px;}
+.leyenda{display:flex; gap:22px; flex-wrap:wrap; margin:0 0 14px; align-items:center;}
+.leyenda span{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--tinta-2);}
+.leyenda i{display:block; width:15px; height:0; border-top:2px solid; flex:0 0 auto;}
+.leyenda i.punto{width:9px; height:9px; border:2px solid; border-radius:50%; border-top-width:2px;}
+.panel{border:1px solid var(--linea); padding:20px 18px 14px; margin-top:0;}
+.panel + .panel{border-top:none;}
+.panel h3{font-family:var(--display); font-weight:400; font-size:13px;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--tinta-3);}
+
+/* --- Tablas --- */
+.tabla-env{overflow-x:auto; margin:6px 0 0; border:1px solid var(--linea);}
+table{border-collapse:collapse; width:100%; min-width:520px; font-size:14.5px;}
+th,td{padding:11px 16px; text-align:right; border-bottom:1px solid var(--linea-2);
+  font-variant-numeric:tabular-nums; white-space:nowrap;}
+th:first-child,td:first-child{text-align:left;}
+thead th{
+  font-family:var(--display); font-weight:400; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--tinta-3); border-bottom:1px solid var(--linea);
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.destaca td{background:var(--realce); font-weight:600;}
+tbody tr.mediana td{border-top:1px solid var(--linea); color:var(--tinta-2);}
+td.sube{color:var(--mercado);}
+td.baja{color:var(--consenso);}
+
+details{margin-top:22px; border-top:1px solid var(--linea); padding-top:16px;}
+summary{cursor:pointer; font-family:var(--display); font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--tinta-2);}
+summary:hover{color:var(--tinta);}
+details .tabla-env{margin-top:16px;}
+
+/* --- Cierre --- */
+.cierre{margin-top:56px; border-top:1px solid var(--tinta); padding-top:28px;}
+.legal{font-size:12.5px; line-height:1.62; color:var(--tinta-3); max-width:760px;}
+.legal p + p{margin-top:11px;}
+.cta{
+  display:inline-block; margin-top:26px; font-family:var(--display); font-size:13px;
+  letter-spacing:.13em; text-transform:uppercase; text-decoration:none;
+  color:var(--papel); background:var(--tinta); padding:14px 26px;
+}
+.cta:hover{opacity:.88;}
+.cta:focus-visible{outline:2px solid var(--mercado); outline-offset:3px;}
+
+/* --- Tooltip --- */
+#tip{
+  position:fixed; pointer-events:none; opacity:0; transition:opacity .1s;
+  background:var(--papel); border:1px solid var(--tinta); padding:9px 12px;
+  font-size:12.5px; line-height:1.5; font-variant-numeric:tabular-nums;
+  z-index:20; max-width:220px;
+}
+#tip.on{opacity:1;}
+#tip b{font-family:var(--display); font-weight:500; display:block; margin-bottom:4px;}
+#tip s{text-decoration:none; display:block;}
+@media (prefers-reduced-motion: reduce){ #tip{transition:none;} }
+</style>
+</head>
+<body>
+
+<div class="aviso">
+  <div class="hoja">
+    <p><b>Muestra</b> · Preparada por Empowered Investor para la consideración de
+    Southland Group Corporate Finance. No es una publicación de Southland Group.</p>
+  </div>
+</div>
+
+<div class="hoja">
+
+  <header class="masthead">
+    <div class="firma">Empowered Investor</div>
+    <div class="linea"></div>
+    <span class="rotulo">Carta semanal de mercado · Edición de muestra</span>
+    <h1>El consenso llegó a donde dijo que llegaría, cinco meses antes de lo previsto</h1>
+    <p class="bajada">El S&amp;P 500 cerró la semana en su máximo histórico. El objetivo
+    que Wall Street fijó en enero para todo 2026 implicaba un 13.4% de avance. El
+    mercado ya lleva 13.3% y falta casi medio año.</p>
+    <div class="fecha">
+      <span class="rotulo">Lunes 10 de agosto de 2026</span>
+      <span class="rotulo">Datos al cierre del viernes 7 de agosto</span>
+    </div>
+  </header>
+
+  <div class="encuadre">
+    <h3>Para Víctor Serrato</h3>
+    <p>Víctor, esta es una edición real construida con los datos de la semana pasada,
+    para que pueda ver el producto terminado y no una descripción de lo que sería.</p>
+    <p>El formato sigue tres reglas. Cada cifra se verifica contra la fuente primaria
+    antes de publicarse. Cada idea de una casa de research va parafraseada y atribuida
+    por nombre. Y ninguna sección se rellena: si en una semana un tema no tuvo novedad
+    relevante, ese tema no aparece.</p>
+    <p>El registro es formal y de trato de usted, alineado con la voz de Southland
+    Group. La carta que enviamos a nuestros propios clientes usa un tono más cercano,
+    y esa diferencia es deliberada.</p>
+  </div>
+
+  <section>
+    <span class="rotulo">Dónde está el mercado</span>
+    <h2>Máximo histórico en acciones, y el oro 18% debajo de su pico de enero</h2>
+
+    <div class="col">
+      <p>El S&amp;P 500 cerró el viernes en 7,757.64, que es su cierre más alto en
+      la historia del índice. El avance del año va en 13.3%. El Nasdaq 100 cerró en
+      29,722.30, todavía 3.06% debajo del máximo que marcó el 2 de junio.</p>
+      <p>El movimiento de la semana estuvo en los metales. El oro subió 7.20% en cinco
+      sesiones, hasta 4,340.70 dólares la onza. Aun con ese salto queda 18.38% debajo
+      del máximo que hizo el 29 de enero. El índice dólar cerró en 99.60, casi sin
+      cambio en la semana.</p>
+    </div>
+
+    <dl class="radar">
+      <div><dt>S&amp;P 500</dt><dd class="num">7,757.64</dd>
+        <div class="sub">Máximo histórico de cierre<br>+3.58% en la semana</div></div>
+      <div><dt>Nasdaq 100</dt><dd class="num">29,722.30</dd>
+        <div class="sub">3.06% debajo del máximo<br>+5.12% en la semana</div></div>
+      <div><dt>Índice dólar</dt><dd class="num">99.60</dd>
+        <div class="sub">1.98% debajo del máximo<br>-0.20% en la semana</div></div>
+      <div><dt>Oro</dt><dd class="num">4,340.70</dd>
+        <div class="sub">18.38% debajo del máximo<br>+7.20% en la semana</div></div>
+    </dl>
+
+    <div class="senal">
+      <span class="marca" aria-hidden="true"></span>
+      <p><strong>Señal de momentum sin activar.</strong> Seguimos la distancia de cada
+      índice al máximo de cierre de las últimas 39 semanas, con umbral en 18%. El
+      S&amp;P 500 está en 0.00% de ese máximo y el Nasdaq 100 en 3.06%. Ninguno de los
+      dos se acerca al umbral. Esta lectura va en cada edición, activada o no, porque
+      su valor está en la consistencia del seguimiento.</p>
+    </div>
+    <p class="pie">El oro cerró en 18.38% debajo de su máximo de 39 semanas. La señal
+    se calcula sobre índices de renta variable y no sobre materias primas, así que ese
+    cruce se informa como contexto y no como una señal del sistema.</p>
+  </section>
+
+  <section>
+    <span class="rotulo">Objetivos de Wall Street</span>
+    <h2>Diez firmas, un rango de 1,050 puntos y un recorrido mediano de 3.1%</h2>
+
+    <div class="col">
+      <p>Con el índice en máximos, los objetivos publicados para el cierre de 2026 se
+      agrupan en una banda estrecha. Ocho de las diez firmas que seguimos están entre
+      7,800 y 8,150. La mediana de esas diez queda en 8,000, que desde el cierre del
+      viernes implica 3.12% de recorrido para los cinco meses que restan del año.</p>
+      <p>El motor que todas citan es el mismo: la inversión de capital en inteligencia
+      artificial y el crecimiento de utilidades que la acompaña. Las estimaciones de
+      utilidad por acción del S&amp;P 500 para 2026 van de 335 dólares en UBS a 365 en
+      J.P. Morgan. Conviene notar de dónde viene el optimismo. Casi todas las
+      revisiones al alza de este año se apoyan en subir la estimación de utilidades, no
+      en pagar un múltiplo más alto por ellas.</p>
+    </div>
+
+    <div class="tabla-env">
+      <table>
+        <caption class="rotulo" style="text-align:left;padding:14px 16px 4px;">
+          Objetivos para el cierre de 2026 · base 7,757.64 al 7 de agosto</caption>
+        <thead><tr>
+          <th>Firma</th><th>Estratega</th><th>Objetivo</th><th>Recorrido</th>
+        </tr></thead>
+        <tbody id="tbl-targets"></tbody>
+      </table>
+    </div>
+    <p class="pie">La encuesta de estrategas de CNBC ubicaba la mediana del mercado
+    cerca de 7,825 a mediados de año, algo debajo de la mediana de estas diez firmas,
+    porque abarca una muestra más amplia de casas.</p>
+  </section>
+
+  <section>
+    <span class="rotulo">El gráfico</span>
+    <h2>Lo que el consenso proyectó y lo que el mercado hizo</h2>
+
+    <div class="col">
+      <p>El panel de arriba traza el S&amp;P 500 real desde 2018. Los círculos marcan
+      dónde el consenso de Wall Street dijo, en enero de cada año, que el índice
+      cerraría en diciembre. La línea vertical que une cada círculo con la trayectoria
+      real es el error de ese año.</p>
+      <p>El panel de abajo mide ese error en puntos porcentuales de rendimiento: la
+      diferencia entre el avance que el consenso implicaba y el que el mercado
+      entregó.</p>
+    </div>
+
+    <figure>
+      <div class="leyenda">
+        <span><i style="border-color:var(--mercado)"></i>S&amp;P 500 real</span>
+        <span><i class="punto" style="border-color:var(--consenso)"></i>Objetivo del consenso, fijado en enero</span>
+        <span><i style="border-color:var(--consenso);border-top-style:dashed"></i>Rango de objetivos vigentes</span>
+      </div>
+      <div class="panel">
+        <h3>S&amp;P 500 · nivel del índice</h3>
+        <canvas id="c1" class="lienzo"></canvas>
+      </div>
+      <div class="panel">
+        <h3>Desvío del consenso · puntos porcentuales de rendimiento</h3>
+        <canvas id="c2" class="lienzo"></canvas>
+      </div>
+      <div class="panel">
+        <h3>Recorrido implícito hasta el cierre de 2026 · desde 7,757.64</h3>
+        <canvas id="c3" class="lienzo"></canvas>
+      </div>
+      <figcaption>Cierres reales del S&amp;P 500 verificados contra el endpoint de
+      Yahoo Finance para los nueve cierres de fin de año de 2017 a 2025. Los objetivos
+      de consenso provienen de encuestas agregadas de estrategas. Las cifras de 2018 a
+      2022 son direccionales, porque distintos compiladores difieren entre 100 y 200
+      puntos según qué firmas encuestan y en qué fecha. Azul es siempre el mercado
+      real y latón es siempre el pronóstico, en los tres paneles. El tercer panel mide
+      cada objetivo vigente contra el cierre del 7 de agosto, que es la línea de cero.</figcaption>
+    </figure>
+
+    <details>
+      <summary>Ver los datos en tabla</summary>
+      <div class="tabla-env">
+        <table>
+          <thead><tr>
+            <th>Año</th><th>Nivel inicial</th><th>Consenso</th><th>Implícito</th>
+            <th>Cierre real</th><th>Real</th><th>Desvío</th>
+          </tr></thead>
+          <tbody id="tbl-hist"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <span class="rotulo">La lección del historial</span>
+    <h2>En ocho años el consenso no acertó ninguno, y falló en las dos direcciones</h2>
+
+    <div class="col">
+      <p>Este es el punto que más nos interesa poner por delante, porque ordena la
+      conversación con el cliente. Entre 2018 y 2025 el objetivo de consenso fijado en
+      enero se desvió del resultado real todos los años. El error absoluto promedio fue
+      de 15.7 puntos porcentuales. Solo 2025 cayó dentro de una banda de cinco puntos.</p>
+      <p>Los dos extremos muestran que el sesgo no es en una sola dirección. En 2022 el
+      consenso implicaba un avance de 3.9% y el mercado cayó 19.4%, un desvío de 23.3
+      puntos. En 2024 implicaba 1.9% y el mercado subió 23.3%, un desvío de 21.4 puntos
+      en el sentido opuesto.</p>
+      <p>De ahí sale nuestra forma de presentar estos números. Un objetivo de precio es
+      la opinión de un estratega en una fecha, sujeta a revisión constante. J.P. Morgan
+      movió su objetivo de 2026 entre 7,200 y 8,000 en el transcurso de un mismo año.
+      Presentamos el abanico completo de escenarios y el historial de acierto, para que
+      la decisión del cliente se ancle en su horizonte y en su diversificación.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">J.P. Morgan</span>
+    <h2>Subió el objetivo a 8,000 y ahora ve a la Fed subiendo tasas en diciembre</h2>
+
+    <div class="col">
+      <p>El equipo de Dubravko Lakos-Bujas elevó su objetivo de fin de 2026 a 8,000
+      desde 7,800 el lunes 10 de agosto, con el 87% de las empresas del S&amp;P 500 ya
+      reportadas. La firma subió su estimación de utilidad por acción para 2026 a 365
+      dólares y la de 2027 a 420, y mantuvo el múltiplo cerca de 20 veces. El objetivo
+      completo se sostiene en utilidades y no en expansión de múltiplo.</p>
+      <p>El outlook de mitad de año, publicado el 1 de julio bajo el título
+      <em>The tug of war continues</em>, describe una economía estadounidense que se
+      moderaría a un rango de 1.50% a 1.75% en el segundo semestre, con inflación
+      subyacente global pegajosa cerca de 3%.</p>
+      <p>El cambio de postura más relevante está en la Fed. J.P. Morgan pasó de esperar
+      pausa a proyectar un alza de tasas en diciembre de 2026. Para el inversionista
+      eso importa por una vía concreta: un alza tiende a comprimir los múltiplos, y
+      todos los objetivos de 8,000 y más dependen de que las utilidades sostengan la
+      valuación actual.</p>
+      <p>En el resto de los activos la firma proyecta el rendimiento del Tesoro a 2 años
+      hacia 4.20% y el de 10 años hacia 4.70% al cierre del año. En oro mantiene una
+      lectura constructiva, con la posibilidad de 6,000 dólares la onza en diciembre de
+      2026, aunque recortó su promedio anual proyectado a 5,243. Desde el cierre del
+      viernes en 4,340.70, ese escenario de 6,000 implicaría un avance de 38.2%.</p>
+      <p>Entre los riesgos que la propia firma señala, el que menos se comenta es la
+      aglomeración extrema en el factor de momentum, que J.P. Morgan describe como un
+      riesgo de reversión brusca. Los otros son política monetaria más restrictiva, un
+      aumento fuerte de la oferta de acciones y una reactivación del conflicto en
+      Medio Oriente.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">El contrapunto</span>
+    <h2>Bank of America es la única casa con un objetivo debajo del nivel actual</h2>
+
+    <div class="col">
+      <p>Savita Subramanian mantiene el objetivo más bajo de Wall Street en 7,100, que
+      desde el cierre del viernes implicaría una caída de 8.48%. Su argumento es de
+      valuación y concentración. Siete de los diez indicadores bajistas que su equipo
+      monitorea estaban activados en mayo, contra cinco en abril, y ese es el nivel
+      promedio observado antes de los mercados bajistas desde 1990. Su preferencia
+      sectorial va a salud e inmobiliario.</p>
+      <p>Vanguard aporta el otro contrapeso, por una vía distinta. Su modelo de mercados
+      de capital proyecta rendimientos anualizados de 3.9% a 5.9% para la renta variable
+      estadounidense en los próximos diez años. No fija objetivo de índice. La utilidad
+      de esa cifra está en la escala de tiempo: ordena la expectativa de largo plazo de
+      un cliente que hoy ve el índice en máximos.</p>
+      <p>Incluimos estas dos posiciones en cada edición donde existan, con el mismo
+      espacio que las alcistas. Un cliente que solo escucha el lado constructivo del
+      consenso no está recibiendo el consenso.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">Research de terceros</span>
+    <h2>David Kelly: la inteligencia artificial carga la economía y los salarios se quedaron atrás</h2>
+
+    <div class="col">
+      <p>David Kelly, estratega global jefe de J.P. Morgan Asset Management, publicó
+      hoy su lectura para el resto del año. Su tesis es que el auge de la inteligencia
+      artificial sostiene la economía casi solo, y que debajo de ese motor hay bastante
+      debilidad.</p>
+      <p>Kelly apunta que el crecimiento del empleo del último año es apenas positivo
+      según la encuesta de nóminas y negativo según la de hogares. Los salarios subieron
+      3.2% anual en julio, el avance más flojo en más de cinco años. Por estimación de su
+      equipo, esa cifra quedó debajo de la inflación por cuarto mes consecutivo. El
+      desempleo cerró en 4.1%, el más bajo en 18 meses. Lee esa combinación como un
+      mercado laboral apretado por falta de trabajadores, sin poder de negociación para
+      quien ya tiene empleo.</p>
+      <p>En valuación deja una comparación que vale tener presente. Kelly calcula que el
+      valor de mercado de todas las acciones corporativas de Estados Unidos supera el
+      400% del producto interno bruto. Antes de la pandemia iba en 244%. En el pico de
+      la burbuja de las empresas de internet llegó a 204%. Su argumento es que el valor
+      de las empresas estadounidenses depende del trabajo y del gasto de la población,
+      de modo que le cuesta ver a las acciones sostener el ritmo si la situación del
+      consumidor no mejora.</p>
+      <p>Sobre las utilidades del segundo trimestre deja una advertencia de lectura.
+      FactSet reportó un salto cercano al 50% anual en utilidad por acción. Kelly señala
+      que más de 150 mil millones de dólares de esa cifra corresponden a ganancias de
+      capital no realizadas de dos empresas grandes de tecnología. Sin ese efecto el
+      avance ronda 20%, que sigue siendo fuerte para una economía que crece despacio.</p>
+    </div>
+  </section>
+
+  <section>
+    <span class="rotulo">La semana entrante</span>
+    <h2>El dato de inflación del miércoles es el que mueve la conversación de la Fed</h2>
+
+    <div class="col">
+      <p>El reporte de precios al consumidor de julio se publica el miércoles. Kelly
+      proyecta 3.4% anual, contra 3.5% en junio. Es el dato con más peso sobre la
+      discusión de septiembre, porque el mercado sigue dividido entre pausa y alza, y la
+      postura de J.P. Morgan es que la Fed se mantiene quieta en esa reunión.</p>
+      <p>Con la temporada de resultados del segundo trimestre por encima del 85% de la
+      capitalización del índice ya reportada, la atención se traslada de las utilidades
+      hacia la trayectoria de tasas.</p>
+    </div>
+  </section>
+
+  <div class="cierre">
+    <span class="rotulo">Notas de método y advertencias</span>
+    <div class="legal" style="margin-top:14px;">
+      <p><strong>Fuentes.</strong> Niveles de índices, dólar y oro tomados del endpoint
+      de datos de Yahoo Finance al cierre del 7 de agosto de 2026, con cierres ajustados.
+      Los nueve cierres de fin de año de 2017 a 2025 usados en el gráfico se verificaron
+      uno por uno contra esa misma fuente. Objetivos de precio y estimaciones de
+      utilidades atribuidos a cada firma según sus publicaciones más recientes
+      localizadas al 10 de agosto de 2026.</p>
+      <p><strong>Calidad de los datos históricos.</strong> Los promedios de consenso de
+      2018 a 2022 provienen en parte de agregaciones secundarias y deben leerse como
+      direccionales. Distintos compiladores difieren entre 100 y 200 puntos según qué
+      firmas encuestan y en qué fecha.</p>
+      <p><strong>Los objetivos de fin de año ignoran el camino.</strong> Un objetivo que
+      resulta acertado al 31 de diciembre puede convivir con caídas severas dentro del
+      año. La cifra de cierre no describe la experiencia del inversionista durante el
+      trayecto.</p>
+      <p><strong>Advertencia.</strong> No se garantizan retornos. Los resultados pasados
+      no garantizan resultados futuros. Los objetivos de precio son opiniones de
+      estrategas sujetas a revisión y no constituyen una promesa de resultado. Este
+      contenido es educativo y no constituye una recomendación de inversión ni una oferta
+      de compra o venta de valores.</p>
+      <p style="margin-top:16px;color:var(--tinta-2);">Preparado por Empowered Investor.
+      Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su
+      propia cuenta.</p>
+    </div>
+    <a class="cta" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">Conversemos el formato</a>
+  </div>
+
+</div>
+
+<div id="tip" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+var DATOS = {"base":"2017-12-29","d":[[0,267361],[4,269581],[5,271306],[6,272399],[7,274315],[10,274771],[11,275129],[12,274823],[13,276756],[14,278624],[18,277642],[19,280256],[20,279803],[21,281030],[24,283297],[25,283913],[26,283754],[27,283925],[28,287287],[31,285353],[32,282243],[33,282381],[34,282198],[35,276213],[38,264894],[39,269514],[40,268166],[41,258100],[42,261955],[45,265600],[46,266294],[47,269863],[48,273120],[49,273222],[53,271626],[54,270133],[55,270396],[56,274730],[59,277960],[60,274428],[61,271383],[62,267767],[63,269125],[66,272094],[67,272812],[68,272680],[69,273897],[70,278657],[73,278302],[74,276531],[75,274948],[76,274733],[77,275201],[80,271292],[81,271694],[82,271193],[83,264369],[84,258826],[87,265855],[88,261262],[89,260500],[90,264087],[94,258188],[95,261445],[96,264469],[97,266284],[98,260447],[101,261316],[102,265687],[103,264219],[104,266399],[105,265630],[108,267784],[109,270639],[110,270864],[111,269313],[112,267014],[115,267029],[116,263456],[117,263940],[118,266694],[119,266991],[122,264805],[123,265480],[124,263567],[125,262973],[126,266342],[129,267263],[130,267192],[131,269779],[132,272307],[133,272772],[136,273013],[137,271145],[138,272246],[139,272013],[140,271297],[143,273301],[144,272444],[145,273329],[146,272776],[147,272133],[151,268986],[152,272401],[153,270527],[154,273462],[157,274687],[158,274880],[159,277235],[160,277037],[161,277903],[164,278200],[165,278685],[166,277563],[167,278249],[168,277966],[171,277375],[172,276259],[173,276732],[174,274976],[175,275488],[178,271707],[179,272306],[180,269963],[181,271631],[182,271837],[185,272671],[186,271322],[188,273661],[189,275982],[192,278417],[193,279384],[194,277402],[195,279829],[196,280131],[199,279843],[200,280955],[201,281562],[202,280449],[203,280183],[206,280698],[207,282040],[208,284607],[209,283744],[210,281882],[213,280260],[214,281629],[215,281336],[216,282722],[217,284035],[220,285040],[221,285845],[222,285770],[223,285358],[224,283328],[227,282193],[228,283996],[229,281837],[230,284069],[231,285013],[234,285705],[235,286296],[236,286182],[237,285698],[238,287469],[241,289674],[242,289752],[243,291404],[244,290113],[245,290152],[249,289672],[250,288860],[251,287805],[252,287168],[255,287713],[256,288789],[257,288892],[258,290418],[259,290498],[262,288880],[263,290431],[264,290795],[265,293075],[266,292967],[269,291937],[270,291556],[271,290597],[272,291400],[273,291398],[276,292459],[277,292343],[278,292551],[279,290161],[280,288557],[283,288443],[284,288034],[285,278568],[286,272837],[287,276713],[290,275079],[291,280992],[292,280921],[293,276878],[294,276778],[297,275588],[298,274069],[299,265610],[300,270557],[301,265869],[304,264125],[305,268263],[306,271174],[307,274037],[308,272306],[311,273831],[312,275545],[313,281389],[314,280683],[315,278101],[318,272622],[319,272218],[320,270158],[321,273020],[322,273627],[325,269073],[326,264189],[327,264993],[329,263256],[332,267345],[333,268217],[334,274379],[335,273780],[336,276017],[339,279037],[340,270006],[342,269595],[343,263308],[346,263772],[347,263678],[348,265107],[349,265054],[350,259995],[353,254594],[354,254616],[355,250696],[356,246742],[357,241662],[360,235110],[362,246770],[363,248883],[364,248574],[367,250685],[369,251003],[370,244789],[371,253194],[374,254969],[375,257441],[376,258496],[377,259664],[378,259626],[381,258261],[382,261030],[383,261610],[384,263596],[385,267071],[389,263290],[390,263870],[391,264233],[392,266476],[395,264385],[396,264000],[397,268105],[398,270410],[399,270653],[402,272487],[403,273770],[404,273161],[405,270605],[406,270788],[409,270980],[410,274473],[411,275303],[412,274573],[413,277560],[417,277976],[418,278470],[419,277488],[420,279267],[423,279611],[424,279390],[425,279238],[426,278449],[427,280369],[430,279281],[431,278965],[432,277145],[433,274893],[434,274307],[437,278330],[438,279152],[439,281092],[440,280848],[441,282248],[444,283294],[445,283257],[446,282423],[447,285488],[448,280071],[451,279836],[452,281846],[453,280537],[454,281544],[455,283440],[458,286719],[459,286724],[460,287340],[461,287939],[462,289274],[465,289577],[466,287820],[467,288821],[468,288832],[469,290741],[472,290558],[473,290706],[474,290045],[475,290503],[479,290797],[480,293368],[481,292725],[482,292617],[483,293988],[486,294303],[487,294583],[488,292373],[489,291752],[490,294564],[493,293247],[494,288405],[495,287942],[496,287072],[497,288140],[500,281187],[501,283441],[502,285096],[503,287632],[504,285953],[507,284023],[508,286436],[509,285627],[510,282224],[511,282606],[515,280239],[516,278302],[517,278886],[518,275206],[521,274445],[522,280327],[523,282615],[524,284349],[525,287334],[528,288673],[529,288572],[530,287984],[531,289164],[532,288698],[535,288967],[536,291775],[537,292646],[538,295418],[539,295046],[542,294535],[543,291738],[544,291378],[545,292492],[546,294176],[549,296433],[550,297301],[551,299582],[553,299041],[556,297595],[557,297963],[558,299307],[559,299991],[560,301377],[563,301430],[564,300404],[565,298442],[566,299511],[567,297661],[570,298503],[571,300547],[572,301956],[573,300367],[574,302586],[577,302097],[578,301318],[579,298038],[580,295356],[581,293205],[584,284474],[585,288177],[586,288398],[587,293809],[588,291865],[591,288270],[592,292632],[593,284060],[594,284760],[595,288868],[598,292365],[599,290051],[600,292443],[601,292295],[602,284711],[605,287838],[606,286916],[607,288794],[608,292458],[609,292646],[613,290627],[614,293778],[615,297600],[616,297871],[619,297843],[620,297939],[621,300093],[622,300957],[623,300739],[626,299796],[627,300570],[628,300673],[629,300679],[630,299207],[633,299178],[634,296660],[635,298487],[636,297762],[637,296179],[640,297674],[641,294025],[642,288761],[643,291063],[644,295201],[647,293879],[648,289306],[649,291940],[650,293813],[651,297027],[654,296615],[655,299568],[656,298969],[657,299795],[658,298620],[661,300672],[662,299599],[663,300452],[664,301029],[665,302255],[668,303942],[669,303689],[670,304677],[671,303756],[672,306691],[675,307827],[676,307462],[677,307678],[678,308518],[679,309308],[682,308701],[683,309184],[684,309404],[685,309663],[686,312046],[689,312203],[690,312018],[691,310846],[692,310354],[693,311029],[696,313364],[697,314052],[698,315363],[700,314098],[703,311387],[704,309320],[705,311276],[706,311743],[707,314591],[710,313596],[711,313252],[712,314163],[713,316857],[714,316880],[717,319145],[718,319252],[719,319114],[720,320537],[721,322122],[724,322401],[725,322338],[727,323991],[728,324002],[731,322129],[732,323078],[734,325785],[735,323485],[738,324628],[739,323718],[740,325305],[741,327470],[742,326535],[745,328813],[746,328315],[747,328929],[748,331681],[749,332962],[753,332079],[754,332175],[755,332554],[756,329547],[759,324363],[760,327624],[761,327340],[762,328366],[763,322552],[766,324892],[767,329759],[768,333469],[769,334578],[770,332771],[773,335209],[774,335775],[775,337945],[776,337394],[777,338016],[781,337029],[782,338615],[783,337323],[784,333775],[787,322589],[788,312821],[789,311639],[790,297876],[791,295422],[794,309023],[795,300337],[796,313012],[797,302394],[798,297237],[801,274656],[802,288223],[803,274138],[804,248064],[805,271102],[808,238613],[809,252919],[810,239810],[811,240939],[812,230492],[815,223740],[816,244733],[817,247556],[818,263007],[819,254147],[822,262665],[823,258459],[824,247050],[825,252690],[826,248865],[829,266368],[830,265941],[831,274998],[832,278982],[836,276163],[837,284606],[838,278336],[839,279955],[840,287456],[843,282316],[844,273656],[845,279931],[846,279780],[847,283674],[850,287848],[851,286339],[852,293951],[853,291243],[854,283071],[857,284274],[858,286844],[859,284842],[860,288119],[861,292980],[864,293019],[865,287012],[866,282000],[867,285250],[868,286370],[871,295391],[872,292294],[873,297161],[874,294851],[875,295545],[879,299177],[880,303613],[881,302973],[882,304431],[885,305573],[886,308082],[887,312287],[888,311235],[889,319393],[892,323239],[893,320718],[894,319014],[895,300210],[896,304131],[899,306659],[900,312474],[901,311349],[902,311534],[903,309774],[906,311786],[907,313129],[908,305033],[909,308376],[910,300905],[913,305324],[914,310029],[915,311586],[916,313001],[920,317972],[921,314532],[922,316994],[923,315205],[924,318504],[927,315522],[928,319752],[929,322656],[930,321557],[931,322473],[934,325184],[935,325730],[936,327602],[937,323566],[938,321563],[941,323941],[942,321844],[943,325844],[944,324622],[945,327112],[948,329461],[949,330651],[950,332777],[951,334916],[952,335128],[955,336047],[956,333369],[957,338035],[958,337343],[959,337285],[962,338199],[963,338978],[964,337485],[965,338551],[966,339716],[969,343128],[970,344362],[971,347873],[972,348455],[973,350801],[976,350031],[977,352665],[978,358084],[979,345506],[980,342696],[984,333184],[985,339896],[986,333919],[987,334097],[990,338354],[991,340120],[992,338549],[993,335701],[994,331947],[997,328106],[998,331557],[999,323692],[1000,324659],[1001,329846],[1004,335160],[1005,333547],[1006,336300],[1007,338080],[1008,334842],[1011,340860],[1012,336097],[1013,341944],[1014,344683],[1015,347714],[1018,353422],[1019,351193],[1020,348867],[1021,348334],[1022,348381],[1025,342692],[1026,344312],[1027,343556],[1028,345349],[1029,346539],[1032,340097],[1033,339068],[1034,327103],[1035,331011],[1036,326996],[1039,331024],[1040,336916],[1041,344344],[1042,351045],[1043,350944],[1046,355050],[1047,354553],[1048,357266],[1049,353701],[1050,358515],[1053,362691],[1054,360953],[1055,356779],[1056,358187],[1057,355754],[1060,357759],[1061,363541],[1062,362965],[1064,363835],[1067,362163],[1068,366245],[1069,366901],[1070,366672],[1071,369912],[1074,369196],[1075,370225],[1076,367282],[1077,366810],[1078,366346],[1081,364749],[1082,369462],[1083,370117],[1084,372248],[1085,370941],[1088,369492],[1089,368726],[1090,369001],[1091,370306],[1095,373536],[1096,372704],[1097,373204],[1098,375607],[1102,370065],[1103,372686],[1104,374814],[1105,380379],[1106,382468],[1109,379961],[1110,380119],[1111,380984],[1112,379554],[1113,376825],[1117,379891],[1118,385185],[1119,385307],[1120,384147],[1123,385536],[1124,384962],[1125,375077],[1126,378738],[1127,371424],[1130,377386],[1131,382631],[1132,383017],[1133,387174],[1134,388683],[1137,391559],[1138,391123],[1139,390988],[1140,391638],[1141,393483],[1145,393259],[1146,393133],[1147,391397],[1148,390671],[1151,387650],[1152,388137],[1153,392543],[1154,382934],[1155,381115],[1158,390182],[1159,387029],[1160,381972],[1161,376847],[1162,384194],[1165,382135],[1166,387544],[1167,389881],[1168,393934],[1169,394334],[1172,396894],[1173,396271],[1174,397412],[1175,391546],[1176,391310],[1179,394059],[1180,391052],[1181,388914],[1182,390952],[1183,397454],[1186,397109],[1187,395855],[1188,397289],[1189,401987],[1193,407791],[1194,407394],[1195,407995],[1196,409717],[1197,412880],[1200,412799],[1201,414159],[1202,412466],[1203,417042],[1204,418547],[1207,416326],[1208,413494],[1209,417342],[1210,413498],[1211,418017],[1214,418762],[1215,418672],[1216,418318],[1217,421147],[1218,418117],[1221,419266],[1222,416466],[1223,416759],[1224,420162],[1225,423260],[1228,418843],[1229,415210],[1230,406304],[1231,411250],[1232,417385],[1235,416329],[1236,412783],[1237,411568],[1238,415912],[1239,415586],[1242,419705],[1243,418813],[1244,419599],[1245,420088],[1246,420411],[1250,420204],[1251,420812],[1252,419285],[1253,422989],[1256,422652],[1257,422726],[1258,421955],[1259,423918],[1260,424744],[1263,425515],[1264,424659],[1265,422370],[1266,422186],[1267,416645],[1270,422479],[1271,424644],[1272,424184],[1273,426649],[1274,428070],[1277,429061],[1278,429180],[1279,429750],[1280,431994],[1281,435234],[1285,434354],[1286,435813],[1287,432082],[1288,436955],[1291,438463],[1292,436921],[1293,437430],[1294,436003],[1295,432716],[1298,425849],[1299,432306],[1300,435869],[1301,436748],[1302,441179],[1305,442230],[1306,440146],[1307,440064],[1308,441915],[1309,439526],[1312,438716],[1313,442315],[1314,440266],[1315,442910],[1316,443652],[1319,443235],[1320,443675],[1321,444241],[1322,446083],[1323,446800],[1326,447971],[1327,444808],[1328,440027],[1329,440580],[1330,444167],[1333,447953],[1334,448623],[1335,449619],[1336,447000],[1337,450937],[1340,452879],[1341,452268],[1342,452409],[1343,453695],[1344,453543],[1348,452003],[1349,451407],[1350,449328],[1351,445858],[1354,446873],[1355,444305],[1356,448070],[1357,447375],[1358,443299],[1361,435773],[1362,435419],[1363,439564],[1364,444898],[1365,445548],[1368,444311],[1369,435263],[1370,435946],[1371,430754],[1372,435704],[1375,430046],[1376,434572],[1377,436355],[1378,439976],[1379,439134],[1382,436119],[1383,435065],[1384,436380],[1385,443826],[1386,447137],[1389,448646],[1390,451963],[1391,453619],[1392,454978],[1393,454490],[1396,456648],[1397,457479],[1398,455168],[1399,459642],[1400,460538],[1403,461367],[1404,463065],[1405,466057],[1406,468006],[1407,469753],[1410,470170],[1411,468525],[1412,464671],[1413,464927],[1414,468285],[1417,468280],[1418,470090],[1419,468867],[1420,470454],[1421,469796],[1424,468294],[1425,469070],[1426,470146],[1428,459462],[1431,465527],[1432,456700],[1433,451304],[1434,457710],[1435,453843],[1438,459167],[1439,468675],[1440,470121],[1441,466745],[1442,471202],[1445,466897],[1446,463409],[1447,470985],[1448,466867],[1449,462064],[1452,456802],[1453,464923],[1454,469656],[1455,472579],[1459,479119],[1460,478635],[1461,479306],[1462,477873],[1463,476618],[1466,479656],[1467,479354],[1468,470058],[1469,469605],[1470,467703],[1473,467029],[1474,471307],[1475,472635],[1476,465903],[1477,466285],[1481,457711],[1482,453276],[1483,448273],[1484,439794],[1487,441013],[1488,435645],[1489,434993],[1490,432651],[1491,443185],[1494,451555],[1495,454654],[1496,458938],[1497,447744],[1498,450053],[1501,448387],[1502,452154],[1503,458718],[1504,450408],[1505,441864],[1508,440167],[1509,447107],[1510,447501],[1511,438026],[1512,434887],[1516,430476],[1517,422550],[1518,428870],[1519,438465],[1522,437394],[1523,430626],[1524,438654],[1525,436349],[1526,432887],[1529,420109],[1530,417070],[1531,427788],[1532,425952],[1533,420431],[1536,417311],[1537,426245],[1538,435786],[1539,441167],[1540,446312],[1543,446118],[1544,451161],[1545,445624],[1546,452016],[1547,454306],[1550,457552],[1551,463160],[1552,460245],[1553,453041],[1554,454586],[1557,458264],[1558,452512],[1559,448115],[1560,450021],[1561,448828],[1564,441253],[1565,439745],[1566,444659],[1567,439259],[1571,439169],[1572,446221],[1573,445945],[1574,439366],[1575,427178],[1578,429612],[1579,417520],[1580,418396],[1581,428750],[1582,413193],[1585,415538],[1586,417548],[1587,430017],[1588,414687],[1589,412334],[1592,399124],[1593,400105],[1594,393518],[1595,393008],[1596,402389],[1599,400801],[1600,408885],[1601,392368],[1602,390079],[1603,390136],[1606,397375],[1607,394148],[1608,397873],[1609,405784],[1610,415824],[1614,413215],[1615,410123],[1616,417682],[1617,410854],[1620,412143],[1621,416068],[1622,411577],[1623,401782],[1624,390086],[1627,374963],[1628,373548],[1629,378999],[1630,366677],[1631,367484],[1635,376479],[1636,375989],[1637,379573],[1638,391174],[1641,390011],[1642,382155],[1643,381883],[1644,378538],[1645,382533],[1649,383139],[1650,384508],[1651,390262],[1652,389938],[1655,385443],[1656,381880],[1657,380178],[1658,379038],[1659,386316],[1662,383085],[1663,393669],[1664,395990],[1665,399895],[1666,396163],[1669,396684],[1670,392105],[1671,402361],[1672,407243],[1673,413029],[1676,411863],[1677,409119],[1678,415517],[1679,415194],[1680,414519],[1683,414006],[1684,412247],[1685,421024],[1686,420727],[1687,428015],[1690,429714],[1691,430520],[1692,427404],[1693,428374],[1694,422848],[1697,413799],[1698,412873],[1699,414077],[1700,419912],[1701,405766],[1704,403061],[1705,398616],[1706,395500],[1707,396685],[1708,392426],[1712,390819],[1713,397987],[1714,400618],[1715,406736],[1718,411041],[1719,393269],[1720,394601],[1721,390135],[1722,387333],[1725,389989],[1726,385593],[1727,378993],[1728,375799],[1729,369323],[1732,365504],[1733,364729],[1734,371904],[1735,364047],[1736,358562],[1739,367843],[1740,379093],[1741,378328],[1742,374452],[1743,363966],[1746,361239],[1747,358884],[1748,357703],[1749,366991],[1750,358307],[1753,367795],[1754,371998],[1755,369516],[1756,366578],[1757,375275],[1760,379734],[1761,385911],[1762,383060],[1763,380730],[1764,390106],[1767,387198],[1768,385610],[1769,375969],[1770,371989],[1771,377055],[1774,380680],[1775,382811],[1776,374857],[1777,395637],[1778,399293],[1781,395725],[1782,399173],[1783,395879],[1784,394656],[1785,396534],[1788,394994],[1789,400358],[1790,402726],[1792,402612],[1795,396394],[1796,395763],[1797,408011],[1798,407657],[1799,407170],[1802,399884],[1803,394126],[1804,393392],[1805,396351],[1806,393438],[1809,399056],[1810,401965],[1811,399532],[1812,389575],[1813,385236],[1816,381766],[1817,382162],[1818,387844],[1819,382239],[1820,384482],[1824,382925],[1825,378322],[1826,384928],[1827,383950],[1831,382414],[1832,385297],[1833,380810],[1834,389508],[1837,389209],[1838,391925],[1839,396961],[1840,398317],[1841,399909],[1845,399097],[1846,392886],[1847,389885],[1848,397261],[1851,401981],[1852,401695],[1853,401622],[1854,406043],[1855,407056],[1858,401777],[1859,407660],[1860,411921],[1861,417976],[1862,413648],[1865,411108],[1866,416400],[1867,411786],[1868,408150],[1869,409046],[1872,413729],[1873,413613],[1874,414760],[1875,409041],[1876,407909],[1880,399734],[1881,399105],[1882,401232],[1883,397004],[1886,398224],[1887,397015],[1888,395139],[1889,398135],[1890,404564],[1893,404842],[1894,398637],[1895,399201],[1896,391832],[1897,386159],[1900,385576],[1901,391929],[1902,389193],[1903,396028],[1904,391664],[1907,395157],[1908,400287],[1909,393697],[1910,394872],[1911,397099],[1914,397753],[1915,397127],[1916,402781],[1917,405083],[1918,410931],[1921,412451],[1922,410060],[1923,409038],[1924,410502],[1928,410911],[1929,410894],[1930,409195],[1931,414622],[1932,413764],[1935,415132],[1936,415487],[1937,415452],[1938,412979],[1939,413352],[1942,413704],[1943,407163],[1944,405599],[1945,413535],[1946,416948],[1949,416787],[1950,411958],[1951,409075],[1952,406122],[1953,413625],[1956,413812],[1957,411917],[1958,413764],[1959,413062],[1960,412408],[1963,413628],[1964,410990],[1965,415877],[1966,419805],[1967,419198],[1970,419263],[1971,414558],[1972,411524],[1973,415128],[1974,420545],[1978,420552],[1979,417983],[1980,422102],[1981,428237],[1984,427379],[1985,428385],[1986,426752],[1987,429393],[1988,429886],[1991,433893],[1992,436901],[1993,437259],[1994,442584],[1995,440959],[1999,438871],[2000,436569],[2001,438189],[2002,434833],[2005,432882],[2006,437841],[2007,437686],[2008,439644],[2009,445038],[2012,445559],[2014,444682],[2015,441159],[2016,439895],[2019,440953],[2020,443926],[2021,447216],[2022,451004],[2023,450542],[2026,452279],[2027,455498],[2028,456572],[2029,453487],[2030,453634],[2033,455464],[2034,456746],[2035,456675],[2036,453741],[2037,458223],[2040,458896],[2041,457673],[2042,451339],[2043,450189],[2044,447803],[2047,451844],[2048,449938],[2049,446771],[2050,446883],[2051,446405],[2054,448972],[2055,443786],[2056,440433],[2057,437036],[2058,436971],[2061,439977],[2062,438755],[2063,443601],[2064,437631],[2065,440571],[2068,443331],[2069,449763],[2070,451487],[2071,450766],[2072,451577],[2076,449683],[2077,446548],[2078,445114],[2079,445749],[2082,448746],[2083,446190],[2084,446744],[2085,450510],[2086,445032],[2089,445353],[2090,444395],[2091,440220],[2092,433000],[2093,432006],[2096,433744],[2097,427353],[2098,427451],[2099,429970],[2100,428805],[2103,428839],[2104,422945],[2105,426375],[2106,425819],[2107,430850],[2110,433566],[2111,435824],[2112,437695],[2113,434961],[2114,432778],[2117,437363],[2118,437320],[2119,431460],[2120,427800],[2121,422416],[2124,421704],[2125,424768],[2126,418677],[2127,413723],[2128,411737],[2131,416682],[2132,419380],[2133,423786],[2134,431778],[2135,435834],[2138,436598],[2139,437838],[2140,438278],[2141,434735],[2142,441524],[2145,441155],[2146,449570],[2147,450288],[2148,450824],[2149,451402],[2152,454738],[2153,453819],[2154,455662],[2156,455934],[2159,455043],[2160,455489],[2161,455058],[2162,456780],[2163,459463],[2166,456978],[2167,456718],[2168,454934],[2169,458559],[2170,460437],[2173,462244],[2174,464370],[2175,470709],[2176,471955],[2177,471919],[2180,474056],[2181,476837],[2182,469835],[2183,474675],[2184,475463],[2188,477475],[2189,478158],[2190,478335],[2191,476983],[2195,474283],[2196,470481],[2197,468868],[2198,469724],[2201,476354],[2202,475650],[2203,478345],[2204,478024],[2205,478383],[2209,476598],[2210,473921],[2211,478094],[2212,483981],[2215,485043],[2216,486460],[2217,486855],[2218,489416],[2219,489097],[2222,492793],[2223,492497],[2224,484565],[2225,490619],[2226,495861],[2229,494281],[2230,495423],[2231,499506],[2232,499791],[2233,502661],[2236,502184],[2237,495317],[2238,500062],[2239,502973],[2240,500557],[2244,497551],[2245,498180],[2246,508703],[2247,508880],[2250,506953],[2251,507818],[2252,506976],[2253,509627],[2254,513708],[2257,513095],[2258,507865],[2259,510476],[2260,515736],[2261,512369],[2264,511794],[2265,517527],[2266,516531],[2267,515048],[2268,511709],[2271,514942],[2272,517851],[2273,522462],[2274,524153],[2275,523418],[2278,521819],[2279,520358],[2280,524849],[2281,525435],[2285,524377],[2286,520581],[2287,521149],[2288,514721],[2289,520434],[2292,520239],[2293,520991],[2294,516064],[2295,519906],[2296,512341],[2299,506182],[2300,505141],[2301,502221],[2302,501112],[2303,496723],[2306,501060],[2307,507055],[2308,507163],[2309,504842],[2310,509996],[2313,511617],[2314,503569],[2315,501839],[2316,506420],[2317,512779],[2320,518074],[2321,518770],[2322,518767],[2323,521408],[2324,522268],[2327,522142],[2328,524668],[2329,530815],[2330,529710],[2331,530327],[2334,530813],[2335,532141],[2336,530701],[2337,526784],[2338,530472],[2342,530604],[2343,526695],[2344,523548],[2345,527751],[2348,528340],[2349,529134],[2350,535403],[2351,535296],[2352,534699],[2355,536079],[2356,537532],[2357,542103],[2358,543374],[2359,543160],[2362,547323],[2363,548703],[2365,547317],[2366,546462],[2369,544787],[2370,546930],[2371,547790],[2372,548287],[2373,546048],[2376,547509],[2377,550901],[2378,553702],[2380,556719],[2383,557285],[2384,557698],[2385,563391],[2386,558454],[2387,561535],[2390,563122],[2391,566720],[2392,558827],[2393,554459],[2394,550500],[2397,556441],[2398,555574],[2399,542713],[2400,539922],[2401,545910],[2404,546354],[2405,543644],[2406,552230],[2407,544668],[2408,534656],[2411,518633],[2412,524003],[2413,519950],[2414,531931],[2415,534416],[2418,534439],[2419,543443],[2420,545521],[2421,554322],[2422,555425],[2425,560825],[2426,559712],[2427,562085],[2428,557064],[2429,563461],[2432,561684],[2433,562580],[2434,559218],[2435,559196],[2436,564840],[2440,552893],[2441,552007],[2442,550341],[2443,540842],[2446,547105],[2447,549552],[2448,555413],[2449,559576],[2450,562602],[2453,563309],[2454,563458],[2455,561826],[2456,571364],[2457,570255],[2460,571857],[2461,573293],[2462,572226],[2463,574537],[2464,573817],[2467,576248],[2468,570875],[2469,570954],[2470,569994],[2471,575107],[2474,569594],[2475,575113],[2476,579204],[2477,578005],[2478,581503],[2481,585985],[2482,581526],[2483,584247],[2484,584147],[2485,586467],[2488,585398],[2489,585120],[2490,579742],[2491,580986],[2492,580812],[2495,582352],[2496,583292],[2497,581367],[2498,570545],[2499,572880],[2502,571269],[2503,578276],[2504,592904],[2505,597310],[2506,599554],[2509,600135],[2510,598399],[2511,598538],[2512,594917],[2513,587062],[2516,589362],[2517,591698],[2518,591711],[2519,594871],[2520,596934],[2523,598737],[2524,602163],[2525,599874],[2527,603238],[2530,604715],[2531,604988],[2532,608649],[2533,607511],[2534,609027],[2537,605285],[2538,603491],[2539,608419],[2540,605125],[2541,605109],[2544,607408],[2545,605061],[2546,587216],[2547,586708],[2548,593085],[2551,597407],[2552,604004],[2554,603759],[2555,597084],[2558,590694],[2559,588163],[2561,586855],[2562,594247],[2565,597538],[2566,590903],[2567,591825],[2569,582704],[2572,583622],[2573,584291],[2574,594991],[2575,593734],[2576,599666],[2580,604924],[2581,608637],[2582,611871],[2583,610124],[2586,601228],[2587,606770],[2588,603931],[2589,607117],[2590,604053],[2593,599457],[2594,603788],[2595,606148],[2596,608357],[2597,602599],[2600,606644],[2601,606850],[2602,605197],[2603,611507],[2604,611463],[2608,612958],[2609,614415],[2610,611752],[2611,601313],[2614,598325],[2615,595525],[2616,595606],[2617,586157],[2618,595450],[2621,584972],[2622,577815],[2623,584263],[2624,573852],[2625,577020],[2628,561456],[2629,557207],[2630,559930],[2631,552152],[2632,563894],[2635,567512],[2636,561466],[2637,567529],[2638,566289],[2639,566756],[2642,576757],[2643,577665],[2644,571220],[2645,569331],[2646,558094],[2649,561185],[2650,563307],[2651,567097],[2652,539652],[2653,507408],[2656,506225],[2657,498277],[2658,545690],[2659,526805],[2660,536336],[2663,540597],[2664,539663],[2665,527570],[2666,528270],[2670,515820],[2671,528776],[2672,537586],[2673,548477],[2674,552521],[2677,552875],[2678,556083],[2679,556906],[2680,560414],[2681,568667],[2684,565038],[2685,560691],[2686,563128],[2687,566394],[2688,565991],[2691,584419],[2692,588655],[2693,589258],[2694,591693],[2695,595838],[2698,596360],[2699,594046],[2700,584461],[2701,584201],[2702,580282],[2706,592154],[2707,588855],[2708,591217],[2709,591169],[2712,593594],[2713,597037],[2714,597081],[2715,593930],[2716,600036],[2719,600588],[2720,603881],[2721,602224],[2722,604526],[2723,597697],[2726,603311],[2727,598272],[2728,598087],[2730,596784],[2733,602517],[2734,609218],[2735,609216],[2736,614102],[2737,617307],[2740,620495],[2741,619801],[2742,622742],[2743,627935],[2747,622998],[2748,622552],[2749,626326],[2750,628046],[2751,625975],[2754,626856],[2755,624376],[2756,626370],[2757,629736],[2758,629679],[2761,630560],[2762,630962],[2763,635891],[2764,636335],[2765,638864],[2768,638977],[2769,637086],[2770,636290],[2771,633939],[2772,623801],[2775,632994],[2776,629919],[2777,634506],[2778,634000],[2779,638945],[2782,637345],[2783,644576],[2784,646658],[2785,646854],[2786,644980],[2789,644915],[2790,641137],[2791,639578],[2792,637017],[2793,646691],[2796,643932],[2797,646594],[2798,648140],[2799,650186],[2800,646026],[2804,641554],[2805,644826],[2806,650208],[2807,648150],[2810,649515],[2811,651261],[2812,653204],[2813,658747],[2814,658429],[2817,661528],[2818,660676],[2819,660035],[2820,663196],[2821,666436],[2824,669375],[2825,665692],[2826,663797],[2827,660472],[2828,664370],[2831,666121],[2832,668846],[2833,671120],[2834,671535],[2835,671579],[2838,674028],[2839,671459],[2840,675372],[2841,673511],[2842,655251],[2845,665472],[2846,664431],[2847,667106],[2848,662907],[2849,666401],[2852,673513],[2853,673535],[2854,669940],[2855,673844],[2856,679169],[2859,687516],[2860,689089],[2861,689059],[2862,682234],[2863,684020],[2866,685197],[2867,677155],[2868,679629],[2869,672032],[2870,672880],[2873,683243],[2874,684661],[2875,685092],[2876,673749],[2877,673411],[2880,667241],[2881,661732],[2882,664216],[2883,653876],[2884,660299],[2887,670512],[2888,676588],[2889,681261],[2891,684909],[2894,681263],[2895,682937],[2896,684972],[2897,685712],[2898,687040],[2901,684651],[2902,684051],[2903,688668],[2904,690100],[2905,682741],[2908,681651],[2909,680026],[2910,672143],[2911,677476],[2912,683450],[2915,687849],[2916,690979],[2917,693205],[2919,692994],[2922,690574],[2923,689624],[2924,684550],[2926,685847],[2929,690205],[2930,694482],[2931,692093],[2932,692146],[2933,696628],[2936,697727],[2937,696374],[2938,692660],[2939,694447],[2940,694001],[2944,679686],[2945,687562],[2946,691335],[2947,691561],[2950,695023],[2951,697860],[2952,697803],[2953,696901],[2954,693903],[2957,697644],[2958,691781],[2959,688272],[2960,679840],[2961,693230],[2964,696482],[2965,694181],[2966,694147],[2967,683276],[2968,683617],[2972,684322],[2973,688131],[2974,686189],[2975,690951],[2978,683775],[2979,689007],[2980,694613],[2981,690886],[2982,687888],[2985,688162],[2986,681663],[2987,686950],[2988,683071],[2989,674002],[2992,679599],[2993,678148],[2994,677580],[2995,667262],[2996,663219],[2999,669938],[3000,671609],[3001,662470],[3002,660649],[3003,650648],[3006,658100],[3007,655637],[3008,659190],[3009,647716],[3010,636885],[3013,634372],[3014,652852],[3015,657532],[3016,658269],[3020,661183],[3021,661685],[3022,678281],[3023,682466],[3024,681689],[3027,688624],[3028,696738],[3029,702295],[3030,704128],[3031,712606],[3034,710914],[3035,706401],[3036,713790],[3037,710840],[3038,716508],[3041,717391],[3042,713880],[3043,713595],[3044,720901],[3045,723012],[3048,720075],[3049,725922],[3050,736512],[3051,733711],[3052,739893],[3055,741284],[3056,740096],[3057,744425],[3058,750124],[3059,740850],[3062,740305],[3063,735361],[3064,743297],[3065,744572],[3066,747347],[3070,751912],[3071,752036],[3072,756363],[3073,758006],[3076,759996],[3077,760978],[3078,755368],[3079,758431],[3080,738374],[3083,740573],[3084,738665],[3085,726699],[3086,739430],[3087,743146],[3090,755429],[3091,751135],[3092,742010],[3093,750058],[3097,747279],[3098,736546],[3099,735822],[3100,735749],[3101,735402],[3104,744043],[3105,749936],[3106,748323],[3107,748324],[3111,753743],[3112,750385],[3113,748271],[3114,754364],[3115,757539],[3118,751534],[3119,754359],[3120,757240],[3121,753377],[3122,745769],[3125,744328],[3126,750920],[3127,749896],[3128,740830],[3129,741198],[3132,741318],[3133,742878],[3134,731615],[3135,743763],[3136,748972],[3139,760050],[3140,773652],[3141,772355],[3142,770996],[3143,775764]],"filas":[{"ano":2018,"inicio":2673.61,"consenso":2950,"cierre":2506.85,"implicito":10.3,"real":-6.2,"desvio":-16.6,"jpm":3000,"gs":2850},{"ano":2019,"inicio":2506.85,"consenso":2975,"cierre":3230.78,"implicito":18.7,"real":28.9,"desvio":10.2,"jpm":3100,"gs":3000},{"ano":2020,"inicio":3230.78,"consenso":3333,"cierre":3756.07,"implicito":3.2,"real":16.3,"desvio":13.1,"jpm":3400,"gs":3400},{"ano":2021,"inicio":3756.07,"consenso":4056,"cierre":4766.18,"implicito":8.0,"real":26.9,"desvio":18.9,"jpm":4400,"gs":4300},{"ano":2022,"inicio":4766.18,"consenso":4950,"cierre":3839.5,"implicito":3.9,"real":-19.4,"desvio":-23.3,"jpm":5050,"gs":5100},{"ano":2023,"inicio":3839.5,"consenso":4080,"cierre":4769.83,"implicito":6.3,"real":24.2,"desvio":18.0,"jpm":4200,"gs":4000},{"ano":2024,"inicio":4769.83,"consenso":4861,"cierre":5881.63,"implicito":1.9,"real":23.3,"desvio":21.4,"jpm":4200,"gs":4700},{"ano":2025,"inicio":5881.63,"consenso":6630,"cierre":6845.5,"implicito":12.7,"real":16.4,"desvio":3.7,"jpm":6500,"gs":6500}],"targets":[{"firma":"RBC","estratega":"Calvasina","objetivo":8150,"recorrido":5.06},{"firma":"Citi","estratega":"Chronert","objetivo":8100,"recorrido":4.41},{"firma":"J.P. Morgan","estratega":"Lakos-Bujas","objetivo":8000,"recorrido":3.12},{"firma":"Goldman Sachs","estratega":"Snider","objetivo":8000,"recorrido":3.12},{"firma":"Morgan Stanley","estratega":"Wilson","objetivo":8000,"recorrido":3.12},{"firma":"Deutsche Bank","estratega":"Chadha","objetivo":8000,"recorrido":3.12},{"firma":"Wells Fargo","estratega":"Kwon","objetivo":7950,"recorrido":2.48},{"firma":"UBS","estratega":"CIO","objetivo":7900,"recorrido":1.84},{"firma":"Barclays","estratega":"Krishna","objetivo":7800,"recorrido":0.55},{"firma":"Bank of America","estratega":"Subramanian","objetivo":7100,"recorrido":-8.48}],"ref":7757.64,"ref_f":"2026-08-07","mediana":8000.0};
+
+var BASE = new Date(DATOS.base + "T00:00:00Z").getTime();
+var DIA  = 86400000;
+var REF  = DATOS.ref;                      // 7,757.64 al 7 de agosto de 2026
+
+// Serie real: [dias desde base, nivel]
+var SERIE = DATOS.d.map(function(p){ return { t: BASE + p[0] * DIA, v: p[1] / 100 }; });
+
+// Objetivos vigentes, para la banda de proyeccion
+var OBJ = DATOS.targets.slice().sort(function(a, b){ return a.objetivo - b.objetivo; });
+var OBJ_MIN = OBJ[0], OBJ_MAX = OBJ[OBJ.length - 1];
+
+// Objetivos de 2027 localizados. Solo hay lado alto, asi que van como puntos
+// sueltos y no como banda: inventar un piso seria dibujar un dato que no existe.
+var P2027 = [
+  { firma: "UBS",            v: 8200, f: "2027-06-30" },
+  { firma: "Morgan Stanley", v: 8300, f: "2027-06-30" },
+  { firma: "Barclays",       v: 8800, f: "2027-12-31" }
+];
+
+function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function ms(f){ return new Date(f + "T00:00:00Z").getTime(); }
+// en-US y no es-CR a proposito: el ICU de es-CR agrupa los miles con espacio fino
+// ("8 150") y el cuerpo de la carta usa coma ("7,757.64"), que es la convencion de
+// la plaza. Dos formatos de numero en la misma pagina se leen como un descuido.
+function mil(v, d){ return v.toLocaleString("en-US", { minimumFractionDigits: d === undefined ? 0 : d,
+                                                      maximumFractionDigits: d === undefined ? 0 : d }); }
+
+var T0 = ms("2018-01-01"), T1 = ms("2027-12-31");
+var PAD = { l: 62, r: 74, t: 16, b: 26 };
+
+function lienzo(id, alto){
+  var c = document.getElementById(id), r = c.getBoundingClientRect();
+  var dpr = window.devicePixelRatio || 1;
+  var w = Math.max(320, Math.round(r.width));
+  c.width = w * dpr; c.height = alto * dpr; c.style.height = alto + "px";
+  var g = c.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.clearRect(0, 0, w, alto);
+  return { g: g, W: w, H: alto };
+}
+
+function marcasY(lo, hi, n){
+  var crudo = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(crudo)));
+  var paso = [1, 2, 2.5, 5, 10].map(function(m){ return m * mag; })
+              .find(function(s){ return s >= crudo; }) || mag * 10;
+  var out = [];
+  for (var v = Math.ceil(lo / paso) * paso; v <= hi + 1e-9; v += paso) out.push(+v.toFixed(6));
+  return out;
+}
+
+function rejilla(g, W, H, xs, ys, marcas, fmt){
+  g.strokeStyle = css("--linea-2"); g.lineWidth = 1;
+  g.fillStyle = css("--tinta-3");
+  g.font = "11px " + css("--texto");
+  g.textAlign = "right"; g.textBaseline = "middle";
+  marcas.forEach(function(v){
+    var y = Math.round(ys(v)) + 0.5;
+    g.beginPath(); g.moveTo(PAD.l, y); g.lineTo(W - PAD.r, y); g.stroke();
+    g.fillText(fmt(v), PAD.l - 9, y);
+  });
+  // Anos en el eje horizontal
+  g.textAlign = "center"; g.textBaseline = "top";
+  for (var a = 2018; a <= 2027; a++){
+    var x = xs(ms(a + "-07-01"));
+    if (x < PAD.l - 4 || x > W - PAD.r + 4) continue;
+    g.fillText(String(a), x, H - PAD.b + 7);
+  }
+}
+
+/* ---- Panel 1: el indice real, los objetivos y la banda vigente ---- */
+var ejeX = null;
+function panel1(){
+  var o = lienzo("c1", 330), g = o.g, W = o.W, H = o.H;
+  var lo = 2200, hi = 9000;
+  var xs = function(t){ return PAD.l + (t - T0) / (T1 - T0) * (W - PAD.l - PAD.r); };
+  var ys = function(v){ return PAD.t + (1 - (v - lo) / (hi - lo)) * (H - PAD.t - PAD.b); };
+  ejeX = { xs: xs, ys: ys, W: W, H: H };
+
+  rejilla(g, W, H, xs, ys, marcasY(lo, hi, 5), function(v){ return mil(v); });
+
+  // Banda de objetivos vigentes para el cierre de 2026. Abanico desde el ultimo
+  // dato real, porque de ahi es que arranca el recorrido implicito.
+  var tRef = ms(DATOS.ref_f), tFin = ms("2026-12-31");
+  g.fillStyle = css("--consenso"); g.globalAlpha = 0.11;
+  g.beginPath();
+  g.moveTo(xs(tRef), ys(REF));
+  g.lineTo(xs(tFin), ys(OBJ_MAX.objetivo));
+  g.lineTo(xs(tFin), ys(OBJ_MIN.objetivo));
+  g.closePath(); g.fill(); g.globalAlpha = 1;
+
+  g.strokeStyle = css("--consenso"); g.lineWidth = 1.5;
+  g.setLineDash([5, 4]);
+  [OBJ_MAX.objetivo, OBJ_MIN.objetivo, DATOS.mediana].forEach(function(v){
+    g.beginPath(); g.moveTo(xs(tRef), ys(REF)); g.lineTo(xs(tFin), ys(v)); g.stroke();
+  });
+  P2027.forEach(function(p){
+    g.beginPath(); g.moveTo(xs(tFin), ys(DATOS.mediana)); g.lineTo(xs(ms(p.f)), ys(p.v)); g.stroke();
+  });
+  g.setLineDash([]);
+
+  // Objetivo de consenso de cada ano, y el error contra el cierre real
+  g.font = "10px " + css("--texto");
+  DATOS.filas.forEach(function(f){
+    var t = ms(f.ano + "-12-31"), x = xs(t);
+    g.strokeStyle = css("--consenso"); g.lineWidth = 1;
+    g.setLineDash([2, 3]);
+    g.beginPath(); g.moveTo(x, ys(f.consenso)); g.lineTo(x, ys(f.cierre)); g.stroke();
+    g.setLineDash([]);
+    // Anillo de superficie para que el marcador no se pierda sobre la linea
+    g.beginPath(); g.arc(x, ys(f.consenso), 5.6, 0, 6.2832);
+    g.strokeStyle = css("--papel"); g.lineWidth = 3; g.stroke();
+    g.beginPath(); g.arc(x, ys(f.consenso), 4.4, 0, 6.2832);
+    g.fillStyle = css("--papel"); g.fill();
+    g.strokeStyle = css("--consenso"); g.lineWidth = 2; g.stroke();
+  });
+
+  // La serie real, encima de todo
+  g.strokeStyle = css("--mercado"); g.lineWidth = 2;
+  g.lineJoin = "round"; g.beginPath();
+  SERIE.forEach(function(p, i){ i ? g.lineTo(xs(p.t), ys(p.v)) : g.moveTo(xs(p.t), ys(p.v)); });
+  g.stroke();
+
+  var ult = SERIE[SERIE.length - 1];
+  g.beginPath(); g.arc(xs(ult.t), ys(ult.v), 3.5, 0, 6.2832);
+  g.fillStyle = css("--mercado"); g.fill();
+
+  // Etiquetas de los extremos de la banda, separadas para que no se toquen
+  var et = [
+    { y: ys(OBJ_MAX.objetivo), s: OBJ_MAX.firma + " " + mil(OBJ_MAX.objetivo) },
+    { y: ys(DATOS.mediana),    s: "Mediana " + mil(DATOS.mediana) },
+    { y: ys(OBJ_MIN.objetivo), s: OBJ_MIN.firma.replace("Bank of America", "BofA") + " " + mil(OBJ_MIN.objetivo) }
+  ].sort(function(a, b){ return a.y - b.y; });
+  for (var i = 1; i < et.length; i++)
+    if (et[i].y - et[i - 1].y < 13) et[i].y = et[i - 1].y + 13;
+  g.font = "10.5px " + css("--texto");
+  g.textAlign = "left"; g.textBaseline = "middle";
+  // Halo del color de la superficie: las lineas punteadas del abanico pasan por
+  // debajo de estas etiquetas y sin el halo el texto se vuelve ilegible.
+  function rotular(s, x, y, color){
+    g.strokeStyle = css("--papel"); g.lineWidth = 3.5;
+    g.lineJoin = "round"; g.strokeText(s, x, y);
+    g.fillStyle = color; g.fillText(s, x, y);
+  }
+  et.forEach(function(e){ rotular(e.s, xs(tFin) + 6, e.y, css("--consenso")); });
+  rotular("Barclays 8,800", xs(ms("2027-12-31")) - 66, ys(8800) - 12, css("--tinta-3"));
+}
+
+/* ---- Panel 2: el desvio en puntos porcentuales ---- */
+function panel2(){
+  var o = lienzo("c2", 190), g = o.g, W = o.W, H = o.H;
+  var lo = -26, hi = 26;
+  var xs = function(t){ return PAD.l + (t - T0) / (T1 - T0) * (W - PAD.l - PAD.r); };
+  var ys = function(v){ return PAD.t + (1 - (v - lo) / (hi - lo)) * (H - PAD.t - PAD.b); };
+
+  rejilla(g, W, H, xs, ys, marcasY(lo, hi, 4), function(v){
+    return (v > 0 ? "+" : "") + v.toFixed(0);
+  });
+
+  var ancho = Math.max(10, (xs(ms("2019-01-01")) - xs(ms("2018-01-01"))) * 0.42);
+  var y0 = ys(0);
+  DATOS.filas.forEach(function(f){
+    var x = xs(ms(f.ano + "-07-01"));
+    var alto = ys(f.desvio) - y0;
+    // Azul cuando el mercado supero al pronostico, laton cuando el pronostico
+    // quedo arriba del mercado. Mismo significado que en el panel de arriba.
+    g.fillStyle = f.desvio >= 0 ? css("--mercado") : css("--consenso");
+    g.globalAlpha = 0.9;
+    g.fillRect(x - ancho / 2, Math.min(y0, ys(f.desvio)), ancho, Math.abs(alto));
+    g.globalAlpha = 1;
+    g.fillStyle = css("--tinta-2");
+    g.font = "10px " + css("--texto");
+    g.textAlign = "center";
+    g.textBaseline = f.desvio >= 0 ? "bottom" : "top";
+    g.fillText((f.desvio > 0 ? "+" : "") + f.desvio.toFixed(1),
+               x, ys(f.desvio) + (f.desvio >= 0 ? -4 : 4));
+  });
+
+  g.strokeStyle = css("--tinta-3"); g.lineWidth = 1;
+  g.beginPath(); g.moveTo(PAD.l, Math.round(y0) + 0.5);
+  g.lineTo(W - PAD.r, Math.round(y0) + 0.5); g.stroke();
+
+  g.fillStyle = css("--tinta-3"); g.font = "10.5px " + css("--texto");
+  g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillText("en curso", xs(ms("2026-07-01")), y0 - 14);
+}
+
+/* ---- Panel 3: el recorrido implicito de cada objetivo vigente ----
+   En el panel 1 el abanico de 2026 abarca cinco meses sobre un eje de diez anos,
+   asi que queda comprimido y el recorrido no se puede leer. Este panel lo abre:
+   una barra por firma, medida contra el cierre del 7 de agosto, que es el cero. */
+function panel3(){
+  var fs = DATOS.targets.slice().sort(function(a, b){ return b.recorrido - a.recorrido; });
+  var FILA = 23, PL = 132, PR = 58, PT = 10;
+  var o = lienzo("c3", PT + fs.length * FILA + 26), g = o.g, W = o.W, H = o.H;
+  var lo = -10, hi = 6;
+  var xs = function(v){ return PL + (v - lo) / (hi - lo) * (W - PL - PR); };
+  var x0 = xs(0);
+
+  // Rejilla vertical, en porcentaje
+  g.strokeStyle = css("--linea-2"); g.lineWidth = 1;
+  g.fillStyle = css("--tinta-3"); g.font = "10px " + css("--texto");
+  g.textAlign = "center"; g.textBaseline = "top";
+  marcasY(lo, hi, 4).forEach(function(v){
+    var x = Math.round(xs(v)) + 0.5;
+    g.beginPath(); g.moveTo(x, PT); g.lineTo(x, H - 22); g.stroke();
+    g.fillText((v > 0 ? "+" : "") + v + "%", x, H - 18);
+  });
+
+  fs.forEach(function(t, i){
+    var y = PT + i * FILA, alto = 13;
+    var x = xs(t.recorrido);
+    g.fillStyle = css("--consenso"); g.globalAlpha = t.firma === "J.P. Morgan" ? 1 : 0.72;
+    g.fillRect(Math.min(x0, x), y + (FILA - alto) / 2, Math.abs(x - x0), alto);
+    g.globalAlpha = 1;
+
+    g.font = (t.firma === "J.P. Morgan" ? "600 " : "") + "11.5px " + css("--texto");
+    g.fillStyle = css("--tinta-2");
+    g.textAlign = "right"; g.textBaseline = "middle";
+    g.fillText(t.firma, PL - 12, y + FILA / 2);
+
+    // La barra negativa crece hacia la columna de nombres, asi que su etiqueta va
+    // por dentro de la barra. Afuera se montaria encima del nombre de la firma.
+    var texto = (t.recorrido >= 0 ? "+" : "") + t.recorrido.toFixed(2) + "% · " + mil(t.objetivo);
+    g.font = "11.5px " + css("--texto");
+    if (t.recorrido >= 0){
+      g.fillStyle = css("--tinta-3"); g.textAlign = "left";
+      g.fillText(texto, x + 7, y + FILA / 2);
+    } else {
+      g.fillStyle = css("--papel"); g.textAlign = "left";
+      g.fillText(texto, x + 8, y + FILA / 2);
+    }
+  });
+
+  // La linea de cero es el nivel actual del indice, no un valor arbitrario
+  g.strokeStyle = css("--tinta"); g.lineWidth = 1;
+  g.beginPath(); g.moveTo(Math.round(x0) + 0.5, PT);
+  g.lineTo(Math.round(x0) + 0.5, H - 22); g.stroke();
+}
+
+/* ---- Tablas ---- */
+function tablas(){
+  document.getElementById("tbl-targets").innerHTML = DATOS.targets.map(function(t){
+    var cl = t.recorrido >= 0 ? "sube" : "baja";
+    return "<tr" + (t.firma === "J.P. Morgan" ? ' class="destaca"' : "") + ">" +
+      "<td>" + t.firma + "</td><td>" + t.estratega + "</td>" +
+      "<td>" + mil(t.objetivo) + "</td>" +
+      "<td class=\"" + cl + "\">" + (t.recorrido >= 0 ? "+" : "") +
+      t.recorrido.toFixed(2) + "%</td></tr>";
+  }).join("") +
+    "<tr class=\"mediana\"><td>Mediana de las diez</td><td></td><td>" +
+    mil(DATOS.mediana) + "</td><td>+3.12%</td></tr>";
+
+  document.getElementById("tbl-hist").innerHTML = DATOS.filas.map(function(f){
+    return "<tr><td>" + f.ano + "</td><td>" + mil(f.inicio) + "</td>" +
+      "<td>" + mil(f.consenso) + "</td><td>" + (f.implicito > 0 ? "+" : "") +
+      f.implicito.toFixed(1) + "%</td><td>" + mil(f.cierre) + "</td>" +
+      "<td>" + (f.real > 0 ? "+" : "") + f.real.toFixed(1) + "%</td>" +
+      "<td class=\"" + (f.desvio >= 0 ? "sube" : "baja") + "\">" +
+      (f.desvio > 0 ? "+" : "") + f.desvio.toFixed(1) + " pp</td></tr>";
+  }).join("");
+}
+
+/* ---- Capa de lectura sobre el panel del indice ---- */
+var tip = document.getElementById("tip");
+function cerca(t){
+  var i = 0, mejor = Infinity;
+  for (var k = 0; k < SERIE.length; k++){
+    var d = Math.abs(SERIE[k].t - t);
+    if (d < mejor){ mejor = d; i = k; }
+  }
+  return SERIE[i];
+}
+function mover(ev){
+  if (!ejeX) return;
+  var c = document.getElementById("c1"), r = c.getBoundingClientRect();
+  var x = ev.clientX - r.left;
+  if (x < PAD.l || x > r.width - PAD.r){ tip.className = ""; return; }
+  var t = T0 + (x - PAD.l) / (r.width - PAD.l - PAD.r) * (T1 - T0);
+  var p = cerca(t);
+  var f = new Date(p.t);
+  tip.innerHTML = "<b>" + f.toLocaleDateString("es-CR",
+      { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) + "</b>" +
+    "<s>S&amp;P 500 " + mil(p.v, 2) + "</s>" +
+    "<s style=\"color:var(--tinta-3)\">" +
+    ((p.v / REF - 1) * 100).toFixed(1) + "% vs el cierre del 7 de agosto</s>";
+  tip.className = "on";
+  tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 232) + "px";
+  tip.style.top  = Math.max(8, ev.clientY - 58) + "px";
+}
+document.getElementById("c1").addEventListener("mousemove", mover);
+document.getElementById("c1").addEventListener("mouseleave", function(){ tip.className = ""; });
+
+function pintar(){ panel1(); panel2(); panel3(); }
+tablas(); pintar();
+
+var temp = null;
+window.addEventListener("resize", function(){
+  clearTimeout(temp); temp = setTimeout(pintar, 120);
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){
+  setTimeout(pintar, 30);
+});
+new MutationObserver(function(){ setTimeout(pintar, 30); })
+  .observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+</body>
+</html>
