@@ -333,7 +333,7 @@
     </div>
     <div class="grid" style="margin-top:10px">
       <div class="field" style="grid-column:1/-1"><label>Frecuencia de transferencia internacional</label><div class="row"><div class="seg segph" id="seg-freq"><button data-a="mensual">Mensual</button><button data-a="trimestral">3 meses</button><button data-a="semestral">6 meses</button><button data-a="anual">Anual</button><button data-a="umbral" class="on">Al juntar $</button></div></div></div>
-      <div class="field" style="grid-column:1/-1"><label>Filtro de mercado (señal sobre el Nasdaq-100)</label><div class="row"><div class="seg segph" id="seg-filtro"><button data-a="off" class="on">Sin filtro</button><button data-a="9h">Timing 9m</button><button data-a="faber">Faber 10m</button></div></div></div>
+      <div class="field" style="grid-column:1/-1"><label>Filtro de mercado (señal sobre el Nasdaq-100)</label><div class="row"><div class="seg segph" id="seg-filtro"><button data-a="off" class="on">Sin filtro</button><button data-a="9h">Timing 9m</button><button data-a="lrs">LRS 200d</button></div></div></div>
       <div class="field"><label>Aportes</label><div class="row"><div class="seg" id="seg-sinap"><button data-a="con" class="on">Con aportes</button><button data-a="sin">Sin aportes</button></div></div></div>
       <div class="field"><label>Costos</label><div class="row"><div class="seg" id="seg-costos"><button data-a="con" class="on">Con costos</button><button data-a="sin">Sin costos</button></div></div></div>
     </div>
@@ -461,12 +461,12 @@
         <li><b>La ejecución es la semana siguiente:</b> lo que se decidió con el cierre del viernes se opera al arrancar la semana que sigue. Nunca la misma semana: la señal jamás usa información que todavía no existía.</li>
         <li><b>Mientras estás afuera,</b> la plata espera en efectivo hasta que llegue la señal de reentrada.</li>
       </ol></div>
-      <div class="papel"><div class="src">El de los papers · Faber 10 meses</div><h3>La media móvil que premió el Dow Award</h3><p>Si el cierre está <b>arriba del promedio de 10 meses</b>, adentro; abajo, afuera. Es la familia de señales de Gayed y Bilello. La tenemos precalculada en el laboratorio ("Faber 10m") para que valides el paper con nuestros propios datos. Dos señales distintas que cuentan la misma historia.</p></div>
+      <div class="papel"><div class="src">El del paper · LRS · media móvil de 200 días</div><h3>La señal que premió el Dow Award</h3><p>Es la regla exacta de Gayed y Bilello: se está adentro mientras el precio se mantiene <b>sobre su media móvil de 200 días</b>, y afuera cuando la pierde. La revisión es diaria y la señal reacciona rápido, así que rota unas <b>5.5 veces al año</b> contra media vez al año de la nuestra.</p><p>Es el comparador que importa, porque es contra esta señal que corrimos todo nuestro research. El resultado en el Nasdaq-100 apalancado, que es donde el sistema la usa: <b>42.1% anual con caída máxima de −74.9%</b> para la nuestra, contra <b>30.8% y −94.9%</b> para la LRS. En el S&amp;P 500 la LRS es mejor, y así lo decimos.</p><p style="color:var(--gris-sec);font-size:11.5px">Nota de método: en el laboratorio de abajo la LRS se calcula sobre cierres semanales (40 semanas = 200 días de bolsa), que es la granularidad de estos datos. Así rota unas 3 veces al año en vez de 5.5, porque la barra semanal se traga parte del serrucho diario. La comparación queda, si acaso, a favor de la LRS.</p></div>
     </div>
     <div class="psetbar">
       <button class="pset" data-preset="fpf" data-stay="1">El plan, sin filtro <small>la base que se defiende sola</small></button>
       <button class="pset" data-preset="fpftim" data-stay="1">Con nuestro timing 9m <small>sale a −18% · vuelve a −6%</small></button>
-      <button class="pset" data-preset="fpffaber" data-stay="1">Con Faber 10m <small>el filtro de los papers</small></button>
+      <button class="pset" data-preset="fpflrs" data-stay="1">Con LRS 200 días <small>el filtro del paper</small></button>
     </div>
     <div class="card" style="margin-bottom:14px">
       <div style="font-weight:700;color:var(--crema);margin-bottom:2px">El espejo del laboratorio: mismo plan, tocá los filtros y mirá la diferencia acá mismo</div>
@@ -908,8 +908,20 @@ function drawGlide(){
 // ===== HISTÓRICO semanal del plan (framework sobre precios reales) =====
 function capH(){ return num(byId("i-cap").value); }
 function pxOk(){ return window.PX && window.PX.t && window.PX.sig; }
+// LRS del paper de Gayed: adentro mientras el precio esta sobre su media movil de 200 dias.
+// Con barras semanales, 200 dias de bolsa = 40 semanas. Se calcula aca para no tocar pxdata.js,
+// que comparten /retiro y /admin.
+(function(){ if(!window.PX||!PX.QQQ||!PX.sig||PX.sig.QQQ_lrs) return;
+  var N=40, suma=0, out=[];
+  for(var i=0;i<PX.QQQ.length;i++){
+    suma+=PX.QQQ[i]; if(i>=N) suma-=PX.QQQ[i-N];
+    var ma = i>=N-1 ? suma/N : null;
+    out.push(ma===null ? 1 : (PX.QQQ[i]>ma ? 1 : 0));
+  }
+  PX.sig.QQQ_lrs=out;
+})();
 function weekSigH(){ if(!pxOk()) return null; var f=S.filtro;
-  return f==="9h"?PX.sig.QQQ:f==="faber"?PX.sig.QQQ_faber:f==="52"?PX.sig.QQQ_52:f==="mom"?PX.sig.QQQ_mom:null; }
+  return f==="9h"?PX.sig.QQQ:f==="lrs"?PX.sig.QQQ_lrs:f==="faber"?PX.sig.QQQ_faber:f==="52"?PX.sig.QQQ_52:f==="mom"?PX.sig.QQQ_mom:null; }
 function simHistFW(){
   if(!pxOk()) return null;
   var PX=window.PX, T=PX.t, n=T.length, sig=weekSigH(), timing=!!sig;
@@ -1102,7 +1114,7 @@ function renderHist(){
   drawHist(s);
   renderMetricas(s, ti);
   renderDDstudy(s);
-  var fl = S.filtro==="off"?"":({ "9h":"timing 9m", faber:"Faber 10m", "52":"máx. 52 sem", mom:"momentum" })[S.filtro];
+  var fl = S.filtro==="off"?"":({ "9h":"timing 9m", lrs:"LRS 200 días", faber:"Faber 10m", "52":"máx. 52 sem", mom:"momentum" })[S.filtro];
   byId("hist-txt").innerHTML="Con este plan ("+planDesc(S.f1,S.f2,S.f3,S.ff)+")"+(fl?", con filtro <b>"+fl+"</b>,":"")+" entre <b>"+S.y0+"</b> y <b>"+S.y1+"</b>: pusiste <b>"+money(s.aportado)+"</b> y hoy tendrías <b>"+money(s.valor)+"</b> (tu plata rindió <b>"+fmt1(ti)+"%</b> anual). Es UNA historia real, no un promedio — el estudio de abajo sortea miles de futuros.";
   ["hist-txt2","hist-txt3"].forEach(function(tid){ var mt=byId(tid); if(mt) mt.innerHTML=byId("hist-txt").innerHTML; });
 }
@@ -1402,7 +1414,7 @@ var PRESETS={
   fpftim:   {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
   sorpresastim:{f1:"TQQQ",f2:"SPY", f3:"SJC", p1:40,p2:100,ff:70, tim:"9h"},
   antestim: {f1:"TQQQ",f2:"QQQ", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
-  fpffaber: {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"faber"}
+  fpflrs:   {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"lrs"}
 };
 Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), function(b){
   b.addEventListener("click", function(){
