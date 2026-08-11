@@ -105,6 +105,27 @@
   .editcap button{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:8px;
     padding:5px 12px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; }
   .editcap button:hover{ border-color:var(--menta); }
+  /* ===== modal de alta / edición ===== */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:40; display:none;
+    align-items:flex-start; justify-content:center; overflow-y:auto; padding:18px; }
+  .modal.on{ display:flex; }
+  .modal .caja2{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 20px 18px;
+    max-width:580px; width:100%; margin:auto; }
+  .modal h3{ margin:0 0 2px; font-size:18px; color:var(--crema); }
+  .modal .ayuda{ font-size:12px; color:var(--gris-sec); margin-bottom:12px; }
+  .modal label{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--gris-sec); font-weight:800; margin:10px 0 4px; }
+  .modal input, .modal textarea{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:9px;
+    color:var(--crema); font-family:inherit; font-size:14.5px; padding:9px 11px; }
+  .modal input:focus, .modal textarea:focus{ outline:none; border-color:var(--menta); }
+  .f2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:520px){ .f2{ grid-template-columns:1fr; } }
+  .modal .acc2{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  .modal .acc2 button{ flex:1; min-width:130px; border-radius:999px; padding:11px 16px; font-family:inherit;
+    font-size:14px; font-weight:800; cursor:pointer; border:1px solid var(--bd); }
+  .modal .acc2 .ok{ background:var(--menta); color:#082018; border-color:var(--menta); }
+  .modal .acc2 .no{ background:transparent; color:var(--gris); }
+  .modal .msg{ font-size:12.5px; margin-top:10px; min-height:18px; }
   .volver{ display:none; }
   @media(max-width:900px){
     .layout{ grid-template-columns:1fr; }
@@ -128,6 +149,7 @@
   <h1>Panel de cuentas</h1>
   <div id="senal" class="senal"><div class="pto"></div><div>Cargando señal…</div></div>
   <div class="toolbar">
+    <button id="nuevo">➕ Nuevo cliente</button>
     <button id="refrescar">🔄 Actualizar datos (sin correos)</button>
     <button id="priv" title="Modo privacidad: esconde los nombres para pantallazos">👁 Privacidad</button>
     <button id="salir">Salir</button>
@@ -143,6 +165,42 @@
       <div id="filas"></div>
     </div>
     <div class="det" id="det"><div class="vacio">Tocá un cliente para ver su cuenta</div></div>
+  </div>
+
+  <div class="modal" id="modal-alta">
+    <div class="caja2">
+      <h3>Nuevo cliente</h3>
+      <div class="ayuda">Los keys de Alpaca viajan cifrados por HTTPS y se guardan cifrados con la llave maestra. Después de guardar, dale a <b>Actualizar datos</b> para traer su cuenta.</div>
+      <div class="f2">
+        <div><label for="n-nombre">Nombre completo</label><input id="n-nombre" placeholder="María Vargas"></div>
+        <div><label for="n-alias">Alias (público, sale en su URL)</label><input id="n-alias" placeholder="se genera solo"></div>
+      </div>
+      <div class="f2">
+        <div><label for="n-correo">Correo</label><input id="n-correo" type="email" placeholder="maria@correo.com"></div>
+        <div><label for="n-clave">Clave de su reporte</label><input id="n-clave" placeholder="la que le vas a compartir"></div>
+      </div>
+      <div class="f2">
+        <div><label for="n-akey">Alpaca API Key</label><input id="n-akey" autocomplete="off"></div>
+        <div><label for="n-asec">Alpaca API Secret</label><input id="n-asec" type="password" autocomplete="off"></div>
+      </div>
+      <div class="f2">
+        <div><label for="n-ingreso">Ingreso meta ($/mes)</label><input id="n-ingreso" inputmode="numeric" value="10000"></div>
+        <div><label for="n-tasa">Tasa de retiro (%)</label><input id="n-tasa" inputmode="numeric" value="4"></div>
+      </div>
+      <div class="f2">
+        <div><label for="n-aporte">Aporte pactado ($/mes)</label><input id="n-aporte" inputmode="numeric" value="1000"></div>
+        <div><label for="n-capini">Capital inicial ($, opcional)</label><input id="n-capini" inputmode="numeric" placeholder="0"></div>
+      </div>
+      <label for="n-plan">Plan · fase1,fase2,fase3,salida%,mezcla%,final%,timing</label>
+      <input id="n-plan" value="TQQQ,SPY,SJC,70,100,70,si">
+      <label for="n-notas">Notas privadas</label>
+      <textarea id="n-notas" rows="2"></textarea>
+      <div class="acc2">
+        <button class="ok" id="n-guardar">Guardar cliente</button>
+        <button class="no" id="n-cerrar">Cancelar</button>
+      </div>
+      <div class="msg" id="n-msg"></div>
+    </div>
   </div>
 </div>
 
@@ -508,6 +566,50 @@ function pintarPriv(){ $("priv").style.borderColor=PRIV?"var(--menta)":"var(--bd
 $("priv").addEventListener("click", function(){ PRIV=!PRIV; sessionStorage.setItem("panel_priv", PRIV?"1":"0");
   pintarPriv(); if(DATOS){ renderLista(); renderDet(); } });
 pintarPriv();
+// ===== alta de cliente desde el panel =====
+function aliasDesde(nombre){
+  var partes=String(nombre||"").replace(/([a-z])([A-Z])/g,"$1 $2").split(/\s+/).filter(Boolean);
+  var ini=partes.map(function(p){return p[0];}).join("").toLowerCase().slice(0,3) || "cl";
+  var usados=(DATOS&&DATOS.clientes||[]).map(function(c){return c.alias;});
+  for(var i=1;i<200;i++){ var a=ini+"-"+String(i).padStart(2,"0"); if(usados.indexOf(a)<0) return a; }
+  return ini+"-"+Date.now().toString().slice(-4);
+}
+function abrirAlta(){
+  ["n-nombre","n-alias","n-correo","n-clave","n-akey","n-asec","n-capini","n-notas"].forEach(function(id){ $(id).value=""; });
+  $("n-ingreso").value="10000"; $("n-tasa").value="4"; $("n-aporte").value="1000";
+  $("n-plan").value="TQQQ,SPY,SJC,70,100,70,si"; $("n-msg").textContent="";
+  $("modal-alta").classList.add("on"); $("n-nombre").focus();
+}
+$("nuevo").addEventListener("click", abrirAlta);
+$("n-cerrar").addEventListener("click", function(){ $("modal-alta").classList.remove("on"); });
+$("modal-alta").addEventListener("click", function(e){ if(e.target===$("modal-alta")) $("modal-alta").classList.remove("on"); });
+$("n-nombre").addEventListener("blur", function(){ if(!$("n-alias").value.trim()) $("n-alias").value=aliasDesde($("n-nombre").value); });
+$("n-guardar").addEventListener("click", async function(){
+  var g=function(id){ return $(id).value.trim(); };
+  var msg=$("n-msg"); msg.style.color="var(--gris-sec)";
+  if(!g("n-nombre") || !g("n-correo") || !g("n-clave") || !g("n-akey") || !g("n-asec")){
+    msg.style.color="var(--rojo)"; msg.textContent="Faltan datos: nombre, correo, clave y los dos keys son obligatorios."; return;
+  }
+  var pl=g("n-plan").split(",").map(function(x){return x.trim();});
+  if(pl.length<7){ msg.style.color="var(--rojo)"; msg.textContent="El plan necesita 7 valores separados por coma."; return; }
+  var alias=(g("n-alias")||aliasDesde(g("n-nombre"))).toLowerCase();
+  var body={ alias:alias, nombre:g("n-nombre"), correo:g("n-correo"), clave_reporte:g("n-clave"),
+    api_key:g("n-akey"), api_secret:g("n-asec"),
+    meta:{ ingreso:+g("n-ingreso")||0, tasa:+g("n-tasa")||4, aporte_pactado:+g("n-aporte")||0,
+      capital_inicial:parseInt((g("n-capini")||"0").replace(/[^0-9]/g,""),10)||0,
+      plan:{ f1:pl[0], f2:pl[1], f3:pl[2], p1:+pl[3], p2:+pl[4], ff:+pl[5], timing:pl[6].toLowerCase()==="si" } },
+    notas:g("n-notas") };
+  var btn=$("n-guardar"); btn.disabled=true; msg.textContent="Guardando…";
+  try{
+    await llamar("guardar-cliente", body);
+    msg.style.color="var(--menta)";
+    msg.textContent="✅ Guardado como "+alias+". Dale a Actualizar datos para traer su cuenta.";
+    ["n-akey","n-asec","n-clave"].forEach(function(id){ $(id).value=""; });
+    await cargar();
+    setTimeout(function(){ $("modal-alta").classList.remove("on"); }, 1600);
+  }catch(e){ msg.style.color="var(--rojo)"; msg.textContent="❌ "+(e.message||e); }
+  btn.disabled=false;
+});
 $("refrescar").addEventListener("click", async function(){
   $("estado").textContent="Consultando Alpaca (sin correos)…";
   try{ var r=await llamar("cierre-mes",{sin_correo:true});
