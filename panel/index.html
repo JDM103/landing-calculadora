@@ -150,7 +150,7 @@
   <div id="senal" class="senal"><div class="pto"></div><div>Cargando señal…</div></div>
   <div class="toolbar">
     <button id="nuevo">➕ Nuevo cliente</button>
-    <button id="refrescar">🔄 Actualizar datos (sin correos)</button>
+    <button id="refrescar" title="Trae los datos frescos de Alpaca. Nunca manda correos a clientes; esos solo salen con el cierre automático de cada mes.">🔄 Actualizar datos</button>
     <button id="priv" title="Modo privacidad: esconde los nombres para pantallazos">👁 Privacidad</button>
     <button id="salir">Salir</button>
     <span class="tot" id="tots"></span>
@@ -170,7 +170,7 @@
   <div class="modal" id="modal-alta">
     <div class="caja2">
       <h3>Nuevo cliente</h3>
-      <div class="ayuda">Los keys de Alpaca viajan cifrados por HTTPS y se guardan cifrados con la llave maestra. Después de guardar, dale a <b>Actualizar datos</b> para traer su cuenta.</div>
+      <div class="ayuda">Todo viaja y se guarda cifrado; solo vos, con tu token, podés verlo. Después de guardar, dale a <b>Actualizar datos</b> para traer su cuenta.</div>
       <div class="f2">
         <div><label for="n-nombre">Nombre completo</label><input id="n-nombre" placeholder="María Vargas"></div>
         <div><label for="n-alias">Alias (público, sale en su URL)</label><input id="n-alias" placeholder="se genera solo"></div>
@@ -461,7 +461,11 @@ function renderDet(){
         : (trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':''))
       : '<div class="sub">Sin snapshot: dale a Actualizar datos.</div>')
     +'<div class="accion'+(a.calma?' calma':'')+'">'+a.t+'</div>'
-    +(!PRIV? '<div class="sec">Notas</div>'
+    +(!PRIV? '<div class="sec">Clave de su reporte</div>'
+      +'<div class="editcap" style="margin-top:2px"><span>Las claves se guardan cifradas y no se pueden leer; acá solo se asigna una nueva:</span>'
+      +'<input id="clave-ed" autocomplete="off" placeholder="clave nueva" style="width:150px;text-align:left">'
+      +'<button id="clave-go">Asignar</button><span id="clave-msg"></span></div>'
+      +'<div class="sec">Notas</div>'
       +'<textarea id="notas-ed" rows="2" style="width:100%;background:var(--input);border:1px solid var(--bd);border-radius:8px;color:var(--ambar);font-family:inherit;font-size:12.5px;padding:8px" placeholder="Notas privadas de este cliente…">'+escapa(c.notas)+'</textarea>'
       +'<div class="editcap" style="margin-top:6px"><button id="notas-go">Guardar notas</button><span id="notas-msg"></span></div>' : '');
   det.classList.add("abierto");
@@ -504,6 +508,17 @@ function renderDet(){
         var m2=$("fmark-msg"); if(m2) m2.textContent="✅ Guardado. TIR e YTD se recalculan al Actualizar datos.";
       }catch(e){ $("fmark-msg").textContent="❌ "+(e.message||e); }
     });
+  });
+  var claveBox=document.getElementById("clave-box");
+  if(!PRIV && !claveBox){ /* se agrega junto a las notas en el render */ }
+  var cg2=$("clave-go");
+  if(cg2) cg2.addEventListener("click", async function(){
+    var val=$("clave-ed").value.trim();
+    if(val.length<4){ $("clave-msg").textContent="❌ mínimo 4 caracteres"; return; }
+    $("clave-msg").textContent="Guardando…";
+    try{ await llamar("guardar-cliente",{alias:c.alias, clave_reporte:val});
+      $("clave-ed").value=""; $("clave-msg").textContent="✅ Clave nueva guardada. Compartísela al cliente.";
+    }catch(e){ $("clave-msg").textContent="❌ "+(e.message||e); }
   });
   var ng=$("notas-go");
   if(ng) ng.addEventListener("click", async function(){
@@ -559,7 +574,9 @@ async function cargar(){
     $("err").style.display="block"; $("err").textContent=String(e.message||e);
   }
 }
-$("entrar").addEventListener("click", function(){ sessionStorage.setItem("panel_tok", $("tok").value.trim()); $("tok").value=""; cargar(); });
+$("entrar").addEventListener("click", function(){ sessionStorage.setItem("panel_tok", $("tok").value.trim()); $("tok").value="";
+  $("entrar").disabled=true; $("entrar").textContent="Entrando…"; $("err").style.display="none";
+  cargar().finally(function(){ $("entrar").disabled=false; $("entrar").textContent="Entrar"; }); });
 $("tok").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar").click(); });
 $("salir").addEventListener("click", function(){ sessionStorage.removeItem("panel_tok"); location.reload(); });
 function pintarPriv(){ $("priv").style.borderColor=PRIV?"var(--menta)":"var(--bd)"; $("priv").style.color=PRIV?"var(--menta)":"var(--crema)"; }
@@ -611,7 +628,7 @@ $("n-guardar").addEventListener("click", async function(){
   btn.disabled=false;
 });
 $("refrescar").addEventListener("click", async function(){
-  $("estado").textContent="Consultando Alpaca (sin correos)…";
+  $("estado").textContent="Consultando Alpaca…";
   try{ var r=await llamar("cierre-mes",{sin_correo:true});
     var mal=Object.keys(r.resultados).filter(function(k){return r.resultados[k]!=="ok";});
     $("estado").textContent="Actualizado ("+r.mes+"): "+(Object.keys(r.resultados).length-mal.length)+" ok"+(mal.length?" · con error: "+mal.join(", "):"");
