@@ -293,8 +293,8 @@
   <!-- controles que más movés, pegados al gráfico -->
   <div class="card" style="margin-top:6px">
     <div class="grid">
-      <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1990</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div><div class="subedad">tu edad ese año <input id="e-y0" inputmode="numeric" value="30" aria-label="Edad en el año desde"></div></div>
-      <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div><div class="subedad">tu edad ese año <input id="e-y1" inputmode="numeric" value="65" aria-label="Edad en el año hasta"></div></div>
+      <div class="field"><label>Desde (año)</label><div class="row"><b class="big" id="v-y0">1990</b><div class="steps"><button class="stp" data-s="y0" data-d="1">▲</button><button class="stp" data-s="y0" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>Hasta (año)</label><div class="row"><b class="big" id="v-y1">2025</b><div class="steps"><button class="stp" data-s="y1" data-d="1">▲</button><button class="stp" data-s="y1" data-d="-1">▼</button></div></div></div>
       <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
@@ -316,7 +316,7 @@
   </div>
   <div class="card" style="margin-top:12px; border-color:rgba(99,252,175,.3)">
     <div style="font-weight:700;color:var(--crema);margin-bottom:2px">📊 La estadística real de este escenario</div>
-    <p class="note" style="margin:2px 0 8px">El gráfico de arriba es UNA historia. Esto es el mismo plan que tenés seleccionado (activos, porcentajes de etapa y filtro) corrido en <b>1,000 futuros</b> sorteados de la historia: su probabilidad de verdad. Se recalcula solo con cada cambio.</p>
+    <p class="note" style="margin:2px 0 8px">El gráfico de arriba es UNA historia (la ventana desde/hasta solo cambia qué pedazo mirás). Esto es tu plan completo —activos, porcentajes de etapa, filtro, y las edades, aporte y capital inicial de <b>Tus datos</b>— corrido en <b>1,000 futuros</b> sorteados de la historia: su probabilidad de verdad. Se recalcula solo con cada cambio.</p>
     <div class="kpis">
       <div class="kpi"><div class="k">Prob. de llegar</div><div class="v men" id="sp-prob">…</div></div>
       <div class="kpi"><div class="k">Años a la meta (típico / pesimista)</div><div class="v" id="sp-anios">…</div></div>
@@ -884,8 +884,6 @@ function refresh(){
   var im2=byId("i-meta2"); if(im2 && document.activeElement!==im2) im2.value=fmt(S.income);
   var km2=byId("k-meta2"); if(km2 && document.activeElement!==km2) km2.value=fmt(metaCapital());
   var ka2=byId("k-aporte2"); if(ka2) ka2.textContent="$"+fmt(aporte())+"/mes";
-  var ey0=byId("e-y0"); if(ey0 && document.activeElement!==ey0) ey0.value=S.edad;
-  var ey1=byId("e-y1"); if(ey1 && document.activeElement!==ey1) ey1.value=S.edad+(S.y1-S.y0);
   byId("lg-L").textContent=S.f1; byId("lg-E").textContent=S.f2; byId("lg-F").textContent=faseNom(S.f3);
   byId("lg-cL").style.background="rgb("+assetRGB(S.f1)+")"; byId("lg-cE").style.background="rgb("+assetRGB(S.f2)+")"; byId("lg-cF").style.background="rgb("+assetRGB(S.f3)+")";
   byId("field-sjc").style.display = (S.f3==="SJC")?"":"none";
@@ -1438,19 +1436,13 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), functio
   });
 });
 // ===== Espejo de "Tus datos" dentro del laboratorio =====
+// La ventana desde/hasta del laboratorio es SOLO el pedazo de historia que mirás en el gráfico;
+// el plan (edades, freedom point, aporte y la estadística) vive en "Tus datos".
 (function(){
-  var im2=byId("i-meta2"), km2=byId("k-meta2"), ey0=byId("e-y0"), ey1=byId("e-y1");
+  var im2=byId("i-meta2"), km2=byId("k-meta2");
   function limpio(el){ var d=el.value.replace(/[^0-9]/g,""); el.value=d?Number(d).toLocaleString("en-US"):""; return num(el.value); }
   if(im2) im2.addEventListener("input", function(){ setIncome(limpio(im2)); });
   if(km2) km2.addEventListener("input", function(){ fpToIncome(limpio(km2)); });
-  // La ventana del laboratorio y las edades cuentan la misma historia: desde = tu edad hoy, hasta = tu edad de retiro.
-  function syncVentana(){ var dif=Math.max(1, Math.min(S.edadret-S.edad, 2025-S.y0)); S.y1=S.y0+dif; refresh(); }
-  function syncEdades(){ var dif=S.y1-S.y0; S.edadret=Math.min(80, Math.max(S.edad+1, S.edad+dif)); refresh(); }
-  if(ey0) ey0.addEventListener("input", function(){ var v=parseInt(ey0.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S.edad=Math.min(64,Math.max(18,v)); if(S.edadret<=S.edad) S.edadret=S.edad+1; syncVentana(); });
-  if(ey1) ey1.addEventListener("input", function(){ var v=parseInt(ey1.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S.edadret=Math.min(80,Math.max(S.edad+1,v)); syncVentana(); });
-  Array.prototype.forEach.call(document.querySelectorAll('.stp[data-s="y0"],.stp[data-s="y1"],.stp[data-diff]'), function(b){ b.addEventListener("click", syncEdades); });
-  Array.prototype.forEach.call(document.querySelectorAll('.stp[data-s="edad"],.stp[data-s="edadret"]'), function(b){ b.addEventListener("click", syncVentana); });
-  ["v-edad","v-edadret"].forEach(function(id){ var el=byId(id); if(el) el.addEventListener("input", function(){ setTimeout(syncVentana,0); }); });
 })();
 // ===== Estudio profundo 1971–2025 en vivo (replica exacta del estudio interno) =====
 (function(){
@@ -1545,12 +1537,21 @@ function spTabla(){
   if(!SP.mret[f]) SP.mret[f]=monthlyTable(f==="off"?null : f==="9h"?PX.sig.QQQ : PX.sig.QQQ_lrs);
   return SP.mret[f];
 }
+// sorteo con semilla fija: el mismo escenario da siempre el mismo número
+function spDraws(N, M, np, B){
+  var a=19710203|0; function rng(){ a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }
+  if(np<B) B=np; var d=[];
+  for(var q=0;q<N;q++){ var r=new Int32Array(M), pos=0;
+    while(pos<M){ var st=(rng()*(np-B+1))|0; for(var k=0;k<B&&pos<M;k++) r[pos++]=st+k; }
+    d.push(r); }
+  return d;
+}
 window.__statsPlan=function(){
   clearTimeout(SP.timer);
   SP.timer=setTimeout(function(){
     if(!pxOk() || !byId("sp-prob")) return;
     var mret=spTabla(), M=anios()*12;
-    if(!SP.draws || SP.drawsM!==M){ SP.draws=makeBlockDraws(1000, M, mret.SPY.length, 48); SP.drawsM=M; }
+    if(!SP.draws || SP.drawsM!==M){ SP.draws=spDraws(1000, M, mret.SPY.length, 48); SP.drawsM=M; }
     var r=simMC(function(phi){ return fwW(phi,S.p1,S.p2,S.ff); }, 1000, SP.draws, {costos:S.costos, mret:mret});
     var ny=anios();
     byId("sp-prob").textContent=Math.round(r.pMeta)+"%";
@@ -1561,6 +1562,8 @@ window.__statsPlan=function(){
     byId("sp-plan").innerHTML="Escenario medido: <b>"+planDesc(S.f1,S.f2,S.f3,S.ff)+fl+"</b> · salís de fase 1 al "+S.p1+"% · mezcla final al "+S.p2+"% · aporte <b>$"+fmt(aporte())+"/mes</b> · capital inicial "+money(capH())+" · meta "+money(metaCapital())+".";
   }, 350);
 };
+// primer llenado: el motor pudo haber corrido antes de que existiera __statsPlan
+(function primeraVez(){ if(pxOk() && byId("sp-prob")) window.__statsPlan(); else setTimeout(primeraVez, 400); })();
 // ===== Carrusel de testimonios =====
 (function(){
   var wrap=byId("tcarousel"); if(!wrap) return;
