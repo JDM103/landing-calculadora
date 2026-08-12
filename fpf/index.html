@@ -230,7 +230,7 @@
     <div class="field"><label>Edad hoy</label><div class="row"><input class="big-in" id="v-edad" inputmode="numeric" value="30" aria-label="Edad hoy (editable)"><div class="steps"><button class="stp" data-s="edad" data-d="1">▲</button><button class="stp" data-s="edad" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Edad de retiro</label><div class="row"><input class="big-in" id="v-edadret" inputmode="numeric" value="65" aria-label="Edad de retiro (editable)"><div class="steps"><button class="stp" data-s="edadret" data-d="1">▲</button><button class="stp" data-s="edadret" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><input id="i-meta" inputmode="numeric" value="10,000"><div class="steps"><button class="stp" data-money="i-meta" data-step="500" data-d="1">▲</button><button class="stp" data-money="i-meta" data-step="500" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Años para juntar</label><div class="row"><b class="big" id="k-anios">35</b></div></div>
+    <div class="field"><label>Capital inicial ($)</label><div class="row"><input id="i-cap" inputmode="numeric" value="0"></div></div><div class="field"><label>Años para juntar</label><div class="row"><b class="big" id="k-anios">35</b></div></div>
   </div>
   <div class="kpis">
     <div class="kpi"><div class="k">Meta de capital · freedom point</div>
@@ -314,6 +314,17 @@
     <div class="kpi"><div class="k">Freedom point</div><div style="display:flex;align-items:center;gap:3px;margin-top:3px"><b style="color:var(--peri);font-size:17px;font-weight:800">$</b><input id="k-meta2" class="kpi-in" inputmode="numeric" value="3,000,000" aria-label="Freedom point (espejo editable)"></div></div>
     <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte2">$0</div></div>
   </div>
+  <div class="card" style="margin-top:12px; border-color:rgba(99,252,175,.3)">
+    <div style="font-weight:700;color:var(--crema);margin-bottom:2px">📊 La estadística real de este escenario</div>
+    <p class="note" style="margin:2px 0 8px">El gráfico de arriba es UNA historia. Esto es el mismo plan que tenés seleccionado (activos, porcentajes de etapa y filtro) corrido en <b>1,000 futuros</b> sorteados de la historia: su probabilidad de verdad. Se recalcula solo con cada cambio.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Prob. de llegar</div><div class="v men" id="sp-prob">…</div></div>
+      <div class="kpi"><div class="k">Años a la meta (típico / pesimista)</div><div class="v" id="sp-anios">…</div></div>
+      <div class="kpi"><div class="k">Peor 1%</div><div class="v rojo" id="sp-peor">…</div></div>
+      <div class="kpi"><div class="k">Mediana al final</div><div class="v per" id="sp-med">…</div></div>
+    </div>
+    <p class="note" id="sp-plan" style="margin-top:4px"></p>
+  </div>
   <div style="overflow-x:auto;margin-top:8px"><table id="metricas-tbl"></table></div>
   <p class="note" id="metricas-txt" style="margin-top:6px"></p>
 
@@ -328,7 +339,6 @@
   <!-- controles detallados (los que uso menos) -->
   <div class="card" style="margin-top:8px">
     <div class="grid">
-      <div class="field"><label>Capital inicial</label><div class="row"><input id="i-cap" inputmode="numeric" value="0"></div></div>
       <div class="field"><label>Cada $ (umbral de transferencia)</label><div class="row"><b class="big" id="v-umbral">$5,000</b><div class="steps"><button class="stp" data-s="umbral" data-d="1">▲</button><button class="stp" data-s="umbral" data-d="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
@@ -785,13 +795,13 @@ function fwW(phi, p1, p2, Ff){
 // ===== Monte Carlo — BLOCK BOOTSTRAP MENSUAL =====
 // Retornos MENSUALES reales por activo (compuestos de las semanas de PX; con timing = señal 9m a efectivo).
 // Meses reales => captura caídas intra-año (ej. marzo 2020) que los retornos anuales esconden.
-function monthlyTable(useTiming){
-  var T=PX.t, sig=PX.sig.QQQ, cashW=Math.pow(1.02,1/52)-1, ks=["SPY","QQQ","QLD","TQQQ"];
+function monthlyTable(sigArr){
+  var T=PX.t, sig=sigArr, cashW=Math.pow(1.02,1/52)-1, ks=["SPY","QQQ","QLD","TQQQ"];
   var acc={SPY:1,QQQ:1,QLD:1,TQQQ:1}, out={SPY:[],QQQ:[],QLD:[],TQQQ:[]}, cur=null;
   function ym(t){ var y=Math.floor(t); return y*12+Math.floor((t-y)*12+1e-6); }
   for(var i=1;i<T.length;i++){ var m=ym(T[i]); if(cur===null)cur=m;
     if(m!==cur){ for(var a=0;a<4;a++) out[ks[a]].push(acc[ks[a]]-1), acc[ks[a]]=1; cur=m; }
-    var inv=!useTiming||sig[i-1]===1;
+    var inv=!sig||sig[i-1]===1;
     for(var b2=0;b2<4;b2++){ var k=ks[b2], r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; acc[k]*=(1+r); } }
   for(var c=0;c<4;c++) out[ks[c]].push(acc[ks[c]]-1);
   return out;
@@ -840,7 +850,10 @@ function simMC(stratFn, N, draws, opt){
   }
   finals.sort(); maxdds.sort(); calms.sort(function(a,b){return a-b;}); sharps.sort(function(a,b){return a-b;}); ddPre.sort(function(a,b){return a-b;}); ddPost.sort(function(a,b){return a-b;});
   var tSum=0; for(var z=0;z<times.length;z++) tSum+=times[z];
-  return { p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5), pMeta:100*nMeta/N,
+  var n1=Math.max(1,Math.round(N*0.01)), c1=0; for(var w1=0;w1<n1;w1++) c1+=finals[w1];
+  times.sort(function(a,b){return a-b;});
+  return { cvar1:c1/n1, tTip:pct(times,.5), tPes:pct(times,.9),
+           p25:pct(finals,.25), p50:pct(finals,.5), maxddMed:pct(maxdds,.5), pMeta:100*nMeta/N,
            calmarMed:calms.length?pct(calms,.5):0, sharpeMed:sharps.length?pct(sharps,.5):0, t50:tSum/times.length,
            ddFPpre:pct(ddPre,.9), ddFPpost:pct(ddPost,.9) };
 }
@@ -880,6 +893,7 @@ function refresh(){
   byId("plan-txt").innerHTML="Con este plan: mientras llevás <b>menos del "+S.p1+"%</b> de tu meta, tu plata está en <b>"+S.f1+"</b> (fase 1). Al pasar el <b>"+S.p1+"%</b> salís a <b>"+S.f2+"</b> (fase 2). Después vas moviéndote de a poco a <b>"+faseNom(S.f3)+"</b> (fase 3) hasta llegar a la meta con <b>"+S.ff+"% en fase 3</b> y <b>"+(100-S.ff)+"% en "+S.f2+"</b> todavía creciendo.";
   renderProj();
   renderHist();
+  if(window.__statsPlan) window.__statsPlan();
 }
 
 // ===== gráfico del glidepath (área apilada por fondeo) =====
@@ -1169,7 +1183,7 @@ function annualTable(useTiming){
   var T=PX.t, sig=PX.sig.QQQ, cashW=Math.pow(1.02,1/52)-1, out={};
   ["SPY","QQQ","QLD","TQQQ"].forEach(function(k){
     var val=1, endVal={}, tab={};
-    for(var i=1;i<T.length;i++){ var inv=!useTiming||sig[i-1]===1; var r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; val*=(1+r); endVal[Math.floor(T[i])]=val; }
+    for(var i=1;i<T.length;i++){ var inv=!sig||sig[i-1]===1; var r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; val*=(1+r); endVal[Math.floor(T[i])]=val; }
     var prev=1, y0=Math.floor(T[0]);
     for(var y=y0;y<=2025;y++){ if(endVal[y]!=null){ tab[y]=(endVal[y]/prev-1)*100; prev=endVal[y]; } }
     out[k]=tab;
@@ -1213,7 +1227,7 @@ function correrGeneral(){
   var out=byId("general-out");
   if(!pxOk()){ out.innerHTML='<p class="note">Cargando datos históricos…</p>'; return; }
   var nY=anios(), M=nY*12, BLOCK=48;   // bloques de 4 años (preserva racimos de caídas)
-  var mret={"off":monthlyTable(false),"9h":monthlyTable(true)}, np=mret.off.SPY.length;
+  var mret={"off":monthlyTable(null),"9h":monthlyTable(PX.sig.QQQ)}, np=mret.off.SPY.length;
   var N=1500, draws=makeBlockDraws(N, M, np, BLOCK);   // mismos bloques para todos los planes (comparación justa)
   var combos=sweepGeneralCombos(), res=[], i=0, _f1=S.f1,_f2=S.f2,_f3=S.f3;
   out.innerHTML='<p class="note">Corriendo <b>'+combos.length.toLocaleString("en-US")+' planes</b> × '+N.toLocaleString("en-US")+' escenarios (block bootstrap mensual, bloques de 4 años), sobre toda la historia (1990–2025)… <b id="gen-prog">0%</b></p>';
@@ -1524,6 +1538,29 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), functio
   else { var ob=new IntersectionObserver(function(es){ es.forEach(function(e2){ if(e2.isIntersecting){ ob.disconnect(); arrancar(); } }); },{rootMargin:"900px"});
     ob.observe(mount); }
 })();
+// ===== estadística Monte Carlo en vivo del plan seleccionado =====
+var SP={timer:null, draws:null, drawsM:0, mret:{}};
+function spTabla(){
+  var f = S.filtro==="9h" ? "9h" : S.filtro==="lrs" ? "lrs" : "off";
+  if(!SP.mret[f]) SP.mret[f]=monthlyTable(f==="off"?null : f==="9h"?PX.sig.QQQ : PX.sig.QQQ_lrs);
+  return SP.mret[f];
+}
+window.__statsPlan=function(){
+  clearTimeout(SP.timer);
+  SP.timer=setTimeout(function(){
+    if(!pxOk() || !byId("sp-prob")) return;
+    var mret=spTabla(), M=anios()*12;
+    if(!SP.draws || SP.drawsM!==M){ SP.draws=makeBlockDraws(1000, M, mret.SPY.length, 48); SP.drawsM=M; }
+    var r=simMC(function(phi){ return fwW(phi,S.p1,S.p2,S.ff); }, 1000, SP.draws, {costos:S.costos, mret:mret});
+    var ny=anios();
+    byId("sp-prob").textContent=Math.round(r.pMeta)+"%";
+    byId("sp-anios").textContent=(r.tTip>ny?"—":Math.round(r.tTip))+" / "+(r.tPes>ny?">"+ny:Math.round(r.tPes));
+    byId("sp-peor").textContent=money(r.cvar1);
+    byId("sp-med").textContent=money(r.p50);
+    var fl=S.filtro==="9h"?" + timing 9m":S.filtro==="lrs"?" + LRS 200d":" (sin filtro)";
+    byId("sp-plan").innerHTML="Escenario medido: <b>"+planDesc(S.f1,S.f2,S.f3,S.ff)+fl+"</b> · salís de fase 1 al "+S.p1+"% · mezcla final al "+S.p2+"% · aporte <b>$"+fmt(aporte())+"/mes</b> · capital inicial "+money(capH())+" · meta "+money(metaCapital())+".";
+  }, 350);
+};
 // ===== Carrusel de testimonios =====
 (function(){
   var wrap=byId("tcarousel"); if(!wrap) return;
