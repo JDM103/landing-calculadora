@@ -132,7 +132,6 @@
     <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Inflación (%/año)</label><div class="row"><b class="big" id="v-infl">3%</b><div class="steps"><button class="stp" data-s="infl" data-d="1">▲</button><button class="stp" data-s="infl" data-d="-1">▼</button></div></div></div>
   </div>
-  <p class="note" id="ret-tope" style="display:none"></p>
   <div class="card">
     <div class="chart-wrap"><canvas id="proj-chart"></canvas></div>
     <div class="legend">
@@ -308,12 +307,9 @@ function anios(){ return Math.max(1, S.edadret-S.edad); }
 // S.income = ingreso mensual deseado, en precisión completa (fuente de verdad).
 // El input i-meta sólo lo muestra redondeado; así editar el freedom point no arrastra el redondeo del ingreso.
 function metaMensual(){ return S.income; }
-// Tasa de retiro SOSTENIBLE: si la llegada es SJC, la fase 3 paga S.sjc, se reinvierte la inflación
-// y se vive del neto (sjc − infl). Si ese neto queda bajo la tasa deseada, manda el neto:
-// bajar la tasa de la fase 3 SUBE el freedom point (hace falta más capital para el mismo ingreso).
-function tasaEfectiva(){ var t=S.ret;
-  if(S.f3==="SJC") t=Math.min(t, Math.max(0.5, S.sjc-S.infl));
-  return t; }
+// Tus datos es una sección teórica: la tasa de retiro es la que se ponga, sin tope. Si se retira
+// más de lo que crece la plata, el gráfico y el texto de agotamiento muestran cuándo se acaba.
+function tasaEfectiva(){ return S.ret; }
 function metaCapital(){ var t=tasaEfectiva(); return t>0 ? S.income*12/(t/100) : 0; }
 // Aporte mensual REQUERIDO (despejado) para llegar al freedom point a la edad de retiro,
 // con el crecimiento real esperado y el capital inicial. Menos años = más aporte; más crecimiento = menos.
@@ -407,19 +403,6 @@ function sweepFW(N, opt){
 
 // ===== KPIs de datos =====
 function refresh(){
-  // El knob "Retirás al año" nunca muestra un número que el motor no use: con llegada en SJC
-  // el tope sostenible es sjc − inflación, y al tocarlo se explica en vez de ignorarlo en silencio.
-  var nTope=byId("ret-tope");
-  if(S.f3==="SJC"){
-    var topeR=Math.max(0.5, S.sjc-S.infl);
-    if(S.ret>topeR) S.ret=Math.round(topeR*10)/10;
-    if(nTope){
-      if(S.ret>=topeR-1e-9){
-        nTope.style.display="block";
-        nTope.innerHTML="Tope del plan: la llegada en SJC paga "+S.sjc+"% y la inflación se come "+S.infl+"%, así que lo máximo que se puede retirar para siempre es <b>"+fmt1(topeR)+"% al año</b>. Retirar más se comería el capital. Si subís la tasa de SJC (o la llegada es otro activo), este tope sube.";
-      } else nTope.style.display="none";
-    }
-  } else if(nTope) nTope.style.display="none";
   var vedad=byId("v-edad"); if(document.activeElement!==vedad) vedad.value=S.edad;
   var vedadret=byId("v-edadret"); if(document.activeElement!==vedadret) vedadret.value=S.edadret;
   byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
