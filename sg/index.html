@@ -125,6 +125,10 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .segp button.on.semanas{ background:var(--azul); border-color:var(--azul); color:#fff; }
   .segp button.on.explorando{ background:#5d646d; border-color:#5d646d; color:#fff; }
   .dosCol{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .montoRow{ display:flex; gap:8px; align-items:stretch; }
+  .montoRow input{ flex:1; min-width:0; }
+  .segp.unid{ width:112px; flex:none; }
+  .segp.unid button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
   #editor .acciones{ display:flex; gap:9px; margin-top:20px; }
   #editor .acciones button{ border-radius:9px; padding:13px 14px; font-weight:700; font-size:15px; border:0; }
   #btn-guardar{ flex:1; background:var(--azul); color:#fff; }
@@ -195,7 +199,14 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   <label for="e-dsc">Descripción</label>
   <textarea id="e-dsc" placeholder="quién es, contexto, tareas… ej: Empresario de Grecia. Preguntarle por su family office."></textarea>
   <label for="e-monto">Expected investment (US$)</label>
-  <input id="e-monto" inputmode="numeric" placeholder="ej. 400,000 — dejalo vacío si no sabés aún">
+  <div class="montoRow">
+    <input id="e-monto" inputmode="decimal" placeholder="ej. 10 — vacío si no sabés aún">
+    <div class="segp unid" id="e-unid">
+      <button data-u="mm" class="on">MM</button>
+      <button data-u="k">K</button>
+    </div>
+  </div>
+  <div class="nota-edit" id="e-monto-eq"></div>
   <label>Prioridad</label>
   <div class="segp" id="e-prio">
     <button data-p="dias" class="dias">🎯 Próx. días</button>
@@ -203,10 +214,10 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
     <button data-p="explorando" class="explorando on">Explorando</button>
   </div>
   <div class="nota-edit">Próximos días = fruta al alcance, el próximo al que apuntarle. Explorando = conversaciones abiertas, sin apuro.</div>
-  <label for="e-cuando">Reunión · cuándo (texto libre)</label>
+  <label for="e-cuando">Reunión · cuándo aproximadamente</label>
   <input id="e-cuando" type="text" placeholder="ej. próxima semana / pedirle fecha">
   <div class="dosCol">
-    <div><label for="e-fecha">…o fecha fija</label><input id="e-fecha" type="date"></div>
+    <div><label for="e-fecha">O fecha ya es fija</label><input id="e-fecha" type="date"></div>
     <div><label for="e-hora">Hora</label><input id="e-hora" type="time"></div>
   </div>
   <label for="e-lugar">Lugar</label>
@@ -261,7 +272,6 @@ function money(n){ if(n==null||!(n>0)) return null;
   if(n>=1e6) return "$"+(Math.round(n/1e5)/10)+"M";
   if(n>=1e3) return "$"+Math.round(n/1e3)+"k";
   return "$"+Math.round(n); }
-function numDe(s){ var d=String(s||"").replace(/[^0-9]/g,""); return d?parseInt(d,10):null; }
 
 /* ===== fechas ===== */
 var DIAS=["dom","lun","mar","mié","jue","vie","sáb"], MESES=["ene","feb","mar","abr","may","jun","jul","ago","set","oct","nov","dic"];
@@ -380,15 +390,36 @@ function setPrio(p){ S.prio=p;
     b.classList.toggle("on", b.getAttribute("data-p")===p); }); }
 Array.prototype.forEach.call(byId("e-prio").children,function(b){
   b.addEventListener("click",function(){ setPrio(b.getAttribute("data-p")); }); });
+/* monto: se escribe en millones (MM) por default — "10" = $10,000,000 — con opción K para miles */
+function unidad(){ return byId("e-unid").querySelector("button.on").getAttribute("data-u"); }
+function montoDeCampo(){ var v=parseFloat(byId("e-monto").value.replace(/[^0-9.]/g,""));
+  if(isNaN(v)||v<=0) return null; return Math.round(v*(unidad()==="mm"?1e6:1e3)); }
+function eqMonto(){ var m=montoDeCampo();
+  byId("e-monto-eq").textContent = m ? ("= $"+m.toLocaleString("en-US")) : ""; }
 byId("e-monto").addEventListener("input",function(){
-  var d=this.value.replace(/[^0-9]/g,""); this.value=d?Number(d).toLocaleString("en-US"):""; });
+  var d=this.value.replace(/[^0-9.]/g,""); var i=d.indexOf(".");
+  if(i>=0) d=d.slice(0,i+1)+d.slice(i+1).replace(/\./g,"");
+  this.value=d; eqMonto(); });
+Array.prototype.forEach.call(byId("e-unid").children,function(b){
+  b.addEventListener("click",function(){
+    var antes=unidad(), m=parseFloat(byId("e-monto").value); var nueva=b.getAttribute("data-u");
+    if(antes===nueva) return;
+    Array.prototype.forEach.call(byId("e-unid").children,function(x){ x.classList.toggle("on",x===b); });
+    if(!isNaN(m)&&m>0){ var v=nueva==="mm"?m/1000:m*1000;
+      byId("e-monto").value=String(Math.round(v*1000)/1000); }
+    eqMonto(); }); });
+function setUnidad(u){ Array.prototype.forEach.call(byId("e-unid").children,function(x){
+  x.classList.toggle("on", x.getAttribute("data-u")===u); }); }
 
 function abrirEditor(p){
   S.editId=p?p.id:null;
   byId("e-titulo").textContent=p?"Editar prospecto":"Nuevo prospecto";
   byId("e-nombre").value=p?(p.nombre||""):"";
   byId("e-dsc").value=p?(p.dsc||""):"";
-  byId("e-monto").value=(p&&p.monto)?Number(p.monto).toLocaleString("en-US"):"";
+  if(p&&p.monto){ if(p.monto>=1e6){ setUnidad("mm"); byId("e-monto").value=String(Math.round(p.monto/1e6*1000)/1000); }
+    else { setUnidad("k"); byId("e-monto").value=String(Math.round(p.monto/1e3*10)/10); } }
+  else { setUnidad("mm"); byId("e-monto").value=""; }
+  eqMonto();
   byId("e-cuando").value=p?(p.cuando||""):"";
   byId("e-fecha").value=p?(p.fecha||""):"";
   byId("e-hora").value=p?(p.hora||""):"";
@@ -407,7 +438,7 @@ byId("btn-guardar").addEventListener("click", async function(){
   var nombre=byId("e-nombre").value.trim();
   if(!nombre){ toast("Falta el nombre."); return; }
   var p={ id:S.editId||undefined, nombre:nombre, dsc:byId("e-dsc").value.trim(),
-    monto:numDe(byId("e-monto").value), prio:S.prio,
+    monto:montoDeCampo(), prio:S.prio,
     cuando:byId("e-cuando").value.trim(), fecha:byId("e-fecha").value, hora:byId("e-hora").value,
     lugar:byId("e-lugar").value.trim(), por:quien() };
   this.textContent="Guardando…"; this.disabled=true;
