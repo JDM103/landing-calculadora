@@ -176,7 +176,6 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
 
   <div class="controles">
     <button class="chip on" data-f="todos">Todos</button>
-    <button class="chip" data-f="dias">🎯 Próx. días</button>
     <button class="chip" data-f="reunion">📅 Con reunión</button>
     <div class="sep"></div>
     <select id="orden" aria-label="Orden">
@@ -290,7 +289,6 @@ function reuTexto(p){
   return null; }
 function filtrada(){
   var l=S.lista.slice();
-  if(S.filtro==="dias") l=l.filter(function(p){ return prioDe(p)==="dias"; });
   if(S.filtro==="reunion") l=l.filter(function(p){ return p.fecha||p.cuando; });
   if(S.orden==="prio") l.sort(function(a,b){
     return PRIO_RANK[prioDe(a)]-PRIO_RANK[prioDe(b)]
