@@ -342,7 +342,8 @@ function renderTabla(out,l){
       var h=document.createElement("div"); h.className="ghead "+b; h.setAttribute("data-b",b);
       h.textContent=(b==="dias"?"🎯 ":"")+PRIO_LBL[b];
       wrap.appendChild(h);
-      l.filter(function(p){ return prioDe(p)===b; }).forEach(function(p){ wrap.appendChild(filaDe(p,conDrag)); });
+      l.filter(function(p){ return prioDe(p)===b; }).forEach(function(p){
+        var fila=filaDe(p,conDrag); fila.setAttribute("data-b",b); wrap.appendChild(fila); });
     });
   } else {
     l.forEach(function(p){ wrap.appendChild(filaDe(p,conDrag)); });
@@ -380,16 +381,18 @@ function wireDrag(row){
     ev.preventDefault(); DRAG.movio=true;
     DRAG.ghost.style.top=(ev.clientY-DRAG.offY)+"px";
     var wrap=byId("lwrap"); if(!wrap) return;
+    // El orden solo se cambia DENTRO del mismo segmento de prioridad: para pasar a otro
+    // segmento se usa el editor. Simplifica el arrastre en el celular (recorridos cortos).
+    var miGrupo=row.getAttribute("data-b");
     var els=document.elementsFromPoint(ev.clientX,ev.clientY);
     for(var i=0;i<els.length;i++){
       var el=els[i];
-      if(el.classList&&el.classList.contains("rowc")&&el!==row){
+      if(el.classList&&el.classList.contains("rowc")&&el!==row&&el.getAttribute("data-b")===miGrupo){
         var r=el.getBoundingClientRect();
         if(ev.clientY < r.top+r.height/2) wrap.insertBefore(DRAG.ph,el);
         else wrap.insertBefore(DRAG.ph,el.nextSibling);
         return;
       }
-      if(el.classList&&el.classList.contains("ghead")){ wrap.insertBefore(DRAG.ph,el.nextSibling); return; }
     }
   });
   mango.addEventListener("pointerup",function(){
