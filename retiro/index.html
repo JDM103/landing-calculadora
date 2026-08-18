@@ -132,6 +132,7 @@
     <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Inflación (%/año)</label><div class="row"><b class="big" id="v-infl">3%</b><div class="steps"><button class="stp" data-s="infl" data-d="1">▲</button><button class="stp" data-s="infl" data-d="-1">▼</button></div></div></div>
   </div>
+  <p class="note" id="ret-tope" style="display:none"></p>
   <div class="card">
     <div class="chart-wrap"><canvas id="proj-chart"></canvas></div>
     <div class="legend">
@@ -406,6 +407,19 @@ function sweepFW(N, opt){
 
 // ===== KPIs de datos =====
 function refresh(){
+  // El knob "Retirás al año" nunca muestra un número que el motor no use: con llegada en SJC
+  // el tope sostenible es sjc − inflación, y al tocarlo se explica en vez de ignorarlo en silencio.
+  var nTope=byId("ret-tope");
+  if(S.f3==="SJC"){
+    var topeR=Math.max(0.5, S.sjc-S.infl);
+    if(S.ret>topeR) S.ret=Math.round(topeR*10)/10;
+    if(nTope){
+      if(S.ret>=topeR-1e-9){
+        nTope.style.display="block";
+        nTope.innerHTML="Tope del plan: la llegada en SJC paga "+S.sjc+"% y la inflación se come "+S.infl+"%, así que lo máximo que se puede retirar para siempre es <b>"+fmt1(topeR)+"% al año</b>. Retirar más se comería el capital. Si subís la tasa de SJC (o la llegada es otro activo), este tope sube.";
+      } else nTope.style.display="none";
+    }
+  } else if(nTope) nTope.style.display="none";
   var vedad=byId("v-edad"); if(document.activeElement!==vedad) vedad.value=S.edad;
   var vedadret=byId("v-edadret"); if(document.activeElement!==vedadret) vedadret.value=S.edadret;
   byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
@@ -854,7 +868,7 @@ function drawProj(v){
 }
 // Edad EXACTA a la que se agota la plata (aunque sea más allá del tramo que dibuja el gráfico).
 function edadAgotamiento(){
-  var g=(S.crecret-S.infl)/100, ret=S.ret/100; if(g>=ret-1e-9) return null;
+  var g=(S.crecret-S.infl)/100, ret=tasaEfectiva()/100; if(g>=ret-1e-9) return null;
   var capital=metaCapital(); if(capital<=0) return null; var W=metaMensual()*12;
   var k=Math.abs(g)<1e-9 ? capital/W : Math.log(ret/(ret-g))/Math.log(1+g);
   if(!isFinite(k)||k<=0) return null; return S.edadret+Math.ceil(k);
