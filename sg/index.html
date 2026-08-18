@@ -95,6 +95,7 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .cuerpoR .nom{ font-weight:800; font-size:15.5px; color:#22262c; flex:1; min-width:0; }
   .cuerpoR .monto{ font-weight:800; font-size:15px; color:var(--azul); white-space:nowrap; font-variant-numeric:tabular-nums; }
   .cuerpoR .monto.nd{ color:var(--texto-suave); font-weight:600; font-size:12.5px; }
+  .cuerpoR .tareaR{ font-size:13px; font-weight:700; color:var(--azul); margin-top:2px; line-height:1.4; }
   .cuerpoR .dscR{ font-size:13px; color:var(--texto-suave); margin-top:1px; line-height:1.4; }
   .cuerpoR .metaR{ font-size:12px; margin-top:3px; color:#9aa0a8; display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
   .cuerpoR .metaR .reu{ font-size:12px; }
@@ -195,6 +196,8 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   <h2 id="e-titulo">Nuevo prospecto</h2>
   <label for="e-nombre">Nombre</label>
   <input id="e-nombre" type="text">
+  <label for="e-tarea">Tarea</label>
+  <input id="e-tarea" type="text">
   <label for="e-dsc">Descripción</label>
   <textarea id="e-dsc"></textarea>
   <label for="e-monto">Potential investment</label>
@@ -310,9 +313,11 @@ function filaDe(p, conDrag){
   row.innerHTML=(conDrag?'<span class="drag" title="Arrastrá para reordenar">⠿</span>':"")
     +'<div class="cuerpoR"><div class="l1"><div class="nom"></div>'
     +'<div class="monto'+(m?"":" nd")+'">'+(m||"por definir")+'</div></div>'
+    +(p.tarea?'<div class="tareaR"></div>':"")
     +(p.dsc?'<div class="dscR"></div>':"")
     +'<div class="metaR">'+meta.join("")+'</div></div>';
   row.querySelector(".nom").textContent=p.nombre||"(sin nombre)";
+  if(p.tarea) row.querySelector(".tareaR").textContent="☐ "+p.tarea;
   if(p.dsc) row.querySelector(".dscR").textContent=p.dsc;
   if(reu) row.querySelector(".reu").textContent=reu;
   row.addEventListener("click",function(){ if(!DRAG.recien) abrirEditor(p); });
@@ -482,6 +487,7 @@ function abrirEditor(p){
   S.editId=p?p.id:null;
   byId("e-titulo").textContent=p?"Editar prospecto":"Nuevo prospecto";
   byId("e-nombre").value=p?(p.nombre||""):"";
+  byId("e-tarea").value=p?(p.tarea||""):"";
   byId("e-dsc").value=p?(p.dsc||""):"";
   if(p&&p.monto){ if(p.monto>=1e6){ setUnidad("mm"); byId("e-monto").value=String(Math.round(p.monto/1e6*1000)/1000); }
     else { setUnidad("k"); byId("e-monto").value=String(Math.round(p.monto/1e3*10)/10); } }
@@ -504,8 +510,8 @@ byId("btn-nuevo").addEventListener("click",function(){ abrirEditor(null); });
 byId("btn-guardar").addEventListener("click", async function(){
   var nombre=byId("e-nombre").value.trim();
   if(!nombre){ toast("Falta el nombre."); return; }
-  var p={ id:S.editId||undefined, nombre:nombre, dsc:byId("e-dsc").value.trim(),
-    monto:montoDeCampo(), prio:S.prio,
+  var p={ id:S.editId||undefined, nombre:nombre, tarea:byId("e-tarea").value.trim(),
+    dsc:byId("e-dsc").value.trim(), monto:montoDeCampo(), prio:S.prio,
     cuando:byId("e-cuando").value.trim(), fecha:byId("e-fecha").value, hora:byId("e-hora").value,
     lugar:byId("e-lugar").value.trim(), por:quien() };
   this.textContent="Guardando…"; this.disabled=true;
