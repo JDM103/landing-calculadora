@@ -151,10 +151,8 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   <div class="card">
     <img class="loginlogo" src="logo-southland.png" alt="Southland Corporate Finance">
     <h1>Prospectos · acceso privado</h1>
-    <label for="l-clave">Clave compartida</label>
-    <input id="l-clave" type="password" autocomplete="current-password">
-    <label for="l-quien">Tu nombre (para saber quién editó)</label>
-    <input id="l-quien" type="text" placeholder="ej. Jose">
+    <label for="l-quien">¿Quién sos? Tus iniciales o tu nombre</label>
+    <input id="l-quien" type="text" placeholder="ej. JDM o VSP" autocomplete="off">
     <button id="l-entrar">Entrar</button>
     <div class="err" id="l-err"></div>
   </div>
@@ -253,6 +251,18 @@ function prioDe(p){ var v=p&&p.prio;
 
 function clave(){ return localStorage.getItem("sg_clave")||""; }
 function quien(){ return localStorage.getItem("sg_quien")||""; }
+
+/* Acceso por iniciales: la ÚNICA clave son las iniciales o el nombre, en cualquier
+   variante razonable (el backend valida la misma lista). Se prioriza entrar fácil:
+   esta lista no le sirve a un tercero. Lo que pongás define el "editó" del tracking. */
+var PERSONAS=[
+  { nombre:"Jose",   alias:["j","jd","jdm","jose","josedaniel","josemontero","jdmontero","josedanielmontero"] },
+  { nombre:"Víctor", alias:["v","vs","vsp","victor","victorserrato","vserrato","victorserratoparis"] }
+];
+function normAlias(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z]/g,""); }
+function personaDe(s){ var n=normAlias(s); if(!n) return null;
+  for(var i=0;i<PERSONAS.length;i++) if(PERSONAS[i].alias.indexOf(n)>=0) return PERSONAS[i].nombre;
+  return null; }
 
 async function api(body){
   body.clave=clave();
@@ -434,15 +444,14 @@ function entrarOk(){ byId("login").style.display="none"; byId("app").style.displ
 function salir(msj){ localStorage.removeItem("sg_clave"); byId("app").style.display="none";
   byId("login").style.display="block"; if(msj) byId("l-err").textContent=msj; }
 byId("l-entrar").addEventListener("click", async function(){
-  var c=byId("l-clave").value.trim(), q=byId("l-quien").value.trim();
-  if(!c||!q){ byId("l-err").textContent="Poné la clave y tu nombre."; return; }
+  var qn=personaDe(byId("l-quien").value);
+  if(!qn){ byId("l-err").textContent="No te reconozco. Probá con tus iniciales (JDM o VSP)."; return; }
   byId("l-err").textContent=""; this.textContent="Entrando…";
-  localStorage.setItem("sg_clave",c); localStorage.setItem("sg_quien",q);
+  localStorage.setItem("sg_clave",normAlias(byId("l-quien").value)); localStorage.setItem("sg_quien",qn);
   try{ await api({accion:"listar"}); entrarOk(); }
-  catch(e){ byId("l-err").textContent = e.message==="clave" ? "Clave incorrecta." : ("Error: "+e.message); }
+  catch(e){ if(e.message!=="clave") byId("l-err").textContent="Error: "+e.message; }
   this.textContent="Entrar";
 });
-byId("l-clave").addEventListener("keydown",function(e){ if(e.key==="Enter") byId("l-quien").focus(); });
 byId("l-quien").addEventListener("keydown",function(e){ if(e.key==="Enter") byId("l-entrar").click(); });
 byId("btn-salir").addEventListener("click",function(){ salir(); });
 byId("btn-refrescar").addEventListener("click",function(){ cargar("Actualizado ✓"); });
