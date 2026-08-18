@@ -34,7 +34,9 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .top{ position:sticky; top:0; z-index:20; background:var(--blanco); border-bottom:1px solid var(--linea);
     padding:10px 14px; display:flex; align-items:center; gap:10px; }
   .top{ position:relative; }
-  .toplogo{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); height:30px; width:auto; }
+  .toplogo{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); height:44px; width:auto; max-width:46vw; object-fit:contain; }
+  .top{ min-height:62px; }
+  @media (max-width:560px){ .lbl-act{ display:none; } .icobtn{ padding:7px 12px; } }
   .top .sp{ flex:1; }
   .icobtn{ background:var(--blanco); border:1px solid var(--linea); border-radius:8px; padding:7px 11px;
     font-size:14px; font-weight:600; color:var(--azul); }
@@ -43,7 +45,7 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   /* ===== login ===== */
   #login{ max-width:380px; margin:9vh auto 0; padding:0 18px; }
   #login .card{ background:var(--blanco); border:1px solid var(--linea); border-radius:14px; padding:26px 22px; }
-  .loginlogo{ display:block; margin:2px auto 0; width:min(78%,240px); height:auto; }
+  .loginlogo{ display:block; margin:2px auto 0; width:min(90%,300px); height:auto; }
   #login h1{ font-size:15px; font-weight:700; text-align:center; margin:16px 0 18px; color:var(--texto); }
   #login label{ display:block; font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
     color:var(--texto-suave); margin:12px 0 5px; }
@@ -126,7 +128,7 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .segp button.on.explorando{ background:#5d646d; border-color:#5d646d; color:#fff; }
   .dosCol{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .montoRow{ display:flex; gap:8px; align-items:stretch; }
-  .montoRow input{ flex:1; min-width:0; }
+  #editor .montoRow input{ width:120px; min-width:0; text-align:right; }
   .segp.unid{ width:112px; flex:none; }
   .segp.unid button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
   #editor .acciones{ display:flex; gap:9px; margin-top:20px; }
@@ -161,7 +163,7 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
 <!-- ===== APP ===== -->
 <div id="app" style="display:none">
   <div class="top">
-    <button class="icobtn" id="btn-refrescar" title="Traer lo último">↻ Actualizar</button>
+    <button class="icobtn" id="btn-refrescar" title="Traer lo último" aria-label="Actualizar">↻<span class="lbl-act"> Actualizar</span></button>
     <img class="toplogo" src="logo-southland.png" alt="Southland Corporate Finance">
     <div class="sp"></div>
     <button class="icobtn" id="btn-salir" title="Salir">Salir</button>
@@ -198,7 +200,7 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   <input id="e-nombre" type="text">
   <label for="e-dsc">Descripción</label>
   <textarea id="e-dsc" placeholder="quién es, contexto, tareas… ej: Empresario de Grecia. Preguntarle por su family office."></textarea>
-  <label for="e-monto">Expected investment (US$)</label>
+  <label for="e-monto">Potential investment</label>
   <div class="montoRow">
     <input id="e-monto" inputmode="decimal" placeholder="ej. 10 — vacío si no sabés aún">
     <div class="segp unid" id="e-unid">
@@ -318,7 +320,7 @@ function renderTarjetas(out,l){
 function renderTabla(out,l){
   var wrap=document.createElement("div"); wrap.className="twrap";
   var tab=document.createElement("table"); tab.className="ptab";
-  tab.innerHTML='<thead><tr><th>Nombre</th><th class="m">Monto</th><th>Prioridad</th><th>Reunión</th><th>Descripción</th><th>Editó</th></tr></thead>';
+  tab.innerHTML='<thead><tr><th>Nombre</th><th class="m">Potencial</th><th>Prioridad</th><th>Reunión</th><th>Descripción</th><th>Editó</th></tr></thead>';
   var tb=document.createElement("tbody");
   l.forEach(function(p){
     var tr=document.createElement("tr"), m=money(p.monto), pr=prioDe(p), reu=reuTexto(p);
