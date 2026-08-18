@@ -85,21 +85,29 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .prio.semanas{ background:#e4ecf6; color:var(--azul); }
   .prio.explorando{ background:#eef0f2; color:var(--texto-suave); }
 
-  /* ===== vista de tabla ===== */
-  .twrap{ background:var(--blanco); border:1px solid var(--linea); border-radius:12px; overflow-x:auto; }
-  .ptab{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:700px; }
-  .ptab thead th{ background:var(--azul); color:#fff; text-align:left; padding:10px 12px; font-weight:700;
-    letter-spacing:.3px; white-space:nowrap; }
-  .ptab thead th.m{ text-align:right; }
-  .ptab tbody td{ padding:10px 12px; border-bottom:1px solid var(--linea); vertical-align:top; }
-  .ptab tbody tr:last-child td{ border-bottom:0; }
-  .ptab tbody tr{ cursor:pointer; }
-  .ptab tbody tr:hover td, .ptab tbody tr:active td{ background:#fbfcfd; }
-  .ptab td.nom{ font-weight:700; color:#22262c; white-space:nowrap; }
-  .ptab td.m{ text-align:right; font-weight:800; color:var(--azul); font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .ptab td.m.nd{ color:var(--texto-suave); font-weight:600; }
-  .ptab td.reuc{ font-size:12.5px; color:var(--ok); font-weight:600; white-space:nowrap; }
-  .ptab td.quienc{ font-size:12px; color:#9aa0a8; white-space:nowrap; }
+  /* ===== vista de tabla: lista compacta agrupada por prioridad, reordenable ===== */
+  .lwrap{ background:var(--blanco); border:1px solid var(--linea); border-radius:12px; overflow:hidden; }
+  .ghead{ padding:7px 14px; font-size:11px; font-weight:800; letter-spacing:.9px; text-transform:uppercase; }
+  .ghead.dias{ color:#7a6000; background:#fdf4d5; }
+  .ghead.semanas{ color:var(--azul); background:#e9f0f9; }
+  .ghead.explorando{ color:var(--texto-suave); background:#f0f2f4; }
+  .rowc{ display:flex; gap:6px; padding:9px 13px 9px 6px; border-bottom:1px solid var(--linea);
+    cursor:pointer; align-items:stretch; background:var(--blanco); }
+  .rowc:last-child{ border-bottom:0; }
+  .rowc:active{ background:#fbfcfd; }
+  .drag{ flex:none; width:28px; display:flex; align-items:center; justify-content:center;
+    color:#b6bcc4; font-size:17px; touch-action:none; cursor:grab; user-select:none; -webkit-user-select:none; }
+  .rowc.sinDrag{ padding-left:13px; }
+  .cuerpoR{ flex:1; min-width:0; }
+  .cuerpoR .l1{ display:flex; align-items:baseline; gap:8px; }
+  .cuerpoR .nom{ font-weight:800; font-size:15.5px; color:#22262c; flex:1; min-width:0; }
+  .cuerpoR .monto{ font-weight:800; font-size:15px; color:var(--azul); white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .cuerpoR .monto.nd{ color:var(--texto-suave); font-weight:600; font-size:12.5px; }
+  .cuerpoR .dscR{ font-size:13px; color:var(--texto-suave); margin-top:1px; line-height:1.4; }
+  .cuerpoR .metaR{ font-size:12px; margin-top:3px; color:#9aa0a8; display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; }
+  .cuerpoR .metaR .reu{ font-size:12px; }
+  .rowc.arrastrando{ box-shadow:0 8px 22px rgba(13,55,104,.28); border-radius:10px; border:1px solid var(--linea); }
+  .dragph{ background:repeating-linear-gradient(45deg,#eef3fa,#eef3fa 6px,#f6f9fd 6px,#f6f9fd 12px); border-bottom:1px solid var(--linea); }
   .reu{ font-size:12.5px; font-weight:600; color:var(--ok); }
   .pcard .quien{ font-size:11.5px; color:#9aa0a8; margin-left:auto; }
   .vacio{ text-align:center; color:var(--texto-suave); padding:34px 10px; font-size:14.5px; }
@@ -295,7 +303,10 @@ function filtrada(){
   var l=S.lista.slice();
   if(S.filtro==="dias") l=l.filter(function(p){ return prioDe(p)==="dias"; });
   if(S.filtro==="reunion") l=l.filter(function(p){ return p.fecha||p.cuando; });
-  if(S.orden==="prio") l.sort(function(a,b){ return PRIO_RANK[prioDe(a)]-PRIO_RANK[prioDe(b)] || (b.monto||0)-(a.monto||0); });
+  if(S.orden==="prio") l.sort(function(a,b){
+    return PRIO_RANK[prioDe(a)]-PRIO_RANK[prioDe(b)]
+      || ((a.pos==null?1e9:a.pos)-(b.pos==null?1e9:b.pos))
+      || (b.monto||0)-(a.monto||0); });
   if(S.orden==="monto") l.sort(function(a,b){ return (b.monto||0)-(a.monto||0); });
   if(S.orden==="reciente") l.sort(function(a,b){ return a.actualizado<b.actualizado?1:-1; });
   return l;
@@ -317,24 +328,113 @@ function renderTarjetas(out,l){
     out.appendChild(card);
   });
 }
+function dragHabilitado(){ return S.vista==="tabla" && S.orden==="prio" && S.filtro==="todos"; }
+function filaDe(p, conDrag){
+  var row=document.createElement("div"); row.className="rowc"+(conDrag?"":" sinDrag");
+  row.setAttribute("data-id",p.id);
+  var m=money(p.monto), reu=reuTexto(p);
+  var meta=[];
+  if(reu) meta.push('<span class="reu" style="color:var(--ok);font-weight:600"></span>');
+  if(S.orden!=="prio"){ var pr=prioDe(p); meta.push('<span class="prio '+pr+'">'+(pr==="dias"?"🎯 ":"")+PRIO_LBL[pr]+'</span>'); }
+  meta.push('<span>'+(p.por?("editó "+p.por+" · "):"")+hace(p.actualizado)+'</span>');
+  row.innerHTML=(conDrag?'<span class="drag" title="Arrastrá para reordenar">⠿</span>':"")
+    +'<div class="cuerpoR"><div class="l1"><div class="nom"></div>'
+    +'<div class="monto'+(m?"":" nd")+'">'+(m||"por definir")+'</div></div>'
+    +(p.dsc?'<div class="dscR"></div>':"")
+    +'<div class="metaR">'+meta.join("")+'</div></div>';
+  row.querySelector(".nom").textContent=p.nombre||"(sin nombre)";
+  if(p.dsc) row.querySelector(".dscR").textContent=p.dsc;
+  if(reu) row.querySelector(".reu").textContent=reu;
+  row.addEventListener("click",function(){ if(!DRAG.recien) abrirEditor(p); });
+  if(conDrag) wireDrag(row);
+  return row;
+}
 function renderTabla(out,l){
-  var wrap=document.createElement("div"); wrap.className="twrap";
-  var tab=document.createElement("table"); tab.className="ptab";
-  tab.innerHTML='<thead><tr><th>Nombre</th><th class="m">Potencial</th><th>Prioridad</th><th>Reunión</th><th>Descripción</th><th>Editó</th></tr></thead>';
-  var tb=document.createElement("tbody");
-  l.forEach(function(p){
-    var tr=document.createElement("tr"), m=money(p.monto), pr=prioDe(p), reu=reuTexto(p);
-    function td(cls,txt){ var c=document.createElement("td"); if(cls)c.className=cls; c.textContent=txt||""; tr.appendChild(c); return c; }
-    td("nom", p.nombre||"(sin nombre)");
-    td("m"+(m?"":" nd"), m||"por definir");
-    var cp=document.createElement("td"); cp.innerHTML='<span class="prio '+pr+'">'+(pr==="dias"?"🎯 ":"")+PRIO_LBL[pr]+'</span>'; tr.appendChild(cp);
-    td("reuc", reu||"—");
-    var d=p.dsc||""; td("", d.length>72 ? d.slice(0,70)+"…" : d);
-    td("quienc", (p.por?(p.por+" · "):"")+hace(p.actualizado));
-    tr.addEventListener("click",function(){ abrirEditor(p); });
-    tb.appendChild(tr);
+  var wrap=document.createElement("div"); wrap.className="lwrap"; wrap.id="lwrap";
+  var conDrag=dragHabilitado();
+  if(S.orden==="prio" && S.filtro==="todos"){
+    ["dias","semanas","explorando"].forEach(function(b){
+      var h=document.createElement("div"); h.className="ghead "+b; h.setAttribute("data-b",b);
+      h.textContent=(b==="dias"?"🎯 ":"")+PRIO_LBL[b];
+      wrap.appendChild(h);
+      l.filter(function(p){ return prioDe(p)===b; }).forEach(function(p){ wrap.appendChild(filaDe(p,conDrag)); });
+    });
+  } else {
+    l.forEach(function(p){ wrap.appendChild(filaDe(p,conDrag)); });
+  }
+  out.appendChild(wrap);
+}
+
+/* ===== arrastre para reordenar (con el dedo o el mouse, desde el mango ⠿) =====
+   La fila real NO se mueve durante el arrastre (si se re-inserta en el DOM el navegador
+   cancela la captura del puntero): se esconde en su lugar, un clon fijo sigue al dedo
+   y un hueco (placeholder) marca dónde caería. Al soltar, la fila toma el lugar del hueco. */
+var DRAG={ row:null, ghost:null, ph:null, offY:0, movio:false, recien:false };
+function limpiarDrag(){
+  if(DRAG.ghost&&DRAG.ghost.parentNode) DRAG.ghost.parentNode.removeChild(DRAG.ghost);
+  if(DRAG.ph&&DRAG.ph.parentNode) DRAG.ph.parentNode.removeChild(DRAG.ph);
+  if(DRAG.row) DRAG.row.style.display="";
+  DRAG.row=null; DRAG.ghost=null; DRAG.ph=null;
+}
+function wireDrag(row){
+  var mango=row.querySelector(".drag");
+  mango.addEventListener("pointerdown",function(ev){
+    ev.preventDefault(); mango.setPointerCapture(ev.pointerId);
+    var r=row.getBoundingClientRect();
+    DRAG.row=row; DRAG.movio=false; DRAG.offY=ev.clientY-r.top;
+    var g=row.cloneNode(true); g.classList.add("arrastrando");
+    g.style.cssText="position:fixed; left:"+r.left+"px; top:"+r.top+"px; width:"+r.width+"px; pointer-events:none; z-index:50;";
+    var ph=document.createElement("div"); ph.className="dragph"; ph.style.height=r.height+"px";
+    row.parentNode.insertBefore(ph,row);
+    row.style.display="none";
+    document.body.appendChild(g);
+    DRAG.ghost=g; DRAG.ph=ph;
   });
-  tab.appendChild(tb); wrap.appendChild(tab); out.appendChild(wrap);
+  mango.addEventListener("pointermove",function(ev){
+    if(DRAG.row!==row||!DRAG.ghost) return;
+    ev.preventDefault(); DRAG.movio=true;
+    DRAG.ghost.style.top=(ev.clientY-DRAG.offY)+"px";
+    var wrap=byId("lwrap"); if(!wrap) return;
+    var els=document.elementsFromPoint(ev.clientX,ev.clientY);
+    for(var i=0;i<els.length;i++){
+      var el=els[i];
+      if(el.classList&&el.classList.contains("rowc")&&el!==row){
+        var r=el.getBoundingClientRect();
+        if(ev.clientY < r.top+r.height/2) wrap.insertBefore(DRAG.ph,el);
+        else wrap.insertBefore(DRAG.ph,el.nextSibling);
+        return;
+      }
+      if(el.classList&&el.classList.contains("ghead")){ wrap.insertBefore(DRAG.ph,el.nextSibling); return; }
+    }
+  });
+  mango.addEventListener("pointerup",function(){
+    if(DRAG.row!==row) return;
+    var movio=DRAG.movio, ph=DRAG.ph;
+    if(movio&&ph&&ph.parentNode){ ph.parentNode.insertBefore(row,ph); }
+    limpiarDrag();
+    if(movio){ DRAG.recien=true; setTimeout(function(){ DRAG.recien=false; },350); confirmarOrden(); }
+  });
+  mango.addEventListener("pointercancel",function(){ if(DRAG.row===row) limpiarDrag(); });
+}
+async function confirmarOrden(){
+  var wrap=byId("lwrap"); if(!wrap) return;
+  var porId={}; S.lista.forEach(function(p){ porId[p.id]=p; });
+  var cambios=[], bucket=null, pos=0;
+  Array.prototype.forEach.call(wrap.children,function(el){
+    if(el.classList.contains("ghead")){ bucket=el.getAttribute("data-b"); pos=0; return; }
+    var p=porId[el.getAttribute("data-id")]; if(!p) return;
+    if(prioDe(p)!==bucket || p.pos!==pos){
+      p.prio=bucket; p.pos=pos; p.por=quien();
+      var copia={}; for(var k in p) if(k!=="actualizado") copia[k]=p[k];
+      cambios.push(copia);
+    } else { p.prio=bucket; p.pos=pos; }
+    pos++;
+  });
+  render();
+  if(!cambios.length) return;
+  try{ var j=await api({accion:"guardar_lote", prospectos:cambios});
+    S.lista=j.prospectos||S.lista; S.ultimaCarga=Date.now(); render(); toast("Orden guardado ✓"); }
+  catch(e){ if(e.message!=="clave") toast("No se guardó el orden: "+e.message); }
 }
 function render(){
   var l=filtrada();
