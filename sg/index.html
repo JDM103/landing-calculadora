@@ -72,20 +72,12 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
 
   /* ===== lista ===== */
   #lista{ max-width:760px; margin:0 auto; padding:10px 14px 110px; display:flex; flex-direction:column; gap:9px; }
-  .pcard{ background:var(--blanco); border:1px solid var(--linea); border-radius:12px; padding:13px 14px; cursor:pointer; }
-  .pcard:active{ background:#fbfcfd; }
-  .pcard .fila1{ display:flex; align-items:baseline; gap:8px; }
-  .pcard .nom{ font-weight:800; font-size:16.5px; color:#22262c; flex:1; min-width:0; }
-  .pcard .monto{ font-weight:800; font-size:16px; color:var(--azul); white-space:nowrap; font-variant-numeric:tabular-nums; }
-  .pcard .monto.nd{ color:var(--texto-suave); font-weight:600; font-size:13px; }
-  .pcard .dsc{ font-size:14px; color:var(--texto-suave); margin-top:3px; }
-  .pcard .fila2{ display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-top:9px; }
   .prio{ font-size:11px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; border-radius:999px; padding:3px 10px; white-space:nowrap; }
   .prio.dias{ background:var(--dorado); color:#3d3000; }
   .prio.semanas{ background:#e4ecf6; color:var(--azul); }
   .prio.explorando{ background:#eef0f2; color:var(--texto-suave); }
 
-  /* ===== vista de tabla: lista compacta agrupada por prioridad, reordenable ===== */
+  /* ===== lista compacta agrupada por prioridad, reordenable ===== */
   .lwrap{ background:var(--blanco); border:1px solid var(--linea); border-radius:12px; overflow:hidden; }
   .ghead{ padding:7px 14px; font-size:11px; font-weight:800; letter-spacing:.9px; text-transform:uppercase; }
   .ghead.dias{ color:#7a6000; background:#fdf4d5; }
@@ -109,7 +101,6 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
   .rowc.arrastrando{ box-shadow:0 8px 22px rgba(13,55,104,.28); border-radius:10px; border:1px solid var(--linea); }
   .dragph{ background:repeating-linear-gradient(45deg,#eef3fa,#eef3fa 6px,#f6f9fd 6px,#f6f9fd 12px); border-bottom:1px solid var(--linea); }
   .reu{ font-size:12.5px; font-weight:600; color:var(--ok); }
-  .pcard .quien{ font-size:11.5px; color:#9aa0a8; margin-left:auto; }
   .vacio{ text-align:center; color:var(--texto-suave); padding:34px 10px; font-size:14.5px; }
 
   /* ===== botón nuevo ===== */
@@ -188,7 +179,6 @@ PROSPECTOS · SOUTHLAND GROUP (CRM interno de Jose y su socio)
     <button class="chip" data-f="dias">🎯 Próx. días</button>
     <button class="chip" data-f="reunion">📅 Con reunión</button>
     <div class="sep"></div>
-    <button class="chip" id="vista" title="Cambiar entre tabla y tarjetas">▦ Tarjetas</button>
     <select id="orden" aria-label="Orden">
       <option value="prio">Orden: prioridad</option>
       <option value="monto">Orden: monto</option>
@@ -247,8 +237,7 @@ var API="https://jsjhfiakinodosesdqum.supabase.co/functions/v1/sg-crm";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzamhmaWFraW5vZG9zZXNkcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNjY5NTQsImV4cCI6MjEwMTY0Mjk1NH0.MfXXQ6QFx_OudI5Bj9Sr7yw5PRTv_O45NQ_X24tuqLU";
 function byId(id){ return document.getElementById(id); }
 
-var S={ lista:[], filtro:"todos", orden:"prio", editId:null, prio:"explorando", ultimaCarga:0,
-  vista: localStorage.getItem("sg_vista")||"tabla" };
+var S={ lista:[], filtro:"todos", orden:"prio", editId:null, prio:"explorando", ultimaCarga:0 };
 
 /* prioridades: 1 próximos días · 2 próximas semanas · 3 explorando conversaciones
    (los valores viejos ahora/pronto/radar se traducen al leer) */
@@ -311,24 +300,7 @@ function filtrada(){
   if(S.orden==="reciente") l.sort(function(a,b){ return a.actualizado<b.actualizado?1:-1; });
   return l;
 }
-function renderTarjetas(out,l){
-  l.forEach(function(p){
-    var card=document.createElement("div"); card.className="pcard";
-    var m=money(p.monto), reu=reuTexto(p), pr=prioDe(p);
-    card.innerHTML='<div class="fila1"><div class="nom"></div>'
-      +'<div class="monto'+(m?"":" nd")+'">'+(m||"por definir")+'</div></div>'
-      +(p.dsc?'<div class="dsc"></div>':"")
-      +'<div class="fila2"><span class="prio '+pr+'">'+(pr==="dias"?"🎯 ":"")+PRIO_LBL[pr]+'</span>'
-      +(reu?'<span class="reu"></span>':"")
-      +'<span class="quien">'+(p.por?("editó "+p.por+" · "):"")+hace(p.actualizado)+'</span></div>';
-    card.querySelector(".nom").textContent=p.nombre||"(sin nombre)";
-    if(p.dsc) card.querySelector(".dsc").textContent=p.dsc;
-    if(reu) card.querySelector(".reu").textContent=reu;
-    card.addEventListener("click",function(){ abrirEditor(p); });
-    out.appendChild(card);
-  });
-}
-function dragHabilitado(){ return S.vista==="tabla" && S.orden==="prio" && S.filtro==="todos"; }
+function dragHabilitado(){ return S.orden==="prio" && S.filtro==="todos"; }
 function filaDe(p, conDrag){
   var row=document.createElement("div"); row.className="rowc"+(conDrag?"":" sinDrag");
   row.setAttribute("data-id",p.id);
@@ -443,15 +415,10 @@ function render(){
   byId("s-n").textContent=S.lista.length;
   byId("s-pipe").textContent=money(tot)||"$0";
   byId("s-ahora").textContent=nDias;
-  byId("vista").textContent = S.vista==="tabla" ? "▤ Tarjetas" : "☰ Tabla";
-
   var out=byId("lista"); out.innerHTML="";
   if(!l.length){ out.innerHTML='<div class="vacio">Nada por aquí todavía. Tocá <b>＋ Prospecto</b> para agregar el primero.</div>'; return; }
-  if(S.vista==="tabla") renderTabla(out,l); else renderTarjetas(out,l);
+  renderTabla(out,l);
 }
-byId("vista").addEventListener("click",function(){
-  S.vista = S.vista==="tabla" ? "tarjetas" : "tabla";
-  localStorage.setItem("sg_vista",S.vista); render(); });
 
 /* ===== cargar ===== */
 async function cargar(msj){
