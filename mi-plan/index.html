@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+MI PLAN · panel genérico de check-in del Freedom Point Fund (servicio DIY)
+- Página pública, estática y sin backend: el cliente trae su pico anotado en su
+  bitácora y la página le dice qué mover (o que no mueva nada).
+- La matemática de la mezcla es IDÉNTICA a /fpf: fw() copiada de fpf/index.html
+  (fwW, líneas ~784-788). Si algún día cambia allá, cambiarla acá también.
+============================================================================= -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi plan · Check-in del Freedom Point Fund</title>
+<meta name="description" content="Tu ritual semestral: metés tu meta, tu pico y tus saldos de Alpaca, y salís con las órdenes exactas (o con la confirmación de que no tocás nada).">
+<link rel="canonical" href="https://investorcr.com/mi-plan/">
+<meta property="og:title" content="Mi plan · Check-in del Freedom Point Fund">
+<meta property="og:description" content="El panel del ritual: qué mover, cuánto y cuándo volver.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --panel:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
+    --gris:#9AA1AB; --linea:rgba(140,150,170,.18); --rojo:#E36658; --ambar:#E0B07A;
+    --f1:#e0796b; --f2:#5bc8b0; --f3:#4caf7d; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:760px; margin:0 auto; padding:26px 18px 60px; }
+  .marca{ font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--gris); }
+  .marca b{ color:var(--menta); }
+  h1{ font-size:clamp(25px,6vw,34px); font-weight:800; line-height:1.2; margin:14px 0 8px; text-wrap:balance; }
+  .sub{ color:var(--gris); margin-bottom:22px; }
+  .card{ background:var(--panel); border:1px solid var(--linea); border-radius:14px; padding:18px 16px; margin-bottom:14px; }
+  .card h2{ font-size:13px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--gris); margin-bottom:12px; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
+  label{ display:block; font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--gris); margin-bottom:5px; }
+  input{ width:100%; padding:11px 12px; border:1px solid var(--linea); border-radius:9px;
+    background:var(--tinta); color:var(--crema); font-family:inherit; font-size:16px; font-weight:600; }
+  input:focus{ outline:1px solid var(--menta); }
+  .nota{ font-size:12.5px; color:var(--gris); margin-top:7px; line-height:1.5; }
+  .seg{ display:flex; gap:6px; flex-wrap:wrap; }
+  .seg button{ border:1px solid var(--linea); background:var(--tinta); color:var(--gris); border-radius:9px;
+    padding:9px 13px; font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+  .seg button.on{ background:var(--menta); border-color:var(--menta); color:#082018; }
+  .fase{ display:grid; grid-template-columns:1fr; gap:8px; padding:12px; border:1px solid var(--linea);
+    border-radius:10px; margin-bottom:10px; }
+  .fase .tit{ font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; }
+  details{ margin-bottom:14px; }
+  summary{ cursor:pointer; color:var(--gris); font-size:14px; font-weight:600; padding:6px 2px; }
+  /* resultado */
+  .veredicto{ border-radius:14px; padding:18px 16px; margin:20px 0 14px; font-size:clamp(17px,4.5vw,21px);
+    font-weight:700; line-height:1.45; border:1px solid; }
+  .veredicto.quieto{ background:rgba(99,252,175,.08); border-color:rgba(99,252,175,.4); }
+  .veredicto.mover{ background:rgba(85,109,251,.10); border-color:rgba(85,109,251,.45); }
+  .veredicto.falta{ background:var(--panel); border-color:var(--linea); color:var(--gris); font-weight:500; }
+  .ordenes{ list-style:none; }
+  .ordenes li{ background:var(--panel); border:1px solid var(--linea); border-radius:10px; padding:12px 14px;
+    margin-bottom:8px; font-size:16.5px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .ordenes b{ color:var(--menta); }
+  .ordenes .v b{ color:var(--rojo); }
+  .aviso-pico{ background:rgba(224,176,122,.10); border:1px solid rgba(224,176,122,.5); border-radius:10px;
+    padding:12px 14px; margin:10px 0; font-size:14.5px; }
+  .aviso-pico b{ color:var(--ambar); }
+  .kpis{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0; }
+  .kpi{ background:var(--panel); border:1px solid var(--linea); border-radius:10px; padding:10px 12px; }
+  .kpi .k{ font-size:11px; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--gris); }
+  .kpi .v{ font-size:21px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .barra{ margin:6px 0 2px; }
+  .barra .lbl{ font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--gris); margin-bottom:4px; }
+  .barra .pista{ display:flex; height:16px; border-radius:999px; overflow:hidden; background:var(--panel); border:1px solid var(--linea); }
+  .barra i{ display:block; height:100%; }
+  .leyfases{ display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--gris); margin-top:8px; }
+  .leyfases span::before{ content:"●"; margin-right:5px; }
+  .leyfases .lf1::before{ color:var(--f1); } .leyfases .lf2::before{ color:var(--f2); } .leyfases .lf3::before{ color:var(--f3); }
+  .botones{ display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 6px; }
+  .btn{ display:inline-block; padding:13px 20px; border-radius:999px; font-weight:700; font-size:15px;
+    text-decoration:none; cursor:pointer; border:0; font-family:inherit; }
+  .btn.verde{ background:var(--menta); color:#082018; }
+  .btn.ghost{ background:transparent; color:var(--crema); border:1px solid var(--linea); }
+  .eiplus{ background:linear-gradient(160deg, rgba(85,109,251,.14), rgba(99,252,175,.07));
+    border:1px solid rgba(85,109,251,.4); border-radius:14px; padding:20px 18px; margin-top:34px; }
+  .eiplus h2{ font-size:19px; font-weight:800; margin-bottom:8px; }
+  .pie{ margin-top:34px; font-size:12px; color:#6b7280; line-height:1.6; }
+  /* hoja imprimible */
+  #hoja{ display:none; }
+  @media print{
+    body{ background:#fff; color:#111; }
+    .app{ display:none !important; }
+    #hoja{ display:block; font-family:'Bai Jamjuree',sans-serif; padding:10px; color:#111; }
+    #hoja h1{ font-size:20px; margin-bottom:2px; color:#111; }
+    #hoja .linea{ border-bottom:1px solid #999; margin:10px 0; }
+    #hoja table{ width:100%; border-collapse:collapse; font-size:14px; }
+    #hoja td, #hoja th{ border:1px solid #bbb; padding:7px 9px; text-align:left; }
+    #hoja .chica{ font-size:11px; color:#555; margin-top:14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap app">
+  <div class="marca">Empowered <b>Investor</b> · Mi plan</div>
+  <h1>Tu check-in, en cinco minutos</h1>
+  <p class="sub">Traé tu bitácora y tus saldos de Alpaca. Esta página te dice qué mover y cuánto — o te confirma que hoy no tocás nada, que la mayoría de las veces es la respuesta.</p>
+
+  <div class="card">
+    <h2>Tu meta</h2>
+    <div class="grid">
+      <div><label for="i-ing">Querés vivir con ($/mes)</label><input id="i-ing" inputmode="numeric" value="7,000"></div>
+      <div><label for="i-tasa">Retirás al año (%)</label><input id="i-tasa" inputmode="decimal" value="4"></div>
+      <div><label for="i-meta">Meta de capital ($)</label><input id="i-meta" inputmode="numeric" value="2,100,000"></div>
+    </div>
+    <p class="nota">Meta = gasto anual ÷ % de retiro. Podés escribir la meta directa y el ingreso se ajusta solo.</p>
+  </div>
+
+  <div class="card">
+    <h2>Tu bitácora</h2>
+    <div class="grid">
+      <div>
+        <label for="i-pico" title="El riesgo del plan baja a medida que avanzás, y con candado: aunque el mercado te devuelva para atrás, la mezcla se queda en la del máximo que ya tocaste.">% máximo de la meta que has alcanzado (tu pico)</label>
+        <input id="i-pico" inputmode="decimal" placeholder="ej. 42">
+      </div>
+    </div>
+    <p class="nota">🔒 Es el candado del plan: el riesgo solo baja, nunca vuelve a subir. Como esta página no guarda nada, el pico vive en tu bitácora — lo anotás en cada check-in y lo traés al siguiente. Si es tu primer check-in, dejalo vacío.</p>
+  </div>
+
+  <div class="card">
+    <h2>Tus saldos de Alpaca, hoy</h2>
+    <div class="fase">
+      <div class="tit" style="color:var(--f1)">Fase 1 · arranque</div>
+      <div class="seg" id="seg-f1">
+        <button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ" class="on">TQQQ</button>
+      </div>
+      <div><label for="s-f1">Saldo en ese activo ($)</label><input id="s-f1" inputmode="numeric" value="0"></div>
+    </div>
+    <div class="fase">
+      <div class="tit" style="color:var(--f2)">Fase 2 · intermedia</div>
+      <div class="seg" id="seg-f2">
+        <button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button>
+      </div>
+      <div><label for="s-f2">Saldo en ese activo ($)</label><input id="s-f2" inputmode="numeric" value="0"></div>
+    </div>
+    <div class="fase" style="margin-bottom:0">
+      <div class="tit" style="color:var(--f3)">Fase 3 · renta fija (el piso)</div>
+      <div class="grid">
+        <div><label for="s-f3">Saldo ($)</label><input id="s-f3" inputmode="numeric" value="0"></div>
+        <div><label for="i-tf3">Tasa anual (%)</label><input id="i-tf3" inputmode="decimal" value="8"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Tu ritual</h2>
+    <label>Cada cuánto hacés el check-in</label>
+    <div class="seg" id="seg-per">
+      <button data-m="3">3 meses</button><button data-m="6" class="on">6 meses</button><button data-m="12">12 meses</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Avanzado · los umbrales del glide path (si no los tocaste con nosotros, dejalos así)</summary>
+    <div class="card" style="margin-top:10px">
+      <div class="grid">
+        <div><label for="i-p1">Salir de la Fase 1 al (% de meta)</label><input id="i-p1" inputmode="numeric" value="70"></div>
+        <div><label for="i-p2">Mezcla final al (% de meta)</label><input id="i-p2" inputmode="numeric" value="100"></div>
+        <div><label for="i-ff">Fase 3 al final (%)</label><input id="i-ff" inputmode="numeric" value="70"></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ===== resultado ===== -->
+  <div id="veredicto" class="veredicto falta">Llená tu meta y tus saldos para ver tu check-in.</div>
+  <ul class="ordenes" id="ordenes"></ul>
+  <div id="aviso-pico"></div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="k">Avance a tu meta (φ hoy)</div><div class="v" id="k-phi">—</div></div>
+    <div class="kpi"><div class="k">🔒 Tu pico (manda sobre la mezcla)</div><div class="v" id="k-pico">—</div></div>
+  </div>
+  <div class="barra"><div class="lbl">Tu mezcla hoy</div><div class="pista" id="b-hoy"></div></div>
+  <div class="barra"><div class="lbl">Tu mezcla objetivo</div><div class="pista" id="b-obj"></div></div>
+  <div class="leyfases"><span class="lf1" id="ley-f1">Fase 1</span><span class="lf2" id="ley-f2">Fase 2</span><span class="lf3">Fase 3 · renta fija</span></div>
+
+  <div class="kpis" style="margin-top:14px">
+    <div class="kpi" style="grid-column:1/-1"><div class="k">Próximo check-in</div><div class="v" id="k-prox" style="font-size:18px">—</div></div>
+  </div>
+
+  <div class="botones">
+    <button class="btn verde" id="btn-imprimir">🖨️ Imprimir la hoja de bitácora</button>
+  </div>
+  <p class="nota">La hoja lleva la fecha, tus saldos, tu φ, tu pico y las órdenes. La guardás con las anteriores y ya está el registro de tu plan.</p>
+
+  <div class="eiplus">
+    <h2>¿Preferís que nosotros vigilemos?</h2>
+    <p style="color:var(--gris)">Con <b style="color:var(--crema)">EI+</b> te avisamos cuando la señal de timing cambia, tu pico queda guardado solo, recibís reportes mensuales y podés dejarnos preguntas con respuesta cada mes.</p>
+    <div class="botones" style="margin-bottom:0">
+      <a class="btn ghost" href="/diy/">Conocé EI+ y el servicio DIY →</a>
+    </div>
+  </div>
+
+  <p class="pie">Herramienta educativa de Empowered Investor. No constituye asesoría de inversión individualizada. Los rendimientos pasados no garantizan resultados futuros. Vos custodiás tu cuenta y tus decisiones. · <a href="/fpf/" style="color:#6b7280">La evidencia del método</a></p>
+</div>
+
+<!-- ===== hoja imprimible ===== -->
+<div id="hoja"></div>
+
+<script>
+"use strict";
+function byId(id){ return document.getElementById(id); }
+function num(s){ var d=String(s||"").replace(/[^0-9.]/g,""); var n=parseFloat(d); return isNaN(n)?0:n; }
+function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
+function comas(el){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart, a=el.value.length;
+  el.value=d?Number(d).toLocaleString("en-US"):""; var b=el.value.length; try{el.setSelectionRange(Math.max(0,p+(b-a)),Math.max(0,p+(b-a)));}catch(e){}
+  recalc(el.id); }); }
+
+/* Mezcla por avance, COPIADA de /fpf (fwW). No tocar sin tocar la de allá. */
+function fw(phi, p1, p2, Ff){
+  var wL,wE,wF; p1/=100; p2/=100; Ff/=100; if(p2<=p1)p2=p1+0.01;
+  if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; }
+  else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; }
+  else { wL=0; wF=Ff; wE=1-Ff; }
+  return [wL,wE,wF];
+}
+
+var S={ f1:"TQQQ", f2:"SPY", per:6 };
+
+function segWire(id, key, cb){
+  Array.prototype.forEach.call(byId(id).querySelectorAll("button"), function(b){
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(byId(id).querySelectorAll("button"), function(x){ x.classList.remove("on"); });
+      b.classList.add("on"); S[key]=b.getAttribute(b.hasAttribute("data-a")?"data-a":"data-m"); cb&&cb(); recalc(); });
+  });
+}
+segWire("seg-f1","f1"); segWire("seg-f2","f2"); segWire("seg-per","per");
+
+/* meta de dos vías: ingreso+tasa <-> meta */
+function recalcMeta(origen){
+  var ing=num(byId("i-ing").value), tasa=num(byId("i-tasa").value), meta=num(byId("i-meta").value);
+  if(origen==="i-meta"){ if(tasa>0&&meta>0) byId("i-ing").value=fmt(meta*(tasa/100)/12); }
+  else { if(tasa>0&&ing>0) byId("i-meta").value=fmt(ing*12/(tasa/100)); }
+}
+
+var ULT=null; /* último cálculo, para la hoja imprimible */
+function recalc(origen){
+  if(origen==="i-ing"||origen==="i-tasa"||origen==="i-meta") recalcMeta(origen);
+  var meta=num(byId("i-meta").value);
+  var s1=num(byId("s-f1").value), s2=num(byId("s-f2").value), s3=num(byId("s-f3").value);
+  var p1=num(byId("i-p1").value)||70, p2=num(byId("i-p2").value)||100, ff=num(byId("i-ff").value)||70;
+  var picoIn=num(byId("i-pico").value)/100;
+  var total=s1+s2+s3;
+  var ver=byId("veredicto"), ord=byId("ordenes"), avi=byId("aviso-pico");
+  ord.innerHTML=""; avi.innerHTML="";
+
+  if(!(meta>0)||!(total>0)){
+    ver.className="veredicto falta"; ver.textContent="Llená tu meta y tus saldos para ver tu check-in.";
+    byId("k-phi").textContent="—"; byId("k-pico").textContent="—";
+    pintarBarra("b-hoy",[s1,s2,s3],total); pintarBarra("b-obj",[0,0,0],0); proxima(); ULT=null; return;
+  }
+
+  var phi=total/meta;
+  var pico=Math.max(picoIn, phi);
+  if(phi>picoIn){
+    avi.innerHTML='<div class="aviso-pico">🔒 <b>Nuevo máximo: anotá '+(phi*100).toFixed(1)+'% en tu bitácora.</b> Ese número manda de aquí en adelante: aunque el mercado te devuelva, tu mezcla se queda en la de ese pico.</div>';
+  }
+  var w=fw(pico,p1,p2,ff);
+  /* candado: la Fase 3 nunca se vende. Si ya tenés más que el objetivo, se queda. */
+  var tgt3=Math.max(s3, w[2]*total);
+  var resto=Math.max(0,total-tgt3), w12=w[0]+w[1];
+  var tgt1=w12>1e-9? resto*(w[0]/w12) : 0;
+  var tgt2=resto-tgt1;
+  var d1=tgt1-s1, d2=tgt2-s2, d3=tgt3-s3;
+  var umbral=Math.max(500, total*0.02);
+  var mueve=Math.max(Math.abs(d1),Math.abs(d2),Math.abs(d3))>=umbral;
+
+  if(!mueve){
+    ver.className="veredicto quieto";
+    ver.textContent="Estás en tu mezcla. No hacés nada hasta el próximo check-in.";
+  } else {
+    ver.className="veredicto mover";
+    ver.textContent="Toca ajustar: movés esto y volvés a tu mezcla.";
+    var items=[];
+    if(d1<-1) items.push({t:"v", txt:"Vendé <b>$"+fmt(-d1)+"</b> de "+S.f1});
+    if(d2<-1) items.push({t:"v", txt:"Vendé <b>$"+fmt(-d2)+"</b> de "+S.f2});
+    if(d1>1) items.push({t:"c", txt:"Comprá <b>$"+fmt(d1)+"</b> de "+S.f1});
+    if(d2>1) items.push({t:"c", txt:"Comprá <b>$"+fmt(d2)+"</b> de "+S.f2});
+    if(d3>1) items.push({t:"c", txt:"Pasá <b>$"+fmt(d3)+"</b> a tu Fase 3 (renta fija)"});
+    items.forEach(function(x){ var li=document.createElement("li"); li.className=x.t; li.innerHTML=x.txt; ord.appendChild(li); });
+  }
+
+  byId("k-phi").textContent=(phi*100).toFixed(1)+"%";
+  byId("k-pico").textContent=(pico*100).toFixed(1)+"%";
+  byId("ley-f1").textContent="Fase 1 · "+S.f1;
+  byId("ley-f2").textContent="Fase 2 · "+S.f2;
+  pintarBarra("b-hoy",[s1,s2,s3],total);
+  pintarBarra("b-obj",[tgt1,tgt2,tgt3],total);
+  proxima();
+  ULT={ meta:meta, phi:phi, pico:pico, s1:s1, s2:s2, s3:s3, tgt1:tgt1, tgt2:tgt2, tgt3:tgt3,
+        d1:d1, d2:d2, d3:d3, mueve:mueve, umbral:umbral };
+}
+
+function pintarBarra(id, partes, total){
+  var el=byId(id); el.innerHTML="";
+  var cols=["var(--f1)","var(--f2)","var(--f3)"];
+  if(!(total>0)) return;
+  partes.forEach(function(v,k){ var i=document.createElement("i");
+    i.style.width=(100*Math.max(0,v)/total)+"%"; i.style.background=cols[k]; el.appendChild(i); });
+}
+
+var MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","setiembre","octubre","noviembre","diciembre"];
+function proxima(){
+  var d=new Date(); d.setMonth(d.getMonth()+parseInt(S.per,10));
+  byId("k-prox").textContent=d.getDate()+" de "+MESES[d.getMonth()]+" de "+d.getFullYear();
+}
+
+byId("btn-imprimir").addEventListener("click", function(){
+  var hoy=new Date(); var f=hoy.getDate()+" de "+MESES[hoy.getMonth()]+" de "+hoy.getFullYear();
+  var u=ULT, h="<h1>Bitácora · Freedom Point Fund</h1><div>Check-in del "+f+"</div><div class='linea'></div>";
+  if(!u){ h+="<p>Check-in sin datos: llená la página antes de imprimir.</p>"; }
+  else {
+    h+="<table><tr><th>Meta de capital</th><td>$"+fmt(u.meta)+"</td></tr>"
+      +"<tr><th>Fase 1 · "+S.f1+"</th><td>$"+fmt(u.s1)+"</td></tr>"
+      +"<tr><th>Fase 2 · "+S.f2+"</th><td>$"+fmt(u.s2)+"</td></tr>"
+      +"<tr><th>Fase 3 · renta fija</th><td>$"+fmt(u.s3)+"</td></tr>"
+      +"<tr><th>Avance (φ hoy)</th><td>"+(u.phi*100).toFixed(1)+"%</td></tr>"
+      +"<tr><th>🔒 Pico (anotalo: manda el próximo check-in)</th><td><b>"+(u.pico*100).toFixed(1)+"%</b></td></tr></table>";
+    h+="<h1 style='font-size:16px;margin-top:14px'>Órdenes de este check-in</h1>";
+    if(!u.mueve) h+="<p>Ninguna: estás en tu mezcla.</p>";
+    else { h+="<ul>";
+      if(u.d1<0) h+="<li>Vendé $"+fmt(-u.d1)+" de "+S.f1+"</li>";
+      if(u.d2<0) h+="<li>Vendé $"+fmt(-u.d2)+" de "+S.f2+"</li>";
+      if(u.d1>0) h+="<li>Comprá $"+fmt(u.d1)+" de "+S.f1+"</li>";
+      if(u.d2>0) h+="<li>Comprá $"+fmt(u.d2)+" de "+S.f2+"</li>";
+      if(u.d3>0) h+="<li>Pasá $"+fmt(u.d3)+" a la Fase 3</li>";
+      h+="</ul>"; }
+    h+="<div class='linea'></div><div>Próximo check-in: "+byId("k-prox").textContent+"</div>";
+    h+="<p class='chica'>Herramienta educativa de Empowered Investor · investorcr.com/mi-plan · No constituye asesoría individualizada. Los rendimientos pasados no garantizan resultados futuros.</p>";
+  }
+  byId("hoja").innerHTML=h;
+  window.print();
+});
+
+["i-ing","i-meta","s-f1","s-f2","s-f3"].forEach(function(id){ comas(byId(id)); });
+["i-tasa","i-pico","i-tf3","i-p1","i-p2","i-ff"].forEach(function(id){
+  byId(id).addEventListener("input", function(){ recalc(id); }); });
+recalc();
+</script>
+</body>
+</html>

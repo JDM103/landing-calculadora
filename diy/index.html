@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+DIY · página de oferta del Freedom Point Fund autogestionado + EI+
+- Pública: canonical + sitemap + enlaza a /mi-plan (la herramienta del ritual).
+- Los números del bloque de transparencia y del FAQ salen del estudio de /fpf
+  (era buena 1990-2025, plan default): si allá cambian, actualizarlos acá.
+- Precio de EI+ pendiente: buscar [PRECIO] antes de publicar.
+============================================================================= -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freedom Point Fund DIY · Empowered Investor</title>
+<meta name="description" content="Por $1,000 salís con tu plan de retiro montado, en tu propia cuenta, y es tuyo para siempre. Y si preferís que nosotros vigilemos, existe EI+.">
+<link rel="canonical" href="https://investorcr.com/diy/">
+<meta property="og:title" content="Freedom Point Fund DIY · Empowered Investor">
+<meta property="og:description" content="Tu plan de retiro montado en tu propia cuenta, con un ritual de 15 minutos cada 6 meses.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --panel:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
+    --gris:#9AA1AB; --linea:rgba(140,150,170,.18); --ambar:#E0B07A; }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif;
+    font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:760px; margin:0 auto; padding:26px 18px 60px; }
+  .marca{ font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--gris); }
+  .marca b{ color:var(--menta); }
+  h1{ font-size:clamp(28px,7vw,40px); font-weight:800; line-height:1.15; margin:18px 0 12px; text-wrap:balance; }
+  h1 em{ font-style:normal; color:var(--menta); }
+  .sub{ color:var(--gris); font-size:18px; margin-bottom:24px; }
+  h2{ font-size:clamp(20px,5vw,25px); font-weight:800; margin:44px 0 14px; line-height:1.3; text-wrap:balance; }
+  p{ margin-bottom:14px; }
+  .g{ color:var(--gris); }
+  .card{ background:var(--panel); border:1px solid var(--linea); border-radius:14px; padding:18px 16px; margin-bottom:12px; }
+  .precio{ font-size:15px; color:var(--gris); }
+  .precio b{ color:var(--menta); font-size:26px; }
+  .stack{ list-style:none; }
+  .stack li{ background:var(--panel); border:1px solid var(--linea); border-radius:12px; padding:14px 16px; margin-bottom:9px; }
+  .stack b{ display:block; margin-bottom:2px; }
+  .stack span{ color:var(--gris); font-size:14.5px; }
+  .pasos{ counter-reset:paso; list-style:none; }
+  .pasos li{ position:relative; padding:0 0 16px 52px; }
+  .pasos li::before{ counter-increment:paso; content:counter(paso); position:absolute; left:0; top:1px;
+    width:36px; height:36px; border-radius:999px; background:var(--panel); border:1px solid var(--menta);
+    color:var(--menta); font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .pasos b{ display:block; }
+  .pasos span{ color:var(--gris); font-size:15px; }
+  .tabla{ overflow-x:auto; border:1px solid var(--linea); border-radius:12px; margin:14px 0; }
+  table{ width:100%; border-collapse:collapse; font-size:15px; min-width:460px; }
+  th{ background:var(--panel); text-align:left; padding:11px 14px; font-weight:700; }
+  th.c, td.c{ text-align:center; }
+  td{ padding:10px 14px; border-top:1px solid var(--linea); color:var(--gris); }
+  td:first-child{ color:var(--crema); }
+  .si{ color:var(--menta); font-weight:800; }
+  .no{ color:#6b7280; }
+  .transp{ background:linear-gradient(160deg, rgba(99,252,175,.07), rgba(85,109,251,.06));
+    border:1px solid rgba(99,252,175,.3); border-radius:14px; padding:18px 16px; margin:16px 0; }
+  .numeros{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin:12px 0 4px; }
+  .num{ background:var(--tinta); border:1px solid var(--linea); border-radius:10px; padding:10px 12px; }
+  .num .k{ font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--gris); }
+  .num .v{ font-size:19px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .num .v small{ color:var(--gris); font-weight:600; font-size:13px; }
+  details{ background:var(--panel); border:1px solid var(--linea); border-radius:12px; padding:0 16px; margin-bottom:9px; }
+  summary{ cursor:pointer; font-weight:700; padding:14px 0; font-size:16px; }
+  details p{ color:var(--gris); font-size:15px; padding-bottom:14px; }
+  .cta{ text-align:center; margin:44px 0 8px; }
+  .btn{ display:inline-block; padding:15px 26px; border-radius:999px; font-weight:700; font-size:16px;
+    text-decoration:none; margin:6px 6px 0 0; }
+  .btn.verde{ background:var(--menta); color:#082018; }
+  .btn.ghost{ background:transparent; color:var(--crema); border:1px solid var(--linea); }
+  .pie{ margin-top:40px; font-size:12px; color:#6b7280; line-height:1.6; }
+  a{ color:var(--menta); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="marca">Empowered <b>Investor</b> · DIY</div>
+  <h1>Por $1,000 salís con tu plan de retiro <em>montado</em> — y es tuyo para siempre</h1>
+  <p class="sub">Tu cuenta, tu plata, tu freedom point con fecha. Nosotros lo dejamos andando con vos y te enseñamos el ritual de 15 minutos cada 6 meses que lo mantiene vivo.</p>
+
+  <h2>Qué incluyen los $1,000 (pago único)</h2>
+  <ul class="stack">
+    <li><b>Apertura de cuenta acompañada</b><span>Abrimos juntos tu cuenta en Alpaca, a tu nombre. La plata queda custodiada por vos desde el día uno.</span></li>
+    <li><b>Primera transferencia acompañada</b><span>Te enseñamos a mandar la plata bien, incluido cómo agrupar los SWIFT para no regalar comisiones en cada envío.</span></li>
+    <li><b>Sesión de plan</b><span>Definimos tu freedom point, tu aporte mensual, tus fases y tus umbrales. Salís con números tuyos, con nombre y fecha.</span></li>
+    <li><b>Sesión "el día del −50%"</b><span>Ensayamos la crisis antes de que llegue: qué vas a sentir, qué dice tu plan y qué vas a hacer (spoiler: casi siempre, nada).</span></li>
+    <li><b>Manual del ritual + bitácora</b><span>El paso a paso de tu check-in semestral y la hoja donde vive tu pico. Tu plan queda por escrito.</span></li>
+    <li><b>El panel de tu plan, de por vida</b><span><a href="/mi-plan/">investorcr.com/mi-plan</a>: metés tus saldos y te dice qué mover, cuánto, o que no toqués nada. Sin cuentas ni contraseñas.</span></li>
+  </ul>
+
+  <h2>El ritual, cada 6 meses</h2>
+  <ol class="pasos">
+    <li><b>Abrís Alpaca y anotás tus tres saldos.</b><span>Fase 1, fase 2 y tu renta fija. Dos minutos.</span></li>
+    <li><b>Los metés en <a href="/mi-plan/">tu panel</a> junto con el pico de tu bitácora.</b><span>El panel calcula tu avance y tu mezcla objetivo con la misma matemática del estudio.</span></li>
+    <li><b>Ejecutás las órdenes (o nada) e imprimís la hoja.</b><span>La mayoría de los check-ins la respuesta es "no tocás nada". Anotás el pico nuevo y nos vemos en 6 meses.</span></li>
+  </ol>
+
+  <h2>EI+ · para los que prefieren que nosotros vigilemos</h2>
+  <p class="precio"><b>[PRECIO]</b>/mes · cancelás cuando querás</p>
+  <p class="g">El plan DIY se defiende solo. EI+ existe para cortar los peores mundos y quitarte la vigilancia de encima:</p>
+  <ul class="stack">
+    <li><b>El modelo con timing</b><span>Nuestra señal semanal basada en papers premiados. Te avisamos cuando cambia: cuándo salir a efectivo y cuándo volver. Vos ejecutás en tu cuenta.</span></li>
+    <li><b>Reportes mensuales</b><span>Tu avance al freedom point, qué puso tu bolsillo y qué puso el mercado, cada mes en tu correo.</span></li>
+    <li><b>Buzón de preguntas</b><span>Dejás tus preguntas cuando surjan; respuesta detallada cada mes.</span></li>
+    <li><b>Panel personalizado</b><span>Recuerda tu pico y tu historial solo — se acaba la bitácora de papel.</span></li>
+  </ul>
+
+  <div class="tabla"><table>
+    <thead><tr><th>Qué tenés</th><th class="c">DIY</th><th class="c">DIY + EI+</th></tr></thead>
+    <tbody>
+      <tr><td>Plan montado en tu cuenta (tuyo para siempre)</td><td class="c si">✓</td><td class="c si">✓</td></tr>
+      <tr><td>Panel del ritual (/mi-plan)</td><td class="c si">✓</td><td class="c si">✓</td></tr>
+      <tr><td>Manual + bitácora</td><td class="c si">✓</td><td class="c si">✓</td></tr>
+      <tr><td>Señal de timing con avisos</td><td class="c no">—</td><td class="c si">✓</td></tr>
+      <tr><td>Reportes mensuales</td><td class="c no">—</td><td class="c si">✓</td></tr>
+      <tr><td>Buzón de preguntas (respuesta mensual)</td><td class="c no">—</td><td class="c si">✓</td></tr>
+      <tr><td>Panel personalizado (pico e historial guardados)</td><td class="c no">—</td><td class="c si">✓</td></tr>
+      <tr><td>Precio</td><td class="c">$1,000 una vez</td><td class="c">+ [PRECIO]/mes</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="transp">
+    <h2 style="margin-top:0">Transparencia: el plan se sostiene sin el timing</h2>
+    <p class="g">No te vendemos miedo. Corrimos el plan completo sobre 35 años de historia y <a href="/fpf/">los números están publicados</a>: sin timing ya llega de forma fiable. El timing de EI+ existe para cortar los peores mundos, y eso también está medido:</p>
+    <div class="numeros">
+      <div class="num"><div class="k">Prob. de llegar</div><div class="v">92.9% <small>→ 100%</small></div></div>
+      <div class="num"><div class="k">Peor 1% de los mundos</div><div class="v">$274k <small>→ $4.56M</small></div></div>
+      <div class="num"><div class="k">Caída típica del camino</div><div class="v">−81% <small>→ −47%</small></div></div>
+    </div>
+    <p class="g" style="font-size:13px; margin:6px 0 0">Plan default del estudio, 1990–2025, sin timing → con timing. Detalle completo y metodología en <a href="/fpf/">/fpf</a>.</p>
+  </div>
+
+  <h2>Preguntas frecuentes</h2>
+  <details><summary>¿Puedo usar el 3× sin pagar EI+?</summary>
+    <p>Sí. Sos libre: el plan es tuyo y el 3× funciona sin el filtro. Los números del estudio lo dicen tal cual: sin timing, el plan default llega en el 92.9% de los mundos con una caída típica de −81% en el camino; con timing, 100% y −47%. Si aguantás la montaña rusa, el destino llega igual. EI+ te vende un camino más tranquilo, no un destino distinto.</p>
+  </details>
+  <details><summary>¿Quién custodia mi plata?</summary>
+    <p>Vos. La cuenta de Alpaca está a tu nombre y los retiros solo pueden ir a tu propio banco. Nosotros nunca tocamos tu plata: te enseñamos a manejarla y, si estás en EI+, te avisamos qué está pasando.</p>
+  </details>
+  <details><summary>¿Qué pasa si cancelo EI+?</summary>
+    <p>Tu panel personalizado se congela, te exportamos tu historial completo y seguís exactamente donde estabas: con tu bitácora, el panel genérico de por vida y tu plan intacto. Lo que compraste con los $1,000 no caduca.</p>
+  </details>
+  <details><summary>¿Necesito saber de inversiones?</summary>
+    <p>No. El montaje lo hacemos juntos y el ritual son tres pasos con el panel diciéndote los montos exactos. La parte difícil del plan no es técnica: es no hacer nada cuando el mercado grita, y para eso está la sesión del −50%.</p>
+  </details>
+  <details><summary>¿Cuánto tiempo me toma de verdad?</summary>
+    <p>El montaje: dos sesiones con nosotros más los trámites de la cuenta (unos días de espera de Alpaca). Después, unos 15 minutos cada 6 meses. Está diseñado para gente que tiene vida.</p>
+  </details>
+  <details><summary>¿Y si el mercado se cae justo cuando empiezo?</summary>
+    <p>El plan lo contempla: el estudio de <a href="/fpf/">/fpf</a> arranca gente en 1999 y en 2007, en la puerta de las dos peores crisis del periodo, y el glide path hace su trabajo. Además la sesión del −50% existe precisamente para ese día. Y si querés el cinturón extra, ahí está la señal de EI+.</p>
+  </details>
+  <details><summary>¿Esto es asesoría financiera?</summary>
+    <p>Es educación más herramientas: te enseñamos un método publicado, con su evidencia, y vos tomás las decisiones en tu cuenta. Sin custodiar tu plata ni ejecutar por vos.</p>
+  </details>
+
+  <div class="cta">
+    <h2>Empezá con una llamada de 30 minutos</h2>
+    <p class="g">Vemos tu punto de partida, tu freedom point y si el DIY es para vos. Sin compromiso.</p>
+    <a class="btn verde" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diy&utm_medium=cta&utm_campaign=diy-lanzamiento" target="_blank" rel="noopener">Agendá tu llamada →</a>
+    <a class="btn ghost" href="/newsletter/">Suscribite al newsletter →</a>
+  </div>
+
+  <p class="pie">Contenido educativo de Empowered Investor. No constituye asesoría de inversión individualizada ni garantía de resultados. Los rendimientos pasados no garantizan resultados futuros. Vos custodiás tu cuenta y tus decisiones. · <a href="/mi-plan/" style="color:#6b7280">El panel del ritual</a> · <a href="/fpf/" style="color:#6b7280">La evidencia del método</a></p>
+</div>
+</body>
+</html>
