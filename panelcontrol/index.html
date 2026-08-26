@@ -143,6 +143,15 @@
   #ctl-modal table{ width:100%; border-collapse:collapse; font-size:13px; }
   #ctl-modal td, #ctl-modal th{ padding:6px 8px; border-bottom:1px solid var(--bd); text-align:right; }
   #ctl-modal td:first-child, #ctl-modal th:first-child{ text-align:left; }
+  .planb{ background:linear-gradient(135deg, rgba(99,252,175,.10), rgba(85,109,251,.10));
+    border:1px solid rgba(99,252,175,.4); border-radius:12px; padding:10px 14px; margin:8px 0 4px;
+    font-size:13.5px; color:var(--crema); }
+  .planb b{ color:var(--menta); }
+  .gcaja{ background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:10px 8px 4px; margin:6px 0 4px; }
+  .gcaja canvas{ display:block; width:100%; }
+  .gley{ display:flex; gap:16px; flex-wrap:wrap; font-size:11.5px; color:var(--gris-sec); padding:4px 6px 6px; }
+  .gley i{ display:inline-block; width:16px; height:3px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .caidas td, .caidas th{ font-size:12.5px; }
 </style>
 </head>
 <body>
@@ -425,6 +434,7 @@ function renderDet(){
     +'<div class="sub">'+(PRIV?'••••':c.alias)+(c.snap?' · dato al '+c.snap.mes:' · sin datos')
       +(cta.inicio&&!PRIV?' · cliente desde '+cta.inicio:'')
       +(m.plan?' · plan '+m.plan.f1+"→"+m.plan.f2+"→"+m.plan.f3+" "+m.plan.p1+"/"+m.plan.p2+"/"+m.plan.ff+(m.plan.timing?" + timing":""):'')+'</div>'
+    +fppDash(c)
     +(c.snap?
       '<div class="tiles">'
       +'<div class="tile"><div class="k">Capital</div><div class="v num">'+fmt(c.snap.equity)+'</div></div>'
@@ -450,7 +460,6 @@ function renderDet(){
         : fp>0? '<div class="barra"><i style="width:'+Math.min(100,phi*100).toFixed(1)+'%"></i></div>'
         +'<div class="sub num">Avance al freedom point ('+money(fp)+'): <b style="color:var(--crema)">'+(phi*100).toFixed(1)+'%</b></div>'
         : '<div class="sub">Freedom point sin definir (se llena en la sesión 1 a 1).</div>')
-      +fppDash(c)
       +'<div class="sec">Portafolio en el tiempo'
         +'<span class="hbtns">'+["1M","3M","YTD","1A","Todo"].map(function(h){
           return '<button data-hz="'+h+'"'+(HORIZONTE===h?' class="on"':'')+'>'+h+'</button>'; }).join("")+'</span>'
@@ -732,8 +741,30 @@ function fppDash(c){
     return '<tr><td style="font-weight:600">'+nom+'</td><td class="num">'+fmt(act)+' <span style="color:var(--gris-sec)">('+(eq>0?(100*act/eq).toFixed(1):0)+'%)</span></td>'
       +'<td class="num">'+fmt(obj)+' <span style="color:var(--gris-sec)">('+(eq>0?(100*obj/eq).toFixed(1):0)+'%)</span></td>'
       +'<td class="num '+cls(d)+'">'+fmt(d)+'</td><td style="text-align:right">'+btn+'</td></tr>'; }
+  var tim = m.plan && m.plan.timing;
   return ''
-   +'<div class="sec" style="color:var(--menta)">Freedom point dashboard</div>'
+   +'<div class="planb num"><b>PLAN ACORDADO</b> · '+plan.f1+' → '+plan.f2+' → SJC · salida al '+plan.p1+'% · mezcla al '+plan.p2+'% · llegada '+plan.ff+'% en fase 3 · timing '+(tim?"si":"no")
+     +' · aporte <b>'+(pact>0? "$"+pact.toLocaleString("en-US")+"/mes":"por definir")+'</b> · freedom point <b>'+(fp>0? money(fp):"por definir")+'</b>'+(pctF<100? ' · <b>'+pctF+'% FPP</b> / '+(100-pctF)+'% fuera del plan':'')+'</div>'
+   +'<div class="sec" style="color:var(--menta)">Su plan sobre la historia real</div>'
+   +'<div class="gcaja"><canvas id="cv-plan" height="260"></canvas>'
+   +'<div class="gley"><span><i style="background:var(--menta)"></i>Su cuenta</span>'
+   +'<span><i style="background:var(--crema);opacity:.75"></i>Lo que aporto (real)</span>'
+   +'<span><i style="background:var(--gris-sec)"></i>Lo planeado ('+(pact>0?"$"+pact.toLocaleString("en-US")+"/mes":"defini el aporte")+')</span>'
+   +(fp>0?'<span><i style="background:var(--peri)"></i>Freedom point</span>':'')+'</div></div>'
+   +'<div class="kpis">'
+   +'<div class="tile"><div class="k">Valor hoy</div><div class="v num">'+fmt(eq)+'</div></div>'
+   +'<div class="tile"><div class="k">De su bolsillo</div><div class="v num">'+fmt(lleva)+'</div></div>'
+   +'<div class="tile"><div class="k">Lo puso el mercado</div><div class="v num" style="color:var(--peri)">'+fmt(eq-lleva)+'</div></div>'
+   +'<div class="tile"><div class="k">Su plata rindio (TIR)</div><div class="v num '+(typeof cta.tir==="number"?cls(cta.tir):"")+'">'+(typeof cta.tir==="number"?pct(cta.tir):"—")+'</div></div>'
+   +'</div>'
+   +'<div class="sec">Asi se ve su riesgo dinamico</div>'
+   +'<div class="gcaja"><canvas id="cv-riesgo" height="170"></canvas>'
+   +'<div class="gley"><span><i style="background:rgba(224,102,90,.8)"></i>Fase 1 · '+plan.f1+'</span>'
+   +'<span><i style="background:rgba(96,140,235,.8)"></i>Fase 2 · '+plan.f2+'</span>'
+   +'<span><i style="background:rgba(78,190,130,.8)"></i>Fase 3 · SJC</span></div></div>'
+   +'<div class="sec">Las caidas que de verdad importan: en dolares, vs su freedom point</div>'
+   +'<div id="caidas-box" class="sub">Cargando su historia…</div>'
+   +'<div class="sec" style="color:var(--menta)">Aportes y ajustes</div>'
    +'<div class="kpis">'
    +'<div class="tile"><div class="k">Aportes: llevan vs plan</div><div class="v num" style="font-size:15px">'+fmt(lleva)+' / '+(planAp>0?fmt(planAp):"—")+'</div>'
      +(planAp>0? '<div class="s num" style="color:'+(cumple>=95?"var(--menta)":"var(--ambar)")+'">'+cumple.toFixed(0)+'% de lo pactado</div>' : '<div class="s">defini el aporte pactado →</div>')+'</div>'
@@ -864,7 +895,159 @@ function wireControl(c){
   });
   var tm=$("tk-monto");
   if(tm) tm.addEventListener("input", function(){ var d=tm.value.replace(/[^0-9]/g,""); tm.value=d?Number(d).toLocaleString("en-US"):""; });
+  cargarPlanCliente(c);
   refreshKsw();
+}
+
+function ctxDe(id, altoCss){
+  var cv=$(id); if(!cv) return null;
+  var W=cv.parentNode.clientWidth-16 || 600;
+  cv.width=W*2; cv.height=altoCss*2; cv.style.width=W+"px"; cv.style.height=altoCss+"px";
+  var x=cv.getContext("2d"); x.setTransform(2,0,0,2,0,0);
+  return {x:x, W:W, H:altoCss};
+}
+
+function datosPlanDe(c){
+  var m=c.meta||{}, plan=planDe(m), cta=(c.snap&&c.snap.cuenta)||{};
+  var fp=m.fp || (m.ingreso? m.ingreso*12/((m.tasa||4)/100):0);
+  var pctF=(m.pct_fpp==null?100:+m.pct_fpp);
+  return { m:m, plan:plan, cta:cta, fp:fp, pctF:pctF, pact:+m.aporte_pactado||0 };
+}
+
+async function cargarPlanCliente(c){
+  if(!c || !c.snap) return;
+  try{
+    var h=await serieDe(c.alias, "Todo");
+    if(SELECC!==c.alias) return;
+    dibujarPlanCliente(c, h);
+    renderCaidas(c, h);
+  }catch(e){ var cb=$("caidas-box"); if(cb) cb.textContent="No se pudo cargar su historia: "+(e.message||e); }
+  dibujarRiesgo(c);
+}
+
+function dibujarPlanCliente(c, h){
+  var g=ctxDe("cv-plan", 260); if(!g || !h || !h.t || h.t.length<2) return;
+  var x=g.x, W=g.W, H=g.H, padL=52, padR=10, padT=14, padB=22;
+  var d=datosPlanDe(c), cta=d.cta;
+  var t0=h.t[0], t1=h.t[h.t.length-1], rango=Math.max(1,t1-t0);
+  // aportado real acumulado desde el historial de transferencias (contadas) + capital inicial
+  var fon=(cta.fondeos||[]).filter(function(f){return f.c;}).map(function(f){
+    return { ts: Date.parse(f.f)/1000, m:f.m }; }).sort(function(a,b){return a.ts-b.ts;});
+  var capI=capIniDe(c);
+  function apReal(ts){ var a=capI; for(var i=0;i<fon.length;i++){ if(fon[i].ts<=ts) a+=fon[i].m; } return Math.max(0,a); }
+  // aportado planeado: capital inicial + pacto mensual desde su inicio
+  var ini=cta.inicio? Date.parse(cta.inicio)/1000 : t0;
+  function apPlan(ts){ if(d.pact<=0) return null;
+    var meses=Math.max(0, Math.floor((ts-ini)/2629800));
+    return capI + d.pact*meses; }
+  var maxEq=0; h.eq.forEach(function(v){ if(v>maxEq) maxEq=v; });
+  var topPlan=apPlan(t1)||0;
+  var yMax=Math.max(maxEq, apReal(t1), topPlan, d.fp>0? d.fp*1.1:0)*1.08 || 1;
+  function X(ts){ return padL+(W-padL-padR)*(ts-t0)/rango; }
+  function Y(v){ return padT+(H-padT-padB)*(1-v/yMax); }
+  x.clearRect(0,0,W,H);
+  x.font="10px 'Bai Jamjuree'"; x.fillStyle="#9AA1AB"; x.strokeStyle="rgba(140,150,170,.15)"; x.lineWidth=1;
+  for(var gi=1; gi<=3; gi++){ var vv=yMax*gi/4; x.beginPath(); x.moveTo(padL,Y(vv)); x.lineTo(W-padR,Y(vv)); x.stroke();
+    x.fillText(money(vv), 4, Y(vv)+3); }
+  var f0=new Date(t0*1000), f1=new Date(t1*1000);
+  x.fillText(f0.getFullYear()+"-"+(f0.getMonth()+1), padL, H-6);
+  x.textAlign="right"; x.fillText(f1.getFullYear()+"-"+(f1.getMonth()+1), W-padR, H-6); x.textAlign="left";
+  // relleno + linea de la cuenta (menta, como el laboratorio de /fpf)
+  x.beginPath(); x.moveTo(X(h.t[0]), Y(Math.max(0,h.eq[0])));
+  for(var i=1;i<h.t.length;i++) x.lineTo(X(h.t[i]), Y(Math.max(0,h.eq[i])));
+  x.lineTo(X(t1), Y(0)); x.lineTo(X(t0), Y(0)); x.closePath();
+  x.fillStyle="rgba(99,252,175,.10)"; x.fill();
+  x.beginPath(); x.moveTo(X(h.t[0]), Y(Math.max(0,h.eq[0])));
+  for(var i2=1;i2<h.t.length;i2++) x.lineTo(X(h.t[i2]), Y(Math.max(0,h.eq[i2])));
+  x.strokeStyle="#63FCAF"; x.lineWidth=2.2; x.stroke();
+  // aportado real (crema punteado)
+  x.setLineDash([4,3]); x.beginPath();
+  for(var i3=0;i3<h.t.length;i3++){ var v3=apReal(h.t[i3]); if(i3===0) x.moveTo(X(h.t[i3]),Y(v3)); else x.lineTo(X(h.t[i3]),Y(v3)); }
+  x.strokeStyle="rgba(254,249,243,.75)"; x.lineWidth=1.4; x.stroke();
+  // aportado planeado (gris punteado)
+  if(d.pact>0){ x.beginPath();
+    for(var i4=0;i4<h.t.length;i4++){ var v4=apPlan(h.t[i4]); if(i4===0) x.moveTo(X(h.t[i4]),Y(v4)); else x.lineTo(X(h.t[i4]),Y(v4)); }
+    x.strokeStyle="rgba(154,161,171,.8)"; x.lineWidth=1.2; x.stroke(); }
+  // freedom point (peri punteado, como /fpf)
+  if(d.fp>0 && d.fp<yMax){ x.beginPath(); x.moveTo(padL,Y(d.fp)); x.lineTo(W-padR,Y(d.fp));
+    x.strokeStyle="rgba(85,109,251,.65)"; x.lineWidth=1.5; x.stroke(); x.setLineDash([]);
+    x.fillStyle="#8ea0ff"; x.font="700 10px 'Bai Jamjuree'"; x.fillText("Freedom point", padL+4, Y(d.fp)-4); }
+  x.setLineDash([]);
+  // punto final + valor
+  var vf=h.eq[h.eq.length-1];
+  x.beginPath(); x.arc(X(t1),Y(vf),3.5,0,7); x.fillStyle="#FEF9F3"; x.fill();
+  x.strokeStyle="#63FCAF"; x.lineWidth=2; x.stroke();
+  x.fillStyle="#63FCAF"; x.font="700 12px 'Bai Jamjuree'"; x.textAlign="right";
+  x.fillText(money(vf), W-padR, Math.max(12,Y(vf)-8)); x.textAlign="left";
+}
+
+function dibujarRiesgo(c){
+  var g=ctxDe("cv-riesgo", 170); if(!g) return;
+  var x=g.x, W=g.W, H=g.H, padL=40, padR=10, padT=8, padB=20;
+  var d=datosPlanDe(c), plan=d.plan;
+  var eq=+c.snap.equity||0, eqF=eq*d.pctF/100, phi=d.fp>0? eqF/d.fp:0;
+  var xMax=Math.max(1.3, phi*1.15);
+  function X(p){ return padL+(W-padL-padR)*p/xMax; }
+  function Y(f){ return padT+(H-padT-padB)*(1-f); }
+  x.clearRect(0,0,W,H);
+  var cols=["rgba(224,102,90,.55)","rgba(96,140,235,.5)","rgba(78,190,130,.55)"];
+  var N=140, prev=null;
+  for(var capa=0; capa<3; capa++){
+    x.beginPath();
+    for(var i=0;i<=N;i++){ var p=xMax*i/N, w=fwCtl(p, plan.p1, plan.p2, plan.ff);
+      var base=capa===0?0:(capa===1? w[0] : w[0]+w[1]);
+      var top=base+w[capa];
+      if(i===0) x.moveTo(X(p),Y(top)); else x.lineTo(X(p),Y(top)); }
+    for(var j=N;j>=0;j--){ var p2=xMax*j/N, w2=fwCtl(p2, plan.p1, plan.p2, plan.ff);
+      var base2=capa===0?0:(capa===1? w2[0] : w2[0]+w2[1]);
+      x.lineTo(X(p2),Y(base2)); }
+    x.closePath(); x.fillStyle=cols[capa]; x.fill();
+  }
+  x.font="10px 'Bai Jamjuree'"; x.fillStyle="#9AA1AB"; x.textAlign="center";
+  [0,0.25,0.5,0.75,1,1.25].forEach(function(p){ if(p<=xMax) x.fillText(Math.round(p*100)+"%", X(p), H-6); });
+  x.textAlign="left";
+  x.fillText("Avance hacia su meta", padL, padT+2);
+  // marcador ESTA AQUI
+  if(d.fp>0){
+    var px=X(Math.min(phi,xMax));
+    x.beginPath(); x.moveTo(px,padT); x.lineTo(px,H-padB);
+    x.strokeStyle="#FEF9F3"; x.lineWidth=1.6; x.setLineDash([3,3]); x.stroke(); x.setLineDash([]);
+    x.fillStyle="#FEF9F3"; x.font="700 11px 'Bai Jamjuree'";
+    x.textAlign = px>W-110? "right":"left";
+    x.fillText("ESTA AQUI · "+(100*phi).toFixed(1)+"%", px+(px>W-110? -6:6), padT+14);
+    x.textAlign="left";
+  } else {
+    x.fillStyle="#9AA1AB"; x.fillText("Defini su freedom point para marcar donde esta.", padL, padT+16);
+  }
+}
+
+function renderCaidas(c, h){
+  var box=$("caidas-box"); if(!box) return;
+  if(!h || !h.eq || h.eq.length<10){ box.textContent="Cuenta muy joven todavia: sin historia suficiente."; return; }
+  var d=datosPlanDe(c), fp=d.fp, pctF=d.pctF;
+  var eps=[], peak=h.eq[0], pi=0, low=h.eq[0], li=0, en=false;
+  for(var i=1;i<h.eq.length;i++){
+    var v=h.eq[i];
+    if(v>=peak){ if(en && peak>0 && (peak-low)/peak>0.02) eps.push({pi:pi, li:li, peak:peak, low:low});
+      peak=v; pi=i; low=v; li=i; en=false; }
+    else { if(v<low){ low=v; li=i; } en=true; }
+  }
+  if(en && peak>0 && (peak-low)/peak>0.02) eps.push({pi:pi, li:li, peak:peak, low:low});
+  if(!eps.length){ box.textContent="Sin caidas relevantes en su historia. Que siga asi."; return; }
+  eps.sort(function(a,b){ return (b.peak-b.low)-(a.peak-a.low); });
+  var filas=eps.slice(0,5).map(function(e){
+    var a=new Date(h.t[e.pi]*1000).getFullYear(), b=new Date(h.t[e.li]*1000).getFullYear();
+    var ep=a===b? String(a) : a+"–"+b;
+    var usd=e.peak-e.low, pc=100*(e.low/e.peak-1);
+    var vsfp=fp>0? (100*usd/fp).toFixed(1)+"%" : "—";
+    var antes=fp>0? (e.peak*pctF/100)<fp : null;
+    var cu=antes===null? "—" : antes? '<span style="color:var(--ambar);font-weight:700">Antes de su FP</span>' : '<span style="color:var(--gris-sec)">Despues · sobre el excedente</span>';
+    return '<tr><td class="num" style="font-weight:600">'+ep+'</td><td class="num down">'+pc.toFixed(1)+'%</td>'
+      +'<td class="num down">−'+money(usd)+'</td><td class="num">'+vsfp+'</td>'
+      +'<td style="text-align:right">'+cu+'</td></tr>';
+  }).join("");
+  box.className=""; box.innerHTML='<div style="overflow-x:auto"><table class="caidas"><thead><tr><th>Epoca</th><th>Caida (%)</th><th>En dolares</th><th>Vs. su FP</th><th>Cuando</th></tr></thead><tbody>'+filas+'</tbody></table></div>'
+    +'<div class="sub" style="color:var(--gris-sec)">La caida que importa es la de <b style="color:var(--ambar)">antes</b> del freedom point (puede retrasar la meta); las de despues son sobre el excedente. Igual que se lo ensenamos en /fpf.</div>';
 }
 
 async function refreshKsw(){
