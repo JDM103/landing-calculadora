@@ -13,12 +13,12 @@
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
 <title>Llamada de diagnóstico</title>
-<meta name="description" content="En 3 minutos sabés si tiene sentido que gestionemos tu portafolio, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
+<meta name="description" content="En 4 minutos sabés si tiene sentido que gestionemos tu portafolio, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Llamada de diagnóstico · Empowered Investor">
-<meta property="og:description" content="En 3 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
+<meta property="og:description" content="En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
@@ -38,7 +38,7 @@
   h2{font-size:clamp(20px,3.4vw,26px); font-weight:700; line-height:1.25;}
   section{margin-top:48px;}
 
-  /* Video del hero (mismo reproductor de /retirovideo, sin candado) */
+  /* Video del hero */
   .player{position:relative; margin:28px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
   @media(min-width:860px){ .player{ width:min(1060px, calc(100vw - 60px)); margin-left:50%; transform:translateX(-50%); } }
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
@@ -97,7 +97,7 @@
   .paso p{font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
   .intro{font-size:15.5px; line-height:1.6; color:var(--gris); font-weight:400; margin-top:12px;}
 
-  /* Testimonios (mismo carrusel de /retirovideo) */
+  /* Testimonios */
   .testi h2{text-align:center; margin-bottom:20px;}
   .tcarousel{position:relative;}
   .tcard{display:none; gap:22px; background:#1C2127; border:1px solid var(--bd); border-radius:16px; padding:24px 24px;}
@@ -139,7 +139,7 @@
 
   <!-- ===== 1 · HERO CON VIDEO ===== -->
   <h1>¿Tiene sentido que <em>gestionemos tu portafolio</em>?</h1>
-  <p class="sub">En 3 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.</p>
+  <p class="sub">En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.</p>
 
   <!-- VIDEO -->
   <div class="player" id="player">
@@ -204,7 +204,7 @@
     </ul>
   </section>
 
-  <!-- ===== 6 · TESTIMONIOS (carrusel reusado de /retirovideo) ===== -->
+  <!-- ===== 6 · TESTIMONIOS ===== -->
   <section class="testi">
     <h2>Profesionales como vos ya confían en nosotros</h2>
     <div class="tcarousel" id="tcarousel">
@@ -342,7 +342,7 @@
 
   byId("cta-hero").addEventListener("click", function(){ track("click_agendar", {origen:"hero"}); });
 
-  // ===== Reproductor del VSL (reusado de /retirovideo, sin candado) =====
+  // ===== Reproductor del video =====
   (function(){
     var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
     if(!V) return;
@@ -387,7 +387,7 @@
     });
   })();
 
-  // ===== Carrusel de testimonios (reusado de /retirovideo) =====
+  // ===== Carrusel de testimonios =====
   (function(){
     var wrap=byId("tcarousel"); if(!wrap) return;
     var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("dots");
