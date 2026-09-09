@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>El costo de oportunidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0d0f14; --panel:#15191E; --menta:#63FCAF; --peri:#556DFB;
+    --crema:#FEF9F3; --gris:#9aa3ad;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px 16px; overflow-x:hidden;
+  }
+  .wrap{ width:100%; max-width:920px; min-width:0; }
+  .kicker{
+    text-align:center; color:var(--menta); font-weight:600;
+    font-size:13px; letter-spacing:.42em; text-transform:uppercase; margin-bottom:14px;
+  }
+  h1{
+    text-align:center; font-weight:700; font-size:clamp(26px,5vw,44px);
+    letter-spacing:-.01em; margin-bottom:22px;
+  }
+  .leg{
+    display:flex; justify-content:center; gap:26px; flex-wrap:wrap;
+    font-size:15px; font-weight:500; margin-bottom:10px;
+  }
+  .leg span{ display:flex; align-items:center; gap:8px; }
+  .leg i{ width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .chart{ position:relative; width:100%; }
+  canvas{ width:100%; max-width:100%; display:block; cursor:pointer; }
+  .nota{
+    text-align:center; color:var(--gris); font-size:12.5px; margin-top:14px;
+  }
+  @media (max-width:480px){
+    .kicker{ font-size:11px; letter-spacing:.32em; }
+    .leg{ gap:16px; font-size:13.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">El costo de oportunidad</div>
+  <h1>$10k invertidos desde abril 1999</h1>
+  <div class="leg">
+    <span><i style="background:#ffffff"></i>S&amp;P 500</span>
+    <span><i style="background:var(--menta)"></i>Nasdaq 100</span>
+    <span><i style="background:var(--peri)"></i>CDP</span>
+  </div>
+  <div class="chart"><canvas id="cv"></canvas></div>
+  <p class="nota">Retorno total con dividendos reinvertidos, abril 1999 – julio 2026. CDP al 3% anual. Tocá el gráfico para repetir.</p>
+</div>
+
+<script>
+// [año decimal, S&P 500, Nasdaq 100] · $10k iniciales, total return
+var DATA=[[1999.268,10000,10000],[1999.364,9919,9569],[1999.441,9625,9278],[1999.537,10546,10997],[1999.613,9902,10330],[1999.69,10105,11311],[1999.786,9313,10728],[1999.862,10422,12934],[1999.939,10580,14317],[2000.036,10987,16730],[2000.112,10368,17894],[2000.189,10476,20515],[2000.285,10193,14401],[2000.361,10704,15162],[2000.438,10987,16797],[2000.534,11363,18029],[2000.611,11074,16316],[2000.687,11255,17044],[2000.783,10360,14558],[2000.86,10290,12855],[2000.936,10090,12184],[2001.03,9972,11240],[2001.107,9960,10105],[2001.203,8712,7382],[2001.279,9003,7669],[2001.356,9480,8161],[2001.452,9256,7633],[2001.528,9286,7731],[2001.605,9062,7217],[2001.701,8360,6110],[2001.777,8349,6190],[2001.854,8595,6760],[2001.95,8626,7187],[2002.027,8794,7319],[2002.104,8423,6481],[2002.2,8951,6671],[2002.276,8549,6006],[2002.353,8112,5296],[2002.449,7780,4949],[2002.526,7072,4443],[2002.602,7029,4180],[2002.698,6905,4119],[2002.775,6509,3981],[2002.871,7069,4737],[2002.947,6910,4486],[2003.025,7233,4856],[2003.12,6541,4388],[2003.197,6539,4608],[2003.274,6801,4571],[2003.37,7404,5142],[2003.446,7769,5368],[2003.523,7851,5705],[2003.619,7802,5585],[2003.695,8024,6060],[2003.772,8221,6273],[2003.868,8291,6278],[2003.945,8502,6314],[2004.022,8878,6763],[2004.118,9094,6621],[2004.194,8893,6365],[2004.271,9066,6621],[2004.367,8723,6229],[2004.444,9064,6603],[2004.52,8889,6408],[2004.616,8528,5829],[2004.693,8995,6295],[2004.769,8988,6377],[2004.865,9490,6929],[2004.942,9561,7157],[2005.036,9519,6954],[2005.112,9723,6822],[2005.189,9692,6726],[2005.285,9226,6286],[2005.361,9353,6558],[2005.438,9715,6795],[2005.534,9968,7044],[2005.611,9986,7102],[2005.687,10111,7176],[2005.783,9671,6894],[2005.86,10085,7374],[2005.936,10295,7557],[2006.033,10542,7803],[2006.11,10375,7437],[2006.186,10535,7364],[2006.282,10586,7649],[2006.359,10630,7302],[2006.435,10310,6931],[2006.531,10204,6534],[2006.608,10493,6642],[2006.704,10950,7297],[2006.78,11337,7719],[2006.857,11471,7828],[2006.953,11877,8092],[2007.03,11952,8253],[2007.107,12010,7992],[2007.203,11605,7806],[2007.279,12174,8138],[2007.356,12638,8526],[2007.452,12878,8711],[2007.528,13028,9102],[2007.605,12175,8624],[2007.701,12527,8978],[2007.777,13215,9769],[2007.854,12269,9125],[2007.95,12440,9302],[2008.027,11910,8595],[2008.104,11308,7965],[2008.2,11014,7718],[2008.276,11391,8095],[2008.353,11862,8814],[2008.449,11627,8843],[2008.526,10629,8152],[2008.602,11103,8657],[2008.698,10822,7946],[2008.775,7640,5734],[2008.871,7477,5305],[2008.947,7682,5434],[2009.022,7753,5513],[2009.118,7202,5579],[2009.194,6622,5269],[2009.271,7521,6049],[2009.367,7775,6128],[2009.444,8333,6731],[2009.52,7753,6421],[2009.616,8884,7287],[2009.693,9235,7634],[2009.769,9499,7818],[2009.865,9708,8100],[2009.942,9840,8122],[2010.019,10201,8582],[2010.115,9620,8067],[2010.192,10280,8731],[2010.268,10688,9048],[2010.364,10182,8661],[2010.441,9806,8397],[2010.537,9581,8215],[2010.613,9730,8285],[2010.69,10014,8633],[2010.786,10630,9562],[2010.862,10856,9751],[2010.939,11242,10119],[2011.036,11739,10606],[2011.112,12085,10874],[2011.189,11879,10511],[2011.285,12040,10556],[2011.361,12222,10884],[2011.438,11635,10181],[2011.534,12067,10803],[2011.611,10824,10004],[2011.687,10622,9931],[2011.783,11290,10885],[2011.86,11666,10824],[2011.936,11610,10669],[2012.033,11942,10927],[2012.11,12454,11732],[2012.186,12751,12211],[2012.282,12767,12452],[2012.359,12625,12074],[2012.435,12391,11828],[2012.531,12703,11951],[2012.608,13180,12607],[2012.704,13779,13233],[2012.78,13443,12609],[2012.857,12998,11995],[2012.953,13369,12232],[2013.027,13934,12790],[2013.104,14383,12929],[2013.2,14830,13058],[2013.276,15113,13330],[2013.353,15551,13923],[2013.449,15530,13776],[2013.526,16026,14397],[2013.602,16198,14625],[2013.698,16200,14924],[2013.775,16368,15194],[2013.871,17310,16101],[2013.947,17123,16272],[2014.025,17799,16794],[2014.12,17787,17277],[2014.197,17849,17128],[2014.274,17622,16285],[2014.37,18257,16982],[2014.446,18847,17875],[2014.523,19180,18495],[2014.619,19093,18909],[2014.695,19426,19313],[2014.772,18674,18378],[2014.868,20017,20086],[2014.945,19689,19979],[2015.022,20129,20044],[2015.118,20674,20882],[2015.194,20284,20575],[2015.271,20792,21095],[2015.367,21029,21453],[2015.444,20789,21291],[2015.52,20638,21124],[2015.616,20831,21684],[2015.693,19570,20715],[2015.769,20131,20955],[2015.865,20252,21606],[2015.942,20185,21793],[2016.019,19304,20522],[2016.115,18772,19339],[2016.192,20394,21011],[2016.268,20675,21570],[2016.364,20701,20877],[2016.441,21238,21557],[2016.537,21934,22182],[2016.613,22202,23254],[2016.69,21675,22675],[2016.786,21768,23300],[2016.862,22105,23034],[2016.939,23135,23770],[2017.033,23327,24571],[2017.11,23787,25412],[2017.186,24422,26212],[2017.282,23992,26069],[2017.359,24660,27708],[2017.435,25117,27984],[2017.531,25464,28489],[2017.608,25314,28485],[2017.704,25967,29279],[2017.78,26568,29802],[2017.857,26896,30874],[2017.953,27914,31671],[2018.03,29109,33115],[2018.107,27390,31426],[2018.203,28834,34430],[2018.279,27882,32540],[2018.356,28693,34171],[2018.452,29273,35687],[2018.528,29534,36295],[2018.605,29910,36479],[2018.701,30726,37180],[2018.777,29282,35289],[2018.854,29474,34723],[2018.95,27637,32609],[2019.027,27642,32624],[2019.104,28866,34221],[2019.2,30157,36208],[2019.276,31104,37796],[2019.353,30885,37627],[2019.449,31010,37147],[2019.526,32386,39449],[2019.602,31414,38014],[2019.698,32435,39247],[2019.775,32063,39034],[2019.871,33742,41444],[2019.947,34340,42319],[2020.025,35421,44711],[2020.12,36715,48029],[2020.197,29289,39370],[2020.274,30432,41202],[2020.37,31317,45799],[2020.446,33278,48386],[2020.523,34895,54242],[2020.619,37008,55925],[2020.695,36703,55574],[2020.772,38263,58710],[2020.868,39503,59782],[2020.945,40406,62026],[2021.019,42235,65675],[2021.115,43497,69261],[2021.192,43654,64940],[2021.268,45735,69485],[2021.364,46301,67275],[2021.441,47160,70336],[2021.537,48098,73793],[2021.613,49724,76109],[2021.69,49671,77712],[2021.786,49876,76217],[2021.862,52272,81539],[2021.939,52660,82223],[2022.036,52168,78605],[2022.112,49444,71789],[2022.189,47155,67102],[2022.285,49299,70091],[2022.361,45236,62534],[2022.438,43894,59821],[2022.534,43557,60564],[2022.611,48301,68557],[2022.687,45984,63722],[2022.783,40612,54202],[2022.86,45254,59860],[2022.936,44661,58629],[2023.033,45460,58547],[2023.11,46548,62449],[2023.186,44023,60127],[2023.282,47232,66485],[2023.359,47132,67832],[2023.435,49230,73983],[2023.531,51641,79219],[2023.608,51223,76538],[2023.704,51140,77494],[2023.78,49772,76448],[2023.857,50823,79191],[2023.953,54355,84832],[2024.03,55205,85931],[2024.107,58046,91699],[2024.203,59229,91042],[2024.279,59347,92077],[2024.356,60509,92873],[2024.452,63056,100677],[2024.528,65265,104119],[2024.605,62119,94778],[2024.701,65500,100023],[2024.777,67757,103958],[2024.854,69930,108336],[2024.95,70635,111798],[2025.025,68090,107048],[2025.12,71517,113579],[2025.197,66018,101241],[2025.274,62818,96049],[2025.37,69907,110238],[2025.446,70238,111385],[2025.523,73587,117272],[2025.619,75925,122173],[2025.695,77574,124146],[2025.772,77269,124891],[2025.868,79507,128997],[2025.945,80671,130003],[2026.022,82369,132931],[2026.118,80907,127688],[2026.194,78597,125947],[2026.271,80856,129792],[2026.367,87961,150573],[2026.444,88268,153210],[2026.501,88857,151519]];
+
+var T0=DATA[0][0], T1=DATA[DATA.length-1][0], YRS=T1-T0;
+var CDP_R=1.03;
+function cdp(t){ return 10000*Math.pow(CDP_R, t-T0); }
+
+var MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function xlabel(t){
+  var y=Math.floor(t), m=Math.min(11,Math.floor((t-y)*12));
+  return MESES[m]+"-"+String(y).slice(2);
+}
+function fmtK(v){
+  if(v<9950) return "$"+(v/1000).toFixed(1).replace(".",",")+"k";
+  return "$"+Math.round(v/1000)+"k";
+}
+function fmtPct(v0,v1,yrs){
+  if(yrs<1) return "";
+  var c=(Math.pow(v1/v0,1/yrs)-1)*100;
+  var s=c.toFixed(2).replace(/0+$/,"").replace(/\.$/,"");
+  return s.replace(".",",")+"%";
+}
+// valor interpolado de una serie en t
+function valAt(col,t){
+  if(t<=DATA[0][0]) return DATA[0][col];
+  var lo=0, hi=DATA.length-1;
+  while(hi-lo>1){ var mid=(lo+hi)>>1; if(DATA[mid][0]<=t) lo=mid; else hi=mid; }
+  var a=DATA[lo], b=DATA[hi];
+  if(b[0]===a[0]) return a[col];
+  var f=(t-a[0])/(b[0]-a[0]);
+  return a[col]+f*(b[col]-a[col]);
+}
+
+var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+var W=0,H=0,DPR=1;
+function resize(){
+  var w=cv.parentNode.clientWidth;
+  var h=Math.max(340, Math.min(560, Math.round(w*0.62)));
+  DPR=Math.max(1,Math.min(3,window.devicePixelRatio||1));
+  cv.width=Math.round(w*DPR); cv.height=Math.round(h*DPR);
+  cv.style.height=h+"px";
+  W=w; H=h;
+}
+window.addEventListener("resize",function(){ resize(); draw(prog); });
+
+var SERIES=[
+  {nom:"S&P 500",    col:"#ffffff",     v:function(t){return valAt(1,t);} },
+  {nom:"Nasdaq 100", col:"#63FCAF",     v:function(t){return valAt(2,t);} },
+  {nom:"CDP",        col:"#7386ff",     v:cdp }
+];
+
+function niceStep(raw){
+  var p=Math.pow(10,Math.floor(Math.log10(raw)));
+  var m=raw/p;
+  if(m<=1) return p; if(m<=2) return 2*p; if(m<=5) return 5*p;
+  return 10*p;
+}
+
+var DUR=13000, prog=0, t_start=null, raf=null;
+function ease(p){ return p*p*(3-2*p); } // smoothstep
+
+function draw(p){
+  prog=p;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  ctx.textBaseline="middle";
+
+  var small=W<560;
+  var mL=small?44:58, mR=small?96:128, mT=18, mB=30;
+  var pw=W-mL-mR, ph=H-mT-mB;
+
+  var tCur=T0 + p*YRS;
+  var xMax=Math.max(tCur, T0+1.5);
+
+  // máximo hasta ahora (monótono → zoom out suave)
+  var yTop=10000;
+  for(var i=0;i<DATA.length && DATA[i][0]<=tCur;i++){
+    if(DATA[i][1]>yTop) yTop=DATA[i][1];
+    if(DATA[i][2]>yTop) yTop=DATA[i][2];
+  }
+  var vNow=SERIES.map(function(s){return s.v(tCur);});
+  yTop=Math.max(yTop, vNow[0], vNow[1], vNow[2]) * 1.14;
+
+  function X(t){ return mL + (t-T0)/(xMax-T0)*pw; }
+  function Y(v){ return mT + ph - v/yTop*ph; }
+
+  // grilla horizontal
+  var step=niceStep(yTop/5.2);
+  ctx.font=(small?"11px":"12.5px")+" 'Bai Jamjuree'";
+  for(var g=0; g<=yTop; g+=step){
+    ctx.strokeStyle="rgba(255,255,255,0.07)";
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(mL,Y(g)); ctx.lineTo(mL+pw,Y(g)); ctx.stroke();
+    ctx.fillStyle="#8b94a0";
+    ctx.textAlign="right";
+    ctx.fillText(g===0?"$0":"$"+Math.round(g/1000)+"k", mL-8, Y(g));
+  }
+
+  // ticks del eje x en abril de cada año
+  var span=xMax-T0;
+  var stepsY=[1,2,3,4,5,10], sy=stepsY[stepsY.length-1];
+  for(var k=0;k<stepsY.length;k++){ if(span/stepsY[k]<=(small?5.5:7.5)){ sy=stepsY[k]; break; } }
+  ctx.fillStyle="#8b94a0"; ctx.textAlign="center";
+  for(var yr=1999; yr+0.25<=xMax; yr+=sy){
+    var tx=yr+0.25;
+    ctx.fillText("abr-"+String(yr).slice(2), Math.max(X(tx), mL), H-mB+14);
+  }
+
+  // series: CDP primero, encima S&P, encima Nasdaq
+  var order=[2,0,1];
+  order.forEach(function(si){
+    var s=SERIES[si];
+    ctx.strokeStyle=s.col;
+    ctx.lineWidth=si===2?2.2:2.6;
+    ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath();
+    if(si===2){
+      var N=60;
+      for(var j=0;j<=N;j++){
+        var t=T0+(tCur-T0)*j/N;
+        var x=X(t), y=Y(cdp(t));
+        j?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }
+    }else{
+      var first=true;
+      for(var j=0;j<DATA.length && DATA[j][0]<=tCur;j++){
+        var x=X(DATA[j][0]), y=Y(DATA[j][si+1]);
+        first?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        first=false;
+      }
+      ctx.lineTo(X(tCur), Y(vNow[si]));
+    }
+    ctx.stroke();
+    // punta
+    ctx.fillStyle=s.col;
+    ctx.beginPath(); ctx.arc(X(tCur), Y(vNow[si]), 3.4, 0, Math.PI*2); ctx.fill();
+  });
+
+  // etiquetas en la punta, sin encimarse
+  var yrsEl=tCur-T0;
+  var labs=SERIES.map(function(s,si){
+    return { nom:s.nom, col:s.col, val:fmtK(vNow[si]),
+             pct:fmtPct(10000,vNow[si],yrsEl), y:Y(vNow[si]) };
+  }).sort(function(a,b){ return a.y-b.y; });
+  var lh=small?40:48, gap=small?44:54;
+  for(var i2=0;i2<labs.length;i2++){
+    if(i2>0 && labs[i2].y-labs[i2-1].y<gap) labs[i2].y=labs[i2-1].y+gap;
+  }
+  var over=labs[labs.length-1].y-(H-mB-6);
+  if(over>0){
+    for(var i3=labs.length-1;i3>=0;i3--){
+      labs[i3].y-=over;
+      if(i3>0) over=Math.max(0, labs[i3-1].y-(labs[i3].y-gap));
+    }
+  }
+  var lx=X(tCur)+10;
+  ctx.textAlign="left";
+  labs.forEach(function(L){
+    var y0=Math.max(mT+10, L.y-(L.pct?12:6));
+    ctx.fillStyle=L.col;
+    ctx.font="600 "+(small?"12px":"14px")+" 'Bai Jamjuree'";
+    ctx.fillText(L.nom, lx, y0);
+    ctx.font="700 "+(small?"14px":"17px")+" 'Bai Jamjuree'";
+    ctx.fillText(L.val, lx, y0+(small?15:19));
+    if(L.pct){
+      ctx.fillStyle="#8b94a0";
+      ctx.font="500 "+(small?"11px":"12.5px")+" 'Bai Jamjuree'";
+      ctx.fillText(L.pct, lx, y0+(small?29:37));
+    }
+  });
+}
+
+function tick(ts){
+  if(t_start===null) t_start=ts;
+  var p=Math.min(1,(ts-t_start)/DUR);
+  draw(ease(p));
+  if(p<1) raf=requestAnimationFrame(tick);
+}
+function play(){
+  if(raf) cancelAnimationFrame(raf);
+  t_start=null;
+  raf=requestAnimationFrame(tick);
+}
+cv.addEventListener("click", play);
+
+resize();
+var pFix=new URLSearchParams(location.search).get("p");
+if(pFix!==null){
+  var p0=Math.max(0,Math.min(1,parseFloat(pFix)||0));
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ draw(p0); }); }
+  draw(p0);
+}else if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ setTimeout(play,300); });
+}else{
+  setTimeout(play,400);
+}
+</script>
+</body>
+</html>
