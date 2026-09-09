@@ -13,12 +13,12 @@
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
 <title>Llamada de diagnóstico</title>
-<meta name="description" content="En 4 minutos sabés si tiene sentido que gestionemos tu portafolio, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
+<meta name="description" content="En 4 minutos sabés si tiene sentido que gestionemos tu portafolio, cómo funciona y qué pasa en la llamada.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Llamada de diagnóstico · Empowered Investor">
-<meta property="og:description" content="En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.">
+<meta property="og:description" content="En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
@@ -139,7 +139,7 @@
 
   <!-- ===== 1 · HERO CON VIDEO ===== -->
   <h1>¿Tiene sentido que <em>gestionemos tu portafolio</em>?</h1>
-  <p class="sub">En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada. Sin sorpresas.</p>
+  <p class="sub">En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada.</p>
 
   <!-- VIDEO -->
   <div class="player" id="player">
@@ -375,7 +375,7 @@
     });
 
     V.addEventListener("timeupdate", function(){
-      var t=V.currentTime, dur=V.duration||253;
+      var t=V.currentTime, dur=V.duration||252;
       vfill.style.width = Math.min(100,(t/dur)*100) + "%";
       var pct=(t/dur)*100;
       [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
