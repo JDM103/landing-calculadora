@@ -47,6 +47,11 @@
     .kicker{ font-size:11px; letter-spacing:.32em; }
     .leg{ gap:16px; font-size:13.5px; }
   }
+  /* modo reel: captura vertical 9:16 */
+  body.reel .tap{ display:none; }
+  body.reel .nota{ font-size:13.5px; max-width:460px; margin-left:auto; margin-right:auto; }
+  body.reel .sub{ font-size:16px; }
+  body.reel .leg{ font-size:15px; gap:20px; }
 </style>
 </head>
 <body>
@@ -61,7 +66,7 @@
     <span><i style="background:#E0525A"></i>Efectivo</span>
   </div>
   <div class="chart"><canvas id="cv"></canvas></div>
-  <p class="nota">Retorno total con dividendos reinvertidos, en dólares constantes (deflactado por la inflación de EE.&nbsp;UU.; 2026 estimada al 2,9%). Abril 1999 – julio 2026. CDP al 3% anual. Tocá el gráfico para repetir.</p>
+  <p class="nota">Retorno total con dividendos reinvertidos, en dólares constantes (deflactado por la inflación de EE.&nbsp;UU.; 2026 estimada al 2,9%). Abril 1999 – julio 2026. CDP al 3% anual. <span class="tap">Tocá el gráfico para repetir.</span></p>
 </div>
 
 <script>
@@ -100,11 +105,15 @@ function valAt(col,t){
   return a[col]+f*(b[col]-a[col]);
 }
 
+var QS=new URLSearchParams(location.search);
+var REEL=QS.get("reel")!==null;
+if(REEL) document.body.classList.add("reel");
+
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
 var W=0,H=0,DPR=1;
 function resize(){
   var w=cv.parentNode.clientWidth;
-  var h=Math.max(340, Math.min(560, Math.round(w*0.62)));
+  var h=REEL ? Math.round(w*1.28) : Math.max(340, Math.min(560, Math.round(w*0.62)));
   DPR=Math.max(1,Math.min(3,window.devicePixelRatio||1));
   cv.width=Math.round(w*DPR); cv.height=Math.round(h*DPR);
   cv.style.height=h+"px";
@@ -254,7 +263,7 @@ function play(){
 cv.addEventListener("click", play);
 
 resize();
-var pFix=new URLSearchParams(location.search).get("p");
+var pFix=QS.get("p");
 if(pFix!==null){
   var p0=Math.max(0,Math.min(1,parseFloat(pFix)||0));
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ draw(p0); }); }
