@@ -43,6 +43,7 @@
   @media(min-width:860px){ .player{ width:min(1060px, calc(100vw - 60px)); margin-left:50%; transform:translateX(-50%); } }
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
   .player iframe{width:100%; height:100%; display:block; border:0;}
+  .mcposter{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
   .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
     background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.72), rgba(9,11,14,.94)); cursor:pointer; text-align:center; padding:20px;}
   .poster-ov .pb{width:78px; height:78px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
@@ -152,9 +153,14 @@
   <h1>Aprendé a invertir <em>desde cero</em></h1>
   <p class="sub">Una clase de 32 minutos con los temas importantes: qué es invertir, dónde se hace, con qué instrumentos y cómo se arranca desde Costa Rica. Abajo tenés el resumen por temas, con el minuto de cada uno.</p>
 
-  <!-- MINI CURSO (embebido desde el hosting del video) -->
-  <div class="player">
-    <iframe src="https://go.screenpal.com/player/cOQ6FEnw5jC" title="Mini curso de inversión" scrolling="no" allow="autoplay; fullscreen *;" allowfullscreen loading="lazy"></iframe>
+  <!-- MINI CURSO (el player externo se inyecta al dar play, para que la página abra rápido) -->
+  <div class="player" id="mcplayer">
+    <img class="mcposter" src="poster.webp" alt="Mini curso de inversión" width="1280" height="720" fetchpriority="high">
+    <div class="poster-ov" id="mcplay">
+      <div class="pb">▶</div>
+      <div class="pt">Reproducir el mini curso</div>
+      <div class="ps">32 minutos</div>
+    </div>
   </div>
 
   <div class="ctarow">
@@ -199,7 +205,7 @@
     <h2>¿Tiene sentido que gestionemos tu portafolio?</h2>
     <p class="rintro">Si después de la clase querés que lo construyamos con vos, mirá este video de 4 minutos: qué hacemos, cómo funciona y qué pasa en la llamada.</p>
     <div class="player" id="player">
-      <video id="vsl" playsinline preload="metadata" oncontextmenu="return false">
+      <video id="vsl" playsinline preload="none" poster="/diagnostico/poster.webp" oncontextmenu="return false">
         <source src="/diagnostico/diagnostico.mp4" type="video/mp4">
         Tu navegador no soporta video.
       </video>
@@ -262,7 +268,7 @@
     <h2>Profesionales como vos ya confían en nosotros</h2>
     <div class="tcarousel" id="tcarousel">
       <div class="tcard active">
-        <img class="photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo, lo que me brindó mayor confianza y claridad. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente. Sin duda, recomendaría su servicio a cualquier persona interesada en empezar a invertir con seguridad y acompañamiento profesional.</p>
@@ -271,7 +277,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas. Ha sido una experiencia formativa y transformadora en mi relación con el dinero.</p>
@@ -280,7 +286,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Siempre hemos estado en una posición ventajosa para tomar decisiones y aprovechar el capital para distintas necesidades personales. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
@@ -289,7 +295,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y puedo decir que me siento muy tranquila y confiada con su asesoría. Desde el primer encuentro se notó lo apasionado que es con el tema. El dinero siempre es delicado, y encontrar a una persona que le dé una perspectiva tan integral ha sido muy valioso. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
@@ -298,7 +304,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Mi experiencia con Empowered Investor ha sido verdaderamente transformadora. No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso hacia los mercados bursátiles. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas con paciencia y profesionalismo. Lo que más valoro es el enfoque educativo combinado con un servicio completamente personalizado. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas y construir un futuro con mayor libertad y seguridad.</p>
@@ -307,7 +313,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
@@ -316,7 +322,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Estoy muy contenta con el servicio de Empowered Investor. Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones. Ha sido un gran paso para ampliar mi portafolio y atreverme a probar un tipo de inversión un poco más arriesgada, con la confianza de que cuento con una persona que toma decisiones inteligentes, estratégicas y procurando siempre lo mejor para mí.</p>
@@ -325,7 +331,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José no solo me ayudó a invertir, sino que se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Gracias a su ayuda, hoy no solo estoy invirtiendo en la bolsa, sino también en bienes raíces. Estoy demasiado contenta de haber tomado la decisión de empezar y de haber contado con un acompañamiento tan bueno y profesional.</p>
@@ -334,7 +340,7 @@
         </div>
       </div>
       <div class="tcard">
-        <img class="photo" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
+        <img class="photo" loading="lazy" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
         <div class="body">
           <div class="qmark">“</div>
           <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad. Desde que invierto con ellos ha cambiado drásticamente mi manera de planear financieramente para el futuro.</p>
@@ -375,11 +381,7 @@
   <section class="booking" id="agenda">
     <h2>Agendá tu llamada de diagnóstico</h2>
     <p class="sub">Elegí el día y la hora que te sirvan. Valoramos tu caso y te decimos con honestidad si tiene sentido trabajar juntos.</p>
-    <div class="cal-wrap">
-      <div class="calendly-inline-widget"
-        data-url="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=minicurso&hide_gdpr_banner=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf"></div>
-      <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-    </div>
+    <div class="cal-wrap" id="calwrap"></div>
     <a class="callink" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=minicurso" target="_blank" rel="noopener">¿No cargó el calendario? Abrilo en una pestaña nueva →</a>
   </section>
 
@@ -394,6 +396,42 @@
   function track(ev, data){ try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){} }
 
   byId("cta-hero").addEventListener("click", function(){ track("click_agendar", {origen:"hero"}); });
+
+  // ===== Mini curso: el player externo se inyecta al dar play =====
+  (function(){
+    var box=byId("mcplayer"), ov=byId("mcplay");
+    if(!box || !ov) return;
+    ov.addEventListener("click", function(){
+      track("minicurso_play", {});
+      var fr=document.createElement("iframe");
+      fr.src="https://go.screenpal.com/player/cOQ6FEnw5jC?autoplay=1";
+      fr.title="Mini curso de inversión";
+      fr.setAttribute("scrolling","no");
+      fr.setAttribute("allow","autoplay; fullscreen *;");
+      fr.setAttribute("allowfullscreen","");
+      box.innerHTML=""; box.appendChild(fr);
+    });
+  })();
+
+  // ===== Calendly: se carga cuando el usuario se acerca a la agenda =====
+  (function(){
+    var wrap=byId("calwrap"); if(!wrap) return;
+    var cargado=false;
+    function cargar(){
+      if(cargado) return; cargado=true;
+      var d=document.createElement("div");
+      d.className="calendly-inline-widget";
+      d.setAttribute("data-url","https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=minicurso&hide_gdpr_banner=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf");
+      wrap.appendChild(d);
+      var s=document.createElement("script");
+      s.src="https://assets.calendly.com/assets/external/widget.js"; s.async=true;
+      document.body.appendChild(s);
+    }
+    if("IntersectionObserver" in window){
+      var io=new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); cargar(); } }, {rootMargin:"900px 0px"});
+      io.observe(wrap);
+    } else { cargar(); }
+  })();
 
   // ===== Reproductor del video =====
   (function(){
