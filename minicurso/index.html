@@ -404,10 +404,9 @@
     ov.addEventListener("click", function(){
       track("minicurso_play", {});
       var fr=document.createElement("iframe");
-      fr.src="https://go.screenpal.com/player/cOQ6FEnw5jC?autoplay=1";
+      fr.src="https://www.youtube.com/embed/kLkYO5uHans?autoplay=1&rel=0&playsinline=1";
       fr.title="Mini curso de inversión";
-      fr.setAttribute("scrolling","no");
-      fr.setAttribute("allow","autoplay; fullscreen *;");
+      fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
       fr.setAttribute("allowfullscreen","");
       box.innerHTML=""; box.appendChild(fr);
     });
