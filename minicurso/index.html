@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<title>Mini curso de inversión</title>
+<meta name="description" content="La clase completa para empezar a invertir para tu retiro desde Costa Rica: qué es invertir, dónde, con qué instrumentos y cómo se abre tu cuenta.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mini curso de inversión · Empowered Investor">
+<meta property="og:description" content="La clase completa para empezar a invertir para tu retiro desde Costa Rica.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#AEB4BE; --legal:#6E7681; --card:#1B2026; --bd:#262C34; }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:300; min-height:100vh;}
+  .wrap{width:100%; max-width:680px; margin:0 auto; padding:22px 20px 60px;}
+  .marca{display:block; text-align:center; margin:6px 0 24px;}
+  .marca img{width:150px; max-width:44%; height:auto;}
+  h1{font-size:clamp(26px,5.4vw,40px); font-weight:700; line-height:1.14; letter-spacing:-.01em; text-align:center;}
+  h1 em{color:var(--menta); font-style:normal;}
+  .sub{font-size:clamp(15px,2.4vw,18px); line-height:1.55; color:var(--gris); font-weight:400; text-align:center; margin:16px auto 0; max-width:600px;}
+  h2{font-size:clamp(20px,3.4vw,26px); font-weight:700; line-height:1.25;}
+  section{margin-top:48px;}
+
+  /* Video del hero */
+  .player{position:relative; margin:28px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
+  @media(min-width:860px){ .player{ width:min(1060px, calc(100vw - 60px)); margin-left:50%; transform:translateX(-50%); } }
+  .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
+  .player iframe{width:100%; height:100%; display:block; border:0;}
+  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.72), rgba(9,11,14,.94)); cursor:pointer; text-align:center; padding:20px;}
+  .poster-ov .pb{width:78px; height:78px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
+    font-size:30px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35); transition:transform .15s;}
+  .poster-ov:hover .pb{transform:scale(1.06);}
+  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
+  .poster-ov .ps{font-size:13px; color:var(--gris);}
+  .vbar{position:absolute; left:0; right:0; bottom:0; height:6px; background:rgba(255,255,255,.14); cursor:pointer; transition:height .12s ease;}
+  .vbar::before{content:""; position:absolute; left:0; right:0; top:-14px; height:14px;} /* zona de click más alta */
+  .vbar:hover{height:10px;}
+  .vbar-fill{position:relative; height:100%; width:0; background:var(--menta); transition:width .12s linear;}
+  .vbar-fill::after{content:""; position:absolute; right:-9px; top:50%; transform:translateY(-50%) scale(.35); width:18px; height:18px; border-radius:50%;
+    background:var(--menta); box-shadow:0 0 12px rgba(99,252,175,.75); opacity:0; transition:opacity .14s ease, transform .14s ease;}
+  .vbar:hover .vbar-fill::after{opacity:1; transform:translateY(-50%) scale(1);}
+  .mutebtn,.fsbtn{position:absolute; bottom:14px; background:rgba(9,11,14,.6); color:var(--crema); border:1px solid var(--bd);
+    border-radius:999px; width:40px; height:40px; font-size:17px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; line-height:1;}
+  .mutebtn{right:12px;} .fsbtn{right:60px; font-size:20px;}
+  .mutebtn:hover,.fsbtn:hover{border-color:var(--menta); color:var(--menta);}
+  .player:fullscreen{width:100vw; height:100vh; max-width:none; aspect-ratio:auto; border:none; border-radius:0; margin:0; transform:none;}
+  .player:-webkit-full-screen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0; transform:none;}
+  .player:fullscreen video,.player:-webkit-full-screen video{object-fit:contain;}
+  .hidden{display:none;}
+
+  /* CTA */
+  .ctarow{text-align:center; margin-top:22px;}
+  .cta{display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 32px;
+    background:var(--menta); color:var(--tinta); font-family:inherit; font-size:17px; font-weight:700; text-decoration:none;
+    border-radius:999px; transition:filter .15s;}
+  .cta:hover{filter:brightness(.94);}
+
+  /* Resumen del mini curso */
+  .rintro{font-size:15.5px; line-height:1.6; color:var(--gris); font-weight:400; margin-top:12px;}
+  .rcards{display:grid; gap:14px; margin-top:20px;}
+  .rcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 18px;}
+  .rcard .rtime{display:inline-block; font-size:12px; font-weight:600; color:var(--menta); background:rgba(99,252,175,.10);
+    border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:3px 11px; margin-bottom:9px;}
+  .rcard b{display:block; font-size:16px; font-weight:700; color:var(--crema); margin-bottom:5px;}
+  .rcard p{font-size:14.5px; line-height:1.58; color:var(--gris); font-weight:400;}
+  .rlegal{font-size:12px; color:var(--legal); margin-top:14px; line-height:1.5;}
+
+  /* Listas con marcador */
+  .lista{list-style:none; margin-top:18px; display:grid; gap:12px;}
+  .lista li{display:flex; gap:12px; align-items:flex-start; background:var(--card); border:1px solid var(--bd);
+    border-radius:14px; padding:16px 18px; font-size:15.5px; line-height:1.55; color:var(--crema); font-weight:400;}
+  .lista .mk{flex:0 0 auto; font-weight:700; color:var(--menta); font-size:17px; line-height:1.4;}
+
+  /* Sección NO (acento periwinkle) */
+  .no-box{margin-top:18px; background:rgba(85,109,251,.07); border:1px solid rgba(85,109,251,.45); border-radius:16px; padding:20px 18px;}
+  .no-box .lista{margin-top:0;}
+  .no-box .lista li{background:transparent; border:none; padding:8px 2px;}
+  .no-box .lista .mk{color:var(--peri);}
+  .no-box .aparte{display:block; margin-top:4px; font-size:13.5px; color:var(--gris);}
+  .no-cierre{margin-top:14px; border-top:1px solid rgba(85,109,251,.35); padding-top:14px;
+    font-size:15px; line-height:1.55; color:var(--crema); font-weight:500;}
+  .peri{color:var(--peri);}
+
+  /* Cards de pasos */
+  .pasos{display:grid; gap:14px; margin-top:20px;}
+  .paso{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 18px; display:flex; gap:16px; align-items:flex-start;}
+  .paso .num{flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:rgba(99,252,175,.12); border:1px solid var(--menta);
+    color:var(--menta); font-weight:700; font-size:17px; display:flex; align-items:center; justify-content:center;}
+  .paso b{display:block; font-size:16px; font-weight:700; color:var(--crema); margin-bottom:4px;}
+  .paso p{font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
+  .intro{font-size:15.5px; line-height:1.6; color:var(--gris); font-weight:400; margin-top:12px;}
+
+  /* Testimonios */
+  .testi h2{text-align:center; margin-bottom:20px;}
+  .tcarousel{position:relative;}
+  .tcard{display:none; gap:22px; background:#1C2127; border:1px solid var(--bd); border-radius:16px; padding:24px 24px;}
+  .tcard.active{display:flex; animation:tfade .4s ease;}
+  @keyframes tfade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .tcard .photo{flex:0 0 auto; width:112px; height:142px; margin-top:30px; border-radius:12px; object-fit:cover; object-position:top center; background:#0E1216;}
+  .tcard .body{flex:1; min-width:0;}
+  .tcard .qmark{color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:38px; line-height:.1; height:18px; font-weight:700;}
+  .tcard .quote{font-size:15px; line-height:1.62; color:var(--crema); font-weight:400; margin:12px 0 16px;}
+  .tcard .name{font-size:15.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:13px; color:var(--gris); margin-top:2px;}
+  @media(max-width:560px){
+    .tcard{flex-direction:column; align-items:center; text-align:center; gap:14px; padding:22px 18px;}
+    .tcard .photo{width:74px; height:74px; margin-top:0; border-radius:50%;}
+    .tcard .qmark{height:14px; font-size:32px;}
+  }
+  .tnav{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;}
+  .tbtn{background:rgba(255,255,255,.04); border:1px solid var(--bd); color:var(--crema); width:40px; height:40px; border-radius:50%;
+    font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
+  .tbtn:hover{border-color:var(--menta); color:var(--menta);}
+  .dots{display:flex; justify-content:center; flex-wrap:wrap; gap:8px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--bd); border:none; cursor:pointer; padding:0; transition:background .2s;}
+  .dot.on{background:var(--menta);}
+  .tlegal{font-size:12px; color:var(--legal); text-align:center; margin-top:14px; line-height:1.5;}
+
+  /* Agenda / Calendly */
+  .booking h2{text-align:center;}
+  .booking .sub{margin-top:10px;}
+  .cal-wrap{margin-top:16px; border-radius:14px; overflow:hidden; min-height:640px;}
+  .calendly-inline-widget{min-width:280px; height:700px; width:100%;}
+  .callink{display:block; text-align:center; margin-top:14px; color:var(--menta); font-size:14px; text-decoration:none;}
+
+  .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin-top:48px; border-top:1px solid var(--bd); padding-top:22px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="marca" href="/" aria-label="Ir al inicio"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
+
+  <!-- ===== 1 · HERO CON EL MINI CURSO ===== -->
+  <h1>Aprendé a invertir para tu retiro, <em>desde cero</em></h1>
+  <p class="sub">Una clase de 32 minutos con los temas importantes: qué es invertir, dónde se hace, con qué instrumentos y cómo se arranca desde Costa Rica. Abajo tenés el resumen por temas, con el minuto de cada uno.</p>
+
+  <!-- MINI CURSO (embebido desde el hosting del video) -->
+  <div class="player">
+    <iframe src="https://go.screenpal.com/player/cOQ6FEnw5jC" title="Mini curso de inversión" scrolling="no" allow="autoplay; fullscreen *;" allowfullscreen loading="lazy"></iframe>
+  </div>
+
+  <div class="ctarow">
+    <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada</a>
+  </div>
+
+  <!-- ===== 2 · RESUMEN DEL MINI CURSO ===== -->
+  <section>
+    <h2>La clase, resumida por temas</h2>
+    <p class="rintro">Esto es lo que se ve en el video. Cada tarjeta trae el minuto por si querés volver a un tema puntual.</p>
+    <div class="rcards">
+      <div class="rcard"><span class="rtime">Min 00:28</span><b>El retiro colectivo se está rompiendo</b>
+        <p>Los sistemas de pensiones suponen una pirámide poblacional creciente, y la pirámide se invirtió. Desde el año 2000 las reformas van hacia lo privado: la responsabilidad del retiro pasó del gobierno a cada persona.</p></div>
+      <div class="rcard"><span class="rtime">Min 01:38</span><b>La inflación, el enemigo silencioso</b>
+        <p>Los gobiernos gastan más de lo que ganan e imprimen dinero. No lo ves en tu plata: lo ves en los precios. El ajuste es simple: si tu retorno fue 10% y la inflación 3%, tu retorno real fue 7%.</p></div>
+      <div class="rcard"><span class="rtime">Min 03:11</span><b>Qué es invertir y qué cuesta no hacerlo</b>
+        <p>Invertir es gratificación diferida: le mandás plata a tu yo de 65 años. El costo de oportunidad, con números: $10,000 desde abril de 1999 serían hoy $76,000 en el Nasdaq 100, $45,000 en el S&amp;P 500, $11,000 en un CDP al 3% y $5,000 debajo del colchón.</p></div>
+      <div class="rcard"><span class="rtime">Min 06:34</span><b>Tu número de retiro: el Freedom Point</b>
+        <p>Se planea desde tu ingreso meta y tu capacidad de ahorro mensual: acumular un capital suficiente, ponerlo en un vehículo de ingreso pasivo y vivir de ese ingreso sin extinguir el capital. Y que quede legado.</p></div>
+      <div class="rcard"><span class="rtime">Min 08:08</span><b>Dónde: la bolsa de EE. UU., índices y ETFs</b>
+        <p>La bolsa más desarrollada del mundo, con empresas globales. Un índice es una canasta con reglas (S&amp;P 500, Nasdaq 100) y el ETF te deja comprar la canasta entera en una sola compra.</p></div>
+      <div class="rcard"><span class="rtime">Min 11:07</span><b>Invertir desde Costa Rica</b>
+        <p>El impuesto acá es territorial, y al abrir el broker se llena el formulario W-8. Para arrancar necesitás tres cosas: una cuenta de inversión, la transferencia internacional y una estrategia.</p></div>
+      <div class="rcard"><span class="rtime">Min 12:13</span><b>El broker: seguridad primero</b>
+        <p>Que esté en EE. UU. y sea miembro de SIPC, que cubre hasta $500,000 en inversiones si el broker quiebra (en Costa Rica el banco te cubre unos ₡6 millones). Por qué no productos offshore ni plataformas donde no sos dueño de la acción, y la diferencia real entre SIPC y FDIC.</p></div>
+      <div class="rcard"><span class="rtime">Min 14:04</span><b>La transferencia solo va a tu nombre</b>
+        <p>De tu cuenta bancaria a tu cuenta de inversión, siempre con el mismo titular. Las leyes anti-lavado lo hacen infranqueable: nadie más puede mover esa plata.</p></div>
+      <div class="rcard"><span class="rtime">Min 14:44</span><b>La estrategia: de comprar y sostener a la gradiente de riesgo</b>
+        <p>Comprar y sostener el S&amp;P 500 es la base, totalmente válida. Lo nuestro va encima: una metodología basada en papers, con más riesgo cuando estás lejos de tu meta y desapalancando conforme te acercás, hasta asegurar en renta fija.</p></div>
+      <div class="rcard"><span class="rtime">Min 15:52</span><b>El resto del menú</b>
+        <p>Bienes raíces y REITs con sus pros y contras, y la ráfaga: opciones (no las recomendamos), futuros y el margin call, private equity, y bitcoin como una posición pequeña de retorno asimétrico según tu perfil.</p></div>
+      <div class="rcard"><span class="rtime">Min 21:05</span><b>Cómo se invierte de verdad</b>
+        <p>Horizonte de 10 años o más, decisiones basadas en data (inversión cuantitativa), tu perfil de riesgo según edad, patrimonio y personalidad, y la mentalidad para las caídas: la data fría le gana a las emociones.</p></div>
+      <div class="rcard"><span class="rtime">Min 31:16</span><b>El cierre: la primera parte, con vos</b>
+        <p>En una llamada abrimos tu cuenta, te damos la guía clic por clic de la transferencia y el seguimiento para que la plata llegue bien. Tu cuenta, tus activos, tu control.</p></div>
+    </div>
+    <p class="rlegal">Los retornos mencionados son históricos. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
+  </section>
+
+  <!-- ===== 3 · VIDEO DE LA LLAMADA ===== -->
+  <section>
+    <h2>¿Tiene sentido que gestionemos tu portafolio?</h2>
+    <p class="rintro">Si después de la clase querés que lo construyamos con vos, mirá este video de 4 minutos: qué hacemos, cómo funciona y qué pasa en la llamada.</p>
+    <div class="player" id="player">
+      <video id="vsl" playsinline preload="metadata" oncontextmenu="return false">
+        <source src="/diagnostico/diagnostico.mp4" type="video/mp4">
+        Tu navegador no soporta video.
+      </video>
+      <div class="poster-ov" id="playov">
+        <div class="pb">▶</div>
+        <div class="pt">Reproducir con sonido</div>
+        <div class="ps">4 minutos</div>
+      </div>
+      <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+      <button class="mutebtn hidden" id="mutebtn" title="Silenciar / activar sonido">🔊</button>
+      <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 4 · ESTO ES PARA VOS SI… ===== -->
+  <section>
+    <h2>Esto es para vos si…</h2>
+    <ul class="lista">
+      <li><span class="mk">✓</span><span>Tenés mentalidad de largo plazo: podés invertir por 10 años o más.</span></li>
+      <li><span class="mk">✓</span><span>Sos bueno en lo tuyo, pero no tenés tiempo de gestionar tu portafolio de manera profesional.</span></li>
+      <li><span class="mk">✓</span><span>Querés delegar la gestión sin perder el control de tu plata.</span></li>
+    </ul>
+  </section>
+
+  <!-- ===== 5 · ESTO NO ES PARA VOS SI… ===== -->
+  <section>
+    <h2>Esto <span class="peri">NO</span> es para vos si…</h2>
+    <div class="no-box">
+      <ul class="lista">
+        <li><span class="mk">✕</span><span>Buscás hacerte rico rápido.</span></li>
+        <li><span class="mk">✕</span><span>Prevés que vas a necesitar esa plata en menos de 10 años. <span class="aparte">(Podés sacar la plata cuando querás, sin penalizaciones ni letra pequeña. Esto es solo tener la mentalidad de inversión a largo plazo.)</span></span></li>
+        <li><span class="mk">✕</span><span>Querés trading diario o una "segunda fuente de ingresos" a partir del trading.</span></li>
+      </ul>
+      <p class="no-cierre">Si ese es tu caso, te lo decimos de frente en la llamada y no te hacemos perder el tiempo.</p>
+    </div>
+  </section>
+
+  <!-- ===== 6 · LA CUENTA ES 100% TUYA ===== -->
+  <section>
+    <h2>La cuenta es 100% tuya</h2>
+    <ul class="lista">
+      <li><span class="mk">✓</span><span>Se abre a tu nombre, en un bróker regulado en EE. UU., miembro de FINRA y SIPC.</span></li>
+      <li><span class="mk">✓</span><span>Vos sos el único dueño legal. La ves en tiempo real, cuando querás.</span></li>
+      <li><span class="mk">✓</span><span>Nada de fondos comunes ni estructuras offshore.</span></li>
+    </ul>
+  </section>
+
+  <!-- ===== 7 · PERMISO DELIMITADO ===== -->
+  <section>
+    <h2>Nuestro permiso es delimitado: solo comprar y vender</h2>
+    <ul class="lista">
+      <li><span class="mk">🔒</span><span>No podemos transferir tu plata. A ningún lado.</span></li>
+      <li><span class="mk">🔒</span><span>No podemos deducir comisiones de tu cuenta.</span></li>
+      <li><span class="mk">🔒</span><span>El único que puede depositar o retirar sos vos. Ni tu esposo o esposa, ni hermanos, ni familiares. Así de estrictas son las leyes anti-lavado de EE. UU.</span></li>
+    </ul>
+  </section>
+
+  <!-- ===== 8 · TESTIMONIOS ===== -->
+  <section class="testi">
+    <h2>Profesionales como vos ya confían en nosotros</h2>
+    <div class="tcarousel" id="tcarousel">
+      <div class="tcard active">
+        <img class="photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo, lo que me brindó mayor confianza y claridad. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente. Sin duda, recomendaría su servicio a cualquier persona interesada en empezar a invertir con seguridad y acompañamiento profesional.</p>
+          <div class="name">Andrés Reyes</div>
+          <div class="role">Senior Vice President, Citibank</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas. Ha sido una experiencia formativa y transformadora en mi relación con el dinero.</p>
+          <div class="name">Mariana Peña</div>
+          <div class="role">Ginecóloga UCR, CCSS</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Siempre hemos estado en una posición ventajosa para tomar decisiones y aprovechar el capital para distintas necesidades personales. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+          <div class="name">Javier Vargas</div>
+          <div class="role">Business Development, TAPP</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y puedo decir que me siento muy tranquila y confiada con su asesoría. Desde el primer encuentro se notó lo apasionado que es con el tema. El dinero siempre es delicado, y encontrar a una persona que le dé una perspectiva tan integral ha sido muy valioso. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+          <div class="name">Maricruz Linares</div>
+          <div class="role">MSc People Management · Universidad de Navarra</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-9.webp" alt="Andrés Castro">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Mi experiencia con Empowered Investor ha sido verdaderamente transformadora. No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso hacia los mercados bursátiles. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas con paciencia y profesionalismo. Lo que más valoro es el enfoque educativo combinado con un servicio completamente personalizado. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas y construir un futuro con mayor libertad y seguridad.</p>
+          <div class="name">Andrés Castro</div>
+          <div class="role">Founder &amp; CEO, CADMI</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+          <div class="name">Ramsés Espinoza</div>
+          <div class="role">Founder &amp; CEO, CocoJamboo</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Estoy muy contenta con el servicio de Empowered Investor. Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones. Ha sido un gran paso para ampliar mi portafolio y atreverme a probar un tipo de inversión un poco más arriesgada, con la confianza de que cuento con una persona que toma decisiones inteligentes, estratégicas y procurando siempre lo mejor para mí.</p>
+          <div class="name">Mónica Blanco</div>
+          <div class="role">Strategy Director, PHD Costa Rica</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José no solo me ayudó a invertir, sino que se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Gracias a su ayuda, hoy no solo estoy invirtiendo en la bolsa, sino también en bienes raíces. Estoy demasiado contenta de haber tomado la decisión de empezar y de haber contado con un acompañamiento tan bueno y profesional.</p>
+          <div class="name">Anne Baudrit</div>
+          <div class="role">Advertising Designer, JLL Real Estate</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <img class="photo" src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas">
+        <div class="body">
+          <div class="qmark">“</div>
+          <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad. Desde que invierto con ellos ha cambiado drásticamente mi manera de planear financieramente para el futuro.</p>
+          <div class="name">Agustín Fallas</div>
+          <div class="role">Fotógrafo</div>
+        </div>
+      </div>
+    </div>
+    <div class="tnav">
+      <button class="tbtn" id="cprev" type="button" aria-label="Anterior">‹</button>
+      <div class="dots" id="dots"></div>
+      <button class="tbtn" id="cnext" type="button" aria-label="Siguiente">›</button>
+    </div>
+    <p class="tlegal">Experiencias reales de clientes. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
+  </section>
+
+  <!-- ===== 9 · CÓMO FUNCIONA LA LLAMADA ===== -->
+  <section>
+    <h2>¿Cómo funciona la llamada?</h2>
+    <p class="intro">Empezamos con un diagnóstico: cuánto tenés, dónde está y qué querés lograr. Si no te podemos ayudar, te lo decimos y terminamos la llamada ahí. Tu tiempo vale, y el nuestro también.</p>
+    <div class="pasos">
+      <div class="paso">
+        <div class="num">1</div>
+        <div><b>Tu plan de retiro</b><p>Cuánto necesitás acumular según tu ingreso meta, y cómo llegamos ahí usando nuestras metodologías basadas en papers.</p></div>
+      </div>
+      <div class="paso">
+        <div class="num">2</div>
+        <div><b>Tu plan de acción</b><p>Los pasos concretos para llegar ahí, adaptados a tu caso.</p></div>
+      </div>
+      <div class="paso">
+        <div class="num">3</div>
+        <div><b>La decisión</b><p>¿Querés que te ayudemos a construirlo? Vos decidís. Sin presión.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 10 · AGENDA (Calendly inline) ===== -->
+  <section class="booking" id="agenda">
+    <h2>Agendá tu llamada de diagnóstico</h2>
+    <p class="sub">Elegí el día y la hora que te sirvan. Valoramos tu caso y te decimos con honestidad si tiene sentido trabajar juntos.</p>
+    <div class="cal-wrap">
+      <div class="calendly-inline-widget"
+        data-url="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=minicurso&hide_gdpr_banner=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf"></div>
+      <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+    </div>
+    <a class="callink" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=minicurso" target="_blank" rel="noopener">¿No cargó el calendario? Abrilo en una pestaña nueva →</a>
+  </section>
+
+  <!-- ===== 11 · FOOTER LEGAL ===== -->
+  <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo.</p>
+</div>
+
+<script>
+"use strict";
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function track(ev, data){ try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){} }
+
+  byId("cta-hero").addEventListener("click", function(){ track("click_agendar", {origen:"hero"}); });
+
+  // ===== Reproductor del video =====
+  (function(){
+    var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
+    if(!V) return;
+    var miles={25:false,50:false,75:false,100:false};
+
+    playov.addEventListener("click", function(){
+      V.muted=false; V.play();
+      track("vsl_play", {});
+      playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
+    });
+    V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
+
+    var vbar = vfill.parentNode;
+    function seekTo(clientX){
+      if(!V.duration || !isFinite(V.duration)) return;
+      var rect = vbar.getBoundingClientRect();
+      var frac = Math.min(1, Math.max(0, (clientX - rect.left)/rect.width));
+      try{ V.currentTime = frac * V.duration; }catch(e){}
+    }
+    vbar.addEventListener("click", function(e){ e.stopPropagation(); seekTo(e.clientX); });
+    vbar.addEventListener("touchend", function(e){ if(e.changedTouches && e.changedTouches[0]){ e.preventDefault(); seekTo(e.changedTouches[0].clientX); } }, {passive:false});
+    mutebtn.addEventListener("click", function(){ V.muted=!V.muted; mutebtn.textContent=V.muted?"🔇":"🔊"; });
+    fsbtn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+      if(fsEl){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); return; }
+      if(player.requestFullscreen){ player.requestFullscreen(); }
+      else if(player.webkitRequestFullscreen){ player.webkitRequestFullscreen(); }
+      else if(V.webkitEnterFullscreen){ V.webkitEnterFullscreen(); } // iOS: solo el <video>
+    });
+
+    V.addEventListener("timeupdate", function(){
+      var t=V.currentTime, dur=V.duration||252;
+      vfill.style.width = Math.min(100,(t/dur)*100) + "%";
+      var pct=(t/dur)*100;
+      [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
+    });
+    V.addEventListener("ended", function(){
+      mutebtn.classList.add("hidden"); fsbtn.classList.add("hidden");
+      playov.querySelector(".pt").textContent="Volver a ver";
+      playov.classList.remove("hidden");
+    });
+  })();
+
+  // ===== Carrusel de testimonios =====
+  (function(){
+    var wrap=byId("tcarousel"); if(!wrap) return;
+    var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("dots");
+    for(var k=0;k<n;k++){ (function(idx){ var d=document.createElement("button"); d.className="dot"+(idx===0?" on":""); d.setAttribute("aria-label","Testimonio "+(idx+1)); d.onclick=function(){ go(idx); reset(); }; dots.appendChild(d); })(k); }
+    function go(idx){ i=(idx+n)%n; for(var j=0;j<n;j++){ cards[j].classList.toggle("active", j===i); dots.children[j].classList.toggle("on", j===i); } }
+    byId("cprev").onclick=function(){ go(i-1); reset(); };
+    byId("cnext").onclick=function(){ go(i+1); reset(); };
+    var timer=setInterval(function(){ go(i+1); }, 12000);
+    function reset(){ clearInterval(timer); timer=setInterval(function(){ go(i+1); }, 12000); }
+    wrap.addEventListener("mouseenter", function(){ clearInterval(timer); });
+    wrap.addEventListener("mouseleave", function(){ reset(); });
+    var x0=null;
+    wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
+    wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
+  })();
+})();
+</script>
+</body>
+</html>
