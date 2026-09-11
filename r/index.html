@@ -176,6 +176,17 @@
     width:22px; height:22px; border-radius:50%; background:var(--menta); color:#082018; font-weight:800; font-size:12.5px;
     display:flex; align-items:center; justify-content:center; }
   .modal .nota3{ font-size:12px; color:var(--gris-sec); margin:10px 0 0; }
+  .modal label{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--gris-sec); font-weight:800; margin:8px 0 4px; }
+  .modal input{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:9px;
+    color:var(--crema); font-family:inherit; font-size:16px; font-weight:700; padding:10px 12px; }
+  .modal input:focus{ outline:none; border-color:var(--menta); }
+  .e-resumen{ background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.3); border-radius:10px;
+    padding:10px 12px; font-size:14px; color:var(--gris); margin-top:12px; }
+  .e-resumen b{ color:var(--crema); }
+  .editlink{ color:var(--gris-sec); font-size:12px; font-weight:600; cursor:pointer;
+    text-decoration:underline dotted; white-space:nowrap; }
+  .editlink:hover{ color:var(--menta); }
   .modal .btns{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
   .modal .btns button{ flex:1; min-width:120px; border-radius:999px; padding:12px 16px; font-family:inherit;
     font-size:14px; font-weight:800; cursor:pointer; border:1px solid var(--bd); }
@@ -246,6 +257,29 @@
   </div>
 </div>
 
+<div class="modal" id="modal-editar">
+  <div class="caja2">
+    <h3 id="e-tit"></h3>
+    <div class="sub3" id="e-sub"></div>
+    <div id="e-campos-ingreso" style="display:none">
+      <label for="e-ingreso">Querés vivir con ($ al mes)</label>
+      <input id="e-ingreso" inputmode="numeric" autocomplete="off">
+    </div>
+    <div id="e-campos-aporte" style="display:none">
+      <label for="e-anual">Tu compromiso al año ($)</label>
+      <input id="e-anual" inputmode="numeric" autocomplete="off">
+      <label for="e-mensual">…o pensalo al mes ($) — se calculan solos</label>
+      <input id="e-mensual" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="e-resumen" id="e-resumen"></div>
+    <div class="btns">
+      <button class="ok" id="e-guardar">Guardar</button>
+      <button class="no" id="e-cerrar">Cancelar</button>
+    </div>
+    <div class="nota3" id="e-msg"></div>
+  </div>
+</div>
+
 <script>
 "use strict";
 var BASE="https://jsjhfiakinodosesdqum.supabase.co/functions/v1";
@@ -311,8 +345,19 @@ function derivar(d){
   var tgt2=resto-tgt1;
   var umbral=Math.max(500, total*0.02);
 
+  // aportes: el compromiso es ANUAL (2k/mes = 24k/año); el mensual viejo es el fallback
+  var aporteAnual=+m.aporte_anual || (+m.aporte_pactado||0)*12;
+  var anio=new Date().getUTCFullYear();
+  var realAnio=0;
+  snaps.forEach(function(s){ if(s.mes.slice(0,4)==String(anio))
+    (s.transferencias_mes||[]).forEach(function(t){ realAnio+=Math.max(0,+t.monto||0); }); });
+  var mesUlt= snap? +snap.mes.slice(5,7) : (new Date().getUTCMonth()+1);
+  var esperadoAnio=aporteAnual*Math.max(0,mesUlt-1)/12;   // el ritmo hasta el mes anterior completo
+  var mesesRest=12-mesUlt+1;
+
   return { m:m, plan:plan, snap:snap, snaps:snaps, fp:fp, equity:equity, cash:cash,
     phi:phi, pico:pico, b:b, tgt:{f1:tgt1,f2:tgt2,f3:tgt3}, umbral:umbral,
+    aporteAnual:aporteAnual, realAnio:realAnio, esperadoAnio:esperadoAnio, mesesRest:mesesRest,
     cuenta:(snap&&snap.cuenta)||{} };
 }
 
@@ -347,24 +392,24 @@ function armarAcciones(x, senal){
       nota:"Cuando la señal vuelva a entrar (viernes a −6% o mejor), acá van a estar los pasos para comprar de vuelta." });
   }
 
-  // aporte del mes
-  var pactado=+x.m.aporte_pactado||0;
-  if(pactado>0 && x.snap){
-    var delMes=(x.snap.transferencias_mes||[]).reduce(function(s,t){ return s+Math.max(0,+t.monto||0); },0);
-    if(delMes<pactado*0.9){
-      var falta=pactado-delMes;
+  // aportes: se mide contra el AÑO, no contra el mes perfecto
+  if(x.aporteAnual>0){
+    var atras=x.esperadoAnio-x.realAnio;
+    if(atras>Math.max(200, x.aporteAnual*0.04)){
+      var faltaAnio=x.aporteAnual-x.realAnio;
+      var porMes=Math.ceil(faltaAnio/Math.max(1,x.mesesRest)/50)*50;
       acc.push({ id:"aporte-"+mesAct, ico:"💵",
-        t:"Va "+fmt(delMes)+" de tu aporte de "+fmt(pactado)+" este mes.",
-        s:"Te falta "+fmt(falta)+" para quedar al día.",
-        btn:"Ver los pasos",
-        tit:"Completar el aporte del mes",
-        sub:"Tu plan asume "+fmt(pactado)+" por mes. Este mes llevás "+fmt(delMes)+".",
+        t:"Vas "+fmt(atras)+" detrás de tu plan de aportes del año.",
+        s:"Llevás "+fmt(x.realAnio)+" de tu compromiso de "+fmt(x.aporteAnual)+".",
+        btn:"Ver cómo ponerme al día",
+        tit:"Ponerte al día con tus aportes",
+        sub:"Tu compromiso es "+fmt(x.aporteAnual)+" este año. A esta altura tocaría llevar "+fmt(x.esperadoAnio)+" y llevás "+fmt(x.realAnio)+".",
         pasos:[
-          "Entrá a tu banco y transferí <b>"+fmt(falta)+"</b> a tu cuenta de Alpaca (la cuenta que ya tenés vinculada).",
-          "En 1 a 3 días hábiles aparece como efectivo en tu cuenta.",
-          "Cuando entre, volvé acá: esta página te dice exactamente dónde invertirlo."
+          "Opción rápida: transferí <b>"+fmt(atras)+"</b> del banco a tu cuenta de Alpaca y quedás al día hoy.",
+          "Opción por partes: transferí <b>"+fmt(porMes)+"</b> por mes lo que queda del año ("+x.mesesRest+" "+(x.mesesRest===1?"mes":"meses")+") y cerrás tu año completo.",
+          "Cuando la plata entre, volvé acá: esta página te dice exactamente dónde invertirla."
         ],
-        nota:"El aporte constante pesa más que cualquier acierto de mercado. Es la parte del plan que depende 100% de vos." });
+        nota:"Lo que cuenta es el total del año, no el mes perfecto: podés adelantar cuando te caiga un extra." });
     }
   }
 
@@ -441,17 +486,13 @@ function render(){
   var c=x.cuenta;
   var dia=(c.last_equity>0)? x.equity-c.last_equity : null;
 
-  // aportes por mes (para el gráfico y el semáforo)
-  var pactado=+x.m.aporte_pactado||0;
+  // aportes por mes (para el gráfico) + semáforo contra el ritmo del año
   var meses=x.snaps.map(function(s){
     var ap=(s.transferencias_mes||[]).reduce(function(a,t){ return a+Math.max(0,+t.monto||0); },0);
     return { mes:s.mes, ap:ap };
   });
-  var anio=new Date().getUTCFullYear();
-  var mesesAnio=meses.filter(function(z){ return z.mes.slice(0,4)==String(anio); });
-  var realAnio=mesesAnio.reduce(function(a,z){ return a+z.ap; },0);
-  var planAnio=pactado*mesesAnio.length;
-  var ratioAp=planAnio>0? realAnio/planAnio : 1;
+  var pa=x.aporteAnual, realA=x.realAnio, espA=x.esperadoAnio;
+  var ratioAp= espA>0? realA/espA : 1;
   var colorAp= ratioAp>=0.95? "var(--menta)" : ratioAp>=0.7? "var(--ambar)" : "var(--rojo)";
 
   var acciones=armarAcciones(x, sen);
@@ -479,7 +520,8 @@ function render(){
     +'<div class="fila1"><div class="pct num">'+(x.phi*100).toFixed(1)+'%</div>'
       +'<span class="chip '+f.c+'">'+f.t+'</span></div>'
     +'<div class="sub">De tu meta de <b>'+money(x.fp)+'</b> — el capital que paga tus <b>'+fmt(x.m.ingreso||0)+'</b> al mes sin trabajar. '
-      +(falta>0? 'Te faltan <b>'+money(falta)+'</b>.':'<b>Ya llegaste.</b> 🎉')+'</div>'
+      +(falta>0? 'Te faltan <b>'+money(falta)+'</b>. ':'<b>Ya llegaste.</b> 🎉 ')
+      +'<span class="editlink" id="ed-ingreso">✎ cambiar mi meta</span></div>'
     +'<div class="pista">'
       +'<div class="relleno"><i style="width:'+Math.min(100,x.phi*100).toFixed(1)+'%"></i></div>'
       +'<div class="hito" style="left:'+Math.min(99,p1)+'%"></div>'
@@ -564,10 +606,19 @@ function render(){
   /* ---- aportes ---- */
   +'<div class="card">'
     +'<h2>Tus aportes: plan vs realidad</h2>'
-    +'<p class="lede"><span class="semaforo" style="background:'+colorAp+'"></span>'
-      +(planAnio>0?
-        'Este año llevás <b>'+fmt(realAnio)+'</b> de los <b>'+fmt(planAnio)+'</b> que pide tu plan ('+Math.round(ratioAp*100)+'%).'
-        :'Tu plan no tiene un aporte mensual pactado.')+'</p>'
+    +(pa>0?
+      '<p class="lede"><span class="semaforo" style="background:'+colorAp+'"></span>'
+        +'Tu compromiso: <b>'+fmt(pa)+'</b> este año · llevás <b>'+fmt(realA)+'</b> ('+Math.round(100*realA/pa)+'%). '
+        +'<span class="editlink" id="ed-aporte">✎ cambiar mi compromiso</span></p>'
+      +'<div class="pista">'
+        +'<div class="relleno"><i style="width:'+Math.min(100,100*realA/pa).toFixed(1)+'%"></i></div>'
+        +(espA>0&&espA<pa? '<div class="hito meta" style="left:'+Math.min(99,100*espA/pa).toFixed(1)+'%"></div>':'')
+      +'</div>'
+      +'<div class="hitos">'+(espA>0&&espA<pa?
+        '<span style="left:'+Math.min(90,Math.max(10,100*espA/pa)).toFixed(1)+'%">hoy tocaría '+money(espA)+'</span>':'')+'</div>'
+      +'<p class="lede" style="margin-top:6px">'+fraseAporte(x)+'</p>'
+      : '<p class="lede">Todavía no tenés un compromiso de aportes definido. '
+        +'<span class="editlink" id="ed-aporte">✎ definirlo ahora</span></p>')
     +(meses.length? '<div class="apchart"><canvas id="cv-aportes"></canvas></div>':'')
   +'</div>'
 
@@ -618,7 +669,7 @@ function render(){
   // gráficos
   if(d.serie && d.serie.c && d.serie.c.length>45 && x.plan.timing) dibujarSenal(d.serie, sen);
   dibujarGradiente(x);
-  if(meses.length) dibujarAportes(meses, pactado);
+  if(meses.length) dibujarAportes(meses, pa/12);
 
   // eventos
   $("salir").addEventListener("click", function(){
@@ -633,6 +684,20 @@ function render(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-acc]"), function(btn){
     btn.addEventListener("click", function(){ abrirModal(acciones[+btn.getAttribute("data-acc")]); });
   });
+  var ei=$("ed-ingreso"); if(ei) ei.addEventListener("click", function(){ abrirEditor("ingreso"); });
+  var ea=$("ed-aporte"); if(ea) ea.addEventListener("click", function(){ abrirEditor("aporte"); });
+}
+
+function fraseAporte(x){
+  var falta=x.aporteAnual-x.realAnio;
+  if(falta<=0) return "🎉 Año completo: ya cumpliste todo tu compromiso de "+(new Date().getUTCFullYear())+". Todo lo demás es ñapa.";
+  var porMes=falta/Math.max(1,x.mesesRest);
+  var atras=x.esperadoAnio-x.realAnio;
+  var estado= atras>Math.max(200,x.aporteAnual*0.04)
+    ? "Vas <b>"+fmt(atras)+"</b> detrás del ritmo. "
+    : "Vas al día con el ritmo. ";
+  return estado+"Para cerrar el año: <b>"+fmt(falta)+"</b> en "+x.mesesRest+" "
+    +(x.mesesRest===1?"mes":"meses")+" (unos <b>"+fmt(porMes)+"</b> por mes).";
 }
 
 function pintarMezcla(id, partes, total){
@@ -667,6 +732,93 @@ $("m-ok").addEventListener("click", function(){
   }
   $("modal").classList.remove("on"); render();
 });
+
+/* ================= editor: mi meta y mis aportes ================= */
+var ED_TIPO=null;
+function numDe(el){ return parseInt(String(el.value||"").replace(/[^0-9]/g,""),10)||0; }
+function formatea(el){ var d=el.value.replace(/[^0-9]/g,""); el.value=d?Number(d).toLocaleString("en-US"):""; }
+function abrirEditor(tipo){
+  ED_TIPO=tipo;
+  var m=D.meta||{};
+  $("e-msg").textContent="";
+  $("e-campos-ingreso").style.display= tipo==="ingreso"? "":"none";
+  $("e-campos-aporte").style.display= tipo==="aporte"? "":"none";
+  if(tipo==="ingreso"){
+    $("e-tit").textContent="Tu meta de retiro";
+    $("e-sub").textContent="¿Con cuánto querés vivir al mes, sin trabajar? Tu meta de capital sale de ese número.";
+    $("e-ingreso").value=(+m.ingreso||0)? (+m.ingreso).toLocaleString("en-US"):"";
+  } else {
+    $("e-tit").textContent="Tu compromiso de aportes";
+    $("e-sub").textContent="Lo que cuenta es el total del año: podés aportar parejo cada mes o por montones cuando puedas.";
+    var anual=+m.aporte_anual || (+m.aporte_pactado||0)*12;
+    $("e-anual").value=anual? anual.toLocaleString("en-US"):"";
+    $("e-mensual").value=anual? Math.round(anual/12).toLocaleString("en-US"):"";
+  }
+  edResumen();
+  $("modal-editar").classList.add("on");
+}
+function edResumen(){
+  var m=D.meta||{}, r=$("e-resumen");
+  if(ED_TIPO==="ingreso"){
+    var ing=numDe($("e-ingreso")), tasa=+m.tasa||4;
+    var fpV=+m.fp || ((+m.ingreso||0)*12/(tasa/100));
+    var fpN= ing>0? ing*12/(tasa/100):0;
+    r.innerHTML= ing>0
+      ? "Tu meta de capital "+(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(fpN)+"</b>. Tu % de avance se recalcula al guardar."
+      : "Escribí un monto para ver tu meta nueva.";
+  } else {
+    var an=numDe($("e-anual"));
+    var anV=+m.aporte_anual || (+m.aporte_pactado||0)*12;
+    r.innerHTML= an>0
+      ? "Compromiso nuevo: <b>"+fmt(an)+"</b> al año (unos <b>"+fmt(an/12)+"</b> al mes)."
+        +(anV>0&&anV!==an? " Antes: "+fmt(anV)+".":"")
+      : "En cero queda sin compromiso este año (se puede volver a definir cuando quieras).";
+  }
+}
+$("e-ingreso").addEventListener("input", function(){ formatea(this); edResumen(); });
+$("e-anual").addEventListener("input", function(){ formatea(this);
+  var an=numDe(this); $("e-mensual").value=an? Math.round(an/12).toLocaleString("en-US"):""; edResumen(); });
+$("e-mensual").addEventListener("input", function(){ formatea(this);
+  var me=numDe(this); $("e-anual").value=me? (me*12).toLocaleString("en-US"):""; edResumen(); });
+$("e-guardar").addEventListener("click", async function(){
+  var btn=this, cambios={};
+  if(ED_TIPO==="ingreso"){
+    var ing=numDe($("e-ingreso"));
+    if(!(ing>=200 && ing<=200000)){ $("e-msg").textContent="❌ El monto tiene que estar entre $200 y $200,000 al mes."; return; }
+    cambios.ingreso=ing;
+  } else {
+    var an=numDe($("e-anual"));
+    if(!(an>=0 && an<=10000000)){ $("e-msg").textContent="❌ Revisá el monto anual."; return; }
+    cambios.aporte_anual=an;
+  }
+  btn.disabled=true; btn.textContent="Guardando…"; $("e-msg").textContent="";
+  try{
+    if(DEMO){
+      if(cambios.ingreso){ D.meta.ingreso=cambios.ingreso; delete D.meta.fp; }
+      if(typeof cambios.aporte_anual==="number"){
+        D.meta.aporte_anual=cambios.aporte_anual;
+        D.meta.aporte_pactado=Math.round(cambios.aporte_anual/12);
+      }
+    } else {
+      var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
+      if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
+      var body={ correo:ses.correo, clave:ses.clave };
+      if(cambios.ingreso) body.ingreso=cambios.ingreso;
+      if(typeof cambios.aporte_anual==="number") body.aporte_anual=cambios.aporte_anual;
+      var r=await fetch(BASE+"/editar-plan",{ method:"POST",
+        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+        body:JSON.stringify(body) });
+      var j=await r.json();
+      if(!r.ok) throw new Error(j.error||("error "+r.status));
+      D.meta=j.meta;
+    }
+    $("modal-editar").classList.remove("on");
+    render();
+  }catch(e){ $("e-msg").textContent="❌ "+(e.message||e); }
+  btn.disabled=false; btn.textContent="Guardar";
+});
+$("e-cerrar").addEventListener("click", function(){ $("modal-editar").classList.remove("on"); });
+$("modal-editar").addEventListener("click", function(e){ if(e.target===$("modal-editar")) $("modal-editar").classList.remove("on"); });
 
 /* ================= gráfico de la señal ================= */
 function prepCanvas(id){
@@ -826,7 +978,7 @@ function dibujarAportes(meses, pactado){
     g.strokeStyle="#FEF9F3"; g.setLineDash([5,4]); g.lineWidth=1.2;
     g.beginPath(); g.moveTo(padL,Y(pactado)); g.lineTo(W-padR,Y(pactado)); g.stroke(); g.setLineDash([]);
     g.fillStyle="#FEF9F3"; g.font="700 10.5px 'Bai Jamjuree'"; g.textAlign="right";
-    g.fillText("tu aporte pactado: "+fmt(pactado), W-padR-2, Y(pactado)-5);
+    g.fillText("tu ritmo mensual: "+fmt(pactado), W-padR-2, Y(pactado)-5);
   }
 }
 
@@ -985,7 +1137,7 @@ function demoDatos(escenario){
   }
   return {
     nombre:"María Vargas",
-    meta:{ ingreso:4000, tasa:4, aporte_pactado:1500, capital_inicial:0, pico:0.75,
+    meta:{ ingreso:4000, tasa:4, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
       plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
     snapshots: meses,
     senal:{ semana:hoyISO, estado: fuera? "fuera":"dentro", distancia:dist, max39:mx, cierre:serie.c[n-1] },
