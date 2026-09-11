@@ -271,17 +271,8 @@
 
 <div class="wrap" id="app" style="display:none"></div>
 
-<!-- El planificador vive FUERA de #app: los re-render del dashboard no recargan el iframe -->
-<div class="wrap" id="planner" style="display:none; padding-top:0">
-  <div class="card">
-    <h2>Tu plan completo, para jugar con los números <span id="plan-est" style="text-transform:none; letter-spacing:0; font-weight:600"></span></h2>
-    <p class="lede">La misma calculadora que vimos juntos, cargada con tus números reales (tu capital de hoy entra solo).
-    Todo lo que ajustés acá — edades, meta, tasas, el laboratorio con la historia — queda guardado en tu cuenta.</p>
-    <div style="border:1px solid var(--bd); border-radius:12px; overflow:hidden; background:var(--tinta)">
-      <iframe id="fpf-frame" title="Calculadora del plan" style="width:100%; height:1600px; border:0; display:block"></iframe>
-    </div>
-  </div>
-</div>
+<!-- (El planificador /fpf embebido se quitó del dashboard a pedido de Jose 11-set-2026:
+     el modo ?modo=cliente de /fpf sigue existiendo y esto se recupera del historial de git.) -->
 
 <div class="modal" id="modal">
   <div class="caja2">
@@ -658,7 +649,7 @@ function render(){
   /* ---- señal ---- */
   +(x.plan.timing?
   '<div class="card">'
-    +'<h2>La señal del viernes (M39)</h2>'
+    +'<h2>La señal del viernes</h2>'
     +'<p class="lede">Una vez por semana, el viernes al cierre, se revisa el Nasdaq contra su máximo de 39 semanas. Nada más. El resto de la semana no se mira.</p>'
     +(sen? '<div class="estado '+(sen.estado==="dentro"?"dentro":"fuera")+'"><div class="pto"></div><div>'
       +(sen.estado==="dentro"? '<b>Estás DENTRO del mercado.</b>':'<b>Estás FUERA del mercado</b> (a resguardo en efectivo).')
@@ -748,8 +739,7 @@ function render(){
     +'</tbody></table></div></div></details>'
 
   +'<p class="pie">Empowered Investor · Tu cuenta vive en Alpaca a tu nombre; nosotros no podemos retirar tu plata (solo va a tu banco vinculado). '
-  +'Esto no es asesoría individualizada; es el seguimiento del plan que armamos juntos. ¿Dudas? Respondé el correo del reporte y te contesto. · '
-  +'<a href="/m39/">Cómo funciona la señal</a></p>';
+  +'Esto no es asesoría individualizada; es el seguimiento del plan que armamos juntos. ¿Dudas? Respondé el correo del reporte y te contesto.</p>';
 
   // barras de mezcla
   pintarMezcla("b-hoy",[
@@ -1227,74 +1217,9 @@ async function llamarClave(body){
 function mostrar(){
   $("login").style.display="none"; $("app").style.display="";
   render();
-  abrirPlanner();
   window.addEventListener("resize", function(){ if(D) render(); });
 }
 
-/* ================= planificador embebido (/fpf en modo cliente) ================= */
-var PLANNER_PENDIENTE=null, PLANNER_TIMER=null;
-function abrirPlanner(){
-  $("planner").style.display="";
-  var fr=$("fpf-frame");
-  if(!fr.getAttribute("src")) fr.setAttribute("src","/fpf/?modo=cliente");
-}
-window.addEventListener("message", function(ev){
-  if(ev.origin!==location.origin || !D) return;
-  var d=ev.data||{};
-  if(d.tipo==="fpf-listo"){
-    // arranque: lo oficial del plan primero, lo que el cliente guardó en el planificador encima
-    var x=derivar(D), m=D.meta||{};
-    var S0={ income:+m.ingreso||10000, ret:+m.tasa||8 };
-    if(x.plan){ S0.f1=x.plan.f1; S0.f2=x.plan.f2; S0.f3=x.plan.f3;
-      S0.p1=+x.plan.p1||70; S0.p2=+x.plan.p2||100; S0.ff=+x.plan.ff||70;
-      S0.filtro=x.plan.timing? "9h":"off"; }
-    var g=(m.fpf&&typeof m.fpf==="object")? m.fpf:{};
-    Object.keys(g).forEach(function(k){ S0[k]=g[k]; });
-    if(+m.edad) S0.edad=+m.edad;
-    if(+m.edad_retiro) S0.edadret=+m.edad_retiro;
-    S0.income=+m.ingreso||S0.income;   // el ingreso oficial siempre manda sobre lo guardado
-    $("fpf-frame").contentWindow.postMessage({tipo:"fpf-init", S:S0, capital:x.equity}, location.origin);
-  }
-  if(d.tipo==="fpf-alto" && d.alto>300){
-    $("fpf-frame").style.height=Math.min(24000, d.alto+24)+"px";
-  }
-  if(d.tipo==="fpf-estado"){
-    PLANNER_PENDIENTE=d.S||null;
-    clearTimeout(PLANNER_TIMER);
-    PLANNER_TIMER=setTimeout(guardarPlanner, 1500);
-  }
-});
-async function guardarPlanner(){
-  var s=PLANNER_PENDIENTE; PLANNER_PENDIENTE=null;
-  if(!s || !D) return;
-  var est=$("plan-est");
-  try{
-    if(DEMO){
-      D.meta.fpf=s;
-      if(+s.income){ D.meta.ingreso=+s.income; delete D.meta.fp; }
-      if(+s.edad) D.meta.edad=+s.edad;
-      if(+s.edadret) D.meta.edad_retiro=+s.edadret;
-    } else {
-      var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
-      if(!ses) return;
-      var body={ correo:ses.correo, clave:ses.clave, fpf:s };
-      if(+s.income && +s.income!==+((D.meta||{}).ingreso||0)) body.ingreso=+s.income;
-      if(+s.edad) body.edad=+s.edad;
-      if(+s.edadret) body.edad_retiro=+s.edadret;
-      var r=await fetch(BASE+"/editar-plan",{ method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify(body) });
-      var j=await r.json();
-      if(!r.ok) throw new Error(j.error||("error "+r.status));
-      D.meta=j.meta;
-    }
-    if(est){ est.style.color="var(--menta)"; est.textContent="· ✓ guardado";
-      setTimeout(function(){ if(est.textContent==="· ✓ guardado") est.textContent=""; }, 2500); }
-    render();   // el resto del dashboard refleja el ingreso/edades nuevos; el iframe no se toca
-  }catch(e){
-    if(est){ est.style.color="var(--rojo)"; est.textContent="· ❌ "+(e.message||e); }
-  }
-}
 function vista(id){
   ["v-entrar","v-olvido","v-reset"].forEach(function(v){ $(v).style.display= v===id? "":"none"; });
 }
