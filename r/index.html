@@ -185,26 +185,34 @@
   .e-resumen{ background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.3); border-radius:10px;
     padding:10px 12px; font-size:14px; color:var(--gris); margin-top:12px; }
   .e-resumen b{ color:var(--crema); }
+  .e-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; }
+  @media(max-width:520px){ .e-grid{ grid-template-columns:1fr; } }
+  .e-kpi{ background:var(--card2); border:1px solid rgba(99,252,175,.5); border-radius:12px;
+    padding:10px 14px; margin-top:12px; }
+  .e-kpi .k{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800; }
+  .e-kpi .v{ font-size:24px; font-weight:800; color:var(--menta); margin-top:2px; }
+  .e-kpi .s{ font-size:12px; color:var(--gris-sec); }
+  .e-check{ display:flex !important; align-items:center; gap:8px; margin-top:10px !important;
+    font-size:13px !important; text-transform:none !important; letter-spacing:0 !important;
+    color:var(--gris) !important; font-weight:600 !important; cursor:pointer; }
+  .e-check input{ width:auto !important; accent-color:var(--menta); margin:0; }
   .editlink{ color:var(--gris-sec); font-size:12px; font-weight:600; cursor:pointer;
     text-decoration:underline dotted; white-space:nowrap; }
   .editlink:hover{ color:var(--menta); }
 
-  /* ===== laboratorio de planes (versión mini de /fpf) ===== */
-  .planchips{ display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 8px; }
-  .planchips button{ background:var(--card2); border:1px solid var(--bd); color:var(--gris); border-radius:999px;
-    padding:6px 12px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; }
-  .planchips button:hover{ border-color:var(--menta); }
-  .planchips button.on{ background:var(--menta); border-color:var(--menta); color:#082018; }
-  .labctl{ display:flex; gap:6px 10px; flex-wrap:wrap; align-items:center; margin:0 0 10px;
-    font-size:12.5px; color:var(--gris-sec); }
-  .labctl .st{ background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:7px;
-    width:27px; height:27px; cursor:pointer; font-size:12px; font-family:inherit; }
-  .labctl .st:hover{ border-color:var(--menta); }
-  .labctl b{ color:var(--crema); font-variant-numeric:tabular-nums; }
+  /* ===== los planes de la casa (tarjetas en lenguaje natural) ===== */
+  .plan-cards{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  @media(max-width:560px){ .plan-cards{ grid-template-columns:1fr; } }
+  .plan-c{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 13px; }
+  .plan-c.tuyo{ border-color:rgba(99,252,175,.55); }
+  .plan-c .pn{ font-size:14px; font-weight:800; color:var(--crema); }
+  .plan-c .ptag{ font-size:9.5px; font-weight:800; background:rgba(99,252,175,.15); color:var(--menta);
+    border-radius:999px; padding:2px 8px; vertical-align:middle; margin-left:4px; }
+  .plan-c .pt{ font-size:11px; color:var(--gris-sec); margin:1px 0 5px; }
+  .plan-c .pa{ font-size:12.5px; color:var(--gris); }
+  .plan-c .pa b{ color:var(--crema); font-variant-numeric:tabular-nums; }
   .lab-res{ font-size:13.5px; color:var(--gris-sec); margin:6px 0 10px; line-height:1.55; }
   .lab-res b{ color:var(--crema); }
-  .antesfp{ color:var(--ambar); font-weight:700; }
-  .despfp{ color:var(--gris-sec); }
 
   /* ===== distribución (bloque protagonista) ===== */
   .dist-bar{ display:flex; height:24px; border-radius:999px; overflow:hidden; background:var(--input);
@@ -311,19 +319,34 @@
     <h3 id="e-tit"></h3>
     <div class="sub3" id="e-sub"></div>
     <div id="e-campos-ingreso" style="display:none">
-      <label for="e-ingreso">Querés vivir con ($ al mes)</label>
-      <input id="e-ingreso" inputmode="numeric" autocomplete="off">
-      <label for="e-tasa">Tasa de crecimiento y retiro (% al año)</label>
-      <input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="8">
+      <div class="e-grid">
+        <div><label for="e-ingreso">Querés vivir con ($ al mes)</label>
+          <input id="e-ingreso" inputmode="numeric" autocomplete="off"></div>
+        <div><label for="e-tasa">Retirás al año (%)</label>
+          <input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="8"></div>
+        <div><label for="e-edad">Edad hoy</label>
+          <input id="e-edad" inputmode="numeric" autocomplete="off" placeholder="30"></div>
+        <div><label for="e-edadret">Edad de retiro</label>
+          <input id="e-edadret" inputmode="numeric" autocomplete="off" placeholder="65"></div>
+        <div><label for="e-crec">Crecimiento de la inversión (% al año)</label>
+          <input id="e-crec" inputmode="decimal" autocomplete="off" placeholder="12"></div>
+        <div><label for="e-crecret">Crecimiento en el retiro (% al año)</label>
+          <input id="e-crecret" inputmode="decimal" autocomplete="off" placeholder="8"></div>
+        <div><label for="e-infl">Inflación (% al año)</label>
+          <input id="e-infl" inputmode="decimal" autocomplete="off" placeholder="3"></div>
+      </div>
+      <div class="e-kpi">
+        <div class="k">Tu compromiso de ahorro (sale de estos supuestos)</div>
+        <div class="v num" id="e-req">—</div>
+        <div class="s" id="e-req-sub"></div>
+      </div>
+      <label class="e-check"><input type="checkbox" id="e-usar" checked>
+        Usar este número como mi compromiso de aportes del año</label>
     </div>
     <div id="e-lab" style="display:none; margin-top:16px; border-top:1px solid var(--bd); padding-top:14px">
-      <div style="font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec)">Los planes de la casa, sobre la historia real</div>
-      <p class="sub3" style="margin:6px 0 0">Elegí un plan y una época, y mirá qué caídas habrías vivido — en dólares tuyos.
-      Todos con la misma regla: salís de la fase 1 al <b>70%</b> de tu meta y llegás con <b>70% en renta fija</b> (tu piso) y <b>30%</b> todavía creciendo.
-      Usa tu capital de hoy, tu aporte y la meta que escribas arriba.</p>
-      <div class="planchips" id="lab-planes"></div>
-      <div class="labctl" id="lab-epocas"></div>
-      <div id="lab-out"></div>
+      <div style="font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec)">Los planes de la casa</div>
+      <p class="sub3" style="margin:6px 0 0">Del más agresivo al desapalancado, con tus números de arriba: cuántos años hasta tu meta.</p>
+      <div id="e-planes"></div>
     </div>
     <div id="e-campos-aporte" style="display:none">
       <label for="e-anual">Tu compromiso al año ($)</label>
@@ -876,10 +899,16 @@ function abrirEditor(tipo){
   $("e-lab").style.display= tipo==="ingreso"? "":"none";
   document.querySelector("#modal-editar .caja2").classList.toggle("ancha", tipo==="ingreso");
   if(tipo==="ingreso"){
+    var fx=(m.fpf&&typeof m.fpf==="object")? m.fpf:{};
     $("e-tit").textContent="Tu meta y tu plan";
-    $("e-sub").textContent="¿Con cuánto querés vivir al mes, sin trabajar? Tu meta de capital sale de ese número y de la tasa a la que tu capital lo genera.";
+    $("e-sub").textContent="Los supuestos de tu plan, simplificados: de acá salen tu meta de capital y tu compromiso de ahorro al mes.";
     $("e-ingreso").value=(+m.ingreso||0)? (+m.ingreso).toLocaleString("en-US"):"";
     $("e-tasa").value=(+m.tasa||8);
+    $("e-edad").value=(+m.edad || +fx.edad || 30);
+    $("e-edadret").value=(+m.edad_retiro || +fx.edadret || 65);
+    $("e-crec").value=(+fx.crec || 12);
+    $("e-crecret").value=(+fx.crecret || 8);
+    $("e-infl").value=(fx.infl!==undefined && isFinite(+fx.infl))? +fx.infl : 3;
   } else {
     $("e-tit").textContent="Tu compromiso de aportes";
     $("e-sub").textContent="Lo que cuenta es el total del año: podés aportar parejo cada mes o por montones cuando puedas.";
@@ -889,20 +918,49 @@ function abrirEditor(tipo){
   }
   $("modal-editar").classList.add("on");
   edResumen();
-  if(tipo==="ingreso") renderLab();
+  if(tipo==="ingreso") renderPlanes();
+}
+// Aporte mensual requerido para llegar a la meta a la edad de retiro, con el crecimiento
+// real (crecimiento − inflación) y arrancando del capital de hoy. COPIADA de /fpf (aporteReq).
+function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
+  var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f;
+  if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
+function numLibre(id){ return parseFloat(String($(id).value).replace(/[^0-9.]/g,""))||0; }
+// los supuestos tal como están escritos en el modal (0 = inválido/vacío)
+function supuestosDe(){
+  return { ing:numDe($("e-ingreso")), tasa:numLibre("e-tasa"),
+    edad:Math.round(numLibre("e-edad")), edadret:Math.round(numLibre("e-edadret")),
+    crec:numLibre("e-crec"), crecret:numLibre("e-crecret"),
+    infl:parseFloat(String($("e-infl").value).replace(/[^0-9.]/g,"")) };
+}
+function reqDe(s, capital){
+  if(!(s.ing>0&&s.tasa>0&&s.edadret>s.edad&&s.edad>0)) return null;
+  var meta=s.ing*12/(s.tasa/100);
+  var infl=isFinite(s.infl)? s.infl:3;
+  return { meta:meta, mes:aporteReq(meta, capital, (s.crec||12)-infl, (s.edadret-s.edad)*12) };
 }
 function edResumen(){
   var m=D.meta||{}, r=$("e-resumen");
   if(ED_TIPO==="ingreso"){
-    var ing=numDe($("e-ingreso"));
-    var tasa=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
+    var s=supuestosDe();
     var fpV=+m.fp || ((+m.ingreso||0)*12/((+m.tasa||8)/100));
-    var fpN=(ing>0&&tasa>0)? ing*12/(tasa/100):0;
-    r.innerHTML=(ing>0&&tasa>0)
-      ? "Asumiendo que tu capital te paga un <b>"+tasa+"%</b> al año: tu meta de capital "
-        +(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(fpN)+"</b>. Tu % de avance se recalcula al guardar."
-      : "Escribí el monto y la tasa para ver tu meta nueva.";
-    if($("modal-editar").classList.contains("on")) renderLab();   // el laboratorio sigue lo que escribís
+    var q=reqDe(s, derivar(D).equity);
+    if(q){
+      r.innerHTML="Asumiendo que retirás un <b>"+s.tasa+"%</b> al año: tu meta de capital "
+        +(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(q.meta)+"</b>. Tu % de avance se recalcula al guardar.";
+      $("e-req").textContent="$"+Math.round(q.mes).toLocaleString("en-US")+"/mes";
+      var pactado=(+m.aporte_anual || (+m.aporte_pactado||0)*12)/12;
+      $("e-req-sub").innerHTML= q.mes<1
+        ? "Con estos supuestos tu capital llega solo a la meta a los "+s.edadret+" — aportar sigue sumando para llegar antes."
+          +(pactado>0? " Tu compromiso pactado ("+fmt(pactado)+"/mes) no se toca.":"")
+        : "≈ "+fmt(q.mes*12)+" al año, para llegar a tu meta a los "+s.edadret
+          +" arrancando con tu capital de hoy."
+          +(pactado>0? " Hoy tenés pactado "+fmt(pactado)+"/mes.":"");
+    } else {
+      r.innerHTML="Llená los supuestos para ver tu meta y tu compromiso.";
+      $("e-req").textContent="—"; $("e-req-sub").textContent="";
+    }
+    if($("modal-editar").classList.contains("on")) renderPlanes();   // las tarjetas siguen lo que escribís
   } else {
     var an=numDe($("e-anual"));
     var anV=+m.aporte_anual || (+m.aporte_pactado||0)*12;
@@ -913,7 +971,10 @@ function edResumen(){
   }
 }
 $("e-ingreso").addEventListener("input", function(){ formatea(this); edResumen(); });
-$("e-tasa").addEventListener("input", edResumen);
+["e-tasa","e-edad","e-edadret","e-crec","e-crecret","e-infl"].forEach(function(id){
+  $(id).addEventListener("input", edResumen);
+});
+$("e-usar").addEventListener("change", edResumen);
 $("e-anual").addEventListener("input", function(){ formatea(this);
   var an=numDe(this); $("e-mensual").value=an? Math.round(an/12).toLocaleString("en-US"):""; edResumen(); });
 $("e-mensual").addEventListener("input", function(){ formatea(this);
@@ -921,11 +982,21 @@ $("e-mensual").addEventListener("input", function(){ formatea(this);
 $("e-guardar").addEventListener("click", async function(){
   var btn=this, cambios={};
   if(ED_TIPO==="ingreso"){
-    var ing=numDe($("e-ingreso"));
-    var tas=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
-    if(!(ing>=200 && ing<=200000)){ $("e-msg").textContent="❌ El monto tiene que estar entre $200 y $200,000 al mes."; return; }
-    if(!(tas>=2 && tas<=15)){ $("e-msg").textContent="❌ La tasa tiene que estar entre 2% y 15%."; return; }
-    cambios.ingreso=ing; cambios.tasa=tas;
+    var s3=supuestosDe();
+    if(!(s3.ing>=200 && s3.ing<=200000)){ $("e-msg").textContent="❌ El monto tiene que estar entre $200 y $200,000 al mes."; return; }
+    if(!(s3.tasa>=2 && s3.tasa<=15)){ $("e-msg").textContent="❌ La tasa de retiro tiene que estar entre 2% y 15%."; return; }
+    if(!(s3.edad>=18 && s3.edad<=90)){ $("e-msg").textContent="❌ Revisá la edad."; return; }
+    if(!(s3.edadret>s3.edad && s3.edadret<=99)){ $("e-msg").textContent="❌ La edad de retiro tiene que ser mayor que tu edad."; return; }
+    if(!(s3.crec>=0 && s3.crec<=40) || !(s3.crecret>=0 && s3.crecret<=30) || !(isFinite(s3.infl) && s3.infl>=0 && s3.infl<=15)){
+      $("e-msg").textContent="❌ Revisá las tasas de crecimiento y la inflación."; return; }
+    cambios.ingreso=s3.ing; cambios.tasa=s3.tasa;
+    cambios.edad=s3.edad; cambios.edad_retiro=s3.edadret;
+    cambios.fpf={ crec:s3.crec, crecret:s3.crecret, infl:s3.infl, edad:s3.edad, edadret:s3.edadret };
+    if($("e-usar").checked){
+      var q3=reqDe(s3, derivar(D).equity);
+      // requerido $0 = "ya llegás solo": no se pisa el compromiso pactado con cero
+      if(q3 && q3.mes>=1) cambios.aporte_anual=Math.round(q3.mes*12);
+    }
   } else {
     var an=numDe($("e-anual"));
     if(!(an>=0 && an<=10000000)){ $("e-msg").textContent="❌ Revisá el monto anual."; return; }
@@ -936,6 +1007,9 @@ $("e-guardar").addEventListener("click", async function(){
     if(DEMO){
       if(cambios.ingreso){ D.meta.ingreso=cambios.ingreso; delete D.meta.fp; }
       if(cambios.tasa){ D.meta.tasa=cambios.tasa; delete D.meta.fp; }
+      if(cambios.edad) D.meta.edad=cambios.edad;
+      if(cambios.edad_retiro) D.meta.edad_retiro=cambios.edad_retiro;
+      if(cambios.fpf) D.meta.fpf=cambios.fpf;
       if(typeof cambios.aporte_anual==="number"){
         D.meta.aporte_anual=cambios.aporte_anual;
         D.meta.aporte_pactado=Math.round(cambios.aporte_anual/12);
@@ -946,6 +1020,9 @@ $("e-guardar").addEventListener("click", async function(){
       var body={ correo:ses.correo, clave:ses.clave };
       if(cambios.ingreso) body.ingreso=cambios.ingreso;
       if(cambios.tasa) body.tasa=cambios.tasa;
+      if(cambios.edad) body.edad=cambios.edad;
+      if(cambios.edad_retiro) body.edad_retiro=cambios.edad_retiro;
+      if(cambios.fpf) body.fpf=cambios.fpf;
       if(typeof cambios.aporte_anual==="number") body.aporte_anual=cambios.aporte_anual;
       var r=await fetch(BASE+"/editar-plan",{ method:"POST",
         headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
@@ -1069,24 +1146,23 @@ var HR={
   QLD:{1990:-28.02,1991:146.67,1992:7.9,1993:12.41,1994:-5.09,1995:83.08,1996:82.66,1997:27.99,1998:192.39,1999:232.61,2000:-72.3,2001:-68.59,2002:-68.74,2003:99.63,2004:12.32,2005:-4.01,2006:2.48,2007:29.03,2008:-72.89,2009:121.2,2010:36.9,2011:0.04,2012:34.77,2013:82.11,2014:37.59,2015:14.74,2016:10.04,2017:70.34,2018:-8.31,2019:81.69,2020:88.9,2021:54.67,2022:-60.52,2023:117.72,2024:42.81,2025:30.36},
   TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35}
 };
-// Los planes sencillos: fase 1 → fase 2 entre TQQQ, QLD, QQQ y SPY (de más a menos riesgo),
-// todos con salida al 70%, y llegada 70% SJC / 30% fase 2.
-var PLANES_LAB=(function(){
-  var R=["TQQQ","QLD","QQQ","SPY"], out=[];
-  for(var i=0;i<R.length;i++) for(var j=i;j<R.length;j++) out.push({f1:R[i], f2:R[j]});
-  return out;
-})();
-var EPOCAS_LAB=[
-  { t:"Todo (1990–2025)", y0:1990, y1:2025 },
-  { t:"Punto-com (1995–2005)", y0:1995, y1:2005 },
-  { t:"Crisis 2008 (2005–2015)", y0:2005, y1:2015 },
-  { t:"Última década (2015–2025)", y0:2015, y1:2025 }
+// Los planes de la casa, en lenguaje natural: del más agresivo al desapalancado.
+// Todos con la misma regla (salida de fase 1 al 70%, llegada 70% renta fija / 30% fase 2).
+var PLANES_NAT=[
+  { e:"🔥", n:"Todo motor, hasta el final",      f1:"TQQQ", f2:"TQQQ" },
+  { e:"⚡", n:"Agresivo, aflojando apenas",       f1:"TQQQ", f2:"QLD" },
+  { e:"🚀", n:"Lo antes posible",                 f1:"TQQQ", f2:"QQQ" },
+  { e:"⚖️", n:"El punto medio, el de la casa",    f1:"TQQQ", f2:"SPY" },
+  { e:"💪", n:"Fuerte, pero sin 3×",              f1:"QLD",  f2:"QQQ" },
+  { e:"🧭", n:"Moderado",                         f1:"QLD",  f2:"SPY" },
+  { e:"🌊", n:"Tranquilo",                        f1:"QQQ",  f2:"SPY" },
+  { e:"🐢", n:"Sin apalancar, el clásico",        f1:"SPY",  f2:"SPY" }
 ];
-var LAB={ plan:null, y0:1990, y1:2025 };
-var SJC_LAB=8;   // tasa anual de la renta fija del laboratorio (el default de la casa)
+var HRY=Object.keys(HR.SPY).map(Number).sort(function(a,b){return a-b;});
 
-function simPlanLab(p, y0, y1, x){
-  var meta=x.fp>0? x.fp:1, cap0=x.equity, ap=x.aporteAnual||0;
+// Años hasta la meta arrancando la historia en HRY[startIdx] (la secuencia da la vuelta);
+// glidepath 70/100/70 con candado del pico y renta fija al 8%. Tope: 50 años.
+function aniosHasta(p, cap0, ap, meta, startIdx){
   var b1=0,b2=0,b3=0, pico=cap0/meta;
   function rebal(total){
     var w=fw(pico,70,100,70);
@@ -1094,97 +1170,45 @@ function simPlanLab(p, y0, y1, x){
     var t1=w12>1e-9? resto*(w[0]/w12):0;
     b1=t1; b2=resto-t1; b3=t3;
   }
-  b3=0; rebal(cap0);
-  var serie=[{y:y0-1, v:cap0}], llego= cap0>=meta? y0-1:null;
-  for(var y=y0;y<=y1;y++){
-    b1*=1+(HR[p.f1][y]||0)/100; b2*=1+(HR[p.f2][y]||0)/100; b3*=1+SJC_LAB/100;
+  rebal(cap0);
+  if(cap0>=meta) return 0;
+  for(var k=0;k<50;k++){
+    var y=HRY[(startIdx+k)%HRY.length];
+    b1*=1+HR[p.f1][y]/100; b2*=1+HR[p.f2][y]/100; b3*=1.08;
     var total=b1+b2+b3+ap;
     var phi=total/meta; if(phi>pico) pico=phi;
     rebal(total);
-    if(llego===null && total>=meta) llego=y;
-    serie.push({y:y, v:total});
+    if(total>=meta) return k+1;
   }
-  // caídas pico-a-valle sobre los cierres anuales
-  var dds=[], peak=serie[0], valle=null;
-  for(var i=1;i<serie.length;i++){
-    var s=serie[i];
-    if(s.v>=peak.v){ if(valle){ dds.push({d:peak, h:valle}); valle=null; } peak=s; }
-    else if(!valle || s.v<valle.v) valle=s;
-  }
-  if(valle) dds.push({d:peak, h:valle});
-  var filas=dds.map(function(z){
-    return { epoca: z.d.y+1===z.h.y? String(z.h.y) : (z.d.y+1)+"–"+z.h.y,
-      pct:(z.h.v/z.d.v-1)*100, usd:z.d.v-z.h.v, vsfp:(z.d.v-z.h.v)/meta*100,
-      antes: z.d.v<meta };
-  }).sort(function(a,b){ return b.usd-a.usd; }).slice(0,5);
-  return { filas:filas, llego:llego, final:serie[serie.length-1].v,
-    aportado:cap0+ap*(y1-y0+1), anios:y1-y0+1 };
+  return 51;
 }
-
-function renderLab(){
-  var box=$("lab-out"); if(!box || !D) return;
-  // dentro del editor de la meta, el laboratorio usa lo que el cliente esté escribiendo
-  var x;
-  if(ED_TIPO==="ingreso" && $("modal-editar").classList.contains("on")){
-    var m2=JSON.parse(JSON.stringify(D.meta||{}));
-    var ing2=numDe($("e-ingreso")), tas2=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
-    if(ing2>0){ m2.ingreso=ing2; delete m2.fp; }
-    if(tas2>0){ m2.tasa=tas2; delete m2.fp; }
-    x=derivar({ meta:m2, snapshots:D.snapshots, senal:D.senal, pico:D.pico });
-  } else {
-    x=derivar(D);
-  }
-  if(!LAB.plan){
-    var propio=PLANES_LAB.filter(function(p){ return p.f1===x.plan.f1 && p.f2===x.plan.f2; })[0];
-    LAB.plan=propio||PLANES_LAB[3];   // el del cliente si es de los sencillos; si no, TQQQ → SPY
-  }
-  $("lab-planes").innerHTML=PLANES_LAB.map(function(p,i){
-    var on= p.f1===LAB.plan.f1 && p.f2===LAB.plan.f2;
-    return '<button data-lp="'+i+'"'+(on?' class="on"':'')+'>'+p.f1+' → '+p.f2+'</button>';
-  }).join("");
-  $("lab-epocas").innerHTML=EPOCAS_LAB.map(function(e,i){
-      var on= e.y0===LAB.y0 && e.y1===LAB.y1;
-      return '<button class="planchips-ep st" style="width:auto;padding:5px 11px;border-radius:999px;'
-        +(on?'background:var(--menta);border-color:var(--menta);color:#082018;':'')+'" data-le="'+i+'">'+e.t+'</button>';
-    }).join("")
-    +'<span style="margin-left:auto">Desde <button class="st" data-ly="y0,-1">◀</button> <b>'+LAB.y0+'</b> '
-    +'<button class="st" data-ly="y0,1">▶</button> · Hasta <button class="st" data-ly="y1,-1">◀</button> <b>'+LAB.y1+'</b> '
-    +'<button class="st" data-ly="y1,1">▶</button></span>';
-
-  var r=simPlanLab(LAB.plan, LAB.y0, LAB.y1, x);
-  box.innerHTML=
-    '<div class="lab-res">De <b>'+LAB.y0+'</b> a <b>'+LAB.y1+'</b> con <b>'+LAB.plan.f1+' → '+LAB.plan.f2+' → SJC</b>, '
-    +'arrancando con <b>'+fmt(x.equity)+'</b> y aportando <b>'+fmt(x.aporteAnual)+'</b> al año: '
-    +'terminás con <b>'+money(r.final)+'</b>'
-    +(r.llego!==null? ' y tocás tu meta de '+money(x.fp)+' en <b>'+(r.llego<LAB.y0? "el arranque":r.llego)+'</b>.'
-      : '; en esa ventana <b>no llegás</b> a tu meta de '+money(x.fp)+'.')
-    +'</div>'
-    +(r.filas.length?
-      '<div class="tblwrap"><table><thead><tr><th>Época</th><th>Caída</th><th>En dólares</th><th>Vs. tu meta</th><th>¿Cuándo?</th></tr></thead><tbody>'
-      +r.filas.map(function(f2){
-        return '<tr><td>'+f2.epoca+'</td>'
-          +'<td class="num down">'+f2.pct.toFixed(1)+'%</td>'
-          +'<td class="num down">−'+fmt(f2.usd).replace("$","$")+'</td>'
-          +'<td class="num">'+f2.vsfp.toFixed(0)+'%</td>'
-          +'<td style="font-size:11.5px">'+(f2.antes?'<span class="antesfp">Antes de tu meta</span>':'<span class="despfp">Después · sobre el excedente</span>')+'</td></tr>';
-      }).join("")+'</tbody></table></div>'
-      +'<div class="lab-res" style="margin-top:8px;font-size:12px">Cierres anuales (las caídas dentro de un mismo año se ven más chicas de lo que se sintieron). La versión completa, con toda la matemática, la vemos juntos en una sesión.</div>'
-      : '<div class="lab-res">Sin caídas en esa ventana (raro, pero pasa en tramos cortos y buenos).</div>');
-
-  Array.prototype.forEach.call(document.querySelectorAll("[data-lp]"), function(b){
-    b.addEventListener("click", function(){ LAB.plan=PLANES_LAB[+b.getAttribute("data-lp")]; renderLab(); });
-  });
-  Array.prototype.forEach.call(document.querySelectorAll("[data-le]"), function(b){
-    b.addEventListener("click", function(){ var e=EPOCAS_LAB[+b.getAttribute("data-le")]; LAB.y0=e.y0; LAB.y1=e.y1; renderLab(); });
-  });
-  Array.prototype.forEach.call(document.querySelectorAll("[data-ly]"), function(b){
-    b.addEventListener("click", function(){
-      var pp=b.getAttribute("data-ly").split(","), k=pp[0], d=+pp[1];
-      LAB[k]=Math.max(1990, Math.min(2025, LAB[k]+d));
-      if(LAB.y0>=LAB.y1) { if(k==="y0") LAB.y0=LAB.y1-1; else LAB.y1=LAB.y0+1; }
-      renderLab();
-    });
-  });
+// típico = la mitad de los arranques llega antes; pesimista = 9 de cada 10 llegan antes
+function aniosPlan(p, cap0, ap, meta){
+  var arr=[];
+  for(var i=0;i<HRY.length;i++) arr.push(aniosHasta(p, cap0, ap, meta, i));
+  arr.sort(function(a,b){return a-b;});
+  return { tip:arr[Math.floor(arr.length*0.5)], pes:arr[Math.min(arr.length-1,Math.floor(arr.length*0.9))] };
+}
+function renderPlanes(){
+  var box=$("e-planes"); if(!box || !D) return;
+  var s=supuestosDe(), xq=derivar(D), cap0=xq.equity;
+  var meta=(s.ing>0&&s.tasa>0)? s.ing*12/(s.tasa/100) : xq.fp;
+  if(!(meta>0)){ box.innerHTML=""; return; }
+  var q=reqDe(s, cap0);
+  var ap=($("e-usar").checked && q && q.mes>=1)? Math.round(q.mes*12) : xq.aporteAnual;
+  function A(v){ return v===0? "ya estás" : v>50? "+50 años" : v+(v===1?" año":" años"); }
+  box.innerHTML='<div class="plan-cards">'+PLANES_NAT.map(function(p){
+    var a=aniosPlan(p, cap0, ap, meta);
+    var tuyo= xq.plan && p.f1===xq.plan.f1 && p.f2===xq.plan.f2;
+    return '<div class="plan-c'+(tuyo?' tuyo':'')+'">'
+      +'<div class="pn">'+p.e+' '+p.n+(tuyo?'<span class="ptag">tu plan</span>':'')+'</div>'
+      +'<div class="pt">'+p.f1+' → '+p.f2+' → renta fija</div>'
+      +'<div class="pa">A tu meta: <b>'+A(a.tip)+'</b> típico · <b>'+A(a.pes)+'</b> pesimista</div>'
+    +'</div>';
+  }).join("")+'</div>'
+  +'<div class="lab-res" style="margin-top:10px;font-size:12px">Con tu capital de hoy y el aporte de arriba, '
+  +'sobre la historia real 1990–2025 arrancando en cada año posible: el típico es la mitad de los casos; '
+  +'en el pesimista, 9 de cada 10 llegan antes.</div>';
 }
 
 /* (El chat con Jose quedó en pausa por decisión suya 11-set-2026: la function `mensajes`
