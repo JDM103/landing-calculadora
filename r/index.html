@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<!-- ============================================================================
+/r/<alias> · dashboard de autogestión de cada cliente (Empowered Investor)
+- El cliente entra con su clave (function `reporte` de ei-sistema) y ve su cuenta:
+  freedom point, mezcla vs gradiente de riesgo, señal M39 con el punto de salida
+  en el gráfico, aportes plan vs realidad, posiciones y qué hacer ahora.
+- La matemática de la mezcla (fw + candado del pico) es IDÉNTICA a /mi-plan y /fpf.
+  Si cambia allá, cambia acá.
+- #demo: maqueta con datos inventados y selector de escenario (sin backend).
+- En producción el alias viene de la URL (/r/mv-07/ vía redirect de Netlify);
+  en local host se pasa con ?a=mv-07.
+============================================================================= -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu cuenta · Empowered Investor</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7;
+    --ambar:#E0B07A; --rojo:#E0525A; --f1:#e0796b; --f2:#5bc8b0; --f3:#4caf7d; }
+  *{ box-sizing:border-box; } html,body{ margin:0; padding:0; }
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',system-ui,sans-serif; line-height:1.5; }
+  .num{ font-variant-numeric:tabular-nums; }
+  .up{ color:var(--menta); } .down{ color:var(--rojo); }
+  .wrap{ max-width:880px; margin:0 auto; padding:16px 16px 70px; }
+
+  /* ===== login ===== */
+  .caja{ max-width:360px; margin:12vh auto 0; background:var(--card); border:1px solid var(--bd);
+    border-radius:16px; padding:26px 22px; text-align:center; }
+  .caja img{ height:72px; margin-bottom:8px; }
+  .caja .t{ font-weight:800; color:var(--crema); font-size:17px; }
+  .caja .s{ font-size:13px; color:var(--gris-sec); margin-top:4px; }
+  .caja input{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema);
+    font-family:inherit; font-size:16px; padding:12px; text-align:center; margin-top:14px; }
+  .caja input:focus{ outline:none; border-color:var(--menta); }
+  .caja button{ width:100%; margin-top:12px; background:var(--menta); color:#082018; border:none; border-radius:10px;
+    font-family:inherit; font-size:15px; font-weight:800; padding:12px; cursor:pointer; }
+  .caja .err{ color:var(--rojo); font-size:13px; margin-top:10px; display:none; }
+
+  /* ===== barra demo ===== */
+  .demobar{ position:sticky; top:0; z-index:30; background:#241a2e; border-bottom:1px solid #4a3562;
+    padding:7px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12.5px; }
+  .demobar b{ color:#d9b8ff; }
+  .demobar button{ background:transparent; border:1px solid #4a3562; color:#d9b8ff; border-radius:999px;
+    padding:4px 12px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .demobar button.on{ background:#d9b8ff; color:#241a2e; border-color:#d9b8ff; }
+
+  /* ===== encabezado ===== */
+  .top{ display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .top img{ height:44px; }
+  .top .hola{ font-size:19px; font-weight:800; color:var(--crema); line-height:1.2; }
+  .top .cuando{ font-size:12px; color:var(--gris-sec); }
+  .top .salir{ margin-left:auto; background:transparent; border:1px solid var(--bd); color:var(--gris-sec);
+    border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .top .salir:hover{ border-color:var(--menta); color:var(--crema); }
+
+  /* ===== tarjetas ===== */
+  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:16px; margin:12px 0; }
+  .card h2{ margin:0 0 4px; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec); }
+  .card .lede{ font-size:13.5px; color:var(--gris-sec); margin:0 0 10px; }
+  .card .lede b{ color:var(--crema); }
+
+  /* ===== hero freedom point ===== */
+  .hero .fila1{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+  .hero .pct{ font-size:clamp(38px,9vw,54px); font-weight:800; color:var(--crema); line-height:1; }
+  .hero .chip{ font-size:11px; font-weight:800; border-radius:999px; padding:3px 11px; }
+  .chip.cf1{ background:rgba(224,121,107,.16); color:#ffa79b; }
+  .chip.cf2{ background:rgba(91,200,176,.16); color:#8fe6d3; }
+  .chip.cf3{ background:rgba(76,175,125,.18); color:#8fe0b2; }
+  .hero .sub{ font-size:14px; color:var(--gris-sec); margin-top:4px; }
+  .hero .sub b{ color:var(--crema); }
+  .pista{ position:relative; height:18px; background:var(--input); border:1px solid var(--bd); border-radius:999px;
+    margin:14px 0 4px; }
+  .pista .relleno{ position:absolute; inset:0; border-radius:999px; overflow:hidden; }
+  .pista .relleno i{ display:block; height:100%; background:linear-gradient(90deg,#2f7d5a,var(--menta)); border-radius:999px; }
+  .pista .hito{ position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--bd); }
+  .pista .hito.meta{ background:var(--crema); }
+  .hitos{ position:relative; height:16px; font-size:10.5px; color:var(--gris-sec); }
+  .hitos span{ position:absolute; transform:translateX(-50%); white-space:nowrap; }
+
+  .tiles{ display:grid; grid-template-columns:repeat(auto-fit,minmax(136px,1fr)); gap:8px; margin:12px 0; }
+  .tile{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; }
+  .tile .k{ font-size:9.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:800; }
+  .tile .v{ font-size:17px; font-weight:800; color:var(--crema); margin-top:1px; }
+  .tile .s{ font-size:11px; font-weight:600; color:var(--gris-sec); }
+
+  /* ===== señal ===== */
+  .estado{ display:flex; align-items:center; gap:10px; border-radius:12px; padding:10px 14px; margin-bottom:12px;
+    border:1px solid; font-size:14.5px; }
+  .estado b{ color:var(--crema); }
+  .estado .pto{ width:13px; height:13px; border-radius:50%; flex:0 0 auto; }
+  .estado.dentro{ border-color:rgba(99,252,175,.45); background:rgba(99,252,175,.06); }
+  .estado.dentro .pto{ background:var(--menta); box-shadow:0 0 10px rgba(99,252,175,.7); }
+  .estado.fuera{ border-color:rgba(224,82,90,.55); background:#1c1215; }
+  .estado.fuera .pto{ background:var(--rojo); box-shadow:0 0 10px rgba(224,82,90,.7); }
+  .grafico{ position:relative; height:250px; background:var(--input); border:1px solid var(--bd); border-radius:12px; }
+  .grafico canvas{ display:block; width:100%; height:100%; }
+  .leyenda{ display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--gris-sec); margin-top:8px; }
+  .leyenda i{ display:inline-block; width:14px; height:3px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .regla{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 14px;
+    font-size:13.5px; margin-top:10px; }
+  .regla b{ color:var(--crema); }
+
+  /* ===== mezcla ===== */
+  .barra{ margin:8px 0 2px; }
+  .barra .lbl{ display:flex; justify-content:space-between; font-size:11.5px; font-weight:700; letter-spacing:.5px;
+    text-transform:uppercase; color:var(--gris-sec); margin-bottom:4px; }
+  .barra .pista2{ display:flex; height:18px; border-radius:999px; overflow:hidden; background:var(--input); border:1px solid var(--bd); }
+  .barra i{ display:block; height:100%; }
+  .leyfases{ display:flex; gap:12px 16px; flex-wrap:wrap; font-size:12.5px; color:var(--gris-sec); margin-top:10px; }
+  .leyfases span::before{ content:"●"; margin-right:5px; }
+  .lf1::before{ color:var(--f1); } .lf2::before{ color:var(--f2); } .lf3::before{ color:var(--f3); }
+  .lfc::before{ color:#5a6270; } .lfo::before{ color:var(--ambar); }
+  .candado{ font-size:12.5px; color:var(--gris-sec); margin-top:10px; }
+  .candado b{ color:var(--crema); }
+  .grad{ position:relative; height:200px; background:var(--input); border:1px solid var(--bd); border-radius:12px; margin-top:12px; }
+  .grad canvas{ display:block; width:100%; height:100%; }
+
+  /* ===== aportes ===== */
+  .apchart{ position:relative; height:170px; background:var(--input); border:1px solid var(--bd); border-radius:12px; }
+  .apchart canvas{ display:block; width:100%; height:100%; }
+  .semaforo{ display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px; vertical-align:baseline; }
+
+  /* ===== tablas ===== */
+  .tblwrap{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th{ font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:800;
+    text-align:right; padding:6px 8px; border-bottom:1px solid var(--bd); }
+  td{ padding:7px 8px; text-align:right; border-bottom:1px solid rgba(42,49,64,.45); }
+  th:first-child, td:first-child{ text-align:left; }
+  td:first-child{ color:var(--crema); font-weight:800; }
+  tr:last-child td{ border-bottom:none; }
+  td .desc{ display:block; font-size:10.5px; color:var(--gris-sec); font-weight:400; }
+
+  /* ===== acciones ===== */
+  .accion{ display:flex; align-items:center; gap:12px; background:var(--card2); border:1px solid var(--bd);
+    border-radius:12px; padding:12px 14px; margin:8px 0; }
+  .accion.urgente{ border-color:rgba(224,82,90,.55); }
+  .accion.hecha{ opacity:.5; }
+  .accion .ico{ font-size:20px; flex:0 0 auto; }
+  .accion .tx{ font-size:14px; color:var(--crema); }
+  .accion .tx .s{ display:block; font-size:12px; color:var(--gris-sec); font-weight:400; }
+  .accion button{ margin-left:auto; flex:0 0 auto; background:var(--menta); color:#082018; border:none; border-radius:999px;
+    padding:8px 16px; font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; }
+  .accion.hecha button{ background:transparent; border:1px solid var(--bd); color:var(--gris-sec); }
+  .todo-bien{ display:flex; align-items:center; gap:10px; background:rgba(99,252,175,.06);
+    border:1px solid rgba(99,252,175,.35); border-radius:12px; padding:14px; font-size:14.5px; color:var(--crema); }
+
+  /* ===== modal ===== */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.78); z-index:50; display:none;
+    align-items:flex-start; justify-content:center; overflow-y:auto; padding:18px; }
+  .modal.on{ display:flex; }
+  .modal .caja2{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px 18px;
+    max-width:480px; width:100%; margin:auto; }
+  .modal h3{ margin:0 0 6px; font-size:18px; color:var(--crema); }
+  .modal .sub3{ font-size:13px; color:var(--gris-sec); margin-bottom:12px; }
+  .pasos{ list-style:none; margin:0 0 6px; padding:0; counter-reset:paso; }
+  .pasos li{ position:relative; padding:10px 12px 10px 44px; background:var(--card2); border:1px solid var(--bd);
+    border-radius:10px; margin-bottom:8px; font-size:14px; color:var(--gris); counter-increment:paso; }
+  .pasos li b{ color:var(--crema); }
+  .pasos li::before{ content:counter(paso); position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border-radius:50%; background:var(--menta); color:#082018; font-weight:800; font-size:12.5px;
+    display:flex; align-items:center; justify-content:center; }
+  .modal .nota3{ font-size:12px; color:var(--gris-sec); margin:10px 0 0; }
+  .modal .btns{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+  .modal .btns button{ flex:1; min-width:120px; border-radius:999px; padding:12px 16px; font-family:inherit;
+    font-size:14px; font-weight:800; cursor:pointer; border:1px solid var(--bd); }
+  .modal .btns .ok{ background:var(--menta); color:#082018; border-color:var(--menta); }
+  .modal .btns .no{ background:transparent; color:var(--gris); }
+
+  details.hist{ margin:12px 0; }
+  details.hist summary{ cursor:pointer; font-size:13px; font-weight:700; color:var(--gris-sec); padding:4px 2px; }
+  details.hist summary:hover{ color:var(--crema); }
+
+  .pie{ margin-top:30px; font-size:11.5px; color:#6b7280; line-height:1.6; text-align:center; }
+  .pie a{ color:#6b7280; }
+</style>
+</head>
+<body>
+
+<div class="demobar" id="demobar" style="display:none">
+  <b>Maqueta con datos inventados</b> · escenario:
+  <button data-esc="normal" class="on">Mercado normal</button>
+  <button data-esc="cerca">Cerca de la salida</button>
+  <button data-esc="fuera">Fuera del mercado</button>
+</div>
+
+<div id="login" class="caja">
+  <img src="/assets/logo-fondo-negro.png" alt="EI">
+  <div class="t">Tu cuenta</div>
+  <div class="s" id="login-alias">Entrá con tu clave de siempre.</div>
+  <input id="clave" type="password" placeholder="Tu clave" autocomplete="current-password">
+  <button id="entrar">Ver mi cuenta</button>
+  <div class="err" id="err"></div>
+</div>
+
+<div class="wrap" id="app" style="display:none"></div>
+
+<div class="modal" id="modal">
+  <div class="caja2">
+    <h3 id="m-tit"></h3>
+    <div class="sub3" id="m-sub"></div>
+    <ol class="pasos" id="m-pasos"></ol>
+    <div class="nota3" id="m-nota"></div>
+    <div class="btns">
+      <button class="ok" id="m-ok">Ya lo hice ✓</button>
+      <button class="no" id="m-no">Lo hago después</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+var BASE="https://jsjhfiakinodosesdqum.supabase.co/functions/v1";
+var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzamhmaWFraW5vZG9zZXNkcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNjY5NTQsImV4cCI6MjEwMTY0Mjk1NH0.MfXXQ6QFx_OudI5Bj9Sr7yw5PRTv_O45NQ_X24tuqLU";
+
+/* ================= utilidades ================= */
+function $(id){ return document.getElementById(id); }
+function fmt(n){ var s=n<0?"−":""; return s+"$"+Math.abs(Math.round(n)).toLocaleString("en-US"); }
+function money(n){ n=Math.round(n); var s=n<0?"-":""; n=Math.abs(n);
+  if(n>=1e6) return s+"$"+(n/1e6).toFixed(2)+"M";
+  if(n>=1e4) return s+"$"+Math.round(n/1e3).toLocaleString("en-US")+"k";
+  return s+"$"+n.toLocaleString("en-US"); }
+function pct(n){ return (n>=0?"+":"−")+Math.abs(n).toFixed(1)+"%"; }
+function cls(n){ return n>=0?"up":"down"; }
+function esc(t){ return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+var MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","setiembre","octubre","noviembre","diciembre"];
+function mesLargo(iso){ var d=new Date(iso+"T00:00:00Z"); return MESES[d.getUTCMonth()]+" "+d.getUTCFullYear(); }
+function mesCorto(iso){ return ["ene","feb","mar","abr","may","jun","jul","ago","set","oct","nov","dic"][new Date(iso+"T00:00:00Z").getUTCMonth()]; }
+
+/* Mezcla por avance, COPIADA de /mi-plan (y de /fpf fwW). No tocar sin tocar las de allá. */
+function fw(phi, p1, p2, Ff){
+  var wL,wE,wF; p1/=100; p2/=100; Ff/=100; if(p2<=p1)p2=p1+0.01;
+  if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; }
+  else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; }
+  else { wL=0; wF=Ff; wE=1-Ff; }
+  return [wL,wE,wF];
+}
+
+var DEMO = location.hash.indexOf("demo")===0 || location.hash==="#demo";
+var ALIAS = (function(){
+  var q=new URLSearchParams(location.search).get("a"); if(q) return q.toLowerCase();
+  var m=location.pathname.match(/^\/r\/([a-z0-9-]+)/i); if(m && m[1].toLowerCase()!=="index.html") return m[1].toLowerCase();
+  return null;
+})();
+var D=null;            // datos del cliente (respuesta de `reporte` + derivados)
+var ESCENARIO="normal";
+
+/* ================= derivados del plan ================= */
+function derivar(d){
+  var m=d.meta||{}, plan=m.plan||{f1:"TQQQ",f2:"SPY",f3:"—",p1:70,p2:100,ff:70,timing:true};
+  var snaps=d.snapshots||[];
+  var snap=snaps.length? snaps[snaps.length-1] : null;
+  var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||4)/100) : 0);
+  var equity=snap? +snap.equity:0, cash=snap? +snap.cash:0;
+  var phi = fp>0? equity/fp : 0;
+  var pico = phi;
+  snaps.forEach(function(s){ if(+s.phi>pico) pico=+s.phi; });
+  if(typeof d.pico==="number" && d.pico>pico) pico=d.pico;   // pico de toda la vida (cuando el backend lo mande)
+  if(m.pico && m.pico>pico) pico=m.pico;
+
+  // mezcla de hoy, en dólares
+  var pos=(snap&&snap.posiciones)||[];
+  var b={f1:0,f2:0,f3:0,otros:0,otrosSyms:[]};
+  pos.forEach(function(p){
+    if(p.s===plan.f1) b.f1+=p.v;
+    else if(p.s===plan.f2) b.f2+=p.v;
+    else if(p.s===plan.f3) b.f3+=p.v;
+    else { b.otros+=p.v; b.otrosSyms.push(p.s); }
+  });
+  // mezcla objetivo con el candado de la Fase 3 (misma lógica de /mi-plan)
+  var w=fw(pico*100, plan.p1||70, plan.p2||100, plan.ff||70);
+  var total=equity;
+  var tgt3=Math.max(b.f3, w[2]*total);
+  var resto=Math.max(0,total-tgt3), w12=w[0]+w[1];
+  var tgt1=w12>1e-9? resto*(w[0]/w12) : 0;
+  var tgt2=resto-tgt1;
+  var umbral=Math.max(500, total*0.02);
+
+  return { m:m, plan:plan, snap:snap, snaps:snaps, fp:fp, equity:equity, cash:cash,
+    phi:phi, pico:pico, b:b, tgt:{f1:tgt1,f2:tgt2,f3:tgt3}, umbral:umbral,
+    cuenta:(snap&&snap.cuenta)||{} };
+}
+
+function faseDe(x){
+  var p1=(x.plan.p1||70)/100, p2=(x.plan.p2||100)/100;
+  if(x.pico<p1) return {t:"Fase 1 · crecimiento", c:"cf1"};
+  if(x.pico<p2) return {t:"Fase 2 · bajando el riesgo", c:"cf2"};
+  return {t:"Fase 3 · llegaste", c:"cf3"};
+}
+
+/* ================= acciones ================= */
+function armarAcciones(x, senal){
+  var acc=[];
+  var timing=!!x.plan.timing;
+  var fuera = senal && senal.estado==="fuera";
+  var mesAct = x.snap? x.snap.mes.slice(0,7) : "";
+
+  if(timing && fuera && (x.b.f1+x.b.f2)>x.umbral){
+    acc.push({ id:"salir-"+(senal.semana||mesAct), urgente:true, ico:"🔴",
+      t:"La señal dice: esta semana toca salir del mercado.",
+      s:"Tu parte de mercado pasa a efectivo el lunes al abrir.",
+      btn:"Ver los pasos",
+      tit:"Pasar tu parte de mercado a efectivo",
+      sub:"El viernes el mercado cerró abajo de la línea de salida. La regla es simple: se vende el lunes siguiente, apenas abre.",
+      pasos:[
+        "El lunes, entre 7:30 y 8:00 am (hora CR), abrí tu cuenta de Alpaca.",
+        x.b.f1>1? "Vendé todo tu <b>"+esc(x.plan.f1)+"</b> ("+fmt(x.b.f1)+").":null,
+        x.b.f2>1? "Vendé todo tu <b>"+esc(x.plan.f2)+"</b> ("+fmt(x.b.f2)+").":null,
+        "Tu "+esc(x.plan.f3)+" (renta fija) no se toca: ese es tu piso.",
+        "La plata queda en efectivo dentro de tu cuenta, esperando la señal de reentrada."
+      ].filter(Boolean),
+      nota:"Cuando la señal vuelva a entrar (viernes a −6% o mejor), acá van a estar los pasos para comprar de vuelta." });
+  }
+
+  // aporte del mes
+  var pactado=+x.m.aporte_pactado||0;
+  if(pactado>0 && x.snap){
+    var delMes=(x.snap.transferencias_mes||[]).reduce(function(s,t){ return s+Math.max(0,+t.monto||0); },0);
+    if(delMes<pactado*0.9){
+      var falta=pactado-delMes;
+      acc.push({ id:"aporte-"+mesAct, ico:"💵",
+        t:"Va "+fmt(delMes)+" de tu aporte de "+fmt(pactado)+" este mes.",
+        s:"Te falta "+fmt(falta)+" para quedar al día.",
+        btn:"Ver los pasos",
+        tit:"Completar el aporte del mes",
+        sub:"Tu plan asume "+fmt(pactado)+" por mes. Este mes llevás "+fmt(delMes)+".",
+        pasos:[
+          "Entrá a tu banco y transferí <b>"+fmt(falta)+"</b> a tu cuenta de Alpaca (la cuenta que ya tenés vinculada).",
+          "En 1 a 3 días hábiles aparece como efectivo en tu cuenta.",
+          "Cuando entre, volvé acá: esta página te dice exactamente dónde invertirlo."
+        ],
+        nota:"El aporte constante pesa más que cualquier acierto de mercado. Es la parte del plan que depende 100% de vos." });
+    }
+  }
+
+  if(!(timing && fuera)){
+    // efectivo sin invertir
+    if(x.cash>x.umbral){
+      var w12=x.tgt.f1+x.tgt.f2+x.tgt.f3>0;
+      var pasosInv=[];
+      var dc1=Math.max(0,x.tgt.f1-x.b.f1), dc2=Math.max(0,x.tgt.f2-x.b.f2), dc3=Math.max(0,x.tgt.f3-x.b.f3);
+      var sumd=dc1+dc2+dc3||1;
+      var m1=x.cash*dc1/sumd, m2=x.cash*dc2/sumd, m3=x.cash*dc3/sumd;
+      if(m1>=1) pasosInv.push("Comprá <b>"+fmt(m1)+"</b> de <b>"+esc(x.plan.f1)+"</b>.");
+      if(m2>=1) pasosInv.push("Comprá <b>"+fmt(m2)+"</b> de <b>"+esc(x.plan.f2)+"</b>.");
+      if(m3>=1) pasosInv.push("Pasá <b>"+fmt(m3)+"</b> a <b>"+esc(x.plan.f3)+"</b> (tu renta fija).");
+      if(!pasosInv.length) pasosInv.push("Comprá <b>"+fmt(x.cash)+"</b> de <b>"+esc(x.plan.f1)+"</b>.");
+      pasosInv.unshift("Abrí tu cuenta de Alpaca en un día de mercado abierto (lunes a viernes, 7:30 am a 2:00 pm CR).");
+      acc.push({ id:"invertir-"+mesAct+"-"+Math.round(x.cash/100), ico:"🌱",
+        t:"Tenés "+fmt(x.cash)+" en efectivo sin trabajar.",
+        s:"Tu plan dice dónde va, según tu mezcla de hoy.",
+        btn:"Ver dónde va",
+        tit:"Poner tu efectivo a trabajar",
+        sub:"La plata quieta pierde contra la inflación. Así se reparte "+fmt(x.cash)+" según tu mezcla:",
+        pasos:pasosInv,
+        nota:"Usá órdenes de mercado por monto en dólares (Alpaca permite fracciones). No hay que atinarle al momento: el plan ya decidió por vos." });
+    }
+    // rebalanceo
+    var d1=x.tgt.f1-x.b.f1, d2=x.tgt.f2-x.b.f2, d3=x.tgt.f3-x.b.f3;
+    var necesita=Math.max(Math.abs(d1),Math.abs(d2),Math.abs(d3))>=x.umbral && (Math.abs(d1)+Math.abs(d2)+Math.abs(d3))>x.cash+x.umbral;
+    if(necesita){
+      var pasosReb=[];
+      if(x.b.otros>x.umbral) pasosReb.push("Vendé lo que está fuera del plan ("+esc(x.b.otrosSyms.join(", "))+", "+fmt(x.b.otros)+").");
+      if(d1<-1) pasosReb.push("Vendé <b>"+fmt(-d1)+"</b> de "+esc(x.plan.f1)+".");
+      if(d2<-1) pasosReb.push("Vendé <b>"+fmt(-d2)+"</b> de "+esc(x.plan.f2)+".");
+      if(d1>1) pasosReb.push("Comprá <b>"+fmt(d1)+"</b> de "+esc(x.plan.f1)+".");
+      if(d2>1) pasosReb.push("Comprá <b>"+fmt(d2)+"</b> de "+esc(x.plan.f2)+".");
+      if(d3>1) pasosReb.push("Pasá <b>"+fmt(d3)+"</b> a "+esc(x.plan.f3)+" (renta fija).");
+      acc.push({ id:"rebalance-"+mesAct, ico:"⚖️",
+        t:"Tu mezcla se corrió de la del plan.",
+        s:"Un ajuste y quedás de vuelta en tu gradiente de riesgo.",
+        btn:"Ver el ajuste",
+        tit:"Volver a tu mezcla",
+        sub:"Con tu avance, tu mezcla objetivo es la de abajo en la sección \"Tu mezcla\". Este es el ajuste:",
+        pasos:pasosReb,
+        nota:"Tu renta fija nunca se vende: es el candado del plan. Solo se ajusta la parte de mercado." });
+    } else if(x.b.otros>x.umbral){
+      acc.push({ id:"otros-"+mesAct, ico:"🧹",
+        t:"Tenés "+fmt(x.b.otros)+" en activos fuera del plan.",
+        s:esc(x.b.otrosSyms.join(", "))+" no son parte de tu mezcla.",
+        btn:"Ver qué hacer",
+        tit:"Ordenar lo que está fuera del plan",
+        sub:"No es urgente, pero el plan funciona mejor con las piezas del plan.",
+        pasos:[
+          "Vendé "+esc(x.b.otrosSyms.join(", "))+" ("+fmt(x.b.otros)+") en tu cuenta de Alpaca.",
+          "Con ese efectivo, volvé acá: la página te dice dónde va según tu mezcla."
+        ], nota:"" });
+    }
+  }
+  return acc;
+}
+
+/* ================= render ================= */
+function nombreActivo(x, sym){
+  var mapa={ TQQQ:"Nasdaq ×3", QLD:"Nasdaq ×2", QQQ:"Nasdaq 100", SPY:"S&P 500", VOO:"S&P 500", SSO:"S&P 500 ×2" };
+  if(sym===x.plan.f3) return "Renta fija · tu piso";
+  return mapa[sym]||"";
+}
+
+function render(){
+  var d=D, x=derivar(d), f=faseDe(x), sen=d.senal||null;
+  var app=$("app");
+  var falta=Math.max(0,x.fp-x.equity);
+  var aportado=+((x.snap&&x.snap.aportado_total)||0) + (+x.m.capital_inicial||0);
+  var mercado=x.equity-aportado;
+  var c=x.cuenta;
+  var dia=(c.last_equity>0)? x.equity-c.last_equity : null;
+
+  // aportes por mes (para el gráfico y el semáforo)
+  var pactado=+x.m.aporte_pactado||0;
+  var meses=x.snaps.map(function(s){
+    var ap=(s.transferencias_mes||[]).reduce(function(a,t){ return a+Math.max(0,+t.monto||0); },0);
+    return { mes:s.mes, ap:ap };
+  });
+  var anio=new Date().getUTCFullYear();
+  var mesesAnio=meses.filter(function(z){ return z.mes.slice(0,4)==String(anio); });
+  var realAnio=mesesAnio.reduce(function(a,z){ return a+z.ap; },0);
+  var planAnio=pactado*mesesAnio.length;
+  var ratioAp=planAnio>0? realAnio/planAnio : 1;
+  var colorAp= ratioAp>=0.95? "var(--menta)" : ratioAp>=0.7? "var(--ambar)" : "var(--rojo)";
+
+  var acciones=armarAcciones(x, sen);
+  var hechas=JSON.parse(localStorage.getItem("r_hechas_"+(ALIAS||"demo"))||"{}");
+
+  var p1=(x.plan.p1||70), p2=(x.plan.p2||100);
+
+  app.innerHTML=
+  /* ---- encabezado ---- */
+  '<div class="top">'
+    +'<img src="/assets/logo-fondo-negro.png" alt="EI">'
+    +'<div><div class="hola">Hola, '+esc((d.nombre||"").split(" ")[0])+'</div>'
+    +'<div class="cuando">Números al cierre de '+(x.snap? mesLargo(x.snap.mes):"—")+' · se actualizan cada fin de mes</div></div>'
+    +'<button class="salir" id="salir">Salir</button>'
+  +'</div>'
+
+  /* ---- hero freedom point ---- */
+  +'<div class="card hero">'
+    +'<h2>Tu camino al freedom point</h2>'
+    +'<div class="fila1"><div class="pct num">'+(x.phi*100).toFixed(1)+'%</div>'
+      +'<span class="chip '+f.c+'">'+f.t+'</span></div>'
+    +'<div class="sub">De tu meta de <b>'+money(x.fp)+'</b> — el capital que paga tus <b>'+fmt(x.m.ingreso||0)+'</b> al mes sin trabajar. '
+      +(falta>0? 'Te faltan <b>'+money(falta)+'</b>.':'<b>Ya llegaste.</b> 🎉')+'</div>'
+    +'<div class="pista">'
+      +'<div class="relleno"><i style="width:'+Math.min(100,x.phi*100).toFixed(1)+'%"></i></div>'
+      +'<div class="hito" style="left:'+Math.min(99,p1)+'%"></div>'
+      +'<div class="hito" style="left:'+Math.min(99.5,p2-0.5)+'%"></div>'
+    +'</div>'
+    +'<div class="hitos">'
+      +'<span style="left:'+Math.min(92,p1)+'%">'+p1+'% · adiós Fase 1</span>'
+      +'<span style="left:'+Math.min(96,p2-2)+'%">meta</span>'
+    +'</div>'
+    +'<div class="tiles">'
+      +'<div class="tile"><div class="k">Tu capital</div><div class="v num">'+fmt(x.equity)+'</div>'
+        +(dia!==null?'<div class="s num '+cls(dia)+'">'+pct(c.last_equity>0? dia/c.last_equity*100:0)+' hoy</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">Puso tu bolsillo</div><div class="v num">'+fmt(aportado)+'</div></div>'
+      +'<div class="tile"><div class="k">Puso el mercado</div><div class="v num '+cls(mercado)+'">'+fmt(mercado)+'</div>'
+        +(aportado>0?'<div class="s num">'+pct(mercado/aportado*100)+' sobre lo tuyo</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">Rendimiento anual</div><div class="v num">'+(typeof c.tir==="number"? pct(c.tir):"—")+'</div>'
+        +(c.inicio?'<div class="s">desde '+c.inicio.slice(0,7)+'</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">Este año</div><div class="v num '+(typeof c.ytd_pct==="number"?cls(c.ytd_pct):"")+'">'
+        +(typeof c.ytd_pct==="number"? pct(c.ytd_pct):"—")+'</div></div>'
+      +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(x.cash)+'</div></div>'
+    +'</div>'
+  +'</div>'
+
+  /* ---- qué hacer ahora ---- */
+  +'<div class="card">'
+    +'<h2>Para estar al día con tu plan</h2>'
+    +(acciones.length?
+      acciones.map(function(a,i){
+        var done=!!hechas[a.id];
+        return '<div class="accion'+(a.urgente?' urgente':'')+(done?' hecha':'')+'">'
+          +'<div class="ico">'+a.ico+'</div>'
+          +'<div class="tx">'+a.t+'<span class="s">'+(done?'Marcaste esto como hecho. Se actualiza con el próximo cierre.':a.s)+'</span></div>'
+          +'<button data-acc="'+i+'">'+(done?'Ver de nuevo':a.btn)+'</button>'
+        +'</div>';
+      }).join("")
+      : '<div class="todo-bien">✅ <div><b>Todo en orden.</b> No tenés que mover nada hoy. Seguí con tu aporte y dejá que el plan trabaje.</div></div>')
+  +'</div>'
+
+  /* ---- señal ---- */
+  +(x.plan.timing?
+  '<div class="card">'
+    +'<h2>La señal del viernes (M39)</h2>'
+    +'<p class="lede">Una vez por semana, el viernes al cierre, se revisa el Nasdaq contra su máximo de 39 semanas. Nada más. El resto de la semana no se mira.</p>'
+    +(sen? '<div class="estado '+(sen.estado==="dentro"?"dentro":"fuera")+'"><div class="pto"></div><div>'
+      +(sen.estado==="dentro"? '<b>Estás DENTRO del mercado.</b>':'<b>Estás FUERA del mercado</b> (a resguardo en efectivo).')
+      +' Semana del '+sen.semana+'.'
+      +(typeof sen.distancia==="number"? ' El cierre quedó a <b class="num">'+(+sen.distancia).toFixed(1)+'%</b> del máximo.':'')
+      +'</div></div>' : '')
+    +(d.serie && d.serie.c && d.serie.c.length>45?
+      '<div class="grafico"><canvas id="cv-senal"></canvas></div>'
+      +'<div class="leyenda">'
+        +'<span><i style="background:var(--menta)"></i>Nasdaq (cierre semanal)</span>'
+        +'<span><i style="background:#5a6270"></i>Máximo 39 semanas</span>'
+        +'<span><i style="background:var(--rojo)"></i>Línea de salida (−18%)</span>'
+        +'<span><i style="background:var(--peri)"></i>Línea de reentrada (−6%)</span>'
+      +'</div>'
+      +'<div class="regla" id="regla-senal"></div>'
+      : '<div class="regla">La regla: si un viernes el cierre queda <b>18% o más abajo</b> del máximo de 39 semanas, el lunes se sale a efectivo. Estando afuera, si un viernes vuelve a <b>−6% o mejor</b>, el lunes se reentra. Así de aburrido, a propósito.</div>')
+  +'</div>'
+  : '<div class="card"><h2>La señal del viernes</h2><p class="lede">Tu plan no usa la señal de timing: te quedás invertido siempre y el riesgo se maneja solo con tu mezcla. Menos movimientos, cero decisiones de mercado.</p></div>')
+
+  /* ---- mezcla / gradiente ---- */
+  +'<div class="card">'
+    +'<h2>Tu mezcla (la gradiente de riesgo)</h2>'
+    +'<p class="lede">El plan arranca con más motor y termina con más piso. Tu avance decide la mezcla — no el ánimo, no las noticias.</p>'
+    +'<div class="barra"><div class="lbl"><span>Hoy tenés</span><span class="num">'+fmt(x.equity)+'</span></div>'
+      +'<div class="pista2" id="b-hoy"></div></div>'
+    +'<div class="barra"><div class="lbl"><span>Tu plan pide</span><span></span></div>'
+      +'<div class="pista2" id="b-obj"></div></div>'
+    +'<div class="leyfases">'
+      +'<span class="lf1">'+esc(x.plan.f1)+' · motor</span>'
+      +'<span class="lf2">'+esc(x.plan.f2)+' · mercado</span>'
+      +'<span class="lf3">'+esc(x.plan.f3)+' · piso</span>'
+      +'<span class="lfc">efectivo</span>'
+      +(x.b.otros>1?'<span class="lfo">fuera del plan</span>':'')
+    +'</div>'
+    +'<div class="grad"><canvas id="cv-grad"></canvas></div>'
+    +'<div class="candado">🔒 Tu pico: <b class="num">'+(x.pico*100).toFixed(1)+'%</b>. El riesgo del plan solo baja, nunca vuelve a subir: '
+    +'aunque el mercado te devuelva para atrás, tu mezcla se queda en la de tu mejor momento.</div>'
+  +'</div>'
+
+  /* ---- aportes ---- */
+  +'<div class="card">'
+    +'<h2>Tus aportes: plan vs realidad</h2>'
+    +'<p class="lede"><span class="semaforo" style="background:'+colorAp+'"></span>'
+      +(planAnio>0?
+        'Este año llevás <b>'+fmt(realAnio)+'</b> de los <b>'+fmt(planAnio)+'</b> que pide tu plan ('+Math.round(ratioAp*100)+'%).'
+        :'Tu plan no tiene un aporte mensual pactado.')+'</p>'
+    +(meses.length? '<div class="apchart"><canvas id="cv-aportes"></canvas></div>':'')
+  +'</div>'
+
+  /* ---- posiciones ---- */
+  +'<div class="card">'
+    +'<h2>Lo que tenés en tu cuenta</h2>'
+    +((x.snap&&x.snap.posiciones&&x.snap.posiciones.length)?
+      '<div class="tblwrap"><table><thead><tr><th>Activo</th><th>Cant.</th><th>Valor</th><th>% de tu cuenta</th><th>Ganancia</th></tr></thead><tbody>'
+      +x.snap.posiciones.map(function(p){
+        var tp=typeof p.pnl==="number";
+        return '<tr><td>'+esc(p.s)+'<span class="desc">'+nombreActivo(x,p.s)+'</span></td>'
+          +'<td class="num">'+(+p.q).toLocaleString("en-US")+'</td>'
+          +'<td class="num">'+fmt(p.v)+'</td>'
+          +'<td class="num">'+(x.equity>0?(p.v/x.equity*100).toFixed(1)+"%":"—")+'</td>'
+          +'<td class="num '+(tp?cls(p.pnl):"")+'">'+(tp? fmt(p.pnl)+' ('+pct(p.pnlp)+')':"—")+'</td></tr>';
+      }).join("")
+      +'<tr><td>Efectivo<span class="desc">disponible para invertir</span></td><td class="num">—</td>'
+        +'<td class="num">'+fmt(x.cash)+'</td><td class="num">'+(x.equity>0?(x.cash/x.equity*100).toFixed(1)+"%":"—")+'</td><td class="num">—</td></tr>'
+      +'</tbody></table></div>'
+      : '<p class="lede">Todo tu capital está en efectivo ahora mismo.</p>')
+  +'</div>'
+
+  /* ---- historial ---- */
+  +'<details class="hist"><summary>Ver tu historia mes a mes</summary>'
+    +'<div class="card" style="margin-top:8px"><div class="tblwrap"><table><thead>'
+    +'<tr><th>Mes</th><th>Aportaste</th><th>Capital al cierre</th><th>Avance</th></tr></thead><tbody>'
+    +x.snaps.slice().reverse().map(function(s){
+      var ap=(s.transferencias_mes||[]).reduce(function(a,t){ return a+Math.max(0,+t.monto||0); },0);
+      return '<tr><td>'+mesCorto(s.mes)+' '+s.mes.slice(0,4)+'</td><td class="num">'+(ap>0?fmt(ap):"—")+'</td>'
+        +'<td class="num">'+fmt(s.equity)+'</td><td class="num">'+(+s.phi*100).toFixed(1)+'%</td></tr>';
+    }).join("")
+    +'</tbody></table></div></div></details>'
+
+  +'<p class="pie">Empowered Investor · Tu cuenta vive en Alpaca a tu nombre; nosotros no podemos retirar tu plata (solo va a tu banco vinculado). '
+  +'Esto no es asesoría individualizada; es el seguimiento del plan que armamos juntos. ¿Dudas? Respondé el correo del reporte y te contesto. · '
+  +'<a href="/m39/">Cómo funciona la señal</a></p>';
+
+  // barras de mezcla
+  pintarMezcla("b-hoy",[
+    {v:x.b.f1,c:"var(--f1)",t:x.plan.f1},{v:x.b.f2,c:"var(--f2)",t:x.plan.f2},
+    {v:x.b.f3,c:"var(--f3)",t:x.plan.f3},{v:x.cash,c:"#5a6270",t:"efectivo"},
+    {v:x.b.otros,c:"var(--ambar)",t:"fuera del plan"}], x.equity);
+  var fueraSen = x.plan.timing && sen && sen.estado==="fuera";
+  pintarMezcla("b-obj", fueraSen?
+    [{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3},{v:x.equity-x.tgt.f3,c:"#5a6270",t:"efectivo (a resguardo)"}]
+    :[{v:x.tgt.f1,c:"var(--f1)",t:x.plan.f1},{v:x.tgt.f2,c:"var(--f2)",t:x.plan.f2},{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3}], x.equity);
+
+  // gráficos
+  if(d.serie && d.serie.c && d.serie.c.length>45 && x.plan.timing) dibujarSenal(d.serie, sen);
+  dibujarGradiente(x);
+  if(meses.length) dibujarAportes(meses, pactado);
+
+  // eventos
+  $("salir").addEventListener("click", function(){
+    sessionStorage.removeItem("r_clave_"+ALIAS); location.hash=""; location.reload(); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-acc]"), function(btn){
+    btn.addEventListener("click", function(){ abrirModal(acciones[+btn.getAttribute("data-acc")]); });
+  });
+}
+
+function pintarMezcla(id, partes, total){
+  var el=$(id); if(!el) return; el.innerHTML="";
+  if(!(total>0)) return;
+  partes.forEach(function(p){
+    if(!(p.v>0)) return;
+    var i=document.createElement("i");
+    i.style.width=(100*p.v/total)+"%"; i.style.background=p.c;
+    i.title=p.t+": "+fmt(p.v)+" ("+(100*p.v/total).toFixed(1)+"%)";
+    el.appendChild(i);
+  });
+}
+
+/* ================= modal ================= */
+var ACC_ACTUAL=null;
+function abrirModal(a){
+  ACC_ACTUAL=a;
+  $("m-tit").textContent=a.tit;
+  $("m-sub").textContent=a.sub;
+  $("m-pasos").innerHTML=a.pasos.map(function(p){ return "<li>"+p+"</li>"; }).join("");
+  $("m-nota").textContent=a.nota||"";
+  $("modal").classList.add("on");
+}
+$("m-no").addEventListener("click", function(){ $("modal").classList.remove("on"); });
+$("modal").addEventListener("click", function(e){ if(e.target===$("modal")) $("modal").classList.remove("on"); });
+$("m-ok").addEventListener("click", function(){
+  if(ACC_ACTUAL){
+    var k="r_hechas_"+(ALIAS||"demo");
+    var h=JSON.parse(localStorage.getItem(k)||"{}"); h[ACC_ACTUAL.id]=true;
+    localStorage.setItem(k, JSON.stringify(h));
+  }
+  $("modal").classList.remove("on"); render();
+});
+
+/* ================= gráfico de la señal ================= */
+function prepCanvas(id){
+  var cv=$(id); if(!cv) return null;
+  var dpr=Math.max(1,window.devicePixelRatio||1), W=cv.clientWidth, H=cv.clientHeight;
+  cv.width=W*dpr; cv.height=H*dpr;
+  var g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  return {cv:cv,g:g,W:W,H:H};
+}
+function dibujarSenal(serie, sen, hover){
+  var p=prepCanvas("cv-senal"); if(!p) return;
+  var g=p.g, W=p.W, H=p.H;
+  var c=serie.c, t=serie.t, n=c.length;
+  // máximo móvil de 39 semanas (39 previas + la actual, como el backend)
+  var max39=[], salida=[], reent=[];
+  for(var i=0;i<n;i++){
+    var d0=Math.max(0,i-39), mx=0;
+    for(var j=d0;j<=i;j++) if(c[j]>mx) mx=c[j];
+    max39.push(mx); salida.push(mx*0.82); reent.push(mx*0.94);
+  }
+  var padL=8,padR=86,padT=14,padB=22;
+  var mn=Math.min(Math.min.apply(null,c), Math.min.apply(null,salida))*0.985;
+  var mx2=Math.max.apply(null,max39)*1.01;
+  var X=function(i){ return padL+(i/(n-1))*(W-padL-padR); };
+  var Y=function(v){ return padT+(1-(v-mn)/(mx2-mn))*(H-padT-padB); };
+  function linea(arr, color, ancho, dash){
+    g.beginPath(); g.setLineDash(dash||[]);
+    for(var i=0;i<n;i++){ if(i===0) g.moveTo(X(i),Y(arr[i])); else g.lineTo(X(i),Y(arr[i])); }
+    g.strokeStyle=color; g.lineWidth=ancho; g.stroke(); g.setLineDash([]);
+  }
+  // zona bajo la línea de salida (zona de "afuera")
+  g.beginPath(); g.moveTo(X(0),Y(salida[0]));
+  for(var i2=1;i2<n;i2++) g.lineTo(X(i2),Y(salida[i2]));
+  g.lineTo(X(n-1),H-padB); g.lineTo(X(0),H-padB); g.closePath();
+  g.fillStyle="rgba(224,82,90,.07)"; g.fill();
+
+  linea(max39,"#5a6270",1.2);
+  linea(reent,"#7C8FF7",1.2,[5,4]);
+  linea(salida,"#E0525A",1.6,[6,4]);
+  linea(c,"#63FCAF",2);
+
+  // punto y etiquetas del último cierre
+  var ux=X(n-1);
+  g.fillStyle="#FEF9F3"; g.beginPath(); g.arc(ux,Y(c[n-1]),4,0,7); g.fill();
+  g.font="700 11px 'Bai Jamjuree'"; g.textAlign="left";
+  function tag(y, txt, color){
+    g.fillStyle=color; g.fillText(txt, W-padR+6, y+4);
+  }
+  tag(Y(c[n-1]), "hoy "+Math.round(c[n-1]).toLocaleString("en-US"), "#FEF9F3");
+  tag(Y(salida[n-1]), "salida "+Math.round(salida[n-1]).toLocaleString("en-US"), "#E0525A");
+  tag(Y(reent[n-1]), "reentrada", "#7C8FF7");
+  // fechas extremos
+  g.fillStyle="#9AA1AB"; g.font="10px 'Bai Jamjuree'"; g.textAlign="left";
+  g.fillText(t[0], padL+2, H-7);
+  g.textAlign="right"; g.fillText(t[n-1], W-padR-4, H-7);
+
+  // hover
+  if(typeof hover==="number" && hover>=0 && hover<n){
+    var hx=X(hover);
+    g.strokeStyle="rgba(255,255,255,.25)"; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(hx,padT); g.lineTo(hx,H-padB); g.stroke(); g.setLineDash([]);
+    g.fillStyle="#FEF9F3"; g.beginPath(); g.arc(hx,Y(c[hover]),3.5,0,7); g.fill();
+    var dv=(c[hover]/max39[hover]-1)*100;
+    var txt=t[hover]+"  "+Math.round(c[hover]).toLocaleString("en-US")+"  ("+dv.toFixed(1)+"% del máx.)";
+    g.font="700 11.5px 'Bai Jamjuree'";
+    var tw=g.measureText(txt).width+14, bx=Math.min(Math.max(hx-tw/2,padL), W-padR-tw), by=padT+2;
+    g.fillStyle="rgba(13,15,20,.94)"; g.strokeStyle="#2a3140";
+    g.beginPath(); g.roundRect(bx,by,tw,20,6); g.fill(); g.stroke();
+    g.fillStyle="#FEF9F3"; g.textAlign="left"; g.fillText(txt,bx+7,by+14);
+  }
+  p.cv.onmousemove=function(ev){
+    var r=p.cv.getBoundingClientRect(), mxp=ev.clientX-r.left;
+    var i3=Math.round((mxp-padL)/Math.max(1,(W-padL-padR))*(n-1));
+    dibujarSenal(serie, sen, Math.max(0,Math.min(n-1,i3)));
+  };
+  p.cv.onmouseleave=function(){ dibujarSenal(serie, sen); };
+
+  // texto de la regla con los números de hoy
+  var el=$("regla-senal");
+  if(el){
+    var dist=(c[n-1]/max39[n-1]-1)*100;
+    var dentro=!sen || sen.estado==="dentro";
+    if(dentro){
+      var caida=(salida[n-1]/c[n-1]-1)*100; // % que falta caer para tocar la salida
+      el.innerHTML='La regla: si un viernes el Nasdaq cierra en la <b style="color:var(--rojo)">línea roja</b> o más abajo (−18% del máximo de 39 semanas), '
+        +'<b>el lunes siguiente se sale a efectivo</b>. Hoy el cierre va <b class="num">'+Math.abs(dist).toFixed(1)+'%</b> abajo del máximo: '
+        +'tendría que caer <b class="num">'+Math.abs(caida).toFixed(1)+'%</b> más (hasta '+Math.round(salida[n-1]).toLocaleString("en-US")+' puntos) para que toque salir. Nosotros lo vigilamos cada viernes y te avisamos.';
+    } else {
+      var subida=(reent[n-1]/c[n-1]-1)*100;
+      el.innerHTML='Estás a resguardo. La regla de vuelta: cuando un viernes el Nasdaq cierre en la <b style="color:var(--peri)">línea azul</b> o más arriba (−6% del máximo), '
+        +'<b>el lunes siguiente se reentra</b>. Hoy faltaría que suba <b class="num">'+Math.abs(subida).toFixed(1)+'%</b> (hasta '
+        +Math.round(reent[n-1]).toLocaleString("en-US")+' puntos). Nosotros lo vigilamos cada viernes y te avisamos.';
+    }
+  }
+}
+
+/* ================= gráfico de la gradiente ================= */
+function dibujarGradiente(x){
+  var p=prepCanvas("cv-grad"); if(!p) return;
+  var g=p.g, W=p.W, H=p.H;
+  var padL=8,padR=8,padT=26,padB=24;
+  var p1=x.plan.p1||70, p2=x.plan.p2||100, ff=x.plan.ff||70;
+  var maxX=Math.max(110, x.pico*100+10);
+  var X=function(phi){ return padL+(phi/maxX)*(W-padL-padR); };
+  var Y=function(f){ return padT+(1-f)*(H-padT-padB); };
+  // áreas apiladas: f1 abajo, f2 al medio, f3 arriba
+  var paso=maxX/240;
+  function area(hasta, color){
+    g.beginPath(); g.moveTo(X(0),Y(0));
+    for(var q=0;q<=maxX;q+=paso){ g.lineTo(X(q), Y(hasta(q))); }
+    g.lineTo(X(maxX),Y(0)); g.closePath();
+    g.fillStyle=color; g.fill();
+  }
+  // acumulados: w1; w1+w2; w1+w2+w3(=1)
+  area(function(q){ return 1; }, "rgba(76,175,125,.55)");            // f3 (fondo total)
+  area(function(q){ var w=fw(q,p1,p2,ff); return w[0]+w[1]; }, "rgba(91,200,176,.65)"); // f2
+  area(function(q){ var w=fw(q,p1,p2,ff); return w[0]; }, "rgba(224,121,107,.8)");      // f1
+  // hitos p1/p2
+  g.strokeStyle="rgba(255,255,255,.14)"; g.setLineDash([3,4]);
+  [p1,p2].forEach(function(hp){ g.beginPath(); g.moveTo(X(hp),padT-4); g.lineTo(X(hp),H-padB); g.stroke(); });
+  g.setLineDash([]);
+  g.fillStyle="#9AA1AB"; g.font="10px 'Bai Jamjuree'"; g.textAlign="center";
+  g.fillText(p1+"%", X(p1), H-9);
+  g.fillText("meta", X(p2), H-9);
+  g.textAlign="left"; g.fillText("0%", X(0)+2, H-9);
+  // marcador "estás acá" (en el pico, que es el que manda)
+  var px=X(x.pico*100);
+  g.strokeStyle="#FEF9F3"; g.lineWidth=2;
+  g.beginPath(); g.moveTo(px,padT-6); g.lineTo(px,H-padB); g.stroke();
+  g.fillStyle="#FEF9F3"; g.beginPath(); g.moveTo(px,padT-6); g.lineTo(px-5,padT-14); g.lineTo(px+5,padT-14); g.closePath(); g.fill();
+  g.font="700 11px 'Bai Jamjuree'";
+  var lbl="estás acá ("+(x.pico*100).toFixed(0)+"%)";
+  var lw=g.measureText(lbl).width;
+  var lx=Math.min(Math.max(px-lw/2, padL), W-padR-lw);
+  g.fillText(lbl, lx, padT-16>10? padT-18+10 : 10);
+}
+
+/* ================= gráfico de aportes ================= */
+function dibujarAportes(meses, pactado){
+  var p=prepCanvas("cv-aportes"); if(!p) return;
+  var g=p.g, W=p.W, H=p.H;
+  var padL=8,padR=8,padT=18,padB=22;
+  var n=meses.length;
+  var mx=Math.max(pactado, Math.max.apply(null,meses.map(function(z){return z.ap;})),1)*1.15;
+  var bw=Math.min(46,(W-padL-padR)/n*0.62);
+  var X=function(i){ return padL+(i+0.5)*(W-padL-padR)/n; };
+  var Y=function(v){ return padT+(1-v/mx)*(H-padT-padB); };
+  meses.forEach(function(z,i){
+    var ok=pactado<=0 || z.ap>=pactado*0.9;
+    g.fillStyle= z.ap<=0? "rgba(224,82,90,.35)" : ok? "rgba(99,252,175,.75)":"rgba(224,176,122,.8)";
+    var y=Y(z.ap), x0=X(i)-bw/2;
+    g.beginPath(); g.roundRect(x0, Math.min(y,H-padB-2), bw, Math.max(2,(H-padB)-y), 3); g.fill();
+    g.fillStyle="#9AA1AB"; g.font="9.5px 'Bai Jamjuree'"; g.textAlign="center";
+    g.fillText(mesCorto(z.mes), X(i), H-8);
+  });
+  if(pactado>0){
+    g.strokeStyle="#FEF9F3"; g.setLineDash([5,4]); g.lineWidth=1.2;
+    g.beginPath(); g.moveTo(padL,Y(pactado)); g.lineTo(W-padR,Y(pactado)); g.stroke(); g.setLineDash([]);
+    g.fillStyle="#FEF9F3"; g.font="700 10.5px 'Bai Jamjuree'"; g.textAlign="right";
+    g.fillText("tu aporte pactado: "+fmt(pactado), W-padR-2, Y(pactado)-5);
+  }
+}
+
+/* ================= carga ================= */
+async function entrar(clave){
+  var r=await fetch(BASE+"/reporte",{ method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+    body:JSON.stringify({ alias:ALIAS, clave:clave }) });
+  var j=await r.json();
+  if(!r.ok) throw new Error(j.error||("error "+r.status));
+  return j;
+}
+function mostrar(){
+  $("login").style.display="none"; $("app").style.display="";
+  render();
+  window.addEventListener("resize", function(){ if(D) render(); });
+}
+$("entrar").addEventListener("click", async function(){
+  var b=$("entrar"); b.disabled=true; b.textContent="Abriendo…"; $("err").style.display="none";
+  try{
+    D=await entrar($("clave").value.trim());
+    sessionStorage.setItem("r_clave_"+ALIAS, $("clave").value.trim());
+    mostrar();
+  }catch(e){
+    $("err").style.display="block"; $("err").textContent=String(e.message||e);
+  }
+  b.disabled=false; b.textContent="Ver mi cuenta";
+});
+$("clave").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar").click(); });
+
+(function init(){
+  if(DEMO){
+    $("demobar").style.display="flex";
+    Array.prototype.forEach.call(document.querySelectorAll("#demobar button"), function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(document.querySelectorAll("#demobar button"),function(z){z.classList.remove("on");});
+        b.classList.add("on"); ESCENARIO=b.getAttribute("data-esc");
+        localStorage.removeItem("r_hechas_demo");
+        D=demoDatos(ESCENARIO); render();
+      });
+    });
+    D=demoDatos("normal"); mostrar(); return;
+  }
+  if(!ALIAS){
+    $("login-alias").textContent="Abrí el link personal que te compartimos (investorcr.com/r/tu-alias).";
+    $("clave").style.display="none"; $("entrar").style.display="none";
+    return;
+  }
+  $("login-alias").textContent="Cuenta "+ALIAS+" · entrá con tu clave de siempre.";
+  var guardada=sessionStorage.getItem("r_clave_"+ALIAS);
+  if(guardada){
+    entrar(guardada).then(function(j){ D=j; mostrar(); })
+      .catch(function(){ sessionStorage.removeItem("r_clave_"+ALIAS); });
+  }
+})();
+
+/* ================= maqueta (#demo) ================= */
+function demoSerieSemanal(escenario){
+  // ~110 cierres semanales del "Nasdaq" con un techo y una caída según el escenario
+  var n=110, c=[], t=[], v=14500;
+  var caidaFinal= escenario==="fuera"? 0.26 : escenario==="cerca"? 0.135 : 0.032;
+  var semCaida= escenario==="normal"? 6 : 16;
+  for(var i=0;i<n;i++){
+    var drift= i<n-semCaida? 0.0035 : -(caidaFinal/semCaida)*1.9;
+    var ruido=Math.sin(i*1.7)*0.006+Math.sin(i*0.41)*0.004;
+    v*=1+drift+ruido;
+    c.push(Math.round(v));
+    var d=new Date(Date.now()-(n-1-i)*7*864e5);
+    t.push(d.toISOString().slice(0,10));
+  }
+  // ajusta el final exacto a la distancia deseada vs máx 39
+  var mx=0; for(var j=Math.max(0,n-40);j<n;j++) if(c[j]>mx) mx=c[j];
+  c[n-1]=Math.round(mx*(1-caidaFinal));
+  return {t:t, c:c};
+}
+function demoDatos(escenario){
+  var fuera=escenario==="fuera";
+  var serie=demoSerieSemanal(escenario);
+  var n=serie.c.length, mx=0;
+  for(var j=Math.max(0,n-40);j<n;j++) if(serie.c[j]>mx) mx=serie.c[j];
+  var dist=(serie.c[n-1]/mx-1)*100;
+  var hoyISO=new Date().toISOString().slice(0,10);
+  var equity= fuera? 852000: 876400, cash= fuera? 36000: 36400;
+  var meses=[], eq=560000;
+  for(var k=11;k>=0;k--){
+    var d=new Date(); d.setUTCMonth(d.getUTCMonth()-k,1);
+    var mes=d.toISOString().slice(0,10);
+    eq*=1.024;
+    var ap= k===0? 0 : (k===4? 0 : (k%5===0? 2000:1500));
+    meses.push({ mes:mes,
+      equity: k===0? equity : Math.round(eq),
+      cash: k===0? cash : 2600,
+      aportado_total: 468000+(11-k)*1500,
+      phi: (k===0? equity: eq)/1200000,
+      posiciones: k===0? [
+        { s:"TQQQ", q:640, px:93.7, entrada:61.2, v:59968, pnl:20800, pnlp:53.2, hoy:1.4 },
+        { s:"SPY", q:1226, px:571.1, entrada:441.0, v:700168, pnl:159480, pnlp:29.5, hoy:0.4 },
+        { s:"SJC", q:800, px:100.1, entrada:100.0, v:80064, pnl:64, pnlp:0.1, hoy:0.0 }
+      ]:[],
+      transferencias_mes: ap>0? [{fecha:mes, monto:ap}]:[],
+      cuenta: k===0? { last_equity:equity-3900, tir:12.9, inicio:"2021-05-10",
+        ytd_pnl:64200, ytd_pct: fuera? -2.1: 8.4 }:{}
+    });
+  }
+  return {
+    nombre:"María Vargas",
+    meta:{ ingreso:4000, tasa:4, aporte_pactado:1500, capital_inicial:0, pico:0.75,
+      plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
+    snapshots: meses,
+    senal:{ semana:hoyISO, estado: fuera? "fuera":"dentro", distancia:dist, max39:mx, cierre:serie.c[n-1] },
+    serie: serie,
+    pico: 0.75
+  };
+}
+</script>
+</body>
+</html>
