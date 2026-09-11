@@ -166,6 +166,7 @@
   .modal.on{ display:flex; }
   .modal .caja2{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px 18px;
     max-width:480px; width:100%; margin:auto; }
+  .modal .caja2.ancha{ max-width:760px; }
   .modal h3{ margin:0 0 6px; font-size:18px; color:var(--crema); }
   .modal .sub3{ font-size:13px; color:var(--gris-sec); margin-bottom:12px; }
   .pasos{ list-style:none; margin:0 0 6px; padding:0; counter-reset:paso; }
@@ -314,6 +315,15 @@
       <input id="e-ingreso" inputmode="numeric" autocomplete="off">
       <label for="e-tasa">Tasa de crecimiento y retiro (% al año)</label>
       <input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="8">
+    </div>
+    <div id="e-lab" style="display:none; margin-top:16px; border-top:1px solid var(--bd); padding-top:14px">
+      <div style="font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec)">Los planes de la casa, sobre la historia real</div>
+      <p class="sub3" style="margin:6px 0 0">Elegí un plan y una época, y mirá qué caídas habrías vivido — en dólares tuyos.
+      Todos con la misma regla: salís de la fase 1 al <b>70%</b> de tu meta y llegás con <b>70% en renta fija</b> (tu piso) y <b>30%</b> todavía creciendo.
+      Usa tu capital de hoy, tu aporte y la meta que escribas arriba.</p>
+      <div class="planchips" id="lab-planes"></div>
+      <div class="labctl" id="lab-epocas"></div>
+      <div id="lab-out"></div>
     </div>
     <div id="e-campos-aporte" style="display:none">
       <label for="e-anual">Tu compromiso al año ($)</label>
@@ -608,7 +618,7 @@ function render(){
       +'<span class="chip '+f.c+'">'+f.t+'</span></div>'
     +'<div class="sub">De tu meta de <b>'+money(x.fp)+'</b> — el capital que paga tus <b>'+fmt(x.m.ingreso||0)+'</b> al mes sin trabajar. '
       +(falta>0? 'Te faltan <b>'+money(falta)+'</b>. ':'<b>Ya llegaste.</b> 🎉 ')
-      +'<span class="editlink" id="ed-ingreso">✎ cambiar mi meta</span></div>'
+      +'<span class="editlink" id="ed-ingreso">✎ editar mi meta o plan</span></div>'
     +'<div class="pista">'
       +'<div class="relleno"><i style="width:'+Math.min(100,x.phi*100).toFixed(1)+'%"></i></div>'
       +'<div class="hito" style="left:'+Math.min(99,p1)+'%"></div>'
@@ -704,17 +714,6 @@ function render(){
     +'<div class="grad"><canvas id="cv-grad"></canvas></div>'
     +'<div class="candado">🔒 Tu pico: <b class="num">'+(x.pico*100).toFixed(1)+'%</b>. El riesgo del plan solo baja, nunca vuelve a subir: '
     +'aunque el mercado te devuelva para atrás, tu mezcla se queda en la de tu mejor momento.</div>'
-  +'</div>'
-
-  /* ---- laboratorio: los planes de la casa sobre la historia ---- */
-  +'<div class="card">'
-    +'<h2>Los planes de la casa, sobre la historia real</h2>'
-    +'<p class="lede">Elegí un plan y una época, y mirá qué caídas habrías vivido — en dólares tuyos, no solo en %. '
-    +'Todos usan la misma regla: salís de la fase 1 al <b>70%</b> de tu meta y llegás con <b>70% en renta fija</b> (tu piso) y <b>30%</b> todavía creciendo. '
-    +'Arranca con tu capital de hoy y tu aporte del año.</p>'
-    +'<div class="planchips" id="lab-planes"></div>'
-    +'<div class="labctl" id="lab-epocas"></div>'
-    +'<div id="lab-out"></div>'
   +'</div>'
 
   /* ---- aportes ---- */
@@ -813,7 +812,6 @@ function render(){
   var ei=$("ed-ingreso"); if(ei) ei.addEventListener("click", function(){ abrirEditor("ingreso"); });
   var ea=$("ed-aporte"); if(ea) ea.addEventListener("click", function(){ abrirEditor("aporte"); });
   var edd=$("ed-dist"); if(edd) edd.addEventListener("click", abrirDist);
-  renderLab();
 }
 
 function fraseAporte(x){
@@ -875,8 +873,10 @@ function abrirEditor(tipo){
   $("e-msg").textContent="";
   $("e-campos-ingreso").style.display= tipo==="ingreso"? "":"none";
   $("e-campos-aporte").style.display= tipo==="aporte"? "":"none";
+  $("e-lab").style.display= tipo==="ingreso"? "":"none";
+  document.querySelector("#modal-editar .caja2").classList.toggle("ancha", tipo==="ingreso");
   if(tipo==="ingreso"){
-    $("e-tit").textContent="Tu meta de retiro";
+    $("e-tit").textContent="Tu meta y tu plan";
     $("e-sub").textContent="¿Con cuánto querés vivir al mes, sin trabajar? Tu meta de capital sale de ese número y de la tasa a la que tu capital lo genera.";
     $("e-ingreso").value=(+m.ingreso||0)? (+m.ingreso).toLocaleString("en-US"):"";
     $("e-tasa").value=(+m.tasa||8);
@@ -887,8 +887,9 @@ function abrirEditor(tipo){
     $("e-anual").value=anual? anual.toLocaleString("en-US"):"";
     $("e-mensual").value=anual? Math.round(anual/12).toLocaleString("en-US"):"";
   }
-  edResumen();
   $("modal-editar").classList.add("on");
+  edResumen();
+  if(tipo==="ingreso") renderLab();
 }
 function edResumen(){
   var m=D.meta||{}, r=$("e-resumen");
@@ -901,6 +902,7 @@ function edResumen(){
       ? "Asumiendo que tu capital te paga un <b>"+tasa+"%</b> al año: tu meta de capital "
         +(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(fpN)+"</b>. Tu % de avance se recalcula al guardar."
       : "Escribí el monto y la tasa para ver tu meta nueva.";
+    if($("modal-editar").classList.contains("on")) renderLab();   // el laboratorio sigue lo que escribís
   } else {
     var an=numDe($("e-anual"));
     var anV=+m.aporte_anual || (+m.aporte_pactado||0)*12;
@@ -1121,7 +1123,17 @@ function simPlanLab(p, y0, y1, x){
 
 function renderLab(){
   var box=$("lab-out"); if(!box || !D) return;
-  var x=derivar(D);
+  // dentro del editor de la meta, el laboratorio usa lo que el cliente esté escribiendo
+  var x;
+  if(ED_TIPO==="ingreso" && $("modal-editar").classList.contains("on")){
+    var m2=JSON.parse(JSON.stringify(D.meta||{}));
+    var ing2=numDe($("e-ingreso")), tas2=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
+    if(ing2>0){ m2.ingreso=ing2; delete m2.fp; }
+    if(tas2>0){ m2.tasa=tas2; delete m2.fp; }
+    x=derivar({ meta:m2, snapshots:D.snapshots, senal:D.senal, pico:D.pico });
+  } else {
+    x=derivar(D);
+  }
   if(!LAB.plan){
     var propio=PLANES_LAB.filter(function(p){ return p.f1===x.plan.f1 && p.f2===x.plan.f2; })[0];
     LAB.plan=propio||PLANES_LAB[3];   // el del cliente si es de los sencillos; si no, TQQQ → SPY
