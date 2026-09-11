@@ -1136,7 +1136,7 @@ function aplicarCombo(f1,f2,f3,p1,p2,ff,tim){
   if(tim!=null){ S.filtro=tim; var sf=byId("seg-filtro"); if(sf) Array.prototype.forEach.call(sf.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S.filtro); }); }
   ["f1","f2","f3"].forEach(function(k){ var seg=byId("seg-"+k); if(!seg)return;
     Array.prototype.forEach.call(seg.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===S[k]); }); });
-  refresh(); if(!window.__noScroll){ var ids=["hist-chart","hist-chart2","hist-chart3"], best=null, bestD=1e15, mid=window.scrollY+window.innerHeight/2; ids.forEach(function(id){ var el=byId(id); if(!el) return; var r=el.getBoundingClientRect(), c=r.top+window.scrollY+r.height/2, d=Math.abs(c-mid); if(d<bestD){ bestD=d; best=el; } }); if(best) best.scrollIntoView({behavior:"smooth",block:"center"}); } window.__noScroll=false;
+  refresh(); if(!window.__noScroll && !window.__CLIENTE){ var ids=["hist-chart","hist-chart2","hist-chart3"], best=null, bestD=1e15, mid=window.scrollY+window.innerHeight/2; ids.forEach(function(id){ var el=byId(id); if(!el) return; var r=el.getBoundingClientRect(), c=r.top+window.scrollY+r.height/2, d=Math.abs(c-mid); if(d<bestD){ bestD=d; best=el; } }); if(best) best.scrollIntoView({behavior:"smooth",block:"center"}); } window.__noScroll=false;
 }
 // Tabla ordenable reutilizable. cfg:{ cols:[{key,label,align,sortable,fmt}], rows, top, sortKey, sortDir(-1 desc), rowClass(r), onClick(r), note }
 function sortableTable(mount, cfg){
@@ -1576,6 +1576,77 @@ window.__statsPlan=function(){
   var x0=null;
   wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
   wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
+})();
+
+// ===== MODO CLIENTE (?modo=cliente): la calculadora embebida en el dashboard /r =====
+// Muestra solo las secciones 1-3 (la parte interactiva), recibe el estado guardado del
+// cliente por postMessage, y reporta cada cambio al dashboard para que quede guardado.
+(function(){
+  if(new URLSearchParams(location.search).get("modo")!=="cliente") return;
+  window.__CLIENTE=true;
+
+  // recorte: se ve desde la Sección 1 (#s1) hasta antes de la Sección 4 (#s4)
+  var wrap=document.querySelector(".wrap");
+  if(wrap){
+    var dentro=false, fin=false;
+    Array.prototype.forEach.call(wrap.children, function(el){
+      if(el.id==="s1") dentro=true;
+      if(el.id==="s4") fin=true;
+      if(!dentro || fin) el.style.display="none";
+    });
+  }
+  document.body.style.background="#0d0f14";
+
+  var CLAVES_NUM=["edad","edadret","ret","sjc","p1","p2","ff","pmin","y0","y1","umbral","crec","crecret","infl","income"];
+  var CLAVES_STR=["f1","f2","f3","freq","filtro"];
+  var CLAVES_BOOL=["sinap","costos"];
+
+  function sincronizarSegs(){
+    function seg(id, val){ var c=byId(id); if(!c) return;
+      Array.prototype.forEach.call(c.querySelectorAll("button"),function(b){ b.classList.toggle("on", b.getAttribute("data-a")===val); }); }
+    seg("seg-f1",S.f1); seg("seg-f2",S.f2); seg("seg-f3",S.f3);
+    seg("seg-filtro",S.filtro); seg("seg-freq",S.freq);
+    seg("seg-sinap",S.sinap?"sin":"con"); seg("seg-costos",S.costos?"con":"sin");
+  }
+  function estado(){
+    var s={};
+    CLAVES_NUM.concat(CLAVES_STR,CLAVES_BOOL).forEach(function(k){ s[k]=S[k]; });
+    return s;
+  }
+  var timerRep=null, listo=false, altoPrev=0;
+  function reportar(){
+    if(!listo) return;
+    clearTimeout(timerRep);
+    timerRep=setTimeout(function(){
+      parent.postMessage({tipo:"fpf-estado", S:estado()}, location.origin);
+    }, 800);
+  }
+  function reportarAlto(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-altoPrev)>24){ altoPrev=h; parent.postMessage({tipo:"fpf-alto", alto:h}, location.origin); }
+  }
+  setInterval(reportarAlto, 1200);
+
+  // cada refresh (= cada cambio del usuario) se reporta al dashboard
+  var refreshOrig=refresh;
+  refresh=function(){ refreshOrig(); reportar(); reportarAlto(); };
+
+  window.addEventListener("message", function(ev){
+    if(ev.origin!==location.origin) return;
+    var d=ev.data||{};
+    if(d.tipo!=="fpf-init") return;
+    var s=d.S||{};
+    CLAVES_NUM.forEach(function(k){ var v=Number(s[k]); if(isFinite(v)&&v>0||k==="ff"&&isFinite(v)) S[k]=v; });
+    CLAVES_STR.forEach(function(k){ if(typeof s[k]==="string"&&s[k]) S[k]=s[k]; });
+    CLAVES_BOOL.forEach(function(k){ if(typeof s[k]==="boolean") S[k]=s[k]; });
+    var cap=Number(d.capital);
+    if(isFinite(cap)&&cap>=0){ var ic=byId("i-cap"); if(ic) ic.value=Math.round(cap).toLocaleString("en-US"); }
+    sincronizarSegs();
+    refreshOrig();          // aplica sin re-reportar el eco
+    listo=true;             // de aquí en adelante, los cambios del cliente sí se guardan
+    reportarAlto();
+  });
+  parent.postMessage({tipo:"fpf-listo"}, location.origin);
 })();
 </script>
 </body>
