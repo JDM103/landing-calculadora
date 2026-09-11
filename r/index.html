@@ -187,6 +187,33 @@
   .editlink{ color:var(--gris-sec); font-size:12px; font-weight:600; cursor:pointer;
     text-decoration:underline dotted; white-space:nowrap; }
   .editlink:hover{ color:var(--menta); }
+
+  /* ===== chat con Jose ===== */
+  .chat{ display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto;
+    padding:4px 2px; margin-bottom:10px; overscroll-behavior:contain; }
+  .burb{ max-width:85%; border-radius:12px; padding:8px 12px; font-size:13.5px; line-height:1.45;
+    white-space:pre-wrap; word-break:break-word; }
+  .burb .cua{ display:block; font-size:10px; color:var(--gris-sec); margin-top:3px; }
+  .b-cli{ align-self:flex-end; background:rgba(99,252,175,.12); border:1px solid rgba(99,252,175,.3); color:var(--crema); }
+  .b-jose{ align-self:flex-start; background:var(--card2); border:1px solid var(--bd); color:var(--gris); }
+  .chat-in{ display:flex; gap:8px; align-items:stretch; }
+  .chat-in textarea{ flex:1; min-width:0; background:var(--input); border:1px solid var(--bd); border-radius:10px;
+    color:var(--crema); font-family:inherit; font-size:14px; padding:9px 11px; resize:vertical; }
+  .chat-in textarea:focus{ outline:none; border-color:var(--menta); }
+  .chat-in button{ background:var(--menta); color:#082018; border:none; border-radius:10px; padding:0 18px;
+    font-family:inherit; font-weight:800; font-size:14px; cursor:pointer; flex:0 0 auto; }
+
+  /* ===== editor de distribución ===== */
+  .dist-fila{ display:flex; gap:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap; }
+  .dist-fila select{ flex:1; min-width:150px; background:var(--input); border:1px solid var(--bd); border-radius:9px;
+    color:var(--crema); font-family:inherit; font-size:14px; padding:9px; }
+  .dist-fila select:focus{ outline:none; border-color:var(--menta); }
+  .dist-fila .quitar{ background:transparent; border:1px solid var(--bd); color:var(--gris-sec); border-radius:8px;
+    width:34px; height:36px; cursor:pointer; font-size:14px; flex:0 0 auto; }
+  .dist-fila .quitar:hover{ border-color:var(--rojo); color:var(--rojo); }
+  .dist-add{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:999px;
+    padding:8px 16px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+  .dist-add:hover{ border-color:var(--menta); }
   .modal .btns{ display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
   .modal .btns button{ flex:1; min-width:120px; border-radius:999px; padding:12px 16px; font-family:inherit;
     font-size:14px; font-weight:800; cursor:pointer; border:1px solid var(--bd); }
@@ -289,6 +316,22 @@
       <button class="no" id="e-cerrar">Cancelar</button>
     </div>
     <div class="nota3" id="e-msg"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal-dist">
+  <div class="caja2">
+    <h3>Repartir tu plata</h3>
+    <div class="sub3">Decidí qué % va a qué cosa. El <b>Freedom Point Plan</b> es tu plan de fases con su gradiente;
+    lo demás son ETFs fijos. Lo que sume menos de 100% queda en efectivo.</div>
+    <div id="dist-filas"></div>
+    <button class="dist-add" id="dist-add">+ agregar otra fila</button>
+    <div class="e-resumen" id="dist-total"></div>
+    <div class="btns">
+      <button class="ok" id="dist-guardar">Guardar</button>
+      <button class="no" id="dist-cerrar">Cancelar</button>
+    </div>
+    <div class="nota3" id="dist-msg"></div>
   </div>
 </div>
 
@@ -491,6 +534,8 @@ function nombreActivo(x, sym){
 
 function render(){
   var d=D, x=derivar(d), f=faseDe(x), sen=d.senal||null;
+  var dist=(x.m.distribucion&&x.m.distribucion.length)? x.m.distribucion:null;
+  var restoDist=dist? Math.max(0,100-dist.reduce(function(s,f2){return s+(+f2.pct||0);},0)):0;
   var app=$("app");
   var falta=Math.max(0,x.fp-x.equity);
   var aportado=+((x.snap&&x.snap.aportado_total)||0) + (+x.m.capital_inicial||0);
@@ -615,6 +660,18 @@ function render(){
     +'aunque el mercado te devuelva para atrás, tu mezcla se queda en la de tu mejor momento.</div>'
   +'</div>'
 
+  /* ---- distribución pedida ---- */
+  +'<div class="card">'
+    +'<h2>Cómo querés repartir tu plata</h2>'
+    +(dist?
+      '<p class="lede">Tu instrucción actual: <b>'+esc(distTexto(dist))+'</b>'
+        +(restoDist>0.5? ' · el <b>'+restoDist.toFixed(0)+'%</b> restante queda en efectivo':'')
+        +' <span class="editlink" id="ed-dist">✎ cambiar</span></p>'
+      +'<div class="barra"><div class="pista2" id="b-dist"></div></div>'
+      +'<p class="lede" style="margin-top:8px">Esto es una instrucción para Jose: él la ejecuta en tu cuenta y te confirma por los mensajes de abajo. No es una orden automática.</p>'
+      : '<p class="lede">Hoy vas <b>100% con el Freedom Point Plan</b> (la mezcla de arriba). Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — podés pedirlo acá. <span class="editlink" id="ed-dist">✎ personalizar</span></p>')
+  +'</div>'
+
   /* ---- aportes ---- */
   +'<div class="card">'
     +'<h2>Tus aportes: plan vs realidad</h2>'
@@ -653,6 +710,16 @@ function render(){
       : '<p class="lede">Todo tu capital está en efectivo ahora mismo.</p>')
   +'</div>'
 
+  /* ---- mensajes con Jose ---- */
+  +'<div class="card">'
+    +'<h2>Mensajes con Jose</h2>'
+    +'<p class="lede">Anotá acá lo que querás — instrucciones, dudas, cambios en tus propias palabras. Jose lo lee, lo lleva a cabo y te responde en este mismo hilo.</p>'
+    +'<div class="chat" id="chat-hilo"></div>'
+    +'<div class="chat-in"><textarea id="chat-txt" rows="2" placeholder="Escribile a Jose…" maxlength="2000"></textarea>'
+    +'<button id="chat-enviar">Enviar</button></div>'
+    +'<div class="sub" id="chat-msg" style="font-size:12px;color:var(--gris-sec);margin-top:6px"></div>'
+  +'</div>'
+
   /* ---- historial ---- */
   +'<details class="hist"><summary>Ver tu historia mes a mes</summary>'
     +'<div class="card" style="margin-top:8px"><div class="tblwrap"><table><thead>'
@@ -678,6 +745,16 @@ function render(){
     [{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3},{v:x.equity-x.tgt.f3,c:"#5a6270",t:"efectivo (a resguardo)"}]
     :[{v:x.tgt.f1,c:"var(--f1)",t:x.plan.f1},{v:x.tgt.f2,c:"var(--f2)",t:x.plan.f2},{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3}], x.equity);
 
+  // barra de la distribución pedida (fpf en menta; los ETFs van rotando colores)
+  if(dist){
+    var colDist=["#7C8FF7","#E0B07A","#e0796b","#5bc8b0","#9AA1AB"], ci=0;
+    pintarMezcla("b-dist", dist.map(function(f2){
+      return { v:+f2.pct,
+        c: f2.tipo==="fpf"? "var(--menta)" : colDist[(ci++)%colDist.length],
+        t: (f2.tipo==="fpf"?"Freedom Point Plan":f2.sym)+" · "+f2.pct+"%" };
+    }).concat(restoDist>0.5? [{v:restoDist, c:"#3a4150", t:"efectivo · "+restoDist.toFixed(0)+"%"}]:[]), 100);
+  }
+
   // gráficos
   if(d.serie && d.serie.c && d.serie.c.length>45 && x.plan.timing) dibujarSenal(d.serie, sen);
   dibujarGradiente(x);
@@ -698,6 +775,12 @@ function render(){
   });
   var ei=$("ed-ingreso"); if(ei) ei.addEventListener("click", function(){ abrirEditor("ingreso"); });
   var ea=$("ed-aporte"); if(ea) ea.addEventListener("click", function(){ abrirEditor("aporte"); });
+  var edd=$("ed-dist"); if(edd) edd.addEventListener("click", abrirDist);
+  var ce=$("chat-enviar"); if(ce) ce.addEventListener("click", enviarChat);
+  var ct=$("chat-txt"); if(ct) ct.addEventListener("keydown", function(e){
+    if(e.key==="Enter" && (e.ctrlKey||e.metaKey)) enviarChat(); });
+  renderChat();
+  if(MENSAJES===null && !DEMO) cargarMensajes();
 }
 
 function fraseAporte(x){
@@ -831,6 +914,166 @@ $("e-guardar").addEventListener("click", async function(){
 });
 $("e-cerrar").addEventListener("click", function(){ $("modal-editar").classList.remove("on"); });
 $("modal-editar").addEventListener("click", function(e){ if(e.target===$("modal-editar")) $("modal-editar").classList.remove("on"); });
+
+/* ================= distribución: qué % a qué ================= */
+var DIST_ED=[];
+function distTexto(d){
+  return d.map(function(f){ return (+f.pct)+"% "+(f.tipo==="fpf"?"Freedom Point Plan":f.sym); }).join(" · ");
+}
+function abrirDist(){
+  var d=(D.meta&&D.meta.distribucion)||[];
+  DIST_ED = d.length? d.map(function(f){ return {tipo:f.tipo, sym:f.sym||"", pct:+f.pct}; })
+    : [{tipo:"fpf", sym:"", pct:100}];
+  $("dist-msg").textContent="";
+  pintarDistFilas();
+  $("modal-dist").classList.add("on");
+}
+function pintarDistFilas(){
+  var CONOCIDOS=["SPY","QQQ","QLD","TQQQ","SJC"];
+  $("dist-filas").innerHTML=DIST_ED.map(function(f,i){
+    var otro= f.tipo==="etf" && CONOCIDOS.indexOf(f.sym)<0;
+    return '<div class="dist-fila">'
+      +'<select data-sel="'+i+'">'
+        +'<option value="FPF"'+(f.tipo==="fpf"?' selected':'')+'>Freedom Point Plan</option>'
+        +CONOCIDOS.map(function(s){ return '<option value="'+s+'"'+(f.tipo==="etf"&&f.sym===s?' selected':'')+'>'+s+'</option>'; }).join("")
+        +'<option value="OTRO"'+(otro?' selected':'')+'>Otro ticker…</option>'
+      +'</select>'
+      +(otro?'<input data-sym="'+i+'" value="'+esc(f.sym)+'" placeholder="VTI" maxlength="5" style="width:76px;text-transform:uppercase">':'')
+      +'<input data-pct="'+i+'" inputmode="decimal" value="'+(f.pct||"")+'" style="width:70px;text-align:right">'
+      +'<span style="color:var(--gris-sec)">%</span>'
+      +'<button class="quitar" data-del="'+i+'" title="Quitar">✕</button>'
+    +'</div>';
+  }).join("");
+  Array.prototype.forEach.call(document.querySelectorAll("[data-sel]"), function(s){
+    s.addEventListener("change", function(){
+      var i=+s.getAttribute("data-sel"), v=s.value;
+      if(v==="FPF"){ DIST_ED[i]={tipo:"fpf", sym:"", pct:DIST_ED[i].pct}; }
+      else if(v==="OTRO"){ DIST_ED[i]={tipo:"etf", sym:"", pct:DIST_ED[i].pct}; }
+      else { DIST_ED[i]={tipo:"etf", sym:v, pct:DIST_ED[i].pct}; }
+      pintarDistFilas();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-sym]"), function(inp){
+    inp.addEventListener("input", function(){
+      DIST_ED[+inp.getAttribute("data-sym")].sym=inp.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,5);
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-pct]"), function(inp){
+    inp.addEventListener("input", function(){
+      DIST_ED[+inp.getAttribute("data-pct")].pct=parseFloat(inp.value.replace(/[^0-9.]/g,""))||0;
+      distTotalUI();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-del]"), function(b){
+    b.addEventListener("click", function(){ DIST_ED.splice(+b.getAttribute("data-del"),1); pintarDistFilas(); });
+  });
+  distTotalUI();
+}
+function distTotalUI(){
+  var t=DIST_ED.reduce(function(s,f){return s+(+f.pct||0);},0);
+  var resto=Math.round((100-t)*10)/10;
+  $("dist-total").innerHTML= !DIST_ED.length? 'Sin filas: volvés a <b>100% Freedom Point Plan</b>.'
+    : t>100.5? '<b style="color:var(--rojo)">La suma va en '+t+'% — se pasa de 100%.</b>'
+    : 'Suma: <b>'+t+'%</b>'+(resto>0.5? ' · el <b>'+resto+'%</b> queda en efectivo':' · completo');
+}
+$("dist-add").addEventListener("click", function(){
+  if(DIST_ED.length>=8) return;
+  DIST_ED.push({tipo:"etf", sym:"QQQ", pct:0}); pintarDistFilas();
+});
+$("dist-guardar").addEventListener("click", async function(){
+  var msg=$("dist-msg"), btn=this;
+  var total=0, fpfN=0;
+  for(var i=0;i<DIST_ED.length;i++){
+    var f=DIST_ED[i];
+    if(!(f.pct>0)){ msg.textContent="❌ Hay una fila sin %."; return; }
+    if(f.tipo==="fpf") fpfN++;
+    else if(!/^[A-Z]{1,5}$/.test(f.sym)){ msg.textContent="❌ Hay una fila sin ticker."; return; }
+    total+=f.pct;
+  }
+  if(fpfN>1){ msg.textContent="❌ El Freedom Point Plan va una sola vez."; return; }
+  if(total>100.5){ msg.textContent="❌ La suma se pasa de 100%."; return; }
+  var arr=DIST_ED.map(function(f){ return f.tipo==="fpf"? {tipo:"fpf", pct:f.pct} : {tipo:"etf", sym:f.sym, pct:f.pct}; });
+  btn.disabled=true; btn.textContent="Guardando…"; msg.textContent="";
+  try{
+    if(DEMO){ D.meta.distribucion=arr; }
+    else {
+      var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
+      if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
+      var r=await fetch(BASE+"/editar-plan",{ method:"POST",
+        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr }) });
+      var j=await r.json();
+      if(!r.ok) throw new Error(j.error||("error "+r.status));
+      D.meta=j.meta;
+    }
+    // queda constancia en el hilo, en palabras del cliente
+    try{ await mandarTexto(arr.length? "Cambié mi distribución a: "+distTexto(arr)+"." : "Quiero volver a 100% Freedom Point Plan."); }catch(e3){}
+    $("modal-dist").classList.remove("on");
+    render();
+  }catch(e){ msg.textContent="❌ "+(e.message||e); }
+  btn.disabled=false; btn.textContent="Guardar";
+});
+$("dist-cerrar").addEventListener("click", function(){ $("modal-dist").classList.remove("on"); });
+$("modal-dist").addEventListener("click", function(e){ if(e.target===$("modal-dist")) $("modal-dist").classList.remove("on"); });
+
+/* ================= mensajes con Jose ================= */
+var MENSAJES=null, CHAT_CARGANDO=false;
+function renderChat(){
+  var box=$("chat-hilo"); if(!box) return;
+  if(MENSAJES===null){ box.innerHTML='<div style="color:var(--gris-sec);font-size:13px">Cargando mensajes…</div>'; return; }
+  if(!MENSAJES.length){ box.innerHTML='<div style="color:var(--gris-sec);font-size:13px">Todavía no hay mensajes. Escribí el primero.</div>'; return; }
+  box.innerHTML=MENSAJES.map(function(m){
+    var fch=(m.cuando||"").slice(0,16).replace("T"," ");
+    return '<div class="burb '+(m.de==="cliente"?"b-cli":"b-jose")+'">'+esc(m.texto)
+      +'<span class="cua">'+(m.de==="jose"?"Jose · ":"")+fch+'</span></div>';
+  }).join("");
+  box.scrollTop=box.scrollHeight;
+}
+async function cargarMensajes(){
+  if(CHAT_CARGANDO || DEMO) return;
+  CHAT_CARGANDO=true;
+  try{
+    var ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null");
+    if(!ses){ CHAT_CARGANDO=false; return; }
+    var r=await fetch(BASE+"/mensajes",{ method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+      body:JSON.stringify({ correo:ses.correo, clave:ses.clave, accion:"listar" }) });
+    var j=await r.json();
+    if(!r.ok) throw new Error(j.error||("error "+r.status));
+    MENSAJES=j.mensajes||[];
+  }catch(e){
+    MENSAJES=[];
+    var cm=$("chat-msg"); if(cm) cm.textContent="No se pudieron cargar los mensajes: "+(e.message||e);
+  }
+  CHAT_CARGANDO=false;
+  renderChat();
+}
+async function mandarTexto(texto){
+  if(DEMO){
+    MENSAJES=MENSAJES||[];
+    MENSAJES.push({de:"cliente", texto:texto, cuando:new Date().toISOString()});
+    renderChat(); return;
+  }
+  var ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null");
+  if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
+  var r=await fetch(BASE+"/mensajes",{ method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+    body:JSON.stringify({ correo:ses.correo, clave:ses.clave, accion:"enviar", texto:texto }) });
+  var j=await r.json();
+  if(!r.ok) throw new Error(j.error||("error "+r.status));
+  MENSAJES=j.mensajes||[];
+  renderChat();
+}
+async function enviarChat(){
+  var t=$("chat-txt"), btn=$("chat-enviar"), cm=$("chat-msg");
+  if(!t) return;
+  var texto=(t.value||"").trim();
+  if(!texto) return;
+  btn.disabled=true; if(cm) cm.textContent="";
+  try{ await mandarTexto(texto); t.value=""; }
+  catch(e){ if(cm) cm.textContent="❌ "+(e.message||e); }
+  btn.disabled=false;
+}
 
 /* ================= gráfico de la señal ================= */
 function prepCanvas(id){
@@ -1151,6 +1394,10 @@ var TOKEN_RESET=null;
         D=demoDatos(ESCENARIO); render();
       });
     });
+    if(MENSAJES===null) MENSAJES=[
+      { de:"cliente", texto:"Hola Jose, quiero dedicarle una parte a QQQ directo y dejar el resto en el plan. ¿Se puede?", cuando:new Date(Date.now()-3*864e5).toISOString() },
+      { de:"jose", texto:"¡Claro! Anotalo en \"Cómo querés repartir tu plata\" y el lunes lo dejo ejecutado. Cualquier duda me escribís por acá.", cuando:new Date(Date.now()-2*864e5).toISOString() }
+    ];
     D=demoDatos(ESCENARIO); mostrar(); return;
   }
   // ¿viene del correo de cambio de clave?
@@ -1216,6 +1463,7 @@ function demoDatos(escenario){
   return {
     nombre:"María Vargas",
     meta:{ ingreso:4000, tasa:4, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
+      distribucion:[ {tipo:"etf", sym:"QQQ", pct:30}, {tipo:"etf", sym:"QLD", pct:20}, {tipo:"fpf", pct:50} ],
       plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
     snapshots: meses,
     senal:{ semana:hoyISO, estado: fuera? "fuera":"dentro", distancia:dist, max39:mx, cierre:serie.c[n-1] },

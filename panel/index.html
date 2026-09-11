@@ -94,6 +94,21 @@
     padding:8px 11px; font-size:12.5px; color:var(--crema); }
   .accion.calma{ background:rgba(154,161,171,.07); border-color:var(--bd); color:var(--gris-sec); }
   .notas{ margin-top:8px; font-size:12px; color:var(--ambar); }
+  .chatp{ display:flex; flex-direction:column; gap:7px; max-height:280px; overflow-y:auto;
+    padding:4px 2px; margin:6px 0 8px; overscroll-behavior:contain; }
+  .bur{ max-width:88%; border-radius:11px; padding:7px 11px; font-size:12.5px; line-height:1.45;
+    white-space:pre-wrap; word-break:break-word; }
+  .bur .cua{ display:block; font-size:9.5px; color:var(--gris-sec); margin-top:2px; }
+  .bur.bcli{ align-self:flex-start; background:var(--card2); border:1px solid var(--bd); color:var(--gris); }
+  .bur.bjose{ align-self:flex-end; background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); color:var(--crema); }
+  .chatp-in{ display:flex; gap:8px; }
+  .chatp-in textarea{ flex:1; min-width:0; background:var(--input); border:1px solid var(--bd); border-radius:9px;
+    color:var(--crema); font-family:inherit; font-size:13px; padding:8px 10px; resize:vertical; }
+  .chatp-in textarea:focus{ outline:none; border-color:var(--menta); }
+  .chatp-in button{ background:var(--menta); color:#082018; border:none; border-radius:9px; padding:0 16px;
+    font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; flex:0 0 auto; }
+  .distp{ margin-top:8px; background:rgba(124,143,247,.08); border:1px solid rgba(124,143,247,.4);
+    border-radius:10px; padding:8px 11px; font-size:12.5px; color:var(--crema); }
   .cap-in{ width:100%; min-width:0; background:transparent; border:1px solid transparent; color:var(--crema);
     font-family:inherit; font-weight:800; font-size:16px; padding:1px 4px; border-radius:6px; }
   .cap-in:hover{ border-color:var(--bd); cursor:text; }
@@ -208,7 +223,7 @@
 "use strict";
 var BASE="https://jsjhfiakinodosesdqum.supabase.co/functions/v1";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzamhmaWFraW5vZG9zZXNkcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNjY5NTQsImV4cCI6MjEwMTY0Mjk1NH0.MfXXQ6QFx_OudI5Bj9Sr7yw5PRTv_O45NQ_X24tuqLU";
-var DATOS=null, SELECC=null, HORIZONTE="1A", MODOG="cap", CACHE_HIST={}, CACHE_ORD={};
+var DATOS=null, SELECC=null, HORIZONTE="1A", MODOG="cap", CACHE_HIST={}, CACHE_ORD={}, CACHE_MSG={};
 var SORT={k:"nombre", d:1};
 var PRIV=sessionStorage.getItem("panel_priv")==="1";
 function nomDe(c){ return PRIV ? "••••••••" : c.nombre; }
@@ -460,6 +475,12 @@ function renderDet(){
         }).join("")+'</tbody></table></div>'
         : '<div class="sub">Sin posiciones (todo en efectivo).</div>')
       +'<div id="ordenes-box"><div class="sub">Cargando órdenes…</div></div>'
+      +((m.distribucion&&m.distribucion.length)?
+        '<div class="distp">🎯 <b>Distribución pedida por el cliente:</b> '
+        +m.distribucion.map(function(f2){ return f2.pct+"% "+(f2.tipo==="fpf"?"Freedom Point Plan":f2.sym); }).join(" · ")
+        +' <span style="color:var(--gris-sec)">— la ejecutás vos y le confirmás por mensaje.</span></div>' : '')
+      +'<div class="sec">💬 Mensajes con el cliente</div>'
+      +'<div id="chat-box"><div class="sub">Cargando mensajes…</div></div>'
       +((cta.fondeos&&cta.fondeos.length)?
         '<div class="sec">Fondeos (historial completo) <span style="font-weight:400;text-transform:none;letter-spacing:0">— tocá "sí/no" para contar una conversión cripto como fondeo</span></div>'
         +'<div style="max-height:190px; overflow-y:auto"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Monto</th><th>¿Fondeo?</th></tr></thead><tbody>'
@@ -544,6 +565,47 @@ function renderDet(){
   });
   if(c.snap) cargarGrafico();
   cargarOrdenes(c);
+  cargarChat(c);
+}
+function pintarChat(c, mensajes){
+  var box=$("chat-box"); if(!box || SELECC!==c.alias) return;
+  var hilo= mensajes.length
+    ? mensajes.map(function(m2){
+        var f2=(m2.cuando||"").slice(0,16).replace("T"," ");
+        return '<div class="bur '+(m2.de==="cliente"?"bcli":"bjose")+'">'+escapa(m2.texto)
+          +'<span class="cua">'+(m2.de==="cliente"?nomDe(c)+" · ":"")+f2+'</span></div>';
+      }).join("")
+    : '<div class="sub">Sin mensajes todavía.</div>';
+  box.innerHTML='<div class="chatp">'+hilo+'</div>'
+    +'<div class="chatp-in"><textarea id="chat-tx" rows="2" placeholder="Respondele a '+nomDe(c).split(" ")[0]+'…" maxlength="2000"></textarea>'
+    +'<button id="chat-go">Enviar</button></div>'
+    +'<div class="sub" id="chat-est" style="margin-top:4px"></div>';
+  var cp=box.querySelector(".chatp"); if(cp) cp.scrollTop=cp.scrollHeight;
+  $("chat-go").addEventListener("click", async function(){
+    var tx=$("chat-tx"), est=$("chat-est"), texto=(tx.value||"").trim();
+    if(!texto) return;
+    $("chat-go").disabled=true; est.textContent="Enviando…";
+    try{
+      if(location.hash==="#demo"){ CACHE_MSG[c.alias].push({de:"jose",texto:texto,cuando:new Date().toISOString()}); }
+      else { var r=await llamar("mensajes",{accion:"admin_enviar", alias:c.alias, texto:texto});
+        CACHE_MSG[c.alias]=r.mensajes||[]; }
+      est.textContent="";
+      pintarChat(c, CACHE_MSG[c.alias]);
+    }catch(e){ est.textContent="❌ "+(e.message||e); $("chat-go").disabled=false; }
+  });
+}
+async function cargarChat(c){
+  var box=$("chat-box"); if(!box) return;
+  try{
+    if(!CACHE_MSG[c.alias]){
+      CACHE_MSG[c.alias] = location.hash==="#demo"
+        ? [{de:"cliente",texto:"Quiero dedicarle 30% a QQQ directo, ¿se puede?",cuando:"2026-08-05T10:12:00Z"},
+           {de:"jose",texto:"¡Claro! Quedó anotado; el lunes lo ejecuto.",cuando:"2026-08-05T15:40:00Z"}]
+        : (await llamar("mensajes",{accion:"admin_listar", alias:c.alias})).mensajes||[];
+    }
+    if(SELECC!==c.alias) return;
+    pintarChat(c, CACHE_MSG[c.alias]);
+  }catch(e){ box.innerHTML='<div class="sub">Mensajes: '+(e.message||e)+'</div>'; }
 }
 function tablaOrd(lista, vacio){
   if(!lista.length) return '<div class="sub">'+vacio+'</div>';
