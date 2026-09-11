@@ -188,6 +188,23 @@
     text-decoration:underline dotted; white-space:nowrap; }
   .editlink:hover{ color:var(--menta); }
 
+  /* ===== laboratorio de planes (versión mini de /fpf) ===== */
+  .planchips{ display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 8px; }
+  .planchips button{ background:var(--card2); border:1px solid var(--bd); color:var(--gris); border-radius:999px;
+    padding:6px 12px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+  .planchips button:hover{ border-color:var(--menta); }
+  .planchips button.on{ background:var(--menta); border-color:var(--menta); color:#082018; }
+  .labctl{ display:flex; gap:6px 10px; flex-wrap:wrap; align-items:center; margin:0 0 10px;
+    font-size:12.5px; color:var(--gris-sec); }
+  .labctl .st{ background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:7px;
+    width:27px; height:27px; cursor:pointer; font-size:12px; font-family:inherit; }
+  .labctl .st:hover{ border-color:var(--menta); }
+  .labctl b{ color:var(--crema); font-variant-numeric:tabular-nums; }
+  .lab-res{ font-size:13.5px; color:var(--gris-sec); margin:6px 0 10px; line-height:1.55; }
+  .lab-res b{ color:var(--crema); }
+  .antesfp{ color:var(--ambar); font-weight:700; }
+  .despfp{ color:var(--gris-sec); }
+
   /* ===== distribución (bloque protagonista) ===== */
   .dist-bar{ display:flex; height:24px; border-radius:999px; overflow:hidden; background:var(--input);
     border:1px solid var(--bd); margin-top:6px; }
@@ -689,6 +706,17 @@ function render(){
     +'aunque el mercado te devuelva para atrás, tu mezcla se queda en la de tu mejor momento.</div>'
   +'</div>'
 
+  /* ---- laboratorio: los planes de la casa sobre la historia ---- */
+  +'<div class="card">'
+    +'<h2>Los planes de la casa, sobre la historia real</h2>'
+    +'<p class="lede">Elegí un plan y una época, y mirá qué caídas habrías vivido — en dólares tuyos, no solo en %. '
+    +'Todos usan la misma regla: salís de la fase 1 al <b>70%</b> de tu meta y llegás con <b>70% en renta fija</b> (tu piso) y <b>30%</b> todavía creciendo. '
+    +'Arranca con tu capital de hoy y tu aporte del año.</p>'
+    +'<div class="planchips" id="lab-planes"></div>'
+    +'<div class="labctl" id="lab-epocas"></div>'
+    +'<div id="lab-out"></div>'
+  +'</div>'
+
   /* ---- aportes ---- */
   +'<div class="card">'
     +'<h2>Tus aportes: plan vs realidad</h2>'
@@ -785,6 +813,7 @@ function render(){
   var ei=$("ed-ingreso"); if(ei) ei.addEventListener("click", function(){ abrirEditor("ingreso"); });
   var ea=$("ed-aporte"); if(ea) ea.addEventListener("click", function(){ abrirEditor("aporte"); });
   var edd=$("ed-dist"); if(edd) edd.addEventListener("click", abrirDist);
+  renderLab();
 }
 
 function fraseAporte(x){
@@ -1029,6 +1058,122 @@ $("dist-guardar").addEventListener("click", async function(){
 });
 $("dist-cerrar").addEventListener("click", function(){ $("modal-dist").classList.remove("on"); });
 $("modal-dist").addEventListener("click", function(e){ if(e.target===$("modal-dist")) $("modal-dist").classList.remove("on"); });
+
+/* ================= laboratorio: los planes de la casa (versión mini de /fpf) ================= */
+// Retornos anuales (total return; QLD/TQQQ simulados con rebalanceo diario). COPIADOS de /fpf.
+var HR={
+  SPY:{1990:-7.96,1991:26.31,1992:4.46,1993:9.45,1994:0.4,1995:38.05,1996:22.5,1997:33.48,1998:28.69,1999:20.39,2000:-9.74,2001:-11.76,2002:-21.58,2003:28.18,2004:10.7,2005:4.83,2006:15.85,2007:5.15,2008:-36.8,2009:26.35,2010:15.06,2011:1.89,2012:15.99,2013:32.31,2014:13.46,2015:1.23,2016:12.0,2017:21.71,2018:-4.57,2019:31.22,2020:18.33,2021:28.73,2022:-18.18,2023:26.18,2024:24.89,2025:17.72},
+  QQQ:{1990:-11.31,1991:64.99,1992:8.86,1993:10.58,1994:1.5,1995:42.54,1996:42.54,1997:20.63,1998:85.3,1999:97.72,2000:-36.11,2001:-33.34,2002:-37.37,2003:49.67,2004:10.54,2005:1.57,2006:7.14,2007:19.03,2008:-41.73,2009:54.68,2010:20.14,2011:3.48,2012:18.11,2013:36.63,2014:19.18,2015:9.44,2016:7.1,2017:32.66,2018:-0.13,2019:38.96,2020:48.41,2021:27.42,2022:-32.58,2023:54.86,2024:25.58,2025:20.77},
+  QLD:{1990:-28.02,1991:146.67,1992:7.9,1993:12.41,1994:-5.09,1995:83.08,1996:82.66,1997:27.99,1998:192.39,1999:232.61,2000:-72.3,2001:-68.59,2002:-68.74,2003:99.63,2004:12.32,2005:-4.01,2006:2.48,2007:29.03,2008:-72.89,2009:121.2,2010:36.9,2011:0.04,2012:34.77,2013:82.11,2014:37.59,2015:14.74,2016:10.04,2017:70.34,2018:-8.31,2019:81.69,2020:88.9,2021:54.67,2022:-60.52,2023:117.72,2024:42.81,2025:30.36},
+  TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35}
+};
+// Los planes sencillos: fase 1 → fase 2 entre TQQQ, QLD, QQQ y SPY (de más a menos riesgo),
+// todos con salida al 70%, y llegada 70% SJC / 30% fase 2.
+var PLANES_LAB=(function(){
+  var R=["TQQQ","QLD","QQQ","SPY"], out=[];
+  for(var i=0;i<R.length;i++) for(var j=i;j<R.length;j++) out.push({f1:R[i], f2:R[j]});
+  return out;
+})();
+var EPOCAS_LAB=[
+  { t:"Todo (1990–2025)", y0:1990, y1:2025 },
+  { t:"Punto-com (1995–2005)", y0:1995, y1:2005 },
+  { t:"Crisis 2008 (2005–2015)", y0:2005, y1:2015 },
+  { t:"Última década (2015–2025)", y0:2015, y1:2025 }
+];
+var LAB={ plan:null, y0:1990, y1:2025 };
+var SJC_LAB=8;   // tasa anual de la renta fija del laboratorio (el default de la casa)
+
+function simPlanLab(p, y0, y1, x){
+  var meta=x.fp>0? x.fp:1, cap0=x.equity, ap=x.aporteAnual||0;
+  var b1=0,b2=0,b3=0, pico=cap0/meta;
+  function rebal(total){
+    var w=fw(pico,70,100,70);
+    var t3=Math.max(b3, w[2]*total), resto=Math.max(0,total-t3), w12=w[0]+w[1];
+    var t1=w12>1e-9? resto*(w[0]/w12):0;
+    b1=t1; b2=resto-t1; b3=t3;
+  }
+  b3=0; rebal(cap0);
+  var serie=[{y:y0-1, v:cap0}], llego= cap0>=meta? y0-1:null;
+  for(var y=y0;y<=y1;y++){
+    b1*=1+(HR[p.f1][y]||0)/100; b2*=1+(HR[p.f2][y]||0)/100; b3*=1+SJC_LAB/100;
+    var total=b1+b2+b3+ap;
+    var phi=total/meta; if(phi>pico) pico=phi;
+    rebal(total);
+    if(llego===null && total>=meta) llego=y;
+    serie.push({y:y, v:total});
+  }
+  // caídas pico-a-valle sobre los cierres anuales
+  var dds=[], peak=serie[0], valle=null;
+  for(var i=1;i<serie.length;i++){
+    var s=serie[i];
+    if(s.v>=peak.v){ if(valle){ dds.push({d:peak, h:valle}); valle=null; } peak=s; }
+    else if(!valle || s.v<valle.v) valle=s;
+  }
+  if(valle) dds.push({d:peak, h:valle});
+  var filas=dds.map(function(z){
+    return { epoca: z.d.y+1===z.h.y? String(z.h.y) : (z.d.y+1)+"–"+z.h.y,
+      pct:(z.h.v/z.d.v-1)*100, usd:z.d.v-z.h.v, vsfp:(z.d.v-z.h.v)/meta*100,
+      antes: z.d.v<meta };
+  }).sort(function(a,b){ return b.usd-a.usd; }).slice(0,5);
+  return { filas:filas, llego:llego, final:serie[serie.length-1].v,
+    aportado:cap0+ap*(y1-y0+1), anios:y1-y0+1 };
+}
+
+function renderLab(){
+  var box=$("lab-out"); if(!box || !D) return;
+  var x=derivar(D);
+  if(!LAB.plan){
+    var propio=PLANES_LAB.filter(function(p){ return p.f1===x.plan.f1 && p.f2===x.plan.f2; })[0];
+    LAB.plan=propio||PLANES_LAB[3];   // el del cliente si es de los sencillos; si no, TQQQ → SPY
+  }
+  $("lab-planes").innerHTML=PLANES_LAB.map(function(p,i){
+    var on= p.f1===LAB.plan.f1 && p.f2===LAB.plan.f2;
+    return '<button data-lp="'+i+'"'+(on?' class="on"':'')+'>'+p.f1+' → '+p.f2+'</button>';
+  }).join("");
+  $("lab-epocas").innerHTML=EPOCAS_LAB.map(function(e,i){
+      var on= e.y0===LAB.y0 && e.y1===LAB.y1;
+      return '<button class="planchips-ep st" style="width:auto;padding:5px 11px;border-radius:999px;'
+        +(on?'background:var(--menta);border-color:var(--menta);color:#082018;':'')+'" data-le="'+i+'">'+e.t+'</button>';
+    }).join("")
+    +'<span style="margin-left:auto">Desde <button class="st" data-ly="y0,-1">◀</button> <b>'+LAB.y0+'</b> '
+    +'<button class="st" data-ly="y0,1">▶</button> · Hasta <button class="st" data-ly="y1,-1">◀</button> <b>'+LAB.y1+'</b> '
+    +'<button class="st" data-ly="y1,1">▶</button></span>';
+
+  var r=simPlanLab(LAB.plan, LAB.y0, LAB.y1, x);
+  box.innerHTML=
+    '<div class="lab-res">De <b>'+LAB.y0+'</b> a <b>'+LAB.y1+'</b> con <b>'+LAB.plan.f1+' → '+LAB.plan.f2+' → SJC</b>, '
+    +'arrancando con <b>'+fmt(x.equity)+'</b> y aportando <b>'+fmt(x.aporteAnual)+'</b> al año: '
+    +'terminás con <b>'+money(r.final)+'</b>'
+    +(r.llego!==null? ' y tocás tu meta de '+money(x.fp)+' en <b>'+(r.llego<LAB.y0? "el arranque":r.llego)+'</b>.'
+      : '; en esa ventana <b>no llegás</b> a tu meta de '+money(x.fp)+'.')
+    +'</div>'
+    +(r.filas.length?
+      '<div class="tblwrap"><table><thead><tr><th>Época</th><th>Caída</th><th>En dólares</th><th>Vs. tu meta</th><th>¿Cuándo?</th></tr></thead><tbody>'
+      +r.filas.map(function(f2){
+        return '<tr><td>'+f2.epoca+'</td>'
+          +'<td class="num down">'+f2.pct.toFixed(1)+'%</td>'
+          +'<td class="num down">−'+fmt(f2.usd).replace("$","$")+'</td>'
+          +'<td class="num">'+f2.vsfp.toFixed(0)+'%</td>'
+          +'<td style="font-size:11.5px">'+(f2.antes?'<span class="antesfp">Antes de tu meta</span>':'<span class="despfp">Después · sobre el excedente</span>')+'</td></tr>';
+      }).join("")+'</tbody></table></div>'
+      +'<div class="lab-res" style="margin-top:8px;font-size:12px">Cierres anuales (las caídas dentro de un mismo año se ven más chicas de lo que se sintieron). La versión completa, con toda la matemática, la vemos juntos en una sesión.</div>'
+      : '<div class="lab-res">Sin caídas en esa ventana (raro, pero pasa en tramos cortos y buenos).</div>');
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-lp]"), function(b){
+    b.addEventListener("click", function(){ LAB.plan=PLANES_LAB[+b.getAttribute("data-lp")]; renderLab(); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-le]"), function(b){
+    b.addEventListener("click", function(){ var e=EPOCAS_LAB[+b.getAttribute("data-le")]; LAB.y0=e.y0; LAB.y1=e.y1; renderLab(); });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-ly]"), function(b){
+    b.addEventListener("click", function(){
+      var pp=b.getAttribute("data-ly").split(","), k=pp[0], d=+pp[1];
+      LAB[k]=Math.max(1990, Math.min(2025, LAB[k]+d));
+      if(LAB.y0>=LAB.y1) { if(k==="y0") LAB.y0=LAB.y1-1; else LAB.y1=LAB.y0+1; }
+      renderLab();
+    });
+  });
+}
 
 /* (El chat con Jose quedó en pausa por decisión suya 11-set-2026: la function `mensajes`
    sigue desplegada; el UI se re-integra desde el historial de git cuando lo pida.) */
