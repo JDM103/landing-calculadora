@@ -304,6 +304,8 @@
     <div id="e-campos-ingreso" style="display:none">
       <label for="e-ingreso">Querés vivir con ($ al mes)</label>
       <input id="e-ingreso" inputmode="numeric" autocomplete="off">
+      <label for="e-tasa">Tasa de crecimiento y retiro (% al año)</label>
+      <input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="8">
     </div>
     <div id="e-campos-aporte" style="display:none">
       <label for="e-anual">Tu compromiso al año ($)</label>
@@ -374,7 +376,7 @@ function derivar(d){
   var m=d.meta||{}, plan=m.plan||{f1:"TQQQ",f2:"SPY",f3:"—",p1:70,p2:100,ff:70,timing:true};
   var snaps=d.snapshots||[];
   var snap=snaps.length? snaps[snaps.length-1] : null;
-  var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||4)/100) : 0);
+  var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||8)/100) : 0);   // default de la casa: 8%
   var equity=snap? +snap.equity:0, cash=snap? +snap.cash:0;
   var phi = fp>0? equity/fp : 0;
   var pico = phi;
@@ -856,8 +858,9 @@ function abrirEditor(tipo){
   $("e-campos-aporte").style.display= tipo==="aporte"? "":"none";
   if(tipo==="ingreso"){
     $("e-tit").textContent="Tu meta de retiro";
-    $("e-sub").textContent="¿Con cuánto querés vivir al mes, sin trabajar? Tu meta de capital sale de ese número.";
+    $("e-sub").textContent="¿Con cuánto querés vivir al mes, sin trabajar? Tu meta de capital sale de ese número y de la tasa a la que tu capital lo genera.";
     $("e-ingreso").value=(+m.ingreso||0)? (+m.ingreso).toLocaleString("en-US"):"";
+    $("e-tasa").value=(+m.tasa||8);
   } else {
     $("e-tit").textContent="Tu compromiso de aportes";
     $("e-sub").textContent="Lo que cuenta es el total del año: podés aportar parejo cada mes o por montones cuando puedas.";
@@ -871,12 +874,14 @@ function abrirEditor(tipo){
 function edResumen(){
   var m=D.meta||{}, r=$("e-resumen");
   if(ED_TIPO==="ingreso"){
-    var ing=numDe($("e-ingreso")), tasa=+m.tasa||4;
-    var fpV=+m.fp || ((+m.ingreso||0)*12/(tasa/100));
-    var fpN= ing>0? ing*12/(tasa/100):0;
-    r.innerHTML= ing>0
-      ? "Tu meta de capital "+(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(fpN)+"</b>. Tu % de avance se recalcula al guardar."
-      : "Escribí un monto para ver tu meta nueva.";
+    var ing=numDe($("e-ingreso"));
+    var tasa=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
+    var fpV=+m.fp || ((+m.ingreso||0)*12/((+m.tasa||8)/100));
+    var fpN=(ing>0&&tasa>0)? ing*12/(tasa/100):0;
+    r.innerHTML=(ing>0&&tasa>0)
+      ? "Asumiendo que tu capital te paga un <b>"+tasa+"%</b> al año: tu meta de capital "
+        +(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(fpN)+"</b>. Tu % de avance se recalcula al guardar."
+      : "Escribí el monto y la tasa para ver tu meta nueva.";
   } else {
     var an=numDe($("e-anual"));
     var anV=+m.aporte_anual || (+m.aporte_pactado||0)*12;
@@ -887,6 +892,7 @@ function edResumen(){
   }
 }
 $("e-ingreso").addEventListener("input", function(){ formatea(this); edResumen(); });
+$("e-tasa").addEventListener("input", edResumen);
 $("e-anual").addEventListener("input", function(){ formatea(this);
   var an=numDe(this); $("e-mensual").value=an? Math.round(an/12).toLocaleString("en-US"):""; edResumen(); });
 $("e-mensual").addEventListener("input", function(){ formatea(this);
@@ -895,8 +901,10 @@ $("e-guardar").addEventListener("click", async function(){
   var btn=this, cambios={};
   if(ED_TIPO==="ingreso"){
     var ing=numDe($("e-ingreso"));
+    var tas=parseFloat(String($("e-tasa").value).replace(/[^0-9.]/g,""))||0;
     if(!(ing>=200 && ing<=200000)){ $("e-msg").textContent="❌ El monto tiene que estar entre $200 y $200,000 al mes."; return; }
-    cambios.ingreso=ing;
+    if(!(tas>=2 && tas<=15)){ $("e-msg").textContent="❌ La tasa tiene que estar entre 2% y 15%."; return; }
+    cambios.ingreso=ing; cambios.tasa=tas;
   } else {
     var an=numDe($("e-anual"));
     if(!(an>=0 && an<=10000000)){ $("e-msg").textContent="❌ Revisá el monto anual."; return; }
@@ -906,6 +914,7 @@ $("e-guardar").addEventListener("click", async function(){
   try{
     if(DEMO){
       if(cambios.ingreso){ D.meta.ingreso=cambios.ingreso; delete D.meta.fp; }
+      if(cambios.tasa){ D.meta.tasa=cambios.tasa; delete D.meta.fp; }
       if(typeof cambios.aporte_anual==="number"){
         D.meta.aporte_anual=cambios.aporte_anual;
         D.meta.aporte_pactado=Math.round(cambios.aporte_anual/12);
@@ -915,6 +924,7 @@ $("e-guardar").addEventListener("click", async function(){
       if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
       var body={ correo:ses.correo, clave:ses.clave };
       if(cambios.ingreso) body.ingreso=cambios.ingreso;
+      if(cambios.tasa) body.tasa=cambios.tasa;
       if(typeof cambios.aporte_anual==="number") body.aporte_anual=cambios.aporte_anual;
       var r=await fetch(BASE+"/editar-plan",{ method:"POST",
         headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
@@ -1234,7 +1244,7 @@ window.addEventListener("message", function(ev){
   if(d.tipo==="fpf-listo"){
     // arranque: lo oficial del plan primero, lo que el cliente guardó en el planificador encima
     var x=derivar(D), m=D.meta||{};
-    var S0={ income:+m.ingreso||10000, ret:+m.tasa||4 };
+    var S0={ income:+m.ingreso||10000, ret:+m.tasa||8 };
     if(x.plan){ S0.f1=x.plan.f1; S0.f2=x.plan.f2; S0.f3=x.plan.f3;
       S0.p1=+x.plan.p1||70; S0.p2=+x.plan.p2||100; S0.ff=+x.plan.ff||70;
       S0.filtro=x.plan.timing? "9h":"off"; }
@@ -1416,7 +1426,7 @@ function demoDatos(escenario){
   }
   return {
     nombre:"María Vargas",
-    meta:{ ingreso:4000, tasa:4, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
+    meta:{ ingreso:8000, tasa:8, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
       distribucion:[ {tipo:"etf", sym:"QQQ", pct:30}, {tipo:"etf", sym:"QLD", pct:20}, {tipo:"fpf", pct:50} ],
       plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
     snapshots: meses,
