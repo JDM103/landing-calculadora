@@ -41,6 +41,15 @@
   .caja button{ width:100%; margin-top:12px; background:var(--menta); color:#082018; border:none; border-radius:10px;
     font-family:inherit; font-size:15px; font-weight:800; padding:12px; cursor:pointer; }
   .caja .err{ color:var(--rojo); font-size:13px; margin-top:10px; display:none; }
+  .caja .okmsg{ color:var(--menta); font-size:13px; margin-top:10px; display:none; }
+  .caja .alterna{ margin-top:14px; font-size:12.5px; }
+  .caja .alterna a{ color:var(--gris-sec); text-decoration:underline; }
+  .caja .alterna a:hover{ color:var(--crema); }
+  .avisoclave{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:rgba(224,176,122,.09);
+    border:1px solid rgba(224,176,122,.5); border-radius:12px; padding:11px 14px; margin:12px 0; font-size:13.5px; }
+  .avisoclave b{ color:var(--ambar); }
+  .avisoclave button{ margin-left:auto; background:transparent; border:1px solid var(--ambar); color:var(--ambar);
+    border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
 
   /* ===== barra demo ===== */
   .demobar{ position:sticky; top:0; z-index:30; background:#241a2e; border-bottom:1px solid #4a3562;
@@ -193,10 +202,33 @@
 <div id="login" class="caja">
   <img src="/assets/logo-fondo-negro.png" alt="EI">
   <div class="t">Tu cuenta</div>
-  <div class="s" id="login-alias">Entrá con tu clave de siempre.</div>
-  <input id="clave" type="password" placeholder="Tu clave" autocomplete="current-password">
-  <button id="entrar">Ver mi cuenta</button>
-  <div class="err" id="err"></div>
+
+  <div id="v-entrar">
+    <div class="s">Entrá con tu correo y tu clave.</div>
+    <div class="okmsg" id="ok-entrar"></div>
+    <input id="correo" type="email" placeholder="tu@correo.com" autocomplete="username" inputmode="email">
+    <input id="clave" type="password" placeholder="Tu clave" autocomplete="current-password">
+    <button id="entrar">Ver mi cuenta</button>
+    <div class="err" id="err"></div>
+    <div class="alterna"><a href="#" id="ir-olvido">¿Olvidaste tu clave?</a></div>
+  </div>
+
+  <div id="v-olvido" style="display:none">
+    <div class="s">Decinos tu correo y te mandamos un link para elegir una clave nueva.</div>
+    <input id="correo-olvido" type="email" placeholder="tu@correo.com" inputmode="email">
+    <button id="pedir">Mandame el link</button>
+    <div class="err" id="err-olvido"></div>
+    <div class="okmsg" id="ok-olvido"></div>
+    <div class="alterna"><a href="#" id="volver-entrar">← Volver a entrar</a></div>
+  </div>
+
+  <div id="v-reset" style="display:none">
+    <div class="s">Elegí tu clave nueva (mínimo 6 caracteres).</div>
+    <input id="clave1" type="password" placeholder="Tu clave nueva" autocomplete="new-password">
+    <input id="clave2" type="password" placeholder="Repetila" autocomplete="new-password">
+    <button id="cambiar">Guardar mi clave</button>
+    <div class="err" id="err-reset"></div>
+  </div>
 </div>
 
 <div class="wrap" id="app" style="display:none"></div>
@@ -243,11 +275,7 @@ function fw(phi, p1, p2, Ff){
 }
 
 var DEMO = location.hash.indexOf("#demo")===0;   // #demo, #demo-cerca, #demo-fuera
-var ALIAS = (function(){
-  var q=new URLSearchParams(location.search).get("a"); if(q) return q.toLowerCase();
-  var m=location.pathname.match(/^\/r\/([a-z0-9-]+)/i); if(m && m[1].toLowerCase()!=="index.html") return m[1].toLowerCase();
-  return null;
-})();
+var CORREO=null;       // correo con el que entró (la identidad del cliente)
 var D=null;            // datos del cliente (respuesta de `reporte` + derivados)
 var ESCENARIO="normal";
 
@@ -427,7 +455,7 @@ function render(){
   var colorAp= ratioAp>=0.95? "var(--menta)" : ratioAp>=0.7? "var(--ambar)" : "var(--rojo)";
 
   var acciones=armarAcciones(x, sen);
-  var hechas=JSON.parse(localStorage.getItem("r_hechas_"+(ALIAS||"demo"))||"{}");
+  var hechas=JSON.parse(localStorage.getItem("r_hechas_"+(CORREO||"demo"))||"{}");
 
   var p1=(x.plan.p1||70), p2=(x.plan.p2||100);
 
@@ -439,6 +467,11 @@ function render(){
     +'<div class="cuando">Números al cierre de '+(x.snap? mesLargo(x.snap.mes):"—")+' · se actualizan cada fin de mes</div></div>'
     +'<button class="salir" id="salir">Salir</button>'
   +'</div>'
+
+  /* ---- aviso: sigue con la clave inicial ---- */
+  +(D._claveInicial?
+    '<div class="avisoclave">🔑 <div>Estás entrando con tu <b>clave inicial</b>. Cambiala por una tuya: te mandamos un correo con el link.</div>'
+    +'<button id="cambiar-clave">Cambiar mi clave</button></div>':'')
 
   /* ---- hero freedom point ---- */
   +'<div class="card hero">'
@@ -589,7 +622,14 @@ function render(){
 
   // eventos
   $("salir").addEventListener("click", function(){
-    sessionStorage.removeItem("r_clave_"+ALIAS); location.hash=""; location.reload(); });
+    sessionStorage.removeItem("r_sesion"); location.hash=""; location.reload(); });
+  var cc=$("cambiar-clave");
+  if(cc) cc.addEventListener("click", async function(){
+    cc.disabled=true; cc.textContent="Mandando…";
+    try{ if(!DEMO) await llamarClave({accion:"pedir", correo:CORREO});
+      cc.textContent="✓ Revisá tu correo"; }
+    catch(e){ cc.disabled=false; cc.textContent="Error, probá de nuevo"; }
+  });
   Array.prototype.forEach.call(document.querySelectorAll("[data-acc]"), function(btn){
     btn.addEventListener("click", function(){ abrirModal(acciones[+btn.getAttribute("data-acc")]); });
   });
@@ -621,7 +661,7 @@ $("m-no").addEventListener("click", function(){ $("modal").classList.remove("on"
 $("modal").addEventListener("click", function(e){ if(e.target===$("modal")) $("modal").classList.remove("on"); });
 $("m-ok").addEventListener("click", function(){
   if(ACC_ACTUAL){
-    var k="r_hechas_"+(ALIAS||"demo");
+    var k="r_hechas_"+(CORREO||"demo");
     var h=JSON.parse(localStorage.getItem(k)||"{}"); h[ACC_ACTUAL.id]=true;
     localStorage.setItem(k, JSON.stringify(h));
   }
@@ -790,11 +830,21 @@ function dibujarAportes(meses, pactado){
   }
 }
 
-/* ================= carga ================= */
-async function entrar(clave){
+/* ================= carga y claves ================= */
+async function entrar(correo, clave){
   var r=await fetch(BASE+"/reporte",{ method:"POST",
     headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-    body:JSON.stringify({ alias:ALIAS, clave:clave }) });
+    body:JSON.stringify({ correo:correo, clave:clave }) });
+  var j=await r.json();
+  if(!r.ok) throw new Error(j.error||("error "+r.status));
+  // ¿sigue con la clave inicial (la parte antes del @ de su correo)?
+  j._claveInicial = clave===correo.split("@")[0];
+  return j;
+}
+async function llamarClave(body){
+  var r=await fetch(BASE+"/clave",{ method:"POST",
+    headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+    body:JSON.stringify(body) });
   var j=await r.json();
   if(!r.ok) throw new Error(j.error||("error "+r.status));
   return j;
@@ -804,19 +854,59 @@ function mostrar(){
   render();
   window.addEventListener("resize", function(){ if(D) render(); });
 }
+function vista(id){
+  ["v-entrar","v-olvido","v-reset"].forEach(function(v){ $(v).style.display= v===id? "":"none"; });
+}
 $("entrar").addEventListener("click", async function(){
+  var correo=$("correo").value.trim().toLowerCase(), clave=$("clave").value.trim();
+  if(!correo || !clave){ $("err").style.display="block"; $("err").textContent="Escribí tu correo y tu clave."; return; }
   var b=$("entrar"); b.disabled=true; b.textContent="Abriendo…"; $("err").style.display="none";
   try{
-    D=await entrar($("clave").value.trim());
-    sessionStorage.setItem("r_clave_"+ALIAS, $("clave").value.trim());
+    D=await entrar(correo, clave);
+    CORREO=correo;
+    sessionStorage.setItem("r_sesion", JSON.stringify({correo:correo, clave:clave}));
     mostrar();
   }catch(e){
     $("err").style.display="block"; $("err").textContent=String(e.message||e);
   }
   b.disabled=false; b.textContent="Ver mi cuenta";
 });
-$("clave").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar").click(); });
+["correo","clave"].forEach(function(id){
+  $(id).addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar").click(); });
+});
+$("ir-olvido").addEventListener("click", function(e){ e.preventDefault();
+  $("correo-olvido").value=$("correo").value; vista("v-olvido"); });
+$("volver-entrar").addEventListener("click", function(e){ e.preventDefault(); vista("v-entrar"); });
+$("pedir").addEventListener("click", async function(){
+  var correo=$("correo-olvido").value.trim().toLowerCase();
+  var b=$("pedir"), eo=$("err-olvido"), ok=$("ok-olvido");
+  eo.style.display="none"; ok.style.display="none";
+  if(correo.indexOf("@")<1){ eo.style.display="block"; eo.textContent="Escribí tu correo completo."; return; }
+  b.disabled=true; b.textContent="Mandando…";
+  try{
+    await llamarClave({accion:"pedir", correo:correo});
+    ok.style.display="block";
+    ok.textContent="Listo. Si ese correo está registrado, te llegó un link para elegir tu clave nueva (vence en 1 hora). Revisá también el spam.";
+  }catch(e){ eo.style.display="block"; eo.textContent=String(e.message||e); }
+  b.disabled=false; b.textContent="Mandame el link";
+});
+$("cambiar").addEventListener("click", async function(){
+  var c1=$("clave1").value, c2=$("clave2").value, er=$("err-reset");
+  er.style.display="none";
+  if(c1.length<6){ er.style.display="block"; er.textContent="La clave nueva ocupa al menos 6 caracteres."; return; }
+  if(c1!==c2){ er.style.display="block"; er.textContent="Las dos claves no coinciden."; return; }
+  var b=$("cambiar"); b.disabled=true; b.textContent="Guardando…";
+  try{
+    await llamarClave({accion:"cambiar", token:TOKEN_RESET, clave_nueva:c1});
+    history.replaceState(null,"","/r/");
+    vista("v-entrar");
+    $("ok-entrar").style.display="block";
+    $("ok-entrar").textContent="✓ Clave cambiada. Entrá con la nueva.";
+  }catch(e){ er.style.display="block"; er.textContent=String(e.message||e); }
+  b.disabled=false; b.textContent="Guardar mi clave";
+});
 
+var TOKEN_RESET=null;
 (function init(){
   if(DEMO){
     $("demobar").style.display="flex";
@@ -833,16 +923,15 @@ $("clave").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entra
     });
     D=demoDatos(ESCENARIO); mostrar(); return;
   }
-  if(!ALIAS){
-    $("login-alias").textContent="Abrí el link personal que te compartimos (investorcr.com/r/tu-alias).";
-    $("clave").style.display="none"; $("entrar").style.display="none";
-    return;
-  }
-  $("login-alias").textContent="Cuenta "+ALIAS+" · entrá con tu clave de siempre.";
-  var guardada=sessionStorage.getItem("r_clave_"+ALIAS);
-  if(guardada){
-    entrar(guardada).then(function(j){ D=j; mostrar(); })
-      .catch(function(){ sessionStorage.removeItem("r_clave_"+ALIAS); });
+  // ¿viene del correo de cambio de clave?
+  var tk=new URLSearchParams(location.search).get("reset");
+  if(tk){ TOKEN_RESET=tk; vista("v-reset"); return; }
+  // sesión guardada en esta pestaña
+  var ses=null;
+  try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e){}
+  if(ses && ses.correo && ses.clave){
+    entrar(ses.correo, ses.clave).then(function(j){ D=j; CORREO=ses.correo; mostrar(); })
+      .catch(function(){ sessionStorage.removeItem("r_sesion"); });
   }
 })();
 
@@ -901,7 +990,8 @@ function demoDatos(escenario){
     snapshots: meses,
     senal:{ semana:hoyISO, estado: fuera? "fuera":"dentro", distancia:dist, max39:mx, cierre:serie.c[n-1] },
     serie: serie,
-    pico: 0.75
+    pico: 0.75,
+    _claveInicial: escenario==="normal"   // en la maqueta se ve el aviso de cambiar la clave
   };
 }
 </script>
