@@ -242,7 +242,7 @@ function fw(phi, p1, p2, Ff){
   return [wL,wE,wF];
 }
 
-var DEMO = location.hash.indexOf("demo")===0 || location.hash==="#demo";
+var DEMO = location.hash.indexOf("#demo")===0;   // #demo, #demo-cerca, #demo-fuera
 var ALIAS = (function(){
   var q=new URLSearchParams(location.search).get("a"); if(q) return q.toLowerCase();
   var m=location.pathname.match(/^\/r\/([a-z0-9-]+)/i); if(m && m[1].toLowerCase()!=="index.html") return m[1].toLowerCase();
@@ -273,8 +273,9 @@ function derivar(d){
     else if(p.s===plan.f3) b.f3+=p.v;
     else { b.otros+=p.v; b.otrosSyms.push(p.s); }
   });
-  // mezcla objetivo con el candado de la Fase 3 (misma lógica de /mi-plan)
-  var w=fw(pico*100, plan.p1||70, plan.p2||100, plan.ff||70);
+  // mezcla objetivo con el candado de la Fase 3 (misma lógica de /mi-plan;
+  // ojo: fw recibe el avance como fracción y los umbrales en %)
+  var w=fw(pico, plan.p1||70, plan.p2||100, plan.ff||70);
   var total=equity;
   var tgt3=Math.max(b.f3, w[2]*total);
   var resto=Math.max(0,total-tgt3), w12=w[0]+w[1];
@@ -739,10 +740,10 @@ function dibujarGradiente(x){
     g.lineTo(X(maxX),Y(0)); g.closePath();
     g.fillStyle=color; g.fill();
   }
-  // acumulados: w1; w1+w2; w1+w2+w3(=1)
+  // acumulados: w1; w1+w2; w1+w2+w3(=1) — fw recibe el avance como fracción
   area(function(q){ return 1; }, "rgba(76,175,125,.55)");            // f3 (fondo total)
-  area(function(q){ var w=fw(q,p1,p2,ff); return w[0]+w[1]; }, "rgba(91,200,176,.65)"); // f2
-  area(function(q){ var w=fw(q,p1,p2,ff); return w[0]; }, "rgba(224,121,107,.8)");      // f1
+  area(function(q){ var w=fw(q/100,p1,p2,ff); return w[0]+w[1]; }, "rgba(91,200,176,.65)"); // f2
+  area(function(q){ var w=fw(q/100,p1,p2,ff); return w[0]; }, "rgba(224,121,107,.8)");      // f1
   // hitos p1/p2
   g.strokeStyle="rgba(255,255,255,.14)"; g.setLineDash([3,4]);
   [p1,p2].forEach(function(hp){ g.beginPath(); g.moveTo(X(hp),padT-4); g.lineTo(X(hp),H-padB); g.stroke(); });
@@ -819,7 +820,10 @@ $("clave").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entra
 (function init(){
   if(DEMO){
     $("demobar").style.display="flex";
+    var esc0=location.hash.replace("#demo","").replace("-","");
+    ESCENARIO=(esc0==="cerca"||esc0==="fuera")? esc0 : "normal";
     Array.prototype.forEach.call(document.querySelectorAll("#demobar button"), function(b){
+      b.classList.toggle("on", b.getAttribute("data-esc")===ESCENARIO);
       b.addEventListener("click", function(){
         Array.prototype.forEach.call(document.querySelectorAll("#demobar button"),function(z){z.classList.remove("on");});
         b.classList.add("on"); ESCENARIO=b.getAttribute("data-esc");
@@ -827,7 +831,7 @@ $("clave").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entra
         D=demoDatos(ESCENARIO); render();
       });
     });
-    D=demoDatos("normal"); mostrar(); return;
+    D=demoDatos(ESCENARIO); mostrar(); return;
   }
   if(!ALIAS){
     $("login-alias").textContent="Abrí el link personal que te compartimos (investorcr.com/r/tu-alias).";
