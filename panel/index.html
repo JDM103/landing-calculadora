@@ -411,7 +411,9 @@ function renderDet(){
   det.innerHTML=
     '<button class="volver" id="volver">← Volver a la lista</button>'
     +'<h2>'+nomDe(c)+'<span class="chip '+f.c+'">'+f.t+'</span></h2>'
-    +'<div class="sub">'+(PRIV?'••••':c.alias)+(c.snap?' · dato al '+c.snap.mes:' · sin datos')
+    +'<div class="sub">'+(PRIV?'••••':c.alias)
+      +(c.correo&&!PRIV?' · <span style="color:var(--crema);user-select:all">'+escapa(c.correo)+'</span>':'')
+      +(c.snap?' · dato al '+c.snap.mes:' · sin datos')
       +(cta.inicio&&!PRIV?' · cliente desde '+cta.inicio:'')
       +(m.plan?' · plan '+m.plan.f1+"→"+m.plan.f2+"→"+m.plan.f3+" "+m.plan.p1+"/"+m.plan.p2+"/"+m.plan.ff+(m.plan.timing?" + timing":""):'')+'</div>'
     +(c.snap?
@@ -672,14 +674,14 @@ function demoSerie(per){
 function demo(){
   return { senal:{estado:"dentro",semana:"2026-08-06",distancia:-3.4},
     clientes:[
-      {alias:"mv-07",activo:true,nombre:"María Vargas",notas:"Quiere subir aporte en enero.",
+      {alias:"mv-07",activo:true,nombre:"María Vargas",correo:"maria.vargas@gmail.com",notas:"Quiere subir aporte en enero.",
         meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
           cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},
           posiciones:[{s:"TQQQ",q:1890,px:92.4,entrada:61.2,v:174636,pnl:58968,pnlp:51.0,hoy:1.37},
                       {s:"SPY",q:15,px:571.1,entrada:512.4,v:8566,pnl:880,pnlp:11.5,hoy:0.42}],
           transferencias_mes:[{fecha:"2026-08-03",monto:1000}]}},
-      {alias:"jr-02",activo:true,nombre:"Javier Rojas",notas:"",
+      {alias:"jr-02",activo:true,nombre:"Javier Rojas",correo:"javier.rojas@gmail.com",notas:"",
         meta:{ingreso:5000,tasa:4,aporte_pactado:800,plan:{f1:"QLD",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:false}},
         snap:{mes:"2026-08-01",equity:1120540,cash:152,aportado_total:410000,phi:0.746,
           cuenta:{last_equity:1131200,tir:11.8,inicio:"2019-06-02",ytd_pnl:-10480,ytd_pct:-0.9},
