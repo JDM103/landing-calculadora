@@ -143,6 +143,14 @@
     padding:14px; color:var(--crema); font-size:14px; }
   .distp{ margin-top:8px; background:rgba(124,143,247,.08); border:1px solid rgba(124,143,247,.4);
     border-radius:10px; padding:8px 11px; font-size:12.5px; color:var(--crema); }
+  .planed{ display:grid; grid-template-columns:repeat(auto-fit,minmax(118px,1fr)); gap:8px; align-items:end; }
+  .planed label{ display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:.4px;
+    color:var(--gris-sec); font-weight:800; margin-bottom:3px; }
+  .planed select, .planed input{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:8px;
+    color:var(--crema); font-family:inherit; font-size:13px; padding:8px 9px; }
+  .planed select:focus, .planed input:focus{ outline:none; border-color:var(--menta); }
+  .planed button{ width:100%; background:var(--menta); color:#082018; border:none; border-radius:8px;
+    padding:9px 10px; font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; }
   .cap-in{ width:100%; min-width:0; background:transparent; border:1px solid transparent; color:var(--crema);
     font-family:inherit; font-weight:800; font-size:16px; padding:1px 4px; border-radius:6px; }
   .cap-in:hover{ border-color:var(--bd); cursor:text; }
@@ -559,6 +567,25 @@ function renderDet(){
         : (trans.length? '<div class="sec">Transferencias del mes</div><div class="sub num">'+trans.map(function(t){return t.fecha.slice(0,10)+": "+fmt(t.monto);}).join(" · ")+'</div>':''))
       : '<div class="sub">Sin snapshot: dale a Actualizar datos.</div>')
     +'<div class="accion'+(a.calma?' calma':'')+'">'+a.t+'</div>'
+    +(!PRIV? (function(){
+      var pl=m.plan||{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true};
+      function selPl(id, ops, val){
+        return '<select id="'+id+'">'+ops.map(function(o){
+          return '<option value="'+o+'"'+(o===val?' selected':'')+'>'+o+'</option>'; }).join("")+'</select>';
+      }
+      return '<div class="sec">Plan del cliente</div>'
+      +'<div class="planed">'
+        +'<div><label>Fase 1 · motor</label>'+selPl("pl-f1",["TQQQ","QLD","QQQ","SPY"],pl.f1)+'</div>'
+        +'<div><label>Fase 2 · mercado</label>'+selPl("pl-f2",["TQQQ","QLD","QQQ","SPY"],pl.f2)+'</div>'
+        +'<div><label>Fase 3 · piso</label>'+selPl("pl-f3",["SJC","SPY","QQQ"],pl.f3)+'</div>'
+        +'<div><label>Salida F1 (% de meta)</label><input id="pl-p1" inputmode="numeric" value="'+(+pl.p1||70)+'"></div>'
+        +'<div><label>Mezcla final (%)</label><input id="pl-p2" inputmode="numeric" value="'+(+pl.p2||100)+'"></div>'
+        +'<div><label>F3 al final (%)</label><input id="pl-ff" inputmode="numeric" value="'+(+pl.ff||70)+'"></div>'
+        +'<div><label>Señal de timing</label><select id="pl-tim"><option value="si"'+(pl.timing?' selected':'')+'>con timing</option><option value="no"'+(!pl.timing?' selected':'')+'>sin timing</option></select></div>'
+        +'<div style="align-self:end"><button id="pl-go">Guardar plan</button></div>'
+      +'</div>'
+      +'<div class="sub" id="pl-msg" style="margin-top:4px"></div>';
+    })():'')
     +(!PRIV? '<div class="sec">Clave de su reporte</div>'
       +'<div class="editcap" style="margin-top:2px"><span>Las claves se guardan cifradas y no se pueden leer; acá solo se asigna una nueva:</span>'
       +'<input id="clave-ed" autocomplete="off" placeholder="clave nueva" style="width:150px;text-align:left">'
@@ -617,6 +644,24 @@ function renderDet(){
     try{ await llamar("guardar-cliente",{alias:c.alias, clave_reporte:val});
       $("clave-ed").value=""; $("clave-msg").textContent="✅ Clave nueva guardada. Compartísela al cliente.";
     }catch(e){ $("clave-msg").textContent="❌ "+(e.message||e); }
+  });
+  var pg=$("pl-go");
+  if(pg) pg.addEventListener("click", async function(){
+    var p1v=parseInt($("pl-p1").value,10)||0, p2v=parseInt($("pl-p2").value,10)||0, ffv=parseInt($("pl-ff").value,10);
+    if(isNaN(ffv)) ffv=70;
+    if(!(p1v>=10 && p1v<=120)){ $("pl-msg").textContent="❌ La salida de F1 va entre 10% y 120%."; return; }
+    if(!(p2v>p1v && p2v<=140)){ $("pl-msg").textContent="❌ La mezcla final tiene que ser mayor que la salida de F1 (máx 140%)."; return; }
+    if(!(ffv>=0 && ffv<=100)){ $("pl-msg").textContent="❌ F3 al final va entre 0% y 100%."; return; }
+    var meta=JSON.parse(JSON.stringify(c.meta||{}));
+    meta.plan={ f1:$("pl-f1").value, f2:$("pl-f2").value, f3:$("pl-f3").value,
+      p1:p1v, p2:p2v, ff:ffv, timing:$("pl-tim").value==="si" };
+    $("pl-msg").textContent="Guardando…";
+    try{
+      if(location.hash!=="#demo") await llamar("guardar-cliente",{alias:c.alias, meta:meta});
+      c.meta=meta;
+      renderLista(); renderDet();
+      var m2=$("pl-msg"); if(m2) m2.textContent="✅ Plan guardado. El dashboard del cliente y el Modo acción ya lo usan.";
+    }catch(e){ var m3=$("pl-msg"); if(m3) m3.textContent="❌ "+(e.message||e); }
   });
   var ng=$("notas-go");
   if(ng) ng.addEventListener("click", async function(){
