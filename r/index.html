@@ -374,7 +374,8 @@
 <div class="modal" id="modal-dist">
   <div class="caja2">
     <h3>Repartir tu plata</h3>
-    <div class="sub3">Decidí qué % va a qué cosa. El <b>Freedom Point Plan</b> es tu plan de fases con su gradiente;
+    <div class="sub3">Decidí cuánto va a qué cosa — podés escribir el <b>%</b> o directo los <b>dólares</b>, sobre tu capital total.
+    El <b>Freedom Point Plan</b> es tu plan de fases con su gradiente; <b>Cash</b> es la cuenta high-yield de Alpaca;
     lo demás son ETFs fijos. Lo que sume menos de 100% queda en efectivo.</div>
     <div id="dist-filas"></div>
     <button class="dist-add" id="dist-add">+ agregar otra fila</button>
@@ -490,9 +491,9 @@ function render(){
   if(dist){
     var colDist=["#7C8FF7","#E0B07A","#e0796b","#5bc8b0","#9AA1AB"], ci=0;
     distSlices=dist.map(function(f2){
-      return { v:+f2.pct,
-        c: f2.tipo==="fpf"? "var(--menta)" : colDist[(ci++)%colDist.length],
-        t: f2.tipo==="fpf"? "Freedom Point Plan" : f2.sym };
+      if(f2.tipo==="fpf") return { v:+f2.pct, c:"var(--menta)", t:"Freedom Point Plan" };
+      if(f2.sym==="CASH") return { v:+f2.pct, c:"#7d8697", t:"Cash · ~"+TASA_CASH+"%" };
+      return { v:+f2.pct, c:colDist[(ci++)%colDist.length], t:f2.sym };
     });
     if(restoDist>0.5) distSlices.push({ v:restoDist, c:"#3a4150", t:"Efectivo" });
   }
@@ -539,7 +540,6 @@ function render(){
           +'<div class="d num">≈ '+fmt(s2.v/100*x.equity)+'</div></div>';
       }).join("")+'</div>'
       +'<button class="dist-btn" id="ed-dist">✎ Cambiar mi reparto</button>'
-      +'<p class="lede" style="margin-top:10px">Es una instrucción para Jose: él la ejecuta en tu cuenta y te confirma. No es una orden automática.</p>'
       : '<p class="lede" style="font-size:14.5px">Hoy vas <b>100% con el Freedom Point Plan</b>. Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — pedilo acá y Jose lo ejecuta.</p>'
       +'<button class="dist-btn" id="ed-dist">✎ Personalizar mi reparto</button>')
   +'</div>'
@@ -905,30 +905,43 @@ $("e-cerrar").addEventListener("click", function(){ $("modal-editar").classList.
 $("modal-editar").addEventListener("click", function(e){ if(e.target===$("modal-editar")) $("modal-editar").classList.remove("on"); });
 
 /* ================= distribución: qué % a qué ================= */
-var DIST_ED=[];
+var DIST_ED=[], DIST_EQ=0;
+// APY aprox del high-yield cash de Alpaca. No hay API pública para leerlo en vivo:
+// cuando cambie, se actualiza este número a mano (o lo movemos a la tabla config).
+var TASA_CASH=3.8;
+function nombreDist(f){
+  if(f.tipo==="fpf") return "Freedom Point Plan";
+  if(f.sym==="CASH") return "Cash · ~"+TASA_CASH+"%";
+  return f.sym;
+}
 function distTexto(d){
-  return d.map(function(f){ return (+f.pct)+"% "+(f.tipo==="fpf"?"Freedom Point Plan":f.sym); }).join(" · ");
+  return d.map(function(f){ return (+f.pct)+"% "+nombreDist(f); }).join(" · ");
 }
 function abrirDist(){
   var d=(D.meta&&D.meta.distribucion)||[];
   DIST_ED = d.length? d.map(function(f){ return {tipo:f.tipo, sym:f.sym||"", pct:+f.pct}; })
     : [{tipo:"fpf", sym:"", pct:100}];
+  DIST_EQ=derivar(D).equity;
   $("dist-msg").textContent="";
   pintarDistFilas();
   $("modal-dist").classList.add("on");
 }
+function usdDe(pct){ return DIST_EQ>0? Math.round(pct/100*DIST_EQ):0; }
 function pintarDistFilas(){
-  var CONOCIDOS=["SPY","QQQ","QLD","TQQQ","SJC"];
+  var CONOCIDOS=["SPY","QQQ","QLD","TQQQ","SJC","CASH"];
+  var ETIQ={ CASH:"Cash · ~"+TASA_CASH+"% (high-yield)" };
   $("dist-filas").innerHTML=DIST_ED.map(function(f,i){
     var otro= f.tipo==="etf" && CONOCIDOS.indexOf(f.sym)<0;
     return '<div class="dist-fila">'
       +'<select data-sel="'+i+'">'
         +'<option value="FPF"'+(f.tipo==="fpf"?' selected':'')+'>Freedom Point Plan</option>'
-        +CONOCIDOS.map(function(s){ return '<option value="'+s+'"'+(f.tipo==="etf"&&f.sym===s?' selected':'')+'>'+s+'</option>'; }).join("")
+        +CONOCIDOS.map(function(s){ return '<option value="'+s+'"'+(f.tipo==="etf"&&f.sym===s?' selected':'')+'>'+(ETIQ[s]||s)+'</option>'; }).join("")
         +'<option value="OTRO"'+(otro?' selected':'')+'>Otro ticker…</option>'
       +'</select>'
-      +(otro?'<input data-sym="'+i+'" value="'+esc(f.sym)+'" placeholder="VTI" maxlength="5" style="width:76px;text-transform:uppercase">':'')
-      +'<input data-pct="'+i+'" inputmode="decimal" value="'+(f.pct||"")+'" style="width:70px;text-align:right">'
+      +(otro?'<input data-sym="'+i+'" value="'+esc(f.sym)+'" placeholder="VTI" maxlength="5" style="width:70px;text-transform:uppercase">':'')
+      +'<span style="color:var(--gris-sec)">$</span>'
+      +'<input data-usd="'+i+'" inputmode="numeric" value="'+(f.pct>0? usdDe(f.pct).toLocaleString("en-US"):"")+'" style="width:104px;text-align:right">'
+      +'<input data-pct="'+i+'" inputmode="decimal" value="'+(f.pct||"")+'" style="width:58px;text-align:right">'
       +'<span style="color:var(--gris-sec)">%</span>'
       +'<button class="quitar" data-del="'+i+'" title="Quitar">✕</button>'
     +'</div>';
@@ -947,9 +960,27 @@ function pintarDistFilas(){
       DIST_ED[+inp.getAttribute("data-sym")].sym=inp.value.toUpperCase().replace(/[^A-Z]/g,"").slice(0,5);
     });
   });
+  // % y $ ligados: escribís cualquiera de los dos y el otro se calcula sobre el capital total
   Array.prototype.forEach.call(document.querySelectorAll("[data-pct]"), function(inp){
     inp.addEventListener("input", function(){
-      DIST_ED[+inp.getAttribute("data-pct")].pct=parseFloat(inp.value.replace(/[^0-9.]/g,""))||0;
+      var i=+inp.getAttribute("data-pct");
+      var pct=parseFloat(inp.value.replace(/[^0-9.]/g,""))||0;
+      DIST_ED[i].pct=pct;
+      var usd=document.querySelector('[data-usd="'+i+'"]');
+      if(usd) usd.value= pct>0? usdDe(pct).toLocaleString("en-US"):"";
+      distTotalUI();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-usd]"), function(inp){
+    inp.addEventListener("input", function(){
+      var i=+inp.getAttribute("data-usd");
+      var d2=inp.value.replace(/[^0-9]/g,"");
+      inp.value=d2? Number(d2).toLocaleString("en-US"):"";
+      var monto=parseInt(d2||"0",10);
+      var pct= DIST_EQ>0? Math.round(monto/DIST_EQ*1000)/10 : 0;
+      DIST_ED[i].pct=pct;
+      var pc=document.querySelector('[data-pct="'+i+'"]');
+      if(pc) pc.value= pct>0? pct:"";
       distTotalUI();
     });
   });
@@ -960,10 +991,12 @@ function pintarDistFilas(){
 }
 function distTotalUI(){
   var t=DIST_ED.reduce(function(s,f){return s+(+f.pct||0);},0);
+  t=Math.round(t*10)/10;
   var resto=Math.round((100-t)*10)/10;
   $("dist-total").innerHTML= !DIST_ED.length? 'Sin filas: volvés a <b>100% Freedom Point Plan</b>.'
-    : t>100.5? '<b style="color:var(--rojo)">La suma va en '+t+'% — se pasa de 100%.</b>'
-    : 'Suma: <b>'+t+'%</b>'+(resto>0.5? ' · el <b>'+resto+'%</b> queda en efectivo':' · completo');
+    : t>100.5? '<b style="color:var(--rojo)">La suma va en '+t+'% ('+fmt(usdDe(t))+') — se pasa de tu capital de '+fmt(DIST_EQ)+'.</b>'
+    : 'Suma: <b>'+t+'%</b> · <b>'+fmt(usdDe(t))+'</b> de tu capital de <b>'+fmt(DIST_EQ)+'</b>'
+      +(resto>0.5? ' · quedan <b>'+resto+'%</b> ('+fmt(usdDe(resto))+') en efectivo':' · completo');
 }
 $("dist-add").addEventListener("click", function(){
   if(DIST_ED.length>=8) return;
