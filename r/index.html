@@ -250,6 +250,14 @@
   .dist-tile .n i{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
   .dist-tile .p{ font-size:23px; font-weight:800; color:var(--crema); margin-top:3px; }
   .dist-tile .d{ font-size:11.5px; color:var(--gris-sec); }
+  .dist-tile.sjct{ border-style:dashed; border-color:rgba(76,175,125,.55); }
+  .dist-split{ display:flex; align-items:flex-start; gap:8px; margin-top:6px; }
+  .dist-split .dist-bar{ margin-top:0; }
+  .dist-mas{ color:var(--gris-sec); font-weight:800; font-size:17px; align-self:center; padding-bottom:18px; flex:0 0 auto; }
+  .dist-bajo{ font-size:10.5px; color:var(--gris-sec); margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dist-sjcbar{ height:24px; border-radius:999px; border:1.5px dashed var(--f3); color:var(--f3);
+    font-size:10px; font-weight:800; letter-spacing:1px; display:flex; align-items:center; justify-content:center;
+    background:repeating-linear-gradient(45deg, rgba(76,175,125,.22) 0 6px, rgba(76,175,125,.06) 6px 12px); }
   .dist-btn{ margin-top:12px; background:transparent; border:1.5px solid var(--menta); color:var(--menta);
     border-radius:999px; padding:10px 22px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
   .dist-btn:hover{ background:rgba(99,252,175,.12); }
@@ -390,10 +398,22 @@
     <div id="dist-filas"></div>
     <button class="dist-add" id="dist-add">+ agregar otra fila</button>
     <div style="margin-top:14px; border-top:1px solid var(--bd); padding-top:12px">
-      <label for="dist-sjc" style="display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800; margin-bottom:4px">San José Capital ($ · renta fija en CR, aparte de Alpaca)</label>
-      <div class="fila-in" style="max-width:240px"><span style="color:var(--gris-sec); align-self:center">$</span>
-        <input id="dist-sjc" inputmode="numeric" autocomplete="off" placeholder="0"></div>
-      <div class="nota3" style="margin-top:6px">No sale de tu capital de Alpaca: se suma aparte, y cuenta para tu avance al freedom point y como tu renta fija (el piso).</div>
+      <div style="font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--f3); font-weight:800; margin-bottom:2px">San José Capital · renta fija en CR, aparte de Alpaca</div>
+      <div class="e-grid" style="margin-top:4px">
+        <div><label for="dist-sjc">Monto</label>
+          <div class="fila-in">
+            <select id="sjc-mon" style="flex:0 0 100px; background:var(--input); border:1px solid var(--bd); border-radius:9px; color:var(--crema); font-family:inherit; font-size:13.5px; padding:9px 6px">
+              <option value="CRC">₡ colones</option>
+              <option value="USD">$ dólares</option>
+            </select>
+            <input id="dist-sjc" inputmode="numeric" autocomplete="off" placeholder="0">
+          </div></div>
+        <div id="sjc-tc-box"><label for="sjc-tc">Tipo de cambio (₡ por $)</label>
+          <input id="sjc-tc" inputmode="decimal" autocomplete="off" placeholder="510"></div>
+        <div><label for="sjc-tasa">Tasa anual (%)</label>
+          <input id="sjc-tasa" inputmode="decimal" autocomplete="off" placeholder="8"></div>
+      </div>
+      <div class="nota3" id="sjc-equiv" style="margin-top:6px"></div>
     </div>
     <div class="e-resumen" id="dist-total"></div>
     <div class="btns">
@@ -517,18 +537,16 @@ function render(){
   var distSlices=null;
   if(dist){
     var colDist=["#7C8FF7","#E0B07A","#e0796b","#5bc8b0","#9AA1AB"], ci=0;
-    // los % del reparto instruyen sobre el capital de Alpaca; para la foto, todo se
-    // muestra en dolares y en % del patrimonio total (Alpaca + San Jose Capital)
+    // los % del reparto instruyen sobre el capital de Alpaca; San Jose Capital va APARTE
+    // (su propia barra despegada), nunca mezclado en la barra del portafolio
     distSlices=[];
     dist.forEach(function(f2){
-      var usd=(+f2.pct||0)/100*x.equity;
-      if(f2.tipo==="fpf") distSlices.push({ usd:usd, c:"var(--menta)", t:"Freedom Point Plan" });
-      else if(f2.sym==="CASH") distSlices.push({ usd:usd, c:"#7d8697", t:"Cash · ~"+TASA_CASH+"%" });
-      else distSlices.push({ usd:usd, c:colDist[(ci++)%colDist.length], t:f2.sym });
+      var p2=+f2.pct||0, usd=p2/100*x.equity;
+      if(f2.tipo==="fpf") distSlices.push({ v:p2, usd:usd, c:"var(--menta)", t:"Freedom Point Plan" });
+      else if(f2.sym==="CASH") distSlices.push({ v:p2, usd:usd, c:"#7d8697", t:"Cash · ~"+TASA_CASH+"%" });
+      else distSlices.push({ v:p2, usd:usd, c:colDist[(ci++)%colDist.length], t:f2.sym });
     });
-    if(restoDist>0.5) distSlices.push({ usd:restoDist/100*x.equity, c:"#3a4150", t:"Efectivo" });
-    if(x.sjcExt>0) distSlices.push({ usd:x.sjcExt, c:"var(--f3)", t:"San José Capital" });
-    distSlices.forEach(function(s2){ s2.v=x.totalPat>0? s2.usd/x.totalPat*100:0; });
+    if(restoDist>0.5) distSlices.push({ v:restoDist, usd:restoDist/100*x.equity, c:"#3a4150", t:"Efectivo" });
   }
   var app=$("app");
   var falta=Math.max(0,x.fp-x.totalPat);
@@ -566,12 +584,34 @@ function render(){
   +'<div class="card">'
     +'<h2>Cómo querés repartir tu plata</h2>'
     +(distSlices?
-      '<div class="dist-bar" id="b-dist"></div>'
-      +'<div class="dist-tiles">'+distSlices.map(function(s2){
-        return '<div class="dist-tile"><div class="n"><i style="background:'+s2.c+'"></i>'+esc(s2.t)+'</div>'
-          +'<div class="p num">'+(+s2.v).toFixed(0)+'%</div>'
-          +'<div class="d num">≈ '+fmt(s2.usd)+'</div></div>';
-      }).join("")+'</div>'
+      (function(){
+        var awPct= x.sjcExt>0? Math.max(34, x.equity/x.totalPat*100):100;
+        var sjD=x.m.sjc||null;
+        return '<div class="dist-split">'
+          +'<div style="flex:1 1 '+awPct.toFixed(1)+'%; min-width:150px">'
+            +'<div class="dist-bar" id="b-dist"></div>'
+            +'<div class="dist-bajo">En tu cuenta de Alpaca · '+fmt(x.equity)+'</div>'
+          +'</div>'
+          +(x.sjcExt>0?
+            '<div class="dist-mas">+</div>'
+            +'<div style="flex:0 1 '+(100-awPct).toFixed(1)+'%; min-width:96px">'
+              +'<div class="dist-sjcbar">SJC</div>'
+              +'<div class="dist-bajo" style="color:var(--f3)">Aparte · '+fmt(x.sjcExt)+'</div>'
+            +'</div>':'')
+        +'</div>'
+        +'<div class="dist-tiles">'+distSlices.map(function(s2){
+          return '<div class="dist-tile"><div class="n"><i style="background:'+s2.c+'"></i>'+esc(s2.t)+'</div>'
+            +'<div class="p num">'+(+s2.v).toFixed(0)+'%</div>'
+            +'<div class="d num">≈ '+fmt(s2.usd)+'</div></div>';
+        }).join("")
+        +(x.sjcExt>0?
+          '<div class="dist-tile sjct"><div class="n"><i style="background:transparent; border:1.5px dashed var(--f3)"></i>San José Capital · aparte</div>'
+          +'<div class="p num">'+fmt(x.sjcExt)+'</div>'
+          +'<div class="d num">'+(sjD? (isFinite(+sjD.tasa)? +sjD.tasa:8)+'% anual':'renta fija')
+            +(sjD&&sjD.moneda==="CRC"? ' · ₡'+Math.round(+sjD.monto||0).toLocaleString("en-US")+' al ₡'+(+sjD.tc||510):'')
+            +' · '+(x.totalPat>0? (x.sjcExt/x.totalPat*100).toFixed(0):0)+'% de tu patrimonio</div></div>':'')
+        +'</div>';
+      })()
       +'<button class="dist-btn" id="ed-dist">✎ Cambiar mi reparto</button>'
       : '<p class="lede" style="font-size:14.5px">Hoy vas <b>100% con el Freedom Point Plan</b>. Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — pedilo acá y Jose lo ejecuta.</p>'
       +'<button class="dist-btn" id="ed-dist">✎ Personalizar mi reparto</button>')
@@ -962,17 +1002,41 @@ function abrirDist(){
   DIST_ED = d.length? d.map(function(f){ return {tipo:f.tipo, sym:f.sym||"", pct:+f.pct}; })
     : [{tipo:"fpf", sym:"", pct:100}];
   DIST_EQ=derivar(D).equity;
-  var sj=+((D.meta||{}).sjc_capital)||0;
-  $("dist-sjc").value= sj>0? sj.toLocaleString("en-US"):"";
+  var sj=(D.meta||{}).sjc || { monto:+((D.meta||{}).sjc_capital)||0, moneda:"USD", tc:TC_DEF, tasa:8 };
+  $("sjc-mon").value= sj.moneda==="CRC"? "CRC":"USD";
+  $("dist-sjc").value= sj.monto>0? Math.round(sj.monto).toLocaleString("en-US"):"";
+  $("sjc-tc").value= +sj.tc||TC_DEF;
+  $("sjc-tasa").value= (sj.tasa!==undefined && isFinite(+sj.tasa))? +sj.tasa : 8;
+  sjcEquivUI();
   $("dist-msg").textContent="";
   pintarDistFilas();
   $("modal-dist").classList.add("on");
 }
+var TC_DEF=510;   // tipo de cambio ₡/$ de arranque; el cliente lo edita
+function sjcUsdActual(){
+  var monto=parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0;
+  if($("sjc-mon").value==="CRC"){
+    var tc=parseFloat(String($("sjc-tc").value).replace(/[^0-9.]/g,""))||TC_DEF;
+    return tc>0? monto/tc : 0;
+  }
+  return monto;
+}
+function sjcEquivUI(){
+  var esCRC=$("sjc-mon").value==="CRC";
+  $("sjc-tc-box").style.display= esCRC? "":"none";
+  var usd=Math.round(sjcUsdActual());
+  $("sjc-equiv").innerHTML=(esCRC && usd>0? '≈ <b style="color:var(--crema)">'+fmt(usd)+'</b> al tipo de cambio indicado. ':'')
+    +'No sale de tu capital de Alpaca: se suma aparte, y cuenta para tu avance al freedom point y como tu renta fija (el piso).';
+  distTotalUI();
+}
 $("dist-sjc").addEventListener("input", function(){
   var d2=this.value.replace(/[^0-9]/g,"");
   this.value=d2? Number(d2).toLocaleString("en-US"):"";
-  distTotalUI();
+  sjcEquivUI();
 });
+$("sjc-mon").addEventListener("change", sjcEquivUI);
+$("sjc-tc").addEventListener("input", sjcEquivUI);
+$("sjc-tasa").addEventListener("input", sjcEquivUI);
 function usdDe(pct){ return DIST_EQ>0? Math.round(pct/100*DIST_EQ):0; }
 function pintarDistFilas(){
   var CONOCIDOS=["SPY","QQQ","QLD","TQQQ","SJC","CASH"];
@@ -1044,7 +1108,7 @@ function distTotalUI(){
     : t>100.5? '<b style="color:var(--rojo)">La suma va en '+t+'% ('+fmt(usdDe(t))+') — se pasa de tu capital de '+fmt(DIST_EQ)+'.</b>'
     : 'Suma: <b>'+t+'%</b> · <b>'+fmt(usdDe(t))+'</b> de tu capital de <b>'+fmt(DIST_EQ)+'</b>'
       +(resto>0.5? ' · quedan <b>'+resto+'%</b> ('+fmt(usdDe(resto))+') en efectivo':' · completo')
-      +(function(){ var sj=parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0;
+      +(function(){ var sj=Math.round(sjcUsdActual());
         return sj>0? ' · más <b>'+fmt(sj)+'</b> en San José Capital (aparte)':''; })();
 }
 $("dist-add").addEventListener("click", function(){
@@ -1064,17 +1128,26 @@ $("dist-guardar").addEventListener("click", async function(){
   if(fpfN>1){ msg.textContent="❌ El Freedom Point Plan va una sola vez."; return; }
   if(total>100.5){ msg.textContent="❌ La suma se pasa de 100%."; return; }
   var arr=DIST_ED.map(function(f){ return f.tipo==="fpf"? {tipo:"fpf", pct:f.pct} : {tipo:"etf", sym:f.sym, pct:f.pct}; });
-  var sjMonto=parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0;
-  if(sjMonto>10000000){ msg.textContent="❌ Revisá el monto de San José Capital."; return; }
+  var sjObj={
+    monto: parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0,
+    moneda: $("sjc-mon").value==="CRC"? "CRC":"USD",
+    tc: parseFloat(String($("sjc-tc").value).replace(/[^0-9.]/g,""))||TC_DEF,
+    tasa: parseFloat(String($("sjc-tasa").value).replace(/[^0-9.]/g,""))
+  };
+  if(!isFinite(sjObj.tasa)) sjObj.tasa=8;
+  var sjUsd=Math.round(sjcUsdActual());
+  if(sjUsd>10000000){ msg.textContent="❌ Revisá el monto de San José Capital."; return; }
+  if(sjObj.moneda==="CRC" && !(sjObj.tc>=100 && sjObj.tc<=2000)){ msg.textContent="❌ Revisá el tipo de cambio."; return; }
+  if(!(sjObj.tasa>=0 && sjObj.tasa<=30)){ msg.textContent="❌ Revisá la tasa de San José Capital."; return; }
   btn.disabled=true; btn.textContent="Guardando…"; msg.textContent="";
   try{
-    if(DEMO){ D.meta.distribucion=arr; D.meta.sjc_capital=sjMonto; }
+    if(DEMO){ D.meta.distribucion=arr; D.meta.sjc=sjObj; D.meta.sjc_capital=sjUsd; }
     else {
       var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
       if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
       var r=await fetch(BASE+"/editar-plan",{ method:"POST",
         headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr, sjc_capital:sjMonto }) });
+        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr, sjc:sjObj }) });
       var j=await r.json();
       if(!r.ok) throw new Error(j.error||("error "+r.status));
       D.meta=j.meta;
@@ -1590,7 +1663,8 @@ function demoDatos(escenario){
   }
   return {
     nombre:"María Vargas",
-    meta:{ ingreso:8000, tasa:8, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75, sjc_capital:50000,
+    meta:{ ingreso:8000, tasa:8, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
+      sjc_capital:20000, sjc:{ monto:10200000, moneda:"CRC", tc:510, tasa:8 },
       distribucion:[ {tipo:"etf", sym:"QQQ", pct:30}, {tipo:"etf", sym:"QLD", pct:20}, {tipo:"fpf", pct:50} ],
       plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
     snapshots: meses,
