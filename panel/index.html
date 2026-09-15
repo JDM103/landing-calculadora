@@ -139,6 +139,42 @@
     padding:8px 18px; font-weight:800; font-family:inherit; font-size:13px; cursor:not-allowed; opacity:.45; }
   .candado2{ background:rgba(224,176,122,.08); border:1px solid rgba(224,176,122,.45); border-radius:10px;
     padding:9px 12px; font-size:12.5px; color:var(--ambar); margin:8px 0 10px; }
+  .tic .tgo2{ margin-left:auto; background:var(--card); border:1px solid var(--menta); color:var(--menta);
+    border-radius:999px; padding:7px 16px; font-weight:800; font-family:inherit; font-size:12.5px; cursor:pointer; }
+  .tic .tgo2:hover{ background:rgba(99,252,175,.12); }
+  /* boleta de orden */
+  .bol-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px 12px; }
+  .bol-grid label{ display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:.4px;
+    color:var(--gris-sec); font-weight:800; margin-bottom:4px; }
+  .bol-grid input, .bol-grid select{ width:100%; background:var(--input); border:1px solid var(--bd);
+    border-radius:9px; color:var(--crema); font-family:inherit; font-size:14px; padding:9px 10px; }
+  .bol-grid input:focus, .bol-grid select:focus{ outline:none; border-color:var(--menta); }
+  .segb{ display:flex; gap:5px; }
+  .segb button{ flex:1; background:var(--input); border:1px solid var(--bd); color:var(--gris-sec);
+    border-radius:9px; padding:9px 4px; font-family:inherit; font-size:12px; font-weight:800; cursor:pointer; }
+  .segb button.on{ background:var(--menta); border-color:var(--menta); color:#082018; }
+  #bo-lado button[data-v="sell"].on{ background:var(--rojo); border-color:var(--rojo); color:#fff; }
+  .bo-mini{ font-size:10.5px; color:var(--gris-sec); margin-top:4px; }
+  .bo-check{ display:flex !important; align-items:center; gap:7px; font-size:12px !important;
+    text-transform:none !important; letter-spacing:0 !important; color:var(--gris) !important; cursor:pointer; }
+  .bo-check input{ width:auto !important; accent-color:var(--menta); }
+  .bol-res{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:8px; margin-top:12px; }
+  .bol-res > div{ background:var(--card2); border:1px solid var(--bd); border-radius:10px; padding:8px 11px; }
+  .bol-res span{ display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:.4px;
+    color:var(--gris-sec); font-weight:800; }
+  .bol-res b{ font-size:15px; color:var(--crema); }
+  .bol-res .bo-err{ grid-column:1/-1; background:rgba(224,82,90,.1); border:1px solid rgba(224,82,90,.5);
+    color:#ff9ea4; font-size:12.5px; padding:8px 11px; border-radius:10px; }
+  .bol-res .bo-avi{ grid-column:1/-1; background:rgba(224,176,122,.08); border:1px solid rgba(224,176,122,.4);
+    color:var(--ambar); font-size:12.5px; padding:8px 11px; border-radius:10px; }
+  .bo-rev{ background:var(--menta); color:#082018; border:none; border-radius:999px; padding:11px 22px;
+    font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
+  .bo-rev:disabled{ opacity:.4; cursor:not-allowed; }
+  .mo-tbl{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .mo-tbl td{ padding:7px 8px; border-bottom:1px solid rgba(42,49,64,.5); text-align:left; }
+  .mo-tbl td:first-child{ color:var(--gris-sec); font-size:11px; text-transform:uppercase; letter-spacing:.4px;
+    font-weight:800; width:110px; }
+  .mo-tbl td:last-child{ color:var(--crema); }
   .enplan{ background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.3); border-radius:11px;
     padding:14px; color:var(--crema); font-size:14px; }
   .distp{ margin-top:8px; background:rgba(124,143,247,.08); border:1px solid rgba(124,143,247,.4);
@@ -227,6 +263,14 @@
       <div id="filas"></div>
     </div>
     <div class="det" id="det"><div class="vacio">Tocá un cliente para ver su cuenta</div></div>
+  </div>
+
+  <div class="modal" id="modal-orden">
+    <div class="caja2">
+      <h3 id="mo-tit">Confirmar orden</h3>
+      <div id="mo-cuerpo"></div>
+      <div class="acc2" id="mo-pie"></div>
+    </div>
   </div>
 
   <div class="modal" id="modal-alta">
@@ -882,16 +926,23 @@ function renderAccion(){
           return '<div class="tic" data-tic="'+i+'">'
             +'<span class="tl '+(o.lado==="buy"?"up":"down")+'">'+(o.lado==="buy"?"COMPRAR":"VENDER")+'</span>'
             +'<span class="ts">'+o.sym+'</span>'
-            +'<span style="color:var(--gris-sec)">$</span>'
-            +'<input class="tmonto num" value="'+o.monto.toLocaleString("en-US")+'" inputmode="numeric">'
-            +'<select class="ttipo"><option value="market">Mercado</option><option value="limit">Límite</option></select>'
-            +'<input class="tlim num" placeholder="precio lím." inputmode="decimal" style="display:none">'
-            +'<input class="tini" placeholder="iniciales" maxlength="4" autocomplete="off">'
-            +'<button class="tgo" disabled title="Aún no tira órdenes: primero lo revisamos juntos y se enciende el kill switch (config.ordenes_activas).">Ejecutar</button>'
+            +'<span class="num" style="color:var(--crema);font-weight:800">'+fmt(o.monto)+'</span>'
+            +'<button class="tgo2" data-bol="'+i+'">Abrir en la boleta →</button>'
           +'</div>';
         }).join("")
-        +'<div class="sub" style="margin-top:8px">Primero las ventas (liberan efectivo), después las compras. Cada ejecución va a pedir tus <b>iniciales</b> y quedará en la bitácora con fecha, orden y monto.</div>'
+        +'<div class="sub" style="margin-top:8px">Primero las ventas (liberan efectivo), después las compras. Tocá una y la boleta de abajo queda cargada.</div>'
         : '<div class="enplan">✅ <b>Esta cuenta está según lo establecido.</b> Nada que mover (diferencias menores a '+fmt(p.umbral)+' se ignoran).</div>')
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">🎛️ Boleta de orden</div>'
+      +'<div class="candado2">🔒 Modo simulación: todo funciona (revisión, confirmación, iniciales, bitácora) pero la orden <b>no se envía</b> a Alpaca hasta encender el kill switch.</div>'
+      +'<div id="boleta-box"></div>'
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">Bitácora de esta sesión (simulación)</div>'
+      +'<div id="sim-log"></div>'
     +'</div>'
 
     +'<div class="acard">'
@@ -903,18 +954,210 @@ function renderAccion(){
   $("acc-next").addEventListener("click", function(){ ACC_IDX++; renderAccion(); });
   $("acc-sel").addEventListener("change", function(){ ACC_IDX=+this.value; renderAccion(); });
   $("acc-solo").addEventListener("change", function(){ ACC_SOLO=this.checked; ACC_IDX=0; renderAccion(); });
-  Array.prototype.forEach.call(box.querySelectorAll(".ttipo"), function(sel){
-    sel.addEventListener("change", function(){
-      var lim=sel.parentElement.querySelector(".tlim");
-      if(lim) lim.style.display= sel.value==="limit"? "":"none";
+  Array.prototype.forEach.call(box.querySelectorAll("[data-bol]"), function(b){
+    b.addEventListener("click", function(){
+      var o=p.ordenes[+b.getAttribute("data-bol")];
+      BOLETA=boletaDefault(c,p);
+      BOLETA.sym=o.sym; BOLETA.lado=o.lado; BOLETA.monto=o.monto;
+      renderBoleta(c,p);
+      var bb=$("boleta-box"); if(bb) bb.scrollIntoView({behavior:"smooth", block:"center"});
     });
   });
-  Array.prototype.forEach.call(box.querySelectorAll(".tmonto"), function(inp){
-    inp.addEventListener("input", function(){ var d=inp.value.replace(/[^0-9]/g,""); inp.value=d?Number(d).toLocaleString("en-US"):""; });
-  });
   ACC_ALIAS=c.alias;
+  if(!BOLETA || BOLETA._alias!==c.alias) BOLETA=boletaDefault(c,p);
+  renderBoleta(c,p);
+  renderSimLog();
   cargarOrdenes(c);
 }
+
+/* ===== la boleta: experiencia completa de plataforma (simulación hasta el kill switch) ===== */
+var BOLETA=null, SIM_LOG=[];
+function boletaDefault(c,p){
+  return { _alias:c.alias, activo:"stock", sym:"", lado:"buy", modo:"usd", monto:0, qty:"",
+    tipo:"market", lim:"", stop:"", trailT:"pct", trail:"", tif:"day", ext:false, ref:0 };
+}
+function numB(v){ var n=parseFloat(String(v).replace(/[^0-9.]/g,"")); return isFinite(n)? n:0; }
+function pxDe(c, sym){
+  var px=0, q=0, v=0;
+  (c.snap.posiciones||[]).forEach(function(po){ if(po.s===sym){ px=+po.px||0; q=+po.q||0; v=+po.v||0; } });
+  return {px:px, q:q, v:v};
+}
+// estimación viva: cuánto cuesta/recibe, efectivo restante, cantidad aproximada
+function boletaCalc(c, p){
+  var B=BOLETA, out={ ok:true, avisos:[], errores:[] };
+  var pos=pxDe(c, B.sym);
+  var precio= (B.tipo==="limit"||B.tipo==="stop_limit")? numB(B.lim)
+    : B.tipo==="stop"? numB(B.stop)
+    : (numB(B.ref)||pos.px);
+  out.precio=precio;
+  if(B.modo==="usd"){ out.monto=numB(B.monto); out.qty= precio>0? out.monto/precio : null; }
+  else { var q=numB(B.qty); out.qty=q; out.monto= precio>0? q*precio : 0;
+    if(!(precio>0)) out.errores.push("Para operar por cantidad ocupás un precio (límite o de referencia)."); }
+  if(!B.sym) out.errores.push("Falta el símbolo.");
+  if(B.activo==="cripto" && B.sym.indexOf("/")<0) out.errores.push("Las criptos van en par, ej. BTC/USD.");
+  if(!(out.monto>0)) out.errores.push("Poné el monto o la cantidad.");
+  if((B.tipo==="limit"||B.tipo==="stop_limit") && !(numB(B.lim)>0)) out.errores.push("Falta el precio límite.");
+  if((B.tipo==="stop"||B.tipo==="stop_limit") && !(numB(B.stop)>0)) out.errores.push("Falta el precio stop.");
+  if(B.tipo==="trailing" && !(numB(B.trail)>0)) out.errores.push("Falta el trail.");
+  if((B.tif==="opg"||B.tif==="cls") && B.tipo!=="market" && B.tipo!=="limit")
+    out.errores.push("OPG/CLS solo con órdenes de mercado o límite.");
+  if(B.ext && !(B.tipo==="limit" && B.tif==="day"))
+    out.errores.push("Horario extendido: solo límite + DAY (regla de Alpaca).");
+  if(B.lado==="buy"){
+    out.despues=p.cash-out.monto;
+    if(out.monto>p.cash) out.errores.push("No alcanza el efectivo: faltan "+fmt(out.monto-p.cash)+".");
+  } else {
+    out.despues=p.cash+out.monto;
+    if(pos.v>0 && out.monto>pos.v*1.005) out.errores.push("Estás vendiendo más de lo que tiene ("+fmt(pos.v)+" en "+B.sym+").");
+    if(pos.v<=0 && B.sym) out.avisos.push("No veo posición de "+B.sym+" en el último cierre: revisá antes de vender.");
+  }
+  out.pos=pos;
+  out.ok=!out.errores.length;
+  return out;
+}
+var TIPOS_ORD=[["market","Mercado"],["limit","Límite"],["stop","Stop"],["stop_limit","Stop límite"],["trailing","Trailing stop"]];
+var TIFS={ stock:[["day","DAY · hoy"],["gtc","GTC · hasta cancelar"],["opg","OPG · en la apertura"],["cls","CLS · en el cierre"],["ioc","IOC · inmediato o cancela"],["fok","FOK · todo o nada"]],
+  cripto:[["gtc","GTC · hasta cancelar"],["ioc","IOC · inmediato o cancela"]] };
+function segB(id, ops, val){
+  return '<div class="segb" id="'+id+'">'+ops.map(function(o){
+    return '<button type="button" data-v="'+o[0]+'"'+(o[0]===val?' class="on"':'')+'>'+o[1]+'</button>'; }).join("")+'</div>';
+}
+function renderBoleta(c, p){
+  var box=$("boleta-box"); if(!box) return;
+  var B=BOLETA;
+  var esC=B.activo==="cripto";
+  var pos=pxDe(c, B.sym);
+  if(pos.px>0 && !numB(B.ref)) B.ref=pos.px;
+  box.innerHTML=
+    '<div class="bol-grid">'
+      +'<div><label>Tipo de activo</label>'+segB("bo-act",[["stock","Acciones / ETF"],["cripto","Cripto"]],B.activo)+'</div>'
+      +'<div><label>Lado</label>'+segB("bo-lado",[["buy","Comprar"],["sell","Vender"]],B.lado)+'</div>'
+      +'<div><label>Símbolo'+(esC?' (par)':'')+'</label><input id="bo-sym" value="'+escapa(B.sym)+'" placeholder="'+(esC?"BTC/USD":"TQQQ")+'" style="text-transform:uppercase" list="bo-syms">'
+        +'<datalist id="bo-syms">'+(esC?["BTC/USD","ETH/USD","USDT/USD","USDC/USD"]:["TQQQ","QLD","QQQ","SPY","VOO","SJC"]).map(function(x){return '<option value="'+x+'">';}).join("")+'</datalist></div>'
+      +'<div><label>Operar por</label>'+segB("bo-modo",[["usd","$ monto"],["qty","# cantidad"]],B.modo)+'</div>'
+      +(B.modo==="usd"
+        ? '<div><label>Monto ($)</label><input id="bo-monto" inputmode="numeric" value="'+(B.monto? Math.round(B.monto).toLocaleString("en-US"):"")+'"></div>'
+        : '<div><label>Cantidad'+(esC?' (acepta decimales)':'')+'</label><input id="bo-qty" inputmode="decimal" value="'+escapa(B.qty)+'"></div>')
+      +'<div><label>Tipo de orden</label><select id="bo-tipo">'+TIPOS_ORD.map(function(t){
+        return '<option value="'+t[0]+'"'+(t[0]===B.tipo?' selected':'')+'>'+t[1]+'</option>'; }).join("")+'</select></div>'
+      +((B.tipo==="limit"||B.tipo==="stop_limit")?'<div><label>Precio límite ($)</label><input id="bo-lim" inputmode="decimal" value="'+escapa(B.lim)+'"></div>':'')
+      +((B.tipo==="stop"||B.tipo==="stop_limit")?'<div><label>Precio stop ($)</label><input id="bo-stop" inputmode="decimal" value="'+escapa(B.stop)+'"></div>':'')
+      +(B.tipo==="trailing"?'<div><label>Trail</label><div style="display:flex;gap:6px">'+segB("bo-trailt",[["pct","%"],["usd","$"]],B.trailT)+'<input id="bo-trail" inputmode="decimal" value="'+escapa(B.trail)+'" style="flex:1;min-width:0"></div></div>':'')
+      +'<div><label>Vigencia (TIF)</label><select id="bo-tif">'+TIFS[esC?"cripto":"stock"].map(function(t){
+        return '<option value="'+t[0]+'"'+(t[0]===B.tif?' selected':'')+'>'+t[1]+'</option>'; }).join("")+'</select></div>'
+      +'<div><label>Precio de referencia ($)</label><input id="bo-ref" inputmode="decimal" value="'+(B.ref||"")+'" placeholder="para estimar">'
+        +(pos.px>0?'<div class="bo-mini">posición: '+(+pos.q).toLocaleString("en-US")+' × '+fmt(pos.px)+' = '+fmt(pos.v)+'</div>':'')+'</div>'
+      +(!esC?'<div style="align-self:end"><label class="bo-check"><input type="checkbox" id="bo-ext"'+(B.ext?' checked':'')+'> Horario extendido (solo límite + DAY)</label></div>':'')
+    +'</div>'
+    +'<div class="bol-res" id="bol-res"></div>'
+    +'<div style="display:flex; gap:10px; margin-top:10px; align-items:center; flex-wrap:wrap">'
+      +'<button class="bo-rev" id="bo-revisar">Revisar orden →</button>'
+      +'<span class="sub" id="bo-msg"></span>'
+    +'</div>';
+
+  function reState(){ renderBoleta(c,p); }
+  function pintaRes(){
+    var r=boletaCalc(c,p), el=$("bol-res");
+    el.innerHTML=
+      '<div><span>Efectivo disponible</span><b class="num">'+fmt(p.cash)+'</b></div>'
+      +'<div><span>'+(B.lado==="buy"?"Costo estimado":"Recibís (estimado)")+'</span><b class="num">'+(r.monto>0?fmt(r.monto):"—")+'</b></div>'
+      +'<div><span>Efectivo si se ejecuta</span><b class="num" style="color:'+(r.despues<0?'var(--rojo)':'var(--menta)')+'">'+(r.monto>0?fmt(r.despues):"—")+'</b></div>'
+      +(r.qty? '<div><span>Cantidad aprox.</span><b class="num">'+(Math.round(r.qty*10000)/10000).toLocaleString("en-US")+'</b></div>':'')
+      +(B.lado==="sell" && r.pos.v>0? '<div><span>Posición después</span><b class="num">'+fmt(Math.max(0,r.pos.v-r.monto))+'</b></div>':'')
+      +(r.errores.length? '<div class="bo-err">'+r.errores.join("<br>")+'</div>':'')
+      +(r.avisos.length? '<div class="bo-avi">'+r.avisos.join("<br>")+'</div>':'');
+    var rev=$("bo-revisar"); if(rev) rev.disabled=!r.ok;
+  }
+  Array.prototype.forEach.call(box.querySelectorAll("#bo-act button"), function(b){
+    b.addEventListener("click", function(){ B.activo=b.getAttribute("data-v");
+      B.tif= B.activo==="cripto"? "gtc":"day"; B.ext=false; B.sym=""; B.ref=0; reState(); }); });
+  Array.prototype.forEach.call(box.querySelectorAll("#bo-lado button"), function(b){
+    b.addEventListener("click", function(){ B.lado=b.getAttribute("data-v");
+      Array.prototype.forEach.call(box.querySelectorAll("#bo-lado button"),function(z){z.classList.toggle("on",z===b);});
+      pintaRes(); }); });
+  Array.prototype.forEach.call(box.querySelectorAll("#bo-modo button"), function(b){
+    b.addEventListener("click", function(){ B.modo=b.getAttribute("data-v"); reState(); }); });
+  Array.prototype.forEach.call(box.querySelectorAll("#bo-trailt button"), function(b){
+    b.addEventListener("click", function(){ B.trailT=b.getAttribute("data-v");
+      Array.prototype.forEach.call(box.querySelectorAll("#bo-trailt button"),function(z){z.classList.toggle("on",z===b);});
+      pintaRes(); }); });
+  var sy=$("bo-sym"); if(sy) sy.addEventListener("input", function(){
+    B.sym=sy.value.toUpperCase().replace(/[^A-Z/.]/g,""); if(sy.value!==B.sym) sy.value=B.sym;
+    var p2=pxDe(c,B.sym); B.ref=p2.px||0; var rf=$("bo-ref"); if(rf) rf.value=B.ref||"";
+    pintaRes(); });
+  var mo=$("bo-monto"); if(mo) mo.addEventListener("input", function(){
+    var d=mo.value.replace(/[^0-9]/g,""); mo.value=d?Number(d).toLocaleString("en-US"):""; B.monto=parseInt(d||"0",10); pintaRes(); });
+  var qy=$("bo-qty"); if(qy) qy.addEventListener("input", function(){ B.qty=qy.value; pintaRes(); });
+  var tp=$("bo-tipo"); if(tp) tp.addEventListener("change", function(){ B.tipo=tp.value; reState(); });
+  var tf=$("bo-tif"); if(tf) tf.addEventListener("change", function(){ B.tif=tf.value; pintaRes(); });
+  ["bo-lim","bo-stop","bo-trail","bo-ref"].forEach(function(id){
+    var el=$(id); if(el) el.addEventListener("input", function(){
+      B[{ "bo-lim":"lim","bo-stop":"stop","bo-trail":"trail","bo-ref":"ref" }[id]]=el.value; pintaRes(); }); });
+  var ex=$("bo-ext"); if(ex) ex.addEventListener("change", function(){ B.ext=ex.checked; pintaRes(); });
+  pintaRes();
+  var rev=$("bo-revisar");
+  if(rev) rev.addEventListener("click", function(){ abrirConfirmOrden(c,p); });
+}
+function tifTxt(v, esC){ var l=TIFS[esC?"cripto":"stock"].filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
+function tipoTxt(v){ var l=TIPOS_ORD.filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
+function abrirConfirmOrden(c, p){
+  var B=BOLETA, r=boletaCalc(c,p); if(!r.ok) return;
+  var esC=B.activo==="cripto";
+  $("mo-tit").textContent="Confirmar orden · "+nomDe(c);
+  $("mo-cuerpo").innerHTML=
+    '<table class="mo-tbl">'
+    +'<tr><td>Cuenta</td><td>'+nomDe(c)+' <span style="color:var(--gris-sec)">('+c.alias+')</span></td></tr>'
+    +'<tr><td>Activo</td><td><b>'+escapa(B.sym)+'</b> · '+(esC?"cripto":"acciones / ETF")+'</td></tr>'
+    +'<tr><td>Lado</td><td class="'+(B.lado==="buy"?"up":"down")+'"><b>'+(B.lado==="buy"?"COMPRAR":"VENDER")+'</b></td></tr>'
+    +'<tr><td>'+(B.modo==="usd"?"Monto":"Cantidad")+'</td><td class="num"><b>'+(B.modo==="usd"?fmt(r.monto):(numB(B.qty)).toLocaleString("en-US"))+'</b>'
+      +(r.qty&&B.modo==="usd"?' <span style="color:var(--gris-sec)">≈ '+(Math.round(r.qty*10000)/10000)+' unidades</span>':'')
+      +(B.modo==="qty"?' <span style="color:var(--gris-sec)">≈ '+fmt(r.monto)+'</span>':'')+'</td></tr>'
+    +'<tr><td>Tipo</td><td>'+tipoTxt(B.tipo)
+      +((B.tipo==="limit"||B.tipo==="stop_limit")?' · límite '+fmt(numB(B.lim)):'')
+      +((B.tipo==="stop"||B.tipo==="stop_limit")?' · stop '+fmt(numB(B.stop)):'')
+      +(B.tipo==="trailing"?' · trail '+B.trail+(B.trailT==="pct"?"%":" $"):'')+'</td></tr>'
+    +'<tr><td>Vigencia</td><td>'+tifTxt(B.tif,esC)+(B.ext?' · horario extendido':'')+'</td></tr>'
+    +'<tr><td>Efectivo</td><td class="num">'+fmt(p.cash)+' → <b style="color:'+(r.despues<0?'var(--rojo)':'var(--menta)')+'">'+fmt(r.despues)+'</b></td></tr>'
+    +'</table>'
+    +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma de la orden)</label>'
+    +'<input id="mo-ini" maxlength="4" autocomplete="off" placeholder="JM" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">';
+  $("mo-pie").innerHTML=
+    '<button class="ok" id="mo-enviar" disabled>Enviar orden</button>'
+    +'<button class="no" id="mo-cerrar">Cancelar</button>';
+  $("modal-orden").classList.add("on");
+  var ini=$("mo-ini"), env=$("mo-enviar");
+  ini.addEventListener("input", function(){ ini.value=ini.value.toUpperCase().replace(/[^A-Z]/g,"");
+    env.disabled=!/^[A-Z]{2,4}$/.test(ini.value); });
+  ini.focus();
+  $("mo-cerrar").addEventListener("click", cerrarOrden);
+  env.addEventListener("click", function(){
+    var hora=new Date();
+    var desc=(B.lado==="buy"?"COMPRAR ":"VENDER ")+B.sym+" · "+(B.modo==="usd"?fmt(r.monto):numB(B.qty)+" u.")
+      +" · "+tipoTxt(B.tipo)+" · "+B.tif.toUpperCase()+(B.ext?" ext":"");
+    SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), cli:nomDe(c)+" ("+c.alias+")", d:desc, ini:ini.value, cash:fmt(r.despues) });
+    renderSimLog();
+    $("mo-cuerpo").innerHTML=
+      '<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la orden NO se envió.</b> La ejecución sigue apagada (kill switch). '
+      +'Así exactamente se va a ver cuando la encendamos: la orden queda firmada como <b>'+ini.value+'</b> y en la bitácora de la base, permanente.</div>'
+      +'<div class="sub">Quedó registrada abajo, en la <b>bitácora de esta sesión</b>, como simulación.</div>';
+    $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
+    $("mo-cerrar2").addEventListener("click", cerrarOrden);
+  });
+}
+function cerrarOrden(){ $("modal-orden").classList.remove("on"); }
+function renderSimLog(){
+  var el=$("sim-log"); if(!el) return;
+  el.innerHTML= SIM_LOG.length?
+    '<table><thead><tr><th>Hora</th><th>Cuenta</th><th>Orden</th><th>Efectivo después</th><th>Firma</th></tr></thead><tbody>'
+    +SIM_LOG.map(function(r){
+      return '<tr><td class="num" style="text-align:left">'+r.h+'</td><td style="text-align:right">'+escapa(r.cli)+'</td>'
+        +'<td style="text-align:right">'+escapa(r.d)+'</td><td class="num">'+r.cash+'</td>'
+        +'<td style="text-align:right;color:var(--menta);font-weight:800">'+r.ini+'</td></tr>';
+    }).join("")+'</tbody></table>'
+    +'<div class="sub" style="margin-top:6px">Solo de esta sesión y en simulación. Con el kill switch encendido, esto vive en la bitácora de la base, permanente y con firma.</div>'
+    : '<div class="sub">Todavía no has simulado órdenes en esta sesión.</div>';
+}
+
 function ponerModo(modo){
   MODO=modo;
   document.getElementById("tab-cuentas").classList.toggle("on", modo==="cuentas");
