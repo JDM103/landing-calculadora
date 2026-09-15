@@ -97,6 +97,16 @@
   .tile .k{ font-size:9.5px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:800; }
   .tile .v{ font-size:17px; font-weight:800; color:var(--crema); margin-top:1px; }
   .tile .s{ font-size:11px; font-weight:600; color:var(--gris-sec); }
+  .ayuda{ display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px;
+    border-radius:50%; border:1px solid var(--bd); color:var(--gris-sec); font-size:9.5px; font-weight:800;
+    margin-left:5px; cursor:help; position:relative; vertical-align:middle; }
+  .ayuda:hover{ border-color:var(--menta); color:var(--menta); }
+  .ayuda::after{ content:attr(data-tip); position:absolute; bottom:calc(100% + 8px); left:50%;
+    transform:translateX(-50%); width:235px; max-width:64vw; background:#0d0f14; border:1px solid var(--bd);
+    border-radius:10px; padding:9px 11px; font-size:11.5px; font-weight:400; line-height:1.5; color:var(--gris);
+    text-transform:none; letter-spacing:0; opacity:0; pointer-events:none; transition:opacity .15s; z-index:60;
+    text-align:left; white-space:normal; }
+  .ayuda:hover::after{ opacity:1; }
 
   /* ===== señal ===== */
   .estado{ display:flex; align-items:center; gap:10px; border-radius:12px; padding:10px 14px; margin-bottom:12px;
@@ -413,6 +423,11 @@ var MESES=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","se
 function mesLargo(iso){ var d=new Date(iso+"T00:00:00Z"); return MESES[d.getUTCMonth()]+" "+d.getUTCFullYear(); }
 function mesCorto(iso){ return ["ene","feb","mar","abr","may","jun","jul","ago","set","oct","nov","dic"][new Date(iso+"T00:00:00Z").getUTCMonth()]; }
 
+// el "?" con su explicación al pasar el mouse
+var TIP_TIR="Cuánto creció TU plata por año, contando cuándo pusiste y sacaste. Un aporte justo antes de una subida lo mejora; uno antes de una caída lo baja. Mide tu experiencia, con tus fechas.";
+var TIP_TWR="Cuánto rindió LA ESTRATEGIA por año, como si nunca hubieras metido ni sacado plata. Tus aportes no lo mueven: sirve para medir la estrategia y compararla con el mercado.";
+function ayuda(tip){ return '<span class="ayuda" data-tip="'+esc(tip)+'">?</span>'; }
+
 /* Mezcla por avance, COPIADA de /mi-plan (y de /fpf fwW). No tocar sin tocar las de allá. */
 function fw(phi, p1, p2, Ff){
   var wL,wE,wF; p1/=100; p2/=100; Ff/=100; if(p2<=p1)p2=p1+0.01;
@@ -587,8 +602,12 @@ function render(){
       +'<div class="tile"><div class="k">Puso tu bolsillo</div><div class="v num">'+fmt(aportado)+'</div></div>'
       +'<div class="tile"><div class="k">Puso el mercado</div><div class="v num '+cls(mercado)+'">'+fmt(mercado)+'</div>'
         +(aportado>0?'<div class="s num">'+pct(mercado/aportado*100)+' sobre lo tuyo</div>':'')+'</div>'
-      +'<div class="tile"><div class="k">Rendimiento anual</div><div class="v num">'+(typeof c.tir==="number"? pct(c.tir):"—")+'</div>'
-        +(c.inicio?'<div class="s">desde '+c.inicio.slice(0,7)+'</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">TIR · tu rendimiento anual'+ayuda(TIP_TIR)+'</div>'
+        +'<div class="v num'+(typeof c.tir==="number"?" "+cls(c.tir):"")+'">'+(typeof c.tir==="number"? pct(c.tir):"—")+'</div>'
+        +(c.inicio?'<div class="s">con tus fechas · desde '+c.inicio.slice(0,7)+'</div>':'')+'</div>'
+      +'<div class="tile"><div class="k">TWR · la estrategia'+ayuda(TIP_TWR)+'</div>'
+        +'<div class="v num'+(TWR_VAL!==null?" "+cls(TWR_VAL):"")+'" id="tile-twr">'+(TWR_VAL!==null? pct(TWR_VAL):"…")+'</div>'
+        +'<div class="s">por año, sin contar tus aportes</div></div>'
       +'<div class="tile"><div class="k">Este año</div><div class="v num '+(typeof c.ytd_pct==="number"?cls(c.ytd_pct):"")+'">'
         +(typeof c.ytd_pct==="number"? pct(c.ytd_pct):"—")+'</div></div>'
       +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(x.cash)+'</div></div>'
@@ -741,6 +760,7 @@ function render(){
   var ei=$("ed-ingreso"); if(ei) ei.addEventListener("click", function(){ abrirEditor("ingreso"); });
   var ea=$("ed-aporte"); if(ea) ea.addEventListener("click", function(){ abrirEditor("aporte"); });
   var edd=$("ed-dist"); if(edd) edd.addEventListener("click", abrirDist);
+  cargarTWR();
 }
 
 function pintarMezcla(id, partes, total){
@@ -1219,6 +1239,25 @@ async function cargarHist(){
   var cv=$("cv-hist"); if(!cv) return;
   try{ dibujarHist(await serieHist(HORIZONTE)); }
   catch(e){ var m2=cv.parentElement.querySelector(".msg"); if(m2) m2.textContent="Error: "+(e.message||e); }
+}
+// TWR anualizado desde el inicio (la curva "solo rendimiento" de toda la vida)
+var TWR_VAL=null;
+function twrDe(h){
+  if(!h || !h.perf || h.perf.length<2 || !h.perf[0]) return null;
+  var anios2=(h.t[h.t.length-1]-h.t[0])/31557600;
+  if(anios2<0.2) return null;
+  var tot=h.perf[h.perf.length-1]/h.perf[0];
+  if(!(tot>0)) return null;
+  return (Math.pow(tot, 1/anios2)-1)*100;
+}
+async function cargarTWR(){
+  if(TWR_VAL!==null) return;
+  try{
+    var v=twrDe(await serieHist("Todo"));
+    if(v!==null){ TWR_VAL=v;
+      var el=$("tile-twr"); if(el){ el.textContent=pct(v); el.className="v num "+cls(v); } return; }
+  }catch(e){ /* sin curva todavía */ }
+  var el2=$("tile-twr"); if(el2) el2.textContent="—";
 }
 function demoSerieHist(per){
   // capital con aportes mensuales; el "solo rendimiento" es el índice sin esos flujos
