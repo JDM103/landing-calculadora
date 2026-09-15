@@ -379,6 +379,12 @@
     lo demás son ETFs fijos. Lo que sume menos de 100% queda en efectivo.</div>
     <div id="dist-filas"></div>
     <button class="dist-add" id="dist-add">+ agregar otra fila</button>
+    <div style="margin-top:14px; border-top:1px solid var(--bd); padding-top:12px">
+      <label for="dist-sjc" style="display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800; margin-bottom:4px">San José Capital ($ · renta fija en CR, aparte de Alpaca)</label>
+      <div class="fila-in" style="max-width:240px"><span style="color:var(--gris-sec); align-self:center">$</span>
+        <input id="dist-sjc" inputmode="numeric" autocomplete="off" placeholder="0"></div>
+      <div class="nota3" style="margin-top:6px">No sale de tu capital de Alpaca: se suma aparte, y cuenta para tu avance al freedom point y como tu renta fija (el piso).</div>
+    </div>
     <div class="e-resumen" id="dist-total"></div>
     <div class="btns">
       <button class="ok" id="dist-guardar">Guardar</button>
@@ -428,13 +434,17 @@ function derivar(d){
   var snap=snaps.length? snaps[snaps.length-1] : null;
   var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||5)/100) : 0);   // default de la casa: retira 5%/año
   var equity=snap? +snap.equity:0, cash=snap? +snap.cash:0;
-  var phi = fp>0? equity/fp : 0;
+  // San José Capital: renta fija en CR, APARTE de la cuenta de Alpaca. No sale del equity,
+  // pero suma al patrimonio total, al avance al freedom point y al piso (fase 3).
+  var sjcExt=+m.sjc_capital||0;
+  var totalPat=equity+sjcExt;
+  var phi = fp>0? totalPat/fp : 0;
   var pico = phi;
   snaps.forEach(function(s){ if(+s.phi>pico) pico=+s.phi; });
   if(typeof d.pico==="number" && d.pico>pico) pico=d.pico;   // pico de toda la vida (cuando el backend lo mande)
   if(m.pico && m.pico>pico) pico=m.pico;
 
-  // mezcla de hoy, en dólares
+  // mezcla de hoy, en dólares (el SJC externo entra directo al piso)
   var pos=(snap&&snap.posiciones)||[];
   var b={f1:0,f2:0,f3:0,otros:0,otrosSyms:[]};
   pos.forEach(function(p){
@@ -443,10 +453,11 @@ function derivar(d){
     else if(p.s===plan.f3) b.f3+=p.v;
     else { b.otros+=p.v; b.otrosSyms.push(p.s); }
   });
+  b.f3+=sjcExt;
   // mezcla objetivo con el candado de la Fase 3 (misma lógica de /mi-plan;
   // ojo: fw recibe el avance como fracción y los umbrales en %)
   var w=fw(pico, plan.p1||70, plan.p2||100, plan.ff||70);
-  var total=equity;
+  var total=totalPat;
   var tgt3=Math.max(b.f3, w[2]*total);
   var resto=Math.max(0,total-tgt3), w12=w[0]+w[1];
   var tgt1=w12>1e-9? resto*(w[0]/w12) : 0;
@@ -464,6 +475,7 @@ function derivar(d){
   var mesesRest=12-mesUlt+1;
 
   return { m:m, plan:plan, snap:snap, snaps:snaps, fp:fp, equity:equity, cash:cash,
+    sjcExt:sjcExt, totalPat:totalPat,
     phi:phi, pico:pico, b:b, tgt:{f1:tgt1,f2:tgt2,f3:tgt3}, umbral:umbral,
     aporteAnual:aporteAnual, realAnio:realAnio, esperadoAnio:esperadoAnio, mesesRest:mesesRest,
     cuenta:(snap&&snap.cuenta)||{} };
@@ -490,15 +502,21 @@ function render(){
   var distSlices=null;
   if(dist){
     var colDist=["#7C8FF7","#E0B07A","#e0796b","#5bc8b0","#9AA1AB"], ci=0;
-    distSlices=dist.map(function(f2){
-      if(f2.tipo==="fpf") return { v:+f2.pct, c:"var(--menta)", t:"Freedom Point Plan" };
-      if(f2.sym==="CASH") return { v:+f2.pct, c:"#7d8697", t:"Cash · ~"+TASA_CASH+"%" };
-      return { v:+f2.pct, c:colDist[(ci++)%colDist.length], t:f2.sym };
+    // los % del reparto instruyen sobre el capital de Alpaca; para la foto, todo se
+    // muestra en dolares y en % del patrimonio total (Alpaca + San Jose Capital)
+    distSlices=[];
+    dist.forEach(function(f2){
+      var usd=(+f2.pct||0)/100*x.equity;
+      if(f2.tipo==="fpf") distSlices.push({ usd:usd, c:"var(--menta)", t:"Freedom Point Plan" });
+      else if(f2.sym==="CASH") distSlices.push({ usd:usd, c:"#7d8697", t:"Cash · ~"+TASA_CASH+"%" });
+      else distSlices.push({ usd:usd, c:colDist[(ci++)%colDist.length], t:f2.sym });
     });
-    if(restoDist>0.5) distSlices.push({ v:restoDist, c:"#3a4150", t:"Efectivo" });
+    if(restoDist>0.5) distSlices.push({ usd:restoDist/100*x.equity, c:"#3a4150", t:"Efectivo" });
+    if(x.sjcExt>0) distSlices.push({ usd:x.sjcExt, c:"var(--f3)", t:"San José Capital" });
+    distSlices.forEach(function(s2){ s2.v=x.totalPat>0? s2.usd/x.totalPat*100:0; });
   }
   var app=$("app");
-  var falta=Math.max(0,x.fp-x.equity);
+  var falta=Math.max(0,x.fp-x.totalPat);
   var aportado=+((x.snap&&x.snap.aportado_total)||0) + (+x.m.capital_inicial||0);
   var mercado=x.equity-aportado;
   var c=x.cuenta;
@@ -537,7 +555,7 @@ function render(){
       +'<div class="dist-tiles">'+distSlices.map(function(s2){
         return '<div class="dist-tile"><div class="n"><i style="background:'+s2.c+'"></i>'+esc(s2.t)+'</div>'
           +'<div class="p num">'+(+s2.v).toFixed(0)+'%</div>'
-          +'<div class="d num">≈ '+fmt(s2.v/100*x.equity)+'</div></div>';
+          +'<div class="d num">≈ '+fmt(s2.usd)+'</div></div>';
       }).join("")+'</div>'
       +'<button class="dist-btn" id="ed-dist">✎ Cambiar mi reparto</button>'
       : '<p class="lede" style="font-size:14.5px">Hoy vas <b>100% con el Freedom Point Plan</b>. Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — pedilo acá y Jose lo ejecuta.</p>'
@@ -562,8 +580,10 @@ function render(){
       +'<span style="left:'+Math.min(96,p2-2)+'%">meta</span>'
     +'</div>'
     +'<div class="tiles">'
-      +'<div class="tile"><div class="k">Tu capital</div><div class="v num">'+fmt(x.equity)+'</div>'
+      +'<div class="tile"><div class="k">'+(x.sjcExt>0?'Capital en Alpaca':'Tu capital')+'</div><div class="v num">'+fmt(x.equity)+'</div>'
         +(dia!==null?'<div class="s num '+cls(dia)+'">'+pct(c.last_equity>0? dia/c.last_equity*100:0)+' hoy</div>':'')+'</div>'
+      +(x.sjcExt>0? '<div class="tile"><div class="k">San José Capital</div><div class="v num">'+fmt(x.sjcExt)+'</div>'
+        +'<div class="s">renta fija · aparte de Alpaca</div></div>':'')
       +'<div class="tile"><div class="k">Puso tu bolsillo</div><div class="v num">'+fmt(aportado)+'</div></div>'
       +'<div class="tile"><div class="k">Puso el mercado</div><div class="v num '+cls(mercado)+'">'+fmt(mercado)+'</div>'
         +(aportado>0?'<div class="s num">'+pct(mercado/aportado*100)+' sobre lo tuyo</div>':'')+'</div>'
@@ -594,7 +614,7 @@ function render(){
   +'<div class="card">'
     +'<h2>La mezcla (gradiente de riesgo)</h2>'
     +'<p class="lede">El plan arranca con más motor y termina con más piso. Tu avance decide la mezcla — no el ánimo, no las noticias.</p>'
-    +'<div class="barra"><div class="lbl"><span>Hoy tenés</span><span class="num">'+fmt(x.equity)+'</span></div>'
+    +'<div class="barra"><div class="lbl"><span>Hoy tenés</span><span class="num">'+fmt(x.totalPat)+'</span></div>'
       +'<div class="pista2" id="b-hoy"></div></div>'
     +'<div class="barra"><div class="lbl"><span>Tu plan pide</span><span></span></div>'
       +'<div class="pista2" id="b-obj"></div></div>'
@@ -672,12 +692,12 @@ function render(){
   // barras de mezcla
   pintarMezcla("b-hoy",[
     {v:x.b.f1,c:"var(--f1)",t:x.plan.f1},{v:x.b.f2,c:"var(--f2)",t:x.plan.f2},
-    {v:x.b.f3,c:"var(--f3)",t:x.plan.f3},{v:x.cash,c:"#5a6270",t:"efectivo"},
-    {v:x.b.otros,c:"var(--ambar)",t:"fuera del plan"}], x.equity);
+    {v:x.b.f3,c:"var(--f3)",t:x.plan.f3+(x.sjcExt>0?" + San José Capital":"")},{v:x.cash,c:"#5a6270",t:"efectivo"},
+    {v:x.b.otros,c:"var(--ambar)",t:"fuera del plan"}], x.totalPat);
   var fueraSen = x.plan.timing && sen && sen.estado==="fuera";
   pintarMezcla("b-obj", fueraSen?
-    [{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3},{v:x.equity-x.tgt.f3,c:"#5a6270",t:"efectivo (a resguardo)"}]
-    :[{v:x.tgt.f1,c:"var(--f1)",t:x.plan.f1},{v:x.tgt.f2,c:"var(--f2)",t:x.plan.f2},{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3}], x.equity);
+    [{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3},{v:x.totalPat-x.tgt.f3,c:"#5a6270",t:"efectivo (a resguardo)"}]
+    :[{v:x.tgt.f1,c:"var(--f1)",t:x.plan.f1},{v:x.tgt.f2,c:"var(--f2)",t:x.plan.f2},{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3}], x.totalPat);
 
   // barra de la distribución pedida
   if(distSlices){
@@ -793,7 +813,7 @@ function edResumen(){
   if(ED_TIPO==="ingreso"){
     var s=supuestosDe();
     var fpV=+m.fp || ((+m.ingreso||0)*12/((+m.tasa||5)/100));
-    var q=reqDe(s, derivar(D).equity);
+    var q=reqDe(s, derivar(D).totalPat);
     if(q){
       r.innerHTML="Asumiendo que retirás un <b>"+s.tasa+"%</b> al año: tu meta de capital "
         +(fpV>0? "pasa de <b>"+money(fpV)+"</b> a":"queda en")+" <b>"+money(q.meta)+"</b>. Tu % de avance se recalcula al guardar.";
@@ -858,7 +878,7 @@ $("e-guardar").addEventListener("click", async function(){
     cambios.edad=s3.edad; cambios.edad_retiro=s3.edadret;
     cambios.fpf={ crec:s3.crec, crecret:s3.crecret, infl:s3.infl, edad:s3.edad, edadret:s3.edadret };
     if($("e-usar").checked){
-      var q3=reqDe(s3, derivar(D).equity);
+      var q3=reqDe(s3, derivar(D).totalPat);
       // requerido $0 = "ya llegás solo": no se pisa el compromiso pactado con cero
       if(q3 && q3.mes>=1) cambios.aporte_anual=Math.round(q3.mes*12);
     }
@@ -922,10 +942,17 @@ function abrirDist(){
   DIST_ED = d.length? d.map(function(f){ return {tipo:f.tipo, sym:f.sym||"", pct:+f.pct}; })
     : [{tipo:"fpf", sym:"", pct:100}];
   DIST_EQ=derivar(D).equity;
+  var sj=+((D.meta||{}).sjc_capital)||0;
+  $("dist-sjc").value= sj>0? sj.toLocaleString("en-US"):"";
   $("dist-msg").textContent="";
   pintarDistFilas();
   $("modal-dist").classList.add("on");
 }
+$("dist-sjc").addEventListener("input", function(){
+  var d2=this.value.replace(/[^0-9]/g,"");
+  this.value=d2? Number(d2).toLocaleString("en-US"):"";
+  distTotalUI();
+});
 function usdDe(pct){ return DIST_EQ>0? Math.round(pct/100*DIST_EQ):0; }
 function pintarDistFilas(){
   var CONOCIDOS=["SPY","QQQ","QLD","TQQQ","SJC","CASH"];
@@ -996,7 +1023,9 @@ function distTotalUI(){
   $("dist-total").innerHTML= !DIST_ED.length? 'Sin filas: volvés a <b>100% Freedom Point Plan</b>.'
     : t>100.5? '<b style="color:var(--rojo)">La suma va en '+t+'% ('+fmt(usdDe(t))+') — se pasa de tu capital de '+fmt(DIST_EQ)+'.</b>'
     : 'Suma: <b>'+t+'%</b> · <b>'+fmt(usdDe(t))+'</b> de tu capital de <b>'+fmt(DIST_EQ)+'</b>'
-      +(resto>0.5? ' · quedan <b>'+resto+'%</b> ('+fmt(usdDe(resto))+') en efectivo':' · completo');
+      +(resto>0.5? ' · quedan <b>'+resto+'%</b> ('+fmt(usdDe(resto))+') en efectivo':' · completo')
+      +(function(){ var sj=parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0;
+        return sj>0? ' · más <b>'+fmt(sj)+'</b> en San José Capital (aparte)':''; })();
 }
 $("dist-add").addEventListener("click", function(){
   if(DIST_ED.length>=8) return;
@@ -1015,15 +1044,17 @@ $("dist-guardar").addEventListener("click", async function(){
   if(fpfN>1){ msg.textContent="❌ El Freedom Point Plan va una sola vez."; return; }
   if(total>100.5){ msg.textContent="❌ La suma se pasa de 100%."; return; }
   var arr=DIST_ED.map(function(f){ return f.tipo==="fpf"? {tipo:"fpf", pct:f.pct} : {tipo:"etf", sym:f.sym, pct:f.pct}; });
+  var sjMonto=parseInt(String($("dist-sjc").value||"").replace(/[^0-9]/g,""),10)||0;
+  if(sjMonto>10000000){ msg.textContent="❌ Revisá el monto de San José Capital."; return; }
   btn.disabled=true; btn.textContent="Guardando…"; msg.textContent="";
   try{
-    if(DEMO){ D.meta.distribucion=arr; }
+    if(DEMO){ D.meta.distribucion=arr; D.meta.sjc_capital=sjMonto; }
     else {
       var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
       if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
       var r=await fetch(BASE+"/editar-plan",{ method:"POST",
         headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr }) });
+        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr, sjc_capital:sjMonto }) });
       var j=await r.json();
       if(!r.ok) throw new Error(j.error||("error "+r.status));
       D.meta=j.meta;
@@ -1089,7 +1120,7 @@ function aniosPlan(p, cap0, ap, meta){
 }
 function renderPlanes(){
   var box=$("e-planes"); if(!box || !D) return;
-  var s=supuestosDe(), xq=derivar(D), cap0=xq.equity;
+  var s=supuestosDe(), xq=derivar(D), cap0=xq.totalPat||xq.equity;
   var meta=(s.ing>0&&s.tasa>0)? s.ing*12/(s.tasa/100) : xq.fp;
   if(!(meta>0)){ box.innerHTML=""; return; }
   var q=reqDe(s, cap0);
@@ -1520,7 +1551,7 @@ function demoDatos(escenario){
   }
   return {
     nombre:"María Vargas",
-    meta:{ ingreso:8000, tasa:8, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75,
+    meta:{ ingreso:8000, tasa:8, aporte_pactado:2000, aporte_anual:24000, capital_inicial:0, pico:0.75, sjc_capital:50000,
       distribucion:[ {tipo:"etf", sym:"QQQ", pct:30}, {tipo:"etf", sym:"QLD", pct:20}, {tipo:"fpf", pct:50} ],
       plan:{ f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, timing:true } },
     snapshots: meses,
