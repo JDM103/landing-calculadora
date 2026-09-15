@@ -595,9 +595,12 @@ function renderDet(){
       +'<div class="editcap" style="margin-top:2px"><span>Las claves se guardan cifradas y no se pueden leer; acá solo se asigna una nueva:</span>'
       +'<input id="clave-ed" autocomplete="off" placeholder="clave nueva" style="width:150px;text-align:left">'
       +'<button id="clave-go">Asignar</button><span id="clave-msg"></span></div>'
-      +'<div class="sec">Notas</div>'
+      +'<div class="sec">Notas internas <span style="font-weight:400;text-transform:none;letter-spacing:0">— solo las ves vos</span></div>'
       +'<textarea id="notas-ed" rows="2" style="width:100%;background:var(--input);border:1px solid var(--bd);border-radius:8px;color:var(--ambar);font-family:inherit;font-size:12.5px;padding:8px" placeholder="Notas privadas de este cliente…">'+escapa(c.notas)+'</textarea>'
-      +'<div class="editcap" style="margin-top:6px"><button id="notas-go">Guardar notas</button><span id="notas-msg"></span></div>' : '');
+      +'<div class="editcap" style="margin-top:6px"><button id="notas-go">Guardar notas internas</button><span id="notas-msg"></span></div>'
+      +'<div class="sec">Nota para el cliente <span style="font-weight:400;text-transform:none;letter-spacing:0">— la ve en su dashboard</span></div>'
+      +'<textarea id="notacli-ed" rows="2" maxlength="2000" style="width:100%;background:var(--input);border:1px solid rgba(99,252,175,.4);border-radius:8px;color:var(--crema);font-family:inherit;font-size:12.5px;padding:8px" placeholder="Ej: Esta semana ejecuté tu cambio a 30% QQQ. Quedaste al día.">'+escapa(c.nota_cliente||"")+'</textarea>'
+      +'<div class="editcap" style="margin-top:6px"><button id="notacli-go">Publicar nota al cliente</button><span id="notacli-msg"></span></div>' : '');
   det.classList.add("abierto");
   var v=$("volver"); if(v) v.addEventListener("click", function(){ det.classList.remove("abierto"); SELECC=null; renderLista(); });
   Array.prototype.forEach.call(document.querySelectorAll(".hbtns button[data-hz]"), function(b){
@@ -667,6 +670,16 @@ function renderDet(){
       renderLista(); renderDet();
       var m2=$("pl-msg"); if(m2) m2.textContent="✅ Plan guardado. El dashboard del cliente y el Modo acción ya lo usan.";
     }catch(e){ var m3=$("pl-msg"); if(m3) m3.textContent="❌ "+(e.message||e); }
+  });
+  var nc=$("notacli-go");
+  if(nc) nc.addEventListener("click", async function(){
+    var val=$("notacli-ed").value.trim();
+    $("notacli-msg").textContent="Guardando…";
+    try{
+      if(location.hash!=="#demo") await llamar("guardar-cliente",{alias:c.alias, nota_cliente:val});
+      c.nota_cliente=val;
+      $("notacli-msg").textContent= val? "✅ Publicada: el cliente la ve al abrir su dashboard.":"✅ Nota quitada del dashboard del cliente.";
+    }catch(e){ $("notacli-msg").textContent="❌ "+(e.message||e); }
   });
   var ng=$("notas-go");
   if(ng) ng.addEventListener("click", async function(){
@@ -1007,7 +1020,7 @@ function demoSerie(per){
 function demo(){
   return { senal:{estado:"dentro",semana:"2026-08-06",distancia:-3.4},
     clientes:[
-      {alias:"mv-07",activo:true,nombre:"María Vargas",correo:"maria.vargas@gmail.com",notas:"Quiere subir aporte en enero.",
+      {alias:"mv-07",activo:true,nombre:"María Vargas",correo:"maria.vargas@gmail.com",notas:"Quiere subir aporte en enero.",nota_cliente:"Ya ejecuté tu cambio a 30% QQQ. Quedaste al día.",
         meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
           cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},

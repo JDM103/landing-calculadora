@@ -50,6 +50,10 @@
   .avisoclave b{ color:var(--ambar); }
   .avisoclave button{ margin-left:auto; background:transparent; border:1px solid var(--ambar); color:var(--ambar);
     border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .notajose{ display:flex; gap:10px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4);
+    border-radius:12px; padding:12px 14px; margin:12px 0; font-size:14px; }
+  .notajose b{ display:block; color:var(--menta); font-size:11px; text-transform:uppercase; letter-spacing:.8px; margin-bottom:3px; }
+  .notajose span{ color:var(--crema); white-space:pre-wrap; }
 
   /* ===== barra demo ===== */
   .demobar{ position:sticky; top:0; z-index:30; background:#241a2e; border-bottom:1px solid #4a3562;
@@ -579,6 +583,10 @@ function render(){
   +(D._claveInicial?
     '<div class="avisoclave">🔑 <div>Estás entrando con tu <b>clave inicial</b>. Cambiala por una tuya: te mandamos un correo con el link.</div>'
     +'<button id="cambiar-clave">Cambiar mi clave</button></div>':'')
+
+  /* ---- nota de Jose para el cliente ---- */
+  +((d.nota_jose&&String(d.nota_jose).trim())?
+    '<div class="notajose">📝 <div><b>Nota de Jose</b><span>'+esc(d.nota_jose)+'</span></div></div>':'')
 
   /* ---- 1 · cómo repartís tu plata ---- */
   +'<div class="card">'
@@ -1702,6 +1710,7 @@ function demoDatos(escenario){
     senal:{ semana:hoyISO, estado: fuera? "fuera":"dentro", distancia:dist, max39:mx, cierre:serie.c[n-1] },
     serie: serie,
     pico: 0.75,
+    nota_jose: "Ya ejecuté tu cambio: 30% a QQQ y 20% a QLD quedaron comprados el lunes. Tu aporte de setiembre todavía no entra — cuando lo mandés, yo lo acomodo.",
     _claveInicial: escenario==="normal"   // en la maqueta se ve el aviso de cambiar la clave
   };
 }
