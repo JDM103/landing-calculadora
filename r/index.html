@@ -555,11 +555,11 @@ function render(){
   var c=x.cuenta;
   var dia=(c.last_equity>0)? x.equity-c.last_equity : null;
 
-  // aportes por mes (para el gráfico) + semáforo contra el ritmo del año
-  var meses=x.snaps.map(function(s){
-    var ap=(s.transferencias_mes||[]).reduce(function(a,t){ return a+Math.max(0,+t.monto||0); },0);
-    return { mes:s.mes, ap:ap };
-  });
+  // aportes: la mayoría manda por montones (no mensual) — lista de envíos del año
+  var anioAct=new Date().getUTCFullYear(), depsAnio=[];
+  x.snaps.forEach(function(s){ if(s.mes.slice(0,4)==String(anioAct))
+    (s.transferencias_mes||[]).forEach(function(t){ if(+t.monto>0) depsAnio.push({ f:String(t.fecha||s.mes).slice(0,10), m:+t.monto }); }); });
+  depsAnio.sort(function(a,b){ return a.f<b.f? 1:-1; });
   var pa=x.aporteAnual, realA=x.realAnio, espA=x.esperadoAnio;
   var ratioAp= espA>0? realA/espA : 1;
   var colorAp= ratioAp>=0.95? "var(--menta)" : ratioAp>=0.7? "var(--ambar)" : "var(--rojo)";
@@ -673,17 +673,7 @@ function render(){
   +'<div class="card">'
     +'<h2>La mezcla (gradiente de riesgo)</h2>'
     +'<p class="lede">El plan arranca con más motor y termina con más piso. Tu avance decide la mezcla — no el ánimo, no las noticias.</p>'
-    +'<div class="barra"><div class="lbl"><span>Hoy tenés</span><span class="num">'+fmt(x.totalPat)+'</span></div>'
-      +'<div class="pista2" id="b-hoy"></div></div>'
-    +'<div class="barra"><div class="lbl"><span>Tu plan pide</span><span></span></div>'
-      +'<div class="pista2" id="b-obj"></div></div>'
-    +'<div class="leyfases">'
-      +'<span class="lf1">'+esc(x.plan.f1)+' · motor</span>'
-      +'<span class="lf2">'+esc(x.plan.f2)+' · mercado</span>'
-      +'<span class="lf3">'+esc(x.plan.f3)+' · piso</span>'
-      +'<span class="lfc">efectivo</span>'
-      +(x.b.otros>1?'<span class="lfo">fuera del plan</span>':'')
-    +'</div>'
+    +mezclaTabla(x, sen)
     +'<div class="grad"><canvas id="cv-grad"></canvas></div>'
     +'<div class="candado">🔒 Tu pico: <b class="num">'+(x.pico*100).toFixed(1)+'%</b>. El riesgo del plan solo baja, nunca vuelve a subir: '
     +'aunque el mercado te devuelva para atrás, tu mezcla se queda en la de tu mejor momento.</div>'
@@ -704,7 +694,12 @@ function render(){
         '<span style="left:'+Math.min(90,Math.max(10,100*espA/pa)).toFixed(1)+'%">hoy tocaría '+money(espA)+'</span>':'')+'</div>'
       : '<p class="lede">Todavía no tenés un compromiso de aportes definido. '
         +'<span class="editlink" id="ed-aporte">✎ definirlo</span></p>')
-    +(meses.length? '<div class="apchart" style="margin-top:8px"><canvas id="cv-aportes"></canvas></div>':'')
+    +'<div class="deps">'+(depsAnio.length?
+      '<div class="lbl2">Lo que has mandado este año</div>'+depsAnio.map(function(r){
+        var d2=new Date(r.f+"T00:00:00Z");
+        return '<span class="dep num">'+d2.getUTCDate()+' '+mesCorto(r.f)+' · <b>'+fmt(r.m)+'</b></span>';
+      }).join("")
+      : '<div class="lbl2" style="font-weight:600">Este año todavía no has mandado aportes.</div>')+'</div>'
   +'</div>'
 
   /* ---- 5 · señal de salida ---- */
@@ -748,16 +743,6 @@ function render(){
   +'<p class="pie">Empowered Investor · Tu cuenta vive en Alpaca a tu nombre; nosotros no podemos retirar tu plata (solo va a tu banco vinculado). '
   +'Esto no es asesoría individualizada; es el seguimiento del plan que armamos juntos. ¿Dudas? Respondé el correo del reporte y te contesto.</p>';
 
-  // barras de mezcla
-  pintarMezcla("b-hoy",[
-    {v:x.b.f1,c:"var(--f1)",t:x.plan.f1},{v:x.b.f2,c:"var(--f2)",t:x.plan.f2},
-    {v:x.b.f3,c:"var(--f3)",t:x.plan.f3+(x.sjcExt>0?" + San José Capital":"")},{v:x.cash,c:"#5a6270",t:"efectivo"},
-    {v:x.b.otros,c:"var(--ambar)",t:"fuera del plan"}], x.totalPat);
-  var fueraSen = x.plan.timing && sen && sen.estado==="fuera";
-  pintarMezcla("b-obj", fueraSen?
-    [{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3},{v:x.totalPat-x.tgt.f3,c:"#5a6270",t:"efectivo (a resguardo)"}]
-    :[{v:x.tgt.f1,c:"var(--f1)",t:x.plan.f1},{v:x.tgt.f2,c:"var(--f2)",t:x.plan.f2},{v:x.tgt.f3,c:"var(--f3)",t:x.plan.f3}], x.totalPat);
-
   // barra de la distribución pedida
   if(distSlices){
     var bd=$("b-dist");
@@ -774,7 +759,6 @@ function render(){
   // gráficos
   if(d.serie && d.serie.c && d.serie.c.length>45 && x.plan.timing) dibujarSenal(d.serie, sen);
   dibujarGradiente(x);
-  if(meses.length) dibujarAportes(meses.slice(-12), pa/12);   // el gráfico: último año; la tabla de historia: todo
 
   // eventos
   $("salir").addEventListener("click", function(){
@@ -803,6 +787,29 @@ function render(){
   cargarTWR();
 }
 
+// La mezcla en NÚMEROS: hoy vs lo que pide el plan, pieza por pieza
+function mezclaTabla(x, sen){
+  var fueraSen=x.plan.timing && sen && sen.estado==="fuera";
+  var planE= fueraSen?
+    { f1:0, f2:0, f3:x.tgt.f3, cash:Math.max(0,x.totalPat-x.tgt.f3), otros:0 } :
+    { f1:x.tgt.f1, f2:x.tgt.f2, f3:x.tgt.f3, cash:0, otros:0 };
+  function fila(color, nombre, hoyV, planV){
+    var dif=planV-hoyV, ok=Math.abs(dif)<=x.umbral;
+    return '<tr><td><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+color+';margin-right:7px;vertical-align:middle"></i>'+nombre+'</td>'
+      +'<td class="num">'+fmt(hoyV)+'<span class="desc">'+(x.totalPat>0?(hoyV/x.totalPat*100).toFixed(1):"0")+'%</span></td>'
+      +'<td class="num">'+fmt(planV)+'<span class="desc">'+(x.totalPat>0?(planV/x.totalPat*100).toFixed(1):"0")+'%</span></td>'
+      +'<td class="num" style="'+(ok?'color:var(--gris-sec)':'color:'+(dif>0?'var(--menta)':'var(--rojo)'))+'">'
+        +(ok?'✓ al día':(dif>0?'falta ':'sobra ')+fmt(Math.abs(dif)))+'</td></tr>';
+  }
+  var filas=
+    fila("var(--f1)", esc(x.plan.f1)+' · motor', x.b.f1, planE.f1)
+    +fila("var(--f2)", esc(x.plan.f2)+' · mercado', x.b.f2, planE.f2)
+    +fila("var(--f3)", esc(x.plan.f3)+' · piso'+(x.sjcExt>0?' <span class="desc">incluye San José Capital ('+fmt(x.sjcExt)+' aparte)</span>':''), x.b.f3, planE.f3)
+    +fila("#5a6270", 'Efectivo'+(fueraSen?' <span class="desc">a resguardo por la señal</span>':''), x.cash, planE.cash)
+    +(x.b.otros>1? fila("var(--ambar)", 'Fuera del plan <span class="desc">'+esc(x.b.otrosSyms.join(", "))+'</span>', x.b.otros, 0):'');
+  return '<div class="tblwrap"><table><thead><tr><th>Pieza</th><th>Hoy tenés</th><th>Tu plan pide</th><th>Diferencia</th></tr></thead>'
+    +'<tbody>'+filas+'</tbody></table></div>';
+}
 function pintarMezcla(id, partes, total){
   var el=$(id); if(!el) return; el.innerHTML="";
   if(!(total>0)) return;
@@ -1441,7 +1448,7 @@ function dibujarSenal(serie, sen, hover){
 }
 
 /* ================= gráfico de la gradiente ================= */
-function dibujarGradiente(x){
+function dibujarGradiente(x, hover){
   var p=prepCanvas("cv-grad"); if(!p) return;
   var g=p.g, W=p.W, H=p.H;
   var padL=8,padR=8,padT=26,padB=24;
@@ -1479,6 +1486,30 @@ function dibujarGradiente(x){
   var lw=g.measureText(lbl).width;
   var lx=Math.min(Math.max(px-lw/2, padL), W-padR-lw);
   g.fillText(lbl, lx, padT-16>10? padT-18+10 : 10);
+
+  // hover como en /fpf: la mezcla exacta en el punto de avance bajo el mouse
+  if(typeof hover==="number" && hover>=0 && hover<=maxX){
+    var hx=X(hover), wh=fw(hover/100, p1, p2, ff);
+    g.strokeStyle="rgba(255,255,255,.4)"; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(hx,padT-4); g.lineTo(hx,H-padB); g.stroke(); g.setLineDash([]);
+    var partes=[];
+    if(wh[0]>0.004) partes.push(esc(x.plan.f1)+" "+Math.round(wh[0]*100)+"%");
+    if(wh[1]>0.004) partes.push(esc(x.plan.f2)+" "+Math.round(wh[1]*100)+"%");
+    if(wh[2]>0.004) partes.push(esc(x.plan.f3)+" "+Math.round(wh[2]*100)+"%");
+    var txt="Al "+Math.round(hover)+"% de tu meta: "+partes.join(" · ");
+    g.font="700 11.5px 'Bai Jamjuree'";
+    var tw=g.measureText(txt).width+14;
+    var bx=Math.min(Math.max(hx-tw/2, padL), W-padR-tw), by=padT+2;
+    g.fillStyle="rgba(13,15,20,.94)"; g.strokeStyle="#2a3140";
+    g.beginPath(); g.roundRect(bx,by,tw,20,6); g.fill(); g.stroke();
+    g.fillStyle="#FEF9F3"; g.textAlign="left"; g.fillText(txt, bx+7, by+14);
+  }
+  p.cv.onmousemove=function(ev){
+    var r=p.cv.getBoundingClientRect(), mx2=ev.clientX-r.left;
+    var q2=(mx2-padL)/Math.max(1,(W-padL-padR))*maxX;
+    dibujarGradiente(x, Math.max(0, Math.min(maxX, q2)));
+  };
+  p.cv.onmouseleave=function(){ dibujarGradiente(x); };
 }
 
 /* ================= gráfico de aportes ================= */
@@ -1645,7 +1676,7 @@ function demoDatos(escenario){
     var d=new Date(); d.setUTCMonth(d.getUTCMonth()-k,1);
     var mes=d.toISOString().slice(0,10);
     eq*=1.024;
-    var ap= k===0? 0 : (k===4? 0 : (k%5===0? 2000:1500));
+    var ap= (k===9||k===5||k===1)? 5000 : 0;   // manda cuando junta ~5k, no mensual
     meses.push({ mes:mes,
       equity: k===0? equity : Math.round(eq),
       cash: k===0? cash : 2600,

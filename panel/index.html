@@ -104,6 +104,43 @@
     padding:8px 11px; font-size:12.5px; color:var(--crema); }
   .accion.calma{ background:rgba(154,161,171,.07); border-color:var(--bd); color:var(--gris-sec); }
   .notas{ margin-top:8px; font-size:12px; color:var(--ambar); }
+  /* ===== pestañas y modo acción ===== */
+  .tabs{ display:flex; gap:8px; margin:4px 0 12px; }
+  .tabs button{ background:var(--card); border:1px solid var(--bd); color:var(--gris-sec); border-radius:10px;
+    padding:9px 18px; font-family:inherit; font-size:13.5px; font-weight:800; cursor:pointer; }
+  .tabs button.on{ background:var(--card2); color:var(--menta); border-color:rgba(99,252,175,.5); }
+  #vista-accion{ max-width:920px; margin:0 auto; }
+  .acard{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:16px; margin-bottom:12px; }
+  .acc-nav{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:2px 0 12px; }
+  .acc-nav button{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:10px;
+    width:40px; height:40px; font-size:15px; cursor:pointer; font-family:inherit; }
+  .acc-nav button:hover{ border-color:var(--menta); }
+  .acc-nav select{ flex:1; min-width:180px; background:var(--input); border:1px solid var(--bd); border-radius:10px;
+    color:var(--crema); font-family:inherit; font-size:14px; padding:10px; }
+  .acc-nav label{ font-size:12px; color:var(--gris-sec); display:flex; gap:6px; align-items:center; cursor:pointer; }
+  .acc-nav .cont{ font-size:12px; color:var(--gris-sec); }
+  .bsym{ display:flex; height:16px; border-radius:999px; overflow:hidden; background:var(--input); border:1px solid var(--bd); }
+  .bsym i{ display:block; height:100%; }
+  .blbl{ display:flex; justify-content:space-between; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
+    color:var(--gris-sec); font-weight:800; margin:10px 0 4px; }
+  .leysym{ display:flex; gap:10px 16px; flex-wrap:wrap; font-size:12px; color:var(--gris-sec); margin-top:8px; }
+  .leysym i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .tic{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:var(--card2); border:1px solid var(--bd);
+    border-radius:11px; padding:9px 12px; margin:8px 0; }
+  .tic .tl{ font-size:11px; font-weight:800; letter-spacing:.5px; flex:0 0 auto; }
+  .tic .ts{ color:var(--crema); font-size:15px; font-weight:800; }
+  .tic input, .tic select{ background:var(--input); border:1px solid var(--bd); border-radius:8px; color:var(--crema);
+    font-family:inherit; font-size:13px; padding:7px 9px; }
+  .tic input:focus, .tic select:focus{ outline:none; border-color:var(--menta); }
+  .tic .tmonto{ width:110px; text-align:right; }
+  .tic .tlim{ width:100px; text-align:right; }
+  .tic .tini{ width:82px; text-align:center; text-transform:uppercase; }
+  .tic .tgo{ margin-left:auto; background:var(--menta); color:#082018; border:none; border-radius:999px;
+    padding:8px 18px; font-weight:800; font-family:inherit; font-size:13px; cursor:not-allowed; opacity:.45; }
+  .candado2{ background:rgba(224,176,122,.08); border:1px solid rgba(224,176,122,.45); border-radius:10px;
+    padding:9px 12px; font-size:12.5px; color:var(--ambar); margin:8px 0 10px; }
+  .enplan{ background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.3); border-radius:11px;
+    padding:14px; color:var(--crema); font-size:14px; }
   .distp{ margin-top:8px; background:rgba(124,143,247,.08); border:1px solid rgba(124,143,247,.4);
     border-radius:10px; padding:8px 11px; font-size:12.5px; color:var(--crema); }
   .cap-in{ width:100%; min-width:0; background:transparent; border:1px solid transparent; color:var(--crema);
@@ -168,7 +205,12 @@
     <span class="tot" id="tots"></span>
   </div>
   <div id="estado"></div>
-  <div class="layout">
+  <div class="tabs">
+    <button id="tab-cuentas" class="on">📊 Cuentas</button>
+    <button id="tab-accion">⚡ Modo acción</button>
+  </div>
+  <div id="vista-accion" style="display:none"></div>
+  <div class="layout" id="vista-cuentas">
     <div class="lista">
       <div class="cab" id="cab">
         <span data-k="nombre">Cliente</span><span data-k="equity">Capital</span><span data-k="dia">Día</span>
@@ -613,7 +655,8 @@ async function cargarOrdenes(c){
         : await llamar("ordenes",{alias:c.alias});
     }
     var o=CACHE_ORD[c.alias];
-    if(SELECC!==c.alias) return;
+    if(MODO==="cuentas" && SELECC!==c.alias) return;
+    if(MODO==="accion" && ACC_ALIAS!==c.alias) return;
     box.innerHTML=
       '<div class="sec">Órdenes abiertas'+(o.abiertas.length?' ('+o.abiertas.length+')':'')+'</div>'
       +tablaOrd(o.abiertas,"Sin órdenes abiertas.")
@@ -622,11 +665,212 @@ async function cargarOrdenes(c){
   }catch(e){ box.innerHTML='<div class="sub">Órdenes: error '+(e.message||e)+'</div>'; }
 }
 
+/* ================= MODO ACCIÓN: llevar cada cuenta a lo establecido ================= */
+/* Mezcla por avance, COPIADA de /mi-plan, /fpf y /r (φ como fracción, umbrales en %). */
+function fw(phi, p1, p2, Ff){
+  var wL,wE,wF; p1/=100; p2/=100; Ff/=100; if(p2<=p1)p2=p1+0.01;
+  if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; }
+  else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; }
+  else { wL=0; wF=Ff; wE=1-Ff; }
+  return [wL,wE,wF];
+}
+// Qué le falta a la cuenta para estar como se estableció: gradiente con candado sobre la
+// porción FPF (con San José Capital cubriendo piso primero), distribución pedida (ETFs
+// fijos y Cash), y señal (FUERA => la parte de mercado a efectivo, el piso se queda).
+function planAccion(c, senal){
+  if(!c.snap) return null;
+  var m=c.meta||{}, plan=m.plan||{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true};
+  var eq=+c.snap.equity, cash=+c.snap.cash;
+  if(!(eq>0)) return null;
+  var sjc=+m.sjc_capital||0;
+  var fp=m.fp || (m.ingreso? m.ingreso*12/((m.tasa||5)/100):0);
+  var phi=fp>0? (eq+sjc)/fp:0;
+  var pico=Math.max(phi, +c.snap.phi||0, +m.pico||0);
+  var umbral=Math.max(500, eq*0.02);
+  var fuera= !!plan.timing && senal && senal.estado==="fuera";
+
+  var hoy={}; (c.snap.posiciones||[]).forEach(function(p){ hoy[p.s]=(hoy[p.s]||0)+(+p.v||0); });
+
+  var dist=(m.distribucion&&m.distribucion.length)? m.distribucion : [{tipo:"fpf",pct:100}];
+  var tgt={}, cashTgt=0, fpfPct=0, sumPct=0;
+  dist.forEach(function(f){ sumPct+=+f.pct||0;
+    if(f.tipo==="fpf") fpfPct+=+f.pct||0;
+    else if(f.sym==="CASH") cashTgt+=(+f.pct||0)/100*eq;
+    else tgt[f.sym]=(tgt[f.sym]||0)+(+f.pct||0)/100*eq;
+  });
+  cashTgt+=Math.max(0,100-sumPct)/100*eq;   // lo no asignado queda en efectivo
+  var fpfMonto=fpfPct/100*eq;
+  if(fpfMonto>1 && plan.f1){
+    var w=fw(pico, +plan.p1||70, +plan.p2||100, +plan.ff||70);
+    var base=fpfMonto+sjc;                                   // el piso externo cuenta en la gradiente
+    var t3=Math.max(hoy[plan.f3]||0, w[2]*base - sjc);       // candado: el piso nunca se vende
+    if(t3<0) t3=0; if(t3>fpfMonto) t3=fpfMonto;
+    var resto=fpfMonto-t3, w12=w[0]+w[1];
+    var t1=w12>1e-9? resto*(w[0]/w12):0;
+    tgt[plan.f1]=(tgt[plan.f1]||0)+t1;
+    tgt[plan.f2]=(tgt[plan.f2]||0)+(resto-t1);
+    tgt[plan.f3]=(tgt[plan.f3]||0)+t3;
+  }
+  if(fuera){
+    Object.keys(tgt).forEach(function(s){ if(s!==plan.f3){ cashTgt+=tgt[s]; tgt[s]=0; } });
+  }
+
+  var syms={}; Object.keys(hoy).forEach(function(s){syms[s]=1;}); Object.keys(tgt).forEach(function(s){syms[s]=1;});
+  var ordenes=[];
+  Object.keys(syms).forEach(function(s){
+    var dd=(tgt[s]||0)-(hoy[s]||0);
+    if(dd>umbral) ordenes.push({sym:s, lado:"buy", monto:Math.round(dd)});
+    else if(-dd>umbral) ordenes.push({sym:s, lado:"sell", monto:Math.round(-dd)});
+  });
+  ordenes.sort(function(a,b){ return (a.lado==="sell"?0:1)-(b.lado==="sell"?0:1) || b.monto-a.monto; });
+  return { eq:eq, cash:cash, sjc:sjc, fp:fp, phi:phi, pico:pico, plan:plan, fuera:fuera,
+    hoy:hoy, tgt:tgt, cashTgt:cashTgt, ordenes:ordenes, umbral:umbral };
+}
+var MODO="cuentas", ACC_IDX=0, ACC_SOLO=true, ACC_ALIAS=null;
+function colorSym(s, plan){
+  if(s===plan.f1) return "#e0796b";
+  if(s===plan.f2) return "#5bc8b0";
+  if(s===plan.f3) return "#4caf7d";
+  if(s==="CASH"||s==="__cash") return "#5a6270";
+  var extra=["#7C8FF7","#E0B07A","#c792ea","#9AA1AB"];
+  var h=0; for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
+  return extra[h%extra.length];
+}
+function barraSym(partes, total){
+  return '<div class="bsym">'+partes.filter(function(p){return p.v>0.5;}).map(function(p){
+    return '<i style="width:'+(100*p.v/total)+'%; background:'+p.c+'" title="'+p.t+': '+fmt(p.v)+'"></i>';
+  }).join("")+'</div>';
+}
+function listaAccion(){
+  var arr=(DATOS.clientes||[]).filter(function(c){return c.activo && c.snap;})
+    .map(function(c){ return {c:c, p:planAccion(c, DATOS.senal)}; })
+    .filter(function(z){ return z.p; });
+  arr.forEach(function(z){ z.n=z.p.ordenes.length; });
+  var con=arr.filter(function(z){return z.n>0;});
+  var lista= ACC_SOLO? con : arr;
+  lista.sort(function(a,b){ return b.n-a.n || b.p.eq-a.p.eq; });
+  return { lista:lista, total:arr.length, con:con.length };
+}
+function renderAccion(){
+  var box=$("vista-accion"); if(!box || !DATOS) return;
+  var L=listaAccion();
+  if(!L.lista.length){
+    box.innerHTML='<div class="acc-nav"><label><input type="checkbox" id="acc-solo"'+(ACC_SOLO?' checked':'')+'> solo cuentas con acciones</label></div>'
+      +'<div class="enplan">✅ <b>Todas las cuentas están según lo establecido.</b> No hay órdenes pendientes hoy.</div>';
+    var so=$("acc-solo"); if(so) so.addEventListener("change", function(){ ACC_SOLO=so.checked; ACC_IDX=0; renderAccion(); });
+    return;
+  }
+  if(ACC_IDX>=L.lista.length) ACC_IDX=0;
+  if(ACC_IDX<0) ACC_IDX=L.lista.length-1;
+  var z=L.lista[ACC_IDX], c=z.c, p=z.p;
+  var f=faseDe(p.phi, p.plan);
+
+  // barras hoy vs objetivo, por símbolo (el efectivo en gris; SJC externo NO entra: es aparte)
+  var orden=[p.plan.f1,p.plan.f2,p.plan.f3];
+  var symsAll={}; Object.keys(p.hoy).forEach(function(s){symsAll[s]=1;}); Object.keys(p.tgt).forEach(function(s){symsAll[s]=1;});
+  var symsOrd=orden.filter(function(s){return symsAll[s];}).concat(Object.keys(symsAll).filter(function(s){return orden.indexOf(s)<0;}).sort());
+  function partesDe(mapa, cashV){
+    return symsOrd.map(function(s){ return {v:mapa[s]||0, c:colorSym(s,p.plan), t:s}; })
+      .concat([{v:cashV, c:"#5a6270", t:"efectivo"}]);
+  }
+  var hoyCash=Math.max(0, p.cash);
+
+  box.innerHTML=
+    '<div class="acc-nav">'
+      +'<button id="acc-prev" title="anterior">◀</button>'
+      +'<select id="acc-sel">'+L.lista.map(function(z2,i){
+        return '<option value="'+i+'"'+(i===ACC_IDX?' selected':'')+'>'+escapa(nomDe(z2.c))+' ('+z2.n+' '+(z2.n===1?'acción':'acciones')+' · '+money(z2.p.eq)+')</option>';
+      }).join("")+'</select>'
+      +'<button id="acc-next" title="siguiente">▶</button>'
+      +'<label><input type="checkbox" id="acc-solo"'+(ACC_SOLO?' checked':'')+'> solo con acciones</label>'
+      +'<span class="cont">'+(ACC_IDX+1)+' de '+L.lista.length+' · '+L.con+' cuentas necesitan acción</span>'
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<h2 style="margin:0;font-size:19px;color:var(--crema)">'+nomDe(c)+'<span class="chip '+f.c+'">'+f.t+'</span></h2>'
+      +'<div class="sub">'+(PRIV?'••••':c.alias)+(c.correo&&!PRIV?' · '+escapa(c.correo):'')+' · dato al '+c.snap.mes+'</div>'
+      +'<div class="tiles">'
+        +'<div class="tile"><div class="k">Capital en Alpaca</div><div class="v num">'+fmt(p.eq)+'</div></div>'
+        +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(p.cash)+'</div></div>'
+        +(p.sjc>0?'<div class="tile"><div class="k">San José Capital</div><div class="v num">'+fmt(p.sjc)+'</div><div class="s" style="color:var(--gris-sec)">aparte · piso</div></div>':'')
+        +'<div class="tile"><div class="k">Avance al FP</div><div class="v num">'+(p.phi*100).toFixed(1)+'%</div>'+(p.fp>0?'<div class="s" style="color:var(--gris-sec)">meta '+money(p.fp)+'</div>':'')+'</div>'
+      +'</div>'
+      +(p.fuera? '<div class="candado2">🔴 Señal FUERA: el objetivo de abajo ya manda la parte de mercado a efectivo; el piso se queda.</div>':'')
+      +'<div class="blbl"><span>Hoy tiene</span><span class="num">'+fmt(p.eq)+'</span></div>'
+      +barraSym(partesDe(p.hoy, hoyCash), p.eq)
+      +'<div class="blbl"><span>Lo establecido</span><span></span></div>'
+      +barraSym(partesDe(p.tgt, p.cashTgt), p.eq)
+      +'<div class="leysym">'+symsOrd.map(function(s){
+          return '<span><i style="background:'+colorSym(s,p.plan)+'"></i>'+s+' · '+fmt(p.hoy[s]||0)+' → '+fmt(p.tgt[s]||0)+'</span>';
+        }).join("")
+        +'<span><i style="background:#5a6270"></i>efectivo · '+fmt(hoyCash)+' → '+fmt(p.cashTgt)+'</span>'
+      +'</div>'
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">Órdenes para llevarlo a lo establecido'+(p.ordenes.length?' ('+p.ordenes.length+')':'')+'</div>'
+      +'<div class="candado2">🔒 La ejecución está apagada (kill switch): los tiquetes quedan listos, pero el botón todavía no tira órdenes. Lo activamos juntos con calma.</div>'
+      +(p.ordenes.length?
+        p.ordenes.map(function(o,i){
+          return '<div class="tic" data-tic="'+i+'">'
+            +'<span class="tl '+(o.lado==="buy"?"up":"down")+'">'+(o.lado==="buy"?"COMPRAR":"VENDER")+'</span>'
+            +'<span class="ts">'+o.sym+'</span>'
+            +'<span style="color:var(--gris-sec)">$</span>'
+            +'<input class="tmonto num" value="'+o.monto.toLocaleString("en-US")+'" inputmode="numeric">'
+            +'<select class="ttipo"><option value="market">Mercado</option><option value="limit">Límite</option></select>'
+            +'<input class="tlim num" placeholder="precio lím." inputmode="decimal" style="display:none">'
+            +'<input class="tini" placeholder="iniciales" maxlength="4" autocomplete="off">'
+            +'<button class="tgo" disabled title="Aún no tira órdenes: primero lo revisamos juntos y se enciende el kill switch (config.ordenes_activas).">Ejecutar</button>'
+          +'</div>';
+        }).join("")
+        +'<div class="sub" style="margin-top:8px">Primero las ventas (liberan efectivo), después las compras. Cada ejecución va a pedir tus <b>iniciales</b> y quedará en la bitácora con fecha, orden y monto.</div>'
+        : '<div class="enplan">✅ <b>Esta cuenta está según lo establecido.</b> Nada que mover (diferencias menores a '+fmt(p.umbral)+' se ignoran).</div>')
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">Histórico de la cuenta (todo lo que se ha hecho)</div>'
+      +'<div id="ordenes-box"><div class="sub">Cargando órdenes…</div></div>'
+    +'</div>';
+
+  $("acc-prev").addEventListener("click", function(){ ACC_IDX--; renderAccion(); });
+  $("acc-next").addEventListener("click", function(){ ACC_IDX++; renderAccion(); });
+  $("acc-sel").addEventListener("change", function(){ ACC_IDX=+this.value; renderAccion(); });
+  $("acc-solo").addEventListener("change", function(){ ACC_SOLO=this.checked; ACC_IDX=0; renderAccion(); });
+  Array.prototype.forEach.call(box.querySelectorAll(".ttipo"), function(sel){
+    sel.addEventListener("change", function(){
+      var lim=sel.parentElement.querySelector(".tlim");
+      if(lim) lim.style.display= sel.value==="limit"? "":"none";
+    });
+  });
+  Array.prototype.forEach.call(box.querySelectorAll(".tmonto"), function(inp){
+    inp.addEventListener("input", function(){ var d=inp.value.replace(/[^0-9]/g,""); inp.value=d?Number(d).toLocaleString("en-US"):""; });
+  });
+  ACC_ALIAS=c.alias;
+  cargarOrdenes(c);
+}
+function ponerModo(modo){
+  MODO=modo;
+  document.getElementById("tab-cuentas").classList.toggle("on", modo==="cuentas");
+  document.getElementById("tab-accion").classList.toggle("on", modo==="accion");
+  $("vista-cuentas").style.display= modo==="cuentas"? "":"none";
+  $("vista-accion").style.display= modo==="accion"? "":"none";
+  if(modo==="accion"){
+    SELECC=null; $("det").innerHTML='<div class="vacio">Tocá un cliente para ver su cuenta</div>'; $("det").classList.remove("abierto");
+    if(DATOS) renderAccion();
+  } else {
+    $("vista-accion").innerHTML="";
+    if(DATOS) renderLista();
+  }
+}
+document.getElementById("tab-cuentas").addEventListener("click", function(){ ponerModo("cuentas"); });
+document.getElementById("tab-accion").addEventListener("click", function(){ ponerModo("accion"); });
+
 async function cargar(){
   try{
     DATOS = location.hash==="#demo" ? demo() : await llamar("panel");
     $("login").style.display="none"; $("app").style.display="";
     renderLista(); renderDet();
+    if(MODO==="accion") renderAccion();
   }catch(e){
     sessionStorage.removeItem("panel_tok");
     $("login").style.display=""; $("app").style.display="none";
