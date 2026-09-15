@@ -196,6 +196,12 @@
   .e-resumen b{ color:var(--crema); }
   .e-grid{ display:grid; grid-template-columns:1fr 1fr; gap:2px 12px; }
   @media(max-width:520px){ .e-grid{ grid-template-columns:1fr; } }
+  .fila-in{ display:flex; gap:6px; align-items:stretch; }
+  .fila-in input{ flex:1; min-width:0; }
+  .steps{ display:flex; flex-direction:column; gap:3px; flex:0 0 auto; }
+  .steps button{ background:var(--card2); border:1px solid var(--bd); color:var(--gris-sec); border-radius:6px;
+    width:32px; flex:1; cursor:pointer; font-size:9px; line-height:1; padding:0; font-family:inherit; }
+  .steps button:hover{ border-color:var(--menta); color:var(--menta); }
   .e-kpi{ background:var(--card2); border:1px solid rgba(99,252,175,.5); border-radius:12px;
     padding:10px 14px; margin-top:12px; }
   .e-kpi .k{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800; }
@@ -316,19 +322,26 @@
     <div id="e-campos-ingreso" style="display:none">
       <div class="e-grid">
         <div><label for="e-ingreso">Querés vivir con ($ al mes)</label>
-          <input id="e-ingreso" inputmode="numeric" autocomplete="off"></div>
+          <div class="fila-in"><input id="e-ingreso" inputmode="numeric" autocomplete="off">
+            <div class="steps"><button type="button" data-st="e-ingreso,500,1">▲</button><button type="button" data-st="e-ingreso,500,-1">▼</button></div></div></div>
         <div><label for="e-tasa">Retirás al año (%)</label>
-          <input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="8"></div>
+          <div class="fila-in"><input id="e-tasa" inputmode="decimal" autocomplete="off" placeholder="5">
+            <div class="steps"><button type="button" data-st="e-tasa,1,1">▲</button><button type="button" data-st="e-tasa,1,-1">▼</button></div></div></div>
         <div><label for="e-edad">Edad hoy</label>
-          <input id="e-edad" inputmode="numeric" autocomplete="off" placeholder="30"></div>
+          <div class="fila-in"><input id="e-edad" inputmode="numeric" autocomplete="off" placeholder="30">
+            <div class="steps"><button type="button" data-st="e-edad,1,1">▲</button><button type="button" data-st="e-edad,1,-1">▼</button></div></div></div>
         <div><label for="e-edadret">Edad de retiro</label>
-          <input id="e-edadret" inputmode="numeric" autocomplete="off" placeholder="65"></div>
+          <div class="fila-in"><input id="e-edadret" inputmode="numeric" autocomplete="off" placeholder="65">
+            <div class="steps"><button type="button" data-st="e-edadret,1,1">▲</button><button type="button" data-st="e-edadret,1,-1">▼</button></div></div></div>
         <div><label for="e-crec">Crecimiento de la inversión (% al año)</label>
-          <input id="e-crec" inputmode="decimal" autocomplete="off" placeholder="12"></div>
+          <div class="fila-in"><input id="e-crec" inputmode="decimal" autocomplete="off" placeholder="12">
+            <div class="steps"><button type="button" data-st="e-crec,1,1">▲</button><button type="button" data-st="e-crec,1,-1">▼</button></div></div></div>
         <div><label for="e-crecret">Crecimiento en el retiro (% al año)</label>
-          <input id="e-crecret" inputmode="decimal" autocomplete="off" placeholder="8"></div>
+          <div class="fila-in"><input id="e-crecret" inputmode="decimal" autocomplete="off" placeholder="8">
+            <div class="steps"><button type="button" data-st="e-crecret,1,1">▲</button><button type="button" data-st="e-crecret,1,-1">▼</button></div></div></div>
         <div><label for="e-infl">Inflación (% al año)</label>
-          <input id="e-infl" inputmode="decimal" autocomplete="off" placeholder="3"></div>
+          <div class="fila-in"><input id="e-infl" inputmode="decimal" autocomplete="off" placeholder="3">
+            <div class="steps"><button type="button" data-st="e-infl,1,1">▲</button><button type="button" data-st="e-infl,1,-1">▼</button></div></div></div>
       </div>
       <div class="e-kpi">
         <div class="k">Tu compromiso de ahorro (sale de estos supuestos)</div>
@@ -412,7 +425,7 @@ function derivar(d){
   var m=d.meta||{}, plan=m.plan||{f1:"TQQQ",f2:"SPY",f3:"—",p1:70,p2:100,ff:70,timing:true};
   var snaps=d.snapshots||[];
   var snap=snaps.length? snaps[snaps.length-1] : null;
-  var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||8)/100) : 0);   // default de la casa: 8%
+  var fp = m.fp || (m.ingreso? m.ingreso*12/((m.tasa||5)/100) : 0);   // default de la casa: retira 5%/año
   var equity=snap? +snap.equity:0, cash=snap? +snap.cash:0;
   var phi = fp>0? equity/fp : 0;
   var pico = phi;
@@ -739,7 +752,7 @@ function abrirEditor(tipo){
     $("e-tit").textContent="Tu meta y tu plan";
     $("e-sub").textContent="Los supuestos de tu plan, simplificados: de acá salen tu meta de capital y tu compromiso de ahorro al mes.";
     $("e-ingreso").value=(+m.ingreso||0)? (+m.ingreso).toLocaleString("en-US"):"";
-    $("e-tasa").value=(+m.tasa||8);
+    $("e-tasa").value=(+m.tasa||5);
     $("e-edad").value=(+m.edad || +fx.edad || 30);
     $("e-edadret").value=(+m.edad_retiro || +fx.edadret || 65);
     $("e-crec").value=(+fx.crec || 12);
@@ -779,7 +792,7 @@ function edResumen(){
   var m=D.meta||{}, r=$("e-resumen");
   if(ED_TIPO==="ingreso"){
     var s=supuestosDe();
-    var fpV=+m.fp || ((+m.ingreso||0)*12/((+m.tasa||8)/100));
+    var fpV=+m.fp || ((+m.ingreso||0)*12/((+m.tasa||5)/100));
     var q=reqDe(s, derivar(D).equity);
     if(q){
       r.innerHTML="Asumiendo que retirás un <b>"+s.tasa+"%</b> al año: tu meta de capital "
@@ -811,6 +824,22 @@ $("e-ingreso").addEventListener("input", function(){ formatea(this); edResumen()
   $(id).addEventListener("input", edResumen);
 });
 $("e-usar").addEventListener("change", edResumen);
+// flechitas ▲▼: $500 en el ingreso, 1 en el resto; respetan los rangos y que retiro > edad
+var LIM_ED={ "e-ingreso":[200,200000], "e-tasa":[2,15], "e-edad":[18,90], "e-edadret":[19,99],
+  "e-crec":[0,40], "e-crecret":[0,30], "e-infl":[0,15] };
+Array.prototype.forEach.call(document.querySelectorAll("[data-st]"), function(b){
+  b.addEventListener("click", function(){
+    var p=b.getAttribute("data-st").split(","), id=p[0], paso=+p[1], d=+p[2];
+    var el=$(id);
+    var v=(parseFloat(String(el.value).replace(/[^0-9.]/g,""))||0)+paso*d;
+    var lim=LIM_ED[id]||[0,1e9];
+    v=Math.max(lim[0], Math.min(lim[1], v));
+    if(id==="e-edadret"){ var ed=Math.round(parseFloat($("e-edad").value)||30); if(v<=ed) v=ed+1; }
+    if(id==="e-edad"){ var er=Math.round(parseFloat($("e-edadret").value)||65); if(v>=er) v=er-1; }
+    el.value= id==="e-ingreso"? Math.round(v).toLocaleString("en-US") : String(Math.round(v*10)/10);
+    edResumen();
+  });
+});
 $("e-anual").addEventListener("input", function(){ formatea(this);
   var an=numDe(this); $("e-mensual").value=an? Math.round(an/12).toLocaleString("en-US"):""; edResumen(); });
 $("e-mensual").addEventListener("input", function(){ formatea(this);
