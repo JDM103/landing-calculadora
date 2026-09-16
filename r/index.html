@@ -243,6 +243,18 @@
   .lab-res{ font-size:13.5px; color:var(--gris-sec); margin:6px 0 10px; line-height:1.55; }
   .lab-res b{ color:var(--crema); }
 
+  /* ===== la dona de la cuenta ===== */
+  .pie-wrap{ display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+  .pie-c{ width:200px; height:200px; flex:0 0 auto; margin:0 auto; }
+  .pie-c canvas{ display:block; width:100%; height:100%; }
+  .pie-ley{ flex:1; min-width:220px; display:flex; flex-direction:column; gap:7px; }
+  .pley{ display:flex; align-items:center; gap:9px; font-size:13.5px; }
+  .pley i{ width:11px; height:11px; border-radius:50%; flex:0 0 auto; }
+  .pley .pt2{ color:var(--crema); font-weight:700; flex:1; min-width:0; }
+  .pley .pt2 em{ font-style:normal; color:var(--gris-sec); font-weight:400; font-size:11px; margin-left:6px; }
+  .pley b{ color:var(--crema); }
+  .pley .pp{ color:var(--gris-sec); font-size:12px; width:52px; text-align:right; }
+
   /* ===== distribución (bloque protagonista) ===== */
   .dist-bar{ display:flex; height:24px; border-radius:999px; overflow:hidden; background:var(--input);
     border:1px solid var(--bd); margin-top:6px; }
@@ -591,22 +603,16 @@ function render(){
   /* ---- 1 · cómo repartís tu plata ---- */
   +'<div class="card">'
     +'<h2>Cómo querés repartir tu plata</h2>'
+    +'<div class="subsec" style="margin-top:2px">Hoy en tu cuenta de Alpaca · '+fmt(x.equity)
+      +(x.sjcExt>0?' <span style="color:var(--f3); text-transform:none; letter-spacing:0">+ '+fmt(x.sjcExt)+' en San José Capital (aparte)</span>':'')+'</div>'
+    +'<div class="pie-wrap">'
+      +'<div class="pie-c"><canvas id="cv-pie"></canvas></div>'
+      +'<div class="pie-ley" id="pie-ley"></div>'
+    +'</div>'
     +(distSlices?
       (function(){
-        var awPct= x.sjcExt>0? Math.max(34, x.equity/x.totalPat*100):100;
         var sjD=x.m.sjc||null;
-        return '<div class="dist-split">'
-          +'<div style="flex:1 1 '+awPct.toFixed(1)+'%; min-width:150px">'
-            +'<div class="dist-bar" id="b-dist"></div>'
-            +'<div class="dist-bajo">En tu cuenta de Alpaca · '+fmt(x.equity)+'</div>'
-          +'</div>'
-          +(x.sjcExt>0?
-            '<div class="dist-mas">+</div>'
-            +'<div style="flex:0 1 '+(100-awPct).toFixed(1)+'%; min-width:96px">'
-              +'<div class="dist-sjcbar">SJC</div>'
-              +'<div class="dist-bajo" style="color:var(--f3)">Aparte · '+fmt(x.sjcExt)+'</div>'
-            +'</div>':'')
-        +'</div>'
+        return '<div class="subsec">Lo que pediste</div>'
         +'<div class="dist-tiles">'+distSlices.map(function(s2){
           return '<div class="dist-tile"><div class="n"><i style="background:'+s2.c+'"></i>'+esc(s2.t)+'</div>'
             +'<div class="p num">'+(+s2.v).toFixed(0)+'%</div>'
@@ -621,7 +627,7 @@ function render(){
         +'</div>';
       })()
       +'<button class="dist-btn" id="ed-dist">✎ Cambiar mi reparto</button>'
-      : '<p class="lede" style="font-size:14.5px">Hoy vas <b>100% con el Freedom Point Plan</b>. Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — pedilo acá y Jose lo ejecuta.</p>'
+      : '<p class="lede" style="font-size:14.5px; margin-top:12px">Hoy vas <b>100% con el Freedom Point Plan</b>. Si querés dedicarle un % fijo a algún ETF puntual — por ejemplo 30% QQQ y el resto al plan — pedilo acá y Jose lo ejecuta.</p>'
       +'<button class="dist-btn" id="ed-dist">✎ Personalizar mi reparto</button>')
   +'</div>'
 
@@ -751,18 +757,7 @@ function render(){
   +'<p class="pie">Empowered Investor · Tu cuenta vive en Alpaca a tu nombre; nosotros no podemos retirar tu plata (solo va a tu banco vinculado). '
   +'Esto no es asesoría individualizada; es el seguimiento del plan que armamos juntos. ¿Dudas? Respondé el correo del reporte y te contesto.</p>';
 
-  // barra de la distribución pedida
-  if(distSlices){
-    var bd=$("b-dist");
-    if(bd){ bd.innerHTML="";
-      distSlices.forEach(function(s2){
-        var i=document.createElement("i");
-        i.style.width=s2.v+"%"; i.style.background=s2.c;
-        i.title=s2.t+": "+(+s2.v).toFixed(0)+"%";
-        bd.appendChild(i);
-      });
-    }
-  }
+  dibujarPie(x);
 
   // gráficos
   if(d.serie && d.serie.c && d.serie.c.length>45 && x.plan.timing) dibujarSenal(d.serie, sen);
@@ -817,6 +812,64 @@ function mezclaTabla(x, sen){
     +(x.b.otros>1? fila("var(--ambar)", 'Fuera del plan <span class="desc">'+esc(x.b.otrosSyms.join(", "))+'</span>', x.b.otros, 0):'');
   return '<div class="tblwrap"><table><thead><tr><th>Pieza</th><th>Hoy tenés</th><th>Tu plan pide</th><th>Diferencia</th></tr></thead>'
     +'<tbody>'+filas+'</tbody></table></div>';
+}
+/* ===== la dona de la cuenta: posiciones reales + efectivo, con hover ===== */
+function slicesCuenta(x){
+  var cols={}; cols[x.plan.f1]="#e0796b"; cols[x.plan.f2]="#5bc8b0"; cols[x.plan.f3]="#4caf7d";
+  var extra=["#7C8FF7","#E0B07A","#c792ea","#9AA1AB"], ei2=0;
+  var out=[];
+  ((x.snap&&x.snap.posiciones)||[]).forEach(function(p){
+    out.push({ t:p.s, sub:nombreActivo(x,p.s), v:+p.v||0, c: cols[p.s]||extra[(ei2++)%extra.length] });
+  });
+  out.sort(function(a,b){ return b.v-a.v; });
+  if(x.cash>0.5) out.push({ t:"Efectivo", sub:"disponible", v:x.cash, c:"#5a6270" });
+  return out.filter(function(s2){ return s2.v>0.5; });
+}
+function dibujarPie(x, hover){
+  var cv=$("cv-pie"); if(!cv) return;
+  var sl=slicesCuenta(x), total=sl.reduce(function(a,s2){return a+s2.v;},0);
+  var dpr=Math.max(1,window.devicePixelRatio||1), W=cv.clientWidth, H=cv.clientHeight;
+  cv.width=W*dpr; cv.height=H*dpr;
+  var g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  if(!(total>0)){ g.fillStyle="#9AA1AB"; g.font="12px 'Bai Jamjuree'"; g.textAlign="center"; g.fillText("Sin datos", W/2, H/2); return; }
+  var cx=W/2, cy=H/2, R=Math.min(W,H)/2-6, r0=R*0.62;
+  var a=-Math.PI/2;
+  sl.forEach(function(s2,i){
+    var ang=s2.v/total*2*Math.PI;
+    var rr= i===hover? R+4 : R;
+    g.beginPath(); g.moveTo(cx+Math.cos(a)*r0, cy+Math.sin(a)*r0);
+    g.arc(cx,cy,rr,a,a+ang); g.arc(cx,cy,r0,a+ang,a,true); g.closePath();
+    g.fillStyle=s2.c; g.globalAlpha= (hover!==undefined && hover!==null && i!==hover)? .45:1;
+    g.fill(); g.globalAlpha=1;
+    a+=ang;
+  });
+  // centro: el total, o la tajada bajo el mouse
+  g.textAlign="center"; g.fillStyle="#FEF9F3";
+  if(typeof hover==="number" && sl[hover]){
+    g.font="800 15px 'Bai Jamjuree'"; g.fillText(sl[hover].t, cx, cy-6);
+    g.font="700 12px 'Bai Jamjuree'"; g.fillStyle="#9AA1AB";
+    g.fillText((sl[hover].v/total*100).toFixed(1)+"% · "+money(sl[hover].v), cx, cy+12);
+  } else {
+    g.font="800 16px 'Bai Jamjuree'"; g.fillText(money(total), cx, cy-4);
+    g.font="700 10px 'Bai Jamjuree'"; g.fillStyle="#9AA1AB"; g.fillText("TU CUENTA", cx, cy+12);
+  }
+  cv.onmousemove=function(ev){
+    var r=cv.getBoundingClientRect(), mx2=ev.clientX-r.left-cx, my=ev.clientY-r.top-cy;
+    var d2=Math.sqrt(mx2*mx2+my*my);
+    if(d2<r0*0.9 || d2>R+6){ dibujarPie(x); return; }
+    var ang=Math.atan2(my,mx2)+Math.PI/2; if(ang<0) ang+=2*Math.PI;
+    var acc=0, idx=null;
+    for(var i=0;i<sl.length;i++){ acc+=sl[i].v/total*2*Math.PI; if(ang<=acc){ idx=i; break; } }
+    dibujarPie(x, idx);
+  };
+  cv.onmouseleave=function(){ dibujarPie(x); };
+  // leyenda
+  var ley=$("pie-ley");
+  if(ley) ley.innerHTML=sl.map(function(s2){
+    return '<div class="pley"><i style="background:'+s2.c+'"></i>'
+      +'<span class="pt2">'+esc(s2.t)+(s2.sub?'<em>'+esc(s2.sub)+'</em>':'')+'</span>'
+      +'<b class="num">'+fmt(s2.v)+'</b><span class="pp num">'+(s2.v/total*100).toFixed(1)+'%</span></div>';
+  }).join("");
 }
 function pintarMezcla(id, partes, total){
   var el=$(id); if(!el) return; el.innerHTML="";
