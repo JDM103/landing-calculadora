@@ -175,6 +175,11 @@
   .bo-chip span{ color:var(--gris-sec); font-weight:400; font-size:11px; }
   .bo-chip:hover{ border-color:var(--rojo); }
   .bo-chip.on{ background:rgba(224,82,90,.15); border-color:var(--rojo); color:#ff9ea4; }
+  .bo-presets{ display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin-top:12px;
+    background:rgba(99,252,175,.04); border:1px dashed rgba(99,252,175,.35); border-radius:10px; padding:9px 11px; }
+  .bo-pre{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:999px;
+    padding:7px 13px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .bo-pre:hover{ border-color:var(--menta); color:var(--menta); }
   .bo-rev{ background:var(--menta); color:#082018; border:none; border-radius:999px; padding:11px 22px;
     font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
   .bo-rev:disabled{ opacity:.4; cursor:not-allowed; }
@@ -260,8 +265,10 @@
   <div class="tabs">
     <button id="tab-cuentas" class="on">📊 Cuentas</button>
     <button id="tab-accion">⚡ Modo acción</button>
+    <button id="tab-ordenes">🧾 Órdenes abiertas</button>
   </div>
   <div id="vista-accion" style="display:none"></div>
+  <div id="vista-ordenes" style="display:none"></div>
   <div class="layout" id="vista-cuentas">
     <div class="lista">
       <div class="cab" id="cab">
@@ -779,7 +786,7 @@ async function cargarOrdenes(c){
   try{
     if(!CACHE_ORD[c.alias]){
       CACHE_ORD[c.alias] = location.hash==="#demo"
-        ? {abiertas:[{fecha:"2026-08-07 13:02",sym:"TQQQ",lado:"buy",qty:45,px:null,estado:"accepted"}],
+        ? {abiertas:[{fecha:"2026-08-07 13:02",sym:"TQQQ",lado:"buy",qty:45,px:null,lim:69,tif:"gtc",estado:"accepted"}],
            historicas:[{fecha:"2026-08-03 14:31",sym:"TQQQ",lado:"buy",qty:11,px:91.8,estado:"filled"},
                        {fecha:"2026-07-01 14:30",sym:"TQQQ",lado:"buy",qty:10,px:84.2,estado:"filled"}]}
         : await llamar("ordenes",{alias:c.alias});
@@ -792,6 +799,8 @@ async function cargarOrdenes(c){
       +tablaOrd(o.abiertas,"Sin órdenes abiertas.")
       +'<div class="sec">Órdenes históricas (últimas '+Math.min(100,o.historicas.length)+')</div>'
       +tablaOrd(o.historicas,"Sin órdenes todavía.");
+    // con las abiertas ya en caché, el resumen de la boleta recalcula el sobregiro
+    if(MODO==="accion"){ var rf2=$("bo-ref"); if(rf2) rf2.dispatchEvent(new Event("input")); }
   }catch(e){ box.innerHTML='<div class="sub">Órdenes: error '+(e.message||e)+'</div>'; }
 }
 
@@ -1042,6 +1051,11 @@ function boletaCalc(c, p){
   if(B.lado==="buy"){
     out.despues=p.cash-out.monto;
     if(out.monto>p.cash) out.errores.push("No alcanza el efectivo: faltan "+fmt(out.monto-p.cash)+".");
+    // sobregiro: compras ya comprometidas en órdenes abiertas también gastan el efectivo
+    out.comp=comprometidoDe(c.alias);
+    if(out.comp>0 && out.monto<=p.cash && out.monto>p.cash-out.comp){
+      out.errores.push("Riesgo de sobregiro: ya hay "+fmt(out.comp)+" comprometidos en órdenes de compra abiertas (disponible real: "+fmt(Math.max(0,p.cash-out.comp))+").");
+    }
   } else {
     out.despues=p.cash+out.monto;
     // regla de la casa: SOLO se vende desde las posiciones (nada de ventas en corto)
@@ -1090,6 +1104,12 @@ function renderBoleta(c, p){
         +(pos.px>0?'<div class="bo-mini">posición (al cierre): '+(+pos.q).toLocaleString("en-US")+' × '+fmt(pos.px)+' = '+fmt(pos.v)+'</div>':'')+'</div>'
       +(!esC?'<div style="align-self:end"><label class="bo-check"><input type="checkbox" id="bo-ext"'+(B.ext?' checked':'')+'> Horario extendido (solo límite + DAY)</label></div>':'')
     +'</div>'
+    +'<div class="bo-presets"><span class="bo-pos-t">Atajos de la casa:</span>'
+      +'<button type="button" class="bo-pre" data-pre="2">Límite −2% del máx.</button>'
+      +'<button type="button" class="bo-pre" data-pre="4">Límite −4% del máx.</button>'
+      +'<button type="button" class="bo-pre" data-pre="6">Límite −6% del máx.</button>'
+      +'<button type="button" class="bo-pre" data-pre="mkt">Mercado · DAY</button>'
+    +'</div>'
     +(B.lado==="sell"?
       '<div class="bo-pos"><span class="bo-pos-t">Vender desde las posiciones (tocá una):</span>'
       +(((c.snap.posiciones||[]).length)?
@@ -1114,6 +1134,7 @@ function renderBoleta(c, p){
       +'<div><span>Efectivo si se ejecuta</span><b class="num" style="color:'+(r.despues<0?'var(--rojo)':'var(--menta)')+'">'+(r.monto>0?fmt(r.despues):"—")+'</b></div>'
       +(r.qty? '<div><span>Cantidad aprox.</span><b class="num">'+(Math.round(r.qty*10000)/10000).toLocaleString("en-US")+'</b></div>':'')
       +(B.lado==="sell" && r.pos.v>0? '<div><span>Posición después</span><b class="num">'+fmt(Math.max(0,r.pos.v-r.monto))+'</b></div>':'')
+      +(B.lado==="buy" && r.comp>0? '<div><span>Ya comprometido (órdenes abiertas)</span><b class="num" style="color:var(--ambar)">'+fmt(r.comp)+'</b></div>':'')
       +(r.errores.length? '<div class="bo-err">'+r.errores.join("<br>")+'</div>':'')
       +(r.avisos.length? '<div class="bo-avi">'+r.avisos.join("<br>")+'</div>':'');
     var rev=$("bo-revisar"); if(rev) rev.disabled=!r.ok;
@@ -1145,6 +1166,9 @@ function renderBoleta(c, p){
     clearTimeout(PRECIO_T); PRECIO_T=setTimeout(function(){ buscarPrecio(c); }, 600); });
   var rfr=$("bo-refresco"); if(rfr) rfr.addEventListener("click", function(){
     delete PRECIO_CACHE[B.activo+"|"+B.sym]; buscarPrecio(c); });
+  Array.prototype.forEach.call(box.querySelectorAll(".bo-pre"), function(b2){
+    b2.addEventListener("click", function(){ aplicarPreset(c, p, b2.getAttribute("data-pre")); });
+  });
   if(B.sym) buscarPrecio(c);
   var mo=$("bo-monto"); if(mo) mo.addEventListener("input", function(){
     var d=mo.value.replace(/[^0-9]/g,""); mo.value=d?Number(d).toLocaleString("en-US"):""; B.monto=parseInt(d||"0",10); pintaRes(); });
@@ -1167,6 +1191,21 @@ function fLoc(t){ try{ return String(t).slice(0,10); }catch(e){ return ""; } }
 function ponRefInfo(txt, mal){
   var el=$("bo-refinfo"); if(el){ el.innerHTML=txt; el.style.color= mal? "var(--rojo)":"var(--gris-sec)"; }
 }
+// atajos de la casa: limite a -X% del maximo historico (GTC), o mercado DAY
+async function aplicarPreset(c, p, pre){
+  var B=BOLETA;
+  if(pre==="mkt"){ B.tipo="market"; B.tif= B.activo==="cripto"? "gtc":"day"; renderBoleta(c,p); return; }
+  if(!B.sym){ ponRefInfo("Poné el símbolo primero y vuelvo a intentar.", true); return; }
+  var k=B.activo+"|"+B.sym;
+  if(!PRECIO_CACHE[k]){ await buscarPrecio(c); }
+  var d=PRECIO_CACHE[k], ath=d && d.ath && +d.ath.h;
+  if(!ath){ ponRefInfo("No pude traer el máximo histórico de "+B.sym+".", true); return; }
+  var pct=+pre;
+  B.tipo="limit"; B.tif="gtc";
+  B.lim=String(Math.round(ath*(1-pct/100)*100)/100);
+  renderBoleta(c, p);
+  ponRefInfo('Límite puesto en <b>$'+B.lim+'</b> = máximo histórico $'+(+ath).toLocaleString("en-US")+' −'+pct+'% · <b>GTC</b> (queda abierta hasta llenarse o cancelarla).');
+}
 async function buscarPrecio(c){
   var B=BOLETA; if(!B || !B.sym) return;
   var sym=B.sym, esC=B.activo==="cripto";
@@ -1182,7 +1221,8 @@ async function buscarPrecio(c){
             bar5:null,
             hoy:{ c:(pxDe(c,sym).px||100), t:new Date(Date.now()-864e5).toISOString() },
             prev:null,
-            ultimo:{ p:(pxDe(c,sym).px||100)*1.004, t:new Date().toISOString() } }
+            ultimo:{ p:(pxDe(c,sym).px||100)*1.004, t:new Date().toISOString() },
+            ath:{ h:Math.round((pxDe(c,sym).px||100)*1.28*100)/100, t:"2026-07-01" } }
         : await llamar("precio",{ alias:c.alias, sym:sym, cripto:esC });
       d._t=Date.now(); PRECIO_CACHE[k]=d;
     }
@@ -1204,6 +1244,7 @@ async function buscarPrecio(c){
         ref=+d.ultimo.p;
       }
     }
+    if(d.ath && d.ath.h) txt+=" · máx. hist.: $"+(+d.ath.h).toLocaleString("en-US");
     ponRefInfo(txt);
     if(ref>0){
       B.ref=ref;
@@ -1276,18 +1317,102 @@ function ponerModo(modo){
   MODO=modo;
   document.getElementById("tab-cuentas").classList.toggle("on", modo==="cuentas");
   document.getElementById("tab-accion").classList.toggle("on", modo==="accion");
+  document.getElementById("tab-ordenes").classList.toggle("on", modo==="ordenes");
   $("vista-cuentas").style.display= modo==="cuentas"? "":"none";
   $("vista-accion").style.display= modo==="accion"? "":"none";
+  $("vista-ordenes").style.display= modo==="ordenes"? "":"none";
   if(modo==="accion"){
     SELECC=null; $("det").innerHTML='<div class="vacio">Tocá un cliente para ver su cuenta</div>'; $("det").classList.remove("abierto");
     if(DATOS) renderAccion();
   } else {
     $("vista-accion").innerHTML="";
-    if(DATOS) renderLista();
+    if(modo==="cuentas" && DATOS) renderLista();
+    if(modo==="ordenes") renderOrdenesGlob();
   }
 }
 document.getElementById("tab-cuentas").addEventListener("click", function(){ ponerModo("cuentas"); });
 document.getElementById("tab-accion").addEventListener("click", function(){ ponerModo("accion"); });
+document.getElementById("tab-ordenes").addEventListener("click", function(){ ponerModo("ordenes"); });
+
+/* ===== órdenes abiertas de TODAS las cuentas (vigilancia de límites y sobregiro) ===== */
+var ORD_GLOB=null;
+function montoOrden(o){ return +o.notional || ((+o.qty||0)*((+o.lim)||(+o.stop)||(+o.px)||0)) || 0; }
+function comprometidoDe(alias){
+  var o=CACHE_ORD[alias]; if(!o || !o.abiertas) return 0;
+  var t=0; o.abiertas.forEach(function(x){ if(x.lado==="buy") t+=montoOrden(x); });
+  return t;
+}
+async function escanearOrdenes(){
+  var box=$("vista-ordenes");
+  box.innerHTML='<div class="acard"><div class="sub">Consultando las órdenes abiertas de todas las cuentas en Alpaca… (unos segundos)</div></div>';
+  try{
+    var r= location.hash==="#demo"
+      ? { ok:true, total:2, cuentas:[
+          { alias:"jr-02", ordenes:[{fecha:"2026-09-12 13:02",sym:"TQQQ",lado:"buy",qty:45,notional:null,lim:69,stop:null,tif:"gtc",tipo:"limit"}] },
+          { alias:"mv-07", ordenes:[{fecha:"2026-09-10 14:00",sym:"SPY",lado:"sell",qty:5,notional:null,lim:580,stop:null,tif:"gtc",tipo:"limit"}] } ] }
+      : await llamar("ordenes-abiertas",{});
+    ORD_GLOB={ t:new Date(), datos:r };
+  }catch(e){
+    ORD_GLOB=null;
+    box.innerHTML='<div class="acard"><div class="sub">❌ '+(e.message||e)+'</div></div>';
+    return;
+  }
+  renderOrdenesGlob();
+}
+function renderOrdenesGlob(){
+  var box=$("vista-ordenes"); if(!box) return;
+  if(!ORD_GLOB){
+    box.innerHTML='<div class="acard" style="max-width:920px;margin:0 auto">'
+      +'<div class="sec" style="margin-top:0">Órdenes abiertas en todas las cuentas</div>'
+      +'<div class="sub" style="margin-bottom:12px">Escanea las cuentas activas en Alpaca y lista toda orden pendiente (límites que dejaste puestos, stops, etc.), '
+      +'marcando el <b style="color:var(--rojo)">riesgo de sobregiro</b>: compras abiertas que, si se llenan todas, superan el efectivo de la cuenta.</div>'
+      +'<button class="bo-rev" id="ord-scan">🔍 Escanear todas las cuentas</button></div>';
+    var b=$("ord-scan"); if(b) b.addEventListener("click", escanearOrdenes);
+    return;
+  }
+  var d=ORD_GLOB.datos;
+  var porAlias={}; (DATOS&&DATOS.clientes||[]).forEach(function(c){ porAlias[c.alias]=c; });
+  var conO=d.cuentas.filter(function(c){ return c.ordenes && c.ordenes.length; });
+  var errs=d.cuentas.filter(function(c){ return c.error; });
+  var nOrd=0, sobre=0;
+  var html='';
+  conO.forEach(function(cu){
+    var c=porAlias[cu.alias]||{};
+    var cash= c.snap? +c.snap.cash:0;
+    var comp=0; cu.ordenes.forEach(function(o){ if(o.lado==="buy") comp+=montoOrden(o); });
+    var riesgo= comp>cash+1;
+    if(riesgo) sobre++;
+    nOrd+=cu.ordenes.length;
+    html+='<div class="acard"'+(riesgo?' style="border-color:rgba(224,82,90,.6)"':'')+'>'
+      +'<div style="display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">'
+        +'<b style="color:var(--crema);font-size:15px">'+(PRIV?'••••••••':escapa(c.nombre||cu.alias))+'</b>'
+        +'<span class="sub">'+(PRIV?'···':cu.alias)+' · efectivo '+fmt(cash)+' · comprometido en compras <b style="color:'+(riesgo?'var(--rojo)':'var(--crema)')+'">'+fmt(comp)+'</b></span>'
+        +(riesgo?'<span style="background:rgba(224,82,90,.15);color:#ff9ea4;font-size:11px;font-weight:800;border-radius:999px;padding:3px 10px">⚠ SOBREGIRO si se llenan todas</span>':'')
+      +'</div>'
+      +'<div style="overflow-x:auto;margin-top:8px"><table><thead><tr><th>Desde</th><th>Símbolo</th><th>Lado</th><th>Tipo</th><th>TIF</th><th>Monto est.</th></tr></thead><tbody>'
+      +cu.ordenes.map(function(o){
+        return '<tr><td class="num" style="font-weight:600">'+o.fecha+'</td>'
+          +'<td style="text-align:right;color:var(--crema);font-weight:800">'+o.sym+'</td>'
+          +'<td style="text-align:right">'+(o.lado==="buy"?'<span class="up">compra</span>':'<span class="down">venta</span>')+'</td>'
+          +'<td style="text-align:right">'+o.tipo+(o.lim?' $'+o.lim:'')+(o.stop?' · stop $'+o.stop:'')+'</td>'
+          +'<td style="text-align:right;text-transform:uppercase">'+(o.tif||"—")+'</td>'
+          +'<td class="num">'+fmt(montoOrden(o))+'</td></tr>';
+      }).join("")+'</tbody></table></div>'
+    +'</div>';
+  });
+  box.innerHTML='<div style="max-width:920px;margin:0 auto">'
+    +'<div class="acard"><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'
+      +'<b style="color:var(--crema)">'+nOrd+' órdenes abiertas en '+conO.length+' de '+d.total+' cuentas</b>'
+      +(sobre?'<span style="color:var(--rojo);font-weight:800">'+sobre+' con riesgo de sobregiro</span>':'<span style="color:var(--menta)">sin riesgo de sobregiro</span>')
+      +'<span class="sub">escaneado '+ORD_GLOB.t.toTimeString().slice(0,8)+'</span>'
+      +'<button class="dist-btn" id="ord-rescan" style="margin:0;padding:7px 16px;font-size:12.5px;margin-left:auto">↻ Volver a escanear</button>'
+    +'</div>'
+    +(errs.length?'<div class="sub" style="margin-top:6px;color:var(--ambar)">Con error: '+errs.map(function(x){return x.alias;}).join(", ")+'</div>':'')
+    +'</div>'
+    +(conO.length? html : '<div class="acard"><div class="enplan">✅ No hay órdenes abiertas en ninguna cuenta.</div></div>')
+  +'</div>';
+  var rb=$("ord-rescan"); if(rb) rb.addEventListener("click", escanearOrdenes);
+}
 
 async function cargar(){
   try{
