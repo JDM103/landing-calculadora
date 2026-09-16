@@ -12,13 +12,13 @@
   gtag('js', new Date());
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
-<title>Llamada de diagnóstico</title>
-<meta name="description" content="En 4 minutos sabés si tiene sentido que gestionemos tu portafolio, cómo funciona y qué pasa en la llamada.">
+<title>¿Y si ser conservador te deja sin retiro?</title>
+<meta name="description" content="El sistema completo con el que planeamos el retiro: por qué el plan conservador es el que no llega, cómo lo probamos en la burbuja dotcom y cómo se ejecuta en tu propia cuenta en EE. UU.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Llamada de diagnóstico · Empowered Investor">
-<meta property="og:description" content="En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada.">
+<meta property="og:title" content="¿Y si ser conservador te deja sin retiro? · Empowered Investor">
+<meta property="og:description" content="El sistema completo con el que planeamos el retiro de nuestros clientes, probado en la burbuja dotcom.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
@@ -42,6 +42,8 @@
   .player{position:relative; margin:28px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
   @media(min-width:860px){ .player{ width:min(1060px, calc(100vw - 60px)); margin-left:50%; transform:translateX(-50%); } }
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
+  .player iframe{width:100%; height:100%; display:block; border:0;}
+  .ytposter{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
   .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
     background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.72), rgba(9,11,14,.94)); cursor:pointer; text-align:center; padding:20px;}
   .poster-ov .pb{width:78px; height:78px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
@@ -65,9 +67,23 @@
   .player:fullscreen video,.player:-webkit-full-screen video{object-fit:contain;}
   .hidden{display:none;}
 
+  /* Resumen del video largo */
+  .rintro{font-size:15.5px; line-height:1.6; color:var(--gris); font-weight:400; margin-top:12px;}
+  .rcards{display:grid; gap:14px; margin-top:20px;}
+  .rcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 18px;}
+  .rcard .rtime{display:inline-block; font-size:12px; font-weight:600; color:var(--menta); background:rgba(99,252,175,.10);
+    border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:3px 11px; margin-bottom:9px;}
+  .rcard b{display:block; font-size:16px; font-weight:700; color:var(--crema); margin-bottom:5px;}
+  .rcard p{font-size:14.5px; line-height:1.58; color:var(--gris); font-weight:400;}
+  .rlegal{font-size:12px; color:var(--legal); margin-top:14px; line-height:1.5;}
+
+  /* Sección del video de la llamada */
+  .llamada h2{text-align:center;}
+  .llamada .sub{margin-top:10px;}
+
   /* CTA */
   .ctarow{text-align:center; margin-top:22px;}
-  .cta{display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:0 32px;
+  .cta{display:inline-flex; align-items:center; justify-content:center; min-height:52px; padding:12px 28px; text-align:center; line-height:1.25;
     background:var(--menta); color:var(--tinta); font-family:inherit; font-size:17px; font-weight:700; text-decoration:none;
     border-radius:999px; transition:filter .15s;}
   .cta:hover{filter:brightness(.94);}
@@ -137,11 +153,49 @@
 <div class="wrap">
   <a class="marca" href="/" aria-label="Ir al inicio"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
-  <!-- ===== 1 · HERO CON VIDEO ===== -->
-  <h1>¿Tiene sentido que <em>gestionemos tu portafolio</em>?</h1>
-  <p class="sub">En 4 minutos sabés si esto es para vos, cómo funciona y qué pasa en la llamada.</p>
+  <!-- ===== 1 · HERO: HOOK + SISTEMA COMPLETO (YouTube) ===== -->
+  <h1>¿Y si <em>"ser conservador"</em> es lo que te deja sin retiro?</h1>
+  <p class="sub">Este es el sistema completo con el que planeamos el retiro de nuestros clientes: la calculadora, la historia real desde 1990, el stress test en la burbuja dotcom y por qué el plan "seguro" es el que no llega a la meta.</p>
 
-  <!-- VIDEO -->
+  <!-- VIDEO DEL SISTEMA (el player de YouTube se inyecta al dar play, para que la página abra rápido) -->
+  <div class="player" id="ytplayer">
+    <img class="ytposter" src="poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" fetchpriority="high">
+    <div class="poster-ov" id="ytplay">
+      <div class="pb">▶</div>
+      <div class="pt">Ver el sistema completo</div>
+      <div class="ps">27 minutos</div>
+    </div>
+  </div>
+
+  <div class="ctarow">
+    <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada de diagnóstico</a>
+  </div>
+
+  <!-- ===== 2 · LO QUE VAS A VER (con el minuto) ===== -->
+  <section>
+    <h2>Lo que vas a ver en el video</h2>
+    <p class="rintro">Si tenés poco tiempo, estos son los momentos que cambian la conversación. Cada tarjeta trae el minuto.</p>
+    <div class="rcards">
+      <div class="rcard"><span class="rtime">Min 03:37</span><b>El error que arruina casi todos los planes: ignorar la inflación</b>
+        <p>El mismo plan, con y sin inflación. El aporte necesario pasa de $1,300 a $2,641 al mes. Por eso hablamos siempre en dólares de hoy.</p></div>
+      <div class="rcard"><span class="rtime">Min 12:55</span><b>El paper de Yale: más riesgo temprano, menos riesgo de no llegar</b>
+        <p>Solo con el S&amp;P 500 desde 1990 no se llega al retiro en 35 años. Dos profesores de Yale mostraron que ser agresivo al inicio y bajar el riesgo al acercarse a la meta mejora casi todos los escenarios.</p></div>
+      <div class="rcard"><span class="rtime">Min 15:31</span><b>La gradiente de riesgo: agresivo lejos de la meta, renta fija al llegar</b>
+        <p>Tres fases medidas por qué tan cerca estás de tu Freedom Point, no por tu edad. Y qué pasa con la fecha de retiro al agregar apalancamiento en la primera fase.</p></div>
+      <div class="rcard"><span class="rtime">Min 18:26</span><b>Stress test: empezar en 1996, justo antes de la burbuja dotcom</b>
+        <p>El peor escenario posible para una estrategia que usa tecnología apalancada: el portafolio sube a $542,000 y cae a $19,000. Y aun así llega.</p></div>
+      <div class="rcard"><span class="rtime">Min 19:37</span><b>El plan conservador en la misma crisis: ni así llega</b>
+        <p>La crisis le pegó menos, pero creció tan poco que en 2026 todavía no se habría retirado. Ese es el giro: ser conservador no te protege de quedarte sin retiro.</p></div>
+      <div class="rcard"><span class="rtime">Min 24:46</span><b>Cómo se ejecuta: en tu propia cuenta en EE. UU.</b>
+        <p>Vos sos el dueño legal de los activos, en un bróker miembro de FINRA y asegurado por SIPC. Para quién es el servicio y qué cuesta.</p></div>
+    </div>
+    <p class="rlegal">Los retornos mencionados son históricos. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
+  </section>
+
+  <!-- ===== 3 · VIDEO DE LA LLAMADA (puente hacia la agenda) ===== -->
+  <section class="llamada">
+    <h2>¿Tiene sentido que gestionemos tu portafolio?</h2>
+    <p class="sub">Si el sistema te hizo sentido, mirá estos 4 minutos: si esto es para vos, cómo funciona y qué pasa en la llamada.</p>
   <div class="player" id="player">
     <video id="vsl" playsinline preload="none" poster="poster.webp" oncontextmenu="return false">
       <source src="diagnostico.mp4" type="video/mp4">
@@ -157,21 +211,23 @@
     <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
   </div>
 
-  <div class="ctarow">
-    <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada</a>
-  </div>
+    <div class="ctarow">
+      <a class="cta" href="#agenda" id="cta-llamada">Agendar mi llamada de diagnóstico</a>
+    </div>
+  </section>
 
-  <!-- ===== 2 · ESTO ES PARA VOS SI… ===== -->
+  <!-- ===== 4 · ESTO ES PARA VOS SI… ===== -->
   <section>
     <h2>Esto es para vos si…</h2>
     <ul class="lista">
       <li><span class="mk">✓</span><span>Tenés mentalidad de largo plazo: podés invertir por 10 años o más.</span></li>
       <li><span class="mk">✓</span><span>Sos bueno en lo tuyo, pero no tenés tiempo de gestionar tu portafolio de manera profesional.</span></li>
       <li><span class="mk">✓</span><span>Querés delegar la gestión sin perder el control de tu plata.</span></li>
+      <li><span class="mk">✓</span><span>Podés aportar $500 o más al mes, o ya tenés $10,000 o más para invertir.</span></li>
     </ul>
   </section>
 
-  <!-- ===== 3 · ESTO NO ES PARA VOS SI… ===== -->
+  <!-- ===== 5 · ESTO NO ES PARA VOS SI… ===== -->
   <section>
     <h2>Esto <span class="peri">NO</span> es para vos si…</h2>
     <div class="no-box">
@@ -184,7 +240,7 @@
     </div>
   </section>
 
-  <!-- ===== 4 · LA CUENTA ES 100% TUYA ===== -->
+  <!-- ===== 6 · LA CUENTA ES 100% TUYA ===== -->
   <section>
     <h2>La cuenta es 100% tuya</h2>
     <ul class="lista">
@@ -194,7 +250,7 @@
     </ul>
   </section>
 
-  <!-- ===== 5 · PERMISO DELIMITADO ===== -->
+  <!-- ===== 7 · PERMISO DELIMITADO ===== -->
   <section>
     <h2>Nuestro permiso es delimitado: solo comprar y vender</h2>
     <ul class="lista">
@@ -204,7 +260,7 @@
     </ul>
   </section>
 
-  <!-- ===== 6 · TESTIMONIOS ===== -->
+  <!-- ===== 8 · TESTIMONIOS ===== -->
   <section class="testi">
     <h2>Profesionales como vos ya confían en nosotros</h2>
     <div class="tcarousel" id="tcarousel">
@@ -298,7 +354,7 @@
     <p class="tlegal">Experiencias reales de clientes. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
   </section>
 
-  <!-- ===== 7 · CÓMO FUNCIONA LA LLAMADA ===== -->
+  <!-- ===== 9 · CÓMO FUNCIONA LA LLAMADA ===== -->
   <section>
     <h2>¿Cómo funciona la llamada?</h2>
     <p class="intro">Empezamos con un diagnóstico: cuánto tenés, dónde está y qué querés lograr. Si no te podemos ayudar, te lo decimos y terminamos la llamada ahí. Tu tiempo vale, y el nuestro también.</p>
@@ -318,7 +374,7 @@
     </div>
   </section>
 
-  <!-- ===== 8 · AGENDA (Calendly inline) ===== -->
+  <!-- ===== 10 · AGENDA (Calendly inline) ===== -->
   <section class="booking" id="agenda">
     <h2>Agendá tu llamada de diagnóstico</h2>
     <p class="sub">Elegí el día y la hora que te sirvan. Valoramos tu caso y te decimos con honestidad si tiene sentido trabajar juntos.</p>
@@ -326,7 +382,7 @@
     <a class="callink" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diagnostico" target="_blank" rel="noopener">¿No cargó el calendario? Abrilo en una pestaña nueva →</a>
   </section>
 
-  <!-- ===== 9 · FOOTER LEGAL ===== -->
+  <!-- ===== 11 · FOOTER LEGAL ===== -->
   <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo.</p>
 </div>
 
@@ -337,6 +393,22 @@
   function track(ev, data){ try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){} }
 
   byId("cta-hero").addEventListener("click", function(){ track("click_agendar", {origen:"hero"}); });
+  byId("cta-llamada").addEventListener("click", function(){ track("click_agendar", {origen:"video-llamada"}); });
+
+  // ===== Video del sistema: el player de YouTube se inyecta al dar play =====
+  (function(){
+    var box=byId("ytplayer"), ov=byId("ytplay");
+    if(!box || !ov) return;
+    ov.addEventListener("click", function(){
+      track("sistema_play", {});
+      var fr=document.createElement("iframe");
+      fr.src="https://www.youtube.com/embed/AfjY_nuiUFk?autoplay=1&rel=0&playsinline=1";
+      fr.title="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica";
+      fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
+      fr.setAttribute("allowfullscreen","");
+      box.innerHTML=""; box.appendChild(fr);
+    });
+  })();
 
   // ===== Calendly: se carga cuando el usuario se acerca a la agenda =====
   (function(){
