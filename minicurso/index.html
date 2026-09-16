@@ -108,6 +108,12 @@
   .faq details[open] summary::after{content:"\2212";}
   .faq details p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400; padding:0 0 16px;}
 
+  /* Sistema completo (YouTube) */
+  .sistema h2{text-align:center;}
+  .sistema h2 em{color:var(--menta); font-style:normal;}
+  .sistema .sub{margin-top:10px;}
+  .sistema .rlegal{text-align:center;}
+
   /* Testimonios */
   .testi h2{text-align:center; margin-bottom:20px;}
   .tcarousel{position:relative;}
@@ -276,6 +282,21 @@
     </ul>
   </section>
 
+  <!-- ===== 7b · EL SISTEMA COMPLETO (YouTube) ===== -->
+  <section class="sistema">
+    <h2>¿Y si <em>"ser conservador"</em> es lo que te deja sin retiro?</h2>
+    <p class="sub">Este es el sistema completo con el que planeamos el retiro de nuestros clientes: la calculadora, la historia real desde 1990, el stress test en la burbuja dotcom y por qué el plan "seguro" es el que no llega a la meta.</p>
+    <div class="player" id="ytplayer">
+      <img class="mcposter" src="poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" loading="lazy">
+      <div class="poster-ov" id="ytplay">
+        <div class="pb">▶</div>
+        <div class="pt">Ver el sistema completo</div>
+        <div class="ps">27 minutos</div>
+      </div>
+    </div>
+    <p class="rlegal">Los retornos mencionados son históricos. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
+  </section>
+
   <!-- ===== 8 · TESTIMONIOS ===== -->
   <section class="testi">
     <h2>Ellos ya abrieron su cuenta con nosotros</h2>
@@ -428,6 +449,21 @@
       var fr=document.createElement("iframe");
       fr.src="https://www.youtube.com/embed/kLkYO5uHans?autoplay=1&rel=0&playsinline=1";
       fr.title="Mini curso de inversión";
+      fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
+      fr.setAttribute("allowfullscreen","");
+      box.innerHTML=""; box.appendChild(fr);
+    });
+  })();
+
+  // ===== Video del sistema: el player de YouTube se inyecta al dar play =====
+  (function(){
+    var box=byId("ytplayer"), ov=byId("ytplay");
+    if(!box || !ov) return;
+    ov.addEventListener("click", function(){
+      track("sistema_play", {});
+      var fr=document.createElement("iframe");
+      fr.src="https://www.youtube.com/embed/AfjY_nuiUFk?autoplay=1&rel=0&playsinline=1";
+      fr.title="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica";
       fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
       fr.setAttribute("allowfullscreen","");
       box.innerHTML=""; box.appendChild(fr);
