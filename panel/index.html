@@ -573,6 +573,20 @@ function renderDet(){
         +'<div class="s" style="color:var(--gris-sec)">anual, sin contar aportes</div></div>'
       +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(c.snap.cash)+'</div></div>'
       +'<div class="tile"><div class="k">Aportado</div><div class="v num">'+fmt(aportado)+'</div>'+(capIni>0?'<div class="s" style="color:var(--gris-sec)">incluye el capital inicial</div>':'')+'</div>'
+      +(function(){
+        var m2=+cta.multiplier||0;
+        if(!m2) return '<div class="tile"><div class="k">Margen (multiplicador)</div><div class="v num">—</div><div class="s" style="color:var(--gris-sec)">dale a Actualizar datos</div></div>';
+        var mal=m2>2, uno=m2<2;
+        return '<div class="tile"'+(mal?' style="border-color:rgba(224,82,90,.65)"':'')+'><div class="k">Margen (multiplicador)</div>'
+          +'<div class="v num" style="color:'+(mal?'var(--rojo)':(uno?'var(--ambar)':'var(--menta)'))+'">×'+m2+'</div>'
+          +'<div class="s" style="color:'+(mal?'var(--rojo)':'var(--gris-sec)')+'">'+(mal?'¡bajarlo a ×2 en Alpaca!':(uno?'sin margen · se puede subir a ×2':'como debe: ×2, no más'))+'</div></div>';
+      })()
+      +(function(){
+        if(cta.hy){ var tx=Object.keys(cta.hy).map(function(k){ return k+": "+cta.hy[k]; }).join(" · ");
+          return '<div class="tile"><div class="k">High-yield / interés</div><div class="v" style="font-size:12.5px">'+escapa(tx)+'</div></div>'; }
+        return '<div class="tile"><div class="k">High-yield savings</div><div class="v" style="font-size:13px">no visible por API</div>'
+          +'<div class="s" style="color:var(--gris-sec)">activarlo y revisarlo en el dashboard de Alpaca</div></div>';
+      })()
       +'<div class="tile" style="border-color:rgba(224,176,122,.45)"><div class="k" style="color:var(--ambar)">Capital inicial (editable)</div>'
         +'<div style="display:flex;align-items:center;gap:2px;margin-top:1px"><b style="font-size:16px;font-weight:800;color:var(--crema)">$</b>'
         +'<input id="capini" class="cap-in num" inputmode="numeric" value="'+(capIni>0?capIni.toLocaleString("en-US"):"")+'" placeholder="0" aria-label="Capital inicial manual"></div>'
@@ -922,6 +936,14 @@ function renderAccion(){
         +'<div class="tile"><div class="k">Efectivo</div><div class="v num">'+fmt(p.cash)+'</div></div>'
         +(p.sjc>0?'<div class="tile"><div class="k">San José Capital</div><div class="v num">'+fmt(p.sjc)+'</div><div class="s" style="color:var(--gris-sec)">aparte · piso</div></div>':'')
         +'<div class="tile"><div class="k">Avance al FP</div><div class="v num">'+(p.phi*100).toFixed(1)+'%</div>'+(p.fp>0?'<div class="s" style="color:var(--gris-sec)">meta '+money(p.fp)+'</div>':'')+'</div>'
+        +(function(){
+          var m2=+((c.snap.cuenta||{}).multiplier)||0;
+          if(!m2) return '';
+          var mal=m2>2, uno=m2<2;
+          return '<div class="tile"'+(mal?' style="border-color:rgba(224,82,90,.65)"':'')+'><div class="k">Margen</div>'
+            +'<div class="v num" style="color:'+(mal?'var(--rojo)':(uno?'var(--ambar)':'var(--menta)'))+'">×'+m2+'</div>'
+            +(mal?'<div class="s" style="color:var(--rojo)">¡bajarlo a ×2!</div>':(uno?'<div class="s" style="color:var(--gris-sec)">subirlo a ×2</div>':''))+'</div>';
+        })()
       +'</div>'
       +'<div class="distp" style="margin-top:10px">'
         +'📋 <b>Plan:</b> '+p.plan.f1+' → '+p.plan.f2+' → '+p.plan.f3+' · '+(+p.plan.p1||70)+'/'+(+p.plan.p2||100)+'/'+(+p.plan.ff||70)+(p.plan.timing?' · con timing':' · sin timing')
@@ -1061,8 +1083,11 @@ function renderBoleta(c, p){
       +(B.tipo==="trailing"?'<div><label>Trail</label><div style="display:flex;gap:6px">'+segB("bo-trailt",[["pct","%"],["usd","$"]],B.trailT)+'<input id="bo-trail" inputmode="decimal" value="'+escapa(B.trail)+'" style="flex:1;min-width:0"></div></div>':'')
       +'<div><label>Vigencia (TIF)</label><select id="bo-tif">'+TIFS[esC?"cripto":"stock"].map(function(t){
         return '<option value="'+t[0]+'"'+(t[0]===B.tif?' selected':'')+'>'+t[1]+'</option>'; }).join("")+'</select></div>'
-      +'<div><label>Precio de referencia ($)</label><input id="bo-ref" inputmode="decimal" value="'+(B.ref||"")+'" placeholder="para estimar">'
-        +(pos.px>0?'<div class="bo-mini">posición: '+(+pos.q).toLocaleString("en-US")+' × '+fmt(pos.px)+' = '+fmt(pos.v)+'</div>':'')+'</div>'
+      +'<div><label>Precio de referencia ($)</label>'
+        +'<div style="display:flex;gap:6px"><input id="bo-ref" inputmode="decimal" value="'+(B.ref||"")+'" placeholder="para estimar" style="flex:1;min-width:0">'
+        +'<button type="button" id="bo-refresco" title="Traer el precio de Alpaca" style="flex:0 0 36px;background:var(--card2);border:1px solid var(--bd);color:var(--crema);border-radius:9px;cursor:pointer;font-size:14px">↻</button></div>'
+        +'<div class="bo-mini" id="bo-refinfo"></div>'
+        +(pos.px>0?'<div class="bo-mini">posición (al cierre): '+(+pos.q).toLocaleString("en-US")+' × '+fmt(pos.px)+' = '+fmt(pos.v)+'</div>':'')+'</div>'
       +(!esC?'<div style="align-self:end"><label class="bo-check"><input type="checkbox" id="bo-ext"'+(B.ext?' checked':'')+'> Horario extendido (solo límite + DAY)</label></div>':'')
     +'</div>'
     +(B.lado==="sell"?
@@ -1116,7 +1141,11 @@ function renderBoleta(c, p){
   var sy=$("bo-sym"); if(sy) sy.addEventListener("input", function(){
     B.sym=sy.value.toUpperCase().replace(/[^A-Z/.]/g,""); if(sy.value!==B.sym) sy.value=B.sym;
     var p2=pxDe(c,B.sym); B.ref=p2.px||0; var rf=$("bo-ref"); if(rf) rf.value=B.ref||"";
-    pintaRes(); });
+    pintaRes();
+    clearTimeout(PRECIO_T); PRECIO_T=setTimeout(function(){ buscarPrecio(c); }, 600); });
+  var rfr=$("bo-refresco"); if(rfr) rfr.addEventListener("click", function(){
+    delete PRECIO_CACHE[B.activo+"|"+B.sym]; buscarPrecio(c); });
+  if(B.sym) buscarPrecio(c);
   var mo=$("bo-monto"); if(mo) mo.addEventListener("input", function(){
     var d=mo.value.replace(/[^0-9]/g,""); mo.value=d?Number(d).toLocaleString("en-US"):""; B.monto=parseInt(d||"0",10); pintaRes(); });
   var qy=$("bo-qty"); if(qy) qy.addEventListener("input", function(){ B.qty=qy.value; pintaRes(); });
@@ -1129,6 +1158,59 @@ function renderBoleta(c, p){
   pintaRes();
   var rev=$("bo-revisar");
   if(rev) rev.addEventListener("click", function(){ abrirConfirmOrden(c,p); });
+}
+/* precio de referencia real: última barra de 5 min; si el mercado está cerrado, el cierre
+   del día correspondiente; y el último trade fuera de horario cuando existe */
+var PRECIO_CACHE={}, PRECIO_T=null;
+function hLoc(t){ try{ return new Date(t).toTimeString().slice(0,5); }catch(e){ return ""; } }
+function fLoc(t){ try{ return String(t).slice(0,10); }catch(e){ return ""; } }
+function ponRefInfo(txt, mal){
+  var el=$("bo-refinfo"); if(el){ el.innerHTML=txt; el.style.color= mal? "var(--rojo)":"var(--gris-sec)"; }
+}
+async function buscarPrecio(c){
+  var B=BOLETA; if(!B || !B.sym) return;
+  var sym=B.sym, esC=B.activo==="cripto";
+  if(!esC && sym==="SJC"){ ponRefInfo("SJC es renta fija (San José Capital): sin precio de mercado."); return; }
+  if(esC && sym.indexOf("/")<0) return;
+  var k=B.activo+"|"+sym;
+  ponRefInfo("buscando precio…");
+  try{
+    var d=PRECIO_CACHE[k];
+    if(!d || Date.now()-d._t>60000){
+      d= location.hash==="#demo"
+        ? { ok:true, abierto:false,
+            bar5:null,
+            hoy:{ c:(pxDe(c,sym).px||100), t:new Date(Date.now()-864e5).toISOString() },
+            prev:null,
+            ultimo:{ p:(pxDe(c,sym).px||100)*1.004, t:new Date().toISOString() } }
+        : await llamar("precio",{ alias:c.alias, sym:sym, cripto:esC });
+      d._t=Date.now(); PRECIO_CACHE[k]=d;
+    }
+    if(!BOLETA || BOLETA.sym!==sym) return;
+    var ref=0, txt="";
+    if(esC){
+      ref=(d.bar5&&d.bar5.c)||(d.ultimo&&d.ultimo.p)||0;
+      txt="cripto · opera 24/7 · última barra 5 min: "+(d.bar5? "<b>$"+(+d.bar5.c).toLocaleString("en-US")+"</b> ("+hLoc(d.bar5.t)+")"
+        : (d.ultimo? "último $"+(+d.ultimo.p).toLocaleString("en-US"):"—"));
+    } else if(d.abierto){
+      ref=(d.bar5&&d.bar5.c)||0;
+      txt="🟢 mercado ABIERTO · última barra 5 min: "+(d.bar5? "<b>$"+(+d.bar5.c)+"</b> ("+hLoc(d.bar5.t)+")":"—");
+    } else {
+      var cierre=d.hoy||d.prev;
+      ref=(cierre&&+cierre.c)||0;
+      txt="🔴 mercado CERRADO · cierre del "+fLoc(cierre&&cierre.t)+": "+(cierre? "<b>$"+(+cierre.c)+"</b>":"—");
+      if(d.ultimo && cierre && String(d.ultimo.t)>String(cierre.t) && Math.abs(d.ultimo.p-cierre.c)>0.001){
+        txt+=" · fuera de horario: <b>$"+(+d.ultimo.p)+"</b> ("+hLoc(d.ultimo.t)+")";
+        ref=+d.ultimo.p;
+      }
+    }
+    ponRefInfo(txt);
+    if(ref>0){
+      B.ref=ref;
+      var rf=$("bo-ref");
+      if(rf){ rf.value=ref; rf.dispatchEvent(new Event("input")); }   // re-pinta el resumen
+    }
+  }catch(e){ ponRefInfo("sin precio: "+(e.message||e), true); }
 }
 function tifTxt(v, esC){ var l=TIFS[esC?"cripto":"stock"].filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
 function tipoTxt(v){ var l=TIPOS_ORD.filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
@@ -1300,14 +1382,14 @@ function demo(){
           distribucion:[{tipo:"etf",sym:"QQQ",pct:30},{tipo:"etf",sym:"QLD",pct:20},{tipo:"fpf",pct:50}],
           plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
-          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},
+          cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,multiplier:2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},
           posiciones:[{s:"TQQQ",q:1890,px:92.4,entrada:61.2,v:174636,pnl:58968,pnlp:51.0,hoy:1.37},
                       {s:"SPY",q:15,px:571.1,entrada:512.4,v:8566,pnl:880,pnlp:11.5,hoy:0.42}],
           transferencias_mes:[{fecha:"2026-08-03",monto:1000}]}},
       {alias:"jr-02",activo:true,nombre:"Javier Rojas",correo:"javier.rojas@gmail.com",notas:"",
         meta:{ingreso:5000,tasa:4,aporte_pactado:800,plan:{f1:"QLD",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:false}},
         snap:{mes:"2026-08-01",equity:1120540,cash:152,aportado_total:410000,phi:0.746,
-          cuenta:{last_equity:1131200,tir:11.8,inicio:"2019-06-02",ytd_pnl:-10480,ytd_pct:-0.9},
+          cuenta:{last_equity:1131200,tir:11.8,inicio:"2019-06-02",ytd_pnl:-10480,ytd_pct:-0.9,multiplier:4},
           posiciones:[{s:"SPY",q:1220,px:571.1,entrada:389.9,v:696742,pnl:221064,pnlp:46.5,hoy:-0.61},
                       {s:"QLD",q:3100,px:136.5,entrada:98.2,v:423150,pnl:118730,pnlp:39.0,hoy:-1.44}],
           transferencias_mes:[]}}
