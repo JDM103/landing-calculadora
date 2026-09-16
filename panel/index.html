@@ -401,7 +401,8 @@ function accionDe(c, senal){
 function filasOrdenadas(act, senal){
   var filas=act.map(function(c){
     var dia=diaDe(c), cta=(c.snap&&c.snap.cuenta)||{}, ap=aportadoDe(c);
-    return { c:c, nombre:nomDe(c).toLowerCase(),
+    // el orden usa el nombre REAL aunque privacidad lo esconda; si no, enmascarar reordena
+    return { c:c, nombre:String(c.nombre||"").toLowerCase(),
       equity:c.snap?+c.snap.equity:null, cash:c.snap?+c.snap.cash:null,
       dia:dia?dia.pct:null, ytd:(typeof cta.ytd_pct==="number")?cta.ytd_pct:null,
       total:(c.snap&&ap>0)?(c.snap.equity-ap)/ap*100:null,
@@ -843,11 +844,6 @@ function colorSym(s, plan){
   var h=0; for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
   return extra[h%extra.length];
 }
-function barraSym(partes, total){
-  return '<div class="bsym">'+partes.filter(function(p){return p.v>0.5;}).map(function(p){
-    return '<i style="width:'+(100*p.v/total)+'%; background:'+p.c+'" title="'+p.t+': '+fmt(p.v)+'"></i>';
-  }).join("")+'</div>';
-}
 function listaAccion(){
   var arr=(DATOS.clientes||[]).filter(function(c){return c.activo && c.snap;})
     .map(function(c){ return {c:c, p:planAccion(c, DATOS.senal)}; })
@@ -876,15 +872,28 @@ function renderAccion(){
   var z=L.lista[ACC_IDX], c=z.c, p=z.p;
   var f=faseDe(p.phi, p.plan);
 
-  // barras hoy vs objetivo, por símbolo (el efectivo en gris; SJC externo NO entra: es aparte)
+  // hoy vs lo establecido en NÚMEROS, por símbolo (el SJC externo va aparte)
   var orden=[p.plan.f1,p.plan.f2,p.plan.f3];
   var symsAll={}; Object.keys(p.hoy).forEach(function(s){symsAll[s]=1;}); Object.keys(p.tgt).forEach(function(s){symsAll[s]=1;});
   var symsOrd=orden.filter(function(s){return symsAll[s];}).concat(Object.keys(symsAll).filter(function(s){return orden.indexOf(s)<0;}).sort());
-  function partesDe(mapa, cashV){
-    return symsOrd.map(function(s){ return {v:mapa[s]||0, c:colorSym(s,p.plan), t:s}; })
-      .concat([{v:cashV, c:"#5a6270", t:"efectivo"}]);
-  }
   var hoyCash=Math.max(0, p.cash);
+  function rolDe(s){ return s===p.plan.f1?" · motor": s===p.plan.f2?" · mercado": s===p.plan.f3?" · piso":""; }
+  function filaCmp(color, nombre, hoyV, estV){
+    var dif=estV-hoyV, ok=Math.abs(dif)<=p.umbral;
+    return '<tr><td><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+color+';margin-right:7px;vertical-align:middle"></i>'+nombre+'</td>'
+      +'<td class="num">'+fmt(hoyV)+' <span style="color:var(--gris-sec);font-size:10.5px">'+(p.eq>0?(hoyV/p.eq*100).toFixed(1):"0")+'%</span></td>'
+      +'<td class="num">'+fmt(estV)+' <span style="color:var(--gris-sec);font-size:10.5px">'+(p.eq>0?(estV/p.eq*100).toFixed(1):"0")+'%</span></td>'
+      +'<td class="num" style="'+(ok?'color:var(--gris-sec)':'color:'+(dif>0?'var(--menta)':'var(--rojo)'))+'">'
+        +(ok?'✓ al día':(dif>0?'falta ':'sobra ')+fmt(Math.abs(dif)))+'</td></tr>';
+  }
+  var tablaCmp='<div style="overflow-x:auto"><table><thead><tr><th>Pieza</th><th>Hoy tiene</th><th>Lo establecido</th><th>Diferencia</th></tr></thead><tbody>'
+    +symsOrd.map(function(s2){ return filaCmp(colorSym(s2,p.plan), s2+rolDe(s2), p.hoy[s2]||0, p.tgt[s2]||0); }).join("")
+    +filaCmp("#5a6270","Efectivo", hoyCash, p.cashTgt)
+    +'</tbody></table></div>';
+  var distC=(c.meta&&c.meta.distribucion&&c.meta.distribucion.length)? c.meta.distribucion:null;
+  var distTxt= distC? distC.map(function(f2){
+      return (+f2.pct)+"% "+(f2.tipo==="fpf"?"Freedom Point Plan": f2.sym==="CASH"?"Cash":f2.sym);
+    }).join(" · ") : "100% Freedom Point Plan";
 
   box.innerHTML=
     '<div class="acc-nav">'
@@ -906,16 +915,13 @@ function renderAccion(){
         +(p.sjc>0?'<div class="tile"><div class="k">San José Capital</div><div class="v num">'+fmt(p.sjc)+'</div><div class="s" style="color:var(--gris-sec)">aparte · piso</div></div>':'')
         +'<div class="tile"><div class="k">Avance al FP</div><div class="v num">'+(p.phi*100).toFixed(1)+'%</div>'+(p.fp>0?'<div class="s" style="color:var(--gris-sec)">meta '+money(p.fp)+'</div>':'')+'</div>'
       +'</div>'
-      +(p.fuera? '<div class="candado2">🔴 Señal FUERA: el objetivo de abajo ya manda la parte de mercado a efectivo; el piso se queda.</div>':'')
-      +'<div class="blbl"><span>Hoy tiene</span><span class="num">'+fmt(p.eq)+'</span></div>'
-      +barraSym(partesDe(p.hoy, hoyCash), p.eq)
-      +'<div class="blbl"><span>Lo establecido</span><span></span></div>'
-      +barraSym(partesDe(p.tgt, p.cashTgt), p.eq)
-      +'<div class="leysym">'+symsOrd.map(function(s){
-          return '<span><i style="background:'+colorSym(s,p.plan)+'"></i>'+s+' · '+fmt(p.hoy[s]||0)+' → '+fmt(p.tgt[s]||0)+'</span>';
-        }).join("")
-        +'<span><i style="background:#5a6270"></i>efectivo · '+fmt(hoyCash)+' → '+fmt(p.cashTgt)+'</span>'
+      +'<div class="distp" style="margin-top:10px">'
+        +'📋 <b>Plan:</b> '+p.plan.f1+' → '+p.plan.f2+' → '+p.plan.f3+' · '+(+p.plan.p1||70)+'/'+(+p.plan.p2||100)+'/'+(+p.plan.ff||70)+(p.plan.timing?' · con timing':' · sin timing')
+        +' &nbsp;&nbsp; 🎯 <b>Distribución escogida:</b> '+distTxt
+        +(p.sjc>0?' · más '+fmt(p.sjc)+' en San José Capital (aparte)':'')
       +'</div>'
+      +(p.fuera? '<div class="candado2">🔴 Señal FUERA: lo establecido ya manda la parte de mercado a efectivo; el piso se queda.</div>':'')
+      +tablaCmp
     +'</div>'
 
     +'<div class="acard">'
@@ -1134,7 +1140,7 @@ function abrirConfirmOrden(c, p){
     var hora=new Date();
     var desc=(B.lado==="buy"?"COMPRAR ":"VENDER ")+B.sym+" · "+(B.modo==="usd"?fmt(r.monto):numB(B.qty)+" u.")
       +" · "+tipoTxt(B.tipo)+" · "+B.tif.toUpperCase()+(B.ext?" ext":"");
-    SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), cli:nomDe(c)+" ("+c.alias+")", d:desc, ini:ini.value, cash:fmt(r.despues) });
+    SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:fmt(r.despues) });
     renderSimLog();
     $("mo-cuerpo").innerHTML=
       '<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la orden NO se envió.</b> La ejecución sigue apagada (kill switch). '
@@ -1150,7 +1156,7 @@ function renderSimLog(){
   el.innerHTML= SIM_LOG.length?
     '<table><thead><tr><th>Hora</th><th>Cuenta</th><th>Orden</th><th>Efectivo después</th><th>Firma</th></tr></thead><tbody>'
     +SIM_LOG.map(function(r){
-      return '<tr><td class="num" style="text-align:left">'+r.h+'</td><td style="text-align:right">'+escapa(r.cli)+'</td>'
+      return '<tr><td class="num" style="text-align:left">'+r.h+'</td><td style="text-align:right">'+(PRIV?'•••••• (···)':escapa(r.n)+' ('+r.a+')')+'</td>'
         +'<td style="text-align:right">'+escapa(r.d)+'</td><td class="num">'+r.cash+'</td>'
         +'<td style="text-align:right;color:var(--menta);font-weight:800">'+r.ini+'</td></tr>';
     }).join("")+'</tbody></table>'
@@ -1194,7 +1200,7 @@ $("tok").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar"
 $("salir").addEventListener("click", function(){ sessionStorage.removeItem("panel_tok"); location.reload(); });
 function pintarPriv(){ $("priv").style.borderColor=PRIV?"var(--menta)":"var(--bd)"; $("priv").style.color=PRIV?"var(--menta)":"var(--crema)"; }
 $("priv").addEventListener("click", function(){ PRIV=!PRIV; sessionStorage.setItem("panel_priv", PRIV?"1":"0");
-  pintarPriv(); if(DATOS){ renderLista(); renderDet(); } });
+  pintarPriv(); if(DATOS){ renderLista(); renderDet(); if(MODO==="accion"){ renderAccion(); renderSimLog(); } } });
 pintarPriv();
 // ===== alta de cliente desde el panel =====
 function aliasDesde(nombre){
@@ -1264,7 +1270,9 @@ function demo(){
   return { senal:{estado:"dentro",semana:"2026-08-06",distancia:-3.4},
     clientes:[
       {alias:"mv-07",activo:true,nombre:"María Vargas",correo:"maria.vargas@gmail.com",notas:"Quiere subir aporte en enero.",nota_cliente:"Ya ejecuté tu cambio a 30% QQQ. Quedaste al día.",
-        meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
+        meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,sjc_capital:20000,
+          distribucion:[{tipo:"etf",sym:"QQQ",pct:30},{tipo:"etf",sym:"QLD",pct:20},{tipo:"fpf",pct:50}],
+          plan:{f1:"TQQQ",f2:"SPY",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
         snap:{mes:"2026-08-01",equity:187432,cash:4211,aportado_total:96000,phi:0.062,
           cuenta:{last_equity:184921,tir:14.3,inicio:"2022-03-11",ytd_pnl:21890,ytd_pct:13.2,fondeos:[{f:"2022-03-11",m:15000,t:"cripto",sym:"USDT",id:"d1",c:1},{f:"2022-06-20",m:8000,t:"cripto",sym:"BTC",id:"d2",c:0},{f:"2023-01-05",m:20000,t:"cash",id:null,sym:null,c:1},{f:"2026-08-03",m:1000,t:"cash",id:null,sym:null,c:1}]},
           posiciones:[{s:"TQQQ",q:1890,px:92.4,entrada:61.2,v:174636,pnl:58968,pnlp:51.0,hoy:1.37},
