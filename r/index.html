@@ -1668,7 +1668,7 @@ $("cambiar").addEventListener("click", async function(){
   var b=$("cambiar"); b.disabled=true; b.textContent="Guardando…";
   try{
     await llamarClave({accion:"cambiar", token:TOKEN_RESET, clave_nueva:c1});
-    history.replaceState(null,"","/r/");
+    history.replaceState(null,"", location.hostname==="localhost"? "/r/":"/mifreedompoint/");
     vista("v-entrar");
     $("ok-entrar").style.display="block";
     $("ok-entrar").textContent="✓ Clave cambiada. Entrá con la nueva.";

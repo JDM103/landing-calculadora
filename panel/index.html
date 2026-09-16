@@ -41,7 +41,7 @@
   .lista{ background:var(--card); border:1px solid var(--bd); border-radius:14px; overflow:hidden;
     max-height:calc(100vh - 150px); overflow-y:auto; overscroll-behavior:contain; }
   .cab{ position:sticky; top:0; z-index:2; }
-  .cab, .fila{ display:grid; grid-template-columns:1.22fr .76fr .52fr .52fr .56fr .68fr .58fr .42fr; gap:5px; padding:8px 11px; align-items:center; }
+  .cab, .fila{ display:grid; grid-template-columns:1.22fr .76fr .52fr .52fr .56fr .68fr .58fr .4fr .42fr; gap:5px; padding:8px 11px; align-items:center; }
   .cab{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800;
     border-bottom:1px solid var(--bd); background:var(--card2); }
   .cab span{ cursor:pointer; user-select:none; }
@@ -50,7 +50,8 @@
   @media(max-width:560px){
     .cab, .fila{ grid-template-columns:1.3fr .85fr .6fr .6fr .65fr .45fr; }
     .cab span:nth-child(5), .fila > span:nth-child(5),
-    .cab span:nth-child(6), .fila > span:nth-child(6){ display:none; }
+    .cab span:nth-child(6), .fila > span:nth-child(6),
+    .cab span:nth-child(8), .fila > span:nth-child(8){ display:none; }
   }
   .cab span:not(:first-child), .fila > span:not(:first-child){ text-align:right; }
   .fila{ border-bottom:1px solid rgba(42,49,64,.5); cursor:pointer; font-size:12.5px; }
@@ -183,6 +184,15 @@
   .bo-rev{ background:var(--menta); color:#082018; border:none; border-radius:999px; padding:11px 22px;
     font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
   .bo-rev:disabled{ opacity:.4; cursor:not-allowed; }
+  .term{ background:#07090d; border:1px solid var(--bd); border-radius:10px; padding:12px 14px; margin:0;
+    font-family:Consolas,'Cascadia Mono',monospace; font-size:11.5px; line-height:1.55;
+    max-height:340px; overflow:auto; white-space:pre-wrap; word-break:break-word; color:#c6cdd8; }
+  .term .t-req{ color:var(--crema); font-weight:700; }
+  .term .t-res{ color:var(--menta); font-weight:700; }
+  .term .t-sim{ color:var(--ambar); font-weight:700; }
+  .term .t-hora{ color:#5a6270; }
+  .term .t-tit{ color:#c6cdd8; }
+  .term .t-json{ color:#9fe8c1; }
   .mo-tbl{ width:100%; border-collapse:collapse; font-size:13.5px; }
   .mo-tbl td{ padding:7px 8px; border-bottom:1px solid rgba(42,49,64,.5); text-align:left; }
   .mo-tbl td:first-child{ color:var(--gris-sec); font-size:11px; text-transform:uppercase; letter-spacing:.4px;
@@ -273,7 +283,7 @@
     <div class="lista">
       <div class="cab" id="cab">
         <span data-k="nombre">Cliente</span><span data-k="equity">Capital</span><span data-k="dia">Día</span>
-        <span data-k="ytd">YTD</span><span data-k="total" title="Ganancia o pérdida total sobre el aportado neto: (capital − aportado) ÷ aportado. No es TIR ni rendimiento de la estrategia (TWR)">P&L/Ap.</span><span data-k="inicio">Desde</span><span data-k="cash">Cash</span><span data-k="acc">Acc.</span>
+        <span data-k="ytd">YTD</span><span data-k="total" title="Ganancia o pérdida total sobre el aportado neto: (capital − aportado) ÷ aportado. No es TIR ni rendimiento de la estrategia (TWR)">P&L/Ap.</span><span data-k="inicio">Desde</span><span data-k="cash">Cash</span><span data-k="ords" title="Órdenes abiertas en Alpaca (limites pendientes, stops…)">Órd.</span><span data-k="acc">Acc.</span>
       </div>
       <div id="filas"></div>
     </div>
@@ -423,6 +433,7 @@ function filasOrdenadas(act, senal){
       total:(c.snap&&ap>0)?(c.snap.equity-ap)/ap*100:null,
       retiro:retiroTodo(c),
       inicio:cta.inicio||null,
+      ords:ordsDe(c.alias),
       acc:accionDe(c, senal).n||0 };
   });
   filas.sort(function(a,b){
@@ -461,6 +472,9 @@ function renderLista(){
         : '<span class="num '+(r.total!==null?cls(r.total):"")+'">'+(r.total!==null?pct(r.total):"—")+'</span>')
       +'<span class="num" style="font-size:11px">'+(r.inicio?(PRIV?'•••':r.inicio.slice(0,7)):"—")+'</span>'
       +'<span class="num">'+(r.cash!==null?money(r.cash):"—")+'</span>'
+      +'<span class="num">'+(r.ords===null? '<span style="color:var(--gris-sec)" title="sin escanear: pestaña Órdenes abiertas">·</span>'
+        : r.ords>0? '<span style="background:rgba(224,176,122,.15);color:var(--ambar);font-weight:800;border-radius:999px;padding:1px 8px" title="'+ordsTitulo(r.c.alias)+'">'+r.ords+'</span>'
+        : '<span style="color:var(--gris-sec)">—</span>')+'</span>'
       +'<span class="num">'+(r.acc>0?'<span style="background:rgba(99,252,175,.15);color:var(--menta);font-weight:800;border-radius:999px;padding:1px 8px">⚡'+r.acc+'</span>':'<span style="color:var(--gris-sec)">—</span>')+'</span>'
       +'</div>';
   }).join("") || '<div style="padding:14px" class="ali">Sin clientes.</div>';
@@ -786,7 +800,7 @@ async function cargarOrdenes(c){
   try{
     if(!CACHE_ORD[c.alias]){
       CACHE_ORD[c.alias] = location.hash==="#demo"
-        ? {abiertas:[{fecha:"2026-08-07 13:02",sym:"TQQQ",lado:"buy",qty:45,px:null,lim:69,tif:"gtc",estado:"accepted"}],
+        ? {abiertas:[{id:"a1b2c3d4-demo-4444-9999-e5f6a7b8c9d0",fecha:"2026-08-07 13:02",sym:"TQQQ",lado:"buy",qty:45,px:null,lim:69,tif:"gtc",tipo:"limit",estado:"accepted"}],
            historicas:[{fecha:"2026-08-03 14:31",sym:"TQQQ",lado:"buy",qty:11,px:91.8,estado:"filled"},
                        {fecha:"2026-07-01 14:30",sym:"TQQQ",lado:"buy",qty:10,px:84.2,estado:"filled"}]}
         : await llamar("ordenes",{alias:c.alias});
@@ -800,7 +814,10 @@ async function cargarOrdenes(c){
       +'<div class="sec">Órdenes históricas (últimas '+Math.min(100,o.historicas.length)+')</div>'
       +tablaOrd(o.historicas,"Sin órdenes todavía.");
     // con las abiertas ya en caché, el resumen de la boleta recalcula el sobregiro
-    if(MODO==="accion"){ var rf2=$("bo-ref"); if(rf2) rf2.dispatchEvent(new Event("input")); }
+    if(MODO==="accion"){
+      renderAbiertas(c, o.abiertas);
+      var rf2=$("bo-ref"); if(rf2) rf2.dispatchEvent(new Event("input"));
+    }
   }catch(e){ box.innerHTML='<div class="sub">Órdenes: error '+(e.message||e)+'</div>'; }
 }
 
@@ -980,6 +997,11 @@ function renderAccion(){
     +'</div>'
 
     +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">Órdenes abiertas de esta cuenta</div>'
+      +'<div id="acc-abiertas"><div class="sub">Cargando órdenes abiertas…</div></div>'
+    +'</div>'
+
+    +'<div class="acard">'
       +'<div class="sec" style="margin-top:0">🎛️ Boleta de orden</div>'
       +'<div class="candado2">🔒 Modo simulación: todo funciona (revisión, confirmación, iniciales, bitácora) pero la orden <b>no se envía</b> a Alpaca hasta encender el kill switch.</div>'
       +'<div id="boleta-box"></div>'
@@ -988,6 +1010,14 @@ function renderAccion(){
     +'<div class="acard">'
       +'<div class="sec" style="margin-top:0">Bitácora de esta sesión (simulación)</div>'
       +'<div id="sim-log"></div>'
+    +'</div>'
+
+    +'<div class="acard">'
+      +'<div class="sec" style="margin-top:0">🖥️ Terminal · lo que va y viene de la API, crudo'
+        +'<button class="tgo2" id="term-clear" style="margin-left:10px; padding:3px 12px; font-size:11px">limpiar</button></div>'
+      +'<div class="sub" style="margin-bottom:8px">Al revisar/enviar una orden se imprime el REQUEST exacto a Alpaca (keys redactadas: viven en el servidor). '
+      +'Con el kill switch apagado, el envío queda marcado como simulación y sin respuesta; las consultas reales (precio, órdenes) sí muestran su respuesta cruda.</div>'
+      +'<pre id="api-term" class="term"></pre>'
     +'</div>'
 
     +'<div class="acard">'
@@ -1012,7 +1042,138 @@ function renderAccion(){
   if(!BOLETA || BOLETA._alias!==c.alias) BOLETA=boletaDefault(c,p);
   renderBoleta(c,p);
   renderSimLog();
+  renderTerminal();
+  var tc2=$("term-clear"); if(tc2) tc2.addEventListener("click", function(){ API_LOG=[]; renderTerminal(); });
   cargarOrdenes(c);
+}
+
+/* ===== terminal cruda: requests y respuestas tal cual ===== */
+var API_LOG=[];
+function apiLog(tipo, titulo, obj){
+  API_LOG.push({ t:new Date().toTimeString().slice(0,8), tipo:tipo, titulo:titulo,
+    cuerpo: (obj===null||obj===undefined)? null : JSON.stringify(obj, null, 2) });
+  if(API_LOG.length>120) API_LOG.shift();
+  renderTerminal();
+}
+function renderTerminal(){
+  var el=$("api-term"); if(!el) return;
+  if(!API_LOG.length){ el.innerHTML='<span class="t-hora">— sin tráfico todavía: escribí un símbolo o revisá una orden —</span>'; return; }
+  el.innerHTML=API_LOG.map(function(e){
+    var f= e.tipo==="req"? '<span class="t-req">→ REQ</span>'
+      : e.tipo==="res"? '<span class="t-res">← RES</span>'
+      : '<span class="t-sim">✦ SIM</span>';
+    return f+' <span class="t-hora">['+e.t+']</span> <span class="t-tit">'+escapa(e.titulo)+'</span>'
+      +(e.cuerpo? '\n<span class="t-json">'+escapa(e.cuerpo)+'</span>':'');
+  }).join("\n\n");
+  el.scrollTop=el.scrollHeight;
+}
+// el body EXACTO que iria a POST /v2/orders (con las reglas reales de Alpaca)
+function payloadOrden(c, r){
+  var B=BOLETA, esC=B.activo==="cripto";
+  var body={ symbol:B.sym, side:B.lado,
+    type: B.tipo==="trailing"? "trailing_stop":B.tipo,
+    time_in_force:B.tif };
+  var nota=null;
+  if(B.modo==="usd"){
+    var notionalOk= esC || (B.tipo==="market" && B.tif==="day" && !B.ext);
+    if(notionalOk){ body.notional=String(Math.round(r.monto*100)/100); }
+    else {
+      var precio=r.precio||0, q= precio>0? Math.floor(r.monto/precio):0;
+      body.qty=String(q);
+      nota="Alpaca solo acepta monto exacto (notional) en mercado+DAY: el monto $"+Math.round(r.monto).toLocaleString("en-US")
+        +" se convierte a "+q+" acciones enteras (≈$"+Math.round(q*precio).toLocaleString("en-US")+" al precio de referencia).";
+    }
+  } else {
+    body.qty=String(numB(B.qty));
+  }
+  if(B.tipo==="limit"||B.tipo==="stop_limit") body.limit_price=String(numB(B.lim));
+  if(B.tipo==="stop"||B.tipo==="stop_limit") body.stop_price=String(numB(B.stop));
+  if(B.tipo==="trailing"){ if(B.trailT==="pct") body.trail_percent=String(numB(B.trail)); else body.trail_price=String(numB(B.trail)); }
+  if(B.ext) body.extended_hours=true;
+  return { body:body, nota:nota };
+}
+
+/* ===== órdenes abiertas del cliente en Modo acción: detalle + editar/cancelar ===== */
+function renderAbiertas(c, abiertas){
+  var box=$("acc-abiertas"); if(!box || ACC_ALIAS!==c.alias) return;
+  if(!abiertas || !abiertas.length){
+    box.innerHTML='<div class="sub">Sin órdenes abiertas en esta cuenta.</div>'; return;
+  }
+  box.innerHTML=abiertas.map(function(o,i){
+    var det=[];
+    det.push(o.tipo==="limit"?"LÍMITE a $"+o.lim
+      : o.tipo==="stop"?"STOP a $"+o.stop
+      : o.tipo==="stop_limit"?"STOP $"+o.stop+" · LÍMITE $"+o.lim
+      : o.tipo==="trailing_stop"?"TRAILING"
+      : "MERCADO");
+    det.push("TIF "+String(o.tif||"—").toUpperCase());
+    det.push(o.notional? fmt(o.notional) : (o.qty? (+o.qty).toLocaleString("en-US")+" u."+(o.lim?" (≈"+fmt(o.qty*o.lim)+")":""):"—"));
+    det.push("desde "+o.fecha);
+    return '<div class="tic">'
+      +'<span class="tl '+(o.lado==="buy"?"up":"down")+'">'+(o.lado==="buy"?"COMPRA":"VENTA")+'</span>'
+      +'<span class="ts">'+o.sym+'</span>'
+      +'<span class="sub" style="flex:1; min-width:140px">'+det.join(" · ")+(o.id?' · <span style="font-size:10px">id '+String(o.id).slice(0,8)+'…</span>':'')+'</span>'
+      +'<button class="tgo2" data-oe="'+i+'">✎ Editar</button>'
+      +'<button class="tgo2" data-oc="'+i+'" style="border-color:var(--rojo); color:#ff9ea4">✕ Cancelar</button>'
+    +'</div>';
+  }).join("");
+  Array.prototype.forEach.call(box.querySelectorAll("[data-oe]"), function(b){
+    b.addEventListener("click", function(){
+      var o=abiertas[+b.getAttribute("data-oe")];
+      var L=listaAccion().lista.filter(function(z){return z.c.alias===c.alias;})[0];
+      var p=L? L.p : planAccion(c, DATOS.senal);
+      BOLETA=boletaDefault(c,p);
+      BOLETA.activo= o.sym.indexOf("/")>=0? "cripto":"stock";
+      BOLETA.sym=o.sym; BOLETA.lado=o.lado;
+      if(o.notional){ BOLETA.modo="usd"; BOLETA.monto=Math.round(o.notional); }
+      else { BOLETA.modo="qty"; BOLETA.qty=String(o.qty||""); }
+      BOLETA.tipo= o.tipo==="trailing_stop"? "trailing" : (o.tipo||"market");
+      BOLETA.lim= o.lim? String(o.lim):"";
+      BOLETA.stop= o.stop? String(o.stop):"";
+      BOLETA.tif= o.tif||"day";
+      BOLETA._reemplaza=o.id||null;
+      renderBoleta(c,p);
+      apiLog("sim","EDITAR = reemplazo: al ejecutar, esta boleta haría PATCH https://api.alpaca.markets/v2/orders/"+(o.id||"?")+" (replace) en vez de crear una orden nueva.", null);
+      var bb=$("boleta-box"); if(bb) bb.scrollIntoView({behavior:"smooth", block:"center"});
+      ponRefInfo("Boleta cargada desde la orden abierta "+(o.id? String(o.id).slice(0,8)+"…":"")+" — ajustá y revisá.");
+    });
+  });
+  Array.prototype.forEach.call(box.querySelectorAll("[data-oc]"), function(b){
+    b.addEventListener("click", function(){ abrirConfirmCancelar(c, abiertas[+b.getAttribute("data-oc")]); });
+  });
+}
+function abrirConfirmCancelar(c, o){
+  $("mo-tit").textContent="Cancelar orden · "+nomDe(c);
+  $("mo-cuerpo").innerHTML=
+    '<table class="mo-tbl">'
+    +'<tr><td>Orden</td><td><b class="'+(o.lado==="buy"?"up":"down")+'">'+(o.lado==="buy"?"COMPRA":"VENTA")+'</b> '+o.sym+'</td></tr>'
+    +'<tr><td>Detalle</td><td>'+o.tipo+(o.lim?' · límite $'+o.lim:'')+(o.stop?' · stop $'+o.stop:'')+' · TIF '+String(o.tif||"—").toUpperCase()+'</td></tr>'
+    +'<tr><td>Tamaño</td><td class="num">'+(o.notional? fmt(o.notional) : (o.qty? (+o.qty).toLocaleString("en-US")+" unidades":"—"))+'</td></tr>'
+    +'<tr><td>Desde</td><td>'+o.fecha+'</td></tr>'
+    +'<tr><td>Id</td><td style="font-size:11px">'+(o.id||"—")+'</td></tr>'
+    +'</table>'
+    +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma)</label>'
+    +'<input id="mo-ini" maxlength="4" autocomplete="off" placeholder="JM" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">';
+  $("mo-pie").innerHTML=
+    '<button class="ok" id="mo-canc" disabled style="background:var(--rojo);border-color:var(--rojo);color:#fff">Cancelar la orden</button>'
+    +'<button class="no" id="mo-cerrar">Volver</button>';
+  $("modal-orden").classList.add("on");
+  var ini=$("mo-ini"), cbt=$("mo-canc");
+  ini.addEventListener("input", function(){ ini.value=ini.value.toUpperCase().replace(/[^A-Z]/g,"");
+    cbt.disabled=!/^[A-Z]{2,4}$/.test(ini.value); });
+  ini.focus();
+  $("mo-cerrar").addEventListener("click", cerrarOrden);
+  cbt.addEventListener("click", function(){
+    apiLog("req","CANCELACIÓN (firmada "+ini.value+") · DELETE https://api.alpaca.markets/v2/orders/"+(o.id||"?")+" · cuenta "+c.alias, null);
+    apiLog("sim","KILL SWITCH APAGADO: la cancelación NO se envió a Alpaca — la orden sigue abierta.", null);
+    SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias,
+      d:"CANCELAR "+o.sym+" · "+o.tipo+(o.lim?" $"+o.lim:"")+" · "+String(o.tif||"").toUpperCase(), ini:ini.value, cash:"—" });
+    renderSimLog();
+    $("mo-cuerpo").innerHTML='<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la cancelación NO se envió.</b> '
+      +'Con el kill switch encendido, esta acción borra la orden en Alpaca y queda en la bitácora firmada como <b>'+ini.value+'</b>.</div>';
+    $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
+    $("mo-cerrar2").addEventListener("click", cerrarOrden);
+  });
 }
 
 /* ===== la boleta: experiencia completa de plataforma (simulación hasta el kill switch) ===== */
@@ -1215,7 +1376,9 @@ async function buscarPrecio(c){
   ponRefInfo("buscando precio…");
   try{
     var d=PRECIO_CACHE[k];
-    if(!d || Date.now()-d._t>60000){
+    var fresco=!d || Date.now()-d._t>60000;
+    if(fresco) apiLog("req", "function 'precio' → Alpaca Data (barra 5Min + snapshot + reloj + ATH) · "+sym, { alias:c.alias, sym:sym, cripto:esC });
+    if(fresco){
       d= location.hash==="#demo"
         ? { ok:true, abierto:false,
             bar5:null,
@@ -1225,6 +1388,8 @@ async function buscarPrecio(c){
             ath:{ h:Math.round((pxDe(c,sym).px||100)*1.28*100)/100, t:"2026-07-01" } }
         : await llamar("precio",{ alias:c.alias, sym:sym, cripto:esC });
       d._t=Date.now(); PRECIO_CACHE[k]=d;
+      var crudo={}; Object.keys(d).forEach(function(k2){ if(k2!=="_t") crudo[k2]=d[k2]; });
+      apiLog("res", (location.hash==="#demo"? "DEMO · ":"")+"respuesta cruda de 'precio' · "+sym, crudo);
     }
     if(!BOLETA || BOLETA.sym!==sym) return;
     var ref=0, txt="";
@@ -1280,6 +1445,10 @@ function abrirConfirmOrden(c, p){
     '<button class="ok" id="mo-enviar" disabled>Enviar orden</button>'
     +'<button class="no" id="mo-cerrar">Cancelar</button>';
   $("modal-orden").classList.add("on");
+  var pay=payloadOrden(c, r);
+  apiLog("req", "PREPARADA (Revisar orden) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias
+    +" · headers: {APCA-API-KEY-ID: ****cliente, APCA-API-SECRET-KEY: ****} (viven cifrados en el servidor)", pay.body);
+  if(pay.nota) apiLog("sim", pay.nota, null);
   var ini=$("mo-ini"), env=$("mo-enviar");
   ini.addEventListener("input", function(){ ini.value=ini.value.toUpperCase().replace(/[^A-Z]/g,"");
     env.disabled=!/^[A-Z]{2,4}$/.test(ini.value); });
@@ -1291,6 +1460,9 @@ function abrirConfirmOrden(c, p){
       +" · "+tipoTxt(B.tipo)+" · "+B.tif.toUpperCase()+(B.ext?" ext":"");
     SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:fmt(r.despues) });
     renderSimLog();
+    var pay2=payloadOrden(c, r);
+    apiLog("req", "ENVÍO (firmado "+ini.value+") · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, pay2.body);
+    apiLog("sim", "KILL SWITCH APAGADO: la orden NO se envió a Alpaca — sin respuesta. Al encenderlo, acá va a aparecer la respuesta cruda (id, status, filled_qty…).", null);
     $("mo-cuerpo").innerHTML=
       '<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la orden NO se envió.</b> La ejecución sigue apagada (kill switch). '
       +'Así exactamente se va a ver cuando la encendamos: la orden queda firmada como <b>'+ini.value+'</b> y en la bitácora de la base, permanente.</div>'
@@ -1335,16 +1507,28 @@ document.getElementById("tab-accion").addEventListener("click", function(){ pone
 document.getElementById("tab-ordenes").addEventListener("click", function(){ ponerModo("ordenes"); });
 
 /* ===== órdenes abiertas de TODAS las cuentas (vigilancia de límites y sobregiro) ===== */
-var ORD_GLOB=null;
+var ORD_GLOB=null, ORD_SCANEANDO=false;
+function ordsDe(alias){
+  if(!ORD_GLOB) return null;
+  var cu=(ORD_GLOB.datos.cuentas||[]).filter(function(x){ return x.alias===alias && x.ordenes; })[0];
+  return cu? cu.ordenes.length : 0;
+}
+function ordsTitulo(alias){
+  var cu=(ORD_GLOB&&ORD_GLOB.datos.cuentas||[]).filter(function(x){ return x.alias===alias && x.ordenes; })[0];
+  if(!cu) return "";
+  return cu.ordenes.map(function(o){ return (o.lado==="buy"?"compra":"venta")+" "+o.sym+" "+o.tipo+(o.lim?" $"+o.lim:"")+" "+(o.tif||""); }).join(" · ");
+}
 function montoOrden(o){ return +o.notional || ((+o.qty||0)*((+o.lim)||(+o.stop)||(+o.px)||0)) || 0; }
 function comprometidoDe(alias){
   var o=CACHE_ORD[alias]; if(!o || !o.abiertas) return 0;
   var t=0; o.abiertas.forEach(function(x){ if(x.lado==="buy") t+=montoOrden(x); });
   return t;
 }
-async function escanearOrdenes(){
+async function escanearOrdenes(silencioso){
+  if(ORD_SCANEANDO) return;
+  ORD_SCANEANDO=true;
   var box=$("vista-ordenes");
-  box.innerHTML='<div class="acard"><div class="sub">Consultando las órdenes abiertas de todas las cuentas en Alpaca… (unos segundos)</div></div>';
+  if(!silencioso && box) box.innerHTML='<div class="acard"><div class="sub">Consultando las órdenes abiertas de todas las cuentas en Alpaca… (unos segundos)</div></div>';
   try{
     var r= location.hash==="#demo"
       ? { ok:true, total:2, cuentas:[
@@ -1352,12 +1536,16 @@ async function escanearOrdenes(){
           { alias:"mv-07", ordenes:[{fecha:"2026-09-10 14:00",sym:"SPY",lado:"sell",qty:5,notional:null,lim:580,stop:null,tif:"gtc",tipo:"limit"}] } ] }
       : await llamar("ordenes-abiertas",{});
     ORD_GLOB={ t:new Date(), datos:r };
+    apiLog("res", "respuesta cruda de 'ordenes-abiertas' (GET /v2/orders?status=open en cada cuenta)", r);
   }catch(e){
-    ORD_GLOB=null;
-    box.innerHTML='<div class="acard"><div class="sub">❌ '+(e.message||e)+'</div></div>';
+    ORD_GLOB=null; ORD_SCANEANDO=false;
+    if(!silencioso && box) box.innerHTML='<div class="acard"><div class="sub">❌ '+(e.message||e)+'</div></div>';
     return;
   }
-  renderOrdenesGlob();
+  ORD_SCANEANDO=false;
+  if(MODO==="ordenes") renderOrdenesGlob();
+  if(MODO==="cuentas" && DATOS) renderLista();       // llena la columna Órd.
+  if(MODO==="accion" && DATOS) renderAccion();
 }
 function renderOrdenesGlob(){
   var box=$("vista-ordenes"); if(!box) return;
@@ -1420,6 +1608,7 @@ async function cargar(){
     $("login").style.display="none"; $("app").style.display="";
     renderLista(); renderDet();
     if(MODO==="accion") renderAccion();
+    if(!ORD_GLOB) escanearOrdenes(true);   // llena la columna Órd. en segundo plano
   }catch(e){
     sessionStorage.removeItem("panel_tok");
     $("login").style.display=""; $("app").style.display="none";

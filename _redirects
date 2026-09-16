@@ -1,5 +1,9 @@
 /aplicar/*    /retirovideo/:splat    301
 # Atajo corto para stickers de Instagram (los UTM se conservan solos)
 /news         /newsletter/           301
-# Dashboard de cada cliente: /r/<alias> lo atiende la misma página (lee el alias de la URL)
-/r/*          /r/index.html          200
+# Dashboard de cada cliente: investorcr.com/mifreedompoint (la página vive en /r/index.html)
+/mifreedompoint      /r/index.html     200
+/mifreedompoint/*    /r/index.html     200
+# La ruta vieja /r manda a la nueva (conserva los query params, ej. ?reset=token)
+/r      /mifreedompoint    301
+/r/*    /mifreedompoint    301
