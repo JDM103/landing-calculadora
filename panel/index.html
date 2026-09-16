@@ -167,6 +167,14 @@
     color:#ff9ea4; font-size:12.5px; padding:8px 11px; border-radius:10px; }
   .bol-res .bo-avi{ grid-column:1/-1; background:rgba(224,176,122,.08); border:1px solid rgba(224,176,122,.4);
     color:var(--ambar); font-size:12.5px; padding:8px 11px; border-radius:10px; }
+  .bo-pos{ display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin-top:12px;
+    background:rgba(224,82,90,.05); border:1px dashed rgba(224,82,90,.4); border-radius:10px; padding:9px 11px; }
+  .bo-pos-t{ font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:800; width:100%; }
+  .bo-chip{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:999px;
+    padding:7px 13px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .bo-chip span{ color:var(--gris-sec); font-weight:400; font-size:11px; }
+  .bo-chip:hover{ border-color:var(--rojo); }
+  .bo-chip.on{ background:rgba(224,82,90,.15); border-color:var(--rojo); color:#ff9ea4; }
   .bo-rev{ background:var(--menta); color:#082018; border:none; border-radius:999px; padding:11px 22px;
     font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; }
   .bo-rev:disabled{ opacity:.4; cursor:not-allowed; }
@@ -1014,8 +1022,10 @@ function boletaCalc(c, p){
     if(out.monto>p.cash) out.errores.push("No alcanza el efectivo: faltan "+fmt(out.monto-p.cash)+".");
   } else {
     out.despues=p.cash+out.monto;
-    if(pos.v>0 && out.monto>pos.v*1.005) out.errores.push("Estás vendiendo más de lo que tiene ("+fmt(pos.v)+" en "+B.sym+").");
-    if(pos.v<=0 && B.sym) out.avisos.push("No veo posición de "+B.sym+" en el último cierre: revisá antes de vender.");
+    // regla de la casa: SOLO se vende desde las posiciones (nada de ventas en corto)
+    if(B.sym && !(pos.v>0)) out.errores.push("Solo se vende lo que hay: "+B.sym+" no está en las posiciones de esta cuenta.");
+    if(pos.v>0 && out.monto>pos.v*1.005) out.errores.push("Estás vendiendo más de lo que hay ("+fmt(pos.v)+" en "+B.sym+"). Máximo: "+fmt(pos.v)+".");
+    if(B.modo==="qty" && pos.q>0 && numB(B.qty)>pos.q*1.005) out.errores.push("Máximo "+(+pos.q).toLocaleString("en-US")+" unidades de "+B.sym+".");
   }
   out.pos=pos;
   out.ok=!out.errores.length;
@@ -1055,6 +1065,15 @@ function renderBoleta(c, p){
         +(pos.px>0?'<div class="bo-mini">posición: '+(+pos.q).toLocaleString("en-US")+' × '+fmt(pos.px)+' = '+fmt(pos.v)+'</div>':'')+'</div>'
       +(!esC?'<div style="align-self:end"><label class="bo-check"><input type="checkbox" id="bo-ext"'+(B.ext?' checked':'')+'> Horario extendido (solo límite + DAY)</label></div>':'')
     +'</div>'
+    +(B.lado==="sell"?
+      '<div class="bo-pos"><span class="bo-pos-t">Vender desde las posiciones (tocá una):</span>'
+      +(((c.snap.posiciones||[]).length)?
+        (c.snap.posiciones||[]).map(function(po){
+          return '<button type="button" class="bo-chip'+(B.sym===po.s?' on':'')+'" data-pos="'+po.s+'">'
+            +po.s+' · '+fmt(+po.v)+' <span>('+(+po.q).toLocaleString("en-US")+' u.)</span></button>';
+        }).join("")
+        : '<span class="sub">Esta cuenta no tiene posiciones: no hay nada que vender.</span>')
+      +'</div>':'')
     +'<div class="bol-res" id="bol-res"></div>'
     +'<div style="display:flex; gap:10px; margin-top:10px; align-items:center; flex-wrap:wrap">'
       +'<button class="bo-rev" id="bo-revisar">Revisar orden →</button>'
@@ -1078,9 +1097,16 @@ function renderBoleta(c, p){
     b.addEventListener("click", function(){ B.activo=b.getAttribute("data-v");
       B.tif= B.activo==="cripto"? "gtc":"day"; B.ext=false; B.sym=""; B.ref=0; reState(); }); });
   Array.prototype.forEach.call(box.querySelectorAll("#bo-lado button"), function(b){
-    b.addEventListener("click", function(){ B.lado=b.getAttribute("data-v");
-      Array.prototype.forEach.call(box.querySelectorAll("#bo-lado button"),function(z){z.classList.toggle("on",z===b);});
-      pintaRes(); }); });
+    b.addEventListener("click", function(){ B.lado=b.getAttribute("data-v"); reState(); }); });
+  Array.prototype.forEach.call(box.querySelectorAll("[data-pos]"), function(b){
+    b.addEventListener("click", function(){
+      var sym=b.getAttribute("data-pos"), po=pxDe(c, sym);
+      B.sym=sym; B.ref=po.px||0;
+      if(B.modo==="usd") B.monto=Math.round(po.v);
+      else B.qty=String(po.q);
+      reState();
+    });
+  });
   Array.prototype.forEach.call(box.querySelectorAll("#bo-modo button"), function(b){
     b.addEventListener("click", function(){ B.modo=b.getAttribute("data-v"); reState(); }); });
   Array.prototype.forEach.call(box.querySelectorAll("#bo-trailt button"), function(b){
