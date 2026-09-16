@@ -4,6 +4,7 @@
 # Dashboard de cada cliente: investorcr.com/mifreedompoint (la página vive en /r/index.html)
 /mifreedompoint      /r/index.html     200
 /mifreedompoint/*    /r/index.html     200
-# La ruta vieja /r manda a la nueva (conserva los query params, ej. ?reset=token)
-/r      /mifreedompoint    301
-/r/*    /mifreedompoint    301
+# La ruta vieja /r manda a la nueva (conserva los query params, ej. ?reset=token).
+# El ! fuerza el redirect aunque exista el archivo físico r/index.html.
+/r      /mifreedompoint    301!
+/r/*    /mifreedompoint    301!
