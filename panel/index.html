@@ -1111,7 +1111,14 @@ function renderAbiertas(c, abiertas){
   if(!abiertas || !abiertas.length){
     box.innerHTML='<div class="sub">Sin órdenes abiertas en esta cuenta.</div>'; return;
   }
-  box.innerHTML=abiertas.map(function(o,i){
+  // ¿sobregira si se ejecuta todo? compras abiertas vs efectivo de la cuenta
+  var comprasAb=0; abiertas.forEach(function(o){ if(o.lado==="buy") comprasAb+=montoOrden(o); });
+  var cashAb=+((c.snap&&c.snap.cash)||0);
+  var resumenAb= comprasAb<=0? ""
+    : comprasAb>cashAb
+      ? '<div class="candado2" style="border-color:rgba(224,82,90,.65)">⚠️ <b style="color:#ff9ea4">SOBREGIRO si se ejecutan:</b> las compras abiertas suman <b>'+fmt(comprasAb)+'</b> y el efectivo es <b>'+fmt(cashAb)+'</b> — faltarían <b style="color:#ff9ea4">'+fmt(comprasAb-cashAb)+'</b>.</div>'
+      : '<div class="sub" style="margin-bottom:8px">Si se ejecutan todas las compras abiertas ('+fmt(comprasAb)+') el efectivo alcanza: quedarían <b style="color:var(--menta)">'+fmt(cashAb-comprasAb)+'</b> de '+fmt(cashAb)+'.</div>';
+  box.innerHTML=resumenAb+abiertas.map(function(o,i){
     var det=[];
     det.push(o.tipo==="limit"?"LÍMITE a $"+o.lim
       : o.tipo==="stop"?"STOP a $"+o.stop
@@ -1165,7 +1172,7 @@ function abrirConfirmCancelar(c, o){
     +'<tr><td>Id</td><td style="font-size:11px">'+(o.id||"—")+'</td></tr>'
     +'</table>'
     +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma)</label>'
-    +'<input id="mo-ini" maxlength="4" autocomplete="off" placeholder="JM" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
+    +'<input id="mo-ini" maxlength="4" autocomplete="off" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
     +(esVivo()
       ? '<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Clave de firma (última confirmación)</label>'
         +'<input id="mo-firma" type="password" autocomplete="off" style="width:180px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center">'
@@ -1530,7 +1537,7 @@ function abrirConfirmOrden(c, p){
     +'<tr><td>Efectivo</td><td class="num">'+fmt(p.cash)+' → <b style="color:'+(r.despues<0?'var(--rojo)':'var(--menta)')+'">'+fmt(r.despues)+'</b></td></tr>'
     +'</table>'
     +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma de la orden)</label>'
-    +'<input id="mo-ini" maxlength="4" autocomplete="off" placeholder="JM" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
+    +'<input id="mo-ini" maxlength="4" autocomplete="off" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
     +(esVivo()
       ? '<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Clave de firma (última confirmación)</label>'
         +'<input id="mo-firma" type="password" autocomplete="off" style="width:180px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center">'
