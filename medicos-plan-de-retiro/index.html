@@ -100,6 +100,20 @@
   .no-box li b{color:var(--crema); font-weight:700;}
   .no-box .mk{flex:0 0 auto; color:var(--rojo); font-weight:700; font-size:16px; line-height:1.5;}
 
+  /* Video de la metodología (YouTube, se inyecta al dar play) */
+  .sistema h2{text-align:center;}
+  .sistema .sub{margin-top:10px;}
+  .player{position:relative; margin-top:20px; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
+  .player iframe{width:100%; height:100%; display:block; border:0;}
+  .player .poster{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.62), rgba(9,11,14,.92)); cursor:pointer; text-align:center; padding:20px;}
+  .poster-ov .pb{width:72px; height:72px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
+    font-size:28px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35);}
+  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
+  .poster-ov .ps{font-size:13px; color:var(--gris); font-weight:400;}
+  .vnota{font-size:14px; line-height:1.55; color:var(--gris); font-weight:400; text-align:center; margin-top:14px;}
+
   /* Números */
   .stats{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;}
   .stat{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 16px;}
@@ -250,6 +264,22 @@
     </div>
   </section>
 
+  <!-- ===== 4b · LA METODOLOGÍA EN VIDEO (opcional, para el que quiere verla antes de agendar) ===== -->
+  <section class="sistema">
+    <h2>¿Querés ver <em>la metodología</em> antes de agendar?</h2>
+    <p class="sub">En este video armo un plan de retiro de $2M de principio a fin: la calculadora, la historia real desde 1990 y cómo se comporta el plan en una caída como la de las punto com.</p>
+    <div class="player" id="ytplayer">
+      <img class="poster" src="/minicurso/poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" loading="lazy">
+      <div class="poster-ov" id="ytplay">
+        <div class="pb">▶</div>
+        <div class="pt">Ver el sistema completo</div>
+        <div class="ps">27 minutos</div>
+      </div>
+    </div>
+    <p class="vnota">No hace falta verlo para agendar. En la llamada hacemos esto mismo con tus números.</p>
+    <div class="ctarow"><a class="cta" href="#agenda" id="cta-video">Agendar mi llamada · $0</a></div>
+  </section>
+
   <!-- ===== 5 · NÚMEROS ===== -->
   <section>
     <h2>Con quién vas a hablar</h2>
@@ -385,11 +415,25 @@
   }
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
 
-  ["cta-hero","cta-oferta"].forEach(function(id){
+  ["cta-hero","cta-oferta","cta-video"].forEach(function(id){
     byId(id).addEventListener("click", function(){ track("click_agendar", {origen:id.replace("cta-","")}); });
   });
   byId("calalt").href = conUtm(CALENDLY);
   byId("calalt").addEventListener("click", function(){ track("calendly_pantalla_completa", {}); });
+
+  // ===== Video de la metodología: el player de YouTube se inyecta al dar play =====
+  (function(){
+    var box=byId("ytplayer"), ov=byId("ytplay"); if(!box || !ov) return;
+    ov.addEventListener("click", function(){
+      track("sistema_play", {});
+      var fr=document.createElement("iframe");
+      fr.src="https://www.youtube.com/embed/AfjY_nuiUFk?autoplay=1&rel=0&playsinline=1";
+      fr.title="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica";
+      fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
+      fr.setAttribute("allowfullscreen","");
+      box.innerHTML=""; box.appendChild(fr);
+    });
+  })();
 
   // ===== La cuenta de la dispo =====
   (function(){
@@ -463,7 +507,7 @@
       io.observe(wrap);
     } else { cargar(); }
     // Si tocan un CTA, se carga de una vez para que esté listo al llegar.
-    ["cta-hero","cta-oferta"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
+    ["cta-hero","cta-oferta","cta-video"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
   })();
 
   // ===== Carrusel de testimonios =====
