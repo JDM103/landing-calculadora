@@ -1012,8 +1012,8 @@ function renderAccion(){
     +'<div class="acard">'
       +'<div class="sec" style="margin-top:0">🎛️ Boleta de orden</div>'
       +(esVivo()
-        ? '<div class="candado2" style="border-color:rgba(99,252,175,.5)">🟢 <b>EN VIVO:</b> lo que confirmés acá se envía a Alpaca de verdad. Cada envío pide tus iniciales y tu clave de firma, y queda en la bitácora permanente.</div>'
-        : '<div class="candado2">🔒 Modo simulación: todo funciona (revisión, confirmación, iniciales, bitácora) pero la orden <b>no se envía</b> a Alpaca hasta encender el envío real (arriba).</div>')
+        ? '<div class="candado2" style="border-color:rgba(99,252,175,.5)">🟢 <b>EN VIVO:</b> lo que confirmés acá se envía a Alpaca de verdad. Cada envío pide tu clave de firma, y queda en la bitácora permanente.</div>'
+        : '<div class="candado2">🔒 Modo simulación: todo funciona (revisión, confirmación, bitácora) pero la orden <b>no se envía</b> a Alpaca hasta encender el envío real (arriba).</div>')
       +'<div id="boleta-box"></div>'
     +'</div>'
 
@@ -1171,8 +1171,6 @@ function abrirConfirmCancelar(c, o){
     +'<tr><td>Desde</td><td>'+o.fecha+'</td></tr>'
     +'<tr><td>Id</td><td style="font-size:11px">'+(o.id||"—")+'</td></tr>'
     +'</table>'
-    +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma)</label>'
-    +'<input id="mo-ini" maxlength="4" autocomplete="off" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
     +(esVivo()
       ? '<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Clave de firma (última confirmación)</label>'
         +'<input id="mo-firma" type="password" autocomplete="off" style="width:180px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center">'
@@ -1182,35 +1180,34 @@ function abrirConfirmCancelar(c, o){
     '<button class="ok" id="mo-canc" disabled style="background:var(--rojo);border-color:var(--rojo);color:#fff">Cancelar la orden</button>'
     +'<button class="no" id="mo-cerrar">Volver</button>';
   $("modal-orden").classList.add("on");
-  var ini=$("mo-ini"), cbt=$("mo-canc"), fir=$("mo-firma");
-  function habCanc(){ cbt.disabled=!(/^[A-Z]{2,4}$/.test(ini.value) && (!fir || fir.value)); }
-  ini.addEventListener("input", function(){ ini.value=ini.value.toUpperCase().replace(/[^A-Z]/g,""); habCanc(); });
-  if(fir) fir.addEventListener("input", habCanc);
-  ini.focus();
+  var cbt=$("mo-canc"), fir=$("mo-firma");
+  function habCanc(){ cbt.disabled=!!(fir && !fir.value); }
+  if(fir){ fir.addEventListener("input", habCanc); fir.focus(); }
+  habCanc();
   $("mo-cerrar").addEventListener("click", cerrarOrden);
   cbt.addEventListener("click", function(){
     var desc="CANCELAR "+o.sym+" · "+o.tipo+(o.lim?" $"+o.lim:"")+" · "+String(o.tif||"").toUpperCase();
-    apiLog("req","CANCELACIÓN (firmada "+ini.value+") · DELETE https://api.alpaca.markets/v2/orders/"+(o.id||"?")+" · cuenta "+c.alias, null);
+    apiLog("req","CANCELACIÓN · DELETE https://api.alpaca.markets/v2/orders/"+(o.id||"?")+" · cuenta "+c.alias, null);
     if(!esVivo()){
       apiLog("sim","KILL SWITCH APAGADO: la cancelación NO se envió a Alpaca — la orden sigue abierta.", null);
-      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:"—" });
+      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:"—" });
       renderSimLog();
       $("mo-cuerpo").innerHTML='<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la cancelación NO se envió.</b> '
-        +'Con el kill switch encendido, esta acción borra la orden en Alpaca y queda en la bitácora firmada como <b>'+ini.value+'</b>.</div>';
+        +'Con el kill switch encendido, esta acción borra la orden en Alpaca y queda en la bitácora permanente.</div>';
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
       return;
     }
     cbt.disabled=true; cbt.textContent="Cancelando…";
-    llamar("ordenes-vivo",{accion:"cancelar", alias:c.alias, orden_id:o.id, iniciales:ini.value, firma:fir? fir.value:""})
+    llamar("ordenes-vivo",{accion:"cancelar", alias:c.alias, orden_id:o.id, firma:fir? fir.value:""})
     .then(function(j){
       apiLog("res","respuesta de Alpaca a la cancelación ("+(j.status||"?")+")", j.respuesta);
-      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:"—", v:1 });
+      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:"—", v:1 });
       renderSimLog();
       delete CACHE_ORD[c.alias];
       cargarOrdenes(c); escanearOrdenes(true);
       $("mo-cuerpo").innerHTML='<div class="enplan" style="margin-bottom:10px">🟢 <b>Orden cancelada en Alpaca.</b> '
-        +'Firmada como <b>'+ini.value+'</b>; quedó en la bitácora permanente de la base.</div>';
+        +'Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>';
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
     })
@@ -1240,7 +1237,7 @@ function abrirEncender(){
   $("mo-tit").textContent="Encender el envío REAL de órdenes";
   $("mo-cuerpo").innerHTML=
     '<div class="enplan" style="margin-bottom:10px">A partir de aquí, <b>cada orden confirmada se envía a Alpaca de verdad</b>, con plata real. '
-    +'Cada envío vuelve a pedir tus iniciales y tu clave de firma; apagar es un clic, inmediato y sin clave.</div>'
+    +'Cada envío vuelve a pedir tu clave de firma; apagar es un clic, inmediato y sin clave.</div>'
     +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Clave de firma</label>'
     +'<input id="mo-firma" type="password" autocomplete="off" style="width:180px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center">'
     +'<div class="sub" id="mo-err" style="color:var(--rojo);margin-top:8px"></div>';
@@ -1536,8 +1533,6 @@ function abrirConfirmOrden(c, p){
     +'<tr><td>Vigencia</td><td>'+tifTxt(B.tif,esC)+(B.ext?' · horario extendido':'')+'</td></tr>'
     +'<tr><td>Efectivo</td><td class="num">'+fmt(p.cash)+' → <b style="color:'+(r.despues<0?'var(--rojo)':'var(--menta)')+'">'+fmt(r.despues)+'</b></td></tr>'
     +'</table>'
-    +'<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Tus iniciales (firma de la orden)</label>'
-    +'<input id="mo-ini" maxlength="4" autocomplete="off" style="width:110px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center;text-transform:uppercase">'
     +(esVivo()
       ? '<label style="display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gris-sec);font-weight:800;margin:14px 0 4px">Clave de firma (última confirmación)</label>'
         +'<input id="mo-firma" type="password" autocomplete="off" style="width:180px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:16px;font-weight:800;padding:10px;text-align:center">'
@@ -1551,11 +1546,10 @@ function abrirConfirmOrden(c, p){
   apiLog("req", "PREPARADA (Revisar orden) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias
     +" · headers: {APCA-API-KEY-ID: ****cliente, APCA-API-SECRET-KEY: ****} (viven cifrados en el servidor)", pay.body);
   if(pay.nota) apiLog("sim", pay.nota, null);
-  var ini=$("mo-ini"), env=$("mo-enviar"), fir=$("mo-firma");
-  function habEnv(){ env.disabled=!(/^[A-Z]{2,4}$/.test(ini.value) && (!fir || fir.value)); }
-  ini.addEventListener("input", function(){ ini.value=ini.value.toUpperCase().replace(/[^A-Z]/g,""); habEnv(); });
-  if(fir) fir.addEventListener("input", habEnv);
-  ini.focus();
+  var env=$("mo-enviar"), fir=$("mo-firma");
+  function habEnv(){ env.disabled=!!(fir && !fir.value); }
+  if(fir){ fir.addEventListener("input", habEnv); fir.focus(); }
+  habEnv();
   $("mo-cerrar").addEventListener("click", cerrarOrden);
   env.addEventListener("click", function(){
     var hora=new Date();
@@ -1563,13 +1557,13 @@ function abrirConfirmOrden(c, p){
       +" · "+tipoTxt(B.tipo)+" · "+B.tif.toUpperCase()+(B.ext?" ext":"");
     var pay2=payloadOrden(c, r);
     if(!esVivo()){
-      SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:fmt(r.despues) });
+      SIM_LOG.unshift({ h:hora.toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(r.despues) });
       renderSimLog();
-      apiLog("req", "ENVÍO (firmado "+ini.value+") · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, pay2.body);
+      apiLog("req", "ENVÍO (simulado) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, pay2.body);
       apiLog("sim", "KILL SWITCH APAGADO: la orden NO se envió a Alpaca — sin respuesta. Al encenderlo, acá va a aparecer la respuesta cruda (id, status, filled_qty…).", null);
       $("mo-cuerpo").innerHTML=
         '<div class="enplan" style="margin-bottom:10px">🔒 <b>Simulación: la orden NO se envió.</b> La ejecución sigue apagada (kill switch). '
-        +'Así exactamente se va a ver cuando la encendamos: la orden queda firmada como <b>'+ini.value+'</b> y en la bitácora de la base, permanente.</div>'
+        +'Así exactamente se va a ver cuando la encendamos: la orden se confirma con tu clave de firma y queda en la bitácora de la base, permanente.</div>'
         +'<div class="sub">Quedó registrada abajo, en la <b>bitácora de esta sesión</b>, como simulación.</div>';
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
@@ -1580,14 +1574,14 @@ function abrirConfirmOrden(c, p){
     var reempl=B._reemplaza||null;
     var cuerpo=Object.assign({ _precio_ref:(r.precio||0) }, pay2.body);
     env.disabled=true; env.textContent="Enviando…";
-    apiLog("req", "ENVÍO EN VIVO (firmado "+ini.value+") · "+(reempl? "PATCH /v2/orders/"+reempl+" (replace)":"POST https://api.alpaca.markets/v2/orders")+" · cuenta "+c.alias, pay2.body);
+    apiLog("req", "ENVÍO EN VIVO (confirmado con clave) · "+(reempl? "PATCH /v2/orders/"+reempl+" (replace)":"POST https://api.alpaca.markets/v2/orders")+" · cuenta "+c.alias, pay2.body);
     llamar("ordenes-vivo", reempl
-      ? {accion:"reemplazar", alias:c.alias, orden_id:reempl, orden:cuerpo, iniciales:ini.value, firma:fir? fir.value:""}
-      : {accion:"enviar", alias:c.alias, orden:cuerpo, iniciales:ini.value, firma:fir? fir.value:""})
+      ? {accion:"reemplazar", alias:c.alias, orden_id:reempl, orden:cuerpo, firma:fir? fir.value:""}
+      : {accion:"enviar", alias:c.alias, orden:cuerpo, firma:fir? fir.value:""})
     .then(function(j){
       apiLog("res", "respuesta cruda de Alpaca ("+(j.status||"?")+")", j.respuesta);
       var o=j.respuesta||{};
-      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, ini:ini.value, cash:fmt(r.despues), v:1 });
+      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(r.despues), v:1 });
       renderSimLog();
       BOLETA._reemplaza=null;
       delete CACHE_ORD[c.alias];
@@ -1595,7 +1589,7 @@ function abrirConfirmOrden(c, p){
       $("mo-cuerpo").innerHTML=
         '<div class="enplan" style="margin-bottom:10px">🟢 <b>Orden '+(reempl? "reemplazada":"enviada")+' a Alpaca.</b> '
         +'Estado: <b>'+escapa(o.status||"?")+'</b>'+(o.id? ' · id <span style="font-size:11px">'+escapa(o.id)+'</span>':'')
-        +'<br>Firmada como <b>'+ini.value+'</b>; quedó en la bitácora permanente de la base.</div>'
+        +'<br>Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>'
         +'<div class="sub">La respuesta cruda completa está en la terminal.</div>';
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
@@ -1611,11 +1605,10 @@ function cerrarOrden(){ $("modal-orden").classList.remove("on"); }
 function renderSimLog(){
   var el=$("sim-log"); if(!el) return;
   el.innerHTML= SIM_LOG.length?
-    '<table><thead><tr><th>Hora</th><th>Cuenta</th><th>Orden</th><th>Efectivo después</th><th>Firma</th></tr></thead><tbody>'
+    '<table><thead><tr><th>Hora</th><th>Cuenta</th><th>Orden</th><th>Efectivo después</th></tr></thead><tbody>'
     +SIM_LOG.map(function(r){
       return '<tr><td class="num" style="text-align:left">'+r.h+'</td><td style="text-align:right">'+(PRIV?'•••••• (···)':escapa(r.n)+' ('+r.a+')')+'</td>'
-        +'<td style="text-align:right">'+escapa(r.d)+(r.v?' <span style="color:var(--menta);font-size:10px;font-weight:800;border:1px solid var(--menta);border-radius:6px;padding:1px 5px">EN VIVO</span>':' <span style="color:var(--gris-sec);font-size:10px">sim</span>')+'</td><td class="num">'+r.cash+'</td>'
-        +'<td style="text-align:right;color:var(--menta);font-weight:800">'+r.ini+'</td></tr>';
+        +'<td style="text-align:right">'+escapa(r.d)+(r.v?' <span style="color:var(--menta);font-size:10px;font-weight:800;border:1px solid var(--menta);border-radius:6px;padding:1px 5px">EN VIVO</span>':' <span style="color:var(--gris-sec);font-size:10px">sim</span>')+'</td><td class="num">'+r.cash+'</td></tr>';
     }).join("")+'</tbody></table>'
     +'<div class="sub" style="margin-top:6px">Lo de esta sesión. Las órdenes <b>EN VIVO</b> también viven en la bitácora de la base, permanente y con firma; las <b>sim</b> no salieron del navegador.</div>'
     : '<div class="sub">Todavía no has enviado ni simulado órdenes en esta sesión.</div>';
