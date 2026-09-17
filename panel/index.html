@@ -276,9 +276,11 @@
     <button id="tab-cuentas" class="on">📊 Cuentas</button>
     <button id="tab-accion">⚡ Modo acción</button>
     <button id="tab-ordenes">🧾 Órdenes abiertas</button>
+    <button id="tab-term">🖥️ Terminal</button>
   </div>
   <div id="vista-accion" style="display:none"></div>
   <div id="vista-ordenes" style="display:none"></div>
+  <div id="vista-term" style="display:none"></div>
   <div class="layout" id="vista-cuentas">
     <div class="lista">
       <div class="cab" id="cab">
@@ -340,7 +342,7 @@
 var BASE="https://jsjhfiakinodosesdqum.supabase.co/functions/v1";
 var ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzamhmaWFraW5vZG9zZXNkcXVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwNjY5NTQsImV4cCI6MjEwMTY0Mjk1NH0.MfXXQ6QFx_OudI5Bj9Sr7yw5PRTv_O45NQ_X24tuqLU";
 var DATOS=null, SELECC=null, HORIZONTE="1A", MODOG="cap", CACHE_HIST={}, CACHE_ORD={};
-var SORT={k:"nombre", d:1};
+var SORT={k:"equity", d:-1};   // default: capital de mayor a menor
 var PRIV=sessionStorage.getItem("panel_priv")==="1";
 function nomDe(c){ return PRIV ? "••••••••" : c.nombre; }
 document.addEventListener("click", function(e){
@@ -926,6 +928,7 @@ function renderAccion(){
   if(ACC_IDX>=L.lista.length) ACC_IDX=0;
   if(ACC_IDX<0) ACC_IDX=L.lista.length-1;
   var z=L.lista[ACC_IDX], c=z.c, p=z.p;
+  SELECC=c.alias;   // la selección viaja con vos entre pestañas
   var f=faseDe(p.phi, p.plan);
 
   // hoy vs lo establecido en NÚMEROS, por símbolo (el SJC externo va aparte)
@@ -1202,6 +1205,13 @@ function abrirConfirmCancelar(c, o){
     llamar("ordenes-vivo",{accion:"cancelar", alias:c.alias, orden_id:o.id, firma:fir? fir.value:""})
     .then(function(j){
       apiLog("res","respuesta de Alpaca a la cancelación ("+(j.status||"?")+")", j.respuesta);
+      if(!j.ok){
+        var o2=j.respuesta||{};
+        var msj=(o2 && (o2.message||o2.error)) || ("Alpaca respondió "+(j.status||"?"));
+        var err0=$("mo-err"); if(err0) err0.textContent="Alpaca no la canceló ("+(j.status||"?")+"): "+msj;
+        cbt.disabled=false; cbt.textContent="Cancelar la orden";
+        return;
+      }
       SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:"—", v:1 });
       renderSimLog();
       delete CACHE_ORD[c.alias];
@@ -1581,6 +1591,12 @@ function abrirConfirmOrden(c, p){
     .then(function(j){
       apiLog("res", "respuesta cruda de Alpaca ("+(j.status||"?")+")", j.respuesta);
       var o=j.respuesta||{};
+      if(!j.ok){
+        var msj=(o && (o.message||o.error)) || ("Alpaca respondió "+(j.status||"?"));
+        var err0=$("mo-err"); if(err0) err0.textContent="Alpaca la rechazó ("+(j.status||"?")+"): "+msj;
+        env.disabled=false; env.textContent=reempl? "Reemplazar EN VIVO":"Enviar EN VIVO";
+        return;
+      }
       SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(r.despues), v:1 });
       renderSimLog();
       BOLETA._reemplaza=null;
@@ -1616,24 +1632,33 @@ function renderSimLog(){
 
 function ponerModo(modo){
   MODO=modo;
-  document.getElementById("tab-cuentas").classList.toggle("on", modo==="cuentas");
-  document.getElementById("tab-accion").classList.toggle("on", modo==="accion");
-  document.getElementById("tab-ordenes").classList.toggle("on", modo==="ordenes");
-  $("vista-cuentas").style.display= modo==="cuentas"? "":"none";
-  $("vista-accion").style.display= modo==="accion"? "":"none";
-  $("vista-ordenes").style.display= modo==="ordenes"? "":"none";
+  ["cuentas","accion","ordenes","term"].forEach(function(m){
+    document.getElementById("tab-"+m).classList.toggle("on", modo===m);
+    $("vista-"+m).style.display= modo===m? "":"none";
+  });
   if(modo==="accion"){
-    SELECC=null; $("det").innerHTML='<div class="vacio">Tocá un cliente para ver su cuenta</div>'; $("det").classList.remove("abierto");
+    // el cliente elegido en Cuentas se perpetúa acá (y viceversa)
+    if(SELECC && DATOS){
+      var i0=-1, L0=listaAccion();
+      L0.lista.forEach(function(z,i){ if(z.c.alias===SELECC) i0=i; });
+      if(i0<0 && ACC_SOLO){
+        ACC_SOLO=false; L0=listaAccion();
+        L0.lista.forEach(function(z,i){ if(z.c.alias===SELECC) i0=i; });
+      }
+      if(i0>=0) ACC_IDX=i0;
+    }
     if(DATOS) renderAccion();
   } else {
     $("vista-accion").innerHTML="";
-    if(modo==="cuentas" && DATOS) renderLista();
+    if(modo==="cuentas" && DATOS){ renderLista(); renderDet(); }
     if(modo==="ordenes") renderOrdenesGlob();
+    if(modo==="term") renderTermGlob();
   }
 }
 document.getElementById("tab-cuentas").addEventListener("click", function(){ ponerModo("cuentas"); });
 document.getElementById("tab-accion").addEventListener("click", function(){ ponerModo("accion"); });
 document.getElementById("tab-ordenes").addEventListener("click", function(){ ponerModo("ordenes"); });
+document.getElementById("tab-term").addEventListener("click", function(){ ponerModo("term"); });
 
 /* ===== órdenes abiertas de TODAS las cuentas (vigilancia de límites y sobregiro) ===== */
 var ORD_GLOB=null, ORD_SCANEANDO=false;
@@ -1729,6 +1754,65 @@ function renderOrdenesGlob(){
     +(conO.length? html : '<div class="acard"><div class="enplan">✅ No hay órdenes abiertas en ninguna cuenta.</div></div>')
   +'</div>';
   var rb=$("ord-rescan"); if(rb) rb.addEventListener("click", escanearOrdenes);
+}
+
+/* ===== pestaña TERMINAL: historial programático permanente (bitácora cruda de la base).
+   Todo lo que las functions hacen queda ahí (órdenes, precios, escaneos, switch, errores);
+   esta vista lo trae tal cual — JSON completo, listo para copiárselo a una IA. ===== */
+var TERM_N=200, TERM_DATA=null, TERM_CARGANDO=false, TERM_FILTRO="";
+async function cargarTermGlob(){
+  if(TERM_CARGANDO) return;
+  TERM_CARGANDO=true;
+  try{
+    TERM_DATA= location.hash==="#demo"
+      ? { filas:[
+          {cuando:"2026-09-16T22:41:00Z", actor:"jose", accion:"orden_enviada", resultado:"ok",
+            detalle:{alias:"jr-02", orden:{symbol:"SPY",side:"buy",type:"limit",qty:"2",limit_price:"580",time_in_force:"gtc"}, status:200, respuesta:{id:"demo-1234",status:"accepted"}}},
+          {cuando:"2026-09-16T22:40:12Z", actor:"jose", accion:"ordenes_abiertas_escaneadas", resultado:"ok", detalle:{cuentas:39, con_ordenes:2, errores:0}},
+          {cuando:"2026-09-16T22:39:01Z", actor:"jose", accion:"kill_switch", resultado:"ok", detalle:{encendido:true}} ] }
+      : await llamar("terminal",{limite:TERM_N});
+  }catch(e){ TERM_DATA={error:String(e.message||e), filas:[]}; }
+  TERM_CARGANDO=false;
+  if(MODO==="term") renderTermGlob(true);
+}
+function renderTermGlob(yaCargado){
+  var box=$("vista-term"); if(!box) return;
+  if(!TERM_DATA && !yaCargado) cargarTermGlob();
+  var filas=(TERM_DATA&&TERM_DATA.filas)||[];
+  var filtro=TERM_FILTRO.toLowerCase();
+  var vis= filtro? filas.filter(function(r){ return JSON.stringify(r).toLowerCase().indexOf(filtro)>=0; }) : filas;
+  box.innerHTML='<div class="acard" style="max-width:1100px;margin:0 auto">'
+    +'<div class="sec" style="margin-top:0">🖥️ Terminal · todo lo que ha pasado, permanente</div>'
+    +'<div class="sub" style="margin-bottom:10px">La bitácora cruda de la base: cada consulta y orden contra Alpaca (con lo enviado y lo respondido, completo), '
+    +'kill switch, firmas rechazadas, ediciones, cierres de mes y errores. Nada se borra; copiable tal cual para dárselo a una IA.</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">'
+      +'<label class="sub" style="margin:0">Ver últimos</label>'
+      +'<select id="term-n" style="background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:13px;padding:6px 10px">'
+        +[50,200,500,1000,2000].map(function(n){ return '<option value="'+n+'"'+(n===TERM_N?' selected':'')+'>'+n+' registros</option>'; }).join("")
+      +'</select>'
+      +'<input id="term-f" placeholder="filtrar: alias, símbolo, acción…" value="'+escapa(TERM_FILTRO)+'" style="flex:1;min-width:160px;background:var(--input);border:1px solid var(--bd);border-radius:9px;color:var(--crema);font-family:inherit;font-size:13px;padding:6px 10px">'
+      +'<button class="tgo2" id="term-recargar">↻ Recargar</button>'
+      +'<span class="sub" style="margin-left:auto">'+(TERM_DATA? (TERM_DATA.error? '<span style="color:var(--ambar)">'+escapa(TERM_DATA.error)+'</span>' : vis.length+' de '+filas.length+' registros') : '')+'</span>'
+    +'</div>'
+    +'<pre class="term" style="max-height:70vh">'
+      +( !TERM_DATA? '<span class="t-hora">Cargando la bitácora…</span>'
+        : !vis.length? '<span class="t-hora">— sin registros'+(filtro? ' con ese filtro':'')+' —</span>'
+        : vis.map(function(r){
+            var mal=r.resultado && r.resultado!=="ok";
+            return '<span class="'+(mal?'t-sim':'t-res')+'">'+(mal?'✗ '+escapa(r.resultado).toUpperCase():'●')+'</span>'
+              +' <span class="t-hora">['+escapa(String(r.cuando||"").replace("T"," ").slice(0,19))+' UTC]</span>'
+              +' <span class="t-tit">'+escapa(String(r.actor||"")+" · "+String(r.accion||""))+'</span>'
+              +'\n<span class="t-json">'+escapa(JSON.stringify(r.detalle||{}, null, 2))+'</span>';
+          }).join("\n\n") )
+    +'</pre>'
+  +'</div>';
+  var sn=$("term-n"); if(sn) sn.addEventListener("change", function(){ TERM_N=+sn.value; TERM_DATA=null; renderTermGlob(); });
+  var tr=$("term-recargar"); if(tr) tr.addEventListener("click", function(){ TERM_DATA=null; renderTermGlob(); });
+  var tf=$("term-f"); if(tf) tf.addEventListener("input", function(){
+    TERM_FILTRO=tf.value;
+    renderTermGlob(true);
+    var nf=$("term-f"); if(nf){ nf.focus(); nf.setSelectionRange(nf.value.length, nf.value.length); }
+  });
 }
 
 async function cargar(){
