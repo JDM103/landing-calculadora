@@ -267,6 +267,7 @@
   <div class="toolbar">
     <button id="nuevo">➕ Nuevo cliente</button>
     <button id="refrescar" title="Trae los datos frescos de Alpaca. Nunca manda correos a clientes; esos solo salen con el cierre automático de cada mes.">🔄 Actualizar datos</button>
+    <button id="inbox" title="Cambios hechos por los clientes: plan, aportes, claves…">🔔 Cambios<span id="inbox-n" style="display:none;background:var(--rojo);color:#fff;border-radius:999px;font-size:10px;font-weight:800;padding:1px 6px;margin-left:6px"></span></button>
     <button id="priv" title="Modo privacidad: esconde los nombres para pantallazos">👁 Privacidad</button>
     <button id="salir">Salir</button>
     <span class="tot" id="tots"></span>
@@ -802,7 +803,7 @@ function tablaOrd(lista, vacio){
       return '<tr><td class="num" style="font-weight:600">'+o.fecha+'</td><td style="text-align:right;color:var(--crema);font-weight:800">'+o.sym+'</td>'
         +'<td style="text-align:right">'+lado+'</td><td class="num">'+cant+'</td>'
         +'<td class="num">'+(o.px?fmt(o.px):"—")+'</td>'
-        +'<td style="text-align:right;color:var(--gris-sec);font-size:11px">'+o.estado+'</td></tr>';
+        +'<td style="text-align:right;color:'+(ordPendiente(o)?'var(--ambar)':'var(--gris-sec)')+';font-size:11px">'+(ordPendiente(o)? "⏳ "+ordPendiente(o).toLowerCase() : o.estado)+'</td></tr>';
     }).join("")+'</tbody></table></div>';
 }
 async function cargarOrdenes(c){
@@ -1109,18 +1110,27 @@ function payloadOrden(c, r){
 }
 
 /* ===== órdenes abiertas del cliente en Modo acción: detalle + editar/cancelar ===== */
+// Una orden con cancelación (o reemplazo) ya pedida no es "abierta" de verdad: no se
+// puede llenar ni volver a cancelar — se muestra como pendiente y no cuenta al sobregiro.
+function ordPendiente(o){
+  return o.estado==="pending_cancel"? "Cancelación pendiente"
+    : o.estado==="pending_replace"? "Reemplazo pendiente" : null;
+}
 function renderAbiertas(c, abiertas){
   var box=$("acc-abiertas"); if(!box || ACC_ALIAS!==c.alias) return;
   if(!abiertas || !abiertas.length){
     box.innerHTML='<div class="sub">Sin órdenes abiertas en esta cuenta.</div>'; return;
   }
-  // ¿sobregira si se ejecuta todo? compras abiertas vs efectivo de la cuenta
-  var comprasAb=0; abiertas.forEach(function(o){ if(o.lado==="buy") comprasAb+=montoOrden(o); });
+  // ¿sobregira si se ejecuta todo? compras abiertas vs efectivo (las que ya están en
+  // cancelación no pueden llenarse, así que no cuentan)
+  var comprasAb=0, enCanc=0;
+  abiertas.forEach(function(o){ if(ordPendiente(o)){ enCanc++; return; } if(o.lado==="buy") comprasAb+=montoOrden(o); });
   var cashAb=+((c.snap&&c.snap.cash)||0);
   var resumenAb= comprasAb<=0? ""
     : comprasAb>cashAb
       ? '<div class="candado2" style="border-color:rgba(224,82,90,.65)">⚠️ <b style="color:#ff9ea4">SOBREGIRO si se ejecutan:</b> las compras abiertas suman <b>'+fmt(comprasAb)+'</b> y el efectivo es <b>'+fmt(cashAb)+'</b> — faltarían <b style="color:#ff9ea4">'+fmt(comprasAb-cashAb)+'</b>.</div>'
       : '<div class="sub" style="margin-bottom:8px">Si se ejecutan todas las compras abiertas ('+fmt(comprasAb)+') el efectivo alcanza: quedarían <b style="color:var(--menta)">'+fmt(cashAb-comprasAb)+'</b> de '+fmt(cashAb)+'.</div>';
+  if(enCanc) resumenAb+='<div class="sub" style="margin-bottom:8px">⏳ '+enCanc+' en cancelación: ya no pueden llenarse ni cuentan para el sobregiro; desaparecen cuando Alpaca confirme.</div>';
   box.innerHTML=resumenAb+abiertas.map(function(o,i){
     var det=[];
     det.push(o.tipo==="limit"?"LÍMITE a $"+o.lim
@@ -1131,12 +1141,15 @@ function renderAbiertas(c, abiertas){
     det.push("TIF "+String(o.tif||"—").toUpperCase());
     det.push(o.notional? fmt(o.notional) : (o.qty? (+o.qty).toLocaleString("en-US")+" u."+(o.lim?" (≈"+fmt(o.qty*o.lim)+")":""):"—"));
     det.push("desde "+o.fecha);
-    return '<div class="tic">'
+    var pend=ordPendiente(o);
+    return '<div class="tic"'+(pend?' style="opacity:.75"':'')+'>'
       +'<span class="tl '+(o.lado==="buy"?"up":"down")+'">'+(o.lado==="buy"?"COMPRA":"VENTA")+'</span>'
       +'<span class="ts">'+o.sym+'</span>'
       +'<span class="sub" style="flex:1; min-width:140px">'+det.join(" · ")+(o.id?' · <span style="font-size:10px">id '+String(o.id).slice(0,8)+'…</span>':'')+'</span>'
-      +'<button class="tgo2" data-oe="'+i+'">✎ Editar</button>'
-      +'<button class="tgo2" data-oc="'+i+'" style="border-color:var(--rojo); color:#ff9ea4">✕ Cancelar</button>'
+      +(pend
+        ? '<span style="background:rgba(240,180,90,.14);color:var(--ambar);font-size:11px;font-weight:800;border-radius:999px;padding:5px 12px;white-space:nowrap">⏳ '+pend+'</span>'
+        : '<button class="tgo2" data-oe="'+i+'">✎ Editar</button>'
+          +'<button class="tgo2" data-oc="'+i+'" style="border-color:var(--rojo); color:#ff9ea4">✕ Cancelar</button>')
     +'</div>';
   }).join("");
   Array.prototype.forEach.call(box.querySelectorAll("[data-oe]"), function(b){
@@ -1670,12 +1683,12 @@ function ordsDe(alias){
 function ordsTitulo(alias){
   var cu=(ORD_GLOB&&ORD_GLOB.datos.cuentas||[]).filter(function(x){ return x.alias===alias && x.ordenes; })[0];
   if(!cu) return "";
-  return cu.ordenes.map(function(o){ return (o.lado==="buy"?"compra":"venta")+" "+o.sym+" "+o.tipo+(o.lim?" $"+o.lim:"")+" "+(o.tif||""); }).join(" · ");
+  return cu.ordenes.map(function(o){ return (o.lado==="buy"?"compra":"venta")+" "+o.sym+" "+o.tipo+(o.lim?" $"+o.lim:"")+" "+(o.tif||"")+(ordPendiente(o)?" · CANCELÁNDOSE":""); }).join(" · ");
 }
 function montoOrden(o){ return +o.notional || ((+o.qty||0)*((+o.lim)||(+o.stop)||(+o.px)||0)) || 0; }
 function comprometidoDe(alias){
   var o=CACHE_ORD[alias]; if(!o || !o.abiertas) return 0;
-  var t=0; o.abiertas.forEach(function(x){ if(x.lado==="buy") t+=montoOrden(x); });
+  var t=0; o.abiertas.forEach(function(x){ if(x.lado==="buy" && !ordPendiente(x)) t+=montoOrden(x); });
   return t;
 }
 async function escanearOrdenes(silencioso){
@@ -1721,7 +1734,7 @@ function renderOrdenesGlob(){
   conO.forEach(function(cu){
     var c=porAlias[cu.alias]||{};
     var cash= c.snap? +c.snap.cash:0;
-    var comp=0; cu.ordenes.forEach(function(o){ if(o.lado==="buy") comp+=montoOrden(o); });
+    var comp=0; cu.ordenes.forEach(function(o){ if(o.lado==="buy" && !ordPendiente(o)) comp+=montoOrden(o); });
     var riesgo= comp>cash+1;
     if(riesgo) sobre++;
     nOrd+=cu.ordenes.length;
@@ -1736,7 +1749,8 @@ function renderOrdenesGlob(){
         return '<tr><td class="num" style="font-weight:600">'+o.fecha+'</td>'
           +'<td style="text-align:right;color:var(--crema);font-weight:800">'+o.sym+'</td>'
           +'<td style="text-align:right">'+(o.lado==="buy"?'<span class="up">compra</span>':'<span class="down">venta</span>')+'</td>'
-          +'<td style="text-align:right">'+o.tipo+(o.lim?' $'+o.lim:'')+(o.stop?' · stop $'+o.stop:'')+'</td>'
+          +'<td style="text-align:right">'+o.tipo+(o.lim?' $'+o.lim:'')+(o.stop?' · stop $'+o.stop:'')
+            +(ordPendiente(o)?' <span style="color:var(--ambar);font-weight:800">⏳ '+ordPendiente(o).toLowerCase()+'</span>':'')+'</td>'
           +'<td style="text-align:right;text-transform:uppercase">'+(o.tif||"—")+'</td>'
           +'<td class="num">'+fmt(montoOrden(o))+'</td></tr>';
       }).join("")+'</tbody></table></div>'
@@ -1815,6 +1829,74 @@ function renderTermGlob(yaCargado){
   });
 }
 
+/* ===== inbox: lo que los clientes cambiaron (bitácora, actor cliente:*) ===== */
+var INBOX=null;
+function inboxVisto(){ try{ return +(localStorage.getItem("panel_inbox_visto")||0); }catch(e){ return 0; } }
+function inboxAmigable(r){
+  var d=r.detalle||{};
+  if(r.accion==="meta_editada"){
+    var t="✏️ editó su plan"+(d.cambios&&d.cambios.length? " · "+d.cambios.join(", "):"");
+    var ex=[];
+    if(d.antes && d.ahora){
+      if(d.antes.ingreso!==d.ahora.ingreso) ex.push("ingreso meta: "+fmt(+d.antes.ingreso||0)+" → "+fmt(+d.ahora.ingreso||0));
+      if(d.antes.aporte_anual!==d.ahora.aporte_anual) ex.push("aporte anual: "+fmt(+d.antes.aporte_anual||0)+" → "+fmt(+d.ahora.aporte_anual||0));
+    }
+    return {t:t, s:ex.join(" · ")};
+  }
+  if(r.accion==="clave_cambiada") return {t:"🔑 cambió su clave", s:""};
+  if(r.accion==="reset_pedido") return {t:"📧 pidió cambiar su clave", s:""};
+  if(r.accion==="reset_enviado") return {t:"📧 se le envió el link para cambiar la clave", s:""};
+  if(r.accion==="clave_fallida") return {t:"⛔ intentó entrar con clave incorrecta", s:""};
+  if(r.accion==="reporte_visto") return {t:"👀 abrió su dashboard", s:""};
+  return {t:r.accion, s: JSON.stringify(d).slice(0,140)};
+}
+function nombreDeActor(actor){
+  var id=String(actor||"").replace(/^cliente:/,"");
+  var c=(DATOS&&DATOS.clientes||[]).filter(function(x){return x.alias===id;})[0];
+  if(c) return (PRIV?"••••••":String(c.nombre||id))+" ("+(PRIV?"···":id)+")";
+  return PRIV? "••••••" : id;   // reset_pedido llega con el correo, no con el alias
+}
+async function cargarInbox(){
+  try{
+    INBOX= location.hash==="#demo"
+      ? { filas:[{cuando:new Date().toISOString(), actor:"cliente:mv-07", accion:"meta_editada", resultado:"ok",
+          detalle:{cambios:["ingreso","distribucion"], antes:{ingreso:7000,aporte_anual:24000}, ahora:{ingreso:8000,aporte_anual:24000}}}] }
+      : await llamar("terminal",{limite:100, solo_clientes:true});
+  }catch(e){ INBOX={filas:[], error:String(e.message||e)}; }
+  pintarInboxBadge();
+}
+function pintarInboxBadge(){
+  var el=$("inbox-n"); if(!el) return;
+  var v=inboxVisto();
+  var n=((INBOX&&INBOX.filas)||[]).filter(function(r){ return new Date(r.cuando).getTime()>v; }).length;
+  el.style.display= n? "":"none"; el.textContent=n;
+}
+function abrirInbox(){
+  var filas=(INBOX&&INBOX.filas)||[], v=inboxVisto();
+  $("mo-tit").textContent="🔔 Cambios de los clientes";
+  $("mo-cuerpo").innerHTML=
+    (INBOX&&INBOX.error? '<div class="sub" style="color:var(--ambar)">'+escapa(INBOX.error)+'</div>':'')
+    +(filas.length? filas.map(function(r){
+      var a=inboxAmigable(r), nuevo=new Date(r.cuando).getTime()>v;
+      return '<div style="border-bottom:1px solid var(--bd);padding:9px 2px">'
+        +'<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">'
+          +(nuevo?'<span style="background:var(--rojo);border-radius:50%;width:7px;height:7px;flex:0 0 7px;align-self:center"></span>':'')
+          +'<b style="color:var(--crema)">'+escapa(nombreDeActor(r.actor))+'</b>'
+          +'<span>'+escapa(a.t)+'</span>'
+          +'<span class="sub" style="margin-left:auto">'+escapa(String(r.cuando||"").replace("T"," ").slice(0,16))+' UTC</span>'
+        +'</div>'
+        +(a.s?'<div class="sub" style="margin-top:3px">'+escapa(a.s)+'</div>':'')
+      +'</div>';
+    }).join("") : '<div class="sub">Sin cambios de clientes todavía.</div>')
+    +'<div class="sub" style="margin-top:10px">Los cambios que pesan (ingreso, tasa, aporte, distribución, SJC) también van a llegar por correo cuando el dominio quede verificado en Resend. Todo vive además, crudo, en la pestaña 🖥️ Terminal.</div>';
+  $("mo-pie").innerHTML='<button class="no" id="mo-cerrar">Listo</button>';
+  $("modal-orden").classList.add("on");
+  $("mo-cerrar").addEventListener("click", cerrarOrden);
+  try{ localStorage.setItem("panel_inbox_visto", String(Date.now())); }catch(e){ /* sin localStorage el badge no persiste */ }
+  pintarInboxBadge();
+}
+$("inbox").addEventListener("click", abrirInbox);
+
 async function cargar(){
   try{
     DATOS = location.hash==="#demo" ? demo() : await llamar("panel");
@@ -1822,6 +1904,7 @@ async function cargar(){
     renderLista(); renderDet();
     if(MODO==="accion") renderAccion();
     cargarVivo().then(function(){ if(MODO==="accion" && DATOS) renderAccion(); });
+    cargarInbox();
     if(!ORD_GLOB) escanearOrdenes(true);   // llena la columna Órd. en segundo plano
   }catch(e){
     sessionStorage.removeItem("panel_tok");
