@@ -1901,7 +1901,11 @@ async function cargar(){
   try{
     DATOS = location.hash==="#demo" ? demo() : await llamar("panel");
     $("login").style.display="none"; $("app").style.display="";
+    // deep-link desde los correos de aviso: /panel/#cliente=alias abre ese detalle
+    var mCli=location.hash.match(/^#cliente=([A-Za-z0-9\-]+)$/);
+    if(mCli && (DATOS.clientes||[]).some(function(x){ return x.alias===mCli[1]; })) SELECC=mCli[1];
     renderLista(); renderDet();
+    if(mCli && SELECC===mCli[1]){ var dd=$("det"); if(dd) dd.scrollIntoView({behavior:"smooth", block:"start"}); }
     if(MODO==="accion") renderAccion();
     cargarVivo().then(function(){ if(MODO==="accion" && DATOS) renderAccion(); });
     cargarInbox();
