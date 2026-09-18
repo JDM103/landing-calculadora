@@ -14,6 +14,7 @@
  *   META_PIXEL_ID          · opcional, por defecto el píxel InvestorCR
  *   CALENDLY_SIGNING_KEY   · clave de firma del webhook, para no aceptar avisos falsos
  *   META_TEST_EVENT_CODE   · opcional, solo mientras se prueba en "Probar eventos"
+ *   CALENDLY_EVENT_TYPE    · opcional, uuid del tipo de evento de médicos
  *
  * Alta del webhook en Calendly (una sola vez, ver README de la carpeta).
  */
@@ -23,6 +24,11 @@ const crypto = require("crypto");
 
 const GRAPH = "https://graph.facebook.com/v21.0";
 const PIXEL_ID = process.env.META_PIXEL_ID || "2090464615301934";
+
+/* El webhook de Calendly es por usuario, así que llegan TODAS las reservas:
+ * clientes, diagnósticos, apertura de cuenta. Solo la llamada de médicos es la
+ * conversión del anuncio, así que el resto se descarta acá. */
+const EVENT_TYPE_MEDICOS = process.env.CALENDLY_EVENT_TYPE || "83aa89b0-4502-4f3b-8cad-69d665b6d0a0";
 
 const ok = (body) => ({ statusCode: 200, body: JSON.stringify(body) });
 const bad = (code, msg) => ({ statusCode: code, body: JSON.stringify({ error: msg }) });
@@ -108,6 +114,13 @@ exports.handler = async (event) => {
   if (hook.event !== "invitee.created") return ok({ ignorado: hook.event });
 
   const inv = hook.payload || {};
+
+  // Solo la llamada de médicos: las demás reservas no vienen del anuncio.
+  const tipo = String((inv.scheduled_event || {}).event_type || "");
+  if (!tipo.includes(EVENT_TYPE_MEDICOS)) {
+    console.log("Reserva de otro tipo de evento, se ignora:", tipo);
+    return ok({ ignorado: "otro tipo de evento" });
+  }
   const uuid = String(inv.uri || "").match(/invitees\/([0-9a-f-]+)/i);
   if (!uuid) return bad(400, "no vino el uri del invitado");
 

@@ -29,6 +29,7 @@ Site configuration → Environment variables:
 | `CALENDLY_SIGNING_KEY` | la devuelve el paso 3 al crear el webhook | sí |
 | `META_PIXEL_ID` | por defecto `2090464615301934` | no |
 | `META_TEST_EVENT_CODE` | Administrador de eventos → *Probar eventos*; **borrar al terminar la prueba** | no |
+| `CALENDLY_EVENT_TYPE` | uuid del tipo de evento; por defecto el de médicos | no |
 
 El token nunca va en el repo. Solo en Netlify.
 
@@ -70,6 +71,11 @@ Los logs de cada aviso quedan en Netlify → Functions → `calendly-capi`.
 - **No se manda** IP ni las cookies `fbc`/`fbp`: viven en el navegador y el
   webhook no las trae.
 - **`event_time`** es cuándo reservó, no cuándo es la cita.
+- **Solo cuenta la llamada de médicos.** El webhook de Calendly es por usuario,
+  así que llegan todas las reservas (clientes, diagnósticos, apertura de cuenta).
+  La función descarta las que no son del tipo de evento `medicos`
+  (`83aa89b0-4502-4f3b-8cad-69d665b6d0a0`); si no, cada llamada de cliente
+  contaría como conversión del anuncio.
 - Las cancelaciones se ignoran: no son una conversión.
 - Ante un error de Meta la función igual responde 200, para que Calendly no
   reintente y termine duplicando el aviso. El error queda en los logs.
