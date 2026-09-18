@@ -106,7 +106,9 @@ exports.handler = async (event) => {
     ? Buffer.from(event.body || "", "base64").toString("utf8")
     : (event.body || "");
 
-  const clave = process.env.CALENDLY_SIGNING_KEY;
+  // .trim() porque al pegar la clave en Netlify se cuela un salto de línea y
+  // entonces la firma nunca coincide.
+  const clave = (process.env.CALENDLY_SIGNING_KEY || "").trim();
   if (!firmaValida(event.headers["calendly-webhook-signature"], raw, clave)) {
     // Diagnóstico sin exponer la clave: solo su largo y la forma del cuerpo.
     const diag = {
