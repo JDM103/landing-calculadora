@@ -111,11 +111,16 @@ exports.handler = async (event) => {
   const clave = (process.env.CALENDLY_SIGNING_KEY || "").trim();
   if (!firmaValida(event.headers["calendly-webhook-signature"], raw, clave)) {
     // Diagnóstico sin exponer la clave: solo su largo y la forma del cuerpo.
+    const cruda = process.env.CALENDLY_SIGNING_KEY || "";
     const diag = {
+      build: "v4",
       base64: !!event.isBase64Encoded,
       largoCuerpo: raw.length,
       tieneHeader: !!event.headers["calendly-webhook-signature"],
-      largoClave: (clave || "").length
+      largoCrudo: cruda.length,
+      largoLimpio: clave.length,
+      ultimoChar: cruda.length ? cruda.charCodeAt(cruda.length - 1) : null,
+      soloHex: /^[0-9a-f]+$/.test(clave)
     };
     console.warn("Firma inválida:", JSON.stringify(diag));
     return { statusCode: 401, body: JSON.stringify({ error: "firma inválida", diag }) };
