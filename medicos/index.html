@@ -112,7 +112,8 @@
     font-size:28px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35);}
   .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
   .poster-ov .ps{font-size:13px; color:var(--gris); font-weight:400;}
-  .vnota{font-size:14px; line-height:1.55; color:var(--gris); font-weight:400; text-align:center; margin-top:14px;}
+  .vnota{font-size:clamp(16px,3.9vw,18.5px); line-height:1.55; color:var(--crema); font-weight:500; text-align:center; margin-top:16px; text-wrap:balance;}
+  .vnota u{text-decoration:underline; text-decoration-color:var(--menta); text-decoration-thickness:2px; text-underline-offset:4px;}
 
   /* Números */
   .stats{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;}
@@ -276,7 +277,7 @@
         <div class="ps">27 minutos</div>
       </div>
     </div>
-    <p class="vnota">No hace falta verlo para agendar. En la llamada hacemos esto mismo con tus números.</p>
+    <p class="vnota"><u>No hace falta verlo para agendar.</u> En la llamada hacemos esto mismo con tus números.</p>
     <div class="ctarow"><a class="cta" href="#agenda" id="cta-video">Agendar mi llamada · $0</a></div>
   </section>
 
