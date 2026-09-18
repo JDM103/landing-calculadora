@@ -29,10 +29,10 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:300; min-height:100vh; -webkit-font-smoothing:antialiased;}
-  .wrap{width:100%; max-width:680px; margin:0 auto; padding:22px 20px 60px;}
-  .marca{display:block; text-align:center; margin:6px 0 20px;}
-  .marca img{width:130px; max-width:40%; height:auto;}
-  .eyebrow{display:table; margin:0 auto 16px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
+  .wrap{width:100%; max-width:680px; margin:0 auto; padding:14px 20px 60px;}
+  .marca{display:block; text-align:center; margin:0 0 12px;}
+  .marca img{width:84px; max-width:26%; height:auto;}
+  .eyebrow{display:table; margin:0 auto 14px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
     color:var(--menta); background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:5px 14px;}
   h1{font-size:clamp(29px,6.6vw,44px); font-weight:700; line-height:1.1; letter-spacing:-.015em; text-align:center; text-wrap:balance;}
   h1 em, h2 em{color:var(--menta); font-style:normal;}
@@ -50,41 +50,26 @@
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
 
-  /* La oferta, visible al entrar */
-  .otop{margin-top:26px; background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:22px 20px;}
-  .ot-head{display:flex; gap:16px; align-items:center; justify-content:space-between;}
-
-  .ot-que{font-size:16px; line-height:1.45; color:var(--crema); font-weight:400; min-width:0;}
-  .ot-que b{font-weight:700;}
-  .ot-costo{flex:0 0 auto; text-align:center; border:1px solid rgba(99,252,175,.45); border-radius:14px; padding:8px 16px;}
-  .ot-costo .k{display:block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gris);}
-  .ot-costo .v{display:block; font-size:30px; font-weight:700; color:var(--menta); line-height:1.05;}
-  .ot-list{list-style:none; margin-top:18px; display:grid; gap:11px;}
-  .ot-list li{position:relative; padding-left:28px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
+  /* La oferta, visible al entrar: qué me llevo > quién me ayuda > por qué es gratis */
+  .otop{margin-top:22px; background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:22px 20px;}
+  .ot-que{font-size:clamp(17px,4.2vw,19px); line-height:1.4; color:var(--crema); font-weight:500;}
+  .ot-que b{font-weight:700;} .ot-que .free{color:var(--menta); font-weight:700;}
+  .ot-list{list-style:none; margin-top:16px; display:grid; gap:12px;}
+  .ot-list li{position:relative; padding-left:29px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
   .ot-list li b{color:var(--crema); font-weight:700;}
   .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
-  .ot-jose{display:flex; gap:18px; align-items:center;}
-  .ot-jose img{flex:0 0 auto; width:130px; height:168px; border-radius:16px; object-fit:cover; object-position:top center;
-    background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.45), 0 12px 32px rgba(0,0,0,.45);}
-  .ot-jose .jn{font-size:clamp(20px,5vw,24px); font-weight:700; color:var(--crema); line-height:1.15; letter-spacing:-.01em;}
-  .ot-jose .jr{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--menta); margin-top:5px;}
-  .ot-jose .jb{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:8px;}
-  .ot-jose .jb b{color:var(--crema); font-weight:700;}
-  .trayectoria{list-style:none; margin-top:18px; display:grid; gap:11px;}
-  .trayectoria li{position:relative; padding-left:22px; font-size:15.5px; line-height:1.55; color:var(--gris); font-weight:400;}
-  .trayectoria li b{color:var(--crema); font-weight:700;}
-  .trayectoria li::before{content:""; position:absolute; left:4px; top:10px; width:7px; height:7px; border-radius:50%; background:var(--menta);}
-  @media(min-width:560px){ .ot-jose img{width:158px; height:204px;} }
-  .ot-head{margin-top:20px; border-top:1px solid var(--bd); padding-top:18px;}
+  .ot-jose{display:flex; gap:12px; align-items:center; margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .ot-jose img{flex:0 0 auto; width:54px; height:54px; border-radius:50%; object-fit:cover; object-position:top center;
+    background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.5);}
+  .ot-jose .jn{font-size:15.5px; font-weight:700; color:var(--crema); line-height:1.3;}
+  .ot-jose .jb{font-size:13.5px; line-height:1.45; color:var(--gris); font-weight:400; margin-top:2px;}
   .ot-why{margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;}
-  .ot-why b{display:block; font-size:16px; font-weight:700; color:var(--menta); margin-bottom:6px;}
+  .ot-why b{display:block; font-size:15.5px; font-weight:700; color:var(--menta); margin-bottom:6px;}
   .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
-  @media(max-width:430px){ .ot-head{flex-direction:column; align-items:flex-start; gap:12px;} }
 
-  /* El filtro de a quién le sirve la llamada */
-  .filtro{margin-top:20px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:18px;}
-  .filtro .k{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--menta);}
-  .filtro p{font-size:16px; line-height:1.5; color:var(--crema); font-weight:500; margin-top:7px;}
+  /* El filtro, en una línea antes del botón */
+  .filtro{margin-top:22px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400; text-align:center; text-wrap:balance;}
+  .filtro b{color:var(--crema); font-weight:600;}
 
   /* Calculadora de la dispo */
   .dispo{margin-top:34px; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.4); border-radius:20px; padding:24px 20px;}
@@ -225,34 +210,27 @@
 
   <!-- ===== 2 · LA OFERTA, VISIBLE AL ENTRAR (resumen + por qué no tiene costo) ===== -->
   <div class="otop">
+    <div class="ot-que">En una llamada de <b>45 minutos</b>, <span class="free">sin costo</span>:</div>
+    <ul class="ot-list">
+      <li>Armamos tu <b>plan de retiro</b> con tus números.</li>
+      <li>Te acompaño a <b>solicitar tu cuenta de inversión</b> a tu nombre.</li>
+      <li>Te llevás la <b>guía de transferencias del BAC</b>.</li>
+    </ul>
     <div class="ot-jose">
       <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" fetchpriority="high">
       <div>
         <div class="jn">Jose Montero</div>
-        <div class="jr">Fundador de Empowered Investor</div>
-        <div class="jb"><b>11 años</b> gestionando portafolios. Soy quien te va a acompañar en la llamada.</div>
+        <div class="jb">Fundador de Empowered Investor · 11 años gestionando portafolios</div>
       </div>
     </div>
-    <div class="ot-head">
-      <div class="ot-que">Una videollamada de <b>45 minutos</b> conmigo, compartiendo pantalla.</div>
-      <div class="ot-costo"><span class="k">Costo</span><span class="v">$0</span></div>
-    </div>
-    <ul class="ot-list">
-      <li>Tu <b>plan de retiro privado</b>, armado con tus números.</li>
-      <li>Te <b>acompaño a abrir tu cuenta</b> en un bróker regulado de EE.&nbsp;UU., a tu nombre.</li>
-      <li>La <b>plantilla de transferencia del BAC</b>, lista para usar.</li>
-    </ul>
     <div class="ot-why">
       <b>¿Por qué no tiene costo?</b>
-      <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás; la llamada y sus entregables no te obligan a hacerlo.</p>
+      <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás.</p>
     </div>
   </div>
 
   <!-- ===== 3 · EL FILTRO + EL PRIMER BOTÓN ===== -->
-  <div class="filtro">
-    <div class="k">Esta llamada es para vos si</div>
-    <p>Ejercés como médico especialista en Costa Rica y querés destinar parte de tus ingresos a invertir a largo plazo.</p>
-  </div>
+  <p class="filtro">Para <b>especialistas en Costa Rica</b> que quieren destinar parte de sus ingresos a invertir a largo plazo.</p>
 
   <div class="ctarow">
     <a class="cta" href="#agenda" id="cta-top">Agendá mi llamada sin costo →</a>
