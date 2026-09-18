@@ -106,24 +106,18 @@ exports.handler = async (event) => {
     ? Buffer.from(event.body || "", "base64").toString("utf8")
     : (event.body || "");
 
-  // .trim() porque al pegar la clave en Netlify se cuela un salto de línea y
-  // entonces la firma nunca coincide.
+  // .trim() por si al pegar la clave en Netlify se cuela un espacio o un salto
+  // de línea: sin esto la firma no coincidiría nunca y se perderían las agendas.
   const clave = (process.env.CALENDLY_SIGNING_KEY || "").trim();
   if (!firmaValida(event.headers["calendly-webhook-signature"], raw, clave)) {
-    // Diagnóstico sin exponer la clave: solo su largo y la forma del cuerpo.
-    const cruda = process.env.CALENDLY_SIGNING_KEY || "";
-    const diag = {
-      build: "v4",
+    // Nunca se responde con detalle: el diagnóstico va solo a los logs.
+    console.warn("Firma inválida:", JSON.stringify({
       base64: !!event.isBase64Encoded,
       largoCuerpo: raw.length,
       tieneHeader: !!event.headers["calendly-webhook-signature"],
-      largoCrudo: cruda.length,
-      largoLimpio: clave.length,
-      ultimoChar: cruda.length ? cruda.charCodeAt(cruda.length - 1) : null,
-      soloHex: /^[0-9a-f]+$/.test(clave)
-    };
-    console.warn("Firma inválida:", JSON.stringify(diag));
-    return { statusCode: 401, body: JSON.stringify({ error: "firma inválida", diag }) };
+      largoClave: clave.length
+    }));
+    return bad(401, "firma inválida");
   }
 
   let hook;
