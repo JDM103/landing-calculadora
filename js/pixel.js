@@ -15,7 +15,7 @@
   "use strict";
 
   // ⬇⬇ PEGÁ ACÁ EL ID DEL PÍXEL (solo números, lo da el Administrador de eventos de Meta) ⬇⬇
-  var PIXEL_ID = "";
+  var PIXEL_ID = "2090464615301934"; // Pixel InvestorCR
 
   // Sin ID configurado no se carga nada: ni script de Meta, ni requests.
   if (!/^\d{6,}$/.test(PIXEL_ID)) return;
