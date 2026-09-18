@@ -13,7 +13,7 @@
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
 <title>Médicos especialistas · ¿Qué le aporta una dispo al mes a tu retiro?</title>
-<meta name="description" content="Plan de retiro privado, cuenta de inversión abierta en vivo a tu nombre y plantilla de transferencia del BAC lista. Una llamada de 45 minutos para médicos especialistas. Costo: $0.">
+<meta name="description" content="Plan de retiro privado, te acompañamos a abrir tu cuenta de inversión a tu nombre y la plantilla de transferencia del BAC lista. Una llamada de 45 minutos para médicos especialistas. Costo: $0.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
@@ -49,6 +49,28 @@
     border-radius:999px; transition:filter .15s;}
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
+
+  /* La oferta, visible al entrar */
+  .otop{margin-top:26px; background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:22px 20px;}
+  .ot-head{display:flex; gap:16px; align-items:center; justify-content:space-between;}
+  .ot-que{font-size:16px; line-height:1.45; color:var(--crema); font-weight:400; min-width:0;}
+  .ot-que b{font-weight:700;}
+  .ot-costo{flex:0 0 auto; text-align:center; border:1px solid rgba(99,252,175,.45); border-radius:14px; padding:8px 16px;}
+  .ot-costo .k{display:block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gris);}
+  .ot-costo .v{display:block; font-size:30px; font-weight:700; color:var(--menta); line-height:1.05;}
+  .ot-list{list-style:none; margin-top:18px; display:grid; gap:11px;}
+  .ot-list li{position:relative; padding-left:28px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
+  .ot-list li b{color:var(--crema); font-weight:700;}
+  .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
+  .ot-why{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .ot-why b{display:block; font-size:16px; font-weight:700; color:var(--menta); margin-bottom:6px;}
+  .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
+  @media(max-width:430px){ .ot-head{flex-direction:column; align-items:flex-start; gap:12px;} }
+
+  /* El filtro de a quién le sirve la llamada */
+  .filtro{margin-top:18px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:18px;}
+  .filtro .k{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--menta);}
+  .filtro p{font-size:16px; line-height:1.5; color:var(--crema); font-weight:500; margin-top:7px;}
 
   /* Calculadora de la dispo */
   .dispo{margin-top:34px; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.4); border-radius:20px; padding:24px 20px;}
@@ -191,12 +213,29 @@
 <div class="wrap">
   <a class="marca" href="/" aria-label="Ir al inicio"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
-  <!-- ===== 1 · HERO (continúa el hook del anuncio: 1 dispo al mes = ?) ===== -->
+  <!-- ===== 1 · HERO (continúa el hook del anuncio: 1 dispo al mes) ===== -->
   <span class="eyebrow">Solo para médicos especialistas</span>
   <h1>¿Qué le aporta <em>una dispo al mes</em> a tu retiro?</h1>
   <p class="sub"><b>Una sola al mes, invertida</b></p>
 
-  <!-- ===== 2 · LA CUENTA DE LA DISPO ===== -->
+  <!-- ===== 2 · LA OFERTA, VISIBLE AL ENTRAR (resumen + por qué no tiene costo) ===== -->
+  <div class="otop">
+    <div class="ot-head">
+      <div class="ot-que">Una videollamada de <b>45 minutos</b> conmigo, compartiendo pantalla.</div>
+      <div class="ot-costo"><span class="k">Costo</span><span class="v">$0</span></div>
+    </div>
+    <ul class="ot-list">
+      <li>Tu <b>plan de retiro privado</b>, armado con tus números.</li>
+      <li>Te <b>acompaño a abrir tu cuenta</b> en un bróker regulado de EE.&nbsp;UU., a tu nombre.</li>
+      <li>La <b>plantilla de transferencia del BAC</b>, lista para usar.</li>
+    </ul>
+    <div class="ot-why">
+      <b>¿Por qué no tiene costo?</b>
+      <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás; la llamada y sus entregables no te obligan a hacerlo.</p>
+    </div>
+  </div>
+
+  <!-- ===== 3 · LA CUENTA DE LA DISPO ===== -->
   <div class="dispo">
     <div class="tsub">Hacé la cuenta</div>
     <h2>1 dispo al mes = <em id="d-titulo">?</em></h2>
@@ -222,66 +261,13 @@
     </div>
   </div>
 
+  <!-- ===== 4 · CTA ===== -->
   <div class="ctarow">
     <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada · $0</a>
-    <p class="ctanota">45 minutos · Salís con tu plan de retiro y tu cuenta abierta</p>
+    <p class="ctanota">45 minutos por videollamada · Costo $0</p>
   </div>
 
-  <!-- ===== 3 · LA OFERTA ===== -->
-  <section id="oferta">
-    <h2>¿Qué vas a <em>obtener</em>?</h2>
-    <div class="pasos">
-      <div class="paso">
-        <div class="num">1</div>
-        <div><b>Tu plan de retiro privado</b><p>Lo armamos con tus números: cuánto querés recibir por mes, cuánto podés apartar y a qué edad querés dejar las guardias. En la bolsa de EE.&nbsp;UU., con nuestra metodología.</p></div>
-      </div>
-      <div class="paso">
-        <div class="num">2</div>
-        <div><b>Tu cuenta de inversión, abierta en vivo</b><p>La abrimos juntos durante la llamada, en un bróker regulado de EE.&nbsp;UU. y <u>a tu nombre</u>.</p></div>
-      </div>
-      <div class="paso">
-        <div class="num">3</div>
-        <div><b>La plantilla de transferencia internacional del BAC</b><p>Te queda lista con los datos de tu cuenta de inversión, para que mandar la plata sea un trámite corto.</p></div>
-      </div>
-    </div>
-    <div class="reqcosto">
-      <div class="req"><div class="k">Requisito</div><div class="v">Que querás invertir a largo plazo.</div></div>
-      <div class="costo"><div class="k">Costo</div><div class="v">$0</div></div>
-    </div>
-    <div class="ctarow"><a class="cta" href="#agenda" id="cta-oferta">Quiero uno de los 5 espacios</a></div>
-  </section>
-
-  <!-- ===== 4 · LO QUE NO ===== -->
-  <section>
-    <h2>Lo que no vas a encontrar acá</h2>
-    <div class="no-box">
-      <ul>
-        <li><span class="mk">✕</span><span><b>Sin empresas offshore.</b> Nada de Islas Caimán, Islas de Guernsey ni estructuras raras. Bróker regulado en EE.&nbsp;UU., miembro de FINRA y SIPC.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin fondos mancomunados.</b> Tu plata no se mezcla con la de nadie.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin contratos de permanencia</b> ni letra pequeña.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin perder visibilidad.</b> Ves tu cuenta cuando querás, desde tu celular.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin tener que aprender a invertir</b> ni revisar gráficos.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ===== 4b · LA METODOLOGÍA EN VIDEO (opcional, para el que quiere verla antes de agendar) ===== -->
-  <section class="sistema">
-    <h2>¿Querés ver <em>la metodología</em> antes de agendar?</h2>
-    <p class="sub">En este video armo un plan de retiro de $2M de principio a fin.</p>
-    <div class="player" id="ytplayer">
-      <img class="poster" src="/minicurso/poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" loading="lazy">
-      <div class="poster-ov" id="ytplay">
-        <div class="pb">▶</div>
-        <div class="pt">Ver el sistema completo</div>
-        <div class="ps">27 minutos</div>
-      </div>
-    </div>
-    <p class="vnota"><u>No hace falta verlo para agendar.</u> En la llamada hacemos esto mismo con tus números.</p>
-    <div class="ctarow"><a class="cta" href="#agenda" id="cta-video">Agendar mi llamada · $0</a></div>
-  </section>
-
-  <!-- ===== 5 · NÚMEROS ===== -->
+  <!-- ===== 5 · CON QUIÉN VAS A HABLAR ===== -->
   <section>
     <h2>Con quién vas a hablar</h2>
     <div class="stats">
@@ -351,7 +337,45 @@
     </div>
   </section>
 
-  <!-- ===== 7 · SI NO QUERÉS GESTIÓN ===== -->
+  <!-- ===== 7 · LOS ENTREGABLES + EL FILTRO ===== -->
+  <section id="oferta">
+    <h2>¿Qué vas a <em>obtener</em>?</h2>
+    <div class="pasos">
+      <div class="paso">
+        <div class="num">1</div>
+        <div><b>Tu plan de retiro privado</b><p>Lo armamos con tus números: cuánto querés recibir por mes, cuánto podés apartar y a qué edad querés dejar las guardias. En la bolsa de EE.&nbsp;UU., con nuestra metodología.</p></div>
+      </div>
+      <div class="paso">
+        <div class="num">2</div>
+        <div><b>Te acompañamos a abrir tu cuenta</b><p>La solicitud la llenamos juntos durante la llamada, en un bróker regulado de EE.&nbsp;UU. y <u>a tu nombre</u>. La aprobación final la da el bróker.</p></div>
+      </div>
+      <div class="paso">
+        <div class="num">3</div>
+        <div><b>La plantilla de transferencia internacional del BAC</b><p>Te queda lista con los datos de tu cuenta de inversión, para que mandar la plata sea un trámite corto.</p></div>
+      </div>
+    </div>
+    <div class="filtro">
+      <div class="k">Esta llamada es para vos si</div>
+      <p>Ejercés como especialista en Costa Rica y tenés capacidad para destinar parte de tus ingresos a invertir a largo plazo.</p>
+    </div>
+    <div class="ctarow"><a class="cta" href="#agenda" id="cta-oferta">Quiero uno de los 5 espacios</a></div>
+  </section>
+
+  <!-- ===== 8 · LO QUE NO ===== -->
+  <section>
+    <h2>Lo que no vas a encontrar acá</h2>
+    <div class="no-box">
+      <ul>
+        <li><span class="mk">✕</span><span><b>Sin empresas offshore.</b> Nada de Islas Caimán, Islas de Guernsey ni estructuras raras. Bróker regulado en EE.&nbsp;UU., miembro de FINRA y SIPC.</span></li>
+        <li><span class="mk">✕</span><span><b>Sin fondos mancomunados.</b> Tu plata no se mezcla con la de nadie.</span></li>
+        <li><span class="mk">✕</span><span><b>Sin contratos de permanencia</b> ni letra pequeña.</span></li>
+        <li><span class="mk">✕</span><span><b>Sin perder visibilidad.</b> Ves tu cuenta cuando querás, desde tu celular.</span></li>
+        <li><span class="mk">✕</span><span><b>Sin tener que aprender a invertir</b> ni revisar gráficos.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 9 · SI NO QUERÉS GESTIÓN ===== -->
   <section>
     <div class="salida">
       <h2>¿No querés que manejemos tu portafolio?</h2>
@@ -359,13 +383,17 @@
     </div>
   </section>
 
-  <!-- ===== 8 · FAQ ===== -->
+  <!-- ===== 10 · AGENDA (Calendly inline, sin scroll interno) ===== -->
+  <section class="booking" id="agenda">
+    <h2>Agendá tu llamada · <em>$0</em></h2>
+    <p class="sub">45 minutos por videollamada. Son 5 espacios para médicos especialistas. Elegí el día y la hora que te sirvan.</p>
+    <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
+    <a class="calalt" id="calalt" href="https://calendly.com/empoweredinvestor/medicos">¿Se te hace incómodo acá? Abrí el calendario en pantalla completa →</a>
+  </section>
+
+  <!-- ===== 11 · FAQ ===== -->
   <section class="faq">
     <h2>Preguntas que nos hacen los médicos</h2>
-    <details>
-      <summary>¿Por qué cuesta $0?</summary>
-      <p>Porque una parte de los médicos que pasan por la llamada después nos pide que le manejemos el portafolio, y de eso vivimos. Si vos no querés, igual te llevás el plan y la cuenta.</p>
-    </details>
     <details>
       <summary>¿Ustedes pueden sacar plata de mi cuenta?</summary>
       <p>No. La cuenta está a tu nombre y solo vos podés depositar o retirar, siempre hacia una cuenta bancaria que también esté a tu nombre.</p>
@@ -380,12 +408,20 @@
     </details>
   </section>
 
-  <!-- ===== 9 · AGENDA (Calendly inline, sin scroll interno) ===== -->
-  <section class="booking" id="agenda">
-    <h2>Agendá tu llamada · <em>$0</em></h2>
-    <p class="sub">45 minutos por videollamada. Son 5 espacios para médicos especialistas. Elegí el día y la hora que te sirvan.</p>
-    <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
-    <a class="calalt" id="calalt" href="https://calendly.com/empoweredinvestor/medicos">¿Se te hace incómodo acá? Abrí el calendario en pantalla completa →</a>
+  <!-- ===== 12 · LA METODOLOGÍA EN VIDEO (profundización opcional, fuera del camino a la agenda) ===== -->
+  <section class="sistema">
+    <h2>¿Querés ver <em>la metodología</em> en detalle?</h2>
+    <p class="sub">En este video armo un plan de retiro de $2M de principio a fin.</p>
+    <div class="player" id="ytplayer">
+      <img class="poster" src="/minicurso/poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" loading="lazy">
+      <div class="poster-ov" id="ytplay">
+        <div class="pb">▶</div>
+        <div class="pt">Ver el sistema completo</div>
+        <div class="ps">27 minutos</div>
+      </div>
+    </div>
+    <p class="vnota"><u>No hace falta verlo para agendar.</u> En la llamada hacemos esto mismo con tus números.</p>
+    <div class="ctarow"><a class="cta" href="#agenda" id="cta-video">Agendar mi llamada · $0</a></div>
   </section>
 
   <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. Los rendimientos usados son promedios históricos de largo plazo (S&amp;P 500 ~8%, Nasdaq-100 ~14% nominal), ajustados por ~3% de inflación y expresados en dólares de hoy. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo.</p>
