@@ -12,6 +12,8 @@
   gtag('js', new Date());
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
+<!-- Píxel de Meta (el ID vive en /js/pixel.js) -->
+<script src="/js/pixel.js"></script>
 <title>Médicos especialistas · ¿Qué le aporta una dispo al mes a tu retiro?</title>
 <meta name="description" content="Plan de retiro privado, te acompañamos a abrir tu cuenta de inversión a tu nombre y la plantilla de transferencia del BAC lista. Una llamada de 45 minutos para médicos especialistas. Costo: $0.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
@@ -490,7 +492,10 @@
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
 
   ["cta-top","cta-hero","cta-oferta","cta-video"].forEach(function(id){
-    byId(id).addEventListener("click", function(){ track("click_agendar", {origen:id.replace("cta-","")}); });
+    byId(id).addEventListener("click", function(){
+      track("click_agendar", {origen:id.replace("cta-","")});
+      try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(e){}
+    });
   });
 
   // ===== Video de la metodología: el player de YouTube se inyecta al dar play =====
@@ -570,7 +575,7 @@
       } else if(d.event==="calendly.event_scheduled" && !agendado){
         agendado=true;
         track("medicos_llamada_agendada", {utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-        try{ if(typeof fbq==="function") fbq("track","Schedule"); }catch(err){}
+        try{ if(typeof fbq==="function") fbq("track","Schedule",{content_name:"llamada medicos", content_category:UTM.utm_campaign||""}); }catch(err){}
         try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
       }
     });
