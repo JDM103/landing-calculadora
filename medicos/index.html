@@ -63,18 +63,19 @@
   .ot-list li{position:relative; padding-left:28px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
   .ot-list li b{color:var(--crema); font-weight:700;}
   .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
-  .ot-jose{display:flex; gap:18px; align-items:center; padding-bottom:18px; border-bottom:1px solid var(--bd);}
+  .ot-jose{display:flex; gap:18px; align-items:center;}
   .ot-jose img{flex:0 0 auto; width:130px; height:168px; border-radius:16px; object-fit:cover; object-position:top center;
     background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.45), 0 12px 32px rgba(0,0,0,.45);}
   .ot-jose .jn{font-size:clamp(20px,5vw,24px); font-weight:700; color:var(--crema); line-height:1.15; letter-spacing:-.01em;}
   .ot-jose .jr{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--menta); margin-top:5px;}
   .ot-jose .jb{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:8px;}
-  .ot-bio{list-style:none; margin-top:16px; display:grid; gap:9px;}
-  .ot-bio li{position:relative; padding-left:20px; font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400;}
-  .ot-bio li b{color:var(--crema); font-weight:700;}
-  .ot-bio li::before{content:""; position:absolute; left:4px; top:9px; width:6px; height:6px; border-radius:50%; background:var(--menta);}
+  .ot-jose .jb b{color:var(--crema); font-weight:700;}
+  .trayectoria{list-style:none; margin-top:18px; display:grid; gap:11px;}
+  .trayectoria li{position:relative; padding-left:22px; font-size:15.5px; line-height:1.55; color:var(--gris); font-weight:400;}
+  .trayectoria li b{color:var(--crema); font-weight:700;}
+  .trayectoria li::before{content:""; position:absolute; left:4px; top:10px; width:7px; height:7px; border-radius:50%; background:var(--menta);}
   @media(min-width:560px){ .ot-jose img{width:158px; height:204px;} }
-  .ot-head{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .ot-head{margin-top:20px; border-top:1px solid var(--bd); padding-top:18px;}
   .ot-why{margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;}
   .ot-why b{display:block; font-size:16px; font-weight:700; color:var(--menta); margin-bottom:6px;}
   .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
@@ -233,14 +234,9 @@
       <div>
         <div class="jn">Jose Montero</div>
         <div class="jr">Fundador de Empowered Investor</div>
-        <div class="jb">Soy quien te va a acompañar en la llamada.</div>
+        <div class="jb"><b>11 años</b> gestionando portafolios. Soy quien te va a acompañar en la llamada.</div>
       </div>
     </div>
-    <ul class="ot-bio">
-      <li><b>11 años de experiencia</b> en el mercado gestionando portafolios.</li>
-      <li>Durante 4 años formé parte del <b>London Stock Exchange</b>, una de las bolsas de valores más grandes del mundo.</li>
-      <li>Esposo. <b>Papá de tres.</b></li>
-    </ul>
     <div class="ot-head">
       <div class="ot-que">Una videollamada de <b>45 minutos</b> conmigo, compartiendo pantalla.</div>
       <div class="ot-costo"><span class="k">Costo</span><span class="v">$0</span></div>
@@ -299,9 +295,13 @@
     <p class="ctanota">45 minutos por videollamada · Costo $0</p>
   </div>
 
-  <!-- ===== 6 · CON QUIÉN VAS A HABLAR ===== -->
+  <!-- ===== 6 · EXPERIENCIA Y CLIENTES ===== -->
   <section>
-    <h2>Con quién vas a hablar</h2>
+    <h2>Experiencia y clientes</h2>
+    <ul class="trayectoria">
+      <li>Durante 4 años formé parte del <b>London Stock Exchange</b>, una de las bolsas de valores más grandes del mundo.</li>
+      <li>Esposo. <b>Papá de tres.</b></li>
+    </ul>
     <div class="stats">
       <div class="stat"><div class="n">3 de 10</div><div class="t">clientes nuestros son médicos.</div></div>
       <div class="stat"><div class="n">$1MM+</div><div class="t">administrados en cuentas a nombre de cada cliente.</div></div>
