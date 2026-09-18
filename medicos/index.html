@@ -575,7 +575,20 @@
       } else if(d.event==="calendly.event_scheduled" && !agendado){
         agendado=true;
         track("medicos_llamada_agendada", {utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-        try{ if(typeof fbq==="function") fbq("track","Schedule",{content_name:"llamada medicos", content_category:UTM.utm_campaign||""}); }catch(err){}
+        // El mismo id que va a mandar el webhook de Calendly por la API de conversiones,
+        // para que Meta deduplique y no cuente la agenda dos veces. Sale del URI del
+        // invitado: .../scheduled_events/<uuid>/invitees/<uuid>.
+        var eid = "";
+        try{
+          var uri = (d.payload && d.payload.invitee && d.payload.invitee.uri) || "";
+          var m = uri.match(/invitees\/([0-9a-f-]+)/i);
+          if(m) eid = "cal_" + m[1];
+        }catch(err){}
+        try{
+          if(typeof fbq==="function") fbq("track","Schedule",
+            {content_name:"llamada medicos", content_category:UTM.utm_campaign||""},
+            eid ? {eventID:eid} : undefined);
+        }catch(err){}
         try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
       }
     });
