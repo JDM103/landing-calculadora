@@ -62,13 +62,17 @@
   .ot-list li{position:relative; padding-left:28px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
   .ot-list li b{color:var(--crema); font-weight:700;}
   .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
-  .ot-why{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .ot-jose{display:flex; gap:14px; align-items:center; margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .ot-jose img{flex:0 0 auto; width:76px; height:96px; border-radius:12px; object-fit:cover; object-position:top center; background:var(--input);}
+  .ot-jose .jn{font-size:16px; font-weight:700; color:var(--crema);}
+  .ot-jose .jb{font-size:14px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:3px;}
+  .ot-why{margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;}
   .ot-why b{display:block; font-size:16px; font-weight:700; color:var(--menta); margin-bottom:6px;}
   .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
   @media(max-width:430px){ .ot-head{flex-direction:column; align-items:flex-start; gap:12px;} }
 
   /* El filtro de a quién le sirve la llamada */
-  .filtro{margin-top:18px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:18px;}
+  .filtro{margin-top:20px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:18px;}
   .filtro .k{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--menta);}
   .filtro p{font-size:16px; line-height:1.5; color:var(--crema); font-weight:500; margin-top:7px;}
 
@@ -84,6 +88,8 @@
   .e-in{flex:1; min-width:0; width:100%; background:transparent; border:none; color:var(--crema); font-family:inherit; font-weight:700; font-size:22px; padding:0;}
   .e-in:focus{outline:none;}
   .dout{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .dpriv{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:10px;}
+  .dpriv b{color:var(--menta); font-weight:700;}
   .dfrase{font-size:15px; line-height:1.5; color:var(--gris); font-weight:400;}
   .dfrase b{color:var(--crema); font-weight:600;}
   .drows{display:grid; gap:10px; margin-top:12px;}
@@ -106,14 +112,6 @@
   .paso b{display:block; font-size:16px; font-weight:700; color:var(--crema); margin-bottom:4px;}
   .paso p{font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
   .paso p u{color:var(--crema); text-underline-offset:3px;}
-  .reqcosto{display:grid; grid-template-columns:1fr auto; gap:14px; margin-top:14px; align-items:stretch;}
-  @media(max-width:520px){ .reqcosto{grid-template-columns:1fr;} }
-  .req, .costo{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px;}
-  .req .k, .costo .k{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gris);}
-  .req .v{font-size:16px; font-weight:600; color:var(--crema); margin-top:6px; line-height:1.4;}
-  .costo{border-color:rgba(99,252,175,.45); text-align:center; min-width:150px; display:flex; flex-direction:column; justify-content:center;}
-  .costo .v{font-size:40px; font-weight:700; color:var(--menta); line-height:1; margin-top:6px;}
-
   /* Lo que no */
   .no-box{margin-top:18px; background:rgba(85,109,251,.07); border:1px solid rgba(85,109,251,.45); border-radius:16px; padding:8px 18px;}
   .no-box ul{list-style:none;}
@@ -182,6 +180,7 @@
   .salida h2{font-size:clamp(20px,3.6vw,26px);}
   .salida .big{font-size:clamp(19px,4.4vw,24px); line-height:1.4; color:var(--crema); font-weight:500; margin-top:14px; text-wrap:balance;}
   .salida .big em{color:var(--menta); font-style:normal; font-weight:700;}
+  .salida .nota{font-size:14px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:14px; border-top:1px solid var(--bd); padding-top:14px;}
 
   /* FAQ */
   .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; padding:0 18px;}
@@ -221,7 +220,7 @@
   <!-- ===== 2 · LA OFERTA, VISIBLE AL ENTRAR (resumen + por qué no tiene costo) ===== -->
   <div class="otop">
     <div class="ot-head">
-      <div class="ot-que">Una videollamada de <b>45 minutos</b> conmigo, compartiendo pantalla.</div>
+      <div class="ot-que">Una videollamada de <b>45 minutos</b> con <b>Jose Montero</b>, compartiendo pantalla.</div>
       <div class="ot-costo"><span class="k">Costo</span><span class="v">$0</span></div>
     </div>
     <ul class="ot-list">
@@ -229,18 +228,36 @@
       <li>Te <b>acompaño a abrir tu cuenta</b> en un bróker regulado de EE.&nbsp;UU., a tu nombre.</li>
       <li>La <b>plantilla de transferencia del BAC</b>, lista para usar.</li>
     </ul>
+    <div class="ot-jose">
+      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy">
+      <div>
+        <div class="jn">Jose Montero</div>
+        <div class="jb">Fundador de Empowered Investor. 11 años invirtiendo en la bolsa de EE.&nbsp;UU. Soy quien te va a acompañar en la llamada.</div>
+      </div>
+    </div>
     <div class="ot-why">
       <b>¿Por qué no tiene costo?</b>
       <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás; la llamada y sus entregables no te obligan a hacerlo.</p>
     </div>
   </div>
 
-  <!-- ===== 3 · LA CUENTA DE LA DISPO ===== -->
+  <!-- ===== 3 · EL FILTRO + EL PRIMER BOTÓN ===== -->
+  <div class="filtro">
+    <div class="k">Esta llamada es para vos si</div>
+    <p>Ejercés como médico especialista en Costa Rica y querés destinar parte de tus ingresos a invertir a largo plazo.</p>
+  </div>
+
+  <div class="ctarow">
+    <a class="cta" href="#agenda" id="cta-top">Agendá mi llamada sin costo →</a>
+  </div>
+
+  <!-- ===== 4 · LA CUENTA DE LA DISPO (el titular sigue al anuncio; el campo sirve a cualquier aporte) ===== -->
   <div class="dispo">
     <div class="tsub">Hacé la cuenta</div>
     <h2>1 dispo al mes = <em id="d-titulo">?</em></h2>
+    <p class="dpriv"><b>¿Solo hacés privada?</b> Poné el monto que querés invertir cada mes.</p>
     <div class="dgrid">
-      <div class="ecampo"><label for="d-dispo">Lo que te deja una dispo</label><div class="erow"><b>$</b><input id="d-dispo" class="e-in" inputmode="numeric" value="500" aria-label="Lo que te deja una dispo, en dólares"></div></div>
+      <div class="ecampo"><label for="d-dispo">Tu aporte mensual · USD</label><div class="erow"><b>$</b><input id="d-dispo" class="e-in" inputmode="numeric" value="500" aria-label="Tu aporte mensual en dólares"></div></div>
       <div class="ecampo"><label for="d-edad">Tu edad hoy</label><div class="erow"><input id="d-edad" class="e-in" inputmode="numeric" value="35" aria-label="Tu edad hoy"></div></div>
       <div class="ecampo"><label for="d-ret">Edad de retiro</label><div class="erow"><input id="d-ret" class="e-in" inputmode="numeric" value="65" aria-label="Edad de retiro"></div></div>
     </div>
@@ -261,13 +278,13 @@
     </div>
   </div>
 
-  <!-- ===== 4 · CTA ===== -->
+  <!-- ===== 5 · CTA ===== -->
   <div class="ctarow">
     <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada · $0</a>
     <p class="ctanota">45 minutos por videollamada · Costo $0</p>
   </div>
 
-  <!-- ===== 5 · CON QUIÉN VAS A HABLAR ===== -->
+  <!-- ===== 6 · CON QUIÉN VAS A HABLAR ===== -->
   <section>
     <h2>Con quién vas a hablar</h2>
     <div class="stats">
@@ -278,7 +295,7 @@
     </div>
   </section>
 
-  <!-- ===== 6 · TESTIMONIOS: la colega fija + carrusel ===== -->
+  <!-- ===== 7 · TESTIMONIOS: la colega fija + carrusel ===== -->
   <section class="testi">
     <h2>Una colega que ya pasó por acá</h2>
     <div class="tfeat">
@@ -297,7 +314,7 @@
         <img class="photo" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes" loading="lazy">
         <div class="body">
           <div class="qmark">“</div>
-          <p class="quote">A pesar de contar con formación en finanzas, nunca había tenido la oportunidad de involucrarme directamente en la operativa de inversiones en bolsa. Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+          <p class="quote">Me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
           <div class="name">Andrés Reyes</div>
           <div class="role">Senior Vice President, Citibank</div>
         </div>
@@ -306,7 +323,7 @@
         <img class="photo" src="/assets/testimonios/foto-7.webp" alt="Javier Vargas" loading="lazy">
         <div class="body">
           <div class="qmark">“</div>
-          <p class="quote">Hemos trabajado mis inversiones por aproximadamente 3 años y puedo decir que, de todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+          <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante.</p>
           <div class="name">Javier Vargas</div>
           <div class="role">Business Development, TAPP</div>
         </div>
@@ -315,7 +332,7 @@
         <img class="photo" src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza" loading="lazy">
         <div class="body">
           <div class="qmark">“</div>
-          <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+          <p class="quote">Me explicaron los riesgos de tener toda la plata en bancos de Costa Rica, que solo te cubren hasta unos 6 millones de colones. Para alguien como yo, que pasa enredado en el negocio, ese empujón era necesario.</p>
           <div class="name">Ramsés Espinoza</div>
           <div class="role">Founder &amp; CEO, CocoJamboo</div>
         </div>
@@ -324,7 +341,7 @@
         <img class="photo" src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit" loading="lazy">
         <div class="body">
           <div class="qmark">“</div>
-          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y sencilla. Me fue guiando paso a paso durante todo el proceso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones.</p>
+          <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. Me fue guiando paso a paso: abrir la cuenta, transferir el dinero y hacer las inversiones.</p>
           <div class="name">Anne Baudrit</div>
           <div class="role">Advertising Designer, JLL Real Estate</div>
         </div>
@@ -337,7 +354,7 @@
     </div>
   </section>
 
-  <!-- ===== 7 · LOS ENTREGABLES + EL FILTRO ===== -->
+  <!-- ===== 8 · LOS ENTREGABLES ===== -->
   <section id="oferta">
     <h2>¿Qué vas a <em>obtener</em>?</h2>
     <div class="pasos">
@@ -354,14 +371,10 @@
         <div><b>La plantilla de transferencia internacional del BAC</b><p>Te queda lista con los datos de tu cuenta de inversión, para que mandar la plata sea un trámite corto.</p></div>
       </div>
     </div>
-    <div class="filtro">
-      <div class="k">Esta llamada es para vos si</div>
-      <p>Ejercés como especialista en Costa Rica y tenés capacidad para destinar parte de tus ingresos a invertir a largo plazo.</p>
-    </div>
     <div class="ctarow"><a class="cta" href="#agenda" id="cta-oferta">Quiero uno de los 5 espacios</a></div>
   </section>
 
-  <!-- ===== 8 · LO QUE NO ===== -->
+  <!-- ===== 9 · LO QUE NO ===== -->
   <section>
     <h2>Lo que no vas a encontrar acá</h2>
     <div class="no-box">
@@ -375,15 +388,16 @@
     </div>
   </section>
 
-  <!-- ===== 9 · SI NO QUERÉS GESTIÓN ===== -->
+  <!-- ===== 10 · LA GESTIÓN ES OPCIONAL ===== -->
   <section>
     <div class="salida">
-      <h2>¿No querés que manejemos tu portafolio?</h2>
-      <p class="big">Perfecto. Yo perdí 45 minutos.<br>Vos te quedaste con <em>tu plan de retiro</em> y <em>tu cuenta de inversión</em>.</p>
+      <h2>La gestión es <em>opcional</em></h2>
+      <p class="big">Después decidís si querés que gestionemos tus inversiones.<br>La llamada y sus entregables <em>no te obligan a contratar</em>.</p>
+      <p class="nota">Te acompañamos a llenar la solicitud de apertura de tu cuenta; la aprobación final la da el bróker.</p>
     </div>
   </section>
 
-  <!-- ===== 10 · AGENDA (Calendly inline, sin scroll interno) ===== -->
+  <!-- ===== 11 · AGENDA (Calendly inline, sin scroll interno) ===== -->
   <section class="booking" id="agenda">
     <h2>Agendá tu llamada · <em>$0</em></h2>
     <p class="sub">45 minutos por videollamada. Son 5 espacios para médicos especialistas. Elegí el día y la hora que te sirvan.</p>
@@ -391,7 +405,7 @@
     <a class="calalt" id="calalt" href="https://calendly.com/empoweredinvestor/medicos">¿Se te hace incómodo acá? Abrí el calendario en pantalla completa →</a>
   </section>
 
-  <!-- ===== 11 · FAQ ===== -->
+  <!-- ===== 12 · FAQ ===== -->
   <section class="faq">
     <h2>Preguntas que nos hacen los médicos</h2>
     <details>
@@ -408,7 +422,7 @@
     </details>
   </section>
 
-  <!-- ===== 12 · LA METODOLOGÍA EN VIDEO (profundización opcional, fuera del camino a la agenda) ===== -->
+  <!-- ===== 13 · LA METODOLOGÍA EN VIDEO (profundización opcional, fuera del camino a la agenda) ===== -->
   <section class="sistema">
     <h2>¿Querés ver <em>la metodología</em> en detalle?</h2>
     <p class="sub">En este video armo un plan de retiro de $2M de principio a fin.</p>
@@ -452,7 +466,7 @@
   }
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
 
-  ["cta-hero","cta-oferta","cta-video"].forEach(function(id){
+  ["cta-top","cta-hero","cta-oferta","cta-video"].forEach(function(id){
     byId(id).addEventListener("click", function(){ track("click_agendar", {origen:id.replace("cta-","")}); });
   });
   byId("calalt").href = conUtm(CALENDLY);
@@ -486,7 +500,7 @@
       var ok = ap>0 && ed>=18 && rt<=80 && an>=1;
       if(!ok){
         byId("d-titulo").textContent="?";
-        byId("d-frase").innerHTML="Poné lo que te deja una dispo, tu edad y a qué edad te querés retirar.";
+        byId("d-frase").innerHTML="Poné tu aporte mensual, tu edad y a qué edad te querés retirar.";
         ["d-sp-mes","d-nq-mes"].forEach(function(id){ byId(id).innerHTML="—"; });
         ["d-sp-cap","d-nq-cap"].forEach(function(id){ byId(id).textContent=""; });
         return;
@@ -544,7 +558,7 @@
       io.observe(wrap);
     } else { cargar(); }
     // Si tocan un CTA, se carga de una vez para que esté listo al llegar.
-    ["cta-hero","cta-oferta","cta-video"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
+    ["cta-top","cta-hero","cta-oferta","cta-video"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
   })();
 
   // ===== Carrusel de testimonios =====
