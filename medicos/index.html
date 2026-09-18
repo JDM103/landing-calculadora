@@ -53,6 +53,7 @@
   /* La oferta, visible al entrar */
   .otop{margin-top:26px; background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:22px 20px;}
   .ot-head{display:flex; gap:16px; align-items:center; justify-content:space-between;}
+
   .ot-que{font-size:16px; line-height:1.45; color:var(--crema); font-weight:400; min-width:0;}
   .ot-que b{font-weight:700;}
   .ot-costo{flex:0 0 auto; text-align:center; border:1px solid rgba(99,252,175,.45); border-radius:14px; padding:8px 16px;}
@@ -62,10 +63,14 @@
   .ot-list li{position:relative; padding-left:28px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
   .ot-list li b{color:var(--crema); font-weight:700;}
   .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
-  .ot-jose{display:flex; gap:14px; align-items:center; margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
-  .ot-jose img{flex:0 0 auto; width:76px; height:96px; border-radius:12px; object-fit:cover; object-position:top center; background:var(--input);}
-  .ot-jose .jn{font-size:16px; font-weight:700; color:var(--crema);}
-  .ot-jose .jb{font-size:14px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:3px;}
+  .ot-jose{display:flex; gap:18px; align-items:center; padding-bottom:18px; border-bottom:1px solid var(--bd);}
+  .ot-jose img{flex:0 0 auto; width:130px; height:168px; border-radius:16px; object-fit:cover; object-position:top center;
+    background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.45), 0 12px 32px rgba(0,0,0,.45);}
+  .ot-jose .jn{font-size:clamp(20px,5vw,24px); font-weight:700; color:var(--crema); line-height:1.15; letter-spacing:-.01em;}
+  .ot-jose .jr{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.7px; color:var(--menta); margin-top:5px;}
+  .ot-jose .jb{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:8px;}
+  @media(min-width:560px){ .ot-jose img{width:158px; height:204px;} }
+  .ot-head{margin-top:18px;}
   .ot-why{margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;}
   .ot-why b{display:block; font-size:16px; font-weight:700; color:var(--menta); margin-bottom:6px;}
   .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
@@ -219,8 +224,16 @@
 
   <!-- ===== 2 · LA OFERTA, VISIBLE AL ENTRAR (resumen + por qué no tiene costo) ===== -->
   <div class="otop">
+    <div class="ot-jose">
+      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" fetchpriority="high">
+      <div>
+        <div class="jn">Jose Montero</div>
+        <div class="jr">Fundador de Empowered Investor</div>
+        <div class="jb">11 años invirtiendo en la bolsa de EE.&nbsp;UU. Soy quien te va a acompañar en la llamada.</div>
+      </div>
+    </div>
     <div class="ot-head">
-      <div class="ot-que">Una videollamada de <b>45 minutos</b> con <b>Jose Montero</b>, compartiendo pantalla.</div>
+      <div class="ot-que">Una videollamada de <b>45 minutos</b> conmigo, compartiendo pantalla.</div>
       <div class="ot-costo"><span class="k">Costo</span><span class="v">$0</span></div>
     </div>
     <ul class="ot-list">
@@ -228,13 +241,6 @@
       <li>Te <b>acompaño a abrir tu cuenta</b> en un bróker regulado de EE.&nbsp;UU., a tu nombre.</li>
       <li>La <b>plantilla de transferencia del BAC</b>, lista para usar.</li>
     </ul>
-    <div class="ot-jose">
-      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy">
-      <div>
-        <div class="jn">Jose Montero</div>
-        <div class="jb">Fundador de Empowered Investor. 11 años invirtiendo en la bolsa de EE.&nbsp;UU. Soy quien te va a acompañar en la llamada.</div>
-      </div>
-    </div>
     <div class="ot-why">
       <b>¿Por qué no tiene costo?</b>
       <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás; la llamada y sus entregables no te obligan a hacerlo.</p>
