@@ -117,7 +117,7 @@
   </div>
 
   <nav class="toc">
-    <a href="#regla">La regla</a><a href="#hoy">Así está hoy</a><a href="#porque">Por qué funciona</a><a href="#nasdaq">Nasdaq</a><a href="#sp">S&amp;P 500</a><a href="#mallas">¿Números a dedo?</a><a href="#calculos">Los cálculos</a><a href="#fortalezas">Fortalezas y límites</a><a href="#datos">Descargar y comprobar</a>
+    <a href="#regla">La regla</a><a href="#hoy">Así está hoy</a><a href="#porque">Por qué funciona</a><a href="#mallas">¿Números a dedo?</a><a href="#nasdaq">Nasdaq</a><a href="#sp">S&amp;P 500</a><a href="#calculos">Los cálculos</a><a href="#fortalezas">Fortalezas y límites</a><a href="#datos">Descargar y comprobar</a>
   </nav>
 
   <section id="regla">
@@ -147,6 +147,14 @@
     <p>Los mercados suben la mayor parte del tiempo, pero cada tanto viven una caída larga: 2000 a 2002 (el Nasdaq perdió 81%), 2008 (perdió 42% en un año), 2022 (perdió 33%). Esas caídas no ocurren en un día. Empiezan, se confirman, y siguen durante meses. La regla no adivina cuándo empiezan; detecta cuando ya están confirmadas y se hace a un lado.</p>
     <figure><img src="img/qqq_anual.png" alt="Barras por año: Nasdaq sin regla en gris y con la regla en verde. La regla convierte los años de -43%, -33%, -37%, -42% y -33% en años de +3%, +4%, +2%, -5% y -9%."><figcaption><b>Año por año.</b> Los cinco años rojos grandes del Nasdaq (2000, 2001, 2002, 2008, 2022) quedaron entre +4% y -9% con la regla. El precio: en los años de rebote fuerte (2003, 2009, 2020, 2023) la regla entra tarde y se queda con la mitad o dos tercios de la subida, y en los años de sierra (2005, 2011, 2015, 2016) pierde entre 5% y 8% mientras el índice sube algo.</figcaption></figure>
     <div class="nota warn"><p><b>Lo que hay que tener claro antes de seguir.</b> Este edge no gana al Nasdaq todos los años, ni todas las décadas. Gana cuando hay una caída larga y paga una prima el resto del tiempo. Entre 2010 y 2019 no hubo ninguna caída larga, y la regla rindió 11% anual contra 18% del Nasdaq. Si eso te parece inaceptable, este no es tu producto. Más abajo están todos los números, incluidos los malos.</p></div>
+  </section>
+
+  <section id="mallas">
+    <h2>“¿Y si esos números están escogidos a dedo?” Las mallas</h2>
+    <p>Es la pregunta correcta. Cualquiera puede encontrar una combinación de parámetros que se vea bien en el pasado. Por eso no probamos una regla: probamos <b>960 versiones</b> de la misma idea. Promedios de 100, 150, 200 y 250 días; franjas de 1%, 2%, 3% y 5%; máximos de 26, 39 y 52 semanas; salidas a -8%, -10%, -12%, -15% y -18%; reentradas a -2%, -4%, -6% y -8%. Si solo unas pocas funcionan, es suerte. Si casi todas funcionan, hay algo real.</p>
+    <figure><img src="img/qqq_malla.png" alt="Nube de las 960 versiones de la regla en QQQ, todas por encima del Nasdaq sin regla, y dos mapas de calor del Sharpe por parámetros."><figcaption><b>Nasdaq: las 960 versiones, y el Sharpe promedio según cada par de parámetros.</b> El 100% de las versiones supera al Nasdaq sin regla. Los mapas muestran una meseta, no un pico: casi cualquier celda da entre 0.55 y 0.62. Lo único que empeora claramente es el promedio de 100 días (fila de arriba) y salir con caídas de solo 8% o 10% (dos filas de arriba a la derecha). Nuestra regla (200, 3%, 39, -12, -6) está en la parte alta de la meseta, no aislada.</figcaption></figure>
+    <figure><img src="img/spy_malla.png" alt="Lo mismo para SPY: 71% de las versiones superan al S&P sin regla."><figcaption><b>S&amp;P 500: el 71% de las 960 versiones supera al índice sin regla</b>, y las que no lo hacen son casi todas las del promedio de 100 días. Mismo patrón que en el Nasdaq con los mismos parámetros, que es la mejor señal de que la idea no está ajustada a la historia de un solo activo.</figcaption></figure>
+    <p><b>Dos pruebas más que hicimos.</b> Primero, elegimos los parámetros usando solo datos hasta 2009 y los aplicamos a 2010-2026 sin tocarlos: la regla dio Sharpe 0.76 en QQQ y 0.77 en SPY contra 0.87 y 0.78 del índice, con un tercio menos de caída. Segundo, remuestreamos la historia 5.000 veces en bloques de un año: la regla supera al Nasdaq en el 90% de las historias alternativas y al S&amp;P en el 84%. No es certeza; es consistencia.</p>
   </section>
 
   <section id="nasdaq">
@@ -190,13 +198,6 @@
     <p>Contra la mezcla fija de igual volatilidad (64% SPY, 36% letras): la mezcla rindió 8.3% con caída de 38%; la regla, 10.6% con caída de 21%.</p>
   </section>
 
-  <section id="mallas">
-    <h2>“¿Y si esos números están escogidos a dedo?” Las mallas</h2>
-    <p>Es la pregunta correcta. Cualquiera puede encontrar una combinación de parámetros que se vea bien en el pasado. Por eso no probamos una regla: probamos <b>960 versiones</b> de la misma idea. Promedios de 100, 150, 200 y 250 días; franjas de 1%, 2%, 3% y 5%; máximos de 26, 39 y 52 semanas; salidas a -8%, -10%, -12%, -15% y -18%; reentradas a -2%, -4%, -6% y -8%. Si solo unas pocas funcionan, es suerte. Si casi todas funcionan, hay algo real.</p>
-    <figure><img src="img/qqq_malla.png" alt="Nube de las 960 versiones de la regla en QQQ, todas por encima del Nasdaq sin regla, y dos mapas de calor del Sharpe por parámetros."><figcaption><b>Nasdaq: las 960 versiones, y el Sharpe promedio según cada par de parámetros.</b> El 100% de las versiones supera al Nasdaq sin regla. Los mapas muestran una meseta, no un pico: casi cualquier celda da entre 0.55 y 0.62. Lo único que empeora claramente es el promedio de 100 días (fila de arriba) y salir con caídas de solo 8% o 10% (dos filas de arriba a la derecha). Nuestra regla (200, 3%, 39, -12, -6) está en la parte alta de la meseta, no aislada.</figcaption></figure>
-    <figure><img src="img/spy_malla.png" alt="Lo mismo para SPY: 71% de las versiones superan al S&P sin regla."><figcaption><b>S&amp;P 500: el 71% de las 960 versiones supera al índice sin regla</b>, y las que no lo hacen son casi todas las del promedio de 100 días. Mismo patrón que en el Nasdaq con los mismos parámetros, que es la mejor señal de que la idea no está ajustada a la historia de un solo activo.</figcaption></figure>
-    <p><b>Dos pruebas más que hicimos.</b> Primero, elegimos los parámetros usando solo datos hasta 2009 y los aplicamos a 2010-2026 sin tocarlos: la regla dio Sharpe 0.76 en QQQ y 0.77 en SPY contra 0.87 y 0.78 del índice, con un tercio menos de caída. Segundo, remuestreamos la historia 5.000 veces en bloques de un año: la regla supera al Nasdaq en el 90% de las historias alternativas y al S&amp;P en el 84%. No es certeza; es consistencia.</p>
-  </section>
 
   <section id="calculos">
     <h2>Los cálculos, paso a paso</h2>
