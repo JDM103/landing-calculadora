@@ -49,6 +49,7 @@
     cursor:pointer; font-family:inherit; }
   .seg button.on{ background:var(--menta); color:var(--tinta); }
   .segph{ flex-wrap:wrap; } .segph button{ padding:6px 9px; font-size:12px; }
+  .segph button small{ font-size:10px; font-weight:600; opacity:.7; margin-left:1px; }
   .btn{ background:var(--menta); color:var(--tinta); border:none; border-radius:999px; padding:12px 22px; font-size:15px;
     font-weight:800; cursor:pointer; font-family:inherit; }
   .btn:hover{ filter:brightness(1.05); } .btn:disabled{ opacity:.5; cursor:default; }
@@ -277,7 +278,7 @@
   </div>
   <!-- ===== 2. HISTÓRICO (con fases) ===== -->
   <div class="tsub">El laboratorio: tu plan sobre la historia real, año por año</div>
-  <p class="note">Un ejemplo <b>real</b> de la historia: cómo habría crecido tu plan aportando el requerido/mes. Movés el <b>desde/hasta</b>, el <b>capital inicial</b> y elegís las <b>3 fases</b> (arranque · intermedia · llegada), y el gráfico se recalcula. La <b class="hl">línea verde</b> es tu plan; la punteada es lo que pusiste.</p>
+  <p class="note">Un ejemplo <b>real</b> de la historia: cómo habría crecido tu plan aportando el requerido/mes. Movés el <b>desde/hasta</b>, el <b>capital inicial</b> y elegís las <b>3 fases</b> (arranque · intermedia · llegada), y el gráfico se recalcula. En las fases 1 y 2 podés usar el S&amp;P 500 apalancado (<b>SSO</b> 2×, <b>UPRO</b> 3×) o el Nasdaq (<b>QLD</b> 2×, <b>TQQQ</b> 3×). La <b class="hl">línea verde</b> es tu plan; la punteada es lo que pusiste.</p>
   <div class="chart-wrap"><canvas id="hist-chart"></canvas></div>
   <div class="legend" style="margin-top:6px"><span style="color:var(--gris-sec);font-size:12px">Bajo la curva, en qué activo está tu plata:</span>
     <span><i id="hl-cL" style="background:var(--rojo)"></i> Fase 1 (<b id="hl-L">TQQQ</b>)</span>
@@ -298,8 +299,8 @@
       <div class="field"><label>Diferencia (años) · fija el desde</label><div class="row"><b class="big" id="v-diff">32</b><div class="steps"><button class="stp" data-diff="1">▲</button><button class="stp" data-diff="-1">▼</button></div></div></div>
     </div>
     <div class="grid" style="margin-top:10px">
-      <div class="field"><label>Fase 1 · arranque</label><div class="row"><div class="seg segph" id="seg-f1"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ" class="on">TQQQ</button></div></div></div>
-      <div class="field"><label>Fase 2 · intermedia</label><div class="row"><div class="seg segph" id="seg-f2"><button data-a="SPY" class="on">SPY</button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD</button><button data-a="TQQQ">TQQQ</button></div></div></div>
+      <div class="field"><label>Fase 1 · arranque</label><div class="row"><div class="seg segph" id="seg-f1"><button data-a="SPY">SPY</button><button data-a="SSO">SSO <small>2×</small></button><button data-a="UPRO">UPRO <small>3×</small></button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD <small>2×</small></button><button data-a="TQQQ" class="on">TQQQ <small>3×</small></button></div></div></div>
+      <div class="field"><label>Fase 2 · intermedia</label><div class="row"><div class="seg segph" id="seg-f2"><button data-a="SPY" class="on">SPY</button><button data-a="SSO">SSO <small>2×</small></button><button data-a="UPRO">UPRO <small>3×</small></button><button data-a="QQQ">QQQ</button><button data-a="QLD">QLD <small>2×</small></button><button data-a="TQQQ">TQQQ <small>3×</small></button></div></div></div>
       <div class="field"><label>Fase 3 · llegada</label><div class="row"><div class="seg segph" id="seg-f3"><button data-a="SPY">SPY</button><button data-a="QQQ">QQQ</button><button data-a="SJC" class="on">SJC</button></div></div></div>
       <div class="field" id="field-sjc"><label>Tasa Fase 3 · SJC (% anual)</label><div class="row"><b class="big" id="v-sjc">8%</b><div class="steps"><button class="stp" data-s="sjc" data-d="1">▲</button><button class="stp" data-s="sjc" data-d="-1">▼</button></div></div></div>
     </div>
@@ -411,38 +412,50 @@
   <p class="note">La lectura profunda de los papers, con citas textuales y preguntas frecuentes respondidas, está en <a href="/FreedomFunds/" style="color:var(--menta)">investorcr.com/FreedomFunds</a>.</p>
 
   <div class="tsub" style="margin-top:26px">Los planes de la casa. Tocá uno y mirá cómo hubiera sido en la historia</div>
-  <p class="note">Las mejores combinaciones según el estudio (probabilidad en la era 1990–2025, con el aporte del caso base; <b>años a la meta</b>: típico = la mitad de los mundos llega antes; pesimista = el 90% llega antes de eso). Un click lo carga en el gráfico histórico de arriba para moverlo a mano.</p>
+  <p class="note">Las mejores combinaciones según el estudio (probabilidad en la era 1990–2025, con el aporte del caso base, 5,000 futuros por plan; <b>años a la meta</b>: típico = la mitad de los mundos llega antes; pesimista = el 90% llega antes de eso). Un click lo carga en el gráfico histórico de arriba para moverlo a mano. Los dos últimos usan el <b>S&amp;P 500 apalancado</b> (SSO 2×, UPRO 3×): la fase intermedia con SSO sube la mediana sin bajar la probabilidad, a cambio de una caída más honda antes de la meta; y arrancar con UPRO en vez de TQQQ cuesta unos 14 puntos de probabilidad y 7 años, porque el S&amp;P crece menos que el Nasdaq y el 3× amplifica esa diferencia.</p>
   <div class="perfiles">
     <div class="perfil"><h3>⚖️ El punto medio <span style="font-size:11px;color:var(--gris-sec)">(default de la casa)</span></h3>
       <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/70</b></div>
-      <div class="line"><span>Prob. de llegar</span><b>92.6%</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>92.9%</b></div>
       <div class="line"><span>Años a la meta (típico / pesimista)</span><b>19 / 32</b></div>
-      <div class="line"><span>Peor 1% · Mediana</span><b>$156k · $10.8M</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$126k · $11.0M</b></div>
       <button class="btn" data-preset="fpf">Ver este plan</button></div>
     <div class="perfil"><h3>🛡️ No quiero sorpresas</h3>
       <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 40/100/70</b></div>
-      <div class="line"><span>Prob. de llegar</span><b>90.6%</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>90.1%</b></div>
       <div class="line"><span>Años a la meta (típico / pesimista)</span><b>23 / 35</b></div>
-      <div class="line"><span>Peor 1% · Mediana</span><b>$331k · $8.0M</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$277k · $8.1M</b></div>
       <button class="btn" data-preset="sorpresas">Ver este plan</button></div>
     <div class="perfil"><h3>🚀 Lo antes posible</h3>
       <div class="line"><span>Plan</span><b>TQQQ → QQQ → SJC · 70/100/70</b></div>
-      <div class="line"><span>Prob. de llegar</span><b>93.7%</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>94.2%</b></div>
       <div class="line"><span>Años a la meta (típico / pesimista)</span><b>18 / 30</b></div>
-      <div class="line"><span>Peor 1% · Mediana</span><b>$132k · $15.3M</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$109k · $15.4M</b></div>
       <button class="btn" data-preset="antes">Ver este plan</button></div>
     <div class="perfil"><h3>✋ Sin 3× por regla propia</h3>
       <div class="line"><span>Plan</span><b>QLD (2×) → SPY → SJC · 70/100/70</b></div>
-      <div class="line"><span>Prob. de llegar</span><b>89.6%</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>89.1%</b></div>
       <div class="line"><span>Años a la meta (típico / pesimista)</span><b>23 / &gt;35</b></div>
-      <div class="line"><span>Peor 1% · Mediana</span><b>$230k · $8.2M</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$203k · $8.2M</b></div>
       <button class="btn" data-preset="qld">Ver este plan</button></div>
     <div class="perfil"><h3>🏁 Blindar la llegada</h3>
       <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/100</b></div>
-      <div class="line"><span>Prob. de llegar</span><b>92.8%</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>93.1%</b></div>
       <div class="line"><span>Años a la meta (típico / pesimista)</span><b>19 / 32</b></div>
-      <div class="line"><span>Peor 1% · Mediana</span><b>$156k · $10.3M</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$126k · $10.4M</b></div>
       <button class="btn" data-preset="blindar">Ver este plan</button></div>
+    <div class="perfil"><h3>🔁 Intermedia con 2× del S&amp;P</h3>
+      <div class="line"><span>Plan</span><b>TQQQ → SSO (2×) → SJC · 70/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>91.8%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>18 / 33</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$91k · $14.2M</b></div>
+      <button class="btn" data-preset="mixsso">Ver este plan</button></div>
+    <div class="perfil"><h3>🏛️ Solo S&amp;P 500, con 3×</h3>
+      <div class="line"><span>Plan</span><b>UPRO (3×) → SPY → SJC · 70/100/70</b></div>
+      <div class="line"><span>Prob. de llegar</span><b>78.8%</b></div>
+      <div class="line"><span>Años a la meta (típico / pesimista)</span><b>26 / &gt;35</b></div>
+      <div class="line"><span>Peor 1% · Mediana</span><b>$87k · $6.6M</b></div>
+      <button class="btn" data-preset="upro">Ver este plan</button></div>
   </div>
   <div class="card" style="margin-top:16px">
     <div class="bloquetit">La comprobación: el apalancamiento dinámico es lo que compra la probabilidad</div>
@@ -505,26 +518,38 @@
       <p class="note" style="margin-top:10px"><b>Dónde funciona y dónde no:</b> el filtro rinde donde el sistema lo usa: <b>sobre el Nasdaq apalancado</b>. Aplicado al S&amp;P sin apalancar casi no cambia el retorno (10.9% con y sin filtro). Y como antes de 1971 el Nasdaq no existía, para la prueba del siglo completo calculamos la señal sobre el propio S&amp;P: esa versión protege las peores rachas pero baja la probabilidad de llegar, así que el filtro se usa solo donde tiene su ventaja. Su costo es conocido: recorta el techo de los mejores mundos ($60M → $33M) a cambio de multiplicar el piso de los peores.</p>
     </div>
     <div class="tsub" style="margin-top:26px">Los planes de la casa, con la red puesta</div>
-    <p class="note">Los planes de la sección 3 son <b>sin timing</b>. Estos son los mismos, con el filtro semanal encima (era 1990–2025, mismo aporte). Tocá uno y compará en el espejo de arriba.</p>
+    <p class="note">Los planes de la sección 3 son <b>sin timing</b>. Estos son los mismos, con el filtro semanal encima (era 1990–2025, mismo aporte). Tocá uno y compará en el espejo de arriba. Con la red puesta, la intermedia en <b>SSO</b> pasa a ser el plan de mayor mediana de la casa; y el plan <b>solo S&amp;P</b> con UPRO se vuelve viable (de 79% a 99%), aunque sigue llegando unos 5 años después que el de Nasdaq.</p>
     <div class="perfiles">
       <div class="perfil"><h3>⚖️ El punto medio + red</h3>
         <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 70/100/70 + filtro</b></div>
         <div class="line"><span>Prob. de llegar</span><b>100%</b></div>
         <div class="line"><span>Años a la meta (típico / pesimista)</span><b>18 / 24</b></div>
-        <div class="line"><span>Peor 1% · Mediana</span><b>$4.7M · $12.8M</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$4.6M · $12.7M</b></div>
         <button class="btn" data-preset="fpftim">Ver este plan</button></div>
       <div class="perfil"><h3>🛡️ No quiero sorpresas + red</h3>
         <div class="line"><span>Plan</span><b>TQQQ → SPY → SJC · 40/100/70 + filtro</b></div>
         <div class="line"><span>Prob. de llegar</span><b>99.9%</b></div>
         <div class="line"><span>Años a la meta (típico / pesimista)</span><b>22 / 27</b></div>
-        <div class="line"><span>Peor 1% · Mediana</span><b>$3.7M · $9.4M</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$3.6M · $9.4M</b></div>
         <button class="btn" data-preset="sorpresastim">Ver este plan</button></div>
       <div class="perfil"><h3>🚀 Lo antes posible + red</h3>
         <div class="line"><span>Plan</span><b>TQQQ → QQQ → SJC · 70/100/70 + filtro</b></div>
         <div class="line"><span>Prob. de llegar</span><b>100%</b></div>
         <div class="line"><span>Años a la meta (típico / pesimista)</span><b>17 / 22</b></div>
-        <div class="line"><span>Peor 1% · Mediana</span><b>$5.7M · $18.9M</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$5.3M · $18.6M</b></div>
         <button class="btn" data-preset="antestim">Ver este plan</button></div>
+      <div class="perfil"><h3>🔁 Intermedia con 2× del S&amp;P + red</h3>
+        <div class="line"><span>Plan</span><b>TQQQ → SSO (2×) → SJC · 70/100/70 + filtro</b></div>
+        <div class="line"><span>Prob. de llegar</span><b>100%</b></div>
+        <div class="line"><span>Años a la meta (típico / pesimista)</span><b>17 / 22</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$5.7M · $20.5M</b></div>
+        <button class="btn" data-preset="mixssotim">Ver este plan</button></div>
+      <div class="perfil"><h3>🏛️ Solo S&amp;P 500, con 3× + red</h3>
+        <div class="line"><span>Plan</span><b>UPRO (3×) → SPY → SJC · 70/100/70 + filtro</b></div>
+        <div class="line"><span>Prob. de llegar</span><b>99.3%</b></div>
+        <div class="line"><span>Años a la meta (típico / pesimista)</span><b>23 / 29</b></div>
+        <div class="line"><span>Peor 1% · Mediana</span><b>$2.7M · $8.8M</b></div>
+        <button class="btn" data-preset="uprotim">Ver este plan</button></div>
     </div>
   </div>
 
@@ -588,6 +613,8 @@
         <tr><td style="text-align:left">"Quiero retirarme lo más joven posible"</td><td style="text-align:left">Lo antes posible + red</td><td style="text-align:left">TQQQ→QQQ→SJC 70/100/70 + filtro</td></tr>
         <tr><td style="text-align:left">"Con 3× no me meto"</td><td style="text-align:left">Sin 3× por regla propia</td><td style="text-align:left">QLD→SPY→SJC 70/100/70 (+ filtro)</td></tr>
         <tr><td style="text-align:left">"Cuando llegue, no quiero volver a arriesgar"</td><td style="text-align:left">Blindar la llegada</td><td style="text-align:left">TQQQ→SPY→SJC 70/100/100</td></tr>
+        <tr><td style="text-align:left">"Quiero que la fase intermedia también empuje"</td><td style="text-align:left">Intermedia con 2× del S&amp;P + red</td><td style="text-align:left">TQQQ→SSO→SJC 70/100/70 + filtro</td></tr>
+        <tr><td style="text-align:left">"No quiero depender del Nasdaq"</td><td style="text-align:left">Solo S&amp;P 500, con 3× + red</td><td style="text-align:left">UPRO→SPY→SJC 70/100/70 + filtro</td></tr>
       </tbody>
     </table></div>
   </div>
@@ -595,7 +622,7 @@
     <div class="bloquetit">Cómo se calculó</div>
     <p class="note" style="margin:6px 0 6px"><b>Los futuros:</b> cada camino de 35 años se arma pegando <b>bloques de 48 meses consecutivos</b> de la historia real (block bootstrap). Eso preserva los racimos de crisis — 2000–02 entra completo — y permite mundos <b>peores que la historia</b> (dos punto-com seguidas). Los sorteos son <b>los mismos para todos los planes</b>: cuando decimos "A le gana a B en el 97% de los mundos", es con la misma historia para ambos.</p>
     <p class="note" style="margin:0 0 6px"><b>Los números que ves:</b> probabilidad = % de mundos donde juntás tu freedom point antes de la edad de retiro. Años a la meta: <b>optimista</b> = el 25% de los mundos llega antes; <b>típico</b> = la mitad; <b>pesimista</b> = el 90% llega antes de eso. Las caídas se miden <b>contra tu meta</b> (y no contra el pico de la cuenta), porque esa es la que puede retrasar tu retiro.</p>
-    <p class="note" style="margin:0 0 6px"><b>Los costos están adentro:</b> SWIFT $65/mes, setup $2,000, 1% anual sobre la parte invertida en mercado. Los apalancados (QLD/TQQQ) se simulan con <b>rebalanceo diario</b>, con el costo del decay ya incluido en los números. En la prueba de siglo, además: financiamiento flotante (T-bill + 0.6% + 0.95%) y todo <b>deflactado por CPI</b>.</p>
+    <p class="note" style="margin:0 0 6px"><b>Los costos están adentro:</b> SWIFT $65/mes, setup $2,000, 1% anual sobre la parte invertida en mercado. Los apalancados (SSO/UPRO sobre el S&amp;P 500, QLD/TQQQ sobre el Nasdaq) se simulan con <b>rebalanceo diario</b> antes de su listado (financiamiento 4.5% + 0.95% de gasto) y usan el ETF real después, con el costo del decay ya incluido en los números. En la prueba de siglo, además: financiamiento flotante (T-bill + 0.6% + 0.95%) y todo <b>deflactado por CPI</b>.</p>
     <p class="note" style="margin:0"><b>Réplica disponible:</b> datos públicos (Ken French/CRSP, FRED), scripts documentados. Cualquier tercero puede reproducir cada número.</p>
   </div>
 
@@ -718,7 +745,7 @@
     <h2>Conclusión final</h2>
     <p class="note" style="font-size:14.5px; margin:0 0 6px">Recorriste el camino completo: tu meta, lo que cuesta el plan clásico, el sistema, el filtro, el estudio y las preguntas difíciles. Lo que queda en pie es el <b style="color:var(--menta)">Timing Freedom Point Fund</b>: el plan que maneja el riesgo desde tu meta, asegura lo ganado con candado, se apalanca cuando el golpe casi no duele, y usa el filtro semanal como seguro. En los tres futuros posibles llega más veces que todo lo que la industria vende. Y en los mundos duros donde queda corto, los planes clásicos quedaron más cortos todavía.</p>
   </div>
-  <p class="foot">Herramienta interna de trabajo de Empowered Investor para sesiones asesoradas. Los resultados son simulaciones sobre datos históricos sorteados al azar (1990–2025 el motor de la página; 1926–2026 la prueba de siglo, en términos reales); no son una garantía de rendimiento futuro. El apalancado (QLD 2× / TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija, respaldada por bienes raíces, con permanencia mínima de 3 años. Todo neto de costos de transferencias y del servicio.</p>
+  <p class="foot">Herramienta interna de trabajo de Empowered Investor para sesiones asesoradas. Los resultados son simulaciones sobre datos históricos sorteados al azar (1990–2025 el motor de la página; 1926–2026 la prueba de siglo, en términos reales); no son una garantía de rendimiento futuro. El apalancado (SSO y QLD 2× / UPRO y TQQQ 3×) puede caer 70–95% en un crash. San José Capital se asume a tasa fija, respaldada por bienes raíces, con permanencia mínima de 3 años. Todo neto de costos de transferencias y del servicio.</p>
 
 </div>
 
@@ -727,17 +754,23 @@
 <script src="/fpf/deepdata.js"></script>
 <script>
 "use strict";
-// ===== Retornos anuales (total return, con dividendos). QLD/TQQQ simulados con rebalanceo diario. =====
+// ===== Retornos anuales (total return, con dividendos). QLD/TQQQ (Nasdaq 2×/3×) y SSO/UPRO (S&P 500 2×/3×) simulados con rebalanceo diario
+// antes de su listado (financiamiento 4.5% + 0.95% de gasto) y con el ETF real después (QLD jun-2006, TQQQ feb-2010, SSO jun-2006, UPRO jun-2009). =====
 var HR={
   SPY:{1990:-7.96,1991:26.31,1992:4.46,1993:9.45,1994:0.4,1995:38.05,1996:22.5,1997:33.48,1998:28.69,1999:20.39,2000:-9.74,2001:-11.76,2002:-21.58,2003:28.18,2004:10.7,2005:4.83,2006:15.85,2007:5.15,2008:-36.8,2009:26.35,2010:15.06,2011:1.89,2012:15.99,2013:32.31,2014:13.46,2015:1.23,2016:12.0,2017:21.71,2018:-4.57,2019:31.22,2020:18.33,2021:28.73,2022:-18.18,2023:26.18,2024:24.89,2025:17.72},
   QQQ:{1990:-11.31,1991:64.99,1992:8.86,1993:10.58,1994:1.5,1995:42.54,1996:42.54,1997:20.63,1998:85.3,1999:97.72,2000:-36.11,2001:-33.34,2002:-37.37,2003:49.67,2004:10.54,2005:1.57,2006:7.14,2007:19.03,2008:-41.73,2009:54.68,2010:20.14,2011:3.48,2012:18.11,2013:36.63,2014:19.18,2015:9.44,2016:7.1,2017:32.66,2018:-0.13,2019:38.96,2020:48.41,2021:27.42,2022:-32.58,2023:54.86,2024:25.58,2025:20.77},
   QLD:{1990:-28.02,1991:146.67,1992:7.9,1993:12.41,1994:-5.09,1995:83.08,1996:82.66,1997:27.99,1998:192.39,1999:232.61,2000:-72.3,2001:-68.59,2002:-68.74,2003:99.63,2004:12.32,2005:-4.01,2006:2.48,2007:29.03,2008:-72.89,2009:121.2,2010:36.9,2011:0.04,2012:34.77,2013:82.11,2014:37.59,2015:14.74,2016:10.04,2017:70.34,2018:-8.31,2019:81.69,2020:88.9,2021:54.67,2022:-60.52,2023:117.72,2024:42.81,2025:30.36},
-  TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35}
+  TQQQ:{1990:-44.11,1991:256.35,1992:3.87,1993:12.02,1994:-12.85,1995:125.87,1996:124.34,1997:27.28,1998:317.7,1999:407.64,2000:-91.36,2001:-88.93,2002:-86.75,2003:152.98,2004:11.82,2005:-10.01,2006:3.56,2007:38.3,2008:-88.99,2009:175.66,2010:44.4,2011:-8.05,2012:52.29,2013:139.73,2014:57.09,2015:17.23,2016:11.38,2017:118.06,2018:-19.79,2019:133.83,2020:110.05,2021:82.98,2022:-79.09,2023:198.05,2024:58.27,2025:34.35},
+  SSO:{1990:-22.18,1991:47.99,1992:2.33,1993:12.52,1994:-5.61,1995:79.12,1996:39.61,1997:61.89,1998:49.19,1999:32.84,2000:-27.11,2001:-29.68,2002:-45.68,2003:51.41,2004:14.61,2005:2.96,2006:25.11,2007:1.07,2008:-67.94,2009:47.23,2010:26.82,2011:-2.93,2012:31.03,2013:70.47,2014:25.53,2015:-1.2,2016:21.27,2017:44.35,2018:-14.6,2019:63.45,2020:21.54,2021:60.57,2022:-38.98,2023:46.65,2024:43.48,2025:26.19},
+  UPRO:{1990:-35.09,1991:71.52,1992:0.25,1993:15.85,1994:-11.4,1995:132.87,1996:57.86,1997:90.12,1998:65.92,1999:43.24,2000:-43.87,2001:-46.15,2002:-64.56,2003:75.7,2004:18.31,2005:1.01,2006:36.65,2007:-2.47,2008:-86.41,2009:54.4,2010:36.33,2011:-11.88,2012:46.8,2013:118.49,2014:38.01,2015:-5.24,2016:30.78,2017:71.37,2018:-25.11,2019:102.3,2020:10.09,2021:98.64,2022:-56.84,2023:68.53,2024:63.57,2025:31.88}
 };
-var NOM={SPY:"SPY (S&P 500)", QQQ:"QQQ (Nasdaq-100)", QLD:"QLD · Nasdaq 2×", TQQQ:"TQQQ · Nasdaq 3×"};
+var NOM={SPY:"SPY (S&P 500)", SSO:"SSO · S&P 500 2×", UPRO:"UPRO · S&P 500 3×", QQQ:"QQQ (Nasdaq-100)", QLD:"QLD · Nasdaq 2×", TQQQ:"TQQQ · Nasdaq 3×"};
+// ETFs del motor y su orden de riesgo (por volatilidad): SPY < QQQ < SSO < QLD < UPRO < TQQQ. SJC es el piso.
+var ETFS=["SPY","QQQ","SSO","QLD","UPRO","TQQQ"];
+var RISK={SJC:0,SPY:1,QQQ:2,SSO:3,QLD:4,UPRO:5,TQQQ:6};
 var SWIFT=65, EI_SETUP=2000, EI_MGMT=0.01;
 // Color por activo (gradiente por riesgo: rojo=agresivo → verde=renta fija). Mismo activo ⇒ mismo color.
-var ASSETCOL={ TQQQ:"224,82,90", QLD:"224,138,90", QQQ:"110,139,224", SPY:"99,198,201", SJC:"99,252,175" };
+var ASSETCOL={ TQQQ:"224,82,90", UPRO:"214,96,140", QLD:"224,138,90", SSO:"205,170,88", QQQ:"110,139,224", SPY:"99,198,201", SJC:"99,252,175" };
 function assetRGB(k){ return ASSETCOL[k]||"154,161,171"; }
 
 // ===== estado =====
@@ -793,14 +826,14 @@ function fwW(phi, p1, p2, Ff){
 // Retornos MENSUALES reales por activo (compuestos de las semanas de PX; con timing = señal 9m a efectivo).
 // Meses reales => captura caídas intra-año (ej. marzo 2020) que los retornos anuales esconden.
 function monthlyTable(sigArr){
-  var T=PX.t, sig=sigArr, cashW=Math.pow(1.02,1/52)-1, ks=["SPY","QQQ","QLD","TQQQ"];
-  var acc={SPY:1,QQQ:1,QLD:1,TQQQ:1}, out={SPY:[],QQQ:[],QLD:[],TQQQ:[]}, cur=null;
+  var T=PX.t, sig=sigArr, cashW=Math.pow(1.02,1/52)-1, ks=ETFS.filter(function(k){ return !!PX[k]; }), nk=ks.length;
+  var acc={}, out={}, cur=null; ks.forEach(function(k){ acc[k]=1; out[k]=[]; });
   function ym(t){ var y=Math.floor(t); return y*12+Math.floor((t-y)*12+1e-6); }
   for(var i=1;i<T.length;i++){ var m=ym(T[i]); if(cur===null)cur=m;
-    if(m!==cur){ for(var a=0;a<4;a++) out[ks[a]].push(acc[ks[a]]-1), acc[ks[a]]=1; cur=m; }
+    if(m!==cur){ for(var a=0;a<nk;a++) out[ks[a]].push(acc[ks[a]]-1), acc[ks[a]]=1; cur=m; }
     var inv=!sig||sig[i-1]===1;
-    for(var b2=0;b2<4;b2++){ var k=ks[b2], r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; acc[k]*=(1+r); } }
-  for(var c=0;c<4;c++) out[ks[c]].push(acc[ks[c]]-1);
+    for(var b2=0;b2<nk;b2++){ var k=ks[b2], r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; acc[k]*=(1+r); } }
+  for(var c=0;c<nk;c++) out[ks[c]].push(acc[ks[c]]-1);
   return out;
 }
 // Block bootstrap: cada camino de M meses se arma pegando BLOQUES de B meses consecutivos (preserva racimos de caídas).
@@ -896,7 +929,7 @@ var glideChart=null;
 function drawGlide(){
   var ctx=byId("glide-chart"); if(!ctx||typeof Chart==="undefined") return;
   // Agrupamos por ACTIVO (mismo activo ⇒ una sola banda de un solo color). Ordenados por riesgo: agresivo abajo, seguro arriba.
-  var RANK={SJC:0,SPY:1,QQQ:2,QLD:3,TQQQ:4};
+  var RANK=RISK;
   var assets=[]; [S.f1,S.f2,S.f3].forEach(function(a){ if(assets.indexOf(a)<0) assets.push(a); });
   assets.sort(function(a,b){ return RANK[b]-RANK[a]; });
   var xs=[], ser={}; assets.forEach(function(a){ ser[a]=[]; });
@@ -1176,7 +1209,7 @@ function planCols(withTiming){
 // Retornos anuales por activo desde PX (total return semanal). useTiming: señal 9m -> a efectivo (2%).
 function annualTable(useTiming){
   var T=PX.t, sig=PX.sig.QQQ, cashW=Math.pow(1.02,1/52)-1, out={};
-  ["SPY","QQQ","QLD","TQQQ"].forEach(function(k){
+  ETFS.forEach(function(k){
     var val=1, endVal={}, tab={};
     for(var i=1;i<T.length;i++){ var inv=!sig||sig[i-1]===1; var r=inv?(PX[k][i]/PX[k][i-1]-1):cashW; val*=(1+r); endVal[Math.floor(T[i])]=val; }
     var prev=1, y0=Math.floor(T[0]);
@@ -1195,7 +1228,7 @@ function sjcMin(){ return Math.min(100, 100*S.ret/Math.max(0.1,S.sjc)); }
 //  3) La mezcla final debe tener suficiente SJC para que su renta cubra tu retiro (SJC% · tasa ≥ retiro%).
 // Así el equity/apalancado que quede es solo UPSIDE sobre el piso de SJC que asegura tu ingreso.
 function sweepGeneralCombos(){
-  var opts5=["SPY","QQQ","QLD","TQQQ","SJC"], RISK={SJC:0,SPY:1,QQQ:2,QLD:3,TQQQ:4}, thr=sjcMin();
+  var opts5=ETFS.concat(["SJC"]), thr=sjcMin();
   var P1=[25,40,55,70,85,95], P2=[100,110,120], FF=[30,50,70,90,100];
   var combos=[];
   ["off","9h"].forEach(function(tim){ opts5.forEach(function(f1){ opts5.forEach(function(f2){
@@ -1420,6 +1453,10 @@ var PRESETS={
   antes:    {f1:"TQQQ",f2:"QQQ", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
   qld:      {f1:"QLD", f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
   blindar:  {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:100,tim:"off"},
+  mixsso:   {f1:"TQQQ",f2:"SSO", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
+  upro:     {f1:"UPRO",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"off"},
+  mixssotim:{f1:"TQQQ",f2:"SSO", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
+  uprotim:  {f1:"UPRO",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
   fpftim:   {f1:"TQQQ",f2:"SPY", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
   sorpresastim:{f1:"TQQQ",f2:"SPY", f3:"SJC", p1:40,p2:100,ff:70, tim:"9h"},
   antestim: {f1:"TQQQ",f2:"QQQ", f3:"SJC", p1:70,p2:100,ff:70, tim:"9h"},
@@ -1489,10 +1526,13 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-preset]"), functio
   var ESTR=[
     {id:"fpf3x",  et:1, hi:true,  nom:"FPF dinámico apalancado (Nasdaq 3× → mercado → piso)", f:function(TT,dr){return runFPF(TT,dr,"NDQ3","MKT1");}},
     {id:"fpf1x",  et:1, hi:false, nom:"El mismo sistema, sin apalancar", f:function(TT,dr){return runFPF(TT,dr,"NDQ1","MKT1");}},
+    {id:"fpf3xsp",et:1, hi:false, nom:"El mismo sistema con S&P 500 3× (UPRO → mercado → piso)", f:function(TT,dr){return runFPF(TT,dr,"MKT3","MKT1");}},
+    {id:"fpf2xsp",et:1, hi:false, nom:"El mismo sistema con S&P 500 2× (SSO → mercado → piso)", f:function(TT,dr){return runFPF(TT,dr,"MKT2","MKT1");}},
     {id:"qqq",    et:1, hi:false, nom:"Nasdaq comprar y mantener", f:function(TT,dr){return runBH(TT,dr,function(m,mi){return TT.NDQ1[mi];});}},
     {id:"spy",    et:1, hi:false, nom:"S&P 500 comprar y mantener", f:function(TT,dr){return runBH(TT,dr,function(m,mi){return TT.MKT1[mi];});}},
     {id:"tdf",    et:1, hi:false, nom:"Target-date fund típico (por edad)", f:function(TT,dr){return runBH(TT,dr,function(m,mi){ var edad=30+m/12, w=edad<40?0.90:Math.max(0.55,0.90-(edad-40)*(0.35/25)); return w*TT.MKT1[mi]+(1-w)*TT.CORP[mi]; });}},
     {id:"fpf3xf", et:2, hi:true,  nom:"FPF apalancado + timing", f:function(TT,dr){return runFPF(TT,dr,"NDQ3T","MKT1TN");}},
+    {id:"fpf3xspf",et:2,hi:false, nom:"FPF con S&P 500 3× (UPRO) + timing", f:function(TT,dr){return runFPF(TT,dr,"MKT3TN","MKT1TN");}},
     {id:"fpf1xf", et:2, hi:false, nom:"FPF sin apalancar + timing (el timing aislado)", f:function(TT,dr){return runFPF(TT,dr,"NDQ1T","MKT1TN");}}
   ];
   var Tstress={}; for(var kk in T) Tstress[kk]=T[kk].slice(0,DEEP.stressEnd);
