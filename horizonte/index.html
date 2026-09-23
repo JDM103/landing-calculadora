@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<!-- Píxel de Meta (el ID vive en /js/pixel.js) -->
+<script src="/js/pixel.js"></script>
+<title>¿Qué tan probable es ganar en el mercado? · Empowered Investor</title>
+<meta name="description" content="155 años del S&P 500 contados desde cada día posible de entrada: poné un monto, elegí el activo y el plazo, y mirá cuántas veces terminó arriba, cuánto, y cuál fue el peor y el mejor caso. Todo con dividendos reinvertidos y en plata de hoy.">
+<link rel="canonical" href="https://investorcr.com/horizonte/">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿Qué tan probable es ganar en el mercado? · Empowered Investor">
+<meta property="og:description" content="Poné un monto, elegí el activo y el plazo, y mirá qué pasó en la historia: cuántas veces terminó arriba, el caso típico, el peor y el mejor.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#556DFB; --oro:#E0A020; --rojo:#E0525A; --ambar:#F2B84B; }
+  *{box-sizing:border-box;} html,body{margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:960px; margin:0 auto; padding:22px 16px 80px; }
+  a{ color:var(--menta); }
+  a.logo{ display:block; text-align:center; margin-bottom:8px; } a.logo img{ height:84px; }
+  .eyeb{ text-align:center; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); }
+  h1{ font-size:clamp(28px,5.6vw,42px); font-weight:800; color:var(--crema); text-align:center; margin:8px auto 4px; letter-spacing:-.5px; line-height:1.12; max-width:20ch; text-wrap:balance; }
+  .sub{ text-align:center; color:var(--gris-sec); font-size:clamp(15px,2.4vw,17.5px); margin:12px auto 0; max-width:620px; text-wrap:pretty; }
+  .sub b{ color:var(--crema); font-weight:600; }
+  section{ margin-top:52px; }
+  .tsub{ font-size:clamp(21px,3.4vw,27px); font-weight:800; color:var(--crema); margin:0 0 6px; letter-spacing:-.3px; text-wrap:balance; }
+  .note{ font-size:14px; color:var(--gris-sec); margin:4px 0 12px; max-width:70ch; }
+  .note b, p b{ color:var(--crema); font-weight:600; }
+  p{ font-size:16px; color:var(--gris); margin:10px 0; max-width:70ch; text-wrap:pretty; }
+  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:16px; }
+  .controls{ display:grid; grid-template-columns:1fr; gap:12px; }
+  .field{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; }
+  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); margin-bottom:6px; font-weight:700; }
+  .money{ display:flex; align-items:center; gap:8px; }
+  .money .cur{ font-size:22px; font-weight:800; color:var(--gris-sec); }
+  .money input{ flex:1; min-width:0; width:100%; background:var(--input); border:1px solid var(--bd); color:var(--crema); border-radius:8px; padding:8px 10px; font-size:22px; font-weight:800; font-family:inherit; font-variant-numeric:tabular-nums; }
+  .money input:focus{ outline:none; border-color:var(--menta); }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .chips button, .seg button{ background:var(--input); border:1px solid var(--bd); color:var(--gris-sec); border-radius:999px; padding:6px 11px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .chips button:hover, .seg button:hover{ border-color:var(--gris-sec); color:var(--crema); }
+  .seg{ display:flex; flex-wrap:wrap; gap:6px; }
+  .seg button.on{ background:var(--menta); color:var(--tinta); border-color:var(--menta); }
+  .seg button small{ font-weight:600; opacity:.75; margin-left:3px; }
+  .seg button:focus-visible, .chips button:focus-visible, .sw:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
+  .plazo{ display:flex; align-items:center; gap:12px; }
+  .plazo input[type=range]{ flex:1; accent-color:var(--menta); min-width:0; }
+  .plazo .val{ font-size:20px; font-weight:800; color:var(--crema); min-width:96px; text-align:right; font-variant-numeric:tabular-nums; }
+  .sw{ display:inline-flex; align-items:center; gap:10px; background:var(--input); border:1px solid var(--bd); border-radius:999px; padding:6px 12px 6px 6px; cursor:pointer; font-family:inherit; color:var(--gris); font-size:13.5px; font-weight:600; }
+  .sw i{ width:34px; height:20px; border-radius:999px; background:var(--bd); position:relative; transition:background .15s; flex:none; }
+  .sw i:after{ content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%; background:var(--crema); transition:left .15s; }
+  .sw[aria-pressed="true"] i{ background:var(--menta); } .sw[aria-pressed="true"] i:after{ left:16px; background:var(--tinta); }
+  .swrow{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; }
+  .swrow a{ font-size:13px; color:var(--gris-sec); }
+  /* resultado */
+  .res{ margin-top:16px; display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:16px; align-items:stretch; }
+  .big{ background:var(--card2); border:1px solid var(--bd); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:10px; }
+  .big .n{ font-size:clamp(40px,8vw,62px); font-weight:800; color:var(--menta); line-height:1; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
+  .big .n small{ font-size:.42em; color:var(--gris-sec); font-weight:700; letter-spacing:0; }
+  .big .t{ font-size:15px; color:var(--gris); }
+  .big .t b{ color:var(--crema); }
+  .dots{ display:grid; grid-template-columns:repeat(20,1fr); gap:3px; margin-top:4px; }
+  .dots i{ display:block; aspect-ratio:1; border-radius:2px; background:var(--menta); }
+  .dots i.d{ background:var(--rojo); opacity:.85; }
+  .kpis{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; min-width:0; }
+  .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; font-weight:700; }
+  .kpi .v{ font-size:clamp(18px,3vw,23px); font-weight:800; color:var(--crema); margin-top:3px; font-variant-numeric:tabular-nums; line-height:1.15; overflow-wrap:anywhere; }
+  .kpi .v.men{ color:var(--menta); } .kpi .v.rojo{ color:var(--rojo); } .kpi .v.peri{ color:var(--peri); }
+  .kpi .s{ font-size:12.5px; color:var(--gris-sec); margin-top:3px; line-height:1.4; }
+  .frase{ margin-top:14px; font-size:16px; color:var(--gris); background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.25); border-radius:12px; padding:12px 14px; max-width:none; }
+  .frase b{ color:var(--crema); }
+  .chart{ position:relative; width:100%; }
+  .chart svg{ display:block; width:100%; height:auto; overflow:visible; }
+  .ctitle{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 14px; align-items:baseline; margin:14px 0 6px; }
+  .ctitle b{ color:var(--crema); font-size:15px; }
+  .ctitle span{ font-size:13px; color:var(--gris-sec); }
+  .tip{ position:fixed; z-index:20; pointer-events:none; background:var(--card2); color:var(--crema); border:1px solid var(--bd); border-radius:8px; padding:8px 10px; font-size:12.5px; line-height:1.45; display:none; max-width:260px; font-variant-numeric:tabular-nums; box-shadow:0 8px 24px -8px rgba(0,0,0,.6); }
+  .tip b{ color:var(--menta); }
+  .fuente{ font-size:12.5px; color:var(--gris-sec); margin-top:10px; }
+  /* inflación */
+  .infl{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-top:12px; }
+  .infl .kpi .v{ color:var(--ambar); }
+  .cmp{ margin-top:14px; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
+  .bars{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; }
+  .bars .k{ font-size:12px; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.4px; font-weight:700; margin-bottom:8px; }
+  .bar{ display:grid; grid-template-columns:120px 1fr 64px; align-items:center; gap:10px; font-size:13.5px; margin:6px 0; }
+  .bar i{ display:block; height:12px; border-radius:6px; background:var(--peri); width:var(--w); }
+  .bar.real i{ background:var(--menta); }
+  .bar b{ text-align:right; color:var(--crema); font-variant-numeric:tabular-nums; }
+  /* tabla */
+  .tblwrap{ overflow-x:auto; margin-top:10px; -webkit-overflow-scrolling:touch; border-radius:12px; border:1px solid var(--bd); }
+  table{ width:100%; border-collapse:collapse; font-size:14px; background:var(--card); font-variant-numeric:tabular-nums; }
+  th,td{ padding:9px 11px; text-align:right; border-bottom:1px solid var(--bd); white-space:nowrap; }
+  th{ font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); font-weight:700; background:var(--card2); }
+  th:first-child, td:first-child{ text-align:left; position:sticky; left:0; background:var(--card); }
+  th:first-child{ background:var(--card2); }
+  tr.on td{ background:rgba(99,252,175,.08); } tr.on td:first-child{ background:#1b2a26; }
+  td .m{ display:inline-block; width:54px; height:7px; background:var(--bd); border-radius:4px; vertical-align:middle; margin-right:8px; position:relative; overflow:hidden; }
+  td .m:after{ content:""; position:absolute; inset:0; width:var(--w); background:var(--menta); }
+  td small{ color:var(--gris-sec); font-size:12px; }
+  .rojo{ color:var(--rojo); } .men{ color:var(--menta); }
+  tbody tr{ cursor:pointer; } tbody tr:hover td{ background:rgba(255,255,255,.03); }
+  /* Q&A */
+  .qa{ border:1px solid var(--bd); border-radius:14px; overflow:hidden; margin:12px 0; }
+  .qa .q{ background:var(--card2); padding:12px 16px; font-weight:700; color:var(--crema); border-left:3px solid var(--menta); font-size:16px; }
+  .qa .a{ padding:12px 16px; font-size:15px; color:var(--gris); background:var(--card); line-height:1.6; }
+  .qa .a p{ margin:0 0 10px; font-size:15px; } .qa .a p:last-child{ margin-bottom:0; }
+  .firma{ color:var(--gris-sec); font-size:15px; margin-top:16px; }
+  ul.met{ padding-left:20px; color:var(--gris-sec); font-size:14px; line-height:1.6; margin:8px 0; } ul.met li{ margin-bottom:6px; } ul.met b{ color:var(--gris); }
+  .cta{ text-align:center; margin-top:40px; }
+  .btn{ display:inline-block; background:var(--menta); color:var(--tinta); border:none; border-radius:999px; padding:13px 24px; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; text-decoration:none; }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); }
+  .foot{ font-size:12px; color:var(--gris-sec); margin-top:34px; text-align:center; line-height:1.55; }
+  @media(min-width:680px){ .controls{ grid-template-columns:1fr 1fr; } .controls .span2{ grid-column:1 / -1; } }
+  @media(max-width:679px){ .res{ grid-template-columns:1fr; } .bar{ grid-template-columns:96px 1fr 56px; } }
+  @media(max-width:420px){ .kpis{ grid-template-columns:1fr 1fr; } .plazo .val{ min-width:82px; font-size:17px; } }
+  @media(prefers-reduced-motion:reduce){ *{ transition:none !important; } html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+  <div class="eyeb">Empowered Investor · Research</div>
+  <h1>¿Qué tan probable es ganar en el mercado?</h1>
+  <p class="sub">La historia completa del S&amp;P 500 desde 1871, del Nasdaq-100, del oro y de bitcoin, contada desde <b>cada día posible de entrada</b>. Poné un monto, elegí el activo y el plazo, y mirá cuántas veces terminó arriba, cuánto, y cuál fue el peor y el mejor caso. Todo con dividendos reinvertidos y en plata de hoy.</p>
+
+  <!-- ===== INTERACTIVO ===== -->
+  <section id="tu" style="margin-top:30px">
+    <div class="card">
+      <div class="controls">
+        <div class="field">
+          <label for="monto">¿Cuánto invertís?</label>
+          <div class="money"><span class="cur">$</span><input id="monto" type="text" inputmode="numeric" value="10,000" aria-label="Monto en dólares"></div>
+          <div class="chips" id="chips"><button type="button" data-v="1000">$1,000</button><button type="button" data-v="10000">$10,000</button><button type="button" data-v="50000">$50,000</button><button type="button" data-v="100000">$100,000</button></div>
+        </div>
+        <div class="field">
+          <label>¿En qué?</label>
+          <div class="seg" id="segA" role="group" aria-label="Activo"></div>
+          <div class="note" id="descA" style="margin:8px 0 0;font-size:12.5px"></div>
+        </div>
+        <div class="field span2">
+          <label for="plazo">¿Por cuánto tiempo?</label>
+          <div class="plazo"><input id="plazo" type="range" min="0" max="17" step="1" value="14" aria-label="Plazo"><div class="val" id="plazoVal">10 años</div></div>
+          <div class="chips" id="chipsH"><button type="button" data-h="1 día">1 día</button><button type="button" data-h="1 año">1 año</button><button type="button" data-h="5 años">5 años</button><button type="button" data-h="10 años">10 años</button><button type="button" data-h="20 años">20 años</button></div>
+        </div>
+        <div class="field span2">
+          <div class="swrow">
+            <button type="button" class="sw" id="swReal" aria-pressed="true"><i></i><span id="swLbl">En plata de hoy (descontando la inflación)</span></button>
+            <a href="#inflacion">¿Qué significa esto?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="res">
+        <div class="big">
+          <div class="n" id="bigN">89 <small>de cada 100</small></div>
+          <div class="t" id="bigT"></div>
+          <div class="dots" id="dots" aria-hidden="true"></div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Caso típico</div><div class="v men" id="kMed"></div><div class="s" id="kMedS"></div></div>
+          <div class="kpi"><div class="k">8 de cada 10 veces</div><div class="v" id="kRng"></div><div class="s" id="kRngS"></div></div>
+          <div class="kpi"><div class="k">Peor arranque</div><div class="v rojo" id="kMin"></div><div class="s" id="kMinS"></div></div>
+          <div class="kpi"><div class="k">Mejor arranque</div><div class="v peri" id="kMax"></div><div class="s" id="kMaxS"></div></div>
+        </div>
+      </div>
+      <div class="frase" id="frase"></div>
+
+      <div class="ctitle"><b>Así terminaron todos los arranques, del peor al mejor</b><span>Cada barra es el 2% de las veces. Línea punteada: lo que pusiste.</span></div>
+      <div class="chart" id="fan"></div>
+      <div class="fuente" id="fuenteA"></div>
+    </div>
+  </section>
+
+  <!-- ===== CURVA ===== -->
+  <section id="tiempo">
+    <div class="tsub">El tiempo hace el trabajo</div>
+    <p class="note">A un día, el mercado es casi una moneda al aire. Cada año que pasa, la balanza se inclina. Tocá un punto para cambiar el plazo de arriba.</p>
+    <div class="card">
+      <div class="ctitle"><b id="curvaT">Veces que terminó arriba, según el plazo</b><span id="curvaS"></span></div>
+      <div class="chart" id="curva"></div>
+    </div>
+  </section>
+
+  <!-- ===== INFLACIÓN ===== -->
+  <section id="inflacion">
+    <div class="tsub">¿Qué significa "en plata de hoy"?</div>
+    <p>Un dólar de hoy compra menos que un dólar de hace 20 años. Eso es la inflación: los precios suben y la misma plata alcanza para menos. Si una inversión sube 30% pero los precios subieron 30% en el mismo tiempo, en realidad no ganaron nada. Solo se mantuvieron.</p>
+    <p>Por eso acá todo está descontado por inflación. Es la pregunta que importa: <b>¿cuánto más puedo comprar al final que al principio?</b> Si prefieren ver los números sin ese ajuste, el interruptor de arriba los muestra. Van a notar que la probabilidad de "terminar arriba" cambia bastante en los plazos largos, porque ganarle a la inflación es más difícil que simplemente no perder.</p>
+    <div class="infl" id="infl"></div>
+    <div class="cmp" id="cmp"></div>
+    <p class="note" style="margin-top:12px">Más sobre el tema, con un gráfico de cuánto poder de compra pierde la plata guardada: <a href="/inflacion/">investorcr.com/inflacion</a>.</p>
+  </section>
+
+  <!-- ===== TABLA ===== -->
+  <section id="tabla">
+    <div class="tsub">La tabla completa</div>
+    <p class="note">Todos los plazos para el activo elegido. Tocá una fila para cargarla arriba. <b>Terminó arriba</b> es el porcentaje de arranques que acabaron con más plata de la que se puso; <b>8 de cada 10</b> es el rango donde cayó el 80% de los casos; el peor y el mejor caso traen la fecha en que empezaron.</p>
+    <div class="seg" id="segT" role="group" aria-label="Activo de la tabla" style="margin-bottom:6px"></div>
+    <div class="tblwrap"><table id="tbl"></table></div>
+    <p class="fuente" id="fuenteT"></p>
+  </section>
+
+  <!-- ===== Q&A ===== -->
+  <section id="preguntas">
+    <div class="tsub">Las preguntas de siempre</div>
+
+    <div class="qa"><div class="q">¿Me garantizan un retorno?</div><div class="a">
+      <p>No. Nadie puede, y el que se lo garantice les está mintiendo o vendiendo otra cosa.</p>
+      <p>Lo que sí podemos hacer es mirar la historia completa y elegir dónde pararnos. A 10 años, el S&amp;P 500 terminó arriba en <b>97 de cada 100 arranques</b> desde 1871. Si además le exigimos que le gane a la inflación, <b>89 de cada 100</b>. Y a 15 años, 96 de cada 100 en plata de hoy.</p>
+      <p>Por eso pedimos mentalidad de 10 años o más. No porque garantice nada. Porque a nosotros nos gusta vivir en el 97%, y ahí es donde la historia juega a favor.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">Si invierto a un año, ¿qué probabilidad tengo?</div><div class="a">
+      <p>Peor de lo que la gente cree. En plata de hoy, el S&amp;P 500 terminó arriba en <b>70 de cada 100</b> años. Uno de cada tres años se pierde.</p>
+      <p>El caso típico fue ganar 9%. Pero en 8 de cada 10 años el resultado cayó en cualquier punto entre <b>−15% y +32%</b>. El peor año de la historia empezó en junio de 1931 y perdió 58%. El mejor empezó en julio de 1932, justo después, y ganó 151%.</p>
+      <p>Ese rango tan ancho es la respuesta: a un año el resultado depende del momento de entrada, y el momento de entrada nadie lo adivina. Por eso no invertimos a un año.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Y si compro justo antes de una caída grande?</div><div class="a">
+      <p>Es la pregunta correcta, y la historia la contesta con fechas.</p>
+      <p>El peor momento de 155 años para comprar el S&amp;P 500 fue septiembre de 1929. Con dividendos reinvertidos, quien compró ahí tardó 15 años en recuperar su plata. El peor momento moderno fue agosto del 2000: 6 años para recuperar en dólares, 13 años en plata de hoy. El Nasdaq-100 comprado en marzo del 2000 tardó 15 años en dólares y casi 18 en plata de hoy.</p>
+      <p>Eso define el tamaño del largo plazo. Quince años cubre incluso el peor punto de entrada de la historia en dólares; veinte lo cubre descontando la inflación. Menos que eso, el resultado depende de la suerte del momento.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Cuánto voy a ganar?</div><div class="a">
+      <p>Lo curioso de la tabla es que la ganancia típica casi no cambia con el plazo. El S&amp;P 500 rindió <b>alrededor de 7% al año en plata de hoy</b> como caso central, sea a 5, 10 o 30 años.</p>
+      <p>Lo que cambia con el tiempo es la incertidumbre. A 1 año el rango típico va de −15% a +32%. A 20 años, de 2.7% a 10.6% al año. El tiempo no sube el retorno esperado: cierra el rango de resultados y elimina la cola de las pérdidas.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Y el Nasdaq-100?</div><div class="a">
+      <p>Más retorno y más sustos. En plata de hoy, típico de 12% al año, y a 10 años terminó arriba en 92 de cada 100 arranques desde 1985. A 1 año, 79 de cada 100.</p>
+      <p>La letra chica: el peor arranque a 10 años fue marzo del 2000 y perdió 67% en plata de hoy. Son 41 años de datos contra 155 del S&amp;P, así que el margen de error es mayor. Es el mismo principio con más volatilidad, y el plazo es lo que lo hace tolerable.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Y los apalancados (×2 y ×3)?</div><div class="a">
+      <p>Acá la tabla cambia de forma. El S&amp;P 500 ×3 a 10 años terminó arriba en 74 de cada 100 arranques en plata de hoy, con un peor caso de −98%. El Nasdaq-100 ×3 a 15 y 20 años estuvo <b>peor que una moneda al aire</b>, porque todos los arranques de 1998 al 2000 quedaron atrapados en la burbuja y el 3× la convirtió en pérdida casi total.</p>
+      <p>Por eso nosotros no los usamos para comprar y aguantar para siempre. Se usan como una fase de arranque dentro de un plan, con capital chico, horizonte largo y reglas de salida. El plan completo está en <a href="/FreedomFunds/">investorcr.com/FreedomFunds</a>.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Y el oro? ¿Y bitcoin?</div><div class="a">
+      <p><b>El oro</b> no es una inversión de crecimiento, es un seguro. En plata de hoy terminó arriba en 56 de cada 100 años y en 57 de cada 100 décadas desde 1971. Quien compró en enero de 1980 tardó más de 30 años en recuperar su poder de compra. Sirve para dormir tranquilo en una crisis, no para llegar a una meta.</p>
+      <p><b>Bitcoin</b> tiene 16 años de historia, y eso es el problema. A 1 año terminó arriba 72 de cada 100 veces con caídas de hasta 84%; a 4 años o más, siempre arriba. Pero 16 años dan una sola década y media independiente para mirar: es una muestra minúscula y la tabla lo dice en cada fila. Igual que el oro, lo tratamos como una póliza chica, no como el plan.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Por qué todo está "en plata de hoy" y con dividendos reinvertidos?</div><div class="a">
+      <p>Porque es lo que de verdad pasa en una cuenta. Los dividendos históricamente son casi la mitad del retorno del S&amp;P 500; ignorarlos es mentirse. Y la inflación es lo que hace que una ganancia sirva o no para comprar algo. Un fondo indexado reinvierte los dividendos solo; la inflación la descontamos nosotros con el índice de precios de EE. UU.</p>
+    </div></div>
+
+    <div class="qa"><div class="q">¿Esto es una recomendación?</div><div class="a">
+      <p>Es una radiografía de la historia, no una promesa sobre el futuro. Sirve para calibrar expectativas y para entender por qué insistimos tanto con el plazo. Las decisiones de cada uno dependen de su meta, su plazo y su estómago, y eso se conversa en una sesión, no en una tabla.</p>
+    </div></div>
+
+    <p class="firma">Es todo por hoy. Escríbanme si tienen dudas.<br>-Jose Montero</p>
+  </section>
+
+  <!-- ===== MÉTODO ===== -->
+  <section id="metodo">
+    <div class="tsub">Método y fuentes</div>
+    <ul class="met">
+      <li><b>La pregunta:</b> para cada fecha posible de entrada, ¿cuánto valía la inversión un día, una semana, un mes, un año, cinco, diez, quince años después? El porcentaje de veces que terminó arriba es la probabilidad histórica de ese plazo. Las ventanas se solapan: 155 años dan unas 10 observaciones independientes de 15 años, así que los porcentajes son frecuencias históricas, no garantías.</li>
+      <li><b>S&amp;P 500:</b> datos mensuales de Robert Shiller (Yale) desde enero de 1871, con dividendos reinvertidos y el índice de precios al consumidor de EE. UU. para descontar la inflación. Para 1 día y 1 semana, cierres diarios del S&amp;P 500 desde 1928 más los dividendos de Shiller.</li>
+      <li><b>Nasdaq-100:</b> el índice desde octubre de 1985 y QQQ con dividendos reinvertidos desde 1999 (antes de 1999 los dividendos eran menos de 0.5% al año y no están incluidos).</li>
+      <li><b>Oro:</b> precio mensual desde enero de 1971, cuando dejó de estar fijado por el gobierno de EE. UU.; futuros de oro diarios desde 2000 para 1 día y 1 semana. <b>Bitcoin:</b> precio de mercado desde agosto de 2010.</li>
+      <li><b>Apalancados:</b> antes de que existieran los ETF, se simulan con rebalanceo diario sobre el índice con dividendos: 2 o 3 veces el movimiento del día, menos el costo de financiar el préstamo (tasa de letras del Tesoro más 0.6%) y 0.95% anual de gasto del fondo. Desde su listado se usa el ETF real (SSO 2006, UPRO 2009, TQQQ 2010). En el período en que conviven, la simulación reproduce el ETF real con menos de 0.2 puntos anuales de diferencia.</li>
+      <li><b>Lo que no está:</b> comisiones e impuestos; una sola compra (no aportes mensuales); solo EE. UU., el mercado con mejor historia del siglo XX. Datos descargados el 22 de septiembre de 2026.</li>
+    </ul>
+  </section>
+
+  <div class="cta">
+    <a class="btn ghost" href="/newsletter/">Suscribite a nuestro newsletter →</a>
+  </div>
+
+  <p class="foot">Contenido educativo de Empowered Investor. Los resultados son frecuencias históricas sobre datos públicos; no garantizan resultados futuros ni constituyen una recomendación de inversión. Los ETF apalancados (×2 y ×3) pueden perder 70–99% en un crash. Todo antes de comisiones e impuestos.</p>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script src="/horizonte/data.js"></script>
+<script>
+(function(){
+  var D=window.HZ; if(!D){return;}
+  var ORDER=["SPX","NDX","GLD","BTC","SSO","UPRO","TQQQ"];
+  var LBL={SPX:"S&P 500",NDX:"Nasdaq-100",GLD:"Oro",BTC:"Bitcoin",SSO:"S&P 500 <small>×2</small>",UPRO:"S&P 500 <small>×3</small>",TQQQ:"Nasdaq-100 <small>×3</small>"};
+  var HALL=["1 día","1 semana","1 mes","3 meses","6 meses","1 año","2 años","3 años","4 años","5 años","6 años","7 años","8 años","9 años","10 años","15 años","20 años","30 años"];
+  var MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var st={a:"SPX",h:"10 años",amt:10000,real:true};
+  var $=function(s){return document.querySelector(s);};
+  var NS="http://www.w3.org/2000/svg";
+  function S(tag,at,par){var e=document.createElementNS(NS,tag);for(var k in at){if(k==="style")e.style.cssText=at[k];else e.setAttribute(k,at[k]);}if(par)par.appendChild(e);return e;}
+  function T(par,x,y,txt,o){o=o||{};var t=S("text",{x:x,y:y,"text-anchor":o.anchor||"start","dominant-baseline":o.base||"middle",style:"font:"+(o.w||600)+" "+(o.size||12)+"px 'Bai Jamjuree',sans-serif;fill:"+(o.fill||"#9AA1AB")},par);t.textContent=txt;return t;}
+  var tip=$("#tip");
+  function showTip(html,ev){tip.innerHTML=html;tip.style.display="block";var w=tip.offsetWidth,h=tip.offsetHeight,x=ev.clientX+14,y=ev.clientY+14;if(x+w>innerWidth-8)x=ev.clientX-w-14;if(y+h>innerHeight-8)y=ev.clientY-h-14;tip.style.left=x+"px";tip.style.top=y+"px";}
+  function hideTip(){tip.style.display="none";}
+  function money(v){v=Math.round(v);return "$"+v.toLocaleString("en-US");}
+  function pct(x,d){return (x*100).toFixed(d===undefined?1:d)+"%";}
+  function spct(x,d){return (x>0?"+":"")+(x*100).toFixed(d===undefined?1:d)+"%";}
+  function fdate(iso,monthly){var p=iso.split("-");return monthly?MES[+p[1]-1]+" "+p[0]:(+p[2])+" "+MES[+p[1]-1]+" "+p[0];}
+  function ann(x,y){return Math.pow(1+x,1/y)-1;}
+  function rows(a){return D.activos[a].filas;}
+  function row(a,h){var r=rows(a);for(var i=0;i<r.length;i++)if(r[i].h===h)return r[i];return null;}
+  function mode(r){return st.real?r.real:r.nom;}
+  function isMonthly(a,r){return (a==="SPX"||a==="GLD")&&r.h!=="1 día"&&r.h!=="1 semana";}
+  function de100(p){return Math.round(p*100);}
+
+  /* ---- controles */
+  function seg(id,cur,onpick){var box=$(id);box.innerHTML="";ORDER.forEach(function(k){var b=document.createElement("button");b.type="button";b.innerHTML=LBL[k];b.className=k===cur?"on":"";b.setAttribute("data-a",k);b.addEventListener("click",function(){onpick(k);});box.appendChild(b);});}
+  function markSeg(id,cur){$(id).querySelectorAll("button").forEach(function(b){b.className=b.getAttribute("data-a")===cur?"on":"";});}
+  var monto=$("#monto");
+  monto.addEventListener("input",function(){var v=parseFloat(monto.value.replace(/[^0-9.]/g,""));if(v>0){st.amt=v;renderMain();}});
+  monto.addEventListener("blur",function(){monto.value=Math.round(st.amt).toLocaleString("en-US");});
+  $("#chips").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;st.amt=+b.getAttribute("data-v");monto.value=st.amt.toLocaleString("en-US");renderMain();});
+  var slider=$("#plazo");
+  function availH(){return rows(st.a).map(function(r){return r.h;});}
+  function syncSlider(){var hs=availH();slider.max=hs.length-1;var i=hs.indexOf(st.h);if(i<0){i=hs.length-1;st.h=hs[i];}slider.value=i;$("#plazoVal").textContent=st.h;}
+  slider.addEventListener("input",function(){st.h=availH()[+slider.value];$("#plazoVal").textContent=st.h;renderMain();});
+  $("#chipsH").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var h=b.getAttribute("data-h");if(availH().indexOf(h)<0)return;st.h=h;syncSlider();renderMain();});
+  $("#swReal").addEventListener("click",function(){st.real=!st.real;this.setAttribute("aria-pressed",st.real?"true":"false");$("#swLbl").textContent=st.real?"En plata de hoy (descontando la inflación)":"En dólares corrientes (sin descontar la inflación)";renderAll();});
+  function setAsset(k){st.a=k;markSeg("#segA",k);markSeg("#segT",k);syncSlider();renderAll();}
+  seg("#segA",st.a,setAsset);seg("#segT",st.a,setAsset);
+
+  /* ---- resultado principal */
+  function renderMain(){
+    var a=D.activos[st.a],r=row(st.a,st.h),m=mode(r),monthly=isMonthly(st.a,r),A=st.amt,yrs=r.y;
+    $("#descA").textContent=a.desc+". Datos desde "+a.desde.replace("-","/")+".";
+    var p=de100(m.p);
+    $("#bigN").innerHTML=p+' <small>de cada 100</small>';
+    $("#bigN").style.color=p>=90?"var(--menta)":p>=70?"var(--ambar)":"var(--rojo)";
+    $("#bigT").innerHTML="veces que <b>"+money(A)+" en "+a.nombre+"</b> terminaron con más plata después de <b>"+st.h+"</b>"+(st.real?", en plata de hoy":"")+".";
+    var dots=$("#dots");dots.innerHTML="";for(var i=0;i<100;i++){var d=document.createElement("i");if(i>=p)d.className="d";dots.appendChild(d);}
+    var an=yrs>=1;
+    $("#kMed").textContent=money(A*(1+m.med));
+    $("#kMedS").textContent=spct(m.med,an?0:1)+(an?" · "+spct(ann(m.med,yrs))+" al año":"")+". La mitad de las veces terminó arriba de esto, la mitad abajo.";
+    $("#kRng").textContent=money(A*(1+m.p10))+" a "+money(A*(1+m.p90));
+    $("#kRngS").textContent="Entre "+spct(m.p10,an?0:1)+" y "+spct(m.p90,an?0:1)+(an?" ("+spct(ann(m.p10,yrs))+" a "+spct(ann(m.p90,yrs))+" al año)":"")+". Una de cada diez veces fue peor, una de cada diez fue mejor.";
+    $("#kMin").textContent=money(A*(1+m.min));
+    $("#kMinS").textContent=spct(m.min,an?0:1)+(an?" ("+spct(ann(m.min,yrs))+" al año)":"")+" entrando el "+fdate(m.fmin,monthly)+".";
+    $("#kMax").textContent=money(A*(1+m.max));
+    $("#kMaxS").textContent=spct(m.max,0)+(an?" ("+spct(ann(m.max,yrs))+" al año)":"")+" entrando el "+fdate(m.fmax,monthly)+".";
+    var perd=Math.round(m.p20*100);
+    $("#frase").innerHTML="De cada 100 veces que alguien puso <b>"+money(A)+"</b> en <b>"+a.nombre+"</b> y esperó <b>"+st.h+"</b>, en <b>"+p+"</b> terminó con más plata de la que puso"+(st.real?" en plata de hoy":"")+
+      (p<100?" y en <b>"+(100-p)+"</b> con menos":"")+". Lo típico fue quedar con <b>"+money(A*(1+m.med))+"</b>."+(perd>0?" En "+perd+" de cada 100 perdió más del 20%.":" Ninguna vez perdió más del 20%.")+
+      (r.ni<12?" <span style='color:var(--ambar)'>Ojo: son solo "+r.ni+" períodos de "+st.h+" independientes; la muestra es chica.</span>":"");
+    $("#fuenteA").textContent=r.n.toLocaleString("en-US")+" arranques "+(monthly?"mensuales":"diarios")+" entre "+r.desde.slice(0,7).replace("-","/")+" y hoy, restando el plazo. "+a.fuente+".";
+    renderFan(r,m,A);
+  }
+
+  /* ---- abanico de resultados */
+  function renderFan(r,m,A){
+    var box=$("#fan");box.innerHTML="";var W=box.clientWidth||600,H=W<520?240:300,pl=64,pr=12,pt=14,pb=30;
+    var vals=[m.min].concat(m.q).concat([m.max]).map(function(q){return A*Math.max(1+q,0.0005);});
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    var log=(mx/mn>25);
+    var lo=log?Math.min(mn,A)/1.3:Math.min(mn,A)*0.92,hi=log?Math.max(mx,A)*1.3:Math.max(mx,A)*1.06;
+    if(!log&&lo<0)lo=0;
+    var Y=function(v){var t=log?(Math.log(v)-Math.log(lo))/(Math.log(hi)-Math.log(lo)):(v-lo)/(hi-lo);return pt+(1-t)*(H-pt-pb);};
+    var n=vals.length,bw=(W-pl-pr)/n;
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,width:W,height:H,role:"img","aria-label":"Resultados ordenados del peor al mejor"},box);
+    var ticks=log?niceLog(lo,hi):niceLin(lo,hi);
+    ticks.forEach(function(v){if(v<lo||v>hi)return;S("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),style:"stroke:#2a3140;stroke-width:1"},svg);T(svg,pl-8,Y(v),shortMoney(v),{anchor:"end",size:11});});
+    vals.forEach(function(v,i){var up=v>=A,y0=Y(A),y1=Y(v);var rect=S("rect",{x:pl+i*bw+0.5,y:Math.min(y0,y1),width:Math.max(1,bw-1),height:Math.max(1,Math.abs(y1-y0)),rx:1,style:"fill:"+(up?"#63FCAF":"#E0525A")+";opacity:"+(i===0||i===n-1?1:.85)},svg);
+      var pctl=i===0?"El peor caso":i===n-1?"El mejor caso":"Percentil "+Math.round(i*2)+" a "+Math.round(i*2+2);
+      rect.addEventListener("mousemove",function(ev){showTip("<b>"+money(v)+"</b> · "+spct(v/A-1,0)+"<br>"+pctl+(i===0?" ("+fdate(m.fmin,isMonthly(st.a,r))+")":i===n-1?" ("+fdate(m.fmax,isMonthly(st.a,r))+")":""),ev);});
+      rect.addEventListener("mouseleave",hideTip);});
+    S("line",{x1:pl,x2:W-pr,y1:Y(A),y2:Y(A),style:"stroke:#FEF9F3;stroke-width:1.5;stroke-dasharray:5 4"},svg);
+    T(svg,pl+4,Y(A)-10,"lo que pusiste: "+money(A),{anchor:"start",size:11,fill:"#FEF9F3"});
+    var px=pl+m.p*(W-pl-pr);
+    if(m.p>0&&m.p<1){S("line",{x1:px,x2:px,y1:H-pb+2,y2:H-pb+8,style:"stroke:#9AA1AB"},svg);}
+    var far=(px-pl>88)&&(W-pr-px>88);
+    if(far){T(svg,pl,H-8,"peor",{size:11});T(svg,W-pr,H-8,"mejor",{anchor:"end",size:11});
+      T(svg,px,H-8,de100(1-m.p)+"% perdió | "+de100(m.p)+"% ganó",{anchor:"middle",size:11,fill:"#E2E2E2"});}
+    else{T(svg,pl,H-8,"peor",{size:11});
+      T(svg,W-pr,H-8,(m.p>=0.5?de100(m.p)+"% terminó arriba":de100(1-m.p)+"% terminó abajo"),{anchor:"end",size:11,fill:"#E2E2E2"});}
+  }
+  function shortMoney(v){if(v>=1e9)return "$"+(v/1e9).toFixed(1).replace(/\.0$/,"")+"B";if(v>=1e6)return "$"+(v/1e6).toFixed(1).replace(/\.0$/,"")+"M";if(v>=1e3)return "$"+(v/1e3).toFixed(v<1e4?1:0).replace(/\.0$/,"")+"k";return "$"+Math.round(v);}
+  function niceLog(lo,hi){var out=[],e=Math.floor(Math.log10(lo));for(;Math.pow(10,e)<=hi*1.01;e++){[1,2,5].forEach(function(m){var v=m*Math.pow(10,e);if(v>=lo&&v<=hi)out.push(v);});}return out.length>8?out.filter(function(v){return /^[15]/.test(String(v).replace(/[0.]/g,"").charAt(0))||String(v).charAt(0)==="1";}):out;}
+  function niceLin(lo,hi){var span=hi-lo,step=Math.pow(10,Math.floor(Math.log10(span/5)));var m=span/step;step*=m>=50?10:m>=20?5:m>=10?2:1;var out=[];for(var v=Math.ceil(lo/step)*step;v<=hi;v+=step)out.push(v);return out;}
+
+  /* ---- curva por plazo */
+  function renderCurva(){
+    var box=$("#curva");box.innerHTML="";var W=box.clientWidth||600,narrow=W<560,H=narrow?260:320,pl=44,pr=narrow?14:120,pt=14,pb=40;
+    var xmin=1/252,xmax=30;var X=function(y){return pl+(Math.log(y)-Math.log(xmin))/(Math.log(xmax)-Math.log(xmin))*(W-pl-pr);};
+    var Y=function(v){return pt+(1-(v-.25)/.75)*(H-pt-pb);};
+    var svg=S("svg",{viewBox:"0 0 "+W+" "+H,width:W,height:H,role:"img","aria-label":"Probabilidad de terminar arriba según el plazo"},box);
+    [.3,.4,.5,.6,.7,.8,.9,1].forEach(function(v){var z=Math.abs(v-.5)<1e-6;S("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),style:"stroke:"+(z?"#9AA1AB":"#2a3140")+";stroke-width:1;"+(z?"stroke-dasharray:4 4":"")},svg);T(svg,pl-8,Y(v),Math.round(v*100)+"%",{anchor:"end",size:11});});
+    T(svg,W-pr,Y(.5)-9,"moneda al aire",{anchor:"end",size:11});
+    var keepW=["1 día","1 semana","1 mes","3 meses","6 meses","1 año","2 años","3 años","5 años","10 años","15 años","20 años","30 años"],keepN=["1 día","1 mes","6 meses","1 año","3 años","10 años","30 años"];
+    var SH={"1 día":"1 día","1 semana":"1 sem","1 mes":"1 mes","3 meses":"3 m","6 meses":"6 m","1 año":"1 año","2 años":"2","3 años":"3","5 años":"5","10 años":"10","15 años":"15","20 años":"20","30 años":"30 años"};
+    var yrsOf={};rows("SPX").forEach(function(r){yrsOf[r.h]=r.y;});
+    HALL.forEach(function(h){if((narrow?keepN:keepW).indexOf(h)<0)return;T(svg,X(yrsOf[h]),H-pb+16,SH[h],{anchor:"middle",size:11});});
+    T(svg,(pl+W-pr)/2,H-6,"tiempo invertido",{anchor:"middle",size:11});
+    function line(a,color,width,op){var rs=rows(a),d="";rs.forEach(function(r,i){d+=(i?"L":"M")+X(r.y).toFixed(1)+" "+Y(mode(r).p).toFixed(1)+" ";});S("path",{d:d,style:"fill:none;stroke:"+color+";stroke-width:"+width+";opacity:"+op+";stroke-linejoin:round"},svg);return rs;}
+    if(st.a!=="SPX"){var ref=line("SPX","#556DFB",1.5,.7);var l=ref[ref.length-1];if(!narrow)T(svg,X(l.y)+8,Y(mode(l).p),"S&P 500 (referencia)",{size:11,fill:"#556DFB"});}
+    var rs=line(st.a,"#63FCAF",2.5,1);
+    rs.forEach(function(r){var on=r.h===st.h;var c=S("circle",{cx:X(r.y),cy:Y(mode(r).p),r:on?7:4.5,style:"fill:"+(on?"#63FCAF":"#161a22")+";stroke:#63FCAF;stroke-width:2;cursor:pointer"},svg);
+      c.addEventListener("mousemove",function(ev){showTip("<b>"+r.h+"</b>: "+de100(mode(r).p)+" de cada 100 arriba<br>típico "+spct(mode(r).med,0)+(r.y>=1?" · "+spct(ann(mode(r).med,r.y))+" al año":"")+"<br><span style='color:#9AA1AB'>tocá para cargarlo arriba</span>",ev);});
+      c.addEventListener("mouseleave",hideTip);c.addEventListener("click",function(){st.h=r.h;syncSlider();renderMain();renderCurva();markTable();hideTip();document.getElementById("tu").scrollIntoView({behavior:"smooth",block:"start"});});
+      if(on){T(svg,X(r.y),Y(mode(r).p)-14,de100(mode(r).p)+" de cada 100",{anchor:"middle",size:12,fill:"#FEF9F3",w:700});}});
+    var last=rs[rs.length-1];if(!narrow)T(svg,X(last.y)+8,Y(mode(last).p)+(st.a!=="SPX"&&Math.abs(Y(mode(last).p)-Y(mode(rows("SPX")[rows("SPX").length-1]).p))<14?14:0),D.activos[st.a].nombre,{size:11,fill:"#63FCAF"});
+    $("#curvaT").textContent="Veces que "+D.activos[st.a].nombre+" terminó arriba, según el plazo";
+    $("#curvaS").textContent=(st.real?"En plata de hoy":"Sin descontar la inflación")+" · datos desde "+D.activos[st.a].desde.replace("-","/");
+  }
+
+  /* ---- inflación */
+  function renderInfl(){
+    var c=D.cpi,box=$("#infl");
+    box.innerHTML='<div class="kpi"><div class="k">Para comprar lo que costaba $100 en 1971</div><div class="v">'+money(100*c.factor_1971)+'</div><div class="s">hacen falta hoy. Inflación promedio de '+pct(c.cagr_1971)+' al año.</div></div>'+
+      '<div class="kpi"><div class="k">Lo que costaba $100 en 2000</div><div class="v">'+money(100*c.factor_2000)+'</div><div class="s">hoy. Un cuarto de siglo a '+pct(c.cagr_2000)+' al año.</div></div>'+
+      '<div class="kpi"><div class="k">Desde 1871, la inflación promedió</div><div class="v">'+pct(c.cagr_1871)+' al año</div><div class="s">Parece poco. En 30 años se come casi la mitad del poder de compra.</div></div>';
+    var s20=row("SPX","20 años"),s10=row("SPX","10 años"),s1=row("SPX","1 año");
+    function bars(title,items){var h='<div class="bars"><div class="k">'+title+'</div>';var mx=Math.max.apply(null,items.map(function(i){return i.v;}));items.forEach(function(i){h+='<div class="bar '+(i.real?"real":"")+'"><span>'+i.l+'</span><i style="--w:'+(i.v/mx*100).toFixed(1)+'%"></i><b>'+i.t+'</b></div>';});return h+'</div>';}
+    $("#cmp").innerHTML=bars("S&P 500 a 20 años · retorno típico anual",[{l:"En dólares",v:ann(s20.nom.med,20),t:pct(ann(s20.nom.med,20))},{l:"En plata de hoy",v:ann(s20.real.med,20),t:pct(ann(s20.real.med,20)),real:true}])+
+      bars("S&P 500 a 10 años · veces que terminó arriba",[{l:"En dólares",v:s10.nom.p,t:de100(s10.nom.p)+" de 100"},{l:"En plata de hoy",v:s10.real.p,t:de100(s10.real.p)+" de 100",real:true}])+
+      bars("S&P 500 a 1 año · veces que terminó arriba",[{l:"En dólares",v:s1.nom.p,t:de100(s1.nom.p)+" de 100"},{l:"En plata de hoy",v:s1.real.p,t:de100(s1.real.p)+" de 100",real:true}]);
+  }
+
+  /* ---- tabla */
+  function renderTable(){
+    var a=D.activos[st.a],rs=rows(st.a);
+    var h='<thead><tr><th>Plazo</th><th>Arranques</th><th>Terminó arriba</th><th>Caso típico</th><th>Al año</th><th>8 de cada 10 veces, entre</th><th>Peor arranque</th><th>Mejor arranque</th></tr></thead><tbody>';
+    rs.forEach(function(r){var m=mode(r),an=r.y>=1,mo=isMonthly(st.a,r);
+      h+='<tr data-h="'+r.h+'" class="'+(r.h===st.h?"on":"")+'"><td>'+r.h+'</td><td>'+r.n.toLocaleString("en-US")+'</td><td><span class="m" style="--w:'+(m.p*100).toFixed(1)+'%"></span><b>'+de100(m.p)+' de 100</b></td><td>'+spct(m.med,an?0:1)+'</td><td>'+(an?spct(ann(m.med,r.y)):"—")+'</td><td>'+spct(m.p10,an?0:1)+' y '+spct(m.p90,an?0:1)+(an?' <small>('+spct(ann(m.p10,r.y))+' a '+spct(ann(m.p90,r.y))+' al año)</small>':'')+'</td><td class="rojo">'+spct(m.min,an?0:1)+' <small>'+fdate(m.fmin,mo)+'</small></td><td class="men">'+spct(m.max,0)+' <small>'+fdate(m.fmax,mo)+'</small></td></tr>';});
+    $("#tbl").innerHTML=h+"</tbody>";
+    $("#tbl").querySelectorAll("tbody tr").forEach(function(tr){tr.addEventListener("click",function(){st.h=tr.getAttribute("data-h");syncSlider();renderMain();renderCurva();markTable();document.getElementById("tu").scrollIntoView({behavior:"smooth",block:"start"});});});
+    $("#fuenteT").textContent=a.nombre+": "+a.fuente+". "+(st.real?"Todo en plata de hoy (descontando la inflación de EE. UU.).":"Todo en dólares corrientes, sin descontar la inflación.")+" Caso típico = mediana; al año = ese mismo retorno anualizado.";
+  }
+  function markTable(){$("#tbl").querySelectorAll("tbody tr").forEach(function(tr){tr.className=tr.getAttribute("data-h")===st.h?"on":"";});}
+
+  function renderAll(){renderMain();renderCurva();renderInfl();renderTable();}
+  syncSlider();renderAll();
+  var rt;addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){renderMain();renderCurva();},150);});
+})();
+</script>
+</body>
+</html>
