@@ -299,6 +299,14 @@
   var D=window.HZ; if(!D){return;}
   var ORDER=["SPX","NDX","GLD","BTC","SSO","UPRO","TQQQ"];
   var LBL={SPX:"S&P 500",NDX:"Nasdaq-100",GLD:"Oro",BTC:"Bitcoin",SSO:"S&P 500 <small>×2</small>",UPRO:"S&P 500 <small>×3</small>",TQQQ:"Nasdaq-100 <small>×3</small>"};
+  var ETF={
+    SPX:"Se opera con <b>SPY</b>, el ETF más negociado del mundo; <b>VOO</b> e <b>IVV</b> siguen el mismo índice y cobran menos.",
+    NDX:"Se opera con <b>QQQ</b>, el más líquido del Nasdaq-100; <b>QQQM</b> es el hermano barato para aportar todos los meses.",
+    GLD:"Se opera con <b>GLD</b>, el de oro con más volumen; <b>GLDM</b> e <b>IAU</b> cobran menos si es para dejarlo quieto.",
+    BTC:"Se opera con <b>IBIT</b> de BlackRock, el ETF de bitcoin con más volumen; <b>FBTC</b> de Fidelity es la alternativa.",
+    SSO:"Se opera con <b>SSO</b>, el 2× del S&P 500 con más volumen.",
+    UPRO:"Se opera con <b>UPRO</b>, el 3× del S&P 500 con más volumen; <b>SPXL</b> es el equivalente de Direxion.",
+    TQQQ:"Se opera con <b>TQQQ</b>, el 3× del Nasdaq-100 y el apalancado más negociado que existe."};
   var HALL=["1 día","1 semana","1 mes","3 meses","6 meses","1 año","2 años","3 años","4 años","5 años","6 años","7 años","8 años","9 años","10 años","15 años","20 años","30 años"];
   var MES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
   var st={a:"SPX",h:"10 años",amt:10000,real:true};
@@ -339,7 +347,7 @@
   /* ---- resultado principal */
   function renderMain(){
     var a=D.activos[st.a],r=row(st.a,st.h),m=mode(r),monthly=isMonthly(st.a,r),A=st.amt,yrs=r.y;
-    $("#descA").textContent=a.desc+". Datos desde "+a.desde.replace("-","/")+".";
+    $("#descA").innerHTML=a.desc+". Datos desde "+a.desde.replace("-","/")+". "+ETF[st.a];
     var p=de100(m.p);
     $("#bigN").innerHTML=p+' <small>de cada 100</small>';
     $("#bigN").style.color=p>=90?"var(--menta)":p>=70?"var(--ambar)":"var(--rojo)";
