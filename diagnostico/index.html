@@ -115,10 +115,8 @@
 
   /* Testimonios */
   .testi h2{text-align:center; margin-bottom:20px;}
-  .tcarousel{position:relative;}
-  .tcard{display:none; gap:22px; background:#1C2127; border:1px solid var(--bd); border-radius:16px; padding:24px 24px;}
-  .tcard.active{display:flex; animation:tfade .4s ease;}
-  @keyframes tfade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+  .tstack{display:grid; gap:16px;}
+  .tcard{display:flex; gap:22px; background:#1C2127; border:1px solid var(--bd); border-radius:16px; padding:24px 24px;}
   .tcard .photo{flex:0 0 auto; width:112px; height:142px; margin-top:30px; border-radius:12px; object-fit:cover; object-position:top center; background:#0E1216;}
   .tcard .body{flex:1; min-width:0;}
   .tcard .qmark{color:var(--menta); font-family:Georgia,'Times New Roman',serif; font-size:38px; line-height:.1; height:18px; font-weight:700;}
@@ -130,14 +128,20 @@
     .tcard .photo{width:74px; height:74px; margin-top:0; border-radius:50%;}
     .tcard .qmark{height:14px; font-size:32px;}
   }
-  .tnav{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:16px;}
-  .tbtn{background:rgba(255,255,255,.04); border:1px solid var(--bd); color:var(--crema); width:40px; height:40px; border-radius:50%;
-    font-size:22px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto;}
-  .tbtn:hover{border-color:var(--menta); color:var(--menta);}
-  .dots{display:flex; justify-content:center; flex-wrap:wrap; gap:8px;}
-  .dot{width:8px; height:8px; border-radius:50%; background:var(--bd); border:none; cursor:pointer; padding:0; transition:background .2s;}
-  .dot.on{background:var(--menta);}
   .tlegal{font-size:12px; color:var(--legal); text-align:center; margin-top:14px; line-height:1.5;}
+
+  /* Preguntas frecuentes */
+  .faq h2{text-align:center; margin-bottom:20px;}
+  .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; overflow:hidden;}
+  .faq summary{list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:17px 18px; font-size:15.5px; font-weight:600; color:var(--crema); line-height:1.4;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary .chev{flex:0 0 auto; color:var(--menta); font-size:18px; transition:transform .2s ease;}
+  .faq details[open] summary .chev{transform:rotate(45deg);}
+  .faq details[open]{border-color:rgba(99,252,175,.4);}
+  .faq .resp{padding:0 18px 18px; font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
+  .faq .resp p + p{margin-top:10px;}
+  .faq .resp b{color:var(--crema); font-weight:600;}
 
   /* Agenda / Calendly */
   .booking h2{text-align:center;}
@@ -263,8 +267,8 @@
   <!-- ===== 8 · TESTIMONIOS ===== -->
   <section class="testi">
     <h2>Profesionales como vos ya confían en nosotros</h2>
-    <div class="tcarousel" id="tcarousel">
-      <div class="tcard active">
+    <div class="tstack">
+      <div class="tcard">
         <img class="photo" loading="lazy" src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes">
         <div class="body">
           <div class="qmark">“</div>
@@ -346,11 +350,6 @@
         </div>
       </div>
     </div>
-    <div class="tnav">
-      <button class="tbtn" id="cprev" type="button" aria-label="Anterior">‹</button>
-      <div class="dots" id="dots"></div>
-      <button class="tbtn" id="cnext" type="button" aria-label="Siguiente">›</button>
-    </div>
     <p class="tlegal">Experiencias reales de clientes. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros.</p>
   </section>
 
@@ -374,7 +373,40 @@
     </div>
   </section>
 
-  <!-- ===== 10 · AGENDA (Calendly inline) ===== -->
+  <!-- ===== 10 · PREGUNTAS FRECUENTES ===== -->
+  <section class="faq">
+    <h2>Preguntas frecuentes</h2>
+    <details>
+      <summary>¿Qué pasa si un mes no puedo aportar?<span class="chev">＋</span></summary>
+      <div class="resp">
+        <p>Nada. No hay contratos de aporte obligatorio, ni multas, ni letra pequeña. El aporte mensual es una meta de tu plan, no una obligación con nosotros: si un mes no podés, no aportás y el plan sigue.</p>
+        <p>Eso sí, la constancia es lo que hace que el plan llegue a la meta. La idea es retomar los aportes en cuanto puedas, y si tu situación cambia de forma más permanente, ajustamos el plan juntos.</p>
+      </div>
+    </details>
+    <details>
+      <summary>¿Qué pasa si necesito la plata por una emergencia?<span class="chev">＋</span></summary>
+      <div class="resp">
+        <p>Es tu cuenta y tu plata: podés retirarla cuando querás, sin penalizaciones ni períodos de encierro. Nos avisás, vendemos lo necesario y transferís de tu cuenta en el bróker directo a tu banco. El proceso completo normalmente toma pocos días hábiles.</p>
+        <p>Por eso mismo recomendamos invertir solo plata que no vas a necesitar en el corto plazo: para que una emergencia no te obligue a vender en un mal momento del mercado.</p>
+      </div>
+    </details>
+    <details>
+      <summary>¿Cómo se hace la transferencia? ¿Se la hacen a ustedes?<span class="chev">＋</span></summary>
+      <div class="resp">
+        <p><b>No. Nunca nos transferís plata a nosotros.</b> La transferencia va directo de tu banco a tu propia cuenta, a tu nombre, en el bróker regulado en EE. UU. Nosotros ni siquiera podemos tocarla: nuestro permiso es únicamente comprar y vender dentro de tu cuenta, no depositar ni retirar.</p>
+        <p>Te guiamos paso a paso en la transferencia internacional, igual que hemos hecho con todos nuestros clientes.</p>
+      </div>
+    </details>
+    <details>
+      <summary>¿Usted qué estudió? ¿Qué experiencia tiene?<span class="chev">＋</span></summary>
+      <div class="resp">
+        <p>Estudié Administración de Empresas. Después tuve la suerte de trabajar en una firma de inversión que manejaba $600 millones de dólares, y trabajé 4.5 años en LSEG (London Stock Exchange Group, la dueña de la Bolsa de Londres).</p>
+        <p>En total llevo 11 años manejando portafolios de inversión.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ===== 11 · AGENDA (Calendly inline) ===== -->
   <section class="booking" id="agenda">
     <h2>Agendá tu llamada de diagnóstico</h2>
     <p class="sub">Elegí el día y la hora que te sirvan. Valoramos tu caso y te decimos con honestidad si tiene sentido trabajar juntos.</p>
@@ -382,7 +414,7 @@
     <a class="callink" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diagnostico" target="_blank" rel="noopener">¿No cargó el calendario? Abrilo en una pestaña nueva →</a>
   </section>
 
-  <!-- ===== 11 · FOOTER LEGAL ===== -->
+  <!-- ===== 12 · FOOTER LEGAL ===== -->
   <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo.</p>
 </div>
 
@@ -394,6 +426,16 @@
 
   byId("cta-hero").addEventListener("click", function(){ track("click_agendar", {origen:"hero"}); });
   byId("cta-llamada").addEventListener("click", function(){ track("click_agendar", {origen:"video-llamada"}); });
+
+  // ===== FAQ: registrar qué preguntas abren =====
+  (function(){
+    var faqs=document.querySelectorAll(".faq details");
+    for(var k=0;k<faqs.length;k++){ (function(d){
+      d.addEventListener("toggle", function(){
+        if(d.open){ track("faq_abrir", {pregunta: d.querySelector("summary").textContent.replace("＋","").trim()}); }
+      });
+    })(faqs[k]); }
+  })();
 
   // ===== Video del sistema: el player de YouTube se inyecta al dar play =====
   (function(){
@@ -473,23 +515,6 @@
       playov.querySelector(".pt").textContent="Volver a ver";
       playov.classList.remove("hidden");
     });
-  })();
-
-  // ===== Carrusel de testimonios =====
-  (function(){
-    var wrap=byId("tcarousel"); if(!wrap) return;
-    var cards=wrap.querySelectorAll(".tcard"), n=cards.length, i=0, dots=byId("dots");
-    for(var k=0;k<n;k++){ (function(idx){ var d=document.createElement("button"); d.className="dot"+(idx===0?" on":""); d.setAttribute("aria-label","Testimonio "+(idx+1)); d.onclick=function(){ go(idx); reset(); }; dots.appendChild(d); })(k); }
-    function go(idx){ i=(idx+n)%n; for(var j=0;j<n;j++){ cards[j].classList.toggle("active", j===i); dots.children[j].classList.toggle("on", j===i); } }
-    byId("cprev").onclick=function(){ go(i-1); reset(); };
-    byId("cnext").onclick=function(){ go(i+1); reset(); };
-    var timer=setInterval(function(){ go(i+1); }, 12000);
-    function reset(){ clearInterval(timer); timer=setInterval(function(){ go(i+1); }, 12000); }
-    wrap.addEventListener("mouseenter", function(){ clearInterval(timer); });
-    wrap.addEventListener("mouseleave", function(){ reset(); });
-    var x0=null;
-    wrap.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; }, {passive:true});
-    wrap.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40){ go(dx<0?i+1:i-1); reset(); } x0=null; }, {passive:true});
   })();
 })();
 </script>
