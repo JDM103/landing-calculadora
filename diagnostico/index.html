@@ -23,6 +23,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://calendly.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#AEB4BE; --legal:#6E7681; --card:#1B2026; --bd:#262C34; }
@@ -143,11 +144,16 @@
   .faq .resp p + p{margin-top:10px;}
   .faq .resp b{color:var(--crema); font-weight:600;}
 
-  /* Agenda / Calendly */
+  /* Agenda / Calendly.
+     El calendario NO tiene scroll propio: el iframe crece al alto de su contenido (mensaje calendly.page_height),
+     así en el celular el dedo siempre mueve la página y nunca queda atrapado dentro del calendario. */
   .booking h2{text-align:center;}
   .booking .sub{margin-top:10px;}
-  .cal-wrap{margin-top:16px; border-radius:14px; overflow:hidden; min-height:640px;}
-  .calendly-inline-widget{min-width:280px; height:700px; width:100%;}
+  .cal-wrap{margin-top:18px; border-radius:14px; overflow:hidden; height:760px; min-width:280px; background:var(--tinta); position:relative;}
+  @media(max-width:649px){ .cal-wrap{height:1020px; margin-left:-20px; margin-right:-20px; border-radius:0;} }
+  .cal-wrap iframe{display:block; width:100%; height:100%; border:0;}
+  .cal-load{position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:70px; font-size:14px; color:var(--gris); font-weight:400; pointer-events:none;}
+  .cal-wrap.ok .cal-load{display:none;}
   .callink{display:block; text-align:center; margin-top:14px; color:var(--menta); font-size:14px; text-decoration:none;}
 
   .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin-top:48px; border-top:1px solid var(--bd); padding-top:22px;}
@@ -410,7 +416,7 @@
   <section class="booking" id="agenda">
     <h2>Agendá tu llamada de diagnóstico</h2>
     <p class="sub">Elegí el día y la hora que te sirvan. Valoramos tu caso y te decimos con honestidad si tiene sentido trabajar juntos.</p>
-    <div class="cal-wrap" id="calwrap"></div>
+    <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
     <a class="callink" href="https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diagnostico" target="_blank" rel="noopener">¿No cargó el calendario? Abrilo en una pestaña nueva →</a>
   </section>
 
@@ -452,24 +458,45 @@
     });
   })();
 
-  // ===== Calendly: se carga cuando el usuario se acerca a la agenda =====
+  // ===== Calendly inline SIN scroll interno =====
+  // El iframe se crea a mano (sin widget.js) y su alto sigue al contenido con el mensaje calendly.page_height.
+  // Así no hay una zona con scroll propio donde el dedo quede atrapado en el celular.
   (function(){
     var wrap=byId("calwrap"); if(!wrap) return;
-    var cargado=false;
+    var cargado=false, agendado=false;
     function cargar(){
       if(cargado) return; cargado=true;
-      var d=document.createElement("div");
-      d.className="calendly-inline-widget";
-      d.setAttribute("data-url","https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diagnostico&hide_gdpr_banner=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf");
-      wrap.appendChild(d);
-      var s=document.createElement("script");
-      s.src="https://assets.calendly.com/assets/external/widget.js"; s.async=true;
-      document.body.appendChild(s);
+      var url = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos?utm_source=diagnostico"
+        + "&hide_gdpr_banner=1&hide_event_type_details=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf"
+        + "&embed_domain=" + encodeURIComponent(location.hostname || "localhost") + "&embed_type=Inline";
+      var fr=document.createElement("iframe");
+      fr.src=url; fr.title="Agendá tu llamada"; fr.setAttribute("scrolling","no");
+      fr.addEventListener("load", function(){ wrap.classList.add("ok"); });
+      wrap.appendChild(fr);
+      track("calendly_cargado", {});
     }
+    window.addEventListener("message", function(e){
+      if(!/^https:\/\/([a-z0-9-]+\.)?calendly\.com$/.test(e.origin||"")) return;
+      var d=e.data; if(!d || typeof d.event!=="string" || d.event.indexOf("calendly.")!==0) return;
+      if(d.event==="calendly.page_height" && d.payload){
+        var h=parseInt(d.payload.height,10);
+        if(h>300){ wrap.style.height=(h+8)+"px"; wrap.classList.add("ok"); }
+      } else if(d.event==="calendly.date_and_time_selected"){
+        track("calendly_hora_elegida", {});
+        // Al pasar al formulario, el contenido cambia: subimos al inicio del calendario.
+        try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
+      } else if(d.event==="calendly.event_scheduled" && !agendado){
+        agendado=true;
+        track("diagnostico_llamada_agendada", {});
+        try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
+      }
+    });
     if("IntersectionObserver" in window){
-      var io=new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); cargar(); } }, {rootMargin:"900px 0px"});
+      var io=new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); cargar(); } }, {rootMargin:"1200px 0px"});
       io.observe(wrap);
     } else { cargar(); }
+    // Si tocan un CTA, se carga de una vez para que esté listo al llegar.
+    ["cta-hero","cta-llamada"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
   })();
 
   // ===== Reproductor del video =====
