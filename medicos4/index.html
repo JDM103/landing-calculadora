@@ -124,6 +124,16 @@
   .tname .role{color:var(--gris); font-weight:400;}
   @media(max-width:560px){ .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;} .tfeat-photo{width:88px; height:88px; border-radius:50%;} }
 
+  /* Grilla de testimonios (después del calendario) */
+  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px;}
+  @media(max-width:560px){ .tgrid{grid-template-columns:1fr;} }
+  .tcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; display:flex; flex-direction:column;}
+  .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px; flex:1;}
+  .tcard .who{display:flex; gap:10px; align-items:center;}
+  .tcard .who img{width:40px; height:40px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); flex:0 0 auto;}
+  .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
+
   /* Agenda / Calendly (sin scroll interno: patrón calendly.page_height) */
   .booking h2{text-align:center;}
   .booking .sub{text-align:center;}
@@ -157,7 +167,7 @@
     <div class="citas">
       <div class="cita grande">
         <p>"Yo decir a los 55 años <b>ya no quiero hacer disponibilidades</b>, no quiero salir a las 7 de la mañana y llegar a las 10 de la noche a mi casa."</p>
-        <div class="quien"><span class="pin">W</span><span class="qn"><b>William</b> · cirujano, 35 · CCSS y privada</span></div>
+        <div class="quien"><span class="pin">W</span><span class="qn"><b>William</b> · cirujano · CCSS y privada</span></div>
       </div>
       <div class="cita">
         <p>"Desde algún punto de vista es increíble. De otro, <b>es esclavizante</b>."</p>
@@ -269,6 +279,43 @@
     <h2>Tu llamada es esta: <em>elegí el día</em></h2>
     <p class="sub">45 minutos por videollamada, sin costo. Salís con tu número y tu plan de retiro.</p>
     <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
+  </section>
+
+  <!-- ===== 8 · TODOS LOS TESTIMONIOS ===== -->
+  <section style="padding-top:0;">
+    <h2 style="text-align:center;">Y muchos profesionales <em>más</em></h2>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-7.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+        <div class="who"><img src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas.</p>
+        <div class="who"><img src="/assets/testimonios/foto-9.webp" alt="Andrés Castro" loading="lazy"><div><div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones, con la confianza de que cuento con una persona que toma decisiones estratégicas procurando siempre lo mejor para mí.</p>
+        <div class="who"><img src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco" loading="lazy"><div><div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y me fue guiando paso a paso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Estoy demasiado contenta de haber empezado.</p>
+        <div class="who"><img src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit" loading="lazy"><div><div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div></div>
+      </div>
+    </div>
   </section>
 
   <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. Las citas provienen de llamadas reales con médicos, usadas con su autorización; se omiten apellidos y datos personales. No se garantizan retornos: los resultados pasados no garantizan resultados futuros y toda inversión implica riesgo.</p>

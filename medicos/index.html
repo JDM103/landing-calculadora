@@ -14,13 +14,13 @@
 </script>
 <!-- Píxel de Meta (el ID vive en /js/pixel.js) · defer: no bloquea el primer render -->
 <script defer src="/js/pixel.js"></script>
-<title>Médicos especialistas · ¿Con cuánto al mes podrías dejar las dispos?</title>
-<meta name="description" content="Plan de retiro privado, te acompañamos a abrir tu cuenta de inversión a tu nombre y la plantilla de transferencia del BAC lista. Una llamada de 45 minutos para médicos especialistas. Costo: $0.">
+<title>¿Cuántas guardias más? · Empowered Investor</title>
+<meta name="description" content="Lo que nos dijeron médicos especialistas en llamadas reales, y la llamada de 45 minutos sin costo donde sacamos tu número para dejar las guardias y las dispos.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="¿Con cuánto al mes podrías dejar las dispos? · Empowered Investor">
-<meta property="og:description" content="Plan de retiro privado y cuenta de inversión a tu nombre, en una llamada de 45 minutos. Para médicos especialistas. Costo: $0.">
+<meta property="og:title" content="¿Cuántas guardias más? · Empowered Investor">
+<meta property="og:description" content="Una llamada de 45 minutos, sin costo, para sacar tu número y armar tu plan de retiro. Para médicos especialistas.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
@@ -31,142 +31,102 @@
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{ --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#AEB4BE; --legal:#6E7681; --card:#1B2026; --bd:#262C34; --input:#10141B; --rojo:#E0525A; }
+  :root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#AEB4BE; --legal:#6E7681; --card:#1B2026; --bd:#262C34; --input:#10141B; --rojo:#E0525A; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   body{background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:300; min-height:100vh; -webkit-font-smoothing:antialiased;}
-  .wrap{width:100%; max-width:680px; margin:0 auto; padding:14px 20px 60px;}
-  .marca{display:block; text-align:center; margin:0 0 12px;}
-  .marca img{width:84px; max-width:26%; height:auto;}
-  .eyebrow{display:table; margin:0 auto 14px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
-    color:var(--menta); background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:5px 14px;}
-  h1{font-size:clamp(29px,6.6vw,44px); font-weight:700; line-height:1.1; letter-spacing:-.015em; text-align:center; text-wrap:balance;}
+  .wrap{width:100%; max-width:640px; margin:0 auto; padding:0 20px;}
+  .marca{display:block; text-align:center; padding:16px 0 4px;}
+  .marca img{width:76px; max-width:24%; height:auto;}
+  section{padding:46px 0;}
+  h1{font-size:clamp(31px,7.2vw,46px); font-weight:700; line-height:1.08; letter-spacing:-.02em; text-wrap:balance;}
+  h2{font-size:clamp(22px,4.6vw,30px); font-weight:700; line-height:1.18; letter-spacing:-.015em; text-wrap:balance;}
   h1 em, h2 em{color:var(--menta); font-style:normal;}
-  .sub{font-size:clamp(15.5px,2.5vw,18px); line-height:1.55; color:var(--gris); font-weight:400; text-align:center; margin:16px auto 0; max-width:560px; text-wrap:pretty;}
+  .eyebrow{display:table; margin:14px auto 16px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
+    color:var(--menta); background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:5px 14px;}
+  .sub{font-size:clamp(15.5px,2.6vw,18px); line-height:1.55; color:var(--gris); font-weight:400; margin-top:14px; text-wrap:pretty;}
   .sub b{color:var(--crema); font-weight:600;}
-  h2{font-size:clamp(21px,3.8vw,28px); font-weight:700; line-height:1.22; letter-spacing:-.01em; text-wrap:balance;}
-  section{margin-top:52px;}
-  .intro{font-size:15.5px; line-height:1.6; color:var(--gris); font-weight:400; margin-top:12px;}
 
   /* CTA */
-  .ctarow{text-align:center; margin-top:24px;}
+  .ctarow{text-align:center; margin-top:26px;}
   .cta{display:inline-flex; align-items:center; justify-content:center; min-height:54px; padding:12px 30px; text-align:center; line-height:1.25;
     background:var(--menta); color:var(--tinta); font-family:inherit; font-size:17px; font-weight:700; text-decoration:none;
     border-radius:999px; transition:filter .15s;}
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
 
-  /* La oferta, visible al entrar: qué me llevo > quién me ayuda > por qué es gratis */
-  .otop{margin-top:22px; background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:22px 20px;}
-  .ot-que{font-size:clamp(17px,4.2vw,19px); line-height:1.4; color:var(--crema); font-weight:500;}
-  .ot-que b{font-weight:700;} .ot-que .free{color:var(--menta); font-weight:700;}
-  .ot-list{list-style:none; margin-top:16px; display:grid; gap:12px;}
-  .ot-list li{position:relative; padding-left:29px; font-size:15.5px; line-height:1.5; color:var(--gris); font-weight:400;}
-  .ot-list li b{color:var(--crema); font-weight:700;}
-  .ot-list li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700; font-size:16px;}
-  .ot-why{margin-top:16px; border-top:1px solid var(--bd); padding-top:16px;}
-  .ot-why b{display:block; font-size:15.5px; font-weight:700; color:var(--menta); margin-bottom:6px;}
-  .ot-why p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400;}
+  /* Narrador: líneas cortas de historia entre bloques de citas */
+  .narr{font-size:clamp(17px,3.8vw,21px); line-height:1.5; color:var(--crema); font-weight:500; text-wrap:balance;}
+  .narr b{font-weight:700;}
+  .narr em{color:var(--menta); font-style:normal; font-weight:700;}
+  .narr + .narr{margin-top:14px;}
+  .contexto{font-size:13px; color:var(--legal); font-weight:400; margin-top:10px;}
 
-  /* El filtro, en una línea antes del botón */
-  .filtro{margin-top:22px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400; text-align:center; text-wrap:balance;}
-  .filtro b{color:var(--crema); font-weight:600;}
+  /* Citas: tarjetas grandes, muy visuales */
+  .citas{display:grid; gap:14px; margin-top:24px;}
+  .cita{position:relative; background:var(--card); border:1px solid var(--bd); border-radius:18px; padding:22px 20px 18px; overflow:hidden;}
+  .cita::before{content:"“"; position:absolute; top:-6px; right:10px; font-family:Georgia,'Times New Roman',serif;
+    font-size:110px; line-height:1; color:rgba(99,252,175,.10); font-weight:700; pointer-events:none;}
+  .cita p{font-size:clamp(16.5px,3.9vw,20px); line-height:1.45; color:var(--crema); font-weight:500; text-wrap:pretty; position:relative;}
+  .cita p b{color:var(--menta); font-weight:700;}
+  .cita .quien{display:flex; align-items:center; gap:9px; margin-top:14px;}
+  .cita .quien .pin{flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; color:var(--tinta); background:var(--menta);}
+  .cita.azul .quien .pin{background:var(--peri); color:var(--crema);}
+  .cita .quien .qn{font-size:13.5px; color:var(--gris); font-weight:400; line-height:1.35;}
+  .cita .quien .qn b{color:var(--crema); font-weight:700;}
+  .cita.azul{background:rgba(85,109,251,.08); border-color:rgba(85,109,251,.4);}
+  .cita.azul::before{color:rgba(85,109,251,.14);}
+  .cita.verde{background:linear-gradient(180deg,#16231c,#171c22); border-color:rgba(99,252,175,.42);}
+  .cita.grande p{font-size:clamp(19px,4.8vw,25px); line-height:1.35; font-weight:600;}
 
-  /* Calculadora de la dispo */
-  .dispo{margin-top:34px; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.4); border-radius:20px; padding:24px 20px;}
-  .dispo .tsub{font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--menta); margin-bottom:6px;}
-  .dgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:16px;}
-  @media(max-width:520px){ .dgrid{grid-template-columns:1fr 1fr;} .dgrid .ecampo:first-child{grid-column:1 / -1;} }
-  .ecampo label{display:block; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gris); margin-bottom:6px;}
-  .erow{display:flex; align-items:center; gap:7px; background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:9px 13px;}
-  .erow:focus-within{border-color:var(--menta);}
-  .erow b{color:var(--gris); font-weight:700; font-size:15px; flex:0 0 auto;}
-  .e-in{flex:1; min-width:0; width:100%; background:transparent; border:none; color:var(--crema); font-family:inherit; font-weight:700; font-size:22px; padding:0;}
-  .e-in:focus{outline:none;}
-  .dout{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
-  .dpriv{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:10px;}
-  .dpriv b{color:var(--menta); font-weight:700;}
-  .dfrase{font-size:15px; line-height:1.5; color:var(--gris); font-weight:400;}
-  .dfrase b{color:var(--crema); font-weight:600;}
-  .drows{display:grid; gap:10px; margin-top:12px;}
-  .drow{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--input); border:1px solid var(--bd); border-radius:14px; padding:14px 16px;}
-  .drow.top{border-color:rgba(99,252,175,.45);}
-  .drow .dl{font-size:13.5px; line-height:1.4; color:var(--gris); font-weight:400; min-width:0;}
-  .drow .dl b{display:block; font-size:15px; color:var(--crema); font-weight:700;}
-  .drow .dv{flex:0 0 auto; text-align:right; font-variant-numeric:tabular-nums;}
-  .drow .dv .mes{display:block; font-size:clamp(21px,5.4vw,28px); font-weight:700; color:var(--menta); line-height:1.05; letter-spacing:-.01em;}
-  .drow .dv .mes small{font-size:.5em; font-weight:600; color:var(--gris);}
-  .drow .dv .cap{display:block; font-size:12.5px; color:var(--gris); font-weight:400; margin-top:4px;}
-  .dcierre{margin-top:14px; font-size:15.5px; line-height:1.55; color:var(--crema); font-weight:400;}
-  .dlegal{font-size:12px; color:var(--legal); margin-top:12px; line-height:1.5;}
+  /* La llamada: 3 momentos, sin lista de features */
+  .llamada{background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:26px 22px; margin-top:24px;}
+  .llamada .lt{font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--menta);}
+  .llamada h2{margin-top:8px;}
+  .momentos{display:grid; gap:0; margin-top:18px;}
+  .momento{display:flex; gap:14px; padding:14px 0;}
+  .momento + .momento{border-top:1px solid var(--bd);}
+  .momento .mn{flex:0 0 auto; width:34px; height:34px; border-radius:50%; background:rgba(99,252,175,.12); border:1px solid var(--menta);
+    color:var(--menta); font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center;}
+  .momento b{display:block; font-size:16px; font-weight:700; color:var(--crema);}
+  .momento p{font-size:14.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:3px;}
+  .momento p u{color:var(--crema); text-underline-offset:3px;}
+  .llamada .sincosto{margin-top:16px; border-top:1px solid var(--bd); padding-top:14px; font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
+  .llamada .sincosto b{color:var(--menta); font-weight:700;}
 
-  /* Cards de pasos */
-  .pasos{display:grid; gap:14px; margin-top:20px;}
-  .paso{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 18px; display:flex; gap:16px; align-items:flex-start;}
-  .paso .num{flex:0 0 auto; width:38px; height:38px; border-radius:50%; background:rgba(99,252,175,.12); border:1px solid var(--menta);
-    color:var(--menta); font-weight:700; font-size:17px; display:flex; align-items:center; justify-content:center;}
-  .paso b{display:block; font-size:16px; font-weight:700; color:var(--crema); margin-bottom:4px;}
-  .paso p{font-size:14.5px; line-height:1.55; color:var(--gris); font-weight:400;}
-  .paso p u{color:var(--crema); text-underline-offset:3px;}
-  /* Lo que no */
-  .no-box{margin-top:18px; background:rgba(85,109,251,.07); border:1px solid rgba(85,109,251,.45); border-radius:16px; padding:8px 18px;}
-  .no-box ul{list-style:none;}
-  .no-box li{display:flex; gap:12px; align-items:flex-start; padding:13px 0; font-size:15.5px; line-height:1.55; color:var(--gris); font-weight:400;}
-  .no-box li + li{border-top:1px solid rgba(85,109,251,.22);}
-  .no-box li b{color:var(--crema); font-weight:700;}
-  .no-box .mk{flex:0 0 auto; color:var(--rojo); font-weight:700; font-size:16px; line-height:1.5;}
+  /* El paper de Yale que respalda la metodología */
+  .papel{margin:6px 0 14px 48px; background:var(--input); border:1px solid var(--bd); border-radius:16px; padding:16px; text-align:center;}
+  @media(max-width:520px){ .papel{margin-left:0;} }
+  .papel .logobox{background:#F4F0E8; border-radius:12px; padding:16px 12px; display:flex; align-items:center; justify-content:center;}
+  .papel .logobox img{height:46px; width:auto;}
+  .papel .src{font-size:11.5px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--menta); margin-top:12px;}
+  .papel h3{font-size:16px; font-weight:700; color:var(--crema); line-height:1.3; margin-top:6px; text-wrap:balance;}
+  .papel p{font-size:13.5px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:8px; text-align:left;}
+  .papel p b{color:var(--crema); font-weight:700;}
+  .papel p i{font-style:italic;}
 
-  /* Video de la metodología (YouTube, se inyecta al dar play) */
-  .sistema h2{text-align:center;}
-  .sistema .sub{margin-top:10px;}
-  .player{position:relative; margin-top:20px; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
-  .player iframe{width:100%; height:100%; display:block; border:0;}
-  .player .poster{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
-  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
-    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.62), rgba(9,11,14,.92)); cursor:pointer; text-align:center; padding:20px;}
-  .poster-ov .pb{width:72px; height:72px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
-    font-size:28px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35);}
-  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
-  .poster-ov .ps{font-size:13px; color:var(--gris); font-weight:400;}
-  .vnota{font-size:clamp(16px,3.9vw,18.5px); line-height:1.55; color:var(--crema); font-weight:500; text-align:center; margin-top:16px; text-wrap:balance;}
-  .vnota u{text-decoration:underline; text-decoration-color:var(--menta); text-decoration-thickness:2px; text-underline-offset:4px;}
+  /* Jose, breve */
+  .jose{display:flex; gap:16px; align-items:center; background:var(--card); border:1px solid var(--bd); border-radius:18px; padding:18px; margin-top:24px;}
+  .jose img{flex:0 0 auto; width:76px; height:76px; border-radius:50%; object-fit:cover; object-position:top center;
+    background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.5);}
+  .jose .jn{font-size:16px; font-weight:700; color:var(--crema);}
+  .jose .jb{font-size:13.5px; line-height:1.5; color:var(--gris); font-weight:400; margin-top:3px;}
+  .jose .jb b{color:var(--crema); font-weight:600;}
 
-  /* Sobre mí */
-  .sobre-kicker{display:inline-block; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--menta);
-    background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:5px 14px; margin-bottom:14px;}
-  .sobre{display:grid; grid-template-columns:250px 1fr; gap:26px; align-items:start; margin-top:22px;}
-  @media(max-width:560px){ .sobre{grid-template-columns:1fr; gap:20px;} .sobre .foto{max-width:300px; margin:0 auto;} }
-  .sobre .foto{border-radius:20px; overflow:hidden; border:1px solid var(--bd); background:var(--input);}
-  .sobre .foto img{display:block; width:100%; height:auto; object-fit:cover;}
-  .sobre .rol{font-size:14px; color:var(--gris); font-weight:500; margin-bottom:12px;}
-  .sobre p{font-size:15px; line-height:1.62; color:var(--gris); font-weight:400; margin-top:12px;}
-  .sobre p:first-of-type{margin-top:0;}
-  .sobre p b{color:var(--crema); font-weight:600;}
-  .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;}
-  .tag{font-size:13px; font-weight:600; color:var(--crema); background:var(--card); border:1px solid var(--bd); border-radius:999px; padding:6px 14px;}
-
-  /* Números */
-  .stats{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;}
-  .stat{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:18px 16px;}
-  .stat .n{font-size:clamp(26px,6.4vw,36px); font-weight:700; color:var(--menta); line-height:1; letter-spacing:-.01em;}
-  .stat .t{font-size:14px; line-height:1.45; color:var(--gris); font-weight:400; margin-top:8px;}
-
-  /* Testimonios */
-  .testi h2{text-align:center; margin-bottom:26px;}
-  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; display:flex; gap:20px; align-items:flex-start;}
+  /* Testimonio de la colega */
+  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; margin-top:24px; display:flex; gap:18px; align-items:flex-start;}
   .tfeat-badge{position:absolute; top:-12px; left:22px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px;}
-  .tfeat-photo{flex:0 0 auto; width:98px; height:122px; border-radius:14px; object-fit:cover; object-position:top center; background:var(--input);}
-  .tfeat-body{flex:1; min-width:0;}
+  .tfeat-photo{flex:0 0 auto; width:92px; height:114px; border-radius:14px; object-fit:cover; object-position:top center; background:var(--input);}
   .stars{color:var(--menta); font-size:15px; letter-spacing:2px;}
-  .tfeat .quote{font-size:15.5px; line-height:1.62; color:var(--crema); font-weight:400; margin:10px 0 14px;}
-  .tname{font-size:15.5px; font-weight:700; color:var(--crema);}
+  .tfeat .quote{font-size:15px; line-height:1.6; color:var(--crema); font-weight:400; margin:10px 0 12px;}
+  .tname{font-size:15px; font-weight:700; color:var(--crema);}
   .tname .role{color:var(--gris); font-weight:400;}
-  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px;}
-  @media(max-width:560px){
-    .tgrid{grid-template-columns:1fr;}
-    .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;}
-    .tfeat-photo{width:88px; height:88px; border-radius:50%;}
-  }
+  @media(max-width:560px){ .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;} .tfeat-photo{width:88px; height:88px; border-radius:50%;} }
+
+  /* Grilla de testimonios (después del calendario) */
+  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:22px;}
+  @media(max-width:560px){ .tgrid{grid-template-columns:1fr;} }
   .tcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; display:flex; flex-direction:column;}
   .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px; flex:1;}
   .tcard .who{display:flex; gap:10px; align-items:center;}
@@ -174,138 +134,156 @@
   .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
   .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
 
-  /* Si no querés gestión */
-  .salida{background:var(--card); border:1px solid var(--bd); border-radius:20px; padding:28px 22px; text-align:center;}
-  .salida h2{font-size:clamp(20px,3.6vw,26px);}
-  .salida .big{font-size:clamp(19px,4.4vw,24px); line-height:1.4; color:var(--crema); font-weight:500; margin-top:14px; text-wrap:balance;}
-  .salida .big em{color:var(--menta); font-style:normal; font-weight:700;}
-
-  /* FAQ */
-  .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; padding:0 18px;}
-  .faq details:first-of-type{margin-top:18px;}
-  .faq summary{cursor:pointer; list-style:none; padding:16px 0; font-size:15.5px; font-weight:600; color:var(--crema); display:flex; justify-content:space-between; gap:12px; align-items:center;}
-  .faq summary::-webkit-details-marker{display:none;}
-  .faq summary::after{content:"+"; color:var(--menta); font-size:22px; font-weight:400; flex:0 0 auto; line-height:1;}
-  .faq details[open] summary::after{content:"\2212";}
-  .faq details p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400; padding:0 0 16px;}
-
-  /* Agenda / Calendly.
-     El calendario NO tiene scroll propio: el iframe crece al alto de su contenido (mensaje calendly.page_height),
-     así en el celular el dedo siempre mueve la página y nunca queda atrapado dentro del calendario. */
+  /* Agenda / Calendly (sin scroll interno: patrón calendly.page_height) */
   .booking h2{text-align:center;}
-  .booking .sub{margin-top:10px;}
+  .booking .sub{text-align:center;}
   .cal-wrap{margin-top:18px; border-radius:14px; overflow:hidden; height:760px; min-width:280px; background:var(--tinta); position:relative;}
   @media(max-width:649px){ .cal-wrap{height:1020px; margin-left:-20px; margin-right:-20px; border-radius:0;} }
   .cal-wrap iframe{display:block; width:100%; height:100%; border:0;}
   .cal-load{position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:70px; font-size:14px; color:var(--gris); font-weight:400; pointer-events:none;}
   .cal-wrap.ok .cal-load{display:none;}
 
-  .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin-top:48px; border-top:1px solid var(--bd); padding-top:22px;}
+  .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin:20px 0 0; border-top:1px solid var(--bd); padding:22px 0 50px;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <a class="marca" href="/" aria-label="Ir al inicio"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
-  <!-- ===== 1 · HERO (continúa el hook del anuncio: 1 dispo al mes) ===== -->
-  <span class="eyebrow">Solo para médicos especialistas</span>
-  <h1>¿Con cuánto al mes podrías <em>dejar las dispos</em>?</h1>
-  <p class="sub">La mayoría de especialistas nunca se lo ha planteado. En <b>45 minutos, sin costo</b>, sacamos tu número.</p>
-
-  <!-- ===== 2 · LA OFERTA, VISIBLE AL ENTRAR (resumen + por qué no tiene costo) ===== -->
-  <div class="otop">
-    <div class="ot-que">En una llamada de <b>45 minutos</b>, <span class="free">sin costo</span>:</div>
-    <ul class="ot-list">
-      <li>Armamos tu <b>plan de retiro</b> con tus números.</li>
-      <li>Te acompaño a <b>abrir tu cuenta de inversión</b> a tu nombre.</li>
-      <li>Te llevás la <b>guía de transferencias del BAC</b>.</li>
-    </ul>
-    <div class="ot-why">
-      <b>¿Por qué no tiene costo?</b>
-      <p>Algunos médicos después nos contratan para gestionar sus inversiones. Ese servicio sí se cobra. Vos decidís si lo contratás.</p>
+  <!-- ===== 1 · HERO: la historia en una frase, un solo botón ===== -->
+  <header style="text-align:center; padding:8px 0 0;">
+    <span class="eyebrow">Para médicos especialistas</span>
+    <h1>14 años estudiando para ser especialista.<br><em>¿Y cuántos más de guardias y dispos?</em></h1>
+    <p class="sub">Estuvimos en llamadas con cirujanos, anestesiólogos y ginecólogas de la CCSS y privada. Esto fue lo que nos dijeron, <b>en sus palabras</b>.</p>
+    <div class="ctarow">
+      <a class="cta" href="#agenda" id="cta-top">Agendar mi llamada · $0</a>
+      <p class="ctanota">45 minutos por videollamada · Sin costo</p>
     </div>
-  </div>
+  </header>
 
-  <!-- ===== 3 · EL FILTRO + EL PRIMER BOTÓN ===== -->
-  <p class="filtro">Para <b>especialistas en Costa Rica</b> que quieren destinar parte de sus ingresos a invertir a largo plazo.</p>
-
-  <div class="ctarow">
-    <a class="cta" href="#agenda" id="cta-top">Agendá mi llamada sin costo →</a>
-  </div>
-
-  <!-- ===== 4 · LA CUENTA DE LA DISPO (el titular sigue al anuncio; el campo sirve a cualquier aporte) ===== -->
-  <div class="dispo">
-    <div class="tsub">Hacé la cuenta</div>
-    <h2>1 dispo al mes = <em id="d-titulo">?</em></h2>
-    <p class="dpriv"><b>¿Solo hacés privada?</b> Poné el monto que querés invertir cada mes.</p>
-    <div class="dgrid">
-      <div class="ecampo"><label for="d-dispo">Tu aporte mensual · USD</label><div class="erow"><b>$</b><input id="d-dispo" class="e-in" inputmode="numeric" value="500" aria-label="Tu aporte mensual en dólares"></div></div>
-      <div class="ecampo"><label for="d-edad">Tu edad hoy</label><div class="erow"><input id="d-edad" class="e-in" inputmode="numeric" value="35" aria-label="Tu edad hoy"></div></div>
-      <div class="ecampo"><label for="d-ret">Edad de retiro</label><div class="erow"><input id="d-ret" class="e-in" inputmode="numeric" value="65" aria-label="Edad de retiro"></div></div>
-    </div>
-    <div class="dout">
-      <p class="dfrase" id="d-frase">Si invertís <b>$500</b> todos los meses durante <b>30 años</b>, a los 65 te podría pagar esto por mes:</p>
-      <div class="drows">
-        <div class="drow">
-          <div class="dl"><b>Con el S&amp;P 500</b>Historia: ~5% real (tomando en cuenta inflación)</div>
-          <div class="dv"><span class="mes" id="d-sp-mes">$1,734<small>/mes</small></span><span class="cap" id="d-sp-cap">Capital: $416k</span></div>
-        </div>
-        <div class="drow top">
-          <div class="dl"><b>Con el Nasdaq-100</b>Historia: ~11% real (tomando en cuenta inflación)</div>
-          <div class="dv"><span class="mes" id="d-nq-mes">$5,843<small>/mes</small></span><span class="cap" id="d-nq-cap">Capital: $1.40M</span></div>
-        </div>
+  <!-- ===== 2 · ACTO 1: el desgaste ===== -->
+  <section>
+    <p class="narr">La guardia y la dispo pagan bien. Y por eso mismo <em>atrapan</em>.</p>
+    <div class="citas">
+      <div class="cita grande">
+        <p>"Yo decir a los 55 años <b>ya no quiero hacer disponibilidades</b>, no quiero salir a las 7 de la mañana y llegar a las 10 de la noche a mi casa."</p>
+        <div class="quien"><span class="pin">W</span><span class="qn"><b>William</b> · cirujano · CCSS y privada</span></div>
       </div>
-      <p class="dcierre" id="d-cierre">Eso es una dispo al mes. Las demás te las seguís gastando igual.</p>
-      <p class="dlegal">Todo en plata de hoy, con la inflación (~3%) ya descontada. El ingreso mensual sale de retirar 5% al año del capital, que es lo que permite mantenerlo sin gastarlo. Son promedios históricos de largo plazo y no se garantizan retornos.</p>
-    </div>
-  </div>
-
-  <!-- ===== 5 · CTA ===== -->
-  <div class="ctarow">
-    <a class="cta" href="#agenda" id="cta-hero">Agendar mi llamada · $0</a>
-    <p class="ctanota">45 minutos por videollamada · Costo $0</p>
-  </div>
-
-  <!-- ===== 6 · SOBRE MÍ ===== -->
-  <section id="sobre">
-    <span class="sobre-kicker">Sobre mí</span>
-    <h2>Soy Jose Montero, fundador de Empowered Investor.</h2>
-    <div class="sobre">
-      <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
-      <div>
-        <div class="rol">11 años gestionando portafolios en la bolsa de EE.&nbsp;UU.</div>
-        <p>Durante 4 años formé parte del <b>London Stock Exchange</b>, una de las bolsas de valores más grandes del mundo. Hoy administro portafolios de clientes en cuentas que están a nombre de cada uno de ellos.</p>
-        <p><b>3 de cada 10 clientes nuestros son médicos.</b> Los acompañamos a armar su plan de retiro, abrir su cuenta de inversión y, si lo quieren, gestionamos sus portafolios.</p>
-        <p>Esposo. <b>Papá de tres.</b></p>
-        <div class="tags">
-          <span class="tag">Plan de retiro</span>
-          <span class="tag">Inversiones en EE.&nbsp;UU.</span>
-          <span class="tag">Cuentas a tu nombre</span>
-          <span class="tag">Gestión de portafolios</span>
-        </div>
+      <div class="cita">
+        <p>"Desde algún punto de vista es increíble. De otro, <b>es esclavizante</b>."</p>
+        <div class="quien"><span class="pin">L</span><span class="qn"><b>Luis</b> · anestesiólogo</span></div>
       </div>
-    </div>
-    <div class="stats">
-      <div class="stat"><div class="n">3 de 10</div><div class="t">clientes nuestros son médicos.</div></div>
-      <div class="stat"><div class="n">$1MM+</div><div class="t">administrados en cuentas a nombre de cada cliente.</div></div>
-      <div class="stat"><div class="n">11 años</div><div class="t">gestionando portafolios en la bolsa de EE.&nbsp;UU.</div></div>
-      <div class="stat"><div class="n">150+</div><div class="t">cuentas de inversión abiertas de la mano con nosotros.</div></div>
+      <div class="cita">
+        <p>"'¿Y ahora quién viene este domingo?' Y todo el mundo es como <b>'ay no, zafo, zafo, zafo'</b>… todos están cansados."</p>
+        <div class="quien"><span class="pin">M</span><span class="qn"><b>Mariana</b> · especialista en reproducción</span></div>
+      </div>
+      <div class="cita azul">
+        <p>"Yo lo veo en los hospitales: una persona de 60 años ya no más… <b>la habilidad quirúrgica se pierde</b>. Hay que saber cuándo retirarse."</p>
+        <div class="quien"><span class="pin">W</span><span class="qn"><b>William</b> · cirujano</span></div>
+      </div>
     </div>
   </section>
 
-  <!-- ===== 7 · TESTIMONIOS: la colega fija + carrusel ===== -->
-  <section class="testi">
-    <h2>Una colega que ya pasó por acá</h2>
+  <!-- ===== 3 · ACTO 2: nadie les enseñó esto ===== -->
+  <section style="padding-top:0;">
+    <p class="narr">El cuerpo tiene fecha. El plan para ese día, <em>casi nadie lo tiene</em>.</p>
+    <div class="citas">
+      <div class="cita">
+        <p>"Los médicos siempre son como muy de <b>jugar a la segura</b>… ven el riesgo como algo necesariamente adverso."</p>
+        <div class="quien"><span class="pin">M</span><span class="qn"><b>Mariana</b> · especialista en reproducción</span></div>
+      </div>
+      <div class="cita">
+        <p>"No es un portafolio experto, lo he hecho <b>a punta de YouTube y ChatGPT</b>… estoy llegando a un punto donde me quedo estancado."</p>
+        <div class="quien"><span class="pin">A</span><span class="qn"><b>Andrés</b> · cirujano plástico, 34</span></div>
+      </div>
+      <div class="cita grande verde">
+        <p>"¿Con cuánto al mes bajaría el ritmo? <b>La pregunta más difícil. Nunca me lo he planteado.</b>"</p>
+        <div class="quien"><span class="pin">A</span><span class="qn"><b>Andrés</b> · cirujano plástico</span></div>
+      </div>
+    </div>
+    <p class="contexto">Citas de llamadas reales de plan de retiro, transcritas con permiso de cada médico. Nombres sin apellido por privacidad.</p>
+  </section>
+
+  <!-- ===== 4 · EL GIRO: la llamada ===== -->
+  <section style="padding-top:0;">
+    <p class="narr">Esa pregunta —<b>¿con cuánto al mes podrías bajar el ritmo?</b>— tiene respuesta.</p>
+    <p class="narr">Sacarla toma <em>una llamada de 45 minutos</em>. Es lo mismo que hicimos con ellos.</p>
+    <div class="llamada">
+      <div class="lt">La llamada · sin costo</div>
+      <h2>45 minutos, tu número y tu plan</h2>
+      <div class="momentos">
+        <div class="momento"><span class="mn">1</span><div><b>Sacamos tu número</b><p>Cuánto querés recibir por mes, cuánto podés apartar y a qué edad querés dejar las guardias y las dispos.</p></div></div>
+        <div class="momento"><span class="mn">2</span><div><b>Armamos tu plan de retiro</b><p>Con tus números, en la bolsa de EE.&nbsp;UU. Te lo llevás vos, sea que sigás con nosotros o no.</p></div></div>
+        <div class="momento"><span class="mn">3</span><div><b>Te mostramos la metodología</b><p>Basada en papers académicos, para crear el plan en tu cuenta de inversión priorizando tu <u>edad de retiro</u>, sin que tengás que dedicarle tiempo ni esfuerzo.</p></div></div>
+      </div>
+      <div class="papel">
+        <div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div>
+        <div class="src">Yale · Ayres &amp; Nalebuff</div>
+        <h3>Retirarse casi 6 años antes, con más riqueza</h3>
+        <p>"Life-Cycle Investing and Leverage" (SSRN 1149340, luego el libro <i>Lifecycle Investing</i>): simulando 94 generaciones de trabajadores desde 1871, su método terminó con <b>+90% de riqueza al retiro</b> que el fondo life-cycle típico — suficiente para <b>retirarse casi 6 años antes</b>. Nuestra metodología aplica esa misma lógica.</p>
+      </div>
+      <p class="sincosto"><b>¿Por qué la llamada es gratis?</b> Algunos médicos después nos contratan para gestionar sus inversiones. La llamada no te obliga a nada. Nuestro enfoque es construir primero la confianza: escuchar tus necesidades y tus experiencias anteriores, y que veas desde adentro cómo funcionan las cosas.</p>
+    </div>
+    <div class="ctarow">
+      <a class="cta" href="#agenda" id="cta-giro">Quiero sacar mi número →</a>
+      <p class="ctanota">Son 5 espacios por semana para médicos especialistas</p>
+    </div>
+  </section>
+
+  <!-- ===== 5 · ACTO 3: cómo termina la historia ===== -->
+  <section style="padding-top:0;">
+    <p class="narr">Así suena la misma llamada, <em>45 minutos después</em>:</p>
+    <div class="citas">
+      <div class="cita verde">
+        <p>"Y se le baja <b>10 años</b> la edad de retiro."</p>
+        <div class="quien"><span class="pin">L</span><span class="qn"><b>Luis</b> · anestesiólogo, leyendo su plan en pantalla</span></div>
+      </div>
+      <div class="cita verde">
+        <p>"Un montón de dudas que tenía realmente me quedaron <b>extremadamente claras</b>."</p>
+        <div class="quien"><span class="pin">A</span><span class="qn"><b>Andrés</b> · cirujano plástico</span></div>
+      </div>
+      <div class="cita verde">
+        <p>"Ya me dan ganas como de que <b>sea más plata</b> más bien, que no sean solo 5 mil dólares."</p>
+        <div class="quien"><span class="pin">W</span><span class="qn"><b>William</b> · cirujano, después de ver que el plan daba</span></div>
+      </div>
+      <div class="cita">
+        <p>"Mis colegas me dijeron: '¿pero quién les está ayudando? <b>Pásame el contacto</b>, suena interesante'."</p>
+        <div class="quien"><span class="pin">L</span><span class="qn"><b>Luis</b> · anestesiólogo</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 6 · QUIÉN TE ATIENDE + LA COLEGA ===== -->
+  <section style="padding-top:0;">
+    <p class="narr">Del otro lado de la llamada:</p>
+    <div class="jose">
+      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy">
+      <div>
+        <div class="jn">Jose Montero</div>
+        <div class="jb">Fundador de Empowered Investor · 11 años gestionando portafolios en la bolsa de EE.&nbsp;UU. · <b>3 de cada 10 clientes son médicos</b> · 4 años en el London Stock Exchange</div>
+      </div>
+    </div>
     <div class="tfeat">
       <span class="tfeat-badge">★ Médico especialista</span>
       <img class="tfeat-photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña" loading="lazy">
-      <div class="tfeat-body">
+      <div>
         <div class="stars">★★★★★</div>
-        <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Destaco la comunicación constante y el seguimiento cercano; incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas. Ha sido una experiencia formativa y transformadora en mi relación con el dinero.</p>
+        <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas.</p>
         <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
       </div>
     </div>
+  </section>
 
+  <!-- ===== 7 · AGENDA ===== -->
+  <section class="booking" id="agenda" style="padding-top:0;">
+    <h2>Tu llamada es esta: <em>elegí el día</em></h2>
+    <p class="sub">45 minutos por videollamada, sin costo. Salís con tu número y tu plan de retiro.</p>
+    <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
+  </section>
+
+  <!-- ===== 8 · TODOS LOS TESTIMONIOS ===== -->
+  <section style="padding-top:0;">
+    <h2 style="text-align:center;">Y muchos profesionales <em>más</em></h2>
     <div class="tgrid">
       <div class="tcard">
         <div class="stars">★★★★★</div>
@@ -340,88 +318,7 @@
     </div>
   </section>
 
-  <!-- ===== 8 · LOS ENTREGABLES ===== -->
-  <section id="oferta">
-    <h2>¿Qué vas a <em>obtener</em>?</h2>
-    <div class="pasos">
-      <div class="paso">
-        <div class="num">1</div>
-        <div><b>Tu plan de retiro privado</b><p>Lo armamos con tus números: cuánto querés recibir por mes, cuánto podés apartar y a qué edad querés dejar las guardias. En la bolsa de EE.&nbsp;UU., con nuestra metodología.</p></div>
-      </div>
-      <div class="paso">
-        <div class="num">2</div>
-        <div><b>Te acompañamos a abrir tu cuenta</b><p>La solicitud la llenamos juntos durante la llamada, en un bróker regulado de EE.&nbsp;UU. y <u>a tu nombre</u>. La aprobación final la da el bróker.</p></div>
-      </div>
-      <div class="paso">
-        <div class="num">3</div>
-        <div><b>La plantilla de transferencia internacional del BAC</b><p>Te queda lista con los datos de tu cuenta de inversión, para que mandar la plata sea un trámite corto.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== 9 · LO QUE NO ===== -->
-  <section>
-    <h2>Lo que no vas a encontrar acá</h2>
-    <div class="no-box">
-      <ul>
-        <li><span class="mk">✕</span><span><b>Sin empresas offshore.</b> Nada de Islas Caimán, Islas de Guernsey ni estructuras raras. Bróker regulado en EE.&nbsp;UU., miembro de FINRA y SIPC.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin fondos mancomunados.</b> Tu plata no se mezcla con la de nadie.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin contratos de permanencia</b> ni letra pequeña.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin perder visibilidad.</b> Ves tu cuenta cuando querás, desde tu celular.</span></li>
-        <li><span class="mk">✕</span><span><b>Sin tener que aprender a invertir</b> ni revisar gráficos.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- ===== 10 · LA GESTIÓN ES OPCIONAL ===== -->
-  <section>
-    <div class="salida">
-      <h2>La gestión es <em>opcional</em></h2>
-      <p class="big">Después decidís si querés que gestionemos tus inversiones.<br>La llamada y sus entregables <em>no te obligan a contratar</em>.</p>
-    </div>
-  </section>
-
-  <!-- ===== 11 · AGENDA (Calendly inline, sin scroll interno) ===== -->
-  <section class="booking" id="agenda">
-    <h2>Agendá tu llamada · <em>$0</em></h2>
-    <p class="sub">45 minutos por videollamada. Son 5 espacios para médicos especialistas. Elegí el día y la hora que te sirvan.</p>
-    <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
-  </section>
-
-  <!-- ===== 12 · FAQ ===== -->
-  <section class="faq">
-    <h2>Preguntas que nos hacen los médicos</h2>
-    <details>
-      <summary>¿Ustedes pueden sacar plata de mi cuenta?</summary>
-      <p>No. La cuenta está a tu nombre y solo vos podés depositar o retirar, siempre hacia una cuenta bancaria que también esté a tu nombre.</p>
-    </details>
-    <details>
-      <summary>¿Tengo que saber de inversiones?</summary>
-      <p>No. En la llamada te explico el plan con tus números y en palabras normales. Si después querés que lo manejemos nosotros, no tenés que revisar gráficos ni aprender a operar.</p>
-    </details>
-    <details>
-      <summary>¿Qué necesito tener a mano?</summary>
-      <p>Tu cédula o pasaporte vigente y 45 minutos sin interrupciones, de preferencia desde una compu.</p>
-    </details>
-  </section>
-
-  <!-- ===== 13 · LA METODOLOGÍA EN VIDEO (profundización opcional, fuera del camino a la agenda) ===== -->
-  <section class="sistema">
-    <h2>¿Querés ver <em>la metodología</em> en detalle?</h2>
-    <p class="sub">En este video armo un plan de retiro de $2M de principio a fin.</p>
-    <div class="player" id="ytplayer">
-      <img class="poster" src="/minicurso/poster-sistema.webp" alt="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica" width="1280" height="720" loading="lazy">
-      <div class="poster-ov" id="ytplay">
-        <div class="pb">▶</div>
-        <div class="pt">Ver el sistema completo</div>
-        <div class="ps">27 minutos</div>
-      </div>
-    </div>
-    <p class="vnota"><u>No hace falta verlo para agendar.</u> En la llamada hacemos esto mismo con tus números.</p>
-    <div class="ctarow"><a class="cta" href="#agenda" id="cta-video">Agendar mi llamada · $0</a></div>
-  </section>
-
-  <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. Los rendimientos usados son promedios históricos de largo plazo (S&amp;P 500 ~8%, Nasdaq-100 ~14% nominal), ajustados por ~3% de inflación y expresados en dólares de hoy. No se garantizan retornos. Los resultados pasados no garantizan resultados futuros; toda inversión implica riesgo.</p>
+  <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. Las citas provienen de llamadas reales con médicos, usadas con su autorización; se omiten apellidos y datos personales. No se garantizan retornos: los resultados pasados no garantizan resultados futuros y toda inversión implica riesgo.</p>
 </div>
 
 <script>
@@ -448,65 +345,17 @@
     return base + (base.indexOf("?")>-1?"&":"?") + parts.join("&");
   }
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
+  var CTAS = ["cta-top","cta-giro"];
 
-  ["cta-top","cta-hero","cta-video"].forEach(function(id){
+  CTAS.forEach(function(id){
     byId(id).addEventListener("click", function(){
       track("click_agendar", {origen:id.replace("cta-","")});
       try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(e){}
     });
   });
 
-  // ===== Video de la metodología: el player de YouTube se inyecta al dar play =====
-  (function(){
-    var box=byId("ytplayer"), ov=byId("ytplay"); if(!box || !ov) return;
-    ov.addEventListener("click", function(){
-      track("sistema_play", {});
-      var fr=document.createElement("iframe");
-      fr.src="https://www.youtube.com/embed/AfjY_nuiUFk?autoplay=1&rel=0&playsinline=1";
-      fr.title="Cómo llegar a $2M de retiro invirtiendo desde Costa Rica";
-      fr.setAttribute("allow","autoplay; fullscreen; encrypted-media; picture-in-picture");
-      fr.setAttribute("allowfullscreen","");
-      box.innerHTML=""; box.appendChild(fr);
-    });
-  })();
-
-  // ===== La cuenta de la dispo =====
-  (function(){
-    var iD=byId("d-dispo"), iE=byId("d-edad"), iR=byId("d-ret");
-    var WNET=0.05; // retiro: 5% al año del capital, en plata de hoy
-    function num(s){ var n=parseFloat(String(s||"").replace(/[^0-9.]/g,"")); return isNaN(n)?0:n; }
-    function comas(el){ var d=el.value.replace(/[^0-9]/g,""); el.value=d?Number(d).toLocaleString("en-US"):""; }
-    function plata(n){ return "$"+Math.round(n).toLocaleString("en-US"); }
-    function corto(n){ return n>=1e6 ? "$"+(n/1e6).toFixed(2)+"M" : "$"+Math.round(n/1e3)+"k"; }
-    function capital(aporte, anios, real){ var i=real/12, n=anios*12; return aporte*(Math.pow(1+i,n)-1)/i; }
-    function calc(){
-      var ap=num(iD.value), ed=num(iE.value), rt=num(iR.value), an=rt-ed;
-      var ok = ap>0 && ed>=18 && rt<=80 && an>=1;
-      if(!ok){
-        byId("d-titulo").textContent="?";
-        byId("d-frase").innerHTML="Poné tu aporte mensual, tu edad y a qué edad te querés retirar.";
-        ["d-sp-mes","d-nq-mes"].forEach(function(id){ byId(id).innerHTML="—"; });
-        ["d-sp-cap","d-nq-cap"].forEach(function(id){ byId(id).textContent=""; });
-        return;
-      }
-      var cs=capital(ap,an,0.05), cn=capital(ap,an,0.11);
-      byId("d-titulo").textContent="hasta "+plata(cn*WNET/12)+"/mes";
-      byId("d-frase").innerHTML="Si invertís <b>"+plata(ap)+"</b> todos los meses durante <b>"+an+" año"+(an===1?"":"s")+"</b>, a los "+rt+" te podría pagar esto por mes:";
-      byId("d-sp-mes").innerHTML=plata(cs*WNET/12)+"<small>/mes</small>";
-      byId("d-nq-mes").innerHTML=plata(cn*WNET/12)+"<small>/mes</small>";
-      byId("d-sp-cap").textContent="Capital: "+corto(cs);
-      byId("d-nq-cap").textContent="Capital: "+corto(cn);
-    }
-    var tocado=false;
-    function toque(){ if(!tocado){ tocado=true; track("dispo_calc", {}); } }
-    iD.addEventListener("input", function(){ comas(iD); calc(); toque(); });
-    [iE,iR].forEach(function(el){ el.addEventListener("input", function(){ el.value=el.value.replace(/[^0-9]/g,"").slice(0,2); calc(); toque(); }); });
-    calc();
-  })();
-
   // ===== Calendly inline SIN scroll interno =====
   // El iframe se crea a mano (sin widget.js) y su alto sigue al contenido con el mensaje calendly.page_height.
-  // Así no hay una zona con scroll propio donde el dedo quede atrapado en el celular.
   (function(){
     var wrap=byId("calwrap"); if(!wrap) return;
     var cargado=false, agendado=false;
@@ -528,14 +377,12 @@
         if(h>300){ wrap.style.height=(h+8)+"px"; wrap.classList.add("ok"); }
       } else if(d.event==="calendly.date_and_time_selected"){
         track("calendly_hora_elegida", {});
-        // Al pasar al formulario, el contenido cambia: subimos al inicio del calendario.
         try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
       } else if(d.event==="calendly.event_scheduled" && !agendado){
         agendado=true;
         track("medicos_llamada_agendada", {utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-        // El mismo id que va a mandar el webhook de Calendly por la API de conversiones,
-        // para que Meta deduplique y no cuente la agenda dos veces. Sale del URI del
-        // invitado: .../scheduled_events/<uuid>/invitees/<uuid>.
+        // El mismo id que manda el webhook de Calendly por la API de conversiones,
+        // para que Meta deduplique y no cuente la agenda dos veces.
         var eid = "";
         try{
           var uri = (d.payload && d.payload.invitee && d.payload.invitee.uri) || "";
@@ -554,10 +401,8 @@
       var io=new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); cargar(); } }, {rootMargin:"1200px 0px"});
       io.observe(wrap);
     } else { cargar(); }
-    // Si tocan un CTA, se carga de una vez para que esté listo al llegar.
-    ["cta-top","cta-hero","cta-video"].forEach(function(id){ byId(id).addEventListener("click", cargar); });
+    CTAS.forEach(function(id){ byId(id).addEventListener("click", cargar); });
   })();
-
 })();
 </script>
 </body>
