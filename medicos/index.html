@@ -134,6 +134,17 @@
   .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
   .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
 
+  /* FAQ: las objeciones respondidas antes de la agenda */
+  .faq h2{text-align:center;}
+  .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; padding:0 18px;}
+  .faq details:first-of-type{margin-top:22px;}
+  .faq summary{cursor:pointer; list-style:none; padding:16px 0; font-size:15.5px; font-weight:600; color:var(--crema); display:flex; justify-content:space-between; gap:12px; align-items:center;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+"; color:var(--menta); font-size:22px; font-weight:400; flex:0 0 auto; line-height:1;}
+  .faq details[open] summary::after{content:"\2212";}
+  .faq details p{font-size:14.5px; line-height:1.6; color:var(--gris); font-weight:400; padding:0 0 14px;}
+  .faq details p b{color:var(--crema); font-weight:700;}
+
   /* Agenda / Calendly (sin scroll interno: patrón calendly.page_height) */
   .booking h2{text-align:center;}
   .booking .sub{text-align:center;}
@@ -274,7 +285,52 @@
     </div>
   </section>
 
-  <!-- ===== 7 · AGENDA ===== -->
+  <!-- ===== 7 · FAQ: las objeciones, respondidas antes de agendar ===== -->
+  <section class="faq" style="padding-top:0;">
+    <h2>Preguntas <em>frecuentes</em></h2>
+    <details>
+      <summary>¿Necesito tener inversiones o un capital mínimo?</summary>
+      <p>No. La llamada no pide ningún monto de entrada: el plan se arma con tu capacidad real de aporte mensual, sea la que sea. Muchos de los médicos con los que hemos hablado empezaron desde cero.</p>
+    </details>
+    <details>
+      <summary>¿Qué información debo llevar?</summary>
+      <p>Nada formal. Solo una idea de dos números: cuánto podrías apartar al mes y cuánto querrías recibir por mes cuando bajés el ritmo. Con eso trabajamos. 45 minutos sin interrupciones, de preferencia desde una compu.</p>
+    </details>
+    <details>
+      <summary>¿Qué recibo al terminar la llamada?</summary>
+      <p>Tu número y tu plan de retiro con tus datos: a qué edad podés bajar el ritmo, con qué aporte mensual y en qué fases. <b>Te lo llevás vos</b>, sea que sigás con nosotros o no.</p>
+    </details>
+    <details>
+      <summary>¿Qué pasa si después decido no contratar?</summary>
+      <p>Nada. El plan queda tuyo y ahí termina, sin compromisos ni insistencia. La llamada existe para que veas cómo trabajamos; contratar la gestión es una decisión aparte y solo tuya.</p>
+    </details>
+    <details>
+      <summary>¿Qué servicio me ofrecerían y cómo cobran?</summary>
+      <p>Si querés que gestionemos tu portafolio, lo hacemos dentro de tu propia cuenta, a tu nombre, con un honorario del <b>1% anual</b> sobre el monto administrado. Sin contratos de permanencia ni letra pequeña: podés irte cuando querás y la cuenta sigue siendo tuya.</p>
+    </details>
+    <details>
+      <summary>¿Qué pasa si un mes no puedo aportar?</summary>
+      <p>Nada. No hay contratos de aporte obligatorio, ni multas, ni letra pequeña. El aporte mensual es una meta de tu plan, no una obligación con nosotros: si un mes no podés, no aportás y el plan sigue.</p>
+      <p>Eso sí, la constancia es lo que hace que el plan llegue a la meta. La idea es retomar los aportes en cuanto podás, y si tu situación cambia de forma más permanente, ajustamos el plan juntos.</p>
+    </details>
+    <details>
+      <summary>¿Qué pasa si necesito la plata por una emergencia?</summary>
+      <p>Es tu cuenta y tu plata: podés retirarla cuando querás, sin penalizaciones ni períodos de encierro. Nos avisás, vendemos lo necesario y transferís de tu cuenta en el bróker directo a tu banco. El proceso completo normalmente toma pocos días hábiles.</p>
+      <p>Por eso mismo recomendamos invertir solo plata que no vas a necesitar en el corto plazo: para que una emergencia no te obligue a vender en un mal momento del mercado.</p>
+    </details>
+    <details>
+      <summary>¿Cómo se hace la transferencia? ¿Se la hacen a ustedes?</summary>
+      <p><b>No. Nunca nos transferís plata a nosotros.</b> La transferencia va directo de tu banco a tu propia cuenta, a tu nombre, en el bróker regulado en EE.&nbsp;UU. Nosotros ni siquiera podemos tocarla: nuestro permiso es únicamente comprar y vender dentro de tu cuenta, no depositar ni retirar.</p>
+      <p>Te guiamos paso a paso en la transferencia internacional, igual que hemos hecho con todos nuestros clientes.</p>
+    </details>
+    <details>
+      <summary>¿Usted qué estudió? ¿Qué experiencia tiene?</summary>
+      <p>Estudié Administración de Empresas. Después tuve la suerte de trabajar en una firma de inversión que manejaba $600 millones de dólares, y trabajé 4.5 años en LSEG (London Stock Exchange Group).</p>
+      <p>En total llevo 11 años manejando portafolios de inversión.</p>
+    </details>
+  </section>
+
+  <!-- ===== 8 · AGENDA ===== -->
   <section class="booking" id="agenda" style="padding-top:0;">
     <h2>Tu llamada es esta: <em>elegí el día</em></h2>
     <p class="sub">45 minutos por videollamada, sin costo. Salís con tu número y tu plan de retiro.</p>
