@@ -135,21 +135,6 @@
   .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
   .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
 
-  .citas{display:grid; gap:14px; margin-top:14px;}
-  @media(min-width:521px){ .citas{grid-template-columns:1fr 1fr;} }
-  .cita{position:relative; background:var(--card); border:1px solid var(--bd); border-radius:18px; padding:20px 18px 16px; overflow:hidden;}
-  .cita::before{content:"“"; position:absolute; top:-6px; right:10px; font-family:Georgia,'Times New Roman',serif;
-    font-size:100px; line-height:1; color:rgba(99,252,175,.10); font-weight:700; pointer-events:none;}
-  .cita p{font-size:clamp(15.5px,3.6vw,18px); line-height:1.45; color:var(--crema); font-weight:500; text-wrap:pretty; position:relative;}
-  .cita p b{color:var(--menta); font-weight:700;}
-  .cita .quien{display:flex; align-items:center; gap:9px; margin-top:12px;}
-  .cita .quien .pin{flex:0 0 auto; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    font-size:12.5px; font-weight:700; color:var(--tinta); background:var(--menta);}
-  .cita .quien .qn{font-size:13px; color:var(--gris); font-weight:400; line-height:1.35;}
-  .cita .quien .qn b{color:var(--crema); font-weight:700;}
-  .cita.verde{background:linear-gradient(180deg,#16231c,#171c22); border-color:rgba(99,252,175,.42);}
-  .tmore{text-align:center; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gris); margin:26px 0 0;}
-  .contexto{font-size:12.5px; color:var(--legal); font-weight:400; margin-top:12px; text-align:center;}
 
   /* ===== 6 y 8 · Preguntas ===== */
   .faq h2{text-align:center;}
@@ -278,19 +263,6 @@
       <div class="who"><img src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
     </div>
 
-    <div class="tmore">De las llamadas con médicos como vos</div>
-    <div class="citas">
-      <div class="cita">
-        <p>"¿Con cuánto al mes bajaría el ritmo? <b>La pregunta más difícil. Nunca me lo he planteado.</b>"</p>
-        <div class="quien"><span class="pin">A</span><span class="qn"><b>Andrés</b> · cirujano plástico</span></div>
-      </div>
-      <div class="cita verde">
-        <p>"Y se le baja <b>10 años</b> la edad de retiro."</p>
-        <div class="quien"><span class="pin">L</span><span class="qn"><b>Luis</b> · anestesiólogo, leyendo su plan en pantalla</span></div>
-      </div>
-    </div>
-    <p class="contexto">Citas de llamadas reales de plan de retiro, transcritas con permiso de cada médico. Nombres sin apellido por privacidad.</p>
-
     <div class="ctarow">
       <a class="cta" href="#agenda" id="cta-giro">Quiero sacar mi número →</a>
       <p class="ctanota">Son 5 espacios por semana para médicos especialistas</p>
@@ -375,7 +347,7 @@
     </div>
   </section>
 
-  <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. Las citas provienen de llamadas reales con médicos, usadas con su autorización; se omiten apellidos y datos personales. No se garantizan retornos: los resultados pasados no garantizan resultados futuros y toda inversión implica riesgo.</p>
+  <p class="foot">Empowered Investor · Contenido educativo, no es asesoría financiera personalizada. No se garantizan retornos: los resultados pasados no garantizan resultados futuros y toda inversión implica riesgo.</p>
 </div>
 
 <script>
