@@ -50,6 +50,11 @@
   .avisoclave b{ color:var(--ambar); }
   .avisoclave button{ margin-left:auto; background:transparent; border:1px solid var(--ambar); color:var(--ambar);
     border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  /* banda fija cuando Jose entra a la cuenta de un cliente desde /panel (modo asesor) */
+  .avisoasesor{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:#1f2a22; border:1px solid var(--menta); border-radius:12px; padding:10px 14px; margin:0 0 12px;
+    font-size:13.5px; color:var(--crema); box-shadow:0 6px 18px rgba(0,0,0,.35); }
+  .avisoasesor b{ color:var(--menta); }
   .notajose{ display:flex; gap:10px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4);
     border-radius:12px; padding:12px 14px; margin:12px 0; font-size:14px; }
   .notajose b{ display:block; color:var(--menta); font-size:11px; text-transform:uppercase; letter-spacing:.8px; margin-bottom:3px; }
@@ -476,6 +481,7 @@ function fw(phi, p1, p2, Ff){
 var DEMO = location.hash.indexOf("#demo")===0;   // #demo, #demo-cerca, #demo-fuera
 var CORREO=null;       // correo con el que entró (la identidad del cliente)
 var D=null;            // datos del cliente (respuesta de `reporte` + derivados)
+var ASESOR=null;       // {asesor:true, tok, alias} cuando Jose abrió esta cuenta desde /panel
 var ESCENARIO="normal";
 
 /* ================= derivados del plan ================= */
@@ -583,12 +589,16 @@ function render(){
   var p1=(x.plan.p1||70), p2=(x.plan.p2||100);
 
   app.innerHTML=
+  /* ---- modo asesor: Jose viendo/editando la cuenta de un cliente desde /panel ---- */
+  (ASESOR?
+    '<div class="avisoasesor">👁️ <div><b>Modo asesor</b> · estás en la cuenta de <b>'+esc(d.nombre||"")+'</b> ('+esc(ASESOR.alias)+') tal como la ve el cliente. '
+    +'Lo que edités acá queda registrado a tu nombre en el historial del plan.</div></div>':'')
   /* ---- encabezado ---- */
-  '<div class="top">'
+  +'<div class="top">'
     +'<img src="/assets/logo-fondo-negro.png" alt="EI">'
     +'<div><div class="hola">Hola, '+esc((d.nombre||"").split(" ")[0])+'</div>'
     +'<div class="cuando">Números al cierre de '+(x.snap? mesLargo(x.snap.mes):"—")+' · se actualizan cada fin de mes</div></div>'
-    +'<button class="salir" id="salir">Salir</button>'
+    +'<button class="salir" id="salir">'+(ASESOR?"Cerrar vista":"Salir")+'</button>'
   +'</div>'
 
   /* ---- aviso: sigue con la clave inicial ---- */
@@ -765,7 +775,9 @@ function render(){
 
   // eventos
   $("salir").addEventListener("click", function(){
-    sessionStorage.removeItem("r_sesion"); location.hash=""; location.reload(); });
+    sessionStorage.removeItem("r_sesion"); location.hash="";
+    if(ASESOR) window.close();   // si el navegador no deja cerrarla, cae al reload (pantalla de entrada)
+    location.reload(); });
   var cc=$("cambiar-clave");
   if(cc) cc.addEventListener("click", async function(){
     cc.disabled=true; cc.textContent="Mandando…";
@@ -1028,20 +1040,14 @@ $("e-guardar").addEventListener("click", async function(){
         D.meta.aporte_pactado=Math.round(cambios.aporte_anual/12);
       }
     } else {
-      var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
-      if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
-      var body={ correo:ses.correo, clave:ses.clave };
+      var body={};
       if(cambios.ingreso) body.ingreso=cambios.ingreso;
       if(cambios.tasa) body.tasa=cambios.tasa;
       if(cambios.edad) body.edad=cambios.edad;
       if(cambios.edad_retiro) body.edad_retiro=cambios.edad_retiro;
       if(cambios.fpf) body.fpf=cambios.fpf;
       if(typeof cambios.aporte_anual==="number") body.aporte_anual=cambios.aporte_anual;
-      var r=await fetch(BASE+"/editar-plan",{ method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify(body) });
-      var j=await r.json();
-      if(!r.ok) throw new Error(j.error||("error "+r.status));
+      var j=await authFetch("editar-plan", body);
       D.meta=j.meta;
     }
     $("modal-editar").classList.remove("on");
@@ -1211,13 +1217,7 @@ $("dist-guardar").addEventListener("click", async function(){
   try{
     if(DEMO){ D.meta.distribucion=arr; D.meta.sjc=sjObj; D.meta.sjc_capital=sjUsd; }
     else {
-      var ses=null; try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e2){}
-      if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
-      var r=await fetch(BASE+"/editar-plan",{ method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, distribucion:arr, sjc:sjObj }) });
-      var j=await r.json();
-      if(!r.ok) throw new Error(j.error||("error "+r.status));
+      var j=await authFetch("editar-plan", { distribucion:arr, sjc:sjObj });
       D.meta=j.meta;
     }
     $("modal-dist").classList.remove("on");
@@ -1311,14 +1311,7 @@ async function serieHist(hz){
   if(!CACHE_HIST[per]){
     if(DEMO){ CACHE_HIST[per]=demoSerieHist(per); }
     else {
-      var ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null");
-      if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
-      var r=await fetch(BASE+"/historia",{ method:"POST",
-        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-        body:JSON.stringify({ correo:ses.correo, clave:ses.clave, period:per }) });
-      var j=await r.json();
-      if(!r.ok) throw new Error(j.error||("error "+r.status));
-      CACHE_HIST[per]=j;
+      CACHE_HIST[per]=await authFetch("historia", { period:per });
     }
   }
   var h=CACHE_HIST[per];
@@ -1600,14 +1593,27 @@ function dibujarAportes(meses, pactado){
 }
 
 /* ================= carga y claves ================= */
-async function entrar(correo, clave){
-  var r=await fetch(BASE+"/reporte",{ method:"POST",
-    headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
-    body:JSON.stringify({ correo:correo, clave:clave }) });
+function sesion(){ try{ return JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e){ return null; } }
+// Una sola puerta para hablar con el servidor. La sesión es {correo, clave} (el cliente) o
+// {asesor:true, tok, alias} (Jose, abierto desde /panel con su token: va en el header
+// x-admin-token y el alias en el body). Cada function decide por cuál puerta entró.
+async function authFetch(fn, body, ses){
+  ses = ses || sesion();
+  if(!ses) throw new Error("se venció tu sesión; entrá de nuevo");
+  var h={ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON };
+  var b=Object.assign({}, body||{});
+  if(ses.asesor){ h["x-admin-token"]=ses.tok; b.alias=ses.alias; }
+  else { b.correo=ses.correo; b.clave=ses.clave; }
+  var r=await fetch(BASE+"/"+fn,{ method:"POST", headers:h, body:JSON.stringify(b) });
   var j=await r.json();
   if(!r.ok) throw new Error(j.error||("error "+r.status));
-  // ¿sigue con la clave inicial (la parte antes del @ de su correo)?
-  j._claveInicial = clave===correo.split("@")[0];
+  return j;
+}
+async function entrar(ses){
+  var j=await authFetch("reporte", {}, ses);
+  if(ses.asesor && !j.asesor) throw new Error("el token del panel no fue aceptado");
+  // ¿sigue con la clave inicial (la parte antes del @ de su correo)? (nunca en modo asesor)
+  j._claveInicial = !ses.asesor && ses.clave===ses.correo.split("@")[0];
   return j;
 }
 async function llamarClave(body){
@@ -1632,8 +1638,8 @@ $("entrar").addEventListener("click", async function(){
   if(!correo || !clave){ $("err").style.display="block"; $("err").textContent="Escribí tu correo y tu clave."; return; }
   var b=$("entrar"); b.disabled=true; b.textContent="Abriendo…"; $("err").style.display="none";
   try{
-    D=await entrar(correo, clave);
-    CORREO=correo;
+    D=await entrar({correo:correo, clave:clave});
+    CORREO=correo; ASESOR=null;
     sessionStorage.setItem("r_sesion", JSON.stringify({correo:correo, clave:clave}));
     mostrar();
   }catch(e){
@@ -1696,11 +1702,32 @@ var TOKEN_RESET=null;
   // ¿viene del correo de cambio de clave?
   var tk=new URLSearchParams(location.search).get("reset");
   if(tk){ TOKEN_RESET=tk; vista("v-reset"); return; }
-  // sesión guardada en esta pestaña
-  var ses=null;
-  try{ ses=JSON.parse(sessionStorage.getItem("r_sesion")||"null"); }catch(e){}
-  if(ses && ses.correo && ses.clave){
-    entrar(ses.correo, ses.clave).then(function(j){ D=j; CORREO=ses.correo; mostrar(); })
+  var ses=sesion();
+  // Modo asesor: /panel abrió esta pestaña con #asesor. Se le piden el token y el alias al
+  // panel por postMessage (mismo origen); nunca viajan en la URL. Al cerrar la pestaña
+  // se pierde la sesión, igual que en el panel.
+  if(location.hash==="#asesor" && !(ses && ses.asesor)){
+    if(!window.opener){
+      $("err").style.display="block"; $("err").textContent="Esta vista se abre desde el botón \"Abrir su dashboard\" del panel.";
+      return;
+    }
+    $("ok-entrar").style.display="block"; $("ok-entrar").textContent="Abriendo la cuenta como asesor…";
+    window.addEventListener("message", function onMsg(e){
+      if(e.origin!==location.origin || !e.data || e.data.tipo!=="r-asesor" || !e.data.tok || !e.data.alias) return;
+      window.removeEventListener("message", onMsg);
+      var s2={asesor:true, tok:String(e.data.tok), alias:String(e.data.alias)};
+      sessionStorage.setItem("r_sesion", JSON.stringify(s2));
+      history.replaceState(null, "", location.pathname+location.search);
+      entrar(s2).then(function(j){ D=j; CORREO=null; ASESOR=s2; mostrar(); })
+        .catch(function(err){ sessionStorage.removeItem("r_sesion"); $("ok-entrar").style.display="none";
+          $("err").style.display="block"; $("err").textContent=String(err.message||err); });
+    });
+    window.opener.postMessage({tipo:"r-asesor-listo"}, location.origin);
+    return;
+  }
+  // sesión guardada en esta pestaña (cliente o asesor)
+  if(ses && ((ses.correo && ses.clave) || ses.asesor)){
+    entrar(ses).then(function(j){ D=j; CORREO=ses.correo||null; ASESOR= ses.asesor? ses : null; mostrar(); })
       .catch(function(){ sessionStorage.removeItem("r_sesion"); });
   }
 })();

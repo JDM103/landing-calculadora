@@ -581,6 +581,7 @@ function renderDet(){
   var pos=(c.snap&&c.snap.posiciones)||[], trans=(c.snap&&c.snap.transferencias_mes)||[];
   det.innerHTML=
     '<button class="volver" id="volver">← Volver a la lista</button>'
+    +'<button class="volver" id="abrir-dash" style="margin-left:8px" title="Abre /mifreedompoint con esta cuenta usando tu token del panel. Lo que edités ahí queda registrado a tu nombre.">👁️ Abrir su dashboard</button>'
     +'<h2>'+nomDe(c)+'<span class="chip '+f.c+'">'+f.t+'</span></h2>'
     +'<div class="sub">'+(PRIV?'••••':c.alias)
       +(c.correo&&!PRIV?' · <span style="color:var(--crema);user-select:all">'+escapa(c.correo)+'</span>':'')
@@ -690,6 +691,8 @@ function renderDet(){
       +'</div>'
       +'<div class="sub" id="pl-msg" style="margin-top:4px"></div>';
     })():'')
+    +'<div class="sec">Historial del plan <span style="font-weight:400;text-transform:none;letter-spacing:0">— quién cambió qué: vos (panel o su dashboard) o el cliente</span></div>'
+    +'<div id="hist-plan" class="sub">Cargando…</div>'
     +(!PRIV? '<div class="sec">Clave de su reporte</div>'
       +'<div class="editcap" style="margin-top:2px"><span>Las claves se guardan cifradas y no se pueden leer; acá solo se asigna una nueva:</span>'
       +'<input id="clave-ed" autocomplete="off" placeholder="clave nueva" style="width:150px;text-align:left">'
@@ -702,6 +705,22 @@ function renderDet(){
       +'<div class="editcap" style="margin-top:6px"><button id="notacli-go">Publicar nota al cliente</button><span id="notacli-msg"></span></div>' : '');
   det.classList.add("abierto");
   var v=$("volver"); if(v) v.addEventListener("click", function(){ det.classList.remove("abierto"); SELECC=null; renderLista(); });
+  var ad=$("abrir-dash");
+  if(ad) ad.addEventListener("click", function(){
+    if(location.hash==="#demo"){ window.open("/r/#demo","_blank"); return; }
+    // Modo asesor en /mifreedompoint: la pestaña nueva avisa "listo" y acá se le mandan el
+    // token del panel y el alias por postMessage (mismo origen). El token nunca va en la URL.
+    // /r → 301 a /mifreedompoint conservando el #asesor.
+    var tok=sessionStorage.getItem("panel_tok")||"", alias=c.alias, w=null;
+    function onMsg(e){
+      if(e.origin!==location.origin || e.source!==w || !e.data || e.data.tipo!=="r-asesor-listo") return;
+      window.removeEventListener("message", onMsg);
+      w.postMessage({tipo:"r-asesor", tok:tok, alias:alias}, location.origin);
+    }
+    window.addEventListener("message", onMsg);
+    w=window.open("/r/#asesor","_blank");
+    if(!w){ window.removeEventListener("message", onMsg); alert("El navegador bloqueó la pestaña nueva. Permití pop-ups para este sitio."); }
+  });
   Array.prototype.forEach.call(document.querySelectorAll(".hbtns button[data-hz]"), function(b){
     b.addEventListener("click", function(){ HORIZONTE=b.getAttribute("data-hz");
       Array.prototype.forEach.call(document.querySelectorAll(".hbtns button[data-hz]"),function(x){x.classList.toggle("on",x===b);});
@@ -790,7 +809,54 @@ function renderDet(){
   });
   if(c.snap) cargarGrafico();
   cargarOrdenes(c);
+  cargarHistPlan(c);
   if(c.snap) cargarTWRDet(c);
+}
+// ===== Historial del plan: bitácora meta_editada de ESTE cliente (vos o él), campo por campo
+var CAMPO_PLAN={ ingreso:"Ingreso meta ($/mes)", tasa:"Tasa (%/año)", fp:"Freedom point ($)", aporte_anual:"Compromiso anual ($)",
+  aporte_pactado:"Aporte mensual ($)", sjc_capital:"San José Capital ($)", sjc:"SJC (detalle)", edad:"Edad", edad_retiro:"Edad de retiro",
+  distribucion:"Distribución pedida", fpf:"Planificador (sandbox)", plan:"Plan (fases)", capital_inicial:"Capital inicial ($)" };
+function valPlan(k,v){
+  if(v===null||v===undefined||v==="") return "—";
+  if(k==="distribucion") return Array.isArray(v)&&v.length? v.map(function(f){return f.pct+"% "+(f.tipo==="fpf"?"FPP":f.sym);}).join(" · ") : "100% FPP";
+  if(k==="plan"&&typeof v==="object") return (v.f1||"?")+"→"+(v.f2||"?")+"→"+(v.f3||"?")+" "+v.p1+"/"+v.p2+"/"+v.ff+(v.timing?" + timing":"");
+  if(k==="sjc"&&typeof v==="object") return (v.moneda==="CRC"?"₡":"$")+Number(v.monto||0).toLocaleString("en-US")+" al "+v.tasa+"%"+(v.moneda==="CRC"?" (tc "+v.tc+")":"");
+  if(typeof v==="object") return JSON.stringify(v).slice(0,80);
+  if(/^(ingreso|fp|aporte_anual|aporte_pactado|sjc_capital|capital_inicial)$/.test(k)) return fmt(+v||0);
+  return String(v);
+}
+function quienPlan(r){
+  var d=r.detalle||{};
+  if(r.actor==="jose") return { t:"Vos", s: d.origen==="dashboard-asesor"? "desde su dashboard" : d.origen==="alta"? "al darlo de alta" : "desde el panel" };
+  if(/^cliente:/.test(String(r.actor))) return { t:"El cliente", s:"desde su dashboard" };
+  return { t:String(r.actor), s:"" };
+}
+async function cargarHistPlan(c){
+  var el=$("hist-plan"); if(!el) return;
+  var filas=[];
+  try{
+    if(location.hash==="#demo"){
+      filas=[{cuando:new Date().toISOString(), actor:"jose", detalle:{alias:c.alias, origen:"dashboard-asesor", cambios:["aporte_anual","aporte_pactado"], antes:{aporte_anual:12000,aporte_pactado:1000}, ahora:{aporte_anual:18000,aporte_pactado:1500}}},
+             {cuando:new Date(Date.now()-5*864e5).toISOString(), actor:"cliente:"+c.alias, detalle:{alias:c.alias, origen:"dashboard", cambios:["ingreso"], antes:{ingreso:7000}, ahora:{ingreso:8000}}}];
+    } else {
+      var r=await llamar("terminal",{alias:c.alias, limite:300});
+      filas=(r.filas||[]).filter(function(x){ return x.accion==="meta_editada"; });
+    }
+  }catch(e){ el.textContent="❌ "+(e.message||e); return; }
+  if(!filas.length){ el.textContent="Sin cambios registrados todavía."; return; }
+  el.innerHTML='<div style="max-height:260px;overflow-y:auto"><table><thead><tr><th>Cuándo (UTC)</th><th>Quién</th><th>Qué cambió</th></tr></thead><tbody>'
+    +filas.slice(0,60).map(function(r){
+      var d=r.detalle||{}, q=quienPlan(r), cambios=d.cambios||[];
+      var det=cambios.map(function(k){
+        var a=d.antes&&(k in d.antes)? valPlan(k,d.antes[k]) : null, b=d.ahora&&(k in d.ahora)? valPlan(k,d.ahora[k]) : null;
+        var txt= (b!==null)? escapa(a===null?"—":a)+' → <span style="color:var(--crema)">'+escapa(b)+'</span>'
+               : (a!==null)? '(antes: '+escapa(a)+')' : '';   // registros viejos sin "ahora"
+        return '<div><b>'+escapa(CAMPO_PLAN[k]||k)+'</b>'+(txt?': '+txt:'')+'</div>';
+      }).join("");
+      return '<tr><td class="num" style="white-space:nowrap">'+escapa(String(r.cuando||"").replace("T"," ").slice(0,16))+'</td>'
+        +'<td><b style="color:'+(r.actor==="jose"?"var(--menta)":"var(--ambar)")+'">'+escapa(q.t)+'</b><div class="sub">'+escapa(q.s)+'</div></td>'
+        +'<td>'+(det||escapa(cambios.join(", ")))+'</td></tr>';
+    }).join("")+'</tbody></table></div>';
 }
 // (El chat cliente↔asesor quedó en pausa por decisión de Jose 11-set-2026: la function
 // `mensajes` sigue desplegada y este panel lo re-integra desde el historial de git.)
