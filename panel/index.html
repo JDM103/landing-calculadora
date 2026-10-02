@@ -243,6 +243,10 @@
   .modal .acc2 .no{ background:transparent; color:var(--gris); }
   .modal .msg{ font-size:12.5px; margin-top:10px; min-height:18px; }
   .volver{ display:none; }
+  /* botón que abre /mifreedompoint como asesor: siempre visible, al lado del nombre */
+  .abrirdash{ float:right; margin:2px 0 0 10px; background:transparent; border:1px solid var(--menta); color:var(--menta);
+    border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .abrirdash:hover{ background:rgba(99,252,175,.1); }
   @media(max-width:900px){
     .layout{ grid-template-columns:1fr; }
     .det{ position:fixed; inset:0; z-index:20; border-radius:0; overflow-y:auto; display:none; }
@@ -581,7 +585,7 @@ function renderDet(){
   var pos=(c.snap&&c.snap.posiciones)||[], trans=(c.snap&&c.snap.transferencias_mes)||[];
   det.innerHTML=
     '<button class="volver" id="volver">← Volver a la lista</button>'
-    +'<button class="volver" id="abrir-dash" style="margin-left:8px" title="Abre /mifreedompoint con esta cuenta usando tu token del panel. Lo que edités ahí queda registrado a tu nombre.">👁️ Abrir su dashboard</button>'
+    +'<button class="abrirdash" id="abrir-dash" title="Abre /mifreedompoint con esta cuenta usando tu token del panel. Lo que edités ahí queda registrado a tu nombre.">👁️ Abrir su dashboard</button>'
     +'<h2>'+nomDe(c)+'<span class="chip '+f.c+'">'+f.t+'</span></h2>'
     +'<div class="sub">'+(PRIV?'••••':c.alias)
       +(c.correo&&!PRIV?' · <span style="color:var(--crema);user-select:all">'+escapa(c.correo)+'</span>':'')
