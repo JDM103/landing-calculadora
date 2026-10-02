@@ -14,12 +14,12 @@
 </script>
 <!-- Píxel de Meta (el ID vive en /js/pixel.js) · defer: no bloquea el primer render -->
 <script defer src="/js/pixel.js"></script>
-<title>Tu número para bajar el ritmo · Empowered Investor</title>
+<title>¿Cuántos años más para bajar el ritmo? · Empowered Investor</title>
 <meta name="description" content="Para médicos especialistas en Costa Rica: en una videollamada de 45 minutos revisamos tus ahorros, tu capacidad de aporte y el ingreso que querés mantener. Te llevás una primera proyección de tu meta.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tu número para bajar el ritmo · Empowered Investor">
+<meta property="og:title" content="¿Cuántos años más para bajar el ritmo? · Empowered Investor">
 <meta property="og:description" content="Una videollamada de 45 minutos, sin costo, para sacar tu número y una primera proyección de tu meta. Para médicos especialistas.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
@@ -52,6 +52,32 @@
     border-radius:999px; transition:filter .15s;}
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
+
+  /* ===== 1 · Hero: dolor, video y los 3 puntos del video ===== */
+  .dolor{font-size:clamp(15.5px,2.6vw,18px); line-height:1.55; color:var(--crema); font-weight:400; margin:14px auto 0; max-width:560px; text-wrap:pretty;}
+  .player{position:relative; margin:22px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
+  .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
+  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.45), rgba(9,11,14,.82)); cursor:pointer; text-align:center; padding:20px;}
+  .poster-ov .pb{width:74px; height:74px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
+    font-size:28px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35); transition:transform .15s;}
+  .poster-ov:hover .pb{transform:scale(1.06);}
+  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
+  .poster-ov .ps{font-size:13px; color:var(--gris);}
+  .vbar{position:absolute; left:0; right:0; bottom:0; height:6px; background:rgba(255,255,255,.14); cursor:pointer; transition:height .12s ease;}
+  .vbar::before{content:""; position:absolute; left:0; right:0; top:-14px; height:14px;}
+  .vbar:hover{height:10px;}
+  .vbar-fill{position:relative; height:100%; width:0; background:var(--menta); transition:width .12s linear;}
+  .mutebtn,.fsbtn{position:absolute; bottom:14px; background:rgba(9,11,14,.6); color:var(--crema); border:1px solid var(--bd);
+    border-radius:999px; width:40px; height:40px; font-size:17px; cursor:pointer; backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; line-height:1;}
+  .mutebtn{right:12px;} .fsbtn{right:60px; font-size:20px;}
+  .mutebtn:hover,.fsbtn:hover{border-color:var(--menta); color:var(--menta);}
+  .player:fullscreen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0;}
+  .player:-webkit-full-screen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0;}
+  .hidden{display:none;}
+  .tres{list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:22px;}
+  .tres li{font-size:13px; font-weight:600; color:var(--crema); background:var(--card); border:1px solid var(--bd); border-radius:999px; padding:7px 13px;}
+  .tres li::before{content:"✓ "; color:var(--menta); font-weight:700;}
 
   /* ===== 2 · Jose: foto grande + presentación breve ===== */
   .sobre h2{margin-bottom:4px;}
@@ -170,12 +196,35 @@
   <!-- ===== 1 · BENEFICIO DE LA LLAMADA + BOTÓN ===== -->
   <header style="text-align:center; padding:28px 0 0;">
     <span class="eyebrow">Para médicos especialistas en Costa Rica</span>
-    <h1>Calculá cuánto necesitás acumular para <em>bajar el ritmo</em></h1>
-    <p class="sub">En una videollamada de <b>45 minutos</b> revisamos tus ahorros, tu capacidad de aporte y el ingreso que querés mantener. Te llevás una <b>primera proyección de tu meta</b> y los pasos para empezar.</p>
+    <h1>¿Cuántos años más necesitás seguir trabajando para poder <em>bajar el ritmo</em>?</h1>
+    <p class="dolor">Si después de los gastos te queda plata, tenés un buen problema. Pero sigue siendo un problema: la inflación, y lo que esa plata no está haciendo.</p>
+
+    <!-- VSL: video local, se reproduce con sonido al tocar -->
+    <div class="player" id="player">
+      <video id="vsl" playsinline preload="none" poster="/medicos/poster-vsl.webp" oncontextmenu="return false">
+        <source src="/medicos/vsl.mp4" type="video/mp4">
+        Tu navegador no soporta video.
+      </video>
+      <div class="poster-ov" id="playov">
+        <div class="pb">▶</div>
+        <div class="pt">Reproducir con sonido</div>
+        <div class="ps">1 minuto y medio</div>
+      </div>
+      <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+      <button class="mutebtn hidden" id="mutebtn" type="button" title="Silenciar / activar sonido">🔊</button>
+      <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
+    </div>
+
+    <p class="sub">En una videollamada de <b>45 minutos</b> revisamos tus ahorros, tu capacidad de aporte y el ingreso que querés mantener. Te llevás una <b>primera proyección de tu plan de retiro</b>, en tu propia cuenta de inversión en EE.&nbsp;UU., y los pasos para empezar.</p>
     <div class="ctarow">
       <a class="cta" href="#agenda" id="cta-top">Agendar mi llamada sin costo</a>
       <p class="ctanota">45 minutos por videollamada · Costo $0</p>
     </div>
+    <ul class="tres">
+      <li>Sin obligación de aportar cada mes</li>
+      <li>Retirás sin penalidad cuando querás: es tu cuenta</li>
+      <li>Solo compramos y vendemos; no podemos mover tu plata</li>
+    </ul>
   </header>
 
   <!-- ===== 2 · PRESENTACIÓN BREVE ===== -->
@@ -205,7 +254,7 @@
   <!-- ===== 3 · EJEMPLO DEL RESULTADO QUE RECIBE ===== -->
   <section style="padding-top:0;">
     <h2>Esto es lo que te llevás de la llamada</h2>
-    <p class="sub">Tu número y una primera proyección de tu plan, con tus datos. Así se ve:</p>
+    <p class="sub">Tu número y una primera proyección de tu plan de retiro, en tu propia cuenta de inversión en EE.&nbsp;UU. Así se ve:</p>
     <div class="plan-mock">
       <div class="pm-top">
         <div class="pm-t">Tu primera proyección</div>
@@ -382,6 +431,48 @@
       try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(e){}
     });
   });
+
+  // ===== Reproductor del VSL del header =====
+  (function(){
+    var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
+    if(!V) return;
+    var miles={25:false,50:false,75:false,100:false};
+    playov.addEventListener("click", function(){
+      V.muted=false; V.play();
+      track("vsl_play", {});
+      playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
+    });
+    V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
+    var vbar=vfill.parentNode;
+    function seekTo(clientX){
+      if(!V.duration || !isFinite(V.duration)) return;
+      var rect=vbar.getBoundingClientRect();
+      var frac=Math.min(1, Math.max(0, (clientX-rect.left)/rect.width));
+      try{ V.currentTime=frac*V.duration; }catch(e){}
+    }
+    vbar.addEventListener("click", function(e){ e.stopPropagation(); seekTo(e.clientX); });
+    vbar.addEventListener("touchend", function(e){ if(e.changedTouches && e.changedTouches[0]){ e.preventDefault(); seekTo(e.changedTouches[0].clientX); } }, {passive:false});
+    mutebtn.addEventListener("click", function(){ V.muted=!V.muted; mutebtn.textContent=V.muted?"🔇":"🔊"; });
+    fsbtn.addEventListener("click", function(e){
+      e.stopPropagation();
+      var fsEl=document.fullscreenElement || document.webkitFullscreenElement;
+      if(fsEl){ (document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document); return; }
+      if(player.requestFullscreen){ player.requestFullscreen(); }
+      else if(player.webkitRequestFullscreen){ player.webkitRequestFullscreen(); }
+      else if(V.webkitEnterFullscreen){ V.webkitEnterFullscreen(); } // iOS: solo el <video>
+    });
+    V.addEventListener("timeupdate", function(){
+      var t=V.currentTime, dur=V.duration||98;
+      vfill.style.width=Math.min(100,(t/dur)*100)+"%";
+      var pct=(t/dur)*100;
+      [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
+    });
+    V.addEventListener("ended", function(){
+      mutebtn.classList.add("hidden"); fsbtn.classList.add("hidden");
+      playov.querySelector(".pt").textContent="Volver a ver";
+      playov.classList.remove("hidden");
+    });
+  })();
 
   // Enlace alternativo al calendario: lleva los mismos UTM.
   (function(){
