@@ -261,7 +261,7 @@
 
     <div class="lead-ok hidden" id="lead-ok">
       <div class="ok-t">Listo, <span id="ok-nom"></span>. Te escribimos hoy por WhatsApp.</div>
-      <p>Si querés adelantarlo, mandanos el mensaje ahora y coordinamos de una vez:</p>
+      <p id="wa-intro">Si querés adelantarlo, mandanos el mensaje ahora y coordinamos de una vez:</p>
       <a class="cta wa" id="wa-link" href="#" target="_blank" rel="noopener">Abrir WhatsApp con el mensaje listo</a>
       <p class="ok-alt">¿Preferís elegir la hora vos? <a href="https://calendly.com/empoweredinvestor/medicos" id="cal-link" target="_blank" rel="noopener">Abrí el calendario</a>.</p>
     </div>
@@ -524,7 +524,7 @@
     var form=byId("lead"); if(!form) return;
     // Número de WhatsApp al que escribe el médico (con código de país, sin +). Si queda vacío, no se abre WhatsApp:
     // el lead igual se guarda y Jose le escribe.
-    var WA_NUMERO = "";
+    var WA_NUMERO = "50670558296"; // el mismo que usa wizard.html
     // El mismo webhook que /caja y /medicos2: Apps Script → pestaña "Leads" del Sheet + alerta por correo.
     var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
     var esp="";
@@ -566,7 +566,7 @@
           track("lead_whatsapp_abierto", {});
           try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp medicos"}); }catch(err){}
         });
-      } else { link.classList.add("hidden"); }
+      } else { link.classList.add("hidden"); byId("wa-intro").classList.add("hidden"); }
       byId("ok-nom").textContent=nombre.split(" ")[0];
       form.classList.add("hidden"); byId("lead-ok").classList.remove("hidden");
       try{ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"center"}); }catch(err){}
