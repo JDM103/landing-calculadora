@@ -28,11 +28,9 @@
 <meta name="twitter:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://calendly.com">
 <link rel="dns-prefetch" href="https://connect.facebook.net">
 <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#AEB4BE; --legal:#6E7681; --card:#1B2026; --bd:#262C34; --input:#10141B; --rojo:#E0525A; }
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -43,7 +41,7 @@
   h1{font-size:clamp(29px,6.8vw,42px); font-weight:700; line-height:1.12; letter-spacing:-.02em; text-wrap:balance;}
   h2{font-size:clamp(22px,4.6vw,30px); font-weight:700; line-height:1.18; letter-spacing:-.015em; text-wrap:balance;}
   h1 em, h2 em{color:var(--menta); font-style:normal;}
-  .eyebrow{display:table; margin:14px auto 16px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
+  .eyebrow{display:table; margin:6px auto 12px; font-size:12px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase;
     color:var(--menta); background:rgba(99,252,175,.10); border:1px solid rgba(99,252,175,.3); border-radius:999px; padding:5px 14px;}
   .sub{font-size:clamp(15.5px,2.6vw,18px); line-height:1.55; color:var(--gris); font-weight:400; margin-top:14px; text-wrap:pretty;}
   .sub b{color:var(--crema); font-weight:600;}
@@ -56,7 +54,7 @@
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
 
-  /* ===== 1 · Hero: video y los 3 puntos del video ===== */
+  /* ===== 1 · Header, subtítulo, video, botón ===== */
   .player{position:relative; margin:16px 0 0; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
   .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
@@ -76,13 +74,45 @@
   .mutebtn:hover,.fsbtn:hover{border-color:var(--menta); color:var(--menta);}
   .player:fullscreen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0;}
   .player:-webkit-full-screen{width:100vw; height:100vh; aspect-ratio:auto; border:none; border-radius:0; margin:0;}
-  .hidden{display:none;}
-  .tres{list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:22px;}
+  .hidden{display:none !important;}
+  .tres{list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:20px;}
   .tres li{font-size:13px; font-weight:600; color:var(--crema); background:var(--card); border:1px solid var(--bd); border-radius:999px; padding:7px 13px;}
   .tres li::before{content:"✓ "; color:var(--menta); font-weight:700;}
 
-  /* ===== 2 · Testimonio médico + credencial breve ===== */
-  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; display:flex; gap:18px; align-items:flex-start;}
+  /* ===== 2 · Pedir la llamada: especialidad + nombre y WhatsApp ===== */
+  .booking h2{text-align:center;}
+  .booking .sub{text-align:center;}
+  .lead{margin-top:20px; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:22px 18px;}
+  .paso-q + .paso-q{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
+  .q{font-size:16px; font-weight:700; color:var(--crema);}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .chip{font-family:inherit; font-size:14px; font-weight:600; color:var(--crema); background:var(--input); border:1px solid var(--bd); border-radius:999px; padding:9px 14px; cursor:pointer; transition:border-color .12s, background .12s;}
+  .chip:hover{border-color:var(--menta);}
+  .chip.on{background:var(--menta); color:var(--tinta); border-color:var(--menta);}
+  .in{display:block; width:100%; margin-top:12px; background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500;}
+  .in:focus-within, .in:focus{outline:none; border-color:var(--menta);}
+  .in::placeholder{color:var(--legal);}
+  .in.tel{display:flex; align-items:center; gap:8px; padding:0 0 0 14px;}
+  .in.tel span{color:var(--gris); font-weight:700; font-size:15px; flex:0 0 auto;}
+  .in.tel input{flex:1; min-width:0; background:transparent; border:none; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500; padding:12px 14px 12px 0;}
+  .in.tel input:focus{outline:none;}
+  .in.tel input::placeholder{color:var(--legal);}
+  .dos{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media(max-width:480px){ .dos{grid-template-columns:1fr;} .dos .in + .in{margin-top:0;} }
+  .l-err{margin-top:14px; font-size:14px; line-height:1.5; color:var(--rojo); font-weight:500;}
+  .l-btn{width:100%; margin-top:18px; border:none; cursor:pointer;}
+  .l-btn:disabled{opacity:.7; cursor:default;}
+  .lead .ctanota{text-align:center;}
+  .lead-ok{margin-top:20px; background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.45); border-radius:22px; padding:24px 20px; text-align:center;}
+  .lead-ok .ok-t{font-size:clamp(19px,4.4vw,24px); font-weight:700; color:var(--crema); line-height:1.3;}
+  .lead-ok p{font-size:15px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:10px;}
+  .cta.wa{margin-top:16px; background:#25D366; color:#062b17;}
+  .ok-alt{font-size:13.5px; margin-top:16px;}
+  .ok-alt a{color:var(--menta); font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+
+  /* ===== 3 · Testimonios ===== */
+  .testi h2{text-align:center;}
+  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; margin-top:26px; display:flex; gap:18px; align-items:flex-start;}
   .tfeat-badge{position:absolute; top:-12px; left:22px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px;}
   .tfeat-photo{flex:0 0 auto; width:92px; height:114px; border-radius:14px; object-fit:cover; object-position:top center; background:var(--input);}
   .stars{color:var(--menta); font-size:15px; letter-spacing:2px;}
@@ -90,40 +120,16 @@
   .tname{font-size:15px; font-weight:700; color:var(--crema);}
   .tname .role{color:var(--gris); font-weight:400;}
   @media(max-width:560px){ .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;} .tfeat-photo{width:88px; height:88px; border-radius:50%;} }
-  .credline{display:flex; gap:12px; align-items:center; margin-top:14px; background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:12px 14px;}
-  .credline img{flex:0 0 auto; width:46px; height:46px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); box-shadow:0 0 0 1px rgba(99,252,175,.5);}
-  .credline .cn{font-size:14.5px; font-weight:700; color:var(--crema);}
-  .credline .cb{font-size:13px; line-height:1.45; color:var(--gris); font-weight:400; margin-top:2px;}
-  .credline .cb b{color:var(--crema); font-weight:600;}
+  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  @media(max-width:560px){ .tgrid{grid-template-columns:1fr;} }
+  .tcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; display:flex; flex-direction:column;}
+  .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px; flex:1;}
+  .tcard .who{display:flex; gap:10px; align-items:center;}
+  .tcard .who img{width:40px; height:40px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); flex:0 0 auto;}
+  .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
 
-  /* ===== 3 · Proyección interactiva ===== */
-  .proy{background:var(--input); border:1px solid rgba(99,252,175,.35); border-radius:20px; padding:20px 16px; margin-top:20px;}
-  .proy .pt{font-size:12px; font-weight:700; letter-spacing:1.1px; text-transform:uppercase; color:var(--menta);}
-  .pgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;}
-  .field{background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:10px 12px;}
-  .field label{display:block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gris);}
-  .field .row{display:flex; align-items:center; gap:6px; margin-top:4px;}
-  .field input{flex:1; min-width:0; width:100%; background:transparent; border:none; color:var(--crema); font-family:inherit; font-weight:700; font-size:21px; padding:0;}
-  .field input:focus{outline:none;}
-  .field .big{font-size:21px; font-weight:700; color:var(--crema);}
-  .field .pre{color:var(--gris); font-weight:700; font-size:15px; flex:0 0 auto;}
-  .steps{display:flex; flex-direction:column; gap:2px; flex:0 0 auto;}
-  .stp{background:var(--input); border:1px solid var(--bd); color:var(--gris); width:28px; height:19px; border-radius:6px; font-size:9px; cursor:pointer; line-height:1; padding:0; display:flex; align-items:center; justify-content:center;}
-  .stp:hover{border-color:var(--menta); color:var(--menta);}
-  .kpis{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
-  .kpi{background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:10px 12px;}
-  .kpi .k{font-size:10.5px; text-transform:uppercase; color:var(--gris); letter-spacing:.5px; font-weight:700;}
-  .kpi .v{font-size:clamp(19px,4.6vw,24px); font-weight:800; color:var(--crema); margin-top:3px; letter-spacing:-.01em;}
-  .kpi .v.per{color:var(--peri);} .kpi.hl{border-color:rgba(99,252,175,.55);} .kpi .v.men{color:var(--menta);}
-  .chart-wrap{position:relative; height:240px; margin-top:12px;}
-  .legend{display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; font-size:12px; color:var(--gris); font-weight:400;}
-  .legend i{display:inline-block; width:14px; height:4px; border-radius:2px; vertical-align:middle; margin-right:5px;}
-  .proy-txt{font-size:14px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:10px;}
-  .proy-txt b{color:var(--crema); font-weight:700;}
-  .proy-txt .hl{color:var(--menta);}
-  .proy-nota{font-size:11.5px; color:var(--legal); margin-top:10px; line-height:1.5;}
-
-  /* ===== 4 · Presentación compacta ===== */
+  /* ===== 4 · Jose Montero ===== */
   .sobre-grid{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:18px;}
   @media(max-width:480px){ .sobre-grid{grid-template-columns:1fr;} .sobre-grid .foto{max-width:220px; margin:0 auto;} }
   .sobre .foto{border-radius:18px; overflow:hidden; border:1px solid var(--bd); background:var(--input);}
@@ -136,7 +142,7 @@
   .sobre .familia b{color:var(--crema); font-weight:600;}
 
   /* ===== 5 · Qué revisamos en la sesión ===== */
-  .llamada{background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:26px 22px; margin-top:4px;}
+  .llamada{background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:26px 22px;}
   .llamada .lt{font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--menta);}
   .llamada h2{margin-top:8px;}
   .momentos{display:grid; gap:0; margin-top:18px;}
@@ -159,7 +165,7 @@
   .papel p b{color:var(--crema); font-weight:700;}
   .papel p i{font-style:italic;}
 
-  /* ===== Preguntas ===== */
+  /* ===== 6 · Preguntas frecuentes ===== */
   .faq h2{text-align:center;}
   .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; padding:0 18px;}
   .faq details:first-of-type{margin-top:22px;}
@@ -172,44 +178,6 @@
   .faq .gar{margin:0 0 14px; background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.35); border-radius:12px; padding:12px 14px;}
   .faq .gar p{padding:0;}
   .faq .gar p + p{margin-top:8px;}
-  .tcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; margin-top:22px;}
-  .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px;}
-  .tcard .who{display:flex; gap:10px; align-items:center;}
-  .tcard .who img{width:40px; height:40px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); flex:0 0 auto;}
-  .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
-  .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
-
-  /* ===== Pedir la llamada: 2 preguntas + WhatsApp ===== */
-  .booking h2{text-align:center;}
-  .booking .sub{text-align:center;}
-  .lead{margin-top:20px; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:22px 18px;}
-  .paso-q + .paso-q{margin-top:18px; border-top:1px solid var(--bd); padding-top:16px;}
-  .q{display:flex; align-items:center; gap:10px; font-size:16px; font-weight:700; color:var(--crema);}
-  .q .qn{flex:0 0 auto; width:28px; height:28px; border-radius:50%; background:rgba(99,252,175,.12); border:1px solid var(--menta); color:var(--menta); font-size:13px; display:flex; align-items:center; justify-content:center;}
-  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
-  .chip{font-family:inherit; font-size:14px; font-weight:600; color:var(--crema); background:var(--input); border:1px solid var(--bd); border-radius:999px; padding:9px 14px; cursor:pointer; transition:border-color .12s, background .12s;}
-  .chip:hover{border-color:var(--menta);}
-  .chip.on{background:var(--menta); color:var(--tinta); border-color:var(--menta);}
-  .in{display:block; width:100%; margin-top:12px; background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500;}
-  .in:focus-within, .in:focus{outline:none; border-color:var(--menta);}
-  .in::placeholder{color:var(--legal);}
-  .in.tel{display:flex; align-items:center; gap:8px; padding:0 0 0 14px;}
-  .in.tel span{color:var(--gris); font-weight:700; font-size:15px; flex:0 0 auto;}
-  .in.tel input{flex:1; min-width:0; background:transparent; border:none; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500; padding:12px 14px 12px 0;}
-  .in.tel input:focus{outline:none;}
-  .dos{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  .dos .in{margin-top:12px;}
-  @media(max-width:480px){ .dos{grid-template-columns:1fr;} .dos .in + .in{margin-top:0;} }
-  .l-err{margin-top:14px; font-size:14px; line-height:1.5; color:var(--rojo); font-weight:500;}
-  .l-btn{width:100%; margin-top:18px; border:none; cursor:pointer;}
-  .l-btn:disabled{opacity:.7; cursor:default;}
-  .lead .ctanota{text-align:center;}
-  .lead-ok{margin-top:20px; background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.45); border-radius:22px; padding:24px 20px; text-align:center;}
-  .lead-ok .ok-t{font-size:clamp(19px,4.4vw,24px); font-weight:700; color:var(--crema); line-height:1.3;}
-  .lead-ok p{font-size:15px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:10px;}
-  .cta.wa{margin-top:16px; background:#25D366; color:#062b17;}
-  .ok-alt{font-size:13.5px; margin-top:16px;}
-  .ok-alt a{color:var(--menta); font-weight:600; text-decoration:underline; text-underline-offset:3px;}
 
   .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin:20px 0 0; border-top:1px solid var(--bd); padding:22px 0 50px;}
 </style>
@@ -217,9 +185,9 @@
 <body>
 <div class="wrap">
 
-  <!-- ===== 1 · APERTURA + VIDEO + BOTÓN ===== -->
+  <!-- ===== 1 · HEADER · SUBTÍTULO · VIDEO · BOTÓN ===== -->
   <header style="text-align:center; padding:16px 0 0;">
-    <span class="eyebrow" style="margin:6px auto 12px;">Para médicos especialistas en Costa Rica</span>
+    <span class="eyebrow">Para médicos especialistas en Costa Rica</span>
     <h1>¿Querés llegar a los 55 con la opción de <em>bajar el ritmo</em>?</h1>
     <p class="sub" style="margin-top:10px;">Menos guardias, menos dispos o menos horas en la Caja. En una llamada sin costo hacemos tu <b>primera proyección</b>: qué necesitarías para dar ese paso.</p>
 
@@ -250,8 +218,58 @@
     </ul>
   </header>
 
-  <!-- ===== 2 · TESTIMONIO MÉDICO + CREDENCIAL BREVE ===== -->
-  <section>
+  <!-- ===== 2 · FORM DE AGENDA: especialidad + nombre y WhatsApp (la agenda la hacemos nosotros) ===== -->
+  <section class="booking" id="agenda">
+    <h2>Pedí tu llamada <em>en 30 segundos</em></h2>
+    <p class="sub">Tu especialidad y tu WhatsApp. Te escribimos el mismo día para coordinar el día y la hora que te sirvan.</p>
+
+    <form class="lead" id="lead" novalidate>
+      <div class="paso-q">
+        <div class="q">¿Cuál es tu especialidad?</div>
+        <div class="chips" id="chips-esp">
+          <button type="button" class="chip" data-v="Cirugía general">Cirugía general</button>
+          <button type="button" class="chip" data-v="Anestesiología">Anestesiología</button>
+          <button type="button" class="chip" data-v="Ginecología y obstetricia">Ginecología</button>
+          <button type="button" class="chip" data-v="Medicina interna">Medicina interna</button>
+          <button type="button" class="chip" data-v="Pediatría">Pediatría</button>
+          <button type="button" class="chip" data-v="Ortopedia">Ortopedia</button>
+          <button type="button" class="chip" data-v="Cardiología">Cardiología</button>
+          <button type="button" class="chip" data-v="Radiología">Radiología</button>
+          <button type="button" class="chip" data-v="Oftalmología">Oftalmología</button>
+          <button type="button" class="chip" data-v="Dermatología">Dermatología</button>
+          <button type="button" class="chip" data-v="Psiquiatría">Psiquiatría</button>
+          <button type="button" class="chip" data-v="Emergencias">Emergencias</button>
+          <button type="button" class="chip" data-v="Cirugía plástica">Cirugía plástica</button>
+          <button type="button" class="chip" data-v="Odontología">Odontología</button>
+          <button type="button" class="chip" data-v="Medicina general">Medicina general</button>
+          <button type="button" class="chip" data-v="otra">Otra</button>
+        </div>
+        <input class="in hidden" id="esp-otra" type="text" placeholder="Otra" autocomplete="off">
+      </div>
+
+      <div class="paso-q">
+        <div class="dos">
+          <input class="in" id="l-nom" type="text" placeholder="Tu nombre" autocomplete="given-name">
+          <div class="in tel"><span>+506</span><input id="l-wa" type="tel" inputmode="numeric" placeholder="Tu WhatsApp" autocomplete="tel-national" maxlength="8"></div>
+        </div>
+      </div>
+
+      <p class="l-err hidden" id="l-err">Falta algo: elegí tu especialidad y poné tu nombre y un WhatsApp de 8 dígitos.</p>
+      <button type="submit" class="cta l-btn" id="l-send">Pedir mi llamada por WhatsApp →</button>
+      <p class="ctanota">45 minutos, sin costo, sin obligación de contratar. Solo usamos tu WhatsApp para coordinar la llamada.</p>
+    </form>
+
+    <div class="lead-ok hidden" id="lead-ok">
+      <div class="ok-t">Listo, <span id="ok-nom"></span>. Te escribimos hoy por WhatsApp.</div>
+      <p>Si querés adelantarlo, mandanos el mensaje ahora y coordinamos de una vez:</p>
+      <a class="cta wa" id="wa-link" href="#" target="_blank" rel="noopener">Abrir WhatsApp con el mensaje listo</a>
+      <p class="ok-alt">¿Preferís elegir la hora vos? <a href="https://calendly.com/empoweredinvestor/medicos" id="cal-link" target="_blank" rel="noopener">Abrí el calendario</a>.</p>
+    </div>
+  </section>
+
+  <!-- ===== 3 · TESTIMONIOS ===== -->
+  <section class="testi" style="padding-top:0;">
+    <h2>Médicos y profesionales que ya <em>dieron el paso</em></h2>
     <div class="tfeat">
       <span class="tfeat-badge">★ Médico especialista</span>
       <img class="tfeat-photo" src="/assets/testimonios/foto-6.webp" alt="Mariana Peña" loading="lazy">
@@ -261,55 +279,58 @@
         <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
       </div>
     </div>
-    <div class="credline">
-      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy">
-      <div>
-        <div class="cn">Jose Montero · Fundador de Empowered Investor</div>
-        <div class="cb"><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU. · <b>3 de cada 10</b> clientes son médicos</div>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-7.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+        <div class="who"><img src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas.</p>
+        <div class="who"><img src="/assets/testimonios/foto-9.webp" alt="Andrés Castro" loading="lazy"><div><div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+        <div class="who"><img src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza" loading="lazy"><div><div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones, con la confianza de que cuento con una persona que toma decisiones estratégicas procurando siempre lo mejor para mí.</p>
+        <div class="who"><img src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco" loading="lazy"><div><div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y me fue guiando paso a paso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Estoy demasiado contenta de haber empezado.</p>
+        <div class="who"><img src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit" loading="lazy"><div><div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad.</p>
+        <div class="who"><img src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas" loading="lazy"><div><div class="name">Agustín Fallas</div><div class="role">Fotógrafo</div></div></div>
       </div>
     </div>
   </section>
 
-  <!-- ===== 3 · PROYECCIÓN INTERACTIVA ===== -->
-  <section style="padding-top:0;">
-    <h2>Probá tu propia proyección</h2>
-    <p class="sub">Movés la edad, el ingreso o el capital inicial y ves al instante el capital objetivo y el aporte que necesitarías. Esto te da un punto de partida. En la llamada revisamos <b>qué ingresos conservarías al trabajar menos</b>, cuánto podés aportar y distintos escenarios para acercarte a tu meta.</p>
-    <div class="proy" id="proy">
-      <div class="pt">Tus datos · en dólares de hoy</div>
-      <div class="pgrid">
-        <div class="field"><label>Edad hoy</label><div class="row"><input id="v-edad" inputmode="numeric" value="38" aria-label="Edad hoy"><div class="steps"><button class="stp" data-s="edad" data-d="1" type="button">▲</button><button class="stp" data-s="edad" data-d="-1" type="button">▼</button></div></div></div>
-        <div class="field"><label>Edad para bajar el ritmo</label><div class="row"><input id="v-edadret" inputmode="numeric" value="55" aria-label="Edad para bajar el ritmo"><div class="steps"><button class="stp" data-s="edadret" data-d="1" type="button">▲</button><button class="stp" data-s="edadret" data-d="-1" type="button">▼</button></div></div></div>
-        <div class="field"><label>Querés vivir con ($/mes)</label><div class="row"><span class="pre">$</span><input id="i-meta" inputmode="numeric" value="5,000" aria-label="Ingreso mensual deseado"><div class="steps"><button class="stp" data-money="i-meta" data-step="500" data-d="1" type="button">▲</button><button class="stp" data-money="i-meta" data-step="500" data-d="-1" type="button">▼</button></div></div></div>
-        <div class="field"><label>Capital inicial ($)</label><div class="row"><span class="pre">$</span><input id="i-cap" inputmode="numeric" value="20,000" aria-label="Capital inicial"><div class="steps"><button class="stp" data-money="i-cap" data-step="5000" data-d="1" type="button">▲</button><button class="stp" data-money="i-cap" data-step="5000" data-d="-1" type="button">▼</button></div></div></div>
-      </div>
-      <div class="kpis">
-        <div class="kpi hl"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte">—</div></div>
-        <div class="kpi"><div class="k">Meta de capital · Freedom Point</div><div class="v per" id="k-meta">—</div></div>
-        <div class="kpi"><div class="k">Años para juntar</div><div class="v" id="k-anios">—</div></div>
-        <div class="kpi"><div class="k">De tu bolsillo (total)</div><div class="v" id="k-aportado">—</div></div>
-      </div>
-      <div class="chart-wrap"><canvas id="proj-chart"></canvas></div>
-      <div class="legend">
-        <span><i style="background:#63FCAF"></i> Lo que tenés</span>
-        <span><i style="background:#9AA1AB"></i> Lo que aportaste</span>
-        <span><i style="background:#556DFB"></i> 🏖️ Bajás el ritmo</span>
-      </div>
-      <p class="proy-txt" id="proj-txt"></p>
-      <p class="proy-nota">Supuestos: crecimiento 12%/año hasta la meta y 8%/año después, inflación 3%, retiro del 5% anual del capital. Todo en plata de hoy. Son promedios ilustrativos; no se garantizan retornos.</p>
-    </div>
-    <div class="ctarow">
-      <a class="cta" href="#agenda" id="cta-giro">Quiero mi proyección con mis números →</a>
-      <p class="ctanota">45 minutos · Coordinamos por WhatsApp · Sin obligación de contratar</p>
-    </div>
-  </section>
-
-  <!-- ===== 4 · PRESENTACIÓN COMPACTA ===== -->
+  <!-- ===== 4 · JOSE MONTERO ===== -->
   <section class="sobre" style="padding-top:0;">
-    <h2>Soy Jose Montero, fundador de Empowered Investor.</h2>
+    <h2>Jose Montero</h2>
     <div class="sobre-grid">
       <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
       <div>
         <ul class="cred">
+          <li><b>Fundador de Empowered Investor</b></li>
           <li><b>Licenciado en Administración de Empresas</b></li>
           <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
           <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
@@ -321,7 +342,7 @@
     </div>
   </section>
 
-  <!-- ===== 5 · QUÉ REVISAMOS DURANTE LA SESIÓN ===== -->
+  <!-- ===== 5 · QUÉ REVISAMOS EN LA SESIÓN ===== -->
   <section style="padding-top:0;">
     <div class="llamada">
       <div class="lt">Qué revisamos en la sesión · sin costo</div>
@@ -339,11 +360,15 @@
       </div>
       <p class="sincosto"><b>¿Por qué la llamada es gratis?</b> Algunos médicos después nos contratan para gestionar sus inversiones. La llamada no te obliga a nada. Nuestro enfoque es construir primero la confianza: escuchar tus necesidades y tus experiencias anteriores, y que veas desde adentro cómo funcionan las cosas.</p>
     </div>
+    <div class="ctarow">
+      <a class="cta" href="#agenda" id="cta-giro">Pedir mi proyección sin costo</a>
+      <p class="ctanota">45 minutos · Coordinamos por WhatsApp · Sin obligación de contratar</p>
+    </div>
   </section>
 
-  <!-- ===== 6 · CUATRO PREGUNTAS ESENCIALES ===== -->
+  <!-- ===== 6 · PREGUNTAS FRECUENTES ===== -->
   <section class="faq" style="padding-top:0;">
-    <h2>Antes de agendar</h2>
+    <h2>Preguntas <em>frecuentes</em></h2>
     <details>
       <summary>¿Para quién tiene sentido? ¿Necesito un capital mínimo?</summary>
       <p>La llamada no pide ningún monto de entrada, y la proyección se hace con tu capacidad real de aporte. Ahora, el servicio de gestión tiene sentido si podés apartar alrededor de <b>$500 al mes</b> o tenés <b>$10k o más listos para invertir</b>, porque el honorario inicial es de $1,500 a $3,000 e incluye el primer año.</p>
@@ -361,61 +386,6 @@
       <summary>¿Qué pasa si después decido no contratar?</summary>
       <p>Nada. La proyección queda tuya y ahí termina, sin compromisos ni insistencia. La llamada existe para que veas cómo trabajamos; contratar la gestión es una decisión aparte y solo tuya.</p>
     </details>
-  </section>
-
-  <!-- ===== 7 · PEDIR LA LLAMADA: 2 preguntas + WhatsApp (la agenda la hacemos nosotros) ===== -->
-  <section class="booking" id="agenda" style="padding-top:0;">
-    <h2>Pedí tu llamada <em>en 30 segundos</em></h2>
-    <p class="sub">Dos preguntas y tu WhatsApp. Te escribimos el mismo día para coordinar el día y la hora que te sirvan. 45 minutos, sin costo, sin obligación de contratar.</p>
-
-    <form class="lead" id="lead" novalidate>
-      <div class="paso-q">
-        <div class="q"><span class="qn">1</span>¿Cuál es tu especialidad?</div>
-        <div class="chips" id="chips-esp">
-          <button type="button" class="chip" data-v="Cirugía">Cirugía</button>
-          <button type="button" class="chip" data-v="Anestesiología">Anestesiología</button>
-          <button type="button" class="chip" data-v="Ginecología y obstetricia">Ginecología</button>
-          <button type="button" class="chip" data-v="Medicina interna">Medicina interna</button>
-          <button type="button" class="chip" data-v="Pediatría">Pediatría</button>
-          <button type="button" class="chip" data-v="otra">Otra</button>
-        </div>
-        <input class="in otra hidden" id="esp-otra" type="text" placeholder="¿Cuál?" autocomplete="off">
-      </div>
-
-      <div class="paso-q">
-        <div class="q"><span class="qn">2</span>¿Cuánto podrías apartar al mes para tu plan?</div>
-        <div class="chips" id="chips-ap">
-          <button type="button" class="chip" data-v="Menos de $300">Menos de $300</button>
-          <button type="button" class="chip" data-v="$300 a $500">$300–$500</button>
-          <button type="button" class="chip" data-v="$500 a $1,000">$500–$1,000</button>
-          <button type="button" class="chip" data-v="Más de $1,000">Más de $1,000</button>
-        </div>
-      </div>
-
-      <div class="paso-q">
-        <div class="q"><span class="qn">3</span>¿A quién le escribimos?</div>
-        <div class="dos">
-          <input class="in" id="l-nom" type="text" placeholder="Tu nombre" autocomplete="given-name">
-          <div class="in tel"><span>+506</span><input id="l-wa" type="tel" inputmode="numeric" placeholder="8888-8888" autocomplete="tel-national" maxlength="9"></div>
-        </div>
-      </div>
-
-      <p class="l-err hidden" id="l-err">Falta algo: elegí tu especialidad, cuánto podrías apartar, y poné tu nombre y un WhatsApp de 8 dígitos.</p>
-      <button type="submit" class="cta l-btn" id="l-send">Pedir mi llamada por WhatsApp →</button>
-      <p class="ctanota">Solo usamos tu WhatsApp para coordinar la llamada.</p>
-    </form>
-
-    <div class="lead-ok hidden" id="lead-ok">
-      <div class="ok-t">Listo, <span id="ok-nom"></span>. Te escribimos hoy por WhatsApp.</div>
-      <p>Si querés adelantarlo, mandanos el mensaje ahora y coordinamos de una vez:</p>
-      <a class="cta wa" id="wa-link" href="#" target="_blank" rel="noopener">Abrir WhatsApp con el mensaje listo</a>
-      <p class="ok-alt">¿Preferís elegir la hora vos? <a href="https://calendly.com/empoweredinvestor/medicos" id="cal-link" target="_blank" rel="noopener">Abrí el calendario</a>.</p>
-    </div>
-  </section>
-
-  <!-- ===== 8 · MÁS PREGUNTAS (sobre el servicio, después del calendario) ===== -->
-  <section class="faq" style="padding-top:0;">
-    <h2>Más preguntas sobre el servicio</h2>
     <details>
       <summary>¿Qué servicio me ofrecerían y cómo cobran?</summary>
       <p>Si querés que gestionemos tu portafolio, lo hacemos dentro de tu propia cuenta, a tu nombre. El primer año se paga con un único <b>honorario inicial (setup fee) de entre $1,500 y $3,000</b> —según tus necesidades y el tamaño del portafolio; el monto exacto se aclara en la llamada— que incluye todo el primer año de gestión. A partir del año 2, un honorario del <b>1% anual</b> sobre el monto administrado.</p>
@@ -456,47 +426,6 @@
       <p>Estudié Administración de Empresas. Después tuve la suerte de trabajar en una firma de inversión que manejaba $600 millones de dólares, y trabajé 4.5 años en LSEG (London Stock Exchange Group).</p>
       <p>En total llevo 11 años manejando portafolios de inversión.</p>
     </details>
-
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
-      <div class="who"><img src="/assets/testimonios/foto-5.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
-      <div class="who"><img src="/assets/testimonios/foto-7.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
-      <div class="who"><img src="/assets/testimonios/foto-8.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas.</p>
-      <div class="who"><img src="/assets/testimonios/foto-9.webp" alt="Andrés Castro" loading="lazy"><div><div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
-      <div class="who"><img src="/assets/testimonios/foto-10.webp" alt="Ramsés Espinoza" loading="lazy"><div><div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones, con la confianza de que cuento con una persona que toma decisiones estratégicas procurando siempre lo mejor para mí.</p>
-      <div class="who"><img src="/assets/testimonios/foto-11.webp" alt="Mónica Blanco" loading="lazy"><div><div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y me fue guiando paso a paso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Estoy demasiado contenta de haber empezado.</p>
-      <div class="who"><img src="/assets/testimonios/foto-12.webp" alt="Anne Baudrit" loading="lazy"><div><div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div></div>
-    </div>
-    <div class="tcard">
-      <div class="stars">★★★★★</div>
-      <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad.</p>
-      <div class="who"><img src="/assets/testimonios/foto-13.webp" alt="Agustín Fallas" loading="lazy"><div><div class="name">Agustín Fallas</div><div class="role">Fotógrafo</div></div></div>
-    </div>
     <div class="ctarow">
       <a class="cta" href="#agenda" id="cta-fin">Pedir mi proyección sin costo</a>
     </div>
@@ -517,7 +446,7 @@
     try{ if(typeof clarity==="function"){ clarity("event", ev); clarity("set", ev, "si"); } }catch(e){}
   }
 
-  // De dónde llegó la persona: los UTM del anuncio viajan hasta Calendly.
+  // De dónde llegó la persona: los UTM del anuncio viajan con el lead.
   var UTM = (function(){
     var o={ utm_source:"medicos", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
     try{
@@ -583,115 +512,6 @@
     });
   })();
 
-  // ===== Proyección interactiva (misma matemática que /retiro, con los supuestos fijos) =====
-  (function(){
-    var S={ edad:38, edadret:55, income:5000, cap:20000, crec:12, crecret:8, ret:5, infl:3 };
-    var LIM={ edad:[18,70], edadret:[40,80] };
-    function num(s){ var d=String(s||"").replace(/[^0-9.]/g,""); var n=parseFloat(d); return isNaN(n)?0:n; }
-    function fmt(n){ return Math.round(n).toLocaleString("en-US"); }
-    function money(n){ n=Math.round(n); if(Math.abs(n)>=1e6) return "$"+(n/1e6).toFixed(2)+"M"; if(Math.abs(n)>=1e3) return "$"+Math.round(n/1e3)+"k"; return "$"+n; }
-    function anios(){ return Math.max(1, S.edadret-S.edad); }
-    function metaCapital(){ return S.ret>0 ? S.income*12/(S.ret/100) : 0; }
-    // Aporte mensual requerido para llegar a la meta a la edad elegida, con el crecimiento real y el capital inicial.
-    function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
-      var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f;
-      if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
-    function aporte(){ return aporteReq(metaCapital(), S.cap, S.crec-S.infl, anios()*12); }
-    function serieVida(){
-      var ap=aporte(), cap0=S.cap, iAcc=(S.crec-S.infl)/100/12, gRet=(S.crecret-S.infl)/100;
-      var n=anios(), edades=[], saldo=[], aportado=[];
-      for(var y=0;y<=n;y++){ var m=y*12;
-        var bal=cap0*Math.pow(1+iAcc,m) + (Math.abs(iAcc)<1e-12?ap*m:ap*(Math.pow(1+iAcc,m)-1)/iAcc);
-        edades.push(S.edad+y); saldo.push(Math.round(bal)); aportado.push(Math.round(cap0+ap*m)); }
-      var bal2=saldo[saldo.length-1], retiroAnual=S.income*12, totalAp=cap0+ap*n*12, agota=null;
-      for(var k=1;k<=35;k++){ bal2=bal2*(1+gRet)-retiroAnual;
-        if(bal2<=0){ edades.push(S.edadret+k); saldo.push(0); aportado.push(Math.round(totalAp)); agota=S.edadret+k; break; }
-        edades.push(S.edadret+k); saldo.push(Math.round(bal2)); aportado.push(Math.round(totalAp)); }
-      var g=S.crecret-S.infl, tend=g>S.ret+1e-9?"crece":(g<S.ret-1e-9?"baja":"estable");
-      return {edades:edades, saldo:saldo, aportado:aportado, agota:agota, tend:tend};
-    }
-
-    var chart=null, mark={edadRet:55};
-    var plug={ id:"projRet", afterDraw:function(ch){
-      var xs=ch.scales.x; if(!xs) return; var a=ch.chartArea, c=ch.ctx, px=xs.getPixelForValue(mark.edadRet);
-      c.save(); c.strokeStyle="rgba(85,109,251,.45)"; c.lineWidth=2; c.setLineDash([5,4]);
-      c.beginPath(); c.moveTo(px,a.top); c.lineTo(px,a.bottom); c.stroke(); c.setLineDash([]);
-      var cy=Math.max(a.top-12,9), age=String(mark.edadRet); c.textBaseline="middle"; c.textAlign="left"; c.font="700 12px 'Bai Jamjuree',sans-serif";
-      var nw=c.measureText(age).width, ew=17, gap=4, tot=ew+gap+nw, gx=Math.min(Math.max(px-tot/2,a.left+2),a.right-tot-2);
-      c.font="16px 'Bai Jamjuree',sans-serif"; c.fillText("🏖️",gx,cy);
-      c.font="700 12px 'Bai Jamjuree',sans-serif"; c.fillStyle="#556DFB"; c.fillText(age,gx+ew+gap,cy); c.restore();
-    }};
-    function draw(v){
-      var ctx=byId("proj-chart"); if(!ctx||typeof Chart==="undefined") return; mark.edadRet=S.edadret;
-      var mk=function(a){ return v.edades.map(function(e,i){return {x:e,y:a[i]};}); };
-      var minX=Math.floor(v.edades[0]/5)*5, maxX=Math.ceil(v.edades[v.edades.length-1]/5)*5;
-      var data={datasets:[
-        {label:"Lo que tenés", data:mk(v.saldo), borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.14)", borderWidth:3, pointRadius:0, fill:true, tension:.12},
-        {label:"Lo que aportaste", data:mk(v.aportado), borderColor:"#9AA1AB", borderWidth:2, borderDash:[6,4], pointRadius:0, tension:.12}
-      ]};
-      var opts={ responsive:true, maintainAspectRatio:false, animation:false, layout:{padding:{top:18}}, interaction:{mode:"index",intersect:false},
-        plugins:{legend:{display:false}, tooltip:{callbacks:{title:function(it){return "A los "+Math.round(it[0].parsed.x)+" años";}, label:function(it){return it.dataset.label+": "+money(it.parsed.y);}}}},
-        scales:{x:{type:"linear",min:minX,max:maxX,title:{display:true,text:"Tu edad",color:"#9AA1AB",font:{size:11}},ticks:{stepSize:5,color:"#9AA1AB",font:{size:11}},grid:{color:"rgba(140,150,170,.10)"}},
-          y:{ticks:{color:"#9AA1AB",font:{size:11},callback:function(v){return money(v);}},grid:{color:"rgba(140,150,170,.12)"}}} };
-      if(chart){ chart.data=data; chart.options=opts; chart.update(); return; }
-      chart=new Chart(ctx,{type:"line",data:data,options:opts,plugins:[plug]});
-    }
-    function refresh(){
-      var ve=byId("v-edad"); if(document.activeElement!==ve) ve.value=S.edad;
-      var vr=byId("v-edadret"); if(document.activeElement!==vr) vr.value=S.edadret;
-      var im=byId("i-meta"); if(document.activeElement!==im) im.value=fmt(S.income);
-      var ic=byId("i-cap"); if(document.activeElement!==ic) ic.value=fmt(S.cap);
-      var ap=aporte(), v=serieVida();
-      byId("k-anios").textContent=anios();
-      byId("k-meta").textContent=money(metaCapital());
-      byId("k-aporte").textContent="$"+fmt(ap)+"/mes";
-      byId("k-aportado").textContent=money(S.cap+ap*12*anios());
-      var t="Para bajar el ritmo a los <b>"+S.edadret+"</b> con <b>$"+fmt(S.income)+"/mes</b> necesitás juntar <b>"+money(metaCapital())+"</b>, aportando <b class='hl'>$"+fmt(ap)+"/mes</b>. Si adelantás la edad el aporte sube; si empezás con más capital, baja. ";
-      if(v.tend==="crece") t+="Después, sacando $"+fmt(S.income)+"/mes, tu plata <b>sigue creciendo</b>.";
-      else if(v.tend==="estable") t+="Después, sacando $"+fmt(S.income)+"/mes, tu plata <b>se mantiene</b>: vivís del rendimiento sin tocar el capital.";
-      else t+="Después, sacando $"+fmt(S.income)+"/mes, tu plata te dura hasta los <b>"+(v.agota||"?")+"</b>.";
-      byId("proj-txt").innerHTML=t;
-      draw(v);
-    }
-    var tocado=false; function toque(){ if(!tocado){ tocado=true; track("proy_calc", {}); } }
-    Array.prototype.forEach.call(document.querySelectorAll(".stp[data-s]"), function(b){
-      b.addEventListener("click", function(){ var s=b.getAttribute("data-s"), d=parseInt(b.getAttribute("data-d"),10), v=S[s]+d;
-        if(s==="edad"&&v>=S.edadret) v=S.edadret-1; if(s==="edadret"&&v<=S.edad) v=S.edad+1;
-        S[s]=Math.min(LIM[s][1],Math.max(LIM[s][0],v)); toque(); refresh(); });
-    });
-    Array.prototype.forEach.call(document.querySelectorAll(".stp[data-money]"), function(b){
-      b.addEventListener("click", function(){ var id=b.getAttribute("data-money"), st=parseInt(b.getAttribute("data-step"),10), d=parseInt(b.getAttribute("data-d"),10);
-        var key=id==="i-meta"?"income":"cap"; var v=Math.round(S[key]/st)*st+d*st; if(v<0) v=0; if(key==="income"&&v<500) v=500;
-        S[key]=v; toque(); refresh(); });
-    });
-    function editAge(id,key){ var el=byId(id);
-      el.addEventListener("input", function(){ var v=parseInt(el.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S[key]=v; toque(); refresh(); });
-      el.addEventListener("blur", function(){ var v=S[key]; if(key==="edad"&&v>=S.edadret) v=S.edadret-1; if(key==="edadret"&&v<=S.edad) v=S.edad+1;
-        S[key]=Math.min(LIM[key][1],Math.max(LIM[key][0],v)); el.value=S[key]; refresh(); });
-    }
-    editAge("v-edad","edad"); editAge("v-edadret","edadret");
-    function editMoney(id,key){ var el=byId(id);
-      el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart, a=el.value.length;
-        el.value=d?Number(d).toLocaleString("en-US"):""; var bb=el.value.length; try{ el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a))); }catch(e){}
-        S[key]=num(el.value); toque(); refresh(); });
-    }
-    editMoney("i-meta","income"); editMoney("i-cap","cap");
-
-    // Chart.js se carga solo cuando la sección se acerca al viewport, para no frenar el primer render.
-    var cargado=false;
-    function cargarChart(){
-      if(cargado) return; cargado=true;
-      var s=document.createElement("script"); s.src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js";
-      s.onload=function(){ refresh(); }; document.head.appendChild(s);
-    }
-    refresh();
-    var box=byId("proy");
-    if("IntersectionObserver" in window){
-      var io=new IntersectionObserver(function(en){ if(en[0].isIntersecting){ io.disconnect(); cargarChart(); } }, {rootMargin:"600px 0px"});
-      io.observe(box);
-    } else { cargarChart(); }
-  })();
-
   // Enlace alternativo al calendario (para quien prefiere elegir la hora solo): lleva los mismos UTM.
   (function(){
     var a=byId("cal-link"); if(!a) return;
@@ -699,7 +519,7 @@
     a.addEventListener("click", function(){ track("calendly_pestana_nueva", {}); });
   })();
 
-  // ===== Pedir la llamada: 2 preguntas + nombre + WhatsApp → lead al Sheet → WhatsApp con el mensaje listo =====
+  // ===== Pedir la llamada: especialidad + nombre + WhatsApp → lead al Sheet → WhatsApp con el mensaje listo =====
   (function(){
     var form=byId("lead"); if(!form) return;
     // Número de WhatsApp al que escribe el médico (con código de país, sin +). Si queda vacío, no se abre WhatsApp:
@@ -707,44 +527,38 @@
     var WA_NUMERO = "";
     // El mismo webhook que /caja y /medicos2: Apps Script → pestaña "Leads" del Sheet + alerta por correo.
     var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
-    var esp="", ap="";
+    var esp="";
 
-    function chips(boxId, onPick){
-      var box=byId(boxId), all=box.querySelectorAll(".chip");
-      Array.prototype.forEach.call(all, function(b){
-        b.addEventListener("click", function(){
-          Array.prototype.forEach.call(all, function(x){ x.classList.remove("on"); });
-          b.classList.add("on"); onPick(b.getAttribute("data-v"));
-        });
+    var box=byId("chips-esp"), all=box.querySelectorAll(".chip"), otra=byId("esp-otra");
+    Array.prototype.forEach.call(all, function(b){
+      b.addEventListener("click", function(){
+        Array.prototype.forEach.call(all, function(x){ x.classList.remove("on"); });
+        b.classList.add("on"); esp=b.getAttribute("data-v");
+        otra.classList.toggle("hidden", esp!=="otra"); if(esp==="otra") otra.focus();
+        track("lead_especialidad", {v:esp});
       });
-    }
-    var otra=byId("esp-otra");
-    chips("chips-esp", function(v){
-      esp=v; otra.classList.toggle("hidden", v!=="otra");
-      if(v==="otra"){ otra.focus(); } track("lead_especialidad", {v:v});
     });
-    chips("chips-ap", function(v){ ap=v; track("lead_aporte", {v:v}); });
     byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
 
     form.addEventListener("submit", function(e){
       e.preventDefault();
       var nombre=byId("l-nom").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
       var especialidad = esp==="otra" ? otra.value.trim() : esp;
-      var ok = especialidad && ap && nombre && wa.length===8;
+      var ok = especialidad && nombre && wa.length===8;
       byId("l-err").classList.toggle("hidden", !!ok);
       if(!ok) return;
       var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
 
       var payload={ timestamp:new Date().toISOString(), etapa:"medicos_wa", nombre:nombre, whatsapp:"506"+wa,
-        especialidad:especialidad, aporte_mensual:ap, pagina:location.pathname,
+        especialidad:especialidad, pagina:location.pathname,
         utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content };
       // Fire-and-forget con keepalive: el lead queda guardado aunque la persona se vaya a WhatsApp de inmediato.
       try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
 
-      track("medicos_lead", {especialidad:especialidad, aporte:ap, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-      try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"llamada medicos", content_category:ap}); }catch(err){}
+      track("medicos_lead", {especialidad:especialidad, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+      try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"llamada medicos", content_category:especialidad}); }catch(err){}
 
-      var msg="Hola Jose, soy "+nombre+", "+especialidad.toLowerCase()+". Podría apartar "+ap.toLowerCase()+" al mes. Quiero mi primera proyección sin costo. ¿Cuándo podemos hacer la llamada?";
+      var msg="Hola Jose, soy "+nombre+", "+especialidad.toLowerCase()+". Quiero mi primera proyección sin costo. ¿Cuándo podemos hacer la llamada?";
       var link=byId("wa-link");
       if(WA_NUMERO){
         link.href="https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
