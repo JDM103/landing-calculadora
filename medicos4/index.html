@@ -62,13 +62,14 @@
   /* ===== 1 · Header, subtítulo, video, botón ===== */
   .player{position:relative; margin:18px auto 0; max-width:860px; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
-  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
-    background:radial-gradient(120% 120% at 50% 40%, rgba(27,32,38,.45), rgba(9,11,14,.82)); cursor:pointer; text-align:center; padding:20px;}
-  .poster-ov .pb{width:74px; height:74px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
-    font-size:28px; padding-left:5px; box-shadow:0 10px 40px rgba(99,252,175,.35); transition:transform .15s;}
+  /* El video corre solo (en silencio); el recuadro solo activa el sonido, como la referencia */
+  .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background:rgba(9,11,14,.28); cursor:pointer; text-align:center; padding:20px;}
+  .poster-ov .pb{width:66px; height:66px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
+    font-size:26px; box-shadow:0 10px 40px rgba(99,252,175,.35); transition:transform .15s;}
   .poster-ov:hover .pb{transform:scale(1.06);}
-  .poster-ov .pt{font-size:16px; font-weight:600; color:var(--crema);}
-  .poster-ov .ps{font-size:13px; color:var(--gris);}
+  .poster-ov .pt{font-size:16px; font-weight:700; color:var(--crema); text-shadow:0 1px 8px rgba(0,0,0,.6);}
+  .poster-ov .ps{font-size:13.5px; color:var(--crema); font-weight:500; text-shadow:0 1px 8px rgba(0,0,0,.6);}
   .vbar{position:absolute; left:0; right:0; bottom:0; height:6px; background:rgba(255,255,255,.14); cursor:pointer; transition:height .12s ease;}
   .vbar::before{content:""; position:absolute; left:0; right:0; top:-14px; height:14px;}
   .vbar:hover{height:10px;}
@@ -196,14 +197,14 @@
 
     <!-- VSL: video local, se reproduce con sonido al tocar -->
     <div class="player" id="player">
-      <video id="vsl" playsinline preload="none" poster="/medicos/poster-vsl.webp" oncontextmenu="return false">
+      <video id="vsl" autoplay muted playsinline preload="auto" poster="/medicos/poster-vsl.webp" oncontextmenu="return false">
         <source src="/medicos/vsl.mp4" type="video/mp4">
         Tu navegador no soporta video.
       </video>
       <div class="poster-ov" id="playov">
-        <div class="pb">▶</div>
-        <div class="pt">Reproducir con sonido</div>
-        <div class="ps">1 minuto y medio</div>
+        <div class="pb">🔊</div>
+        <div class="pt">Tu video ya está corriendo</div>
+        <div class="ps">Tocá para activar el sonido</div>
       </div>
       <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
       <button class="mutebtn hidden" id="mutebtn" type="button" title="Silenciar / activar sonido">🔊</button>
@@ -487,18 +488,36 @@
     var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
     if(!V) return;
     var miles={25:false,50:false,75:false,100:false};
+    var pt=playov.querySelector(".pt"), ps=playov.querySelector(".ps"), pb=playov.querySelector(".pb");
+
+    // Arranca solo y en silencio. Si el navegador bloquea el autoplay, el recuadro pasa a ser "reproducir".
+    var autoOk=false;
+    function intentarAutoplay(){
+      var p=V.play();
+      if(p && p.then){ p.then(function(){ autoOk=true; track("vsl_autoplay", {}); }).catch(function(){ autoOk=false; pb.textContent="▶"; pt.textContent="Reproducir con sonido"; ps.textContent="1 minuto y medio"; }); }
+    }
+    intentarAutoplay();
+
+    // El recuadro solo activa el sonido (el video ya corre). Si terminó, vuelve a empezar con sonido.
     playov.addEventListener("click", function(){
+      if(V.ended){ try{ V.currentTime=0; }catch(e){} }
       V.muted=false; V.play();
-      track("vsl_play", {});
+      track(autoOk ? "vsl_sonido" : "vsl_play", {});
       playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
     });
     V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
+
+    // Barra "inteligente": el primer 20% del video llena la mitad de la barra (sensación de video corto);
+    // el 80% restante llena la otra mitad a ritmo normal. La misma curva se invierte al buscar en la barra.
+    var K=0.2, M=0.5;
+    function verProg(x){ return x<K ? (x/K)*M : M+((x-K)/(1-K))*(1-M); }
+    function tiempoDe(p){ return p<M ? (p/M)*K : K+((p-M)/(1-M))*(1-K); }
     var vbar=vfill.parentNode;
     function seekTo(clientX){
       if(!V.duration || !isFinite(V.duration)) return;
       var rect=vbar.getBoundingClientRect();
       var frac=Math.min(1, Math.max(0, (clientX-rect.left)/rect.width));
-      try{ V.currentTime=frac*V.duration; }catch(e){}
+      try{ V.currentTime=tiempoDe(frac)*V.duration; }catch(e){}
     }
     vbar.addEventListener("click", function(e){ e.stopPropagation(); seekTo(e.clientX); });
     vbar.addEventListener("touchend", function(e){ if(e.changedTouches && e.changedTouches[0]){ e.preventDefault(); seekTo(e.changedTouches[0].clientX); } }, {passive:false});
@@ -512,14 +531,14 @@
       else if(V.webkitEnterFullscreen){ V.webkitEnterFullscreen(); } // iOS: solo el <video>
     });
     V.addEventListener("timeupdate", function(){
-      var t=V.currentTime, dur=V.duration||98;
-      vfill.style.width=Math.min(100,(t/dur)*100)+"%";
-      var pct=(t/dur)*100;
+      var t=V.currentTime, dur=V.duration||98, x=Math.min(1, t/dur);
+      vfill.style.width=(verProg(x)*100)+"%";
+      var pct=x*100; // el progreso que se mide es el real, no el de la barra
       [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
     });
     V.addEventListener("ended", function(){
       mutebtn.classList.add("hidden"); fsbtn.classList.add("hidden");
-      playov.querySelector(".pt").textContent="Volver a ver";
+      pb.textContent="▶"; pt.textContent="Volver a ver"; ps.textContent="Con sonido";
       playov.classList.remove("hidden");
     });
   })();
