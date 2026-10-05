@@ -94,6 +94,11 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
 
+    // Lotes de eventos de la landing (/medicos): van a OTRO spreadsheet, nunca a Leads, y sin alertas.
+    if (data.tipo === 'eventos') {
+      return _json({ ok: true, eventos: _appendEventos(data) });
+    }
+
     // 'reporte' es solo para el PDF/correo, NO va al Sheet: lo sacamos antes de escribir la fila.
     var reporte = data.reporte || null;
     delete data.reporte;
@@ -484,6 +489,136 @@ function _limpiarTokensSobrantes(pres, reporte) {
       try { pres.replaceAllText('{{' + k + '}}', ''); } catch (e) {}
     }
   });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EVENTOS DE LA LANDING (/medicos): el embudo completo, en un spreadsheet APARTE
+// ─────────────────────────────────────────────────────────────────────────────
+// La landing manda lotes {tipo:"eventos", uid, sid, utm_*, ua, eventos:[{ts, seq, ev, valor}]}.
+// NO se mezclan con la pestaña Leads: van al spreadsheet "Eventos Landing - Empowered Investor",
+// que se crea solo la primera vez (en el Drive de la cuenta duena del script) y cuyo ID queda en
+// las Propiedades del script. No lleva datos personales: ids aleatorios, UTM y acciones.
+//   Pestaña "Eventos":        una fila por evento, cruda. Es la primera pestaña a proposito,
+//                             para poder exportarla como CSV.
+//   Pestaña "Embudo diario":  sesiones por dia y origen con cada paso del embudo.
+//                             La regenera resumenEmbudoDiario() (a mano o con el trigger).
+// SETUP (una vez): nueva version de la implementacion; corre verSheetEventos() para ver el link;
+// corre instalarTriggerEmbudo() para que el resumen se actualice solo cada manana a las 6.
+var EVENTOS_SHEET_NOMBRE = 'Eventos Landing - Empowered Investor';
+var EVENTOS_TZ = 'America/Costa_Rica';
+var EVENTOS_HEADERS = ['ts', 'fecha', 'hora', 'uid', 'sid', 'seq', 'ev', 'valor', 'pagina',
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'referrer',
+  'dispositivo', 'so', 'navegador', 'ancho', 'alto', 'idioma', 'ua'];
+
+function _ssEventos() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('EVENTOS_SHEET_ID');
+  if (id) {
+    try { return SpreadsheetApp.openById(id); } catch (e) { /* lo borraron: se crea otro */ }
+  }
+  var ss = SpreadsheetApp.create(EVENTOS_SHEET_NOMBRE);
+  var sh = ss.getSheets()[0];
+  sh.setName('Eventos');
+  sh.getRange(1, 1, 1, EVENTOS_HEADERS.length).setValues([EVENTOS_HEADERS]).setFontWeight('bold');
+  sh.setFrozenRows(1);
+  ss.insertSheet('Embudo diario');
+  props.setProperty('EVENTOS_SHEET_ID', ss.getId());
+  return ss;
+}
+
+function _appendEventos(d) {
+  var evs = d.eventos || [];
+  if (!evs.length) return 0;
+  var nav = _parsearUA(d.ua || '');
+  var rows = evs.map(function (e) {
+    var ts = e.ts || new Date().toISOString();
+    var f = new Date(ts);
+    if (isNaN(f.getTime())) f = new Date();
+    return [ts, Utilities.formatDate(f, EVENTOS_TZ, 'yyyy-MM-dd'), Utilities.formatDate(f, EVENTOS_TZ, 'HH:mm:ss'),
+      d.uid || '', d.sid || '', e.seq || '', e.ev || '', e.valor === undefined ? '' : e.valor, d.pagina || '',
+      d.utm_source || '', d.utm_medium || '', d.utm_campaign || '', d.utm_content || '', d.utm_term || '',
+      d.referrer || '', nav.dispositivo, nav.so, nav.navegador, d.ancho || '', d.alto || '', d.idioma || '',
+      String(d.ua || '').slice(0, 200)];
+  });
+  var sh = _ssEventos().getSheetByName('Eventos');
+  sh.getRange(sh.getLastRow() + 1, 1, rows.length, EVENTOS_HEADERS.length).setValues(rows);
+  return rows.length;
+}
+
+function _parsearUA(ua) {
+  var so = /iPhone|iPad/i.test(ua) ? 'iOS' : /Android/i.test(ua) ? 'Android' : /Windows/i.test(ua) ? 'Windows'
+         : /Mac OS/i.test(ua) ? 'macOS' : 'otro';
+  var navegador = /Instagram/i.test(ua) ? 'InstagramApp' : /FBAN|FBAV|FB_IAB/i.test(ua) ? 'FacebookApp'
+         : /CriOS|Chrome/i.test(ua) ? 'Chrome' : /Safari/i.test(ua) ? 'Safari' : 'otro';
+  var dispositivo = /iPad|Tablet/i.test(ua) ? 'tablet' : /Mobile|iPhone|Android/i.test(ua) ? 'movil' : 'escritorio';
+  return { so: so, navegador: navegador, dispositivo: dispositivo };
+}
+
+/** Reconstruye "Embudo diario": una fila por dia y origen (ig, fb, ...) mas una fila "todos" por dia. */
+function resumenEmbudoDiario() {
+  var ss = _ssEventos();
+  var sh = ss.getSheetByName('Eventos');
+  var last = sh.getLastRow();
+  var H = {}; EVENTOS_HEADERS.forEach(function (h, i) { H[h] = i; });
+  var ses = {};
+  if (last > 1) {
+    sh.getRange(2, 1, last - 1, EVENTOS_HEADERS.length).getValues().forEach(function (r) {
+      var sid = r[H.sid]; if (!sid) return;
+      var s = ses[sid] || (ses[sid] = { fecha: r[H.fecha], origen: r[H.utm_source] || 'directo',
+        autoplay: 0, sonido: 0, p25: 0, p50: 0, p75: 0, p100: 0, form: 0, cta: 0, lead: 0, wa: 0, scroll: 0, seg: 0, video_seg: 0 });
+      var ev = r[H.ev], v = String(r[H.valor] === undefined ? '' : r[H.valor]);
+      if (ev === 'vsl_autoplay' || ev === 'vsl_play') s.autoplay = 1;
+      else if (ev === 'vsl_sonido') s.sonido = 1;
+      else if (ev === 'vsl_progreso') { var p = Number(v); if (p >= 25) s.p25 = 1; if (p >= 50) s.p50 = 1; if (p >= 75) s.p75 = 1; if (p >= 100) s.p100 = 1; }
+      else if (ev === 'form_visible') s.form = 1;
+      else if (ev === 'click_agendar') s.cta = 1;
+      else if (ev === 'medicos_lead') s.lead = 1;
+      else if (ev === 'lead_whatsapp_abierto') s.wa = 1;
+      else if (ev === 'scroll') s.scroll = Math.max(s.scroll, Number(v) || 0);
+      else if (ev === 'salida') {
+        try {
+          var o = JSON.parse(v);
+          s.seg = Math.max(s.seg, Number(o.seg) || 0); s.scroll = Math.max(s.scroll, Number(o.scroll) || 0);
+          s.video_seg = Math.max(s.video_seg, Number(o.video_seg) || 0); if (o.sonido) s.sonido = 1;
+        } catch (e2) {}
+      }
+    });
+  }
+  var FLAGS = ['autoplay', 'sonido', 'p25', 'p50', 'p75', 'p100', 'form', 'cta', 'lead', 'wa'];
+  var agg = {};
+  function sumar(k, s) {
+    var a = agg[k] || (agg[k] = { n: 0, scroll: 0, seg: 0, video_seg: 0 });
+    a.n++; FLAGS.forEach(function (f) { a[f] = (a[f] || 0) + s[f]; });
+    a.scroll += s.scroll; a.seg += s.seg; a.video_seg += s.video_seg;
+  }
+  Object.keys(ses).forEach(function (sid) { var s = ses[sid]; sumar(s.fecha + '|' + s.origen, s); sumar(s.fecha + '|todos', s); });
+  var head = ['fecha', 'origen', 'sesiones', 'video arranco', 'activo sonido', 'vio 25%', 'vio 50%', 'vio 75%', 'vio 100%',
+    'vio el formulario', 'toco agendar', 'leads', 'abrio WhatsApp', 'scroll prom %', 'seg en pagina prom', 'seg de video prom'];
+  var out = Object.keys(agg).sort().map(function (k) {
+    var a = agg[k], p = k.split('|');
+    return [p[0], p[1], a.n, a.autoplay, a.sonido, a.p25, a.p50, a.p75, a.p100, a.form, a.cta, a.lead, a.wa,
+      Math.round(a.scroll / a.n), Math.round(a.seg / a.n), Math.round(a.video_seg / a.n)];
+  });
+  var sr = ss.getSheetByName('Embudo diario') || ss.insertSheet('Embudo diario');
+  sr.clearContents();
+  sr.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold');
+  sr.setFrozenRows(1);
+  if (out.length) sr.getRange(2, 1, out.length, head.length).setValues(out);
+  Logger.log('Embudo diario: ' + out.length + ' filas a partir de ' + Object.keys(ses).length + ' sesiones. ' + ss.getUrl());
+}
+
+/** Una vez: el resumen se regenera solo cada manana a las 6 (hora del script). */
+function instalarTriggerEmbudo() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === 'resumenEmbudoDiario') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('resumenEmbudoDiario').timeBased().everyDays(1).atHour(6).create();
+  Logger.log('Trigger diario instalado. Spreadsheet: ' + _ssEventos().getUrl());
+}
+
+/** Muestra en el registro el link del spreadsheet de eventos (lo crea si todavia no existe). */
+function verSheetEventos() {
+  Logger.log('Eventos Landing: ' + _ssEventos().getUrl());
 }
 
 function _json(obj) {
