@@ -108,10 +108,21 @@
   .lead .ctanota{text-align:center;}
   .lead-ok{margin-top:20px; background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.45); border-radius:22px; padding:24px 20px; text-align:center;}
   .lead-ok .ok-t{font-size:clamp(19px,4.4vw,24px); font-weight:700; color:var(--crema); line-height:1.3;}
-  .lead-ok p{font-size:15px; line-height:1.55; color:var(--gris); font-weight:400; margin-top:10px;}
-  .cta.wa{margin-top:16px; background:#25D366; color:#062b17;}
-  .ok-alt{font-size:13.5px; margin-top:16px;}
-  .ok-alt a{color:var(--menta); font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+  .lead-ok .ok-sub{font-size:clamp(16px,3.6vw,19px); font-weight:600; color:var(--menta); margin-top:10px; line-height:1.35;}
+  .lead-ok .ok-mini{font-size:14px; color:var(--gris); font-weight:400; margin-top:16px;}
+  .slots{display:grid; gap:10px; margin-top:16px;}
+  @media(min-width:521px){ .slots{grid-template-columns:repeat(3,1fr);} }
+  .slot{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:64px; padding:12px 10px; text-decoration:none;
+    background:var(--input); border:1px solid rgba(99,252,175,.55); border-radius:14px; color:var(--crema); font-weight:600; font-size:14px; line-height:1.3; transition:background .12s, border-color .12s;}
+  .slot:hover{background:rgba(99,252,175,.12); border-color:var(--menta);}
+  .slot b{font-size:18px; font-weight:700; color:var(--menta);}
+  .cal-wrap{margin-top:12px; border-radius:14px; overflow:hidden; height:760px; min-width:280px; background:var(--tinta); position:relative;}
+  @media(max-width:649px){ .cal-wrap{height:1020px; margin-left:-20px; margin-right:-20px; border-radius:0;} }
+  .cal-wrap iframe{display:block; width:100%; height:100%; border:0;}
+  .cal-load{position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:70px; font-size:14px; color:var(--gris); font-weight:400; pointer-events:none;}
+  .cal-wrap.ok .cal-load{display:none;}
+  .ok-alt{font-size:15px; color:var(--crema); font-weight:600; margin-top:22px; border-top:1px solid rgba(99,252,175,.25); padding-top:18px;}
+  .cta.wa{margin-top:12px; background:#25D366; color:#062b17;}
 
   /* ===== 3 · Testimonios ===== */
   .testi h2{text-align:center;}
@@ -255,10 +266,15 @@
     </form>
 
     <div class="lead-ok hidden" id="lead-ok">
-      <div class="ok-t">Listo, <span id="ok-nom"></span>. Te escribimos hoy por WhatsApp.</div>
-      <p id="wa-intro">Si querés adelantarlo, mandanos el mensaje ahora y coordinamos de una vez:</p>
-      <a class="cta wa" id="wa-link" href="#" target="_blank" rel="noopener">Mandar mensaje</a>
-      <p class="ok-alt">¿Preferís elegir la hora vos? <a href="https://calendly.com/empoweredinvestor/medicos" id="cal-link" target="_blank" rel="noopener">Abrí el calendario</a>.</p>
+      <div class="ok-t">Listo, <span id="ok-nom"></span>. Ya recibimos tus datos ✓</div>
+      <p class="ok-sub">Elegí el horario para tu llamada de claridad</p>
+      <!-- Los próximos espacios libres (de la tarde primero), un click y queda la hora elegida -->
+      <div class="slots hidden" id="slots"></div>
+      <p class="ok-mini hidden" id="slots-mas">O mirá todos los horarios acá abajo:</p>
+      <!-- Calendly ya abierto, con nombre y WhatsApp precargados; sin scroll interno (patrón page_height) -->
+      <div class="cal-wrap" id="calwrap"><div class="cal-load">Cargando el calendario…</div></div>
+      <p class="ok-alt" id="ok-alt">¿Preferís coordinar por WhatsApp?</p>
+      <a class="cta wa" id="wa-link" href="#" target="_blank" rel="noopener">Escribir por WhatsApp</a>
     </div>
   </section>
 
@@ -558,12 +574,59 @@
     });
   })();
 
-  // Enlace alternativo al calendario (para quien prefiere elegir la hora solo): lleva los mismos UTM.
-  (function(){
-    var a=byId("cal-link"); if(!a) return;
-    a.href=conUtm(CALENDLY);
-    a.addEventListener("click", function(){ track("calendly_pestana_nueva", {}); });
-  })();
+  // ===== Después del formulario: horarios de un click + Calendly abierto (nombre y WhatsApp precargados) =====
+  var CAL_PRE = ""; // parámetros de precarga (name, a1=WhatsApp, a2=especialidad) que se arman al enviar el formulario
+  function abrirCalendly(){
+    var wrap=byId("calwrap"); if(!wrap || wrap.getAttribute("data-ok")) return; wrap.setAttribute("data-ok","1");
+    var url = conUtm(CALENDLY + "?hide_gdpr_banner=1&hide_event_type_details=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf" + CAL_PRE)
+      + "&embed_domain=" + encodeURIComponent(location.hostname || "localhost") + "&embed_type=Inline";
+    var fr=document.createElement("iframe");
+    fr.src=url; fr.title="Elegí el día y la hora"; fr.setAttribute("scrolling","no");
+    fr.addEventListener("load", function(){ wrap.classList.add("ok"); });
+    wrap.appendChild(fr);
+    track("calendly_cargado", {});
+  }
+  // El alto del iframe sigue al contenido (calendly.page_height): nunca hay scroll atrapado en el celular.
+  var agendado=false;
+  window.addEventListener("message", function(e){
+    if(!/^https:\/\/([a-z0-9-]+\.)?calendly\.com$/.test(e.origin||"")) return;
+    var d=e.data; if(!d || typeof d.event!=="string" || d.event.indexOf("calendly.")!==0) return;
+    var wrap=byId("calwrap");
+    if(d.event==="calendly.page_height" && d.payload){
+      var h=parseInt(d.payload.height,10);
+      if(h>300){ wrap.style.height=(h+8)+"px"; wrap.classList.add("ok"); }
+    } else if(d.event==="calendly.date_and_time_selected"){
+      track("calendly_hora_elegida", {});
+      try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
+    } else if(d.event==="calendly.event_scheduled" && !agendado){
+      agendado=true;
+      track("medicos_llamada_agendada", {utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+      // Mismo id que manda el webhook de Calendly por la API de conversiones: Meta deduplica.
+      var eid="";
+      try{ var uri=(d.payload && d.payload.invitee && d.payload.invitee.uri)||""; var m=uri.match(/invitees\/([0-9a-f-]+)/i); if(m) eid="cal_"+m[1]; }catch(err){}
+      try{ if(typeof fbq==="function") fbq("track","Schedule",{content_name:"llamada medicos", content_category:UTM.utm_campaign||""}, eid?{eventID:eid}:undefined); }catch(err){}
+      try{ wrap.scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
+    }
+  });
+  // Los 3 próximos espacios libres (de la tarde primero), con el link de reserva de cada hora.
+  function cargarHorarios(){
+    var box=byId("slots"), mas=byId("slots-mas"); if(!box) return;
+    var fmtDia=new Intl.DateTimeFormat("es-CR",{weekday:"short", day:"numeric", month:"short", timeZone:"America/Costa_Rica"});
+    var fmtHora=new Intl.DateTimeFormat("es-CR",{hour:"numeric", minute:"2-digit", hour12:true, timeZone:"America/Costa_Rica"});
+    fetch("/.netlify/functions/horarios?n=3").then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+      if(!j || !j.espacios || !j.espacios.length) return;
+      box.innerHTML="";
+      j.espacios.forEach(function(s){
+        var d=new Date(s.inicio), a=document.createElement("a");
+        a.className="slot"; a.href=conUtm(s.url + "?" + CAL_PRE.replace(/^&/,""));
+        a.innerHTML="<span>"+fmtDia.format(d).replace(".","")+"</span><b>"+fmtHora.format(d).replace(/\s*(a|p)\.\s*m\./i,function(x){ return x.indexOf("a")>-1?" am":" pm"; })+"</b>";
+        a.addEventListener("click", function(){ track("slot_click", {v:s.inicio}); });
+        box.appendChild(a);
+      });
+      box.classList.remove("hidden"); mas.classList.remove("hidden");
+      track("slots_vistos", {v:j.espacios.length});
+    }).catch(function(){});
+  }
 
   // ===== Pedir la llamada: especialidad + nombre + WhatsApp → lead al Sheet → WhatsApp con el mensaje listo =====
   (function(){
@@ -615,10 +678,13 @@
           track("lead_whatsapp_abierto", {});
           try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp medicos"}); }catch(err){}
         });
-      } else { link.classList.add("hidden"); byId("wa-intro").classList.add("hidden"); }
+      } else { link.classList.add("hidden"); byId("ok-alt").classList.add("hidden"); }
       byId("ok-nom").textContent=nombre.split(" ")[0];
+      // Calendly con sus datos ya puestos: name, a1 = WhatsApp, a2 = especialidad (las preguntas del evento).
+      CAL_PRE = "&name="+encodeURIComponent(nombre)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(especialidad);
       form.classList.add("hidden"); byId("lead-ok").classList.remove("hidden");
-      try{ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"center"}); }catch(err){}
+      abrirCalendly(); cargarHorarios();
+      try{ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
     });
   })();
 
