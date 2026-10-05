@@ -1,3 +1,22 @@
+# Horarios de un click (Calendly → la landing)
+
+`horarios.js`: la página /medicos, después de recibir nombre, especialidad y
+WhatsApp, pide los próximos espacios libres de la llamada de médicos y los
+muestra como tres botones (de la tarde primero, uno por día). Cada botón abre
+el link de reserva de Calendly con la hora ya elegida y los datos precargados.
+
+Necesita en Netlify → Site configuration → Environment variables:
+
+| Variable | Dónde sale |
+|---|---|
+| `CALENDLY_TOKEN` | Calendly → Integraciones → API y webhooks → Personal Access Token (el mismo que está en el registro de Windows) |
+
+Sin esa variable la función responde 500 y la página simplemente no muestra
+los tres botones: el Calendly abierto y el WhatsApp siguen funcionando.
+
+Probar en vivo: `https://investorcr.com/.netlify/functions/horarios?n=3`
+(responde `{"espacios":[{"inicio":"…Z","url":"https://calendly.com/…/2026-…Z"}],"total":24}`).
+
 # API de conversiones de Meta (Calendly → Meta)
 
 Cuando alguien reserva la llamada de médicos, Calendly le avisa a
