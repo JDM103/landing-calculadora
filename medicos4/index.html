@@ -59,10 +59,10 @@
   .cta:hover{filter:brightness(.94);}
   .ctanota{font-size:13px; color:var(--gris); margin-top:10px; font-weight:400;}
 
-  /* ===== 1 · Header, subtítulo, video, botón ===== */
+  /* ===== Video de Jose (vive en la sección "Jose Montero") ===== */
   .player{position:relative; margin:18px auto 0; max-width:860px; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
   .player video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
-  /* El video corre solo (en silencio); el recuadro solo activa el sonido, como la referencia */
+  /* El video no arranca solo: el recuadro lo reproduce con sonido */
   .poster-ov{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
     background:rgba(9,11,14,.28); cursor:pointer; text-align:center; padding:20px;}
   .poster-ov .pb{width:66px; height:66px; border-radius:50%; background:var(--menta); color:#0b0e12; display:flex; align-items:center; justify-content:center;
@@ -124,7 +124,24 @@
   .ok-alt{font-size:15px; color:var(--crema); font-weight:600; margin-top:22px; border-top:1px solid rgba(99,252,175,.25); padding-top:18px;}
   .cta.wa{margin-top:12px; background:#25D366; color:#062b17;}
 
-  /* ===== 3 · Testimonios ===== */
+  /* ===== 3 · Médicos en su llamada (clips) ===== */
+  .docs h2, .docs .sub{text-align:center;}
+  @media(min-width:900px){ .docs{ width:min(960px, calc(100vw - 48px)); margin-left:50%; transform:translateX(-50%); } }
+  .dgrid{display:grid; gap:20px; margin-top:22px;}
+  @media(min-width:900px){ .dgrid{grid-template-columns:repeat(3,1fr); gap:14px;} }
+  .dplayer{position:relative; border-radius:16px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9;}
+  .dplayer video{width:100%; height:100%; display:block; object-fit:contain; background:#000;}
+  /* Portada: la cara del doctor, su frase encima y el botón de reproducir */
+  .dov{position:absolute; inset:0; width:100%; border:0; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:5px;
+    padding:14px 16px; text-align:center; background:linear-gradient(180deg, rgba(9,11,14,0) 38%, rgba(9,11,14,.94) 100%);}
+  .dov .dq{font-size:clamp(15px,4.2vw,19px); font-weight:700; color:var(--crema); line-height:1.25; text-shadow:0 1px 8px rgba(0,0,0,.7); text-wrap:balance;}
+  .dov .dt{margin-top:4px; font-size:13px; font-weight:700; color:var(--tinta); background:var(--menta); border-radius:999px; padding:6px 14px; transition:filter .15s;}
+  .dov:hover .dt{filter:brightness(.94);}
+  @media(min-width:900px){ .dov .dq{font-size:15px;} .dov .dt{font-size:12px; padding:5px 12px;} }
+  .dvid figcaption{margin-top:9px; font-size:14.5px; color:var(--gris); font-weight:400; text-align:center;}
+  .dvid figcaption b{color:var(--crema); font-weight:700;}
+
+  /* ===== 5 · Testimonios ===== */
   .testi h2{text-align:center;}
   .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; margin-top:26px; display:flex; gap:18px; align-items:flex-start;}
   .tfeat-badge{position:absolute; top:-12px; left:22px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px;}
@@ -155,7 +172,7 @@
   .sobre .familia{margin-top:12px; border-top:1px solid var(--bd); padding-top:10px; font-size:14.5px; color:var(--gris); font-weight:400;}
   .sobre .familia b{color:var(--crema); font-weight:600;}
 
-  /* ===== 5 · Qué revisamos en la sesión ===== */
+  /* ===== 6 · Qué revisamos en la sesión ===== */
   .llamada{background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:22px; padding:26px 22px;}
   .llamada .lt{font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--menta);}
   .llamada h2{margin-top:8px;}
@@ -179,7 +196,7 @@
   .papel p b{color:var(--crema); font-weight:700;}
   .papel p i{font-style:italic;}
 
-  /* ===== 6 · Preguntas frecuentes ===== */
+  /* ===== 7 · Preguntas frecuentes ===== */
   .faq h2{text-align:center;}
   .faq details{background:var(--card); border:1px solid var(--bd); border-radius:14px; margin-top:12px; padding:0 18px;}
   .faq details:first-of-type{margin-top:22px;}
@@ -199,39 +216,15 @@
 <body>
 <div class="wrap">
 
-  <!-- ===== 1 · HEADER · SUBTÍTULO · VIDEO · BOTÓN ===== -->
+  <!-- ===== 1 · HEADER (el formulario va inmediatamente debajo) ===== -->
   <header class="hero">
     <span class="eyebrow">*Para médicos residentes o especialistas que pueden ahorrar cada mes y quieren ponerle un número a su meta de trabajar menos*</span>
     <h1>¿Querés llegar a los 55 con la opción de <em>bajar el ritmo</em>?</h1>
     <p class="paren">(Sin obligación de aportar cada mes. Retirás sin penalidad cuando querás, porque es tu cuenta.)</p>
-
-    <!-- VSL: video local, se reproduce con sonido al tocar -->
-    <div class="player" id="player">
-      <video id="vsl" autoplay muted playsinline preload="auto" poster="/medicos/poster-vsl.webp" oncontextmenu="return false">
-        <source src="/medicos/vsl.mp4" type="video/mp4">
-        Tu navegador no soporta video.
-      </video>
-      <div class="poster-ov" id="playov">
-        <div class="pb">🔊</div>
-        <div class="pt">Tu video ya está corriendo</div>
-        <div class="ps">Tocá para activar el sonido</div>
-      </div>
-      <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
-      <button class="mutebtn hidden" id="mutebtn" type="button" title="Silenciar / activar sonido">🔊</button>
-      <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
-    </div>
-
-    <div class="ctarow" style="margin-top:18px;">
-      <a class="cta" href="#agenda" id="cta-top">Pedir mi llamada de claridad</a>
-      <p class="ctanota">45 minutos · Coordinamos por WhatsApp · Sin obligación de contratar</p>
-    </div>
   </header>
 
   <!-- ===== 2 · FORM DE AGENDA: especialidad + nombre y WhatsApp (la agenda la hacemos nosotros) ===== -->
-  <section class="booking" id="agenda">
-    <h2>Pedí tu llamada de claridad <em>en 30 segundos</em></h2>
-    <p class="sub">Tu especialidad y tu WhatsApp. Te escribimos el mismo día para coordinar el día y la hora que te sirvan.</p>
-
+  <section class="booking" id="agenda" style="padding-top:4px;">
     <form class="lead" id="lead" novalidate>
       <div class="paso-q">
         <div class="q">¿Cuál es tu especialidad?</div>
@@ -279,7 +272,92 @@
     </div>
   </section>
 
-  <!-- ===== 3 · TESTIMONIOS ===== -->
+  <!-- ===== 3 · MÉDICOS EN SU LLAMADA: clips con subtítulos; cada uno carga y suena al tocar ===== -->
+  <section class="docs" style="padding-top:0;">
+    <h2>Otros médicos, <em>en su llamada de claridad</em></h2>
+    <p class="sub">Fragmentos reales de sus llamadas.</p>
+    <div class="dgrid">
+      <figure class="dvid" data-clip="william">
+        <div class="dplayer">
+          <video playsinline preload="none" poster="/medicos/clips/william.webp" oncontextmenu="return false">
+            <source src="/medicos/clips/william.mp4?v=3" type="video/mp4">
+          </video>
+          <button type="button" class="dov" aria-label="Ver el video de William Solís">
+            <span class="dq">“A los 55 años ya no quiero hacer disponibilidades”</span>
+            <span class="dt">▶ Ver video · 1:34</span>
+          </button>
+        </div>
+        <figcaption><b>Dr. William Solís</b> · Urólogo</figcaption>
+      </figure>
+      <figure class="dvid" data-clip="luis">
+        <div class="dplayer">
+          <video playsinline preload="none" poster="/medicos/clips/luis.webp" oncontextmenu="return false">
+            <source src="/medicos/clips/luis.mp4?v=3" type="video/mp4">
+          </video>
+          <button type="button" class="dov" aria-label="Ver el video de Luis Aguilar">
+            <span class="dq">“Desde un punto de vista es increíble, desde otro es esclavizante”</span>
+            <span class="dt">▶ Ver video · 1:13</span>
+          </button>
+        </div>
+        <figcaption><b>Dr. Luis Aguilar</b> · Anestesiólogo</figcaption>
+      </figure>
+      <figure class="dvid" data-clip="mariana">
+        <div class="dplayer">
+          <video playsinline preload="none" poster="/medicos/clips/mariana.webp" oncontextmenu="return false">
+            <source src="/medicos/clips/mariana.mp4?v=3" type="video/mp4">
+          </video>
+          <button type="button" class="dov" aria-label="Ver el video de Mariana Peña">
+            <span class="dq">“Nadie busca hacer plata por hacer plata”</span>
+            <span class="dt">▶ Ver video · 1:38</span>
+          </button>
+        </div>
+        <figcaption><b>Dra. Mariana Peña</b> · Ginecóloga</figcaption>
+      </figure>
+    </div>
+    <div class="ctarow">
+      <a class="cta" href="#agenda" id="cta-docs">Pedir mi llamada de claridad</a>
+      <p class="ctanota">45 minutos · Coordinamos por WhatsApp · Sin obligación de contratar</p>
+    </div>
+  </section>
+
+  <!-- ===== 4 · JOSE MONTERO: su video (se reproduce con sonido al tocar) + credenciales ===== -->
+  <section class="sobre" style="padding-top:0;">
+    <h2>Jose Montero</h2>
+    <div class="player" id="player">
+      <video id="vsl" playsinline preload="none" poster="/medicos/poster-vsl.webp" oncontextmenu="return false">
+        <source src="/medicos/vsl.mp4?v=3" type="video/mp4">
+        Tu navegador no soporta video.
+      </video>
+      <div class="poster-ov" id="playov">
+        <div class="pb">▶</div>
+        <div class="pt">¿Cómo funciona la llamada?</div>
+        <div class="ps">1 minuto y medio · con sonido</div>
+      </div>
+      <button class="fsbtn hidden" id="fsbtn" type="button" title="Pantalla completa" aria-label="Pantalla completa">⛶</button>
+      <button class="mutebtn hidden" id="mutebtn" type="button" title="Silenciar / activar sonido">🔊</button>
+      <div class="vbar"><div class="vbar-fill" id="vfill"></div></div>
+    </div>
+    <!-- El video dice "podés agendarla aquí abajo": por eso el botón va justo debajo -->
+    <div class="ctarow" style="margin-top:18px;">
+      <a class="cta" href="#agenda" id="cta-jose">Pedir mi llamada de claridad</a>
+    </div>
+    <div class="sobre-grid" style="margin-top:26px;">
+      <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
+      <div>
+        <ul class="cred">
+          <li><b>Fundador de Empowered Investor</b></li>
+          <li><b>Licenciado en Administración de Empresas</b></li>
+          <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
+          <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
+          <li><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU.</li>
+          <li><b>3 de cada 10 clientes</b> nuestros son médicos</li>
+        </ul>
+        <p class="familia">Esposo. <b>Papá de tres.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5 · TESTIMONIOS ===== -->
   <section class="testi" style="padding-top:0;">
     <h2>Médicos y profesionales que ya <em>dieron el paso</em></h2>
     <div class="tfeat">
@@ -335,26 +413,7 @@
     </div>
   </section>
 
-  <!-- ===== 4 · JOSE MONTERO ===== -->
-  <section class="sobre" style="padding-top:0;">
-    <h2>Jose Montero</h2>
-    <div class="sobre-grid">
-      <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
-      <div>
-        <ul class="cred">
-          <li><b>Fundador de Empowered Investor</b></li>
-          <li><b>Licenciado en Administración de Empresas</b></li>
-          <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
-          <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
-          <li><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU.</li>
-          <li><b>3 de cada 10 clientes</b> nuestros son médicos</li>
-        </ul>
-        <p class="familia">Esposo. <b>Papá de tres.</b></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== 5 · QUÉ REVISAMOS EN LA SESIÓN ===== -->
+  <!-- ===== 6 · QUÉ REVISAMOS EN LA SESIÓN ===== -->
   <section style="padding-top:0;">
     <div class="llamada">
       <div class="lt">Qué revisamos en la llamada de claridad · sin costo</div>
@@ -378,7 +437,7 @@
     </div>
   </section>
 
-  <!-- ===== 6 · PREGUNTAS FRECUENTES ===== -->
+  <!-- ===== 7 · PREGUNTAS FRECUENTES ===== -->
   <section class="faq" style="padding-top:0;">
     <h2>Preguntas <em>frecuentes</em></h2>
     <details>
@@ -504,7 +563,7 @@
   }
 
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
-  var CTAS = ["cta-top","cta-giro","cta-fin"];
+  var CTAS = ["cta-docs","cta-jose","cta-giro","cta-fin"];
 
   CTAS.forEach(function(id){
     byId(id).addEventListener("click", function(){
@@ -513,26 +572,39 @@
     });
   });
 
-  // ===== Reproductor del VSL del header =====
+  // ===== Clips de médicos: cada uno carga y suena al tocar; solo uno a la vez =====
+  (function(){
+    var figs=document.querySelectorAll(".dvid"); if(!figs.length) return;
+    Array.prototype.forEach.call(figs, function(fig){
+      var slug=fig.getAttribute("data-clip"), v=fig.querySelector("video"), ov=fig.querySelector(".dov"), mitad=false;
+      ov.addEventListener("click", function(){
+        ov.classList.add("hidden"); v.controls=true; v.play();
+        track("clip_play", {v:slug});
+      });
+      v.addEventListener("timeupdate", function(){
+        if(!mitad && v.duration && v.currentTime/v.duration>=0.5){ mitad=true; track("clip_mitad", {v:slug}); }
+      });
+      v.addEventListener("ended", function(){ track("clip_fin", {v:slug}); });
+    });
+    // Al arrancar un video (clip o el de Jose) se pausan los demás.
+    var todos=document.querySelectorAll(".dvid video, #vsl");
+    Array.prototype.forEach.call(todos, function(v){
+      v.addEventListener("play", function(){ Array.prototype.forEach.call(todos, function(o){ if(o!==v) o.pause(); }); });
+    });
+  })();
+
+  // ===== Reproductor del video de Jose (sección "Jose Montero") =====
   (function(){
     var V=byId("vsl"), playov=byId("playov"), mutebtn=byId("mutebtn"), fsbtn=byId("fsbtn"), vfill=byId("vfill"), player=byId("player");
     if(!V) return;
     var miles={25:false,50:false,75:false,100:false};
     var pt=playov.querySelector(".pt"), ps=playov.querySelector(".ps"), pb=playov.querySelector(".pb");
 
-    // Arranca solo y en silencio. Si el navegador bloquea el autoplay, el recuadro pasa a ser "reproducir".
-    var autoOk=false;
-    function intentarAutoplay(){
-      var p=V.play();
-      if(p && p.then){ p.then(function(){ autoOk=true; track("vsl_autoplay", {}); }).catch(function(){ autoOk=false; pb.textContent="▶"; pt.textContent="Reproducir con sonido"; ps.textContent="1 minuto y medio"; }); }
-    }
-    intentarAutoplay();
-
-    // El recuadro solo activa el sonido (el video ya corre). Si terminó, vuelve a empezar con sonido.
+    // No arranca solo: el recuadro lo reproduce con sonido. Si terminó, vuelve a empezar.
     playov.addEventListener("click", function(){
       if(V.ended){ try{ V.currentTime=0; }catch(e){} }
       V.muted=false; V.play(); ESTADO.sonido=true;
-      track(autoOk ? "vsl_sonido" : "vsl_play", {});
+      track("vsl_play", {});
       playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
     });
     V.addEventListener("click", function(){ if(V.paused){ V.play(); } else { V.pause(); } });
