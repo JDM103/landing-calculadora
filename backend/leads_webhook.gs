@@ -159,7 +159,8 @@ function _notificarLead(data) {
   // Si solo querés alertas de leads con contacto, cortamos aca.
   if (ALERTA_SOLO_CALIFICADOS && !dioContacto) return;
 
-  var titulo = etapa === 'llamada_solicitada' ? '📞 LEAD: pidio una LLAMADA'
+  var titulo = etapa === 'medicos_wa' ? '🩺 LEAD MEDICO: pidio la llamada de claridad'
+             : etapa === 'llamada_solicitada' ? '📞 LEAD: pidio una LLAMADA'
              : (etapa === 'reporte_solicitada' || etapa === 'reporte_solicitado') ? '📕 LEAD: pidio el Reporte'
              : (data.califica === true || String(data.califica) === 'true') ? '📥 Lead calificado (sin contacto)'
              : '👀 Lead (sin contacto)';
@@ -171,29 +172,59 @@ function _notificarLead(data) {
     L.push(lbl + ': ' + v);
   }
   var nombre = ((data.nombre || '') + ' ' + (data.apellido || '')).trim();
+
+  // Landing de medicos (/medicos): solo pide especialidad, nombre y WhatsApp. El correo va corto,
+  // con el link para escribirle de una vez y de que anuncio vino.
+  if (etapa === 'medicos_wa') {
+    add('Nombre', nombre);
+    add('Especialidad', data.especialidad);
+    add('WhatsApp', data.whatsapp ? ('+' + data.whatsapp + '  ->  https://wa.me/' + data.whatsapp) : '');
+    add('Anuncio', [data.utm_source, data.utm_campaign, data.utm_content].filter(String).join(' / '));
+    add('Pagina', data.pagina);
+    add('Cuando', data.timestamp);
+    _enviarAlerta(titulo, L.join('\n'));
+    return;
+  }
+  // Newsletter (linktree / home): solo nombre, correo y de donde vino.
+  if (etapa === 'newsletter') {
+    titulo = '📰 Newsletter: nuevo suscriptor';
+    L = [titulo];
+    add('Nombre', nombre);
+    add('Correo', data.correo);
+    add('Origen', [data.utm_source, data.utm_medium, data.utm_campaign].filter(String).join(' / '));
+    add('Cuando', data.timestamp);
+    _enviarAlerta(titulo, L.join('\n'));
+    return;
+  }
+
+  // Wizard / calculadora: solo se muestran los numeros que vinieron (nada de "undefined" ni "$0").
   add('Nombre', nombre);
   add('WhatsApp', data.whatsapp);
   add('Correo', data.correo);
   add('Que quiere', data.autocalificacion || data.intencion);   // landing | wizard
-  add('Edad', (data.edad || data.edad_hoy) + (data.edad_retiro ? (' -> retiro ' + data.edad_retiro) : ''));
-  add('Meta', '$' + _n(data.meta_usd) + '/mes  (CRC ' + _n(data.meta_col) + ')');
-  add('Salario', '$' + _n(data.salario_usd) + '  (CRC ' + _n(data.salario_col) + ')');
-  add('Pension de la Caja', 'CRC ' + _n(data.pension_col || data.pension_estatal_col) + '/mes'
+  var edad = data.edad || data.edad_hoy;
+  if (edad) add('Edad', edad + (data.edad_retiro ? (' -> retiro ' + data.edad_retiro) : ''));
+  if (Number(data.meta_usd) || Number(data.meta_col)) add('Meta', '$' + _n(data.meta_usd) + '/mes  (CRC ' + _n(data.meta_col) + ')');
+  if (Number(data.salario_usd) || Number(data.salario_col)) add('Salario', '$' + _n(data.salario_usd) + '  (CRC ' + _n(data.salario_col) + ')');
+  if (Number(data.pension_col || data.pension_estatal_col)) add('Pension de la Caja', 'CRC ' + _n(data.pension_col || data.pension_estatal_col) + '/mes'
       + (data.toco_techo_ivm ? '  [TOPE del IVM]' : ''));
   // Landing nueva: meta de capital + los 4 aportes calculados.
-  add('Capital objetivo', '$' + _n(data.capital_objetivo_usd));
+  if (Number(data.capital_objetivo_usd)) add('Capital objetivo', '$' + _n(data.capital_objetivo_usd));
   if (data.aporte_8_usd) {
     L.push('Aportes/mes -> 8%: $' + _n(data.aporte_8_usd) + ' | 15%: $' + _n(data.aporte_15_usd)
            + ' | retiro 8%: $' + _n(data.aporte_retiro8_usd) + ' | ambas: $' + _n(data.aporte_combo_usd));
   }
   // Wizard viejo.
-  add('Brecha', 'CRC ' + _n(data.brecha_col) + '/mes');
+  if (Number(data.brecha_col)) add('Brecha', 'CRC ' + _n(data.brecha_col) + '/mes');
   add('Perfil', data.perfil);
   add('Toggles abiertos', (data.toggles_total ? (data.toggles_total + '  (' + data.toggles_abiertos + ')') : ''));
   add('Tiempo en la calc', data.tiempo_calculadora);
   add('Cuando', data.timestamp);
-  var cuerpo = L.join('\n');
+  _enviarAlerta(titulo, L.join('\n'));
+}
 
+/** Manda la alerta: email siempre; WhatsApp por CallMeBot solo si esta configurado. */
+function _enviarAlerta(titulo, cuerpo) {
   // 1) EMAIL (siempre; no requiere ningun setup)
   var para = ALERTA_EMAIL || Session.getEffectiveUser().getEmail();
   if (para) {
