@@ -615,7 +615,10 @@
 
       var payload={ timestamp:new Date().toISOString(), etapa:"medicos_wa", nombre:nombre, whatsapp:"506"+wa,
         especialidad:especialidad, pagina:location.pathname,
-        utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content };
+        utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
+        // Recorrido antes de pedir la llamada: con sid se busca la sesión completa en "Eventos Landing".
+        sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-ESTADO.t0)/1000), scroll_max:ESTADO.scroll,
+        video_seg:Math.round(ESTADO.video_seg), video_pct:ESTADO.video_pct, video_sonido:ESTADO.sonido ? "si" : "no" };
       // Fire-and-forget con keepalive: el lead queda guardado aunque la persona se vaya a WhatsApp de inmediato.
       try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
 
