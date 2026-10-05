@@ -2,7 +2,7 @@
 
 `horarios.js`: la página /medicos, después de recibir nombre, especialidad y
 WhatsApp, pide los próximos espacios libres de la llamada de médicos y los
-muestra como tres botones (de la tarde primero, uno por día). Cada botón abre
+muestra como tres botones (la hora más tarde libre de cada día). Cada botón abre
 el link de reserva de Calendly con la hora ya elegida y los datos precargados.
 
 Necesita en Netlify → Site configuration → Environment variables:

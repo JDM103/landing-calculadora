@@ -14,6 +14,7 @@
  * GET /.netlify/functions/horarios?n=3&desde=13
  *   n      · cuántos espacios devolver (1–6, por defecto 3)
  *   desde  · hora mínima en Costa Rica (0–23, por defecto 13 = de la 1 pm en adelante).
+ *            Devuelve la hora más tarde libre de cada día, los días más cercanos primero.
  *            Si no alcanza con los de la tarde, completa con los demás.
  */
 "use strict";
@@ -33,6 +34,10 @@ const resp = (code, body, cacheSeg) => ({
 function horaCR(iso) {
   const d = new Date(iso);
   return (d.getUTCHours() + TZ_OFFSET_H + 24) % 24 + d.getUTCMinutes() / 60;
+}
+
+function diaCR(iso) {
+  return new Date(new Date(iso).getTime() + TZ_OFFSET_H * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
 exports.handler = async (event) => {
@@ -65,16 +70,20 @@ exports.handler = async (event) => {
     .filter((s) => s.status === "available" && s.scheduling_url)
     .map((s) => ({ inicio: s.start_time, url: s.scheduling_url }));
 
-  // Primero los de la tarde (hora CR >= desde), uno por día para dar variedad; si faltan, se completa.
-  const tarde = todos.filter((s) => horaCR(s.inicio) >= desde);
-  const porDia = (lista) => {
-    const vistos = {}; const out = [];
-    for (const s of lista) { const dia = s.inicio.slice(0, 10); if (!vistos[dia]) { vistos[dia] = true; out.push(s); } }
-    return out;
-  };
-  let elegidos = porDia(tarde);
-  if (elegidos.length < n) for (const s of tarde) if (elegidos.length < n && !elegidos.includes(s)) elegidos.push(s);
-  if (elegidos.length < n) for (const s of todos) if (elegidos.length < n && !elegidos.includes(s)) elegidos.push(s);
+  // La hora más tarde que haya libre en cada día (día de Costa Rica), empezando por los días más cercanos.
+  // Primero los días cuyo último espacio es de la tarde (hora CR >= desde); si faltan, se completa.
+  const ultimoPorDia = new Map();
+  for (const s of todos) {
+    const dia = diaCR(s.inicio);
+    if (!ultimoPorDia.has(dia) || s.inicio > ultimoPorDia.get(dia).inicio) ultimoPorDia.set(dia, s);
+  }
+  const ultimos = [...ultimoPorDia.values()].sort((a, b) => a.inicio.localeCompare(b.inicio));
+  let elegidos = ultimos.filter((s) => horaCR(s.inicio) >= desde).slice(0, n);
+  if (elegidos.length < n) for (const s of ultimos) if (elegidos.length < n && !elegidos.includes(s)) elegidos.push(s);
+  if (elegidos.length < n) {
+    const resto = todos.filter((s) => !elegidos.includes(s)).sort((a, b) => horaCR(b.inicio) - horaCR(a.inicio));
+    elegidos = elegidos.concat(resto.slice(0, n - elegidos.length));
+  }
   elegidos = elegidos.slice(0, n).sort((a, b) => a.inicio.localeCompare(b.inicio));
 
   return resp(200, { espacios: elegidos, total: todos.length }, 120);
