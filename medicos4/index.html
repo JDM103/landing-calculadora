@@ -192,7 +192,6 @@
   <header class="hero">
     <span class="eyebrow">*Para médicos residentes o especialistas que pueden ahorrar cada mes y quieren ponerle un número a su meta de trabajar menos*</span>
     <h1>¿Querés llegar a los 55 con la opción de <em>bajar el ritmo</em>?</h1>
-    <p class="sub" style="margin-top:10px;">Menos guardias, menos dispos o menos horas en la Caja. En una llamada sin costo hacemos tu <b>primera proyección</b>.</p>
     <p class="paren">(Sin obligación de aportar cada mes. Retirás sin penalidad cuando querás, porque es tu cuenta.)</p>
 
     <!-- VSL: video local, se reproduce con sonido al tocar -->
@@ -229,32 +228,15 @@
           <button type="button" class="chip" data-v="Anestesiología">Anestesiología</button>
           <button type="button" class="chip" data-v="Cardiología">Cardiología</button>
           <button type="button" class="chip" data-v="Cirugía general">Cirugía general</button>
-          <button type="button" class="chip" data-v="Cirugía plástica">Cirugía plástica</button>
           <button type="button" class="chip" data-v="Dermatología">Dermatología</button>
           <button type="button" class="chip" data-v="Emergencias">Emergencias</button>
-          <button type="button" class="chip" data-v="Endocrinología">Endocrinología</button>
-          <button type="button" class="chip" data-v="Gastroenterología">Gastroenterología</button>
-          <button type="button" class="chip" data-v="Geriatría">Geriatría</button>
           <button type="button" class="chip" data-v="Ginecología y obstetricia">Ginecología</button>
-          <button type="button" class="chip" data-v="Hematología">Hematología</button>
-          <button type="button" class="chip" data-v="Infectología">Infectología</button>
-          <button type="button" class="chip" data-v="Medicina familiar">Medicina familiar</button>
-          <button type="button" class="chip" data-v="Medicina general">Medicina general</button>
           <button type="button" class="chip" data-v="Medicina interna">Medicina interna</button>
-          <button type="button" class="chip" data-v="Nefrología">Nefrología</button>
-          <button type="button" class="chip" data-v="Neumología">Neumología</button>
-          <button type="button" class="chip" data-v="Neurocirugía">Neurocirugía</button>
-          <button type="button" class="chip" data-v="Neurología">Neurología</button>
-          <button type="button" class="chip" data-v="Odontología">Odontología</button>
           <button type="button" class="chip" data-v="Oftalmología">Oftalmología</button>
-          <button type="button" class="chip" data-v="Oncología">Oncología</button>
           <button type="button" class="chip" data-v="Ortopedia">Ortopedia</button>
-          <button type="button" class="chip" data-v="Otorrinolaringología">Otorrinolaringología</button>
           <button type="button" class="chip" data-v="Pediatría">Pediatría</button>
           <button type="button" class="chip" data-v="Psiquiatría">Psiquiatría</button>
           <button type="button" class="chip" data-v="Radiología">Radiología</button>
-          <button type="button" class="chip" data-v="Reumatología">Reumatología</button>
-          <button type="button" class="chip" data-v="Urología">Urología</button>
           <button type="button" class="chip" data-v="otra">Otra</button>
         </div>
         <input class="in hidden" id="esp-otra" type="text" placeholder="Otra" autocomplete="off">
@@ -451,12 +433,15 @@
 "use strict";
 (function(){
   function byId(id){ return document.getElementById(id); }
+  // track(): cada acción va a GA4 (si está), al píxel de Meta, a Clarity y al registro propio (abajo).
   function track(ev, data){
     try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){}
     try{ if(typeof fbq==="function") fbq("trackCustom", ev, data||{}); }catch(e){}
     // En Clarity: el evento para la línea de tiempo de la grabación, y una etiqueta
     // (ej. vsl_play = si) para filtrar sesiones por lo que hicieron.
     try{ if(typeof clarity==="function"){ clarity("event", ev); clarity("set", ev, "si"); } }catch(e){}
+    var d=data||{}, valor = d.v!==undefined ? d.v : d.pct!==undefined ? d.pct : d.origen!==undefined ? d.origen : d.especialidad!==undefined ? d.especialidad : "";
+    registrar(ev, valor, ev==="medicos_lead" || ev==="click_agendar" || ev==="vsl_sonido");
   }
 
   // De dónde llegó la persona: los UTM del anuncio viajan con el lead.
@@ -473,6 +458,34 @@
     var parts=[]; Object.keys(UTM).forEach(function(k){ if(UTM[k]) parts.push(k+"="+encodeURIComponent(UTM[k])); });
     return base + (base.indexOf("?")>-1?"&":"?") + parts.join("&");
   }
+  // ===== Registro propio de eventos → spreadsheet "Eventos Landing" (embudo completo, permanente) =====
+  // Misma URL que el webhook de leads; el Apps Script separa los lotes con tipo:"eventos" y los guarda
+  // en OTRO spreadsheet, nunca en la pestaña Leads. Sin datos personales: solo un id aleatorio de
+  // usuario (persistente) y de sesión, los UTM del anuncio y lo que la persona hizo en la página.
+  var EVENTOS_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+  var ESTADO = { scroll:0, video_seg:0, video_pct:0, sonido:false, t0:Date.now() };
+  function idAleatorio(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function idGuardado(store, k){ try{ var v=store.getItem(k); if(!v){ v=idAleatorio(); store.setItem(k,v); } return v; }catch(e){ return idAleatorio(); } }
+  var UID = idGuardado(window.localStorage, "ei_uid"), SID = idGuardado(window.sessionStorage, "ei_sid");
+  var cola=[], seq=0, timerFlush=null;
+  function flush(){
+    if(!cola.length) return;
+    var lote=cola.splice(0, 60);
+    var body=JSON.stringify({ tipo:"eventos", uid:UID, sid:SID, pagina:location.pathname,
+      utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content, utm_term:UTM.utm_term,
+      referrer:(document.referrer||"").slice(0,120), ua:(navigator.userAgent||"").slice(0,200),
+      ancho:screen.width, alto:screen.height, idioma:navigator.language||"", eventos:lote });
+    // keepalive: el lote sale aunque la persona cierre la pestaña en ese instante.
+    try{ fetch(EVENTOS_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:body, keepalive:true}).catch(function(){}); }catch(e){}
+    try{ if(typeof clarity==="function") clarity("set", "ei_sid", SID); }catch(e){}
+  }
+  // Los eventos se juntan y salen cada 4 s; los importantes (lead, agendar, sonido) salen al instante.
+  function registrar(ev, valor, urgente){
+    cola.push({ ts:new Date().toISOString(), seq:++seq, ev:ev, valor:(valor===undefined||valor===null)?"":String(valor).slice(0,200) });
+    if(urgente){ if(timerFlush){ clearTimeout(timerFlush); timerFlush=null; } flush(); return; }
+    if(!timerFlush){ timerFlush=setTimeout(function(){ timerFlush=null; flush(); }, 4000); }
+  }
+
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
   var CTAS = ["cta-top","cta-giro","cta-fin"];
 
@@ -501,7 +514,7 @@
     // El recuadro solo activa el sonido (el video ya corre). Si terminó, vuelve a empezar con sonido.
     playov.addEventListener("click", function(){
       if(V.ended){ try{ V.currentTime=0; }catch(e){} }
-      V.muted=false; V.play();
+      V.muted=false; V.play(); ESTADO.sonido=true;
       track(autoOk ? "vsl_sonido" : "vsl_play", {});
       playov.classList.add("hidden"); mutebtn.classList.remove("hidden"); fsbtn.classList.remove("hidden");
     });
@@ -534,9 +547,11 @@
       var t=V.currentTime, dur=V.duration||98, x=Math.min(1, t/dur);
       vfill.style.width=(verProg(x)*100)+"%";
       var pct=x*100; // el progreso que se mide es el real, no el de la barra
+      if(t>ESTADO.video_seg) ESTADO.video_seg=t; if(pct>ESTADO.video_pct) ESTADO.video_pct=Math.round(pct);
       [25,50,75,100].forEach(function(k){ if(pct>=k && !miles[k]){ miles[k]=true; track("vsl_progreso",{pct:k}); } });
     });
     V.addEventListener("ended", function(){
+      track("vsl_fin", {});
       mutebtn.classList.add("hidden"); fsbtn.classList.add("hidden");
       pb.textContent="▶"; pt.textContent="Volver a ver"; ps.textContent="Con sonido";
       playov.classList.remove("hidden");
@@ -557,7 +572,7 @@
     // el lead igual se guarda y Jose le escribe.
     var WA_NUMERO = "50670558296"; // el mismo que usa wizard.html
     // El mismo webhook que /caja y /medicos2: Apps Script → pestaña "Leads" del Sheet + alerta por correo.
-    var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+    var WEBHOOK_URL = EVENTOS_URL;
     var esp="";
 
     var box=byId("chips-esp"), all=box.querySelectorAll(".chip"), otra=byId("esp-otra");
@@ -582,7 +597,10 @@
 
       var payload={ timestamp:new Date().toISOString(), etapa:"medicos_wa", nombre:nombre, whatsapp:"506"+wa,
         especialidad:especialidad, pagina:location.pathname,
-        utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content };
+        utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
+        // Recorrido antes de pedir la llamada: con sid se busca la sesión completa en "Eventos Landing".
+        sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-ESTADO.t0)/1000), scroll_max:ESTADO.scroll,
+        video_seg:Math.round(ESTADO.video_seg), video_pct:ESTADO.video_pct, video_sonido:ESTADO.sonido ? "si" : "no" };
       // Fire-and-forget con keepalive: el lead queda guardado aunque la persona se vaya a WhatsApp de inmediato.
       try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
 
@@ -602,6 +620,36 @@
       form.classList.add("hidden"); byId("lead-ok").classList.remove("hidden");
       try{ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"center"}); }catch(err){}
     });
+  })();
+
+  // ===== Scroll máximo, formulario visible y cierre de sesión =====
+  // Con esto el embudo se reconstruye sin Clarity: hasta dónde bajó, si llegó a ver el formulario,
+  // cuántos segundos estuvo, cuánto video vio y si activó el sonido.
+  (function(){
+    var hitos={25:false,50:false,75:false,100:false};
+    function medirScroll(){
+      var doc=document.documentElement, total=Math.max(1, doc.scrollHeight-window.innerHeight);
+      var pct=Math.min(100, Math.round(((window.scrollY||doc.scrollTop||0)/total)*100));
+      if(pct>ESTADO.scroll) ESTADO.scroll=pct;
+      [25,50,75,100].forEach(function(k){ if(pct>=k && !hitos[k]){ hitos[k]=true; registrar("scroll", k); } });
+    }
+    window.addEventListener("scroll", medirScroll, {passive:true});
+    var agenda=byId("agenda");
+    if(agenda && "IntersectionObserver" in window){
+      var io=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){ registrar("form_visible", Math.round((Date.now()-ESTADO.t0)/1000)); io.disconnect(); } });
+      }, {threshold:0.3});
+      io.observe(agenda);
+    }
+    var salio=false;
+    function salida(){
+      if(salio) return; salio=true;
+      registrar("salida", JSON.stringify({ seg:Math.round((Date.now()-ESTADO.t0)/1000), scroll:ESTADO.scroll,
+        video_seg:Math.round(ESTADO.video_seg), video_pct:ESTADO.video_pct, sonido:ESTADO.sonido }), true);
+    }
+    document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="hidden") salida(); });
+    window.addEventListener("pagehide", salida);
+    registrar("pageview", (document.referrer||"").replace(/^https?:\/\//,"").slice(0,80));
   })();
 })();
 </script>
