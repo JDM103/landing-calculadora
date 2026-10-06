@@ -255,7 +255,7 @@
     <div class="fig">
       <div class="seg" id="seg-camino"></div>
       <div class="chart" id="ch-camino"><div class="tip" id="tip-camino"></div></div>
-      <div class="leg"><span><i style="background:var(--up)"></i>Promedio</span><span><i style="background:#6E7A8A"></i>Cada elección</span><span><i style="background:rgba(47,207,138,.3)"></i>La mitad central de los casos</span></div>
+      <div class="leg"><span><i style="background:var(--up)"></i>Promedio</span><span><i style="background:#6E7A8A"></i>Cada elección</span><span><i style="background:rgba(47,207,138,.3)"></i>Rango típico</span></div>
       <div class="src" id="src-camino"></div>
     </div>
   </section>
@@ -557,7 +557,7 @@
     var hit=svgEl("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"transparent"}); var cursor=svgEl("line",{x1:x0,x2:x0,y1:y0,y2:y1,stroke:"var(--gris)","stroke-width":1,opacity:0});
     hit.addEventListener("mousemove", function(e){ var b=host.getBoundingClientRect(); var m=Math.round((e.clientX-b.left)/(b.width/W)-x0)/((x1-x0)/M); m=Math.max(0,Math.min(M,Math.round(m)));
       cursor.setAttribute("x1",X(m)); cursor.setAttribute("x2",X(m)); cursor.setAttribute("opacity",1);
-      tipShow(tip, host, X(m)*(b.width/W), Y(med[m])*(b.width/W), "<b>"+(m===0?"Día de la elección":m+" meses después")+"</b><br>Promedio <b>"+pct(med[m],1)+"</b> · mínimo "+pct(c.min[m],1)+" · máximo "+pct(c.max[m],1)+"<br><span style=\"color:var(--gris)\">Mediana "+pct(c.mediana[m],1)+" · mitad central: "+pct(c.p25[m],1)+" a "+pct(c.p75[m],1)+"</span>"); });
+      tipShow(tip, host, X(m)*(b.width/W), Y(med[m])*(b.width/W), "<b>"+(m===0?"Día de la elección":m+" meses después")+"</b><br>Promedio <b>"+pct(med[m],1)+"</b> · mínimo "+pct(c.min[m],1)+" · máximo "+pct(c.max[m],1)+"<br><span style=\"color:var(--gris)\">Mediana "+pct(c.mediana[m],1)+" · rango típico: "+pct(c.p25[m],1)+" a "+pct(c.p75[m],1)+"</span>"); });
     hit.addEventListener("mouseleave", function(){ tipHide(tip); cursor.setAttribute("opacity",0); });
     svg.appendChild(cursor); svg.appendChild(hit);
     host.innerHTML=""; host.appendChild(tip); host.appendChild(svg);
