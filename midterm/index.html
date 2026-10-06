@@ -271,18 +271,7 @@
     </div>
     <div class="fig" style="padding:16px 18px;">
       <div class="ft">¿Por qué pasa?</div>
-      <p style="font-size:14.5px; margin-top:6px;">Nadie lo sabe con certeza. Las explicaciones más aceptadas: <b>1)</b> pasada la elección se despejan dos años de incertidumbre política; <b>2)</b> de camino a la presidencial, el gobierno tiende a estimular la economía (gasto, tasas), y eso se empieza a descontar en el año 3; <b>3)</b> el año de midterms suele dejar precios más bajos, y de ahí se rebota. Lo que es firme es la data, no la explicación.</p>
-    </div>
-  </section>
-
-  <!-- ===== 6 · LO QUE PASA ANTES Y 2026 ===== -->
-  <section>
-    <h2>Lo que pasa <em>antes</em> de la elección</h2>
-    <p class="sub">El año de midterms suele ser el más flojo del ciclo, con una caída fuerte antes de la elección. 2026 no la tuvo. ¿Cambia eso la historia? No.</p>
-    <div class="hechos" id="hechos">
-      <div class="hecho"><div class="v dn" id="h1">-18%</div><div class="l">caída promedio del S&amp;P 500 desde su máximo <b>dentro del año de midterms</b>, antes de la elección (1930-2022)</div></div>
-      <div class="hecho"><div class="v dn" id="h3">-9%</div><div class="l">caída máxima del S&amp;P 500 en lo que va de <b>2026</b>. Hoy está a menos del 1% de su máximo histórico: este año no fue el típico.</div></div>
-      <div class="hecho" style="border-color:rgba(99,252,175,.45); background:linear-gradient(180deg,#16231c,#171c22);"><div class="v" id="h2">10 / 10</div><div class="l"><b>El caso de hoy.</b> En los 10 años de midterms sin una caída mayor al 15% antes de la elección, como 2026, el S&amp;P 500 subió las 10 veces a 12 meses (promedio +18%).</div></div>
+      <p style="font-size:14.5px; margin-top:6px;">Nadie lo sabe con certeza. Las explicaciones más aceptadas: <b>1)</b> pasada la elección se despejan dos años de incertidumbre política; <b>2)</b> de camino a la presidencial, el gobierno tiende a estimular la economía (gasto, tasas), y eso se empieza a descontar en el año 3. Lo que es firme es la data, no la explicación.</p>
     </div>
   </section>
 
@@ -627,7 +616,7 @@
   (function(){
     var a=S.sp50.r.m12, n=S.nasdaq.r.m12;
     byId("k1").textContent=a.pos+" / "+a.n; byId("k2").textContent=pct(a.media); byId("k3").textContent=n.pos+" / "+n.n; byId("k4").textContent=pct(n.media);
-    byId("h3").textContent=pct(D.ctx.sp_dd); byId("f-fecha").textContent=D.ctx.fecha;
+    byId("f-fecha").textContent=D.ctx.fecha;
   })();
   barras(); camino(); fase(); largo(); tabla();
   (function(){ var t=null, last=window.innerWidth; window.addEventListener("resize", function(){ if(window.innerWidth===last) return; last=window.innerWidth; clearTimeout(t); t=setTimeout(function(){ barras(); camino(); fase(); largo(); }, 150); }); })();
