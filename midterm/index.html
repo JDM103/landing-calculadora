@@ -251,11 +251,11 @@
   <!-- ===== 3 · EL CAMINO TÍPICO ===== -->
   <section>
     <h2>Cómo se ve <em>el año siguiente</em></h2>
-    <p class="sub">Retorno acumulado desde el día de la elección, mes a mes. Cada línea fina es una elección; la gruesa es el caso del medio.</p>
+    <p class="sub">Retorno acumulado desde el día de la elección, mes a mes. Cada línea fina es una elección; la gruesa es el promedio de todas.</p>
     <div class="fig">
       <div class="seg" id="seg-camino"></div>
       <div class="chart" id="ch-camino"><div class="tip" id="tip-camino"></div></div>
-      <div class="leg"><span><i style="background:#6E7A8A"></i>Cada elección</span><span><i style="background:rgba(47,207,138,.3)"></i>La mitad central de los casos</span><span><i style="background:var(--up)"></i>Mediana</span></div>
+      <div class="leg"><span><i style="background:var(--up)"></i>Promedio</span><span><i style="background:#6E7A8A"></i>Cada elección</span><span><i style="background:rgba(47,207,138,.3)"></i>La mitad central de los casos</span></div>
       <div class="src" id="src-camino"></div>
     </div>
   </section>
@@ -536,7 +536,7 @@
     var s=S[curC], c=s.camino, host=byId("ch-camino"), tip=byId("tip-camino");
     var W=anchoDe(host), mv=esMovil(W), Hh=mv?250:300, padL=mv?38:44, padR=mv?78:100, padT=16, padB=34, M=c.mediana.length-1;
     var lo=Math.min(0, Math.min.apply(null, c.min)), hi=Math.max.apply(null, c.max);
-    var step=(hi-lo)>1 ? 0.25 : 0.1; lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
+    var step=(hi-lo)>1 ? 0.25 : 0.1; var med=c.media; lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
     var y0=padT, y1=Hh-padB, x0=padL, x1=W-padR;
     function X(m){ return x0+(x1-x0)*m/M; } function Y(v){ return pctY(v,y0,y1,lo,hi); }
     var svg=svgEl("svg", {viewBox:"0 0 "+W+" "+Hh, role:"img", "aria-label":"Retorno acumulado desde la elección, mediana y cuartiles, "+s.nombre});
@@ -549,19 +549,19 @@
     // cada elección, una línea fina; la mejor y la peor a 12 meses llevan su año al final
     var iMax=0, iMin=0; c.cada.forEach(function(a,i){ if(a[12]>c.cada[iMax][12]) iMax=i; if(a[12]<c.cada[iMin][12]) iMin=i; });
     c.cada.forEach(function(a,i){ svg.appendChild(svgEl("path",{d:path(a), fill:"none", stroke:"#8B96A6", "stroke-width":1.1, opacity:0.75, "stroke-linejoin":"round"})); });
-    [iMax,iMin].forEach(function(i){ var a=c.cada[i]; svg.appendChild(svgEl("path",{d:path(a), fill:"none", stroke:"#C9D0DA", "stroke-width":1.4, "stroke-linejoin":"round"})); svg.appendChild(txt(X(M)+6, Y(a[M])+4, c.anios[i]+" "+pct(a[M]), "lbl2", "start")); });
-    svg.appendChild(svgEl("path",{d:path(c.mediana), fill:"none", stroke:UP, "stroke-width":3, "stroke-linejoin":"round", "stroke-linecap":"round"}));
-    svg.appendChild(svgEl("circle",{cx:X(12), cy:Y(c.mediana[12]), r:5, fill:UP, stroke:"var(--card)", "stroke-width":2}));
-    svg.appendChild(txt(X(12), Y(c.mediana[12])-11, pct(c.mediana[12]), "lbl"));
-    svg.appendChild(txt(X(M)+6, Y(c.mediana[M])+4, "mediana "+pct(c.mediana[M]), "lbl", "start"));
+    [iMax,iMin].forEach(function(i,k){ var a=c.cada[i]; svg.appendChild(svgEl("path",{d:path(a), fill:"none", stroke:"#C9D0DA", "stroke-width":1.4, "stroke-linejoin":"round"})); svg.appendChild(txt(X(M)+6, Y(a[M])+4, (k===0?"mejor ":"peor ")+c.anios[i]+" "+pct(a[M]), "lbl2", "start")); });
+    svg.appendChild(svgEl("path",{d:path(med), fill:"none", stroke:UP, "stroke-width":3, "stroke-linejoin":"round", "stroke-linecap":"round"}));
+    svg.appendChild(svgEl("circle",{cx:X(12), cy:Y(med[12]), r:5, fill:UP, stroke:"var(--card)", "stroke-width":2}));
+    svg.appendChild(txt(X(12), Y(med[12])-11, pct(med[12]), "lbl"));
+    svg.appendChild(txt(X(M)+6, Y(med[M])+4, "promedio "+pct(med[M]), "lbl", "start"));
     var hit=svgEl("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"transparent"}); var cursor=svgEl("line",{x1:x0,x2:x0,y1:y0,y2:y1,stroke:"var(--gris)","stroke-width":1,opacity:0});
     hit.addEventListener("mousemove", function(e){ var b=host.getBoundingClientRect(); var m=Math.round((e.clientX-b.left)/(b.width/W)-x0)/((x1-x0)/M); m=Math.max(0,Math.min(M,Math.round(m)));
       cursor.setAttribute("x1",X(m)); cursor.setAttribute("x2",X(m)); cursor.setAttribute("opacity",1);
-      tipShow(tip, host, X(m)*(b.width/W), Y(c.mediana[m])*(b.width/W), "<b>"+(m===0?"Día de la elección":m+" meses después")+"</b><br>Mediana <b>"+pct(c.mediana[m],1)+"</b> · 25-75%: "+pct(c.p25[m],1)+" a "+pct(c.p75[m],1)+"<br>Peor "+pct(c.min[m],1)+" · mejor "+pct(c.max[m],1)); });
+      tipShow(tip, host, X(m)*(b.width/W), Y(med[m])*(b.width/W), "<b>"+(m===0?"Día de la elección":m+" meses después")+"</b><br>Promedio <b>"+pct(med[m],1)+"</b> · mínimo "+pct(c.min[m],1)+" · máximo "+pct(c.max[m],1)+"<br><span style=\"color:var(--gris)\">Mediana "+pct(c.mediana[m],1)+" · mitad central: "+pct(c.p25[m],1)+" a "+pct(c.p75[m],1)+"</span>"); });
     hit.addEventListener("mouseleave", function(){ tipHide(tip); cursor.setAttribute("opacity",0); });
     svg.appendChild(cursor); svg.appendChild(hit);
     host.innerHTML=""; host.appendChild(tip); host.appendChild(svg);
-    byId("src-camino").textContent=nombreSerie(curC)+", "+c.n+" elecciones. A los 12 meses la mediana es "+pct(c.mediana[12],1)+" y la mitad central de los casos quedó entre "+pct(c.p25[12])+" y "+pct(c.p75[12])+"; a los 24 meses la mediana es "+pct(c.mediana[24],1)+".";
+    byId("src-camino").textContent=nombreSerie(curC)+", "+c.n+" elecciones. A los 12 meses el promedio es "+pct(med[12],1)+" (mínimo "+pct(c.min[12])+", máximo "+pct(c.max[12])+"; mediana "+pct(c.mediana[12],1)+"). A los 24 meses el promedio es "+pct(med[24],1)+".";
   }
   seg(byId("seg-camino"), SERIES.map(function(k){ return {k:k, l:CORTO[k]}; }), curC, function(k){ curC=k; camino(); });
 
