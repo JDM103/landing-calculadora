@@ -92,6 +92,13 @@
   .chip{font-family:inherit; font-size:14px; font-weight:600; color:var(--crema); background:var(--input); border:1px solid var(--bd); border-radius:999px; padding:9px 14px; cursor:pointer; transition:border-color .12s, background .12s;}
   .chip:hover{border-color:var(--menta);}
   .chip.on{background:var(--menta); color:var(--tinta); border-color:var(--menta);}
+  /* Residentes: pista chica bajo la pregunta + chip opcional que aparece al elegir especialidad */
+  .q-hint{margin-top:6px; font-size:13.5px; line-height:1.45; color:var(--gris); font-weight:400;}
+  .res{margin-top:12px; display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:500; color:var(--gris); background:transparent; border:1px dashed var(--bd); padding:7px 12px;}
+  .res::before{content:""; width:14px; height:14px; border-radius:4px; border:1.5px solid var(--gris); flex:0 0 auto; transition:background .12s, border-color .12s;}
+  .res:hover{color:var(--crema); border-color:var(--menta);}
+  .res.on{background:rgba(99,252,175,.1); color:var(--crema); border-style:solid; border-color:var(--menta);}
+  .res.on::before{background:var(--menta); border-color:var(--menta); content:"\2713"; color:var(--tinta); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;}
   .in{display:block; width:100%; margin-top:12px; background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500;}
   .in:focus-within, .in:focus{outline:none; border-color:var(--menta);}
   .in::placeholder{color:var(--legal);}
@@ -228,6 +235,7 @@
     <form class="lead" id="lead" novalidate>
       <div class="paso-q">
         <div class="q">¿Cuál es tu especialidad?</div>
+        <p class="q-hint">Si estás en residencia, elegí la que estás haciendo.</p>
         <div class="chips" id="chips-esp">
           <button type="button" class="chip" data-v="Anestesiología">Anestesiología</button>
           <button type="button" class="chip" data-v="Cardiología">Cardiología</button>
@@ -245,6 +253,8 @@
           <button type="button" class="chip" data-v="otra">Otra</button>
         </div>
         <input class="in hidden" id="esp-otra" type="text" placeholder="Otra" autocomplete="off">
+        <!-- Opcional, aparece al elegir especialidad. El especialista lo ignora; el residente lo marca y Jose lo ve en el lead. -->
+        <button type="button" class="chip res hidden" id="esp-res" aria-pressed="false">Estoy en residencia</button>
       </div>
 
       <div class="paso-q">
@@ -709,24 +719,31 @@
     var WA_NUMERO = "50670558296"; // el mismo que usa wizard.html
     // El mismo webhook que /caja y /medicos2: Apps Script → pestaña "Leads" del Sheet + alerta por correo.
     var WEBHOOK_URL = EVENTOS_URL;
-    var esp="";
+    var esp="", residente=false;
 
-    var box=byId("chips-esp"), all=box.querySelectorAll(".chip"), otra=byId("esp-otra");
+    var box=byId("chips-esp"), all=box.querySelectorAll(".chip"), otra=byId("esp-otra"), res=byId("esp-res");
     Array.prototype.forEach.call(all, function(b){
       b.addEventListener("click", function(){
         Array.prototype.forEach.call(all, function(x){ x.classList.remove("on"); });
         b.classList.add("on"); esp=b.getAttribute("data-v");
         otra.classList.toggle("hidden", esp!=="otra"); if(esp==="otra") otra.focus();
+        res.classList.remove("hidden"); // recién ahora ofrecemos "Estoy en residencia", sin estorbar antes
         track("lead_especialidad", {v:esp});
       });
+    });
+    res.addEventListener("click", function(){
+      residente=!residente; res.classList.toggle("on", residente); res.setAttribute("aria-pressed", residente ? "true" : "false");
+      track("lead_residente", {v:residente ? "si" : "no"});
     });
     byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
 
     form.addEventListener("submit", function(e){
       e.preventDefault();
       var nombre=byId("l-nom").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
-      var especialidad = esp==="otra" ? otra.value.trim() : esp;
-      var ok = especialidad && nombre && wa.length===8;
+      var espBase = esp==="otra" ? otra.value.trim() : esp;
+      // En el Sheet, el Calendly y el pixel va "Cardiología (residente)"; en el mensaje de WhatsApp, "residente de cardiología".
+      var especialidad = espBase && residente ? espBase+" (residente)" : espBase;
+      var ok = espBase && nombre && wa.length===8;
       byId("l-err").classList.toggle("hidden", !!ok);
       if(!ok) return;
       var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
@@ -743,7 +760,8 @@
       track("medicos_lead", {especialidad:especialidad, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
       try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"llamada medicos", content_category:especialidad}); }catch(err){}
 
-      var msg="Hola Jose, soy "+nombre+", "+especialidad.toLowerCase()+". Quiero mi llamada de claridad sin costo. ¿Cuándo podemos hacerla?";
+      var quien = residente ? "residente de "+espBase.toLowerCase() : espBase.toLowerCase();
+      var msg="Hola Jose, soy "+nombre+", "+quien+". Quiero mi llamada de claridad sin costo. ¿Cuándo podemos hacerla?";
       var link=byId("wa-link");
       if(WA_NUMERO){
         link.href="https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
