@@ -91,10 +91,10 @@
   .leg{display:flex; flex-wrap:wrap; gap:14px; margin-top:10px; font-size:12.5px; color:var(--gris); font-weight:500;}
   .leg span{display:inline-flex; align-items:center; gap:6px;}
   .leg i{width:12px; height:12px; border-radius:3px; display:inline-block;}
-  .fig .res{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px;}
-  .fig .res div{background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:10px 8px; text-align:center;}
-  .fig .res b{display:block; font-size:22px; font-weight:700; color:var(--crema); font-variant-numeric:tabular-nums; line-height:1;}
-  .fig .res small{display:block; font-size:11.5px; color:var(--gris); margin-top:5px; font-weight:500; line-height:1.3;}
+  .fig .resu{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px;}
+  .fig .resu div{background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:10px 8px; text-align:center;}
+  .fig .resu b{display:block; font-size:22px; font-weight:700; color:var(--crema); font-variant-numeric:tabular-nums; line-height:1;}
+  .fig .resu small{display:block; font-size:11.5px; color:var(--gris); margin-top:5px; font-weight:500; line-height:1.3;}
   .src{font-size:12px; color:var(--legal); margin-top:10px; line-height:1.5;}
 
   /* Hechos en fila */
@@ -134,6 +134,12 @@
   .chip{font-family:inherit; font-size:13.5px; font-weight:600; color:var(--crema); background:var(--input); border:1px solid var(--bd); border-radius:999px; padding:7px 11px; cursor:pointer; transition:border-color .12s, background .12s;}
   .chip:hover{border-color:var(--menta);}
   .chip.on{background:var(--menta); color:var(--tinta); border-color:var(--menta);}
+  .q-hint{margin-top:6px; font-size:13.5px; line-height:1.45; color:var(--gris); font-weight:400;}
+  .res{margin-top:12px; display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:500; color:var(--gris); background:transparent; border:1px dashed var(--bd); padding:7px 12px;}
+  .res::before{content:""; width:14px; height:14px; border-radius:4px; border:1.5px solid var(--gris); flex:0 0 auto; transition:background .12s, border-color .12s;}
+  .res:hover{color:var(--crema); border-color:var(--menta);}
+  .res.on{background:rgba(99,252,175,.1); color:var(--crema); border-style:solid; border-color:var(--menta);}
+  .res.on::before{background:var(--menta); border-color:var(--menta); content:"\2713"; color:var(--tinta); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;}
   .in{display:block; width:100%; margin-top:12px; background:var(--input); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; color:var(--crema); font-family:inherit; font-size:16px; font-weight:500;}
   .in:focus-within, .in:focus{outline:none; border-color:var(--menta);}
   .in::placeholder{color:var(--legal);}
@@ -185,6 +191,25 @@
   .jose .jd{font-size:13.5px; line-height:1.5; color:var(--gris); margin-top:4px;}
   .jose .jd b{color:var(--crema); font-weight:600;}
 
+  /* ===== 5 · Testimonios ===== */
+  .testi h2{text-align:center;}
+  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; margin-top:26px; display:flex; gap:18px; align-items:flex-start;}
+  .tfeat-badge{position:absolute; top:-12px; left:22px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px;}
+  .tfeat-photo{flex:0 0 auto; width:130px; height:130px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); box-shadow:0 0 0 3px rgba(99,252,175,.35);}
+  .stars{color:var(--menta); font-size:15px; letter-spacing:2px;}
+  .tfeat .quote{font-size:15px; line-height:1.6; color:var(--crema); font-weight:400; margin:10px 0 12px;}
+  .tname{font-size:15px; font-weight:700; color:var(--crema);}
+  .tname .role{color:var(--gris); font-weight:400;}
+  @media(max-width:560px){ .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;} .tfeat-photo{width:120px; height:120px;} }
+  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  @media(max-width:560px){ .tgrid{grid-template-columns:1fr;} }
+  .tcard{background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; display:flex; flex-direction:column;}
+  .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px; flex:1;}
+  .tcard .who{display:flex; gap:14px; align-items:center;}
+  .tcard .who img{width:96px; height:96px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--input); flex:0 0 auto; box-shadow:0 0 0 3px rgba(99,252,175,.3);}
+  .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
+
   .foot{font-size:12px; color:var(--legal); line-height:1.6; text-align:center; margin:36px 0 0; border-top:1px solid var(--bd); padding:22px 0 50px;}
   .foot a{color:var(--gris);}
 </style>
@@ -196,12 +221,13 @@
   <header class="hero">
     <span class="eyebrow">Elecciones de medio término en EE.&nbsp;UU. · martes 3 de noviembre de 2026</span>
     <h1>El mercado subió el año después de las midterms <em>19 de 19 veces</em></h1>
-    <p class="sub">S&amp;P 500, 12 meses después de cada elección de medio término desde 1950. <b>Promedio +15%.</b> El Nasdaq: <b>12 de 13, promedio +25%.</b> Acá están los datos, año por año.</p>
+    <p class="sub">S&amp;P 500, 12 meses después de cada elección de medio término desde 1950. <b>Promedio +15%.</b> El Nasdaq 100: <b>12 de 13, promedio +25%.</b> Acá están los datos, año por año.</p>
+    <p class="nota" style="max-width:600px; margin:14px auto 0;"><b>¿Qué son las midterms?</b> Las elecciones de EE.&nbsp;UU. que caen a la mitad del período presidencial: se renueva toda la Cámara de Representantes y un tercio del Senado. El presidente no está en la papeleta. Son cada 4 años; la próxima es el 3 de noviembre.</p>
     <div class="kpis" id="kpis">
       <div class="kpi hi"><div class="v" id="k1">19 / 19</div><div class="l">veces que el <b>S&amp;P 500</b> subió a 12 meses, desde 1950</div></div>
       <div class="kpi"><div class="v" id="k2">+15%</div><div class="l">retorno <b>promedio</b> del S&amp;P 500 en esos 12 meses</div></div>
-      <div class="kpi hi"><div class="v" id="k3">12 / 13</div><div class="l">veces que el <b>Nasdaq</b> subió a 12 meses, desde 1974</div></div>
-      <div class="kpi"><div class="v" id="k4">+25%</div><div class="l">retorno <b>promedio</b> del Nasdaq en esos 12 meses</div></div>
+      <div class="kpi hi"><div class="v" id="k3">12 / 13</div><div class="l">veces que el <b>Nasdaq 100</b> subió a 12 meses, desde 1974</div></div>
+      <div class="kpi"><div class="v" id="k4">+25%</div><div class="l">retorno <b>promedio</b> del Nasdaq 100 en esos 12 meses</div></div>
     </div>
     <div class="ctarow">
       <a class="cta" href="#agenda" id="cta-hero">Quiero empezar antes del 3 de noviembre</a>
@@ -217,7 +243,7 @@
       <div class="seg" id="seg-serie"></div>
       <div class="seg" id="seg-h"></div>
       <div class="chart" id="ch-barras"><div class="tip" id="tip-barras"></div></div>
-      <div class="res" id="res-barras"></div>
+      <div class="resu" id="res-barras"></div>
       <div class="src" id="src-barras"></div>
     </div>
   </section>
@@ -225,11 +251,11 @@
   <!-- ===== 3 · EL CAMINO TÍPICO ===== -->
   <section>
     <h2>Cómo se ve <em>el año siguiente</em></h2>
-    <p class="sub">Retorno acumulado desde el día de la elección, mes a mes. La línea es el caso del medio; la franja, donde cayó la mitad central de los casos.</p>
+    <p class="sub">Retorno acumulado desde el día de la elección, mes a mes. Cada línea fina es una elección; la gruesa es el caso del medio.</p>
     <div class="fig">
       <div class="seg" id="seg-camino"></div>
       <div class="chart" id="ch-camino"><div class="tip" id="tip-camino"></div></div>
-      <div class="leg"><span><i style="background:var(--up)"></i>Mediana</span><span><i style="background:rgba(47,207,138,.22)"></i>Del 25% al 75% de los casos</span><span><i style="background:var(--grid)"></i>Peor y mejor caso</span></div>
+      <div class="leg"><span><i style="background:#6E7A8A"></i>Cada elección</span><span><i style="background:rgba(47,207,138,.3)"></i>La mitad central de los casos</span><span><i style="background:var(--up)"></i>Mediana</span></div>
       <div class="src" id="src-camino"></div>
     </div>
   </section>
@@ -243,37 +269,30 @@
       <div class="chart" id="ch-fase"></div>
       <div class="src" id="src-fase"></div>
     </div>
-  </section>
-
-  <!-- ===== 5 · DISTRIBUCIÓN ===== -->
-  <section>
-    <h2>Dónde cayó <em>cada caso</em></h2>
-    <p class="sub">Cada punto es una elección. El retorno a 12 meses, con todos los casos a la vista.</p>
-    <div class="fig">
-      <div class="seg" id="seg-dist"></div>
-      <div class="chart" id="ch-dist"><div class="tip" id="tip-dist"></div></div>
-      <div class="src" id="src-dist"></div>
+    <div class="fig" style="padding:16px 18px;">
+      <div class="ft">¿Por qué pasa?</div>
+      <p style="font-size:14.5px; margin-top:6px;">Nadie lo sabe con certeza. Las explicaciones más aceptadas: <b>1)</b> pasada la elección se despejan dos años de incertidumbre política; <b>2)</b> de camino a la presidencial, el gobierno tiende a estimular la economía (gasto, tasas), y eso se empieza a descontar en el año 3; <b>3)</b> el año de midterms suele dejar precios más bajos, y de ahí se rebota. Lo que es firme es la data, no la explicación.</p>
     </div>
   </section>
 
   <!-- ===== 6 · LO QUE PASA ANTES Y 2026 ===== -->
   <section>
     <h2>Lo que pasa <em>antes</em> de la elección</h2>
-    <p class="sub">El año de midterms suele ser el más flojo del ciclo. Eso es parte de por qué el año siguiente luce tan bien.</p>
+    <p class="sub">El año de midterms suele ser el más flojo del ciclo, con una caída fuerte antes de la elección. 2026 no la tuvo. ¿Cambia eso la historia? No.</p>
     <div class="hechos" id="hechos">
       <div class="hecho"><div class="v dn" id="h1">-18%</div><div class="l">caída promedio del S&amp;P 500 desde su máximo <b>dentro del año de midterms</b>, antes de la elección (1930-2022)</div></div>
-      <div class="hecho"><div class="v" id="h2">10 / 10</div><div class="l">veces que subió a 12 meses cuando el año de midterms <b>no tuvo</b> una caída mayor al 15% (promedio +18%)</div></div>
-      <div class="hecho"><div class="v dn" id="h3">-9%</div><div class="l">caída máxima del S&amp;P 500 en lo que va de <b>2026</b> (hoy está a menos del 1% de su máximo histórico)</div></div>
+      <div class="hecho"><div class="v dn" id="h3">-9%</div><div class="l">caída máxima del S&amp;P 500 en lo que va de <b>2026</b>. Hoy está a menos del 1% de su máximo histórico: este año no fue el típico.</div></div>
+      <div class="hecho" style="border-color:rgba(99,252,175,.45); background:linear-gradient(180deg,#16231c,#171c22);"><div class="v" id="h2">10 / 10</div><div class="l"><b>El caso de hoy.</b> En los 10 años de midterms sin una caída mayor al 15% antes de la elección, como 2026, el S&amp;P 500 subió las 10 veces a 12 meses (promedio +18%).</div></div>
     </div>
   </section>
 
   <!-- ===== 7 · LARGO PLAZO + NARRATIVA ===== -->
   <section>
     <h2>En el largo plazo <em>esto importa poco</em></h2>
-    <p class="sub">S&amp;P 500 con dividendos, 1871-2026: porcentaje de ventanas que terminaron arriba, según cuánto tiempo te quedaste.</p>
+    <p class="sub">Nasdaq 100 con dividendos, 1985-2026: porcentaje de las veces que terminaste arriba, según cuánto tiempo te quedaste, contando desde cada día posible de entrada.</p>
     <div class="fig">
       <div class="chart" id="ch-largo"></div>
-      <div class="src">Fuente: Shiller, S&amp;P Composite con dividendos reinvertidos, todas las ventanas mensuales desde 1871. Más detalle en <a href="/horizonte/">investorcr.com/horizonte</a>.</div>
+      <div class="src">Nasdaq-100 desde octubre de 1985 y QQQ con dividendos reinvertidos desde 1999; todas las ventanas diarias. Con el S&amp;P 500 desde 1871 sale casi igual (15 años: 99.9%). Más detalle en <a href="/horizonte/">investorcr.com/horizonte</a>.</div>
     </div>
     <div class="narr">
       <div class="big">Si te quedás 15 años, las fluctuaciones de mediano plazo casi no importan. Pero si hay un buen momento para <em>empezar</em>, la data dice que es este.</div>
@@ -306,6 +325,48 @@
           <button type="button" class="chip" data-v="Las dos">Las dos</button>
           <button type="button" class="chip" data-v="Todavía estoy viendo">Todavía estoy viendo</button>
         </div>
+        <!-- Buena parte de la audiencia es médica: el chip abre la lista de especialidades (misma que /medicos). Si no es médico, lo ignora. -->
+        <button type="button" class="chip res" id="soy-med" aria-pressed="false">Soy médico</button>
+      </div>
+      <div class="paso-q hidden" id="paso-esp">
+        <div class="q">¿Cuál es tu especialidad?</div>
+        <p class="q-hint">Si estás en residencia, elegí la que estás haciendo.</p>
+        <div class="chips" id="chips-esp">
+          <button type="button" class="chip" data-v="Anestesiología">Anestesiología</button>
+          <button type="button" class="chip" data-v="Cardiología">Cardiología</button>
+          <button type="button" class="chip" data-v="Cirugía general">Cirugía general</button>
+          <button type="button" class="chip" data-v="Cirugía plástica">Cirugía plástica</button>
+          <button type="button" class="chip" data-v="Dermatología">Dermatología</button>
+          <button type="button" class="chip" data-v="Emergencias">Emergencias</button>
+          <button type="button" class="chip" data-v="Endocrinología">Endocrinología</button>
+          <button type="button" class="chip" data-v="Fisiatría">Fisiatría</button>
+          <button type="button" class="chip" data-v="Gastroenterología">Gastroenterología</button>
+          <button type="button" class="chip" data-v="Geriatría">Geriatría</button>
+          <button type="button" class="chip" data-v="Ginecología y obstetricia">Ginecología</button>
+          <button type="button" class="chip" data-v="Hematología">Hematología</button>
+          <button type="button" class="chip" data-v="Infectología">Infectología</button>
+          <button type="button" class="chip" data-v="Medicina familiar">Medicina familiar</button>
+          <button type="button" class="chip" data-v="Medicina general">Medicina general</button>
+          <button type="button" class="chip" data-v="Medicina interna">Medicina interna</button>
+          <button type="button" class="chip" data-v="Nefrología">Nefrología</button>
+          <button type="button" class="chip" data-v="Neumología">Neumología</button>
+          <button type="button" class="chip" data-v="Neurocirugía">Neurocirugía</button>
+          <button type="button" class="chip" data-v="Neurología">Neurología</button>
+          <button type="button" class="chip" data-v="Oftalmología">Oftalmología</button>
+          <button type="button" class="chip" data-v="Oncología">Oncología</button>
+          <button type="button" class="chip" data-v="Ortopedia">Ortopedia</button>
+          <button type="button" class="chip" data-v="Otorrinolaringología">Otorrino</button>
+          <button type="button" class="chip" data-v="Patología">Patología</button>
+          <button type="button" class="chip" data-v="Pediatría">Pediatría</button>
+          <button type="button" class="chip" data-v="Psiquiatría">Psiquiatría</button>
+          <button type="button" class="chip" data-v="Radiología">Radiología</button>
+          <button type="button" class="chip" data-v="Reumatología">Reumatología</button>
+          <button type="button" class="chip" data-v="Urología">Urología</button>
+          <button type="button" class="chip" data-v="Vascular periférico">Vascular periférico</button>
+          <button type="button" class="chip" data-v="otra">Otra</button>
+        </div>
+        <input class="in hidden" id="esp-otra" type="text" placeholder="Otra" autocomplete="off">
+        <button type="button" class="chip res hidden" id="esp-res" aria-pressed="false">Estoy en residencia</button>
       </div>
       <div class="paso-q">
         <div class="dos">
@@ -313,7 +374,7 @@
           <div class="in tel"><span>+506</span><input id="l-wa" type="tel" inputmode="numeric" placeholder="Tu WhatsApp" autocomplete="tel-national" maxlength="8"></div>
         </div>
       </div>
-      <p class="l-err hidden" id="l-err">Falta algo: elegí tu situación y poné tu nombre y un WhatsApp de 8 dígitos.</p>
+      <p class="l-err hidden" id="l-err">Falta algo: elegí tu situación (y tu especialidad si sos médico), y poné tu nombre y un WhatsApp de 8 dígitos.</p>
       <button type="submit" class="cta l-btn" id="l-send">Pedir mi llamada →</button>
       <p class="ctanota">30 minutos, sin costo, sin compromiso. Solo usamos tu WhatsApp para confirmar la llamada.</p>
     </form>
@@ -343,13 +404,74 @@
       <img src="/assets/jose-montero.webp" alt="Jose Montero" width="84" height="84" loading="lazy">
       <div>
         <div class="jn">Jose Montero · Empowered Investor</div>
-        <div class="jd"><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU. · <b>4.5 años en LSEG</b> (London Stock Exchange Group) · antes en una firma que manejaba <b>$600 millones</b>.</div>
+        <div class="jd"><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU. · <b>4.5 años en LSEG</b> (London Stock Exchange Group) · antes en una firma que manejaba <b>$600 millones</b> · <b>3 de cada 10 clientes</b> nuestros son médicos.</div>
       </div>
     </div>
   </section>
 
+  <section class="testi" style="padding-top:36px;">
+    <h2>Médicos y profesionales que ya <em>dieron el paso</em></h2>
+    <div class="tfeat">
+      <span class="tfeat-badge">★ Médico especialista</span>
+      <img class="tfeat-photo" src="/assets/testimonios/foto-6-cara.webp" alt="Mariana Peña" loading="lazy">
+      <div>
+        <div class="stars">★★★★★</div>
+        <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas.</p>
+        <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
+      </div>
+    </div>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-5-cara.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-7-cara.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+        <div class="who"><img src="/assets/testimonios/foto-8-cara.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas.</p>
+        <div class="who"><img src="/assets/testimonios/foto-9-cara.webp" alt="Andrés Castro" loading="lazy"><div><div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+        <div class="who"><img src="/assets/testimonios/foto-10-cara.webp" alt="Ramsés Espinoza" loading="lazy"><div><div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones, con la confianza de que cuento con una persona que toma decisiones estratégicas procurando siempre lo mejor para mí.</p>
+        <div class="who"><img src="/assets/testimonios/foto-11-cara.webp" alt="Mónica Blanco" loading="lazy"><div><div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y me fue guiando paso a paso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Estoy demasiado contenta de haber empezado.</p>
+        <div class="who"><img src="/assets/testimonios/foto-12-cara.webp" alt="Anne Baudrit" loading="lazy"><div><div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad.</p>
+        <div class="who"><img src="/assets/testimonios/foto-13-cara.webp" alt="Agustín Fallas" loading="lazy"><div><div class="name">Agustín Fallas</div><div class="role">Fotógrafo</div></div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="ctarow">
+    <a class="cta" href="#agenda" id="cta-fin">Pedir mi llamada</a>
+    <p class="ctanota">30 minutos · Sin costo · Sin compromiso</p>
+  </div>
+
   <p class="foot">
-    Datos: Robert Shiller (S&amp;P Composite 1871-2026, precio, dividendos y CPI), Yahoo Finance (^GSPC 1927-, ^IXIC 1971-, ^NDX 1985-). Día de elección: primer martes después del primer lunes de noviembre del segundo año del ciclo presidencial; si la bolsa cerró ese día se usa el último cierre anterior. Cálculos propios, reproducibles. Última actualización de precios: <span id="f-fecha"></span>.<br>
+    Datos: S&amp;P 500 = índice de precio (^GSPC, Yahoo Finance) desde 1950; en la sección "Lo que pasa antes" se usa el S&amp;P 500 con dividendos desde 1930 (Robert Shiller). Nasdaq 100 = en los gráficos por elección usamos el Nasdaq Composite (^IXIC) desde 1974 porque el Nasdaq-100 existe desde 1985; los dos índices se mueven casi igual y el Nasdaq-100 solo (10 elecciones) da 10 de 10, promedio +34%. En "largo plazo", Nasdaq-100 desde 1985 y QQQ con dividendos desde 1999. Día de elección: primer martes después del primer lunes de noviembre del segundo año del ciclo presidencial; si la bolsa cerró ese día se usa el último cierre anterior. Cálculos propios, reproducibles. Última actualización de precios: <span id="f-fecha"></span>.<br>
     Rendimientos pasados no garantizan rendimientos futuros. Son 19 a 38 observaciones: una racha así es consistente con que el próximo año también pueda ser negativo. Esta página es informativa y no es una recomendación de inversión. Empowered Investor · <a href="https://investorcr.com">investorcr.com</a>
   </p>
 </div>
@@ -366,9 +488,9 @@
   var S=D.series, UP="var(--up)", DN="var(--dn)";
   function anchoDe(host){ var w=host.clientWidth||host.parentNode.clientWidth||720; return Math.max(300, Math.round(w)); }
   function esMovil(W){ return W<560; }
-  var H_LBL={m3:"3 meses", m6:"6 meses", m9:"9 meses", m12:"12 meses", sweet:"Sweet spot (30 sep → 30 jun)"};
-  var SERIES=["sp50","sp30","nasdaq","ndx"];
-  function nombreSerie(k){ var s=S[k]; return s.nombre+" · desde "+s.desde; }
+  var H_LBL={m3:"3 meses", m6:"6 meses", m9:"9 meses", m12:"12 meses", sweet:"Sweet spot (oct → jun)"};
+  var SERIES=["sp50","nasdaq"], CORTO={sp50:"S&P 500", nasdaq:"Nasdaq 100"};
+  function nombreSerie(k){ return CORTO[k]+" · desde "+S[k].desde; }
 
   // ---------- segmentos (botones) ----------
   function seg(box, items, cur, onpick){
@@ -414,16 +536,16 @@
     host.innerHTML=""; host.appendChild(tip); host.appendChild(svg);
     var r=s.r[curH];
     byId("res-barras").innerHTML = "<div><b>"+r.pos+" / "+r.n+"</b><small>veces subió</small></div><div><b>"+pct(r.media)+"</b><small>promedio</small></div><div><b>"+pct(r.min)+"</b><small>peor caso ("+r.anio_min+")</small></div>";
-    byId("src-barras").textContent = nombreSerie(curS)+" ("+s.nota+"). Cada barra: retorno desde el cierre del día de la elección hasta "+(curH==="sweet"?"el 30 de junio siguiente, arrancando el 30 de setiembre":H_LBL[curH]+" después")+".";
+    byId("src-barras").textContent = nombreSerie(curS)+". Cada barra: retorno "+(curH==="sweet"?"del 30 de setiembre del año de la elección al 30 de junio siguiente (el sweet spot del ciclo: 9 meses)":"desde el cierre del día de la elección hasta "+H_LBL[curH]+" después")+". Sin dividendos.";
   }
-  seg(byId("seg-serie"), SERIES.map(function(k){ return {k:k, l:S[k].nombre+" "+S[k].desde+"-"}; }), curS, function(k){ curS=k; barras(); track("midterm_serie",{v:k}); });
-  seg(byId("seg-h"), ["m3","m6","m9","m12","sweet"].map(function(k){ return {k:k, l:H_LBL[k]}; }), curH, function(k){ curH=k; barras(); track("midterm_plazo",{v:k}); });
+  seg(byId("seg-serie"), SERIES.map(function(k){ return {k:k, l:CORTO[k]}; }), curS, function(k){ curS=k; barras(); track("midterm_serie",{v:k}); });
+  seg(byId("seg-h"), ["m9","m12","sweet"].map(function(k){ return {k:k, l:H_LBL[k]}; }), curH, function(k){ curH=k; barras(); track("midterm_plazo",{v:k}); });
 
   // ---------- 2 · camino típico ----------
   var curC="sp50";
   function camino(){
     var s=S[curC], c=s.camino, host=byId("ch-camino"), tip=byId("tip-camino");
-    var W=anchoDe(host), mv=esMovil(W), Hh=mv?250:300, padL=mv?38:44, padR=mv?40:46, padT=16, padB=34, M=c.mediana.length-1;
+    var W=anchoDe(host), mv=esMovil(W), Hh=mv?250:300, padL=mv?38:44, padR=mv?78:100, padT=16, padB=34, M=c.mediana.length-1;
     var lo=Math.min(0, Math.min.apply(null, c.min)), hi=Math.max.apply(null, c.max);
     var step=(hi-lo)>1 ? 0.25 : 0.1; lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
     var y0=padT, y1=Hh-padB, x0=padL, x1=W-padR;
@@ -434,12 +556,15 @@
     var x12=X(12); svg.appendChild(svgEl("line",{x1:x12,x2:x12,y1:y0,y2:y1,"class":"gl"}));
     function path(arr){ return arr.map(function(v,i){ return (i?"L":"M")+X(i).toFixed(1)+" "+Y(v).toFixed(1); }).join(" "); }
     function band(a,b){ return path(a)+" "+b.slice().reverse().map(function(v,i){ return "L"+X(M-i).toFixed(1)+" "+Y(v).toFixed(1); }).join(" ")+" Z"; }
-    svg.appendChild(svgEl("path",{d:band(c.max,c.min), fill:"var(--grid)", opacity:0.55}));
-    svg.appendChild(svgEl("path",{d:band(c.p75,c.p25), fill:"rgba(47,207,138,.22)"}));
-    svg.appendChild(svgEl("path",{d:path(c.mediana), fill:"none", stroke:UP, "stroke-width":2.5, "stroke-linejoin":"round", "stroke-linecap":"round"}));
+    svg.appendChild(svgEl("path",{d:band(c.p75,c.p25), fill:"rgba(47,207,138,.3)"}));
+    // cada elección, una línea fina; la mejor y la peor a 12 meses llevan su año al final
+    var iMax=0, iMin=0; c.cada.forEach(function(a,i){ if(a[12]>c.cada[iMax][12]) iMax=i; if(a[12]<c.cada[iMin][12]) iMin=i; });
+    c.cada.forEach(function(a,i){ svg.appendChild(svgEl("path",{d:path(a), fill:"none", stroke:"#8B96A6", "stroke-width":1.1, opacity:0.75, "stroke-linejoin":"round"})); });
+    [iMax,iMin].forEach(function(i){ var a=c.cada[i]; svg.appendChild(svgEl("path",{d:path(a), fill:"none", stroke:"#C9D0DA", "stroke-width":1.4, "stroke-linejoin":"round"})); svg.appendChild(txt(X(M)+6, Y(a[M])+4, c.anios[i]+" "+pct(a[M]), "lbl2", "start")); });
+    svg.appendChild(svgEl("path",{d:path(c.mediana), fill:"none", stroke:UP, "stroke-width":3, "stroke-linejoin":"round", "stroke-linecap":"round"}));
     svg.appendChild(svgEl("circle",{cx:X(12), cy:Y(c.mediana[12]), r:5, fill:UP, stroke:"var(--card)", "stroke-width":2}));
     svg.appendChild(txt(X(12), Y(c.mediana[12])-11, pct(c.mediana[12]), "lbl"));
-    svg.appendChild(txt(X(M)+6, Y(c.mediana[M])+4, pct(c.mediana[M]), "lbl", "start"));
+    svg.appendChild(txt(X(M)+6, Y(c.mediana[M])+4, "mediana "+pct(c.mediana[M]), "lbl", "start"));
     var hit=svgEl("rect",{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:"transparent"}); var cursor=svgEl("line",{x1:x0,x2:x0,y1:y0,y2:y1,stroke:"var(--gris)","stroke-width":1,opacity:0});
     hit.addEventListener("mousemove", function(e){ var b=host.getBoundingClientRect(); var m=Math.round((e.clientX-b.left)/(b.width/W)-x0)/((x1-x0)/M); m=Math.max(0,Math.min(M,Math.round(m)));
       cursor.setAttribute("x1",X(m)); cursor.setAttribute("x2",X(m)); cursor.setAttribute("opacity",1);
@@ -447,12 +572,12 @@
     hit.addEventListener("mouseleave", function(){ tipHide(tip); cursor.setAttribute("opacity",0); });
     svg.appendChild(cursor); svg.appendChild(hit);
     host.innerHTML=""; host.appendChild(tip); host.appendChild(svg);
-    byId("src-camino").textContent=nombreSerie(curC)+" ("+s.nota+"), "+c.n+" elecciones. A los 12 meses la mediana es "+pct(c.mediana[12],1)+"; a los 24, "+pct(c.mediana[24],1)+".";
+    byId("src-camino").textContent=nombreSerie(curC)+", "+c.n+" elecciones. A los 12 meses la mediana es "+pct(c.mediana[12],1)+" y la mitad central de los casos quedó entre "+pct(c.p25[12])+" y "+pct(c.p75[12])+"; a los 24 meses la mediana es "+pct(c.mediana[24],1)+".";
   }
-  seg(byId("seg-camino"), SERIES.map(function(k){ return {k:k, l:S[k].nombre+" "+S[k].desde+"-"}; }), curC, function(k){ curC=k; camino(); });
+  seg(byId("seg-camino"), SERIES.map(function(k){ return {k:k, l:CORTO[k]}; }), curC, function(k){ curC=k; camino(); });
 
   // ---------- 3 · fases del ciclo ----------
-  var curF="sp30";
+  var curF="sp50";
   function fase(){
     var rows=D.fases[curF], host=byId("ch-fase"), W=anchoDe(host), mv=esMovil(W), rowH=mv?58:46, padT=8, padL=mv?0:150, padR=mv?0:120, Hh=padT+rowH*rows.length+8;
     var hi=Math.max.apply(null, rows.map(function(r){ return r.media; }));
@@ -467,51 +592,23 @@
       svg.appendChild(txt(padL+w+10, y+4, pct(r.media)+"  ·  subió "+Math.round(r.p_pos*100)+"%", mid?"lbl":"lbl2", "start"));
     });
     host.innerHTML=""; host.appendChild(svg);
-    var nm = curF==="sp30" ? "S&P 500 con dividendos, 1928-2026" : curF==="sp50" ? "S&P 500 (precio), 1949-2026" : "Nasdaq Composite, 1971-2026";
+    var nm = curF==="sp50" ? "S&P 500, 1949-2026" : "Nasdaq 100, 1971-2026";
     var mt=rows.filter(function(x){return x.fase===2;})[0], otros=rows.filter(function(x){return x.fase!==2;});
     var mo=otros.reduce(function(a,x){ return a+x.media*x.n; },0)/otros.reduce(function(a,x){ return a+x.n; },0);
     byId("src-fase").textContent=nm+". Promedio de los 12 meses que arrancan el primer martes de noviembre de cada año: midterms "+pct(mt.media,1)+" contra "+pct(mo,1)+" en los otros tres años del ciclo.";
   }
-  seg(byId("seg-fase"), [{k:"sp30",l:"S&P 500 con dividendos 1928-"},{k:"sp50",l:"S&P 500 1949-"},{k:"nasdaq",l:"Nasdaq 1971-"}], curF, function(k){ curF=k; fase(); });
-
-  // ---------- 4 · distribución (cada elección un punto) ----------
-  var curD="sp30";
-  function dist(){
-    var s=S[curD], ev=s.ev, host=byId("ch-dist"), tip=byId("tip-dist"), W=anchoDe(host), mv=esMovil(W), Hh=mv?170:150, padL=mv?22:16, padR=mv?22:16, padT=36, padB=28;
-    var vals=ev.map(function(e){ return e.m12; }); var lo=Math.min(-0.1, Math.min.apply(null, vals)), hi=Math.max.apply(null, vals);
-    var step=0.1; lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
-    var x0=padL, x1=W-padR; function X(v){ return x0+(x1-x0)*(v-lo)/(hi-lo); }
-    var svg=svgEl("svg",{viewBox:"0 0 "+W+" "+Hh, role:"img", "aria-label":"Distribución del retorno a 12 meses después de cada midterm, "+s.nombre});
-    var yb=Hh-padB;
-    ticks(lo,hi,step).forEach(function(v,i){ svg.appendChild(svgEl("line",{x1:X(v),x2:X(v),y1:padT-6,y2:yb,"class":v===0?"zero":"gl"})); if(!mv || i%2===0) svg.appendChild(txt(X(v), yb+16, pct(v), "ax")); });
-    // apilado por celda de 2.5% para que no se tapen
-    var cell=mv?0.05:0.025, stacks={}; var R=mv?5.5:7;
-    ev.slice().sort(function(a,b){ return a.m12-b.m12; }).forEach(function(e){
-      var k=Math.round(e.m12/cell); stacks[k]=(stacks[k]||0)+1; var lvl=stacks[k]-1;
-      var cx=X(k*cell), cy=yb-10-lvl*(R*2+2);
-      var c=svgEl("circle",{cx:cx, cy:cy, r:R, fill:e.m12>=0?UP:DN, stroke:"var(--card)", "stroke-width":2});
-      c.addEventListener("mousemove", function(ev2){ var b=host.getBoundingClientRect(); tipShow(tip, host, cx*(b.width/W), cy*(b.width/W), "<b>"+e.anio+"</b>: "+pct(e.m12,1)+" a 12 meses"); });
-      c.addEventListener("mouseleave", function(){ tipHide(tip); });
-      svg.appendChild(c);
-      if(e.m12<0 || e.m12===Math.max.apply(null, vals)){ svg.appendChild(txt(cx, cy-12, String(e.anio), "lbl2")); }
-    });
-    var r=s.r.m12; svg.appendChild(txt(X(r.mediana), padT-14, "mediana "+pct(r.mediana), "lbl")); svg.appendChild(svgEl("line",{x1:X(r.mediana),x2:X(r.mediana),y1:padT-8,y2:yb,stroke:"var(--crema)","stroke-width":1,"stroke-dasharray":"0"}));
-    host.innerHTML=""; host.appendChild(tip); host.appendChild(svg);
-    var neg=ev.filter(function(e){ return e.m12<0; }).map(function(e){ return e.anio; });
-    byId("src-dist").textContent=nombreSerie(curD)+" ("+s.nota+"): "+r.pos+" de "+r.n+" arriba. "+(neg.length?"Los casos negativos: "+neg.join(", ")+".":"Ningún caso negativo.")+" Del "+pct(r.min)+" ("+r.anio_min+") al "+pct(r.max)+" ("+r.anio_max+").";
-  }
-  seg(byId("seg-dist"), [{k:"sp30",l:"S&P 500 con dividendos 1930-"},{k:"sp1874",l:"S&P 500 desde 1874"},{k:"nasdaq",l:"Nasdaq 1974-"},{k:"ndx",l:"Nasdaq-100 1986-"}], curD, function(k){ curD=k; dist(); });
+  seg(byId("seg-fase"), [{k:"sp50",l:"S&P 500"},{k:"nasdaq",l:"Nasdaq 100"}], curF, function(k){ curF=k; fase(); });
 
   // ---------- 5 · largo plazo ----------
   function largo(){
-    var rows=D.largo, host=byId("ch-largo"), W=anchoDe(host), mv=esMovil(W), rowH=40, padT=6, padL=mv?60:80, padR=mv?56:70, Hh=padT+rowH*rows.length+6;
+    var rows=D.largo_ndx, host=byId("ch-largo"), W=anchoDe(host), mv=esMovil(W), rowH=40, padT=6, padL=mv?60:80, padR=mv?56:70, Hh=padT+rowH*rows.length+6;
     var svg=svgEl("svg",{viewBox:"0 0 "+W+" "+Hh, role:"img", "aria-label":"Porcentaje de ventanas positivas del S&P 500 por plazo"});
     rows.forEach(function(r, i){
       var y=padT+rowH*i+rowH/2, w=(W-padL-padR)*r.p, strong=r.p>=0.95;
       svg.appendChild(txt(padL-12, y+4, r.h, "lbl2", "end"));
       svg.appendChild(svgEl("rect",{x:padL, y:y-10, width:W-padL-padR, height:20, fill:"var(--grid)"}));
       svg.appendChild(svgEl("rect",{x:padL, y:y-10, width:w, height:20, fill:strong?UP:"rgba(47,207,138,.55)"}));
-      svg.appendChild(txt(padL+w+10, y+4, (r.p*100).toFixed(r.p>=0.99&&r.p<1?1:0)+"%", "lbl", "start"));
+      svg.appendChild(txt(padL+w+10, y+4, (r.p>=0.99&&r.p<1 ? (r.p*100).toFixed(2) : (r.p*100).toFixed(0))+"%", "lbl", "start"));
     });
     host.innerHTML=""; host.appendChild(svg);
   }
@@ -520,7 +617,7 @@
   function tabla(){
     var a=S.sp50.ev, b=S.nasdaq.ev, nq={}; b.forEach(function(e){ nq[e.anio]=e; });
     function td(v){ return v===undefined||v===null ? "<td>—</td>" : "<td class='"+(v>=0?"up":"dn")+"'>"+pct(v,1)+"</td>"; }
-    var h="<table><thead><tr><th>Elección</th><th>S&amp;P 3 m</th><th>S&amp;P 6 m</th><th>S&amp;P 12 m</th><th>Nasdaq 3 m</th><th>Nasdaq 6 m</th><th>Nasdaq 12 m</th><th>Caída previa S&amp;P</th></tr></thead><tbody>";
+    var h="<table><thead><tr><th>Elección</th><th>S&amp;P 3 m</th><th>S&amp;P 6 m</th><th>S&amp;P 12 m</th><th>Nasdaq 100 3 m</th><th>Nasdaq 100 6 m</th><th>Nasdaq 100 12 m</th><th>Caída previa S&amp;P</th></tr></thead><tbody>";
     a.forEach(function(e){ var n=nq[e.anio]||{}; h+="<tr><td>"+e.anio+"</td>"+td(e.m3)+td(e.m6)+td(e.m12)+td(n.m3)+td(n.m6)+td(n.m12)+"<td>"+pct(e.dd,0)+"</td></tr>"; });
     h+="</tbody></table>";
     byId("tw").innerHTML=h;
@@ -532,8 +629,8 @@
     byId("k1").textContent=a.pos+" / "+a.n; byId("k2").textContent=pct(a.media); byId("k3").textContent=n.pos+" / "+n.n; byId("k4").textContent=pct(n.media);
     byId("h3").textContent=pct(D.ctx.sp_dd); byId("f-fecha").textContent=D.ctx.fecha;
   })();
-  barras(); camino(); fase(); dist(); largo(); tabla();
-  (function(){ var t=null, last=window.innerWidth; window.addEventListener("resize", function(){ if(window.innerWidth===last) return; last=window.innerWidth; clearTimeout(t); t=setTimeout(function(){ barras(); camino(); fase(); dist(); largo(); }, 150); }); })();
+  barras(); camino(); fase(); largo(); tabla();
+  (function(){ var t=null, last=window.innerWidth; window.addEventListener("resize", function(){ if(window.innerWidth===last) return; last=window.innerWidth; clearTimeout(t); t=setTimeout(function(){ barras(); camino(); fase(); largo(); }, 150); }); })();
   byId("tabla").addEventListener("toggle", function(){ if(this.open) track("midterm_tabla",{}); });
 
   // ===== Seguimiento: GA4 + píxel + Clarity + registro propio (igual que /medicos) =====
@@ -572,7 +669,7 @@
   // Calendly: por ahora el mismo evento que /medicos (la función `horarios` y la API de conversiones ya lo manejan).
   // Si esta página va a un público general, cambiar acá el evento y revisar netlify/functions/horarios.js y calendly-capi.js.
   var CALENDLY = "https://calendly.com/empoweredinvestor/medicos";
-  ["cta-hero","cta-narr"].forEach(function(id){
+  ["cta-hero","cta-narr","cta-fin"].forEach(function(id){
     byId(id).addEventListener("click", function(){ track("click_agendar", {origen:id.replace("cta-","")}); try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada midterm"}); }catch(e){} });
   });
 
@@ -617,28 +714,35 @@
 
   (function(){
     var form=byId("lead"); if(!form) return;
-    var WA_NUMERO = "50670558296"; var WEBHOOK_URL = EVENTOS_URL; var sit="";
+    var WA_NUMERO = "50670558296"; var WEBHOOK_URL = EVENTOS_URL; var sit="", medico=false, esp="", residente=false;
+    var soy=byId("soy-med"), pasoEsp=byId("paso-esp"), boxE=byId("chips-esp"), allE=boxE.querySelectorAll(".chip"), otra=byId("esp-otra"), res=byId("esp-res");
+    soy.addEventListener("click", function(){ medico=!medico; soy.classList.toggle("on", medico); soy.setAttribute("aria-pressed", medico?"true":"false"); pasoEsp.classList.toggle("hidden", !medico); track("lead_medico", {v:medico?"si":"no"}); });
+    Array.prototype.forEach.call(allE, function(b){ b.addEventListener("click", function(){ Array.prototype.forEach.call(allE, function(x){ x.classList.remove("on"); }); b.classList.add("on"); esp=b.getAttribute("data-v"); otra.classList.toggle("hidden", esp!=="otra"); if(esp==="otra") otra.focus(); res.classList.remove("hidden"); track("lead_especialidad", {v:esp}); }); });
+    res.addEventListener("click", function(){ residente=!residente; res.classList.toggle("on", residente); res.setAttribute("aria-pressed", residente?"true":"false"); });
     var box=byId("chips-sit"), all=box.querySelectorAll(".chip");
     Array.prototype.forEach.call(all, function(b){ b.addEventListener("click", function(){ Array.prototype.forEach.call(all, function(x){ x.classList.remove("on"); }); b.classList.add("on"); sit=b.getAttribute("data-v"); track("lead_situacion", {v:sit}); }); });
     byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
     form.addEventListener("submit", function(e){
       e.preventDefault();
       var nombre=byId("l-nom").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
-      var ok = sit && nombre && wa.length===8;
+      var espBase = !medico ? "" : (esp==="otra" ? otra.value.trim() : esp);
+      var especialidad = espBase && residente ? espBase+" (residente)" : espBase;
+      var ok = sit && nombre && wa.length===8 && (!medico || espBase);
       byId("l-err").classList.toggle("hidden", !!ok); if(!ok) return;
       var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
-      var payload={ timestamp:new Date().toISOString(), etapa:"midterm_wa", nombre:nombre, whatsapp:"506"+wa, especialidad:sit, situacion:sit, pagina:location.pathname,
+      var payload={ timestamp:new Date().toISOString(), etapa:"midterm_wa", nombre:nombre, whatsapp:"506"+wa, especialidad:especialidad||sit, situacion:sit, pagina:location.pathname,
         utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
         sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-ESTADO.t0)/1000), scroll_max:ESTADO.scroll };
       try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
-      track("midterm_lead", {situacion:sit, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-      try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"llamada midterm", content_category:sit}); }catch(err){}
-      var msg="Hola Jose, soy "+nombre+". Vi los datos de las midterms y quiero mi llamada sin costo para ver cómo empezar. ¿Cuándo podemos hacerla?";
+      track("midterm_lead", {situacion:sit+(especialidad?" · "+especialidad:""), utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+      try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"llamada midterm", content_category:especialidad||sit}); }catch(err){}
+      var quien = !espBase ? "" : (residente ? ", residente de "+espBase.toLowerCase() : ", "+espBase.toLowerCase());
+      var msg="Hola Jose, soy "+nombre+quien+". Vi los datos de las midterms y quiero mi llamada sin costo para ver cómo empezar. ¿Cuándo podemos hacerla?";
       var link=byId("wa-link");
       link.href="https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
       link.addEventListener("click", function(){ track("lead_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp midterm"}); }catch(err){} });
       byId("ok-nom").textContent=nombre.split(" ")[0];
-      CAL_PRE = "&name="+encodeURIComponent(nombre)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(sit);
+      CAL_PRE = "&name="+encodeURIComponent(nombre)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(especialidad ? especialidad+" · "+sit : sit);
       form.classList.add("hidden"); byId("lead-ok").classList.remove("hidden");
       abrirCalendly(); cargarHorarios();
       try{ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"start"}); }catch(err){}
