@@ -32,7 +32,7 @@
   .sub{ text-align:center; color:var(--gris); font-size:15.5px; max-width:560px; margin:0 auto 22px; line-height:1.5; }
 
   /* perfiles */
-  .perfiles{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:12px; }
+  .perfiles{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:12px; }
   .perfil{
     background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:12px 10px; cursor:pointer;
     text-align:center; color:var(--crema); font-family:inherit; transition:border-color .15s, background .15s;
@@ -66,6 +66,12 @@
   }
   .chip:hover{ border-color:var(--peri); }
   .chip.az{ border-style:dashed; }
+  .sel{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--bd); }
+  .sel.hid{ display:none; }
+  .sel .lab{ font-size:12px; color:var(--gris); text-transform:uppercase; letter-spacing:.12em; font-weight:600; width:100%; }
+  .sel .chip{ display:inline-flex; align-items:center; gap:7px; opacity:.55; }
+  .sel .chip i{ width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .sel .chip.on{ opacity:1; border-color:var(--crema); }
 
   /* viaje */
   .viaje{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px 14px 10px; }
@@ -129,9 +135,11 @@
     <button class="perfil" data-m="tqqq"><b>Audaz</b><small>TQQQ · 3× diario</small></button>
     <button class="perfil" data-m="all"><b>Los tres</b><small>comparar perfiles</small></button>
     <button class="perfil" data-m="fp"><b>Freedom Point</b><small>TQQQ → QQQ → renta fija</small></button>
+    <button class="perfil" data-m="cust"><b>A mi gusto</b><small>elegí qué comparar</small></button>
   </div>
 
   <div class="ctl">
+    <div class="sel hid" id="sel"><span class="lab">Comparar</span></div>
     <div class="grid">
       <div class="field">
         <label>Empezás en</label>
@@ -219,6 +227,19 @@ var MODES={
 };
 var ALLKEYS=["spy","qqq","qld","tqqq","eqqq","eqld","etqqq"];
 var FP_COL={L:"#E0B07A", E:"#63FCAF", F:"#7386ff"};
+// catálogo para "A mi gusto": orden de dibujo, nombre, color
+var CAT=[
+  {k:"etqqq", nom:"TQQQ con nosotros", col:"#E0B07A"},
+  {k:"eqld",  nom:"QLD con nosotros",  col:"#4CC9F0"},
+  {k:"eqqq",  nom:"QQQ con nosotros",  col:"#63FCAF"},
+  {k:"fp",    nom:"Freedom Point",     col:"#C77DFF"},
+  {k:"tqqq",  nom:"TQQQ comprar y mantener", tip:"TQQQ B&H", col:"#E0525A"},
+  {k:"qld",   nom:"QLD comprar y mantener",  tip:"QLD B&H",  col:"#9aa3ad"},
+  {k:"qqq",   nom:"QQQ comprar y mantener",  tip:"QQQ B&H",  col:"#ffffff"},
+  {k:"spy",   nom:"S&P 500 · SPY", tip:"S&P 500", col:"#7386ff"} ];
+var SEL={qqq:true, tqqq:true, etqqq:true};
+MODES.cust={ lab:"", nom:"A mi gusto", get lines(){ var L=CAT.filter(function(c){ return SEL[c.k]; }).map(function(c){ return {k:c.k, nom:c.nom, tip:c.tip||c.nom, col:c.col, w:c.k.charAt(0)==="e"||c.k==="fp"?2.6:2.1}; });
+  if(!L.length) L=[{k:"qqq", nom:"QQQ comprar y mantener", tip:"QQQ B&H", col:"#ffffff", w:2.1}]; return L; } };
 
 // ---- estado
 var mode="qqq", anio=1987, edad=25, aporte=500, escala="lin", ingreso=5000;
@@ -246,8 +267,7 @@ function simFP(){
     p.push(eq+sjc); ix.push(idx);
     if(FPREACH<0 && eq+sjc>=M) FPREACH=j-S;
   }
-  PATH.fp=p; FPALLOC=al; FPIDX=ix;
-  var mx=-1, dd=0; for(var k=0;k<ix.length;k++){ if(ix[k]>mx) mx=ix[k]; var x=ix[k]/mx-1; if(x<dd) dd=x; } DD.fp=dd;
+  PATH.fp=p; FPALLOC=al; FPIDX=ix; DD.fp=maxDD(p);
 }
 
 function build(){
@@ -267,14 +287,12 @@ function build(){
       if(j3===S || MON[j3]!==MON[j3-1]) v+=aporte;
       p.push(v);
     }
-    PATH[k]=p;
-    var mx=-1, dd=0; for(var j4=S;j4<=E;j4++){ if(L[j4]>mx) mx=L[j4]; var x=L[j4]/mx-1; if(x<dd) dd=x; }
-    DD[k]=dd;
+    PATH[k]=p; DD[k]=maxDD(p);
   });
   var sum=0; for(var j5=S;j5<=E;j5++) sum+=D.pos[j5]; CASHPCT=1-sum/(E-S+1);
   simFP();
 }
-function lev(k,i){ return k==="fp"?FPIDX[i-S]:D[k][i]; }
+function maxDD(p){ var mx=-1, dd=0; for(var q=0;q<p.length;q++){ if(p[q]>mx) mx=p[q]; var x=p[q]/mx-1; if(x<dd) dd=x; } return dd; }
 
 // ---- formato
 function fmtM(v){
@@ -404,7 +422,7 @@ function draw(p){
   }
 
   // etiquetas en la punta
-  var labs=lines.map(function(L,li){ return {nom:(small&&L.nomS)?L.nomS:L.nom.split(" · ")[0], col:L.col, val:fmtM(vNow[li]), x:fmtX(vNow[li],invNow), y:Y(vNow[li])}; })
+  var labs=lines.map(function(L,li){ return {nom:(small&&L.nomS)?L.nomS:(L.tip||L.nom.split(" · ")[0]), col:L.col, val:fmtM(vNow[li]), x:fmtX(vNow[li],invNow), y:Y(vNow[li])}; })
     .sort(function(a,b){ return a.y-b.y; });
   var gap=small?44:52;
   for(var i2=1;i2<labs.length;i2++){ if(labs[i2].y-labs[i2-1].y<gap) labs[i2].y=labs[i2-1].y+gap; }
@@ -423,12 +441,11 @@ function draw(p){
 }
 
 // ---- gráfico de caída desde el máximo (misma escala horizontal que el de arriba)
-function valAtLev(k,f){ var i=Math.floor(f), fr=f-i; if(S+i>=E) return lev(k,E); return lev(k,S+i)+(lev(k,S+i+1)-lev(k,S+i))*fr; }
 function drawDD(lines, n, iI, f, tCur, X, mL, pw, small){
   ctx2.setTransform(DPR,0,0,DPR,0,0); ctx2.clearRect(0,0,W,H2); ctx2.textBaseline="middle";
   var mT=8, mB=6, ph=H2-mT-mB, jMax=Math.min(iI,n);
-  var dds=lines.map(function(L){ var mx=-1, out=[]; for(var j=0;j<=jMax;j++){ var v=lev(L.k,S+j); if(v>mx) mx=v; out.push(v/mx-1); }
-    var vn=valAtLev(L.k,f); if(vn>mx) mx=vn; out.push(vn/mx-1); return out; });
+  var dds=lines.map(function(L){ var mx=-1, out=[], P=PATH[L.k]; for(var j=0;j<=jMax;j++){ var v=P[j]; if(v>mx) mx=v; out.push(v/mx-1); }
+    var vn=valAt(L.k,f); if(vn>mx) mx=vn; out.push(vn/mx-1); return out; });
   var yBot=-0.1; dds.forEach(function(a){ a.forEach(function(v){ if(v<yBot) yBot=v; }); }); yBot=Math.max(-1,yBot*1.12);
   function Y(v){ return mT+(v/yBot)*ph; }
   ctx2.font=(small?"10.5px":"12px")+" 'Bai Jamjuree'"; ctx2.fillStyle="#8b94a0"; ctx2.textAlign="right";
@@ -464,7 +481,10 @@ function live(f, tCur, vNow, invNow){
 var kp=document.getElementById("kpis");
 function kpis(vNow, invNow, done){
   var lines=MODES[mode].lines, h="";
-  if(mode==="fp"){
+  if(mode==="cust"){
+    lines.forEach(function(L,li){ h+='<div class="kpi"><div class="k">'+L.nom+'</div><div class="v" style="color:'+L.col+'">'+fmtM(vNow[li])+'</div><div class="s">'+fmtX(vNow[li],invNow)+' lo que pusiste · peor caída '+fmtPct(DD[L.k])+'</div></div>'; });
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+  }else if(mode==="fp"){
     var reach=FPREACH>=0;
     h+='<div class="kpi hi"><div class="k">Freedom Point · con nosotros</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Tu meta</div><div class="v'+(reach&&done?' men':'')+'">'+fmtM(meta())+'</div><div class="s">'+(reach?'alcanzada a los '+Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+' años ('+ymd(S+FPREACH).y+')':'para vivir con $'+fmtAporte(ingreso)+' al mes')+'</div></div>';
@@ -495,7 +515,8 @@ function legend(){
   var h=MODES[mode].lines.map(function(L){ return '<span><i style="background:'+L.col+'"></i>'+L.nom+'</span>'; }).join("");
   if(mode==="fp") h+='<span><i class="sq" style="background:'+FP_COL.L+'"></i>TQQQ</span><span><i class="sq" style="background:'+FP_COL.E+'"></i>QQQ</span><span><i class="sq" style="background:'+FP_COL.F+'"></i>renta fija 8%</span>';
   h+='<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
-  document.getElementById("f-meta").classList.toggle("hid", mode!=="fp");
+  document.getElementById("f-meta").classList.toggle("hid", !(mode==="fp" || (mode==="cust"&&SEL.fp)));
+  document.getElementById("sel").classList.toggle("hid", mode!=="cust");
   document.getElementById("leg").innerHTML=h;
 }
 
@@ -514,6 +535,10 @@ rE.addEventListener("change",function(){ edad=parseInt(rE.value,10); rebuild(); 
 function setAporte(v){ aporte=Math.max(50, Math.min(100000, Math.round(v/50)*50)); iA.value=fmtAporte(aporte); rebuild(); }
 iA.addEventListener("change",function(){ setAporte(parseFloat(iA.value.replace(/[^0-9.]/g,""))||500); });
 iA.addEventListener("keydown",function(e){ if(e.key==="Enter") iA.blur(); });
+var selEl=document.getElementById("sel");
+CAT.forEach(function(c){ var b=document.createElement("button"); b.className="chip"+(SEL[c.k]?" on":""); b.dataset.k=c.k;
+  b.innerHTML='<i style="background:'+c.col+'"></i>'+c.nom; selEl.appendChild(b); });
+selEl.addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return; SEL[b.dataset.k]=!SEL[b.dataset.k]; b.classList.toggle("on",!!SEL[b.dataset.k]); rebuild(); });
 var iM=document.getElementById("i-meta");
 function setIngreso(v){ ingreso=Math.max(500, Math.min(200000, Math.round(v/100)*100)); iM.value=fmtAporte(ingreso); document.getElementById("v-meta").textContent=fmtM(meta()); rebuild(); }
 iM.addEventListener("change",function(){ setIngreso(parseFloat(iM.value.replace(/[^0-9.]/g,""))||5000); });
@@ -534,11 +559,11 @@ function nota(){
   var fin=ymd(E), ini=ymd(S);
   document.getElementById("nota").innerHTML=
     'Simulación con datos históricos de '+MESES[ini.m-1]+' '+ini.y+' a '+MESES[fin.m-1]+' '+fin.y+(E===N-1?' (último dato)':' (tus 65 años)')+', aportes al inicio de cada mes, en dólares corrientes y antes de impuestos. '+
-    '<b>Con nosotros</b> aplica la regla de tendencia de <a href="/edge/">investorcr.com/edge</a> sobre el Nasdaq 100 (media móvil de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%): mientras la señal está adentro se tiene el ETF; cuando sale, se pasa a letras del Tesoro a 3 meses. Incluye nuestro honorario del 1% anual sobre lo invertido y un día de rezago en la ejecución. '+
-    'Nasdaq 100: índice hasta marzo 1999 y QQQ con dividendos desde entonces. S&P 500: índice más 3,4% de dividendos hasta enero 1993 y SPY con dividendos desde entonces. '+
+    '<b>Con nosotros</b> aplica la regla de tendencia de <a href="/edge/">investorcr.com/edge</a> sobre el Nasdaq 100 (media móvil de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%): mientras la señal está adentro se tiene el ETF; cuando sale, se pasa a letras del Tesoro a 3 meses. Con un día de rezago en la ejecución y sin honorarios. '+
+    'QQQ comprar y mantener: solo precio, sin dividendos (índice hasta marzo 1999, QQQ desde entonces); el edge sobre QQQ sí reinvierte dividendos. S&P 500: índice más 3,4% de dividendos hasta enero 1993 y SPY con dividendos desde entonces. '+
     'QLD y TQQQ: ETF real desde su listado (junio 2006 y febrero 2010); antes, simulación con rebalanceo diario, financiamiento a la tasa del T-bill + 0,6% y 0,95% de gasto. '+
     (mode==="fp"?'<b>Freedom Point</b>: la meta es el capital que paga tu ingreso mensual retirando 4% al año. Arrancás en TQQQ y, conforme avanzás hacia la meta, la plata pasa a QQQ (al 70% de la meta ya no queda TQQQ) y luego a renta fija al 8% anual, hasta llegar con 70% en renta fija y 30% en QQQ; la renta fija es un piso que nunca se vende para volver a riesgo. El edge se aplica a la parte en ETFs. ':'')+
-    'El gráfico de abajo muestra cuánto estaba cada estrategia por debajo de su máximo anterior. Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
+    'El gráfico de abajo muestra cuánto estaba el valor de cada cartera (con los aportes ya adentro) por debajo de su máximo anterior. Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
 }
 
 // ---- arranque
