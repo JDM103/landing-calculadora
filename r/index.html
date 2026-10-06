@@ -50,11 +50,11 @@
   .avisoclave b{ color:var(--ambar); }
   .avisoclave button{ margin-left:auto; background:transparent; border:1px solid var(--ambar); color:var(--ambar);
     border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
-  /* banda fija cuando Jose entra a la cuenta de un cliente desde /panel (modo asesor) */
-  .avisoasesor{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    background:#1f2a22; border:1px solid var(--menta); border-radius:12px; padding:10px 14px; margin:0 0 12px;
-    font-size:13.5px; color:var(--crema); box-shadow:0 6px 18px rgba(0,0,0,.35); }
-  .avisoasesor b{ color:var(--menta); }
+  /* boton de privacidad del encabezado (solo en modo asesor: oculta el nombre del cliente) */
+  .top .priv{ background:transparent; border:1px solid var(--bd); color:var(--gris-sec); border-radius:999px;
+    padding:6px 13px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
+  .top .priv:hover{ border-color:var(--menta); color:var(--crema); }
+  .top .priv.on{ border-color:var(--menta); color:var(--menta); }
   .notajose{ display:flex; gap:10px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.4);
     border-radius:12px; padding:12px 14px; margin:12px 0; font-size:14px; }
   .notajose b{ display:block; color:var(--menta); font-size:11px; text-transform:uppercase; letter-spacing:.8px; margin-bottom:3px; }
@@ -73,7 +73,7 @@
   .top img{ height:44px; }
   .top .hola{ font-size:19px; font-weight:800; color:var(--crema); line-height:1.2; }
   .top .cuando{ font-size:12px; color:var(--gris-sec); }
-  .top .salir{ margin-left:auto; background:transparent; border:1px solid var(--bd); color:var(--gris-sec);
+  .top .salir{ background:transparent; border:1px solid var(--bd); color:var(--gris-sec);
     border-radius:999px; padding:6px 14px; font-family:inherit; font-size:12.5px; font-weight:700; cursor:pointer; }
   .top .salir:hover{ border-color:var(--menta); color:var(--crema); }
 
@@ -482,6 +482,7 @@ var DEMO = location.hash.indexOf("#demo")===0;   // #demo, #demo-cerca, #demo-fu
 var CORREO=null;       // correo con el que entró (la identidad del cliente)
 var D=null;            // datos del cliente (respuesta de `reporte` + derivados)
 var ASESOR=null;       // {asesor:true, tok, alias} cuando Jose abrió esta cuenta desde /panel
+var PRIV = sessionStorage.getItem("r_priv")==="1";   // modo privacidad: oculta el nombre del cliente (para mostrarle el panel a un prospecto)
 var ESCENARIO="normal";
 
 /* ================= derivados del plan ================= */
@@ -589,16 +590,13 @@ function render(){
   var p1=(x.plan.p1||70), p2=(x.plan.p2||100);
 
   app.innerHTML=
-  /* ---- modo asesor: Jose viendo/editando la cuenta de un cliente desde /panel ---- */
-  (ASESOR?
-    '<div class="avisoasesor">👁️ <div><b>Modo asesor</b> · estás en la cuenta de <b>'+esc(d.nombre||"")+'</b> ('+esc(ASESOR.alias)+') tal como la ve el cliente. '
-    +'Lo que edités acá queda registrado a tu nombre en el historial del plan.</div></div>':'')
   /* ---- encabezado ---- */
-  +'<div class="top">'
+  '<div class="top">'
     +'<img src="/assets/logo-fondo-negro.png" alt="EI">'
-    +'<div><div class="hola">Hola, '+esc((d.nombre||"").split(" ")[0])+'</div>'
+    +'<div><div class="hola">Hola, '+esc(PRIV? "Cliente" : (d.nombre||"").split(" ")[0])+'</div>'
     +'<div class="cuando">Números al cierre de '+(x.snap? mesLargo(x.snap.mes):"—")+' · se actualizan cada fin de mes</div></div>'
-    +'<button class="salir" id="salir">'+(ASESOR?"Cerrar vista":"Salir")+'</button>'
+    +(ASESOR? '<button class="priv'+(PRIV?' on':'')+'" id="priv" style="margin-left:auto">'+(PRIV?"Privacidad: on":"Privacidad: off")+'</button>':'')
+    +'<button class="salir" id="salir"'+(ASESOR?'':' style="margin-left:auto"')+'>'+(ASESOR?"Cerrar vista":"Salir")+'</button>'
   +'</div>'
 
   /* ---- aviso: sigue con la clave inicial ---- */
@@ -778,6 +776,9 @@ function render(){
     sessionStorage.removeItem("r_sesion"); location.hash="";
     if(ASESOR) window.close();   // si el navegador no deja cerrarla, cae al reload (pantalla de entrada)
     location.reload(); });
+  var pv=$("priv");
+  if(pv) pv.addEventListener("click", function(){
+    PRIV=!PRIV; sessionStorage.setItem("r_priv", PRIV?"1":"0"); render(); });
   var cc=$("cambiar-clave");
   if(cc) cc.addEventListener("click", async function(){
     cc.disabled=true; cc.textContent="Mandando…";
