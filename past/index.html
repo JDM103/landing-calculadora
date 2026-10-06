@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Viajá al pasado · Empowered Investor</title>
+<meta name="description" content="Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con nuestro edge en el Nasdaq frente a comprar y mantener.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0d0f14; --panel:#15191E; --panel2:#1b2029; --bd:#262d3a;
+    --menta:#63FCAF; --peri:#7386ff; --ambar:#E0B07A; --rojo:#E0525A;
+    --crema:#FEF9F3; --gris:#9aa3ad; --gris2:#6f7883;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ overflow-x:hidden; }
+  body{
+    background:var(--tinta); color:var(--crema);
+    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
+    padding:28px 16px 70px;
+  }
+  .wrap{ width:100%; max-width:940px; min-width:0; margin:0 auto; }
+  a.logo{ display:block; text-align:center; margin-bottom:10px; }
+  a.logo img{ height:78px; }
+  .kicker{ text-align:center; color:var(--menta); font-weight:600; font-size:12.5px; letter-spacing:.38em; text-transform:uppercase; margin-bottom:12px; }
+  h1{ text-align:center; font-weight:700; font-size:clamp(30px,6vw,50px); letter-spacing:-.015em; line-height:1.05; margin-bottom:10px; }
+  h1 em{ color:var(--menta); font-style:normal; }
+  .sub{ text-align:center; color:var(--gris); font-size:15.5px; max-width:560px; margin:0 auto 22px; line-height:1.5; }
+
+  /* perfiles */
+  .perfiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
+  .perfil{
+    background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:12px 10px; cursor:pointer;
+    text-align:center; color:var(--crema); font-family:inherit; transition:border-color .15s, background .15s;
+  }
+  .perfil b{ display:block; font-size:16px; font-weight:700; }
+  .perfil small{ display:block; color:var(--gris); font-size:12px; margin-top:3px; font-weight:500; }
+  .perfil.on{ border-color:var(--menta); background:rgba(99,252,175,.08); }
+  .perfil.on small{ color:var(--menta); }
+
+  /* controles */
+  .ctl{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px 16px 12px; margin-bottom:12px; }
+  .grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px 22px; }
+  .field label{ display:block; font-size:12px; color:var(--gris); text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin-bottom:4px; }
+  .field .big{ font-size:30px; font-weight:700; line-height:1.1; color:var(--crema); }
+  .field .big span{ font-size:15px; color:var(--gris); font-weight:500; margin-left:4px; }
+  input[type=range]{ width:100%; margin-top:8px; accent-color:var(--menta); height:28px; }
+  .money{ display:flex; align-items:center; gap:6px; margin-top:4px; }
+  .money .pre{ font-size:30px; font-weight:700; color:var(--gris); }
+  .money input{
+    width:100%; min-width:0; background:transparent; border:none; border-bottom:2px solid var(--bd); color:var(--crema);
+    font-family:inherit; font-size:30px; font-weight:700; padding:0 0 2px; outline:none;
+  }
+  .money input:focus{ border-color:var(--menta); }
+  .stp{ display:flex; flex-direction:column; gap:4px; }
+  .stp button{ background:var(--panel2); border:1px solid var(--bd); color:var(--crema); width:34px; height:24px; border-radius:7px; cursor:pointer; font-size:11px; font-family:inherit; }
+  .stp button:hover{ border-color:var(--menta); }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip{
+    background:var(--panel2); border:1px solid var(--bd); color:var(--crema); border-radius:999px; padding:7px 13px;
+    font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:border-color .15s;
+  }
+  .chip:hover{ border-color:var(--peri); }
+  .chip.az{ border-style:dashed; }
+
+  /* viaje */
+  .viaje{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px 14px 10px; }
+  .live{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .live .edad{ font-size:clamp(22px,4.6vw,34px); font-weight:700; line-height:1; }
+  .live .edad small{ font-size:14px; color:var(--gris); font-weight:500; margin-left:8px; }
+  .pill{ display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; background:var(--panel2); border:1px solid var(--bd); }
+  .pill i{ width:9px; height:9px; border-radius:50%; background:var(--menta); display:inline-block; box-shadow:0 0 10px var(--menta); }
+  .pill.out i{ background:var(--ambar); box-shadow:0 0 10px var(--ambar); }
+  .leg{ display:flex; gap:18px; flex-wrap:wrap; font-size:13.5px; font-weight:500; margin:6px 0 4px; color:var(--crema); }
+  .leg span{ display:flex; align-items:center; gap:7px; }
+  .leg i{ width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .leg i.sq{ border-radius:3px; width:14px; height:9px; }
+  .chart{ position:relative; width:100%; }
+  canvas{ width:100%; max-width:100%; display:block; cursor:pointer; }
+  .under{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px; flex-wrap:wrap; }
+  .under .btns{ display:flex; gap:8px; }
+  .btn{ background:var(--panel2); border:1px solid var(--bd); color:var(--crema); border-radius:9px; padding:7px 12px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .btn:hover{ border-color:var(--menta); }
+  .seg{ display:inline-flex; border:1px solid var(--bd); border-radius:9px; overflow:hidden; }
+  .seg button{ background:transparent; border:none; color:var(--gris); padding:7px 11px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .seg button.on{ background:var(--panel2); color:var(--crema); }
+
+  /* kpis */
+  .kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+  .kpi{ background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; min-width:0; }
+  .kpi .k{ font-size:11.5px; color:var(--gris); text-transform:uppercase; letter-spacing:.1em; font-weight:600; }
+  .kpi .v{ font-size:clamp(22px,4.4vw,30px); font-weight:700; line-height:1.15; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .kpi .s{ font-size:12.5px; color:var(--gris); margin-top:2px; font-weight:500; }
+  .kpi.hi{ border-color:rgba(99,252,175,.5); }
+  .kpi.hi .v{ color:var(--menta); }
+  .men{ color:var(--menta); } .per{ color:var(--peri); } .amb{ color:var(--ambar); } .roj{ color:var(--rojo); }
+
+  .nota{ color:var(--gris); font-size:12.5px; line-height:1.55; margin-top:18px; max-width:860px; }
+  .nota a{ color:var(--menta); }
+  .nota b{ color:var(--crema); font-weight:600; }
+
+  @media (max-width:640px){
+    body{ padding:20px 16px 50px; }
+    .perfiles{ grid-template-columns:repeat(2,1fr); }
+    .grid{ grid-template-columns:1fr 1fr; }
+    .grid .field:last-child{ grid-column:1/-1; }
+    .kpis{ grid-template-columns:repeat(2,1fr); }
+    .field .big{ font-size:26px; } .money .pre, .money input{ font-size:26px; }
+    .leg{ gap:12px; font-size:12.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-fondo-negro.png" alt="Empowered Investor"></a>
+  <div class="kicker">Viaje al pasado</div>
+  <h1>¿Y si hubieras empezado <em>antes</em>?</h1>
+  <p class="sub">Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con nuestro edge en el Nasdaq, frente a comprar y mantener.</p>
+
+  <div class="perfiles" id="perfiles">
+    <button class="perfil on" data-m="qqq"><b>Tranquilo</b><small>QQQ · Nasdaq 100</small></button>
+    <button class="perfil" data-m="qld"><b>Decidido</b><small>QLD · 2× diario</small></button>
+    <button class="perfil" data-m="tqqq"><b>Audaz</b><small>TQQQ · 3× diario</small></button>
+    <button class="perfil" data-m="all"><b>Los tres</b><small>comparar perfiles</small></button>
+  </div>
+
+  <div class="ctl">
+    <div class="grid">
+      <div class="field">
+        <label>Empezás en</label>
+        <div class="big" id="v-anio">1987</div>
+        <input type="range" id="r-anio" min="1987" max="2021" step="1" value="1987" aria-label="Año de inicio">
+      </div>
+      <div class="field">
+        <label>Tu edad al empezar</label>
+        <div class="big"><span id="v-edad" style="font-size:inherit;color:inherit;margin:0">25</span><span>años</span></div>
+        <input type="range" id="r-edad" min="18" max="64" step="1" value="25" aria-label="Edad al empezar">
+      </div>
+      <div class="field">
+        <label>Ponés al mes</label>
+        <div class="money"><span class="pre">$</span><input id="i-aporte" inputmode="numeric" value="500" aria-label="Aporte mensual en dólares">
+          <div class="stp"><button data-d="1" aria-label="Subir aporte">▲</button><button data-d="-1" aria-label="Bajar aporte">▼</button></div></div>
+      </div>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip" data-y="1987">Crash del 87</button>
+      <button class="chip" data-y="1999">Burbuja punto com</button>
+      <button class="chip" data-y="2007">Crisis 2008</button>
+      <button class="chip" data-y="2010">Década dorada</button>
+      <button class="chip" data-y="2020">Pandemia</button>
+      <button class="chip az" data-y="az">Año al azar</button>
+    </div>
+  </div>
+
+  <div class="viaje">
+    <div class="live">
+      <div class="edad"><span id="l-edad">25 años</span><small id="l-fecha">ene 1987</small></div>
+      <div class="pill" id="pill"><i></i><span id="pill-t">Adentro del mercado</span></div>
+    </div>
+    <div class="leg" id="leg"></div>
+    <div class="chart"><canvas id="cv"></canvas></div>
+    <div class="under">
+      <div class="btns"><button class="btn" id="b-rep">↻ Repetir</button><button class="btn" id="b-fin">Ir al final ⏭</button></div>
+      <div class="seg" id="seg-esc"><button data-e="lin" class="on">Lineal</button><button data-e="log">Log</button></div>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <p class="nota" id="nota"></p>
+</div>
+
+<script src="data.js"></script>
+<script>
+var D=window.PAST, N=D.dates.length;
+var MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function ymd(i){ var d=D.dates[i]; return {y:Math.floor(d/10000), m:Math.floor(d/100)%100, d:d%100}; }
+var DEC=[], MON=[];
+for(var q=0;q<N;q++){ var o=ymd(q); DEC.push(o.y+(o.m-1)/12+(o.d-1)/365.25); MON.push(o.y*12+o.m); }
+var FV=0; (function(){ var f=parseInt(D.firstValid.replace(/-/g,""),10); for(var i=0;i<N;i++){ if(D.dates[i]>=f){ FV=i; break; } } })();
+var LASTYEAR=ymd(N-1).y;
+
+var MODES={
+  qqq:{ lab:"QQQ", nom:"Tranquilo", lines:[
+    {k:"eqqq", nom:"Con nosotros · QQQ", col:"#63FCAF", w:2.8},
+    {k:"qqq",  nom:"Comprar y mantener · QQQ", nomS:"Sin edge", col:"#ffffff", w:2.1},
+    {k:"spy",  nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
+  qld:{ lab:"QLD", nom:"Decidido", lines:[
+    {k:"eqld", nom:"Con nosotros · QLD", col:"#63FCAF", w:2.8},
+    {k:"qld",  nom:"Comprar y mantener · QLD", nomS:"Sin edge", col:"#ffffff", w:2.1},
+    {k:"spy",  nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
+  tqqq:{ lab:"TQQQ", nom:"Audaz", lines:[
+    {k:"etqqq", nom:"Con nosotros · TQQQ", col:"#63FCAF", w:2.8},
+    {k:"tqqq",  nom:"Comprar y mantener · TQQQ", nomS:"Sin edge", col:"#ffffff", w:2.1},
+    {k:"spy",   nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
+  all:{ lab:"", nom:"Los tres", lines:[
+    {k:"etqqq", nom:"Audaz · TQQQ", col:"#E0B07A", w:2.6},
+    {k:"eqld",  nom:"Decidido · QLD", col:"#7386ff", w:2.6},
+    {k:"eqqq",  nom:"Tranquilo · QQQ", col:"#63FCAF", w:2.6},
+    {k:"spy",   nom:"S&P 500 · SPY", col:"#8b94a0", w:1.8} ] }
+};
+var ALLKEYS=["spy","qqq","qld","tqqq","eqqq","eqld","etqqq"];
+
+// ---- estado
+var mode="qqq", anio=1987, edad=25, aporte=500, escala="lin";
+var S=0, E=0, PATH={}, INV=[], DD={}, CASHPCT=0;
+
+function build(){
+  // inicio: primera semana del año elegido (y con señal válida)
+  S=FV; for(var i=FV;i<N;i++){ if(ymd(i).y>=anio){ S=i; break; } }
+  // fin: los 65 años o el último dato
+  var tFin=DEC[S]+(65-edad);
+  E=N-1; for(var j=S;j<N;j++){ if(DEC[j]>=tFin){ E=j; break; } }
+  if(E<S+8) E=Math.min(N-1,S+8);
+  PATH={}; INV=[];
+  var inv=0;
+  for(var j2=S;j2<=E;j2++){ if(j2===S || MON[j2]!==MON[j2-1]) inv+=aporte; INV.push(inv); }
+  ALLKEYS.forEach(function(k){
+    var L=D[k], p=[], v=0;
+    for(var j3=S;j3<=E;j3++){
+      if(j3>S) v=v*L[j3]/L[j3-1];
+      if(j3===S || MON[j3]!==MON[j3-1]) v+=aporte;
+      p.push(v);
+    }
+    PATH[k]=p;
+    var mx=-1, dd=0; for(var j4=S;j4<=E;j4++){ if(L[j4]>mx) mx=L[j4]; var x=L[j4]/mx-1; if(x<dd) dd=x; }
+    DD[k]=dd;
+  });
+  var sum=0; for(var j5=S;j5<=E;j5++) sum+=D.pos[j5]; CASHPCT=1-sum/(E-S+1);
+}
+
+// ---- formato
+function fmtM(v){
+  if(v<0) v=0;
+  if(v<1000) return "$"+Math.round(v);
+  if(v<9950) return "$"+(v/1000).toFixed(1).replace(".",",")+"k";
+  if(v<999500) return "$"+Math.round(v/1000)+"k";
+  if(v<9995000) return "$"+(v/1e6).toFixed(2).replace(".",",")+"M";
+  if(v<99950000) return "$"+(v/1e6).toFixed(1).replace(".",",")+"M";
+  return "$"+Math.round(v/1e6)+"M";
+}
+function fmtX(v,inv){ if(inv<=0) return ""; var x=v/inv; return "×"+(x<10?x.toFixed(1).replace(".",","):Math.round(x)); }
+function fmtPct(v){ return Math.round(v*100)+"%"; }
+function fmtAporte(v){ return v.toLocaleString("en-US"); }
+function niceStep(raw){ var p=Math.pow(10,Math.floor(Math.log10(raw))), m=raw/p; if(m<=1) return p; if(m<=2) return 2*p; if(m<=2.5) return 2.5*p; if(m<=5) return 5*p; return 10*p; }
+
+// ---- canvas
+var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
+var W=0,H=0,DPR=1;
+function resize(){
+  var w=cv.parentNode.clientWidth;
+  var h=Math.max(320, Math.min(540, Math.round(w*0.6)));
+  DPR=Math.max(1,Math.min(3,window.devicePixelRatio||1));
+  cv.width=Math.round(w*DPR); cv.height=Math.round(h*DPR); cv.style.height=h+"px"; W=w; H=h;
+}
+window.addEventListener("resize",function(){ resize(); draw(prog); });
+
+var DUR=10000, prog=0, t_start=null, raf=null;
+function ease(p){ return p*p*(3-2*p); }
+
+function valAt(k,f){ var p=PATH[k], i=Math.floor(f), fr=f-i; if(i>=p.length-1) return p[p.length-1]; return p[i]+(p[i+1]-p[i])*fr; }
+function invAt(f){ var i=Math.floor(f), fr=f-i; if(i>=INV.length-1) return INV[INV.length-1]; return INV[i]+(INV[i+1]-INV[i])*fr; }
+
+function draw(p){
+  prog=p;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  ctx.textBaseline="middle";
+  var small=W<560;
+  var mL=small?46:64, mR=small?104:150, mT=16, strip=12, mB=30+strip+8;
+  var pw=W-mL-mR, ph=H-mT-mB;
+  var lines=MODES[mode].lines;
+  var n=E-S, f=p*n, iI=Math.floor(f);
+  var tCur=DEC[S]+(DEC[E]-DEC[S])*p;
+  var xMax=Math.max(tCur, DEC[S]+1.5);
+  var T0=DEC[S];
+
+  // tope: máximo visto hasta ahora (monótono → zoom out)
+  var yTop=aporte*6, yMin=aporte*0.5;
+  for(var j=0;j<=Math.min(iI,n);j++){ for(var l=0;l<lines.length;l++){ var v=PATH[lines[l].k][j]; if(v>yTop) yTop=v; } }
+  var vNow=lines.map(function(L){ return valAt(L.k,f); });
+  yTop=Math.max.apply(null,[yTop].concat(vNow))*1.14;
+  var invNow=invAt(f);
+
+  function X(t){ return mL+(t-T0)/(xMax-T0)*pw; }
+  var Y;
+  if(escala==="log"){
+    var lo=Math.log(yMin), hi=Math.log(yTop);
+    Y=function(v){ return mT+ph-(Math.log(Math.max(v,yMin))-lo)/(hi-lo)*ph; };
+  }else{
+    Y=function(v){ return mT+ph-v/yTop*ph; };
+  }
+
+  // grilla
+  ctx.font=(small?"11px":"12.5px")+" 'Bai Jamjuree'";
+  ctx.fillStyle="#8b94a0"; ctx.textAlign="right";
+  ctx.strokeStyle="rgba(255,255,255,0.07)"; ctx.lineWidth=1;
+  if(escala==="log"){
+    var e0=Math.floor(Math.log10(yMin)), e1=Math.ceil(Math.log10(yTop));
+    for(var e=e0;e<=e1;e++){ [1,2,5].forEach(function(m){ var g=m*Math.pow(10,e); if(g<yMin||g>yTop) return;
+      ctx.beginPath(); ctx.moveTo(mL,Y(g)); ctx.lineTo(mL+pw,Y(g)); ctx.stroke(); ctx.fillText(fmtM(g), mL-8, Y(g)); }); }
+  }else{
+    var step=niceStep(yTop/5.2);
+    for(var g2=0; g2<=yTop; g2+=step){ ctx.beginPath(); ctx.moveTo(mL,Y(g2)); ctx.lineTo(mL+pw,Y(g2)); ctx.stroke(); ctx.fillText(g2===0?"$0":fmtM(g2), mL-8, Y(g2)); }
+  }
+
+  // eje x: años
+  var span=xMax-T0, stepsY=[1,2,5,10], sy=10;
+  for(var k=0;k<stepsY.length;k++){ if(span/stepsY[k]<=(small?5.5:8)){ sy=stepsY[k]; break; } }
+  ctx.textAlign="center"; ctx.fillStyle="#8b94a0";
+  var y0=Math.ceil(T0); if(sy>1) y0=Math.ceil(T0/sy)*sy;
+  for(var yr=y0; yr<=xMax; yr+=sy){ ctx.fillText(String(yr), X(yr), H-mB+strip+8+12); }
+
+  // franja: adentro (menta) / en efectivo (ámbar)
+  var sy0=mT+ph+4;
+  for(var j6=0;j6<=Math.min(iI,n);j6++){
+    var i0=S+j6, x0=X(DEC[i0]), x1=X(j6<n?DEC[i0+1]:DEC[i0]+0.02);
+    if(j6===iI) x1=X(tCur);
+    var inM=D.pos[i0]>=0.5;
+    ctx.fillStyle=inM?"rgba(99,252,175,0.55)":"rgba(224,176,122,0.85)";
+    ctx.fillRect(x0, sy0, Math.max(0.6,x1-x0+0.6), strip);
+  }
+
+  // líneas (de atrás hacia adelante)
+  for(var li=lines.length-1;li>=0;li--){
+    var L=lines[li], P=PATH[L.k];
+    ctx.strokeStyle=L.col; ctx.lineWidth=L.w; ctx.lineJoin="round"; ctx.lineCap="round";
+    ctx.beginPath();
+    for(var j7=0;j7<=Math.min(iI,n);j7++){ var x=X(DEC[S+j7]), y=Y(P[j7]); j7?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+    ctx.lineTo(X(tCur), Y(vNow[li]));
+    ctx.stroke();
+    ctx.fillStyle=L.col; ctx.beginPath(); ctx.arc(X(tCur), Y(vNow[li]), 3.6, 0, Math.PI*2); ctx.fill();
+  }
+
+  // etiquetas en la punta
+  var labs=lines.map(function(L,li){ return {nom:(small&&L.nomS)?L.nomS:L.nom.split(" · ")[0], col:L.col, val:fmtM(vNow[li]), x:fmtX(vNow[li],invNow), y:Y(vNow[li])}; })
+    .sort(function(a,b){ return a.y-b.y; });
+  var gap=small?44:52;
+  for(var i2=1;i2<labs.length;i2++){ if(labs[i2].y-labs[i2-1].y<gap) labs[i2].y=labs[i2-1].y+gap; }
+  var over=labs[labs.length-1].y-(mT+ph-8);
+  if(over>0){ for(var i3=labs.length-1;i3>=0;i3--){ labs[i3].y-=over; if(i3>0) over=Math.max(0, labs[i3-1].y-(labs[i3].y-gap)); } }
+  var lx=X(tCur)+10; ctx.textAlign="left";
+  labs.forEach(function(Lb){
+    var yy=Math.max(mT+10, Lb.y-12);
+    ctx.fillStyle=Lb.col; ctx.font="600 "+(small?"11.5px":"13.5px")+" 'Bai Jamjuree'"; ctx.fillText(Lb.nom, lx, yy);
+    ctx.font="700 "+(small?"14px":"17px")+" 'Bai Jamjuree'"; ctx.fillText(Lb.val, lx, yy+(small?15:19));
+    if(Lb.x){ ctx.fillStyle="#8b94a0"; ctx.font="500 "+(small?"11px":"12px")+" 'Bai Jamjuree'"; ctx.fillText(Lb.x+" lo aportado", lx, yy+(small?29:36)); }
+  });
+
+  live(f, tCur, vNow, invNow);
+}
+
+// ---- texto vivo
+var elEdad=document.getElementById("l-edad"), elFecha=document.getElementById("l-fecha"), pill=document.getElementById("pill"), pillT=document.getElementById("pill-t");
+function live(f, tCur, vNow, invNow){
+  var i=Math.min(E,S+Math.floor(f)); var o=ymd(i);
+  var age=Math.floor(edad+(DEC[i]-DEC[S])+1e-6);
+  elEdad.textContent=age+" años"; elFecha.textContent=MESES[o.m-1]+" "+o.y;
+  var inM=D.pos[i]>=0.5;
+  pill.className="pill"+(inM?"":" out"); pillT.textContent=inM?"Adentro del mercado":"Afuera, en efectivo";
+  kpis(vNow, invNow, f>=E-S-1e-9);
+}
+
+var kp=document.getElementById("kpis");
+function kpis(vNow, invNow, done){
+  var lines=MODES[mode].lines, h="";
+  if(mode!=="all"){
+    var lab=MODES[mode].lab;
+    h+='<div class="kpi hi"><div class="k">Con nosotros · '+lab+'</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Comprar y mantener · '+lab+'</div><div class="v">'+fmtM(vNow[1])+'</div><div class="s">'+fmtX(vNow[1],invNow)+' lo que pusiste</div></div>';
+    h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
+    h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD[lines[0].k])+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD[lines[1].k])+'</span></div><div class="s">con nosotros vs comprar y mantener</div></div>';
+    h+='<div class="kpi"><div class="k">Tiempo en efectivo</div><div class="v amb">'+fmtPct(CASHPCT)+'</div><div class="s">del viaje, fuera del mercado</div></div>';
+  }else{
+    h+='<div class="kpi"><div class="k">Audaz · TQQQ</div><div class="v amb">'+fmtM(vNow[0])+'</div><div class="s">peor caída '+fmtPct(DD.etqqq)+'</div></div>';
+    h+='<div class="kpi"><div class="k">Decidido · QLD</div><div class="v per">'+fmtM(vNow[1])+'</div><div class="s">peor caída '+fmtPct(DD.eqld)+'</div></div>';
+    h+='<div class="kpi hi"><div class="k">Tranquilo · QQQ</div><div class="v">'+fmtM(vNow[2])+'</div><div class="s">peor caída '+fmtPct(DD.eqqq)+'</div></div>';
+    h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v" style="color:#8b94a0">'+fmtM(vNow[3])+'</div><div class="s">peor caída '+fmtPct(DD.spy)+'</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Tiempo en efectivo</div><div class="v amb">'+fmtPct(CASHPCT)+'</div><div class="s">del viaje, fuera del mercado</div></div>';
+  }
+  kp.innerHTML=h;
+}
+
+function legend(){
+  var h=MODES[mode].lines.map(function(L){ return '<span><i style="background:'+L.col+'"></i>'+L.nom+'</span>'; }).join("");
+  h+='<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
+  document.getElementById("leg").innerHTML=h;
+}
+
+// ---- animación
+function tick(ts){ if(t_start===null) t_start=ts; var p=Math.min(1,(ts-t_start)/DUR); draw(ease(p)); if(p<1) raf=requestAnimationFrame(tick); else raf=null; }
+function play(){ if(raf) cancelAnimationFrame(raf); var yrs=DEC[E]-DEC[S]; DUR=Math.max(5500, Math.min(15000, yrs*420)); t_start=null; raf=requestAnimationFrame(tick); }
+function finish(){ if(raf) cancelAnimationFrame(raf); raf=null; draw(1); }
+function rebuild(){ build(); legend(); nota(); play(); }
+
+// ---- controles
+var rA=document.getElementById("r-anio"), rE=document.getElementById("r-edad"), iA=document.getElementById("i-aporte");
+rA.addEventListener("input",function(){ document.getElementById("v-anio").textContent=rA.value; });
+rA.addEventListener("change",function(){ anio=parseInt(rA.value,10); rebuild(); });
+rE.addEventListener("input",function(){ document.getElementById("v-edad").textContent=rE.value; });
+rE.addEventListener("change",function(){ edad=parseInt(rE.value,10); rebuild(); });
+function setAporte(v){ aporte=Math.max(50, Math.min(100000, Math.round(v/50)*50)); iA.value=fmtAporte(aporte); rebuild(); }
+iA.addEventListener("change",function(){ setAporte(parseFloat(iA.value.replace(/[^0-9.]/g,""))||500); });
+iA.addEventListener("keydown",function(e){ if(e.key==="Enter") iA.blur(); });
+document.querySelectorAll(".stp button").forEach(function(b){ b.addEventListener("click",function(){ var d=parseInt(b.dataset.d,10), st=aporte>=2000?500:aporte>=500?100:50; setAporte(aporte+d*st); }); });
+document.getElementById("perfiles").addEventListener("click",function(e){ var b=e.target.closest(".perfil"); if(!b) return;
+  document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on",x===b); }); mode=b.dataset.m; rebuild(); });
+document.getElementById("chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return;
+  var y=b.dataset.y; if(y==="az"){ var lo=1987, hi=LASTYEAR-8; y=lo+Math.floor(Math.random()*(hi-lo+1)); }
+  anio=parseInt(y,10); rA.value=anio; document.getElementById("v-anio").textContent=anio; rebuild(); });
+document.getElementById("seg-esc").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#seg-esc button").forEach(function(x){ x.classList.toggle("on",x===b); }); escala=b.dataset.e; draw(prog); });
+document.getElementById("b-rep").addEventListener("click",play);
+document.getElementById("b-fin").addEventListener("click",finish);
+cv.addEventListener("click",function(){ if(raf) finish(); else play(); });
+
+function nota(){
+  var fin=ymd(E), ini=ymd(S);
+  document.getElementById("nota").innerHTML=
+    'Simulación con datos históricos de '+MESES[ini.m-1]+' '+ini.y+' a '+MESES[fin.m-1]+' '+fin.y+(E===N-1?' (último dato)':' (tus 65 años)')+', aportes al inicio de cada mes, en dólares corrientes y antes de impuestos. '+
+    '<b>Con nosotros</b> aplica la regla de tendencia de <a href="/edge/">investorcr.com/edge</a> sobre el Nasdaq 100 (media móvil de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%): mientras la señal está adentro se tiene el ETF; cuando sale, se pasa a letras del Tesoro a 3 meses. Incluye nuestro honorario del 1% anual sobre lo invertido, 0,05% por cada cambio y un día de rezago en la ejecución. '+
+    'Nasdaq 100: índice hasta marzo 1999 y QQQ con dividendos desde entonces. S&P 500: índice más 3,4% de dividendos hasta enero 1993 y SPY con dividendos desde entonces. '+
+    'QLD y TQQQ: ETF real desde su listado (junio 2006 y febrero 2010); antes, simulación con rebalanceo diario, financiamiento a la tasa del T-bill + 0,6% y 0,95% de gasto. '+
+    'Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
+}
+
+// ---- arranque
+build(); legend(); nota(); resize();
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setTimeout(play,250); }); } else { setTimeout(play,400); }
+</script>
+</body>
+</html>
