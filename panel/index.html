@@ -1572,7 +1572,8 @@ async function buscarPrecio(c){
             hoy:{ c:(pxDe(c,sym).px||100), t:new Date(Date.now()-864e5).toISOString() },
             prev:null,
             ultimo:{ p:(pxDe(c,sym).px||100)*1.004, t:new Date().toISOString() },
-            ath:{ h:Math.round((pxDe(c,sym).px||100)*1.28*100)/100, t:"2026-07-01" } }
+            ath:{ h:Math.round((pxDe(c,sym).px||100)*1.28*100)/100, t:"2026-07-01" },
+            activo:demoActivo(sym, esC) }
         : await llamar("precio",{ alias:c.alias, sym:sym, cripto:esC });
       d._t=Date.now(); PRECIO_CACHE[k]=d;
       var crudo={}; Object.keys(d).forEach(function(k2){ if(k2!=="_t") crudo[k2]=d[k2]; });
@@ -1597,6 +1598,7 @@ async function buscarPrecio(c){
       }
     }
     if(d.ath && d.ath.h) txt+=" · máx. hist.: $"+(+d.ath.h).toLocaleString("en-US");
+    if(d.activo && d.activo.nombre) txt="<b>"+escapa(d.activo.nombre)+"</b>"+(d.activo.bolsa? " ("+escapa(d.activo.bolsa)+")":"")+" · "+txt;
     ponRefInfo(txt);
     if(ref>0){
       B.ref=ref;
@@ -1604,6 +1606,51 @@ async function buscarPrecio(c){
       if(rf){ rf.value=ref; rf.dispatchEvent(new Event("input")); }   // re-pinta el resumen
     }
   }catch(e){ ponRefInfo("sin precio: "+(e.message||e), true); }
+}
+/* descripción del activo (nombre oficial, bolsa, clase) para cerciorarse de QUÉ se opera.
+   Sale de la misma function 'precio' (Alpaca /v2/assets); si aún no se consultó el precio,
+   se pide sola con solo_activo:true. */
+var ACTIVO_CACHE={};
+var DEMO_NOMBRES={ TQQQ:["ProShares UltraPro QQQ","NASDAQ"], QLD:["ProShares Ultra QQQ","NYSEARCA"], QQQ:["Invesco QQQ Trust, Series 1","NASDAQ"],
+  SPY:["SPDR S&P 500 ETF Trust","NYSEARCA"], VOO:["Vanguard S&P 500 ETF","NYSEARCA"], "BTC/USD":["Bitcoin / USD","CRYPTO"], "ETH/USD":["Ethereum / USD","CRYPTO"] };
+function demoActivo(sym, esC){
+  var d=DEMO_NOMBRES[sym];
+  return d? { nombre:d[0], bolsa:d[1], clase:(esC?"crypto":"us_equity"), operable:true, fraccionable:true, estado:"active" }
+          : { nombre:null, error:"demo: símbolo desconocido" };
+}
+async function descActivo(c, sym, esC){
+  if(!esC && sym==="SJC") return { nombre:"San José Capital", bolsa:null, clase:"renta fija", fuera:true };
+  var k=(esC?"cripto":"stock")+"|"+sym;
+  var d=PRECIO_CACHE[k];
+  if(d && d.activo) return d.activo;
+  if(ACTIVO_CACHE[k]) return ACTIVO_CACHE[k];
+  var a;
+  if(location.hash==="#demo") a=demoActivo(sym, esC);
+  else {
+    apiLog("req", "function 'precio' (solo_activo) → Alpaca /v2/assets · "+sym, { alias:c.alias, sym:sym, cripto:esC, solo_activo:true });
+    var j=await llamar("precio",{ alias:c.alias, sym:sym, cripto:esC, solo_activo:true });
+    apiLog("res", "respuesta cruda de 'precio' (solo_activo) · "+sym, j);
+    a=j.activo||{ nombre:null };
+  }
+  if(a && a.nombre) ACTIVO_CACHE[k]=a;
+  return a;
+}
+function claseTxt(a, esC){
+  if(a && a.fuera) return a.clase;
+  if(esC || (a && a.clase==="crypto")) return "cripto";
+  return "acciones / ETF";
+}
+function activoHtml(a, esC){
+  if(!a || !a.nombre){
+    return '<span style="color:var(--ambar)">⚠ sin descripción: Alpaca no devolvió el nombre de este símbolo'
+      +(a&&a.error? ' <span style="color:var(--gris-sec)">('+escapa(a.error)+')</span>':'')+'. Revisá bien el símbolo.</span>';
+  }
+  var extra=[];
+  if(a.bolsa) extra.push(escapa(a.bolsa));
+  extra.push(claseTxt(a, esC));
+  if(a.fuera) extra.push("fuera de Alpaca");
+  else if(a.operable===false) extra.push('<span style="color:var(--rojo)">NO operable</span>');
+  return '<span style="color:var(--crema)">'+escapa(a.nombre)+'</span> <span style="color:var(--gris-sec)">· '+extra.join(" · ")+'</span>';
 }
 function tifTxt(v, esC){ var l=TIFS[esC?"cripto":"stock"].filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
 function tipoTxt(v){ var l=TIPOS_ORD.filter(function(t){return t[0]===v;})[0]; return l? l[1]:v; }
@@ -1614,7 +1661,7 @@ function abrirConfirmOrden(c, p){
   $("mo-cuerpo").innerHTML=
     '<table class="mo-tbl">'
     +'<tr><td>Cuenta</td><td>'+nomDe(c)+' <span style="color:var(--gris-sec)">('+c.alias+')</span></td></tr>'
-    +'<tr><td>Activo</td><td><b>'+escapa(B.sym)+'</b> · '+(esC?"cripto":"acciones / ETF")+'</td></tr>'
+    +'<tr><td>Activo</td><td><b>'+escapa(B.sym)+'</b><div id="mo-act" style="margin-top:3px;font-size:12.5px;line-height:1.35;color:var(--gris-sec)">buscando descripción…</div></td></tr>'
     +'<tr><td>Lado</td><td class="'+(B.lado==="buy"?"up":"down")+'"><b>'+(B.lado==="buy"?"COMPRAR":"VENDER")+'</b></td></tr>'
     +'<tr><td>'+(B.modo==="usd"?"Monto":"Cantidad")+'</td><td class="num"><b>'+(B.modo==="usd"?fmt(r.monto):(numB(B.qty)).toLocaleString("en-US"))+'</b>'
       +(r.qty&&B.modo==="usd"?' <span style="color:var(--gris-sec)">≈ '+(Math.round(r.qty*10000)/10000)+' unidades</span>':'')
@@ -1635,6 +1682,13 @@ function abrirConfirmOrden(c, p){
     '<button class="ok" id="mo-enviar" disabled>'+(esVivo()? (BOLETA._reemplaza? "Reemplazar EN VIVO":"Enviar EN VIVO") : "Enviar orden")+'</button>'
     +'<button class="no" id="mo-cerrar">Cancelar</button>';
   $("modal-orden").classList.add("on");
+  (function(sym){
+    descActivo(c, sym, esC).then(function(a){
+      var el=$("mo-act"); if(el && BOLETA && BOLETA.sym===sym) el.innerHTML=activoHtml(a, esC);
+    }).catch(function(e){
+      var el=$("mo-act"); if(el) el.innerHTML=activoHtml({ nombre:null, error:String(e.message||e) }, esC);
+    });
+  })(B.sym);
   var pay=payloadOrden(c, r);
   apiLog("req", "PREPARADA (Revisar orden) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias
     +" · headers: {APCA-API-KEY-ID: ****cliente, APCA-API-SECRET-KEY: ****} (viven cifrados en el servidor)", pay.body);
