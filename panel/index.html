@@ -1120,6 +1120,10 @@ function renderAccion(){
       var o=p.ordenes[+b.getAttribute("data-bol")];
       BOLETA=boletaDefault(c,p);
       BOLETA.sym=o.sym; BOLETA.lado=o.lado; BOLETA.monto=o.monto;
+      if(o.lado==="sell"){   // las ventas van por cantidad de acciones, nunca por monto
+        var poV=pxDe(c, o.sym);
+        if(poV.q>0){ BOLETA.modo="qty"; BOLETA.ref=poV.px||0; BOLETA.qty=String(qtyVender(poV, o.monto, poV.px)); }
+      }
       renderBoleta(c,p);
       var bb=$("boleta-box"); if(bb) bb.scrollIntoView({behavior:"smooth", block:"center"});
     });
@@ -1162,7 +1166,15 @@ function payloadOrden(c, r){
   var nota=null;
   if(B.modo==="usd"){
     var notionalOk= esC || (B.tipo==="market" && B.tif==="day" && !B.ext);
-    if(notionalOk){ body.notional=String(Math.round(r.monto*100)/100); }
+    if(B.lado==="sell" && !esC && r.pos && r.pos.q>0){
+      // nunca se vende por notional: el precio de referencia puede estar atrasado y Alpaca
+      // rebota la orden por cantidad insuficiente. Se manda la cantidad de acciones.
+      var qv=qtyVender(r.pos, r.monto, r.precio||r.pos.px);
+      body.qty=String(qv);
+      nota="Las ventas se mandan por cantidad, no por monto: $"+Math.round(r.monto).toLocaleString("en-US")
+        +" se convierte a "+qv+" unidades"+(qv===+r.pos.q? " (toda la posición)":"")+".";
+    }
+    else if(notionalOk){ body.notional=String(Math.round(r.monto*100)/100); }
     else {
       var precio=r.precio||0, q= precio>0? Math.floor(r.monto/precio):0;
       body.qty=String(q);
@@ -1415,6 +1427,16 @@ function boletaCalc(c, p){
   out.ok=!out.errores.length;
   return out;
 }
+// Vender SIEMPRE por cantidad de acciones, no por monto: si el precio de referencia se queda
+// atras, $monto/precio da mas unidades de las que hay y Alpaca rebota la orden
+// (403 insufficient qty available). Si el monto cubre practicamente toda la posicion se manda
+// la cantidad exacta que hay; si no, se redondea hacia abajo.
+function qtyVender(pos, monto, precio){
+  var q = precio>0? monto/precio : 0;
+  if(!(pos && pos.q>0)) return Math.max(0, Math.floor(q*10000)/10000);
+  if(!(q>0) || q>=pos.q*0.995) return +pos.q;      // vender todo: la cantidad exacta de la posicion
+  return Math.floor(q*10000)/10000;
+}
 var TIPOS_ORD=[["market","Mercado"],["limit","Límite"],["stop","Stop"],["stop_limit","Stop límite"],["trailing","Trailing stop"]];
 var TIFS={ stock:[["day","DAY · hoy"],["gtc","GTC · hasta cancelar"],["opg","OPG · en la apertura"],["cls","CLS · en el cierre"],["ioc","IOC · inmediato o cancela"],["fok","FOK · todo o nada"]],
   cripto:[["gtc","GTC · hasta cancelar"],["ioc","IOC · inmediato o cancela"]] };
@@ -1496,8 +1518,8 @@ function renderBoleta(c, p){
     b.addEventListener("click", function(){
       var sym=b.getAttribute("data-pos"), po=pxDe(c, sym);
       B.sym=sym; B.ref=po.px||0;
-      if(B.modo==="usd") B.monto=Math.round(po.v);
-      else B.qty=String(po.q);
+      // por cantidad exacta: el monto estimado puede pasarse de lo que hay y Alpaca la rechaza
+      B.modo="qty"; B.qty=String(po.q); B.monto=Math.round(po.v);
       reState();
     });
   });
