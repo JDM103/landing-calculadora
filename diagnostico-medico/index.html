@@ -443,6 +443,7 @@
     if(!r.cumpleIvm) d += "<br>Con "+r.cuotas+" cuotas a los 65 no llegás al mínimo del IVM: por eso sale en cero. Revisá los años cotizando.";
     else if(r.hoy > 4000000) d += "<br>Cotizás sobre "+col(r.hoy)+", pero el tope del IVM manda: la pensión máxima sin postergar es ₡1,765,859.";
     if(S.etapa!=="privado" && r.fre>0) d += "<br>El FRE sale de "+r.aniosCaja+" años en la Caja ("+frePct(r.aniosCaja)+"% del ordinario). Si renunciás a la Caja, eso se pierde casi todo.";
+    d += "<br>Todo en colones de hoy, y supone que seguís cotizando sobre "+col(r.hoy)+(S.ext>0 ? ", dispos incluidas," : "")+" hasta los 65. Si bajás guardias antes, el ROP baja.";
     byId("r1-desglose").innerHTML = d;
     byId("r1-pct").textContent = Math.round(r.pct)+"%";
     var nota = S.ext>0 ? "Lo naranja, "+col(S.ext)+" en dispos y guardias, es el "+Math.round(S.ext/r.hoy*100)+"% de tu ingreso y desaparece el día que las dejés. La pensión no lo repone." : "Y eso contando que sigás cotizando sin parar hasta los 65.";
