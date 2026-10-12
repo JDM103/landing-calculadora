@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto te va a pagar la Caja? · Diagnóstico del médico · Empowered Investor</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="En 90 segundos: tu pensión real de la Caja (IVM con tope, FRE y ROP) contra lo que ganás hoy con guardias y dispos, y cuántas dispos al mes cierran el hueco.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿Cuánto te va a pagar la Caja el día que dejés las guardias?">
+<meta property="og:description" content="Diagnóstico de 90 segundos para médicos de la CCSS: tu pensión real contra tu ingreso de hoy, en dispos.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Píxel de Meta (el ID vive en /js/pixel.js) y Clarity, como en /medicos -->
+<script defer src="/js/pixel.js"></script>
+<script defer src="/js/clarity.js"></script>
+<!-- Motor de pensión IVM/ROP compartido con wizard.html -->
+<script src="/js/calc.js"></script>
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --rojo:#E0525A; --naranja:#F2A54A; }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; }
+  .wrap{ max-width:560px; margin:0 auto; padding:18px 18px 70px; }
+  a.logo{ display:block; text-align:center; margin-bottom:6px; } a.logo img{ height:64px; }
+  .chip{ display:inline-block; font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase;
+    color:var(--menta); background:rgba(99,252,175,.1); border:1px solid rgba(99,252,175,.35); border-radius:999px; padding:5px 14px; }
+  h1{ font-size:clamp(26px,7vw,34px); font-weight:800; color:var(--crema); line-height:1.12; letter-spacing:-.5px; margin:14px 0 10px; text-wrap:balance; }
+  h2{ font-size:clamp(21px,5.6vw,26px); font-weight:800; color:var(--crema); line-height:1.2; letter-spacing:-.3px; margin:4px 0 6px; text-wrap:balance; }
+  h3{ font-size:17px; font-weight:800; color:var(--crema); margin:0 0 6px; }
+  .sub{ font-size:15.5px; color:var(--gris-sec); margin:0 0 18px; } .sub b{ color:var(--crema); }
+  .nota{ font-size:12px; color:var(--gris-sec); margin-top:16px; line-height:1.5; }
+  .btn{ display:block; width:100%; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer;
+    border-radius:999px; font-family:inherit; font-size:17px; font-weight:800; padding:16px 20px; transition:transform .12s ease; text-decoration:none; }
+  .btn:active{ transform:scale(.98); } .btn:disabled{ opacity:.6; cursor:default; }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; } .btn.ghost:hover{ border-color:var(--menta); }
+  .btn.peri{ background:var(--peri); color:#fff; }
+  .btn + .btn{ margin-top:10px; }
+  .btn:focus-visible, .opcion:focus-visible, input:focus-visible, .rango:focus-visible, .esp:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
+  .prog{ display:none; margin:4px 0 20px; }
+  .prog .ptxt{ font-size:12px; font-weight:700; color:var(--gris-sec); letter-spacing:.4px; text-transform:uppercase; margin-bottom:7px; display:flex; justify-content:space-between; }
+  .prog .pbar{ height:6px; background:var(--card2); border-radius:999px; overflow:hidden; }
+  .prog .pbar i{ display:block; height:100%; width:0; background:linear-gradient(90deg,#2f7d5a,var(--menta)); border-radius:999px; transition:width .3s ease; }
+  .pantalla{ display:none; animation:entra .35s ease both; } .pantalla.activa{ display:block; }
+  @keyframes entra{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion: reduce){ .pantalla{ animation:none; } }
+  .rango{ width:100%; margin:22px 0 6px; accent-color:var(--menta); height:34px; }
+  .extremos{ display:flex; justify-content:space-between; gap:14px; font-size:13.5px; color:var(--gris-sec); font-weight:600; }
+  .valorlbl{ text-align:center; margin:14px 0 6px; }
+  .valorlbl b{ display:inline-block; font-size:21px; color:var(--crema); background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:9px 22px; min-width:220px; font-variant-numeric:tabular-nums; }
+  .valorlbl small{ display:block; color:var(--gris-sec); font-size:12.5px; margin-top:6px; }
+  .opciones{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .opcion{ width:100%; text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer;
+    border-radius:14px; font-family:inherit; font-size:16px; font-weight:600; padding:15px 18px; transition:border-color .12s, background .12s; }
+  .opcion small{ display:block; font-weight:500; color:var(--gris-sec); font-size:13px; margin-top:2px; }
+  .opcion:hover{ border-color:var(--menta); } .opcion.sel{ background:rgba(99,252,175,.12); border-color:var(--menta); }
+  .esps{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .esp{ background:var(--card); border:1px solid var(--bd); color:var(--gris); border-radius:999px; font-family:inherit; font-size:14px; font-weight:600; padding:9px 14px; cursor:pointer; }
+  .esp:hover{ border-color:var(--menta); } .esp.on{ background:rgba(99,252,175,.14); border-color:var(--menta); color:var(--crema); }
+  input[type=text], input[type=email], input[type=tel]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:12px; color:var(--crema);
+    font-family:inherit; font-size:17px; padding:14px 16px; }
+  input:focus{ outline:none; border-color:var(--menta); }
+  label.lbl{ display:block; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; margin:14px 0 6px; }
+  .fila2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } @media(max-width:420px){ .fila2{ grid-template-columns:1fr; } }
+  .wa{ display:flex; align-items:center; gap:8px; } .wa span{ color:var(--gris-sec); font-weight:700; white-space:nowrap; }
+  .consent{ display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--gris-sec); margin:16px 0 8px; }
+  .consent input{ margin-top:3px; accent-color:var(--menta); width:18px; height:18px; flex:none; }
+  .error{ display:none; color:var(--rojo); font-size:13.5px; font-weight:600; margin:8px 0 0; }
+  .micro{ font-size:12px; color:var(--gris-sec); text-align:center; margin-top:12px; }
+  .hidden{ display:none !important; }
+  .dos{ display:flex; gap:10px; margin-top:18px; } .dos .btn{ margin:0; }
+  /* resultado */
+  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:16px 18px; margin:12px 0; }
+  .card.alerta{ border-color:rgba(242,165,74,.6); }
+  .card.verde{ border-color:rgba(99,252,175,.5); }
+  .barras{ margin:14px 0 4px; }
+  .barra{ margin:12px 0; }
+  .barra .et{ display:flex; justify-content:space-between; font-size:13.5px; color:var(--gris-sec); margin-bottom:6px; font-weight:600; }
+  .barra .et b{ color:var(--crema); font-variant-numeric:tabular-nums; }
+  .barra .pista{ height:16px; background:var(--card2); border-radius:999px; overflow:hidden; display:flex; }
+  .barra .pista i{ display:block; height:100%; }
+  .i-ord{ background:var(--peri); } .i-ext{ background:var(--naranja); } .i-pen{ background:var(--menta); }
+  .leyenda{ display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--gris-sec); margin-top:8px; }
+  .leyenda i{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
+  .big{ font-size:clamp(34px,10vw,48px); font-weight:800; color:var(--crema); line-height:1; letter-spacing:-1px; font-variant-numeric:tabular-nums; }
+  .big.naranja{ color:var(--naranja); } .big.menta{ color:var(--menta); }
+  .lbl2{ font-size:13px; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; font-weight:700; }
+  .desglose{ font-size:13.5px; color:var(--gris-sec); line-height:1.7; margin-top:8px; }
+  .desglose b{ color:var(--crema); font-variant-numeric:tabular-nums; }
+  .tiles{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; } @media(max-width:380px){ .tiles{ grid-template-columns:1fr; } }
+  .tile{ background:var(--card2); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; }
+  .tile .n{ font-size:22px; font-weight:800; color:var(--crema); font-variant-numeric:tabular-nums; line-height:1.1; }
+  .tile .n.menta{ color:var(--menta); } .tile .n.naranja{ color:var(--naranja); }
+  .tile .l{ font-size:12px; color:var(--gris-sec); margin-top:4px; line-height:1.35; }
+  .ajuste{ margin-top:14px; }
+  .ajuste .et{ display:flex; justify-content:space-between; font-size:13.5px; color:var(--gris-sec); font-weight:600; } .ajuste .et b{ color:var(--crema); font-variant-numeric:tabular-nums; }
+  .ajuste .rango{ margin:6px 0 0; height:28px; }
+  .bloqueo{ opacity:.75; }
+  .bloqueo .lock{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--gris-sec); border:1px solid var(--bd); border-radius:999px; padding:3px 10px; margin-bottom:6px; }
+  .bloqueo p{ margin:4px 0 0; font-size:14px; color:var(--gris-sec); }
+  .slots{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
+  .slot{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; min-height:64px; padding:12px 10px; text-decoration:none;
+    background:var(--input); border:1px solid rgba(99,252,175,.55); border-radius:14px; color:var(--crema); font-weight:600; font-size:14px; line-height:1.3; }
+  .slot:hover{ background:rgba(99,252,175,.12); border-color:var(--menta); } .slot b{ font-size:18px; font-weight:700; color:var(--menta); }
+  .cal-wrap{ margin-top:12px; border-radius:14px; overflow:hidden; height:760px; min-width:280px; background:var(--tinta); position:relative; }
+  @media(max-width:649px){ .cal-wrap{ height:1020px; margin-left:-18px; margin-right:-18px; border-radius:0; } }
+  .cal-wrap iframe{ display:block; width:100%; height:100%; border:0; }
+  .link{ color:var(--menta); text-decoration:underline; cursor:pointer; background:none; border:0; font:inherit; padding:0; }
+  .enlace{ display:flex; gap:8px; margin-top:8px; } .enlace input{ font-size:13px; padding:10px 12px; color:var(--gris-sec); }
+  .enlace button{ flex:none; }
+  .footerchico{ font-size:11.5px; color:var(--gris-sec); margin-top:26px; line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+  <div class="prog" id="prog">
+    <div class="ptxt"><span id="prog-txt">Pregunta 1 de 5</span><span id="prog-seg">90 segundos</span></div>
+    <div class="pbar"><i id="prog-bar"></i></div>
+  </div>
+
+  <!-- 0 · INTRO -->
+  <section class="pantalla activa" id="p-intro">
+    <span class="chip">Diagnóstico del médico · Nivel 1 · 90 segundos</span>
+    <h1>¿Cuánto te va a pagar la Caja el día que dejés las guardias?</h1>
+    <p class="sub">Cinco respuestas y ves tu <b>pensión real</b> (IVM con tope, el fondo de retiro y el ROP) contra lo que ganás hoy con dispos. Sin correo, sin nada: el número primero.</p>
+    <button class="btn" id="btn-empezar">Verlo en 90 segundos</button>
+    <p class="nota">Hecho con las reglas vigentes del IVM (2026), la tabla del Fondo de Retiro de la Caja (reforma 2021) y el aporte del ROP. Son estimaciones, no una resolución de la Caja.</p>
+  </section>
+
+  <!-- 1 · EDAD -->
+  <section class="pantalla" id="p-1">
+    <h2>¿Cuántos años tenés?</h2>
+    <div class="valorlbl"><b id="v-edad">35 años</b></div>
+    <input class="rango" type="range" id="r-edad" min="24" max="64" value="35" aria-label="Edad">
+    <div class="extremos"><span>24</span><span>64</span></div>
+    <button class="btn" id="n-1" style="margin-top:22px">Siguiente</button>
+  </section>
+
+  <!-- 2 · ETAPA -->
+  <section class="pantalla" id="p-2">
+    <h2>¿En qué etapa estás?</h2>
+    <div class="opciones" id="opc-etapa">
+      <button class="opcion" data-v="residente">Residente<small>R1 a R6, con plaza de residencia en la Caja</small></button>
+      <button class="opcion" data-v="general">Médico general en la Caja<small>G-1, interino o en propiedad</small></button>
+      <button class="opcion" data-v="especialista">Especialista en la Caja<small>G-2 o jefatura, con o sin privado por la tarde</small></button>
+      <button class="opcion" data-v="privado">Solo privado<small>Ya no cotizo como empleado de la Caja</small></button>
+    </div>
+  </section>
+
+  <!-- 3 · ESPECIALIDAD -->
+  <section class="pantalla" id="p-3">
+    <h2>¿Cuál es tu especialidad?</h2>
+    <p class="sub">Si estás en residencia o aplicando, la que vas a tener.</p>
+    <div class="esps" id="esps"></div>
+    <input type="text" id="esp-otra" class="hidden" placeholder="¿Cuál?" style="margin-top:12px" aria-label="Otra especialidad">
+    <button class="btn" id="n-3" style="margin-top:22px" disabled>Siguiente</button>
+  </section>
+
+  <!-- 4 · SALARIO ORDINARIO + AÑOS -->
+  <section class="pantalla" id="p-4">
+    <h2 id="t-sal">¿Cuánto es tu salario ordinario de la Caja?</h2>
+    <p class="sub" id="s-sal">Lo que dice la colilla <b>antes</b> de guardias, dispos y extras. Bruto, al mes.</p>
+    <div class="valorlbl"><b id="v-sal">₡2,850,000</b></div>
+    <input class="rango" type="range" id="r-sal" min="500000" max="7000000" step="50000" value="2850000" aria-label="Salario ordinario">
+    <div class="extremos"><span>₡500 mil</span><span>₡7 millones</span></div>
+    <div class="ajuste" id="bloque-anios">
+      <div class="et"><span>Años cotizando a la Caja (internado y servicio social no cuentan)</span><b id="v-anios">8</b></div>
+      <input class="rango" type="range" id="r-anios" min="0" max="40" value="8" aria-label="Años cotizando">
+    </div>
+    <button class="btn" id="n-4" style="margin-top:22px">Siguiente</button>
+  </section>
+
+  <!-- 5 · EXTRAS -->
+  <section class="pantalla" id="p-5">
+    <h2>¿Y las dispos y guardias?</h2>
+    <p class="sub">Un mes normal. Si no hacés, dejá los dos en cero.</p>
+    <div class="ajuste">
+      <div class="et"><span>Dispos o guardias al mes</span><b id="v-ndisp">4</b></div>
+      <input class="rango" type="range" id="r-ndisp" min="0" max="14" value="4" aria-label="Dispos al mes">
+    </div>
+    <div class="ajuste">
+      <div class="et"><span>Cuánto te dejan en total, bruto</span><b id="v-ext">₡2,000,000</b></div>
+      <input class="rango" type="range" id="r-ext" min="0" max="8000000" step="100000" value="2000000" aria-label="Extras al mes">
+    </div>
+    <p class="micro" id="m-dispo">Una dispo tuya vale ₡500,000</p>
+    <button class="btn" id="n-5" style="margin-top:18px">Ver mi número</button>
+  </section>
+
+  <!-- 6 · RESULTADO LIBRE -->
+  <section class="pantalla" id="p-res1">
+    <span class="chip">Tu techo</span>
+    <h2 id="r1-titulo">La Caja te va a pagar el 27% de lo que ganás hoy</h2>
+    <p class="sub">Pensión mensual estimada a los 65, con todo lo que la Caja te da por planilla, contra tu ingreso bruto de un mes normal.</p>
+    <div class="card">
+      <div class="barras">
+        <div class="barra"><div class="et"><span>Hoy ganás</span><b id="b-hoy"></b></div><div class="pista"><i class="i-ord" id="i-ord"></i><i class="i-ext" id="i-ext"></i></div></div>
+        <div class="barra"><div class="et"><span>La Caja te pagará</span><b id="b-pen"></b></div><div class="pista"><i class="i-pen" id="i-pen"></i></div></div>
+      </div>
+      <div class="leyenda"><span><i class="i-ord"></i>salario ordinario</span><span><i class="i-ext"></i>dispos y guardias</span><span><i class="i-pen"></i>pensión</span></div>
+      <div class="desglose" id="r1-desglose"></div>
+    </div>
+    <div class="card alerta">
+      <div class="lbl2">Reemplazo real</div>
+      <div class="big naranja" id="r1-pct">27%</div>
+      <p class="desglose" id="r1-nota" style="margin-top:6px"></p>
+    </div>
+    <div class="card">
+      <h3>Lo que sigue se calcula con tu número</h3>
+      <p class="desglose">Cuánto te falta para que las dispos sean opcionales a la edad que vos elijás, cuánto es al mes, y <b>en cuántas dispos</b> se cierra. Te lo dejamos en una página tuya para que lo abrás cuando querás.</p>
+      <form id="lead" novalidate>
+        <div class="fila2">
+          <div><label class="lbl" for="l-nom">Nombre</label><input type="text" id="l-nom" autocomplete="given-name" placeholder="Tu nombre"></div>
+          <div><label class="lbl" for="l-ape">Apellidos</label><input type="text" id="l-ape" autocomplete="family-name" placeholder="Tus apellidos"></div>
+        </div>
+        <label class="lbl" for="l-mail">Correo</label><input type="email" id="l-mail" autocomplete="email" inputmode="email" placeholder="tucorreo@gmail.com">
+        <label class="lbl" for="l-wa">WhatsApp</label>
+        <div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" autocomplete="tel-national" placeholder="8888 8888" maxlength="9"></div>
+        <label class="consent"><input type="checkbox" id="l-ok"><span>Acepto que Empowered Investor guarde estos datos para mandarme mi diagnóstico y contactarme por WhatsApp o correo. Nada se comparte con terceros.</span></label>
+        <p class="error" id="l-err">Faltan datos: nombre, apellidos, correo válido, WhatsApp de 8 dígitos y la casilla.</p>
+        <button class="btn" type="submit" id="l-send" style="margin-top:10px">Ver cuánto me falta, en dispos</button>
+        <p class="micro">Sin costo. Sin llamadas que no pediste.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- 7 · RESULTADO COMPLETO (página personal) -->
+  <section class="pantalla" id="p-res2">
+    <span class="chip" id="r2-chip">Nivel 1 de 3 · completado</span>
+    <h2 id="r2-titulo">Tu hueco se cierra con 2 dispos al mes</h2>
+    <p class="sub" id="r2-sub"></p>
+
+    <div class="card verde">
+      <div class="lbl2">Aporte mensual para que las dispos sean opcionales</div>
+      <div class="big menta" id="r2-aporte"></div>
+      <div class="desglose" id="r2-aporte-nota"></div>
+      <div class="tiles">
+        <div class="tile"><div class="n naranja" id="t-dispos"></div><div class="l">dispos al mes dedicadas a esto (hoy hacés <span id="t-ndisp"></span>)</div></div>
+        <div class="tile"><div class="n" id="t-fp"></div><div class="l">capital que te paga <span id="t-deseado"></span> al mes, retirando 5% al año</div></div>
+        <div class="tile"><div class="n" id="t-20"></div><div class="l">tu 20% según la regla 50/30/20 sobre tu ingreso de hoy</div></div>
+        <div class="tile"><div class="n" id="t-anios"></div><div class="l">años para llegar, aportando eso desde hoy</div></div>
+      </div>
+      <p class="desglose" id="r2-veredicto"></p>
+    </div>
+
+    <div class="card">
+      <h3>Movelo a tu gusto</h3>
+      <div class="ajuste"><div class="et"><span>Edad para bajar el ritmo</span><b id="v-meta">55 años</b></div><input class="rango" type="range" id="r-meta" min="45" max="65" value="55" aria-label="Edad meta"></div>
+      <div class="ajuste"><div class="et"><span>Ingreso mensual que querés sin trabajar</span><b id="v-des"></b></div><input class="rango" type="range" id="r-des" min="500000" max="12000000" step="100000" aria-label="Ingreso deseado"></div>
+      <div class="ajuste"><div class="et"><span>Lo que ya tenés invertido o ahorrado</span><b id="v-cap">₡0</b></div><input class="rango" type="range" id="r-cap" min="0" max="150000000" step="1000000" value="0" aria-label="Capital actual"></div>
+      <p class="nota" style="margin-top:10px">Supuestos de la casa: crecimiento 12% anual, inflación 3%, retiro del 5% al año; dólar a ₡<span id="v-tc"></span>. La pensión de la Caja a los 65 queda como colchón aparte, no se cuenta aquí.</p>
+    </div>
+
+    <div class="card">
+      <h3 id="cta-t">Si querés, lo revisamos juntos en 30 minutos</h3>
+      <p class="desglose">Llamada de claridad sin costo con Jose Montero: tu número en vivo, el contra real y qué harías vos y cuándo. Elegí una hora o escribí por WhatsApp.</p>
+      <div class="slots hidden" id="slots"></div>
+      <p class="micro hidden" id="slots-mas"><button class="link" id="ver-mas">Ver más horarios</button></p>
+      <div class="cal-wrap hidden" id="calwrap"></div>
+      <a class="btn" id="cta-cal" href="#" style="margin-top:12px">Elegir día y hora</a>
+      <a class="btn ghost" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
+    </div>
+
+    <div class="card">
+      <h3>Tu página</h3>
+      <p class="desglose">Este link guarda tu diagnóstico. Abrilo cuando querás y seguí con los otros niveles.</p>
+      <div class="enlace"><input type="text" id="mi-link" readonly aria-label="Tu link"><button class="btn ghost" id="copiar" type="button" style="width:auto; padding:10px 14px; font-size:14px">Copiar</button></div>
+    </div>
+
+    <div class="card bloqueo">
+      <span class="lock">Nivel 2 · 4 minutos · pronto</span>
+      <h3>La consulta: tu 50/30/20 y tu carrera proyectada</h3>
+      <p>Tu presupuesto en tus números, lo que ya tenés en la asociación, el FRAP y el ROP con veredicto por instrumento, y a qué edad llegás con S&amp;P 500 contra Nasdaq 100.</p>
+    </div>
+    <div class="card bloqueo">
+      <span class="lock">Nivel 3 · 5 minutos · pronto</span>
+      <h3>El expediente: tu puntaje contra otros médicos</h3>
+      <p>Salud financiera de médico de 0 a 100 en cuatro dimensiones, comparada con los colegas que ya lo hicieron, y tres recomendaciones concretas.</p>
+    </div>
+
+    <p class="footerchico">Estimaciones con reglas públicas: IVM 2026 (tope ₡1,765,859 sin postergar, cuantía básica regresiva, 300 cuotas), Fondo de Retiro de Empleados de la CCSS (3.27% a 7% del salario ordinario promedio según años, tope ₡324,120, solo si cotizás como empleado de la Caja), ROP al 4.25% con rendimiento del 6%. No es asesoría ni una resolución de la CCSS. Empowered Investor no maneja ni custodia tu plata: la cuenta es tuya.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function byId(id){ return document.getElementById(id); }
+  var fmt = new Intl.NumberFormat("es-CR", {maximumFractionDigits:0});
+  function col(n){ return "₡" + fmt.format(Math.round(n||0)); }
+  function usd(n){ return "$" + fmt.format(Math.round(n||0)); }
+  var TC = 500; // tipo de cambio aproximado para mostrar dólares
+  var CRECIMIENTO = 12, INFLACION = 3, RETIRO = 5;
+  var UMBRAL_APORTE_CRC = 250000, UMBRAL_CAPITAL_CRC = 5000000; // ~$500/mes o ~$10k listos
+
+  // ===== Tracking (igual que /medicos): GA4 si está, pixel, Clarity y "Eventos Landing" =====
+  function track(ev, data){
+    try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){}
+    try{ if(typeof fbq==="function") fbq("trackCustom", ev, data||{}); }catch(e){}
+    try{ if(typeof clarity==="function"){ clarity("event", ev); clarity("set", ev, "si"); } }catch(e){}
+    var d=data||{}, valor = d.v!==undefined ? d.v : d.especialidad!==undefined ? d.especialidad : "";
+    registrar(ev, valor, ev==="dx_lead" || ev==="click_agendar");
+  }
+  var UTM = (function(){
+    var o={ utm_source:"diagnostico-medico", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
+    try{ var q=new URLSearchParams(location.search); Object.keys(o).forEach(function(k){ var v=q.get(k); if(v) o[k]=v; });
+      if(!q.get("utm_source") && q.get("fbclid")){ o.utm_source="meta"; o.utm_medium="paid"; } }catch(e){}
+    return o;
+  })();
+  function conUtm(base){ var parts=[]; Object.keys(UTM).forEach(function(k){ if(UTM[k]) parts.push(k+"="+encodeURIComponent(UTM[k])); });
+    return parts.length ? base + (base.indexOf("?")>-1?"&":"?") + parts.join("&") : base; }
+  var EVENTOS_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+  var WEBHOOK_URL = EVENTOS_URL;
+  function idAleatorio(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function idGuardado(store, k){ try{ var v=store.getItem(k); if(!v){ v=idAleatorio(); store.setItem(k,v); } return v; }catch(e){ return idAleatorio(); } }
+  var UID = idGuardado(window.localStorage, "ei_uid"), SID = idGuardado(window.sessionStorage, "ei_sid"), T0 = Date.now();
+  var cola=[], seq=0, timerFlush=null;
+  function flush(){
+    if(!cola.length) return;
+    var lote=cola.splice(0, 60);
+    var body=JSON.stringify({ tipo:"eventos", uid:UID, sid:SID, pagina:location.pathname,
+      utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content, utm_term:UTM.utm_term,
+      referrer:(document.referrer||"").slice(0,120), ua:(navigator.userAgent||"").slice(0,200), ancho:screen.width, alto:screen.height, idioma:navigator.language||"", eventos:lote });
+    try{ fetch(EVENTOS_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:body, keepalive:true}).catch(function(){}); }catch(e){}
+  }
+  function registrar(ev, valor, urgente){
+    cola.push({ ts:new Date().toISOString(), seq:++seq, ev:ev, valor:(valor===undefined||valor===null)?"":String(valor).slice(0,200) });
+    if(urgente){ if(timerFlush){ clearTimeout(timerFlush); timerFlush=null; } flush(); return; }
+    if(!timerFlush){ timerFlush=setTimeout(function(){ timerFlush=null; flush(); }, 4000); }
+  }
+  window.addEventListener("pagehide", flush);
+
+  // ===== Estado =====
+  var S = { edad:35, etapa:"", esp:"", sal:2850000, anios:8, ndisp:4, ext:2000000, meta:55, des:0, cap:0, nombre:"" };
+  var ESPS = ["Anestesiología","Cardiología","Cirugía general","Cirugía plástica","Dermatología","Emergencias","Endocrinología","Fisiatría","Gastroenterología","Geriatría","Ginecología y obstetricia","Hematología","Infectología","Medicina familiar","Medicina general","Medicina interna","Nefrología","Neumología","Neurocirugía","Neurología","Oftalmología","Oncología","Ortopedia","Otorrinolaringología","Patología","Pediatría","Psiquiatría","Radiología","Reumatología","Urología","Vascular periférico"];
+  var SAL_DEFAULT = { residente:1850000, general:2000000, especialista:2850000, privado:3000000 };
+
+  // ===== Tabla del FRE (Fondo de Retiro de Empleados CCSS, reforma 2021): % del salario ordinario promedio según años en la Caja =====
+  function frePct(anios){
+    if(anios<15) return 0; if(anios<20) return 3.27; if(anios<25) return 3.73; if(anios<30) return 4.20;
+    if(anios<31) return 4.67; if(anios<32) return 5.13; if(anios<33) return 5.60; if(anios<34) return 6.07; if(anios<35) return 6.53; return 7.00;
+  }
+  var FRE_TOPE = 324120;
+
+  function calcular(){
+    var hoy = S.sal + S.ext;
+    var cotizaCaja = S.etapa!=="privado";
+    var aniosHasta65 = Math.max(0, 65 - S.edad);
+    // IVM y ROP cotizan sobre el salario total (ordinario + extras). calc.js aplica tope, cuantía básica y cuotas.
+    var pe = Calc.pensionEstado({ salario: hoy, cuotas_cot: S.anios*12, edad_hoy: S.edad, edad_ret: 65, saldo_rop: 0 });
+    var ivm = pe.ivmMonto, rop = pe.ropMonto;
+    var aniosCaja = cotizaCaja ? S.anios + aniosHasta65 : S.anios;
+    var fre = cotizaCaja ? Math.min(FRE_TOPE, S.sal * frePct(aniosCaja)/100) : 0;
+    var pension = ivm + rop + fre;
+    var pct = hoy>0 ? pension/hoy*100 : 0;
+    var valorDispo = S.ndisp>0 ? S.ext/S.ndisp : 0;
+    return { hoy:hoy, ivm:ivm, rop:rop, fre:fre, pension:pension, pct:pct, valorDispo:valorDispo, cumpleIvm:pe.cumpleIvm, cuotas:(pe.ivmObj&&pe.ivmObj.cuotasTotales)||0, aniosCaja:aniosCaja };
+  }
+  function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
+    var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f;
+    if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
+  function mesesHasta(fv, pv, pmt, anualPct){ // meses para llegar a fv aportando pmt (búsqueda simple)
+    var i=anualPct/100/12, v=pv, m=0; if(pmt<=0 && pv<=0) return Infinity;
+    while(v<fv && m<720){ v=v*(1+i)+pmt; m++; } return v>=fv ? m : Infinity; }
+  function plan(){
+    var r = calcular();
+    var meses = Math.max(12, (S.meta - S.edad)*12);
+    var fp = S.des*12/(RETIRO/100);
+    var ap = aporteReq(fp, S.cap, CRECIMIENTO-INFLACION, meses);
+    var veinte = r.hoy*0.20;
+    var dispos = r.valorDispo>0 ? ap/r.valorDispo : 0;
+    var anios = mesesHasta(fp, S.cap, ap, CRECIMIENTO-INFLACION)/12;
+    var calificado = veinte>=UMBRAL_APORTE_CRC || S.cap>=UMBRAL_CAPITAL_CRC;
+    return { r:r, fp:fp, ap:ap, veinte:veinte, dispos:dispos, anios:anios, calificado:calificado, meses:meses };
+  }
+
+  // ===== Navegación =====
+  var PASOS = ["p-intro","p-1","p-2","p-3","p-4","p-5","p-res1","p-res2"];
+  function ir(id){
+    PASOS.forEach(function(p){ byId(p).classList.toggle("activa", p===id); });
+    var n = ["p-1","p-2","p-3","p-4","p-5"].indexOf(id);
+    var prog = byId("prog"); prog.style.display = n>=0 ? "block" : "none";
+    if(n>=0){ byId("prog-txt").textContent = "Pregunta "+(n+1)+" de 5"; byId("prog-seg").textContent = (5-n)*18+" segundos"; byId("prog-bar").style.width = ((n+1)/5*100)+"%"; }
+    window.scrollTo({top:0, behavior:"smooth"});
+    track("dx_pantalla", {v:id});
+  }
+
+  // 1 edad
+  byId("r-edad").addEventListener("input", function(){ S.edad=+this.value; byId("v-edad").textContent=S.edad+" años"; });
+  byId("n-1").addEventListener("click", function(){ var a=Math.max(0, Math.min(40, S.edad-25)); byId("r-anios").value=a; S.anios=a; byId("v-anios").textContent=a; ir("p-2"); });
+  // 2 etapa
+  Array.prototype.forEach.call(byId("opc-etapa").querySelectorAll(".opcion"), function(b){
+    b.addEventListener("click", function(){
+      S.etapa=b.getAttribute("data-v");
+      Array.prototype.forEach.call(byId("opc-etapa").querySelectorAll(".opcion"), function(x){ x.classList.toggle("sel", x===b); });
+      S.sal = SAL_DEFAULT[S.etapa]; byId("r-sal").value=S.sal; byId("v-sal").textContent=col(S.sal);
+      var priv = S.etapa==="privado";
+      byId("t-sal").textContent = priv ? "¿Cuánto ganás al mes, en promedio?" : "¿Cuánto es tu salario ordinario de la Caja?";
+      byId("s-sal").innerHTML = priv ? "Bruto, sin contar lo que cotizás como independiente. Si todavía cotizás por una plaza chica, ponela en el siguiente paso." : "Lo que dice la colilla <b>antes</b> de guardias, dispos y extras. Bruto, al mes.";
+      byId("bloque-anios").querySelector("span").textContent = priv ? "Años que cotizaste a la Caja como empleado (si fueron cero, dejalo en 0)" : "Años cotizando a la Caja (internado y servicio social no cuentan)";
+      if(S.etapa==="residente"){ byId("r-ndisp").value=2; S.ndisp=2; byId("r-ext").value=600000; S.ext=600000; }
+      track("dx_etapa", {v:S.etapa});
+      setTimeout(function(){ ir("p-3"); }, 180);
+    });
+  });
+  // 3 especialidad
+  var espsBox = byId("esps");
+  ESPS.concat(["Otra"]).forEach(function(e){
+    var b=document.createElement("button"); b.type="button"; b.className="esp"; b.textContent=e; b.setAttribute("data-v", e);
+    b.addEventListener("click", function(){
+      Array.prototype.forEach.call(espsBox.querySelectorAll(".esp"), function(x){ x.classList.toggle("on", x===b); });
+      S.esp = e; byId("esp-otra").classList.toggle("hidden", e!=="Otra"); if(e==="Otra") byId("esp-otra").focus();
+      byId("n-3").disabled=false; track("dx_especialidad", {v:e});
+    });
+    espsBox.appendChild(b);
+  });
+  byId("n-3").addEventListener("click", function(){ if(S.esp==="Otra"){ var o=byId("esp-otra").value.trim(); if(o) S.esp=o; } ir("p-4"); });
+  // 4 salario + años
+  byId("r-sal").addEventListener("input", function(){ S.sal=+this.value; byId("v-sal").textContent=col(S.sal); });
+  byId("r-anios").addEventListener("input", function(){ S.anios=+this.value; byId("v-anios").textContent=S.anios; });
+  byId("n-4").addEventListener("click", function(){ pintarDispo(); ir("p-5"); });
+  // 5 extras
+  function pintarDispo(){
+    byId("v-ndisp").textContent=S.ndisp; byId("v-ext").textContent=col(S.ext);
+    byId("m-dispo").textContent = S.ndisp>0 && S.ext>0 ? "Una dispo tuya vale "+col(S.ext/S.ndisp) : "Sin dispos: el cálculo usa solo tu salario ordinario";
+  }
+  byId("r-ndisp").addEventListener("input", function(){ S.ndisp=+this.value; if(S.ndisp>0 && S.ext===0){ S.ext=S.ndisp*500000; byId("r-ext").value=S.ext; } pintarDispo(); });
+  byId("r-ext").addEventListener("input", function(){ S.ext=+this.value; pintarDispo(); });
+  byId("n-5").addEventListener("click", function(){ pintarRes1(); ir("p-res1"); track("dx_resultado1", {v:Math.round(calcular().pct)}); });
+
+  // ===== Resultado libre =====
+  function pintarRes1(){
+    var r = calcular();
+    byId("r1-titulo").textContent = r.hoy>0 ? "La Caja te va a pagar el "+Math.round(r.pct)+"% de lo que ganás hoy" : "Poné tu salario para ver tu número";
+    byId("b-hoy").textContent = col(r.hoy)+"/mes"; byId("b-pen").textContent = col(r.pension)+"/mes";
+    var mx = Math.max(r.hoy, r.pension, 1);
+    byId("i-ord").style.width = (S.sal/mx*100)+"%"; byId("i-ext").style.width = (S.ext/mx*100)+"%"; byId("i-pen").style.width = (r.pension/mx*100)+"%";
+    var d = "= IVM <b>"+col(r.ivm)+"</b> + ROP <b>"+col(r.rop)+"</b>" + (S.etapa!=="privado" ? " + fondo de retiro de la Caja (FRE) <b>"+col(r.fre)+"</b>" : "") + " al mes, a los 65.";
+    if(!r.cumpleIvm) d += "<br>Con "+r.cuotas+" cuotas a los 65 no llegás al mínimo del IVM: por eso sale en cero. Revisá los años cotizando.";
+    else if(r.hoy > 4000000) d += "<br>Cotizás sobre "+col(r.hoy)+", pero el tope del IVM manda: la pensión máxima sin postergar es ₡1,765,859.";
+    if(S.etapa!=="privado" && r.fre>0) d += "<br>El FRE sale de "+r.aniosCaja+" años en la Caja ("+frePct(r.aniosCaja)+"% del ordinario). Si renunciás a la Caja, eso se pierde casi todo.";
+    byId("r1-desglose").innerHTML = d;
+    byId("r1-pct").textContent = Math.round(r.pct)+"%";
+    var nota = S.ext>0 ? "Lo naranja, "+col(S.ext)+" en dispos y guardias, es el "+Math.round(S.ext/r.hoy*100)+"% de tu ingreso y desaparece el día que las dejés. La pensión no lo repone." : "Y eso contando que sigás cotizando sin parar hasta los 65.";
+    if(S.etapa==="residente" || S.etapa==="general"){
+      // El residente gana poco hoy: el techo se ve cuando sea especialista con dispos (ingreso típico ₡6M).
+      var tipico = 6000000, pctEsp = r.pension/tipico*100;
+      nota += " Hoy el porcentaje se ve alto porque tu ingreso es de residente. Como especialista con dispos vas a ganar unos "+col(tipico)+" y la pensión sigue en "+col(r.pension)+": el "+Math.round(pctEsp)+"%.";
+    }
+    byId("r1-nota").textContent = nota;
+  }
+
+  // ===== Captura =====
+  byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
+  byId("lead").addEventListener("submit", function(e){
+    e.preventDefault();
+    var nombre=byId("l-nom").value.trim(), ape=byId("l-ape").value.trim(), mail=byId("l-mail").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
+    var ok = nombre && ape && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) && wa.length===8 && byId("l-ok").checked;
+    byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
+    var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
+    S.nombre = nombre;
+    if(!S.des) S.des = Math.round(calcular().hoy*0.7/100000)*100000;
+    var p = plan();
+    var link = linkPersonal();
+    var payload = { timestamp:new Date().toISOString(), etapa:"diagnostico_medico_n1", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
+      especialidad: S.esp + (S.etapa==="residente" ? " (residente)" : ""), etapa_medico:S.etapa, edad:S.edad,
+      salario_ordinario:S.sal, anios_caja:S.anios, dispos_mes:S.ndisp, extras_mes:S.ext, ingreso_hoy:p.r.hoy,
+      pension_caja:Math.round(p.r.pension), reemplazo_pct:Math.round(p.r.pct), edad_meta:S.meta, ingreso_deseado:S.des, capital:S.cap,
+      freedom_point:Math.round(p.fp), aporte_mes:Math.round(p.ap), dispos_req:Math.round(p.dispos*10)/10, calificado: p.calificado ? "si" : "no",
+      link_personal:link, pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
+      sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
+    try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
+    track("dx_lead", {especialidad:payload.especialidad, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+    try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"diagnostico medico n1", content_category:payload.especialidad}); }catch(err){}
+    CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+"&email="+encodeURIComponent(mail)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(payload.especialidad);
+    var msg="Hola Jose, soy "+nombre+", "+(S.etapa==="residente" ? "residente de "+S.esp.toLowerCase() : S.esp.toLowerCase())+". Hice el diagnóstico: la Caja me pagaría el "+Math.round(p.r.pct)+"% y mi hueco se cierra con "+fmtDispos(p.dispos)+" dispos al mes. Quiero la llamada de claridad. Mi página: "+link;
+    byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
+    try{ localStorage.setItem("ei_dx", JSON.stringify({s:S, link:link})); }catch(err){}
+    pintarRes2(); ir("p-res2"); cargarHorarios();
+  });
+
+  // ===== Página personal (sin backend todavía: el estado viaja en la URL, sin datos de contacto) =====
+  function codificar(){ var o={e:S.edad,t:S.etapa,p:S.esp,s:S.sal,a:S.anios,n:S.ndisp,x:S.ext,m:S.meta,d:S.des,c:S.cap,nm:S.nombre};
+    return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+  function decodificar(s){ try{ s=s.replace(/-/g,"+").replace(/_/g,"/"); while(s.length%4) s+="="; var o=JSON.parse(decodeURIComponent(escape(atob(s))));
+    S.edad=+o.e||35; S.etapa=o.t||"especialista"; S.esp=o.p||""; S.sal=+o.s||0; S.anios=+o.a||0; S.ndisp=+o.n||0; S.ext=+o.x||0; S.meta=+o.m||55; S.des=+o.d||0; S.cap=+o.c||0; S.nombre=o.nm||""; return true; }catch(e){ return false; } }
+  function linkPersonal(){ return location.origin + location.pathname + "?d=" + codificar(); }
+
+  // ===== Resultado completo =====
+  function fmtDispos(d){ return d<1 ? "menos de 1" : (Math.round(d*2)/2).toString().replace(".5",",5"); }
+  function pintarRes2(){
+    var p = plan(), r = p.r;
+    byId("r-meta").value=S.meta; byId("v-meta").textContent=S.meta+" años";
+    byId("r-des").value=S.des; byId("v-des").textContent=col(S.des);
+    byId("r-cap").value=S.cap; byId("v-cap").textContent=col(S.cap);
+    byId("v-tc").textContent=TC;
+    var quien = S.nombre ? S.nombre.split(" ")[0]+", tu" : "Tu";
+    if(S.meta<=S.edad){ byId("r2-titulo").textContent = quien+" edad meta ya pasó: subila para ver el plan"; }
+    else if(p.ap<=0){ byId("r2-titulo").textContent = quien+" capital ya alcanza para "+col(S.des)+" al mes a los "+S.meta; }
+    else if(r.valorDispo>0){ byId("r2-titulo").textContent = quien+" hueco se cierra con "+fmtDispos(p.dispos)+" dispos al mes"; }
+    else { byId("r2-titulo").textContent = quien+" hueco se cierra con "+col(p.ap)+" al mes"; }
+    byId("r2-sub").textContent = "Para que a los "+S.meta+" las guardias sean opcionales y tengás "+col(S.des)+" al mes sin trabajar. La pensión de la Caja llega a los 65 y queda como extra.";
+    byId("r2-aporte").textContent = col(p.ap);
+    byId("r2-aporte-nota").innerHTML = "≈ "+usd(p.ap/TC)+" al mes durante "+Math.round(p.meses/12)+" años. Es tu Freedom Point: "+col(p.fp)+" ("+usd(p.fp/TC)+").";
+    byId("t-dispos").textContent = r.valorDispo>0 ? fmtDispos(p.dispos) : "—"; byId("t-ndisp").textContent = S.ndisp;
+    byId("t-fp").textContent = usd(p.fp/TC); byId("t-deseado").textContent = col(S.des);
+    byId("t-20").textContent = col(p.veinte); byId("t-anios").textContent = isFinite(p.anios) ? Math.round(p.anios) : "—";
+    var v;
+    if(p.ap<=0) v = "Ya estás ahí. Lo que sigue es protegerlo de la inflación y de una mala década.";
+    else if(p.veinte>=p.ap) v = "Tu 20% ("+col(p.veinte)+") cubre el aporte. El problema no es cuánto ganás: es que hoy ese 20% no está yendo a ningún lado que crezca.";
+    else if(r.valorDispo>0 && p.dispos<=S.ndisp) v = "Cabe en lo que ya hacés: "+fmtDispos(p.dispos)+" de tus "+S.ndisp+" dispos del mes, apartadas a esto, y el resto es tuyo.";
+    else v = "Hoy no cabe en tu 20% ni en tus dispos. Las palancas son tres: más años (bajá la meta de edad), menos ingreso deseado, o capital que ya tengás. Movelas arriba y mirá cómo cambia.";
+    byId("r2-veredicto").innerHTML = v;
+    byId("mi-link").value = linkPersonal();
+  }
+  function reajustar(){ pintarRes2(); try{ history.replaceState(null,"",location.pathname+"?d="+codificar()); }catch(e){} }
+  byId("r-meta").addEventListener("input", function(){ S.meta=+this.value; reajustar(); });
+  byId("r-des").addEventListener("input", function(){ S.des=+this.value; reajustar(); });
+  byId("r-cap").addEventListener("input", function(){ S.cap=+this.value; reajustar(); });
+  byId("copiar").addEventListener("click", function(){
+    var inp=byId("mi-link"), b=this;
+    function listo(){ b.textContent="Copiado"; setTimeout(function(){ b.textContent="Copiar"; }, 1800); }
+    try{ navigator.clipboard.writeText(inp.value).then(listo, function(){ inp.select(); listo(); }); }catch(e){ inp.select(); listo(); }
+    track("dx_link_copiado", {});
+  });
+
+  // ===== Calendly: 3 horarios de un click + inline, mismo patrón de /medicos =====
+  var CALENDLY = "https://calendly.com/empoweredinvestor/medicos", CAL_PRE = "", WA_NUMERO = "50670558296";
+  function abrirCalendly(){
+    var wrap=byId("calwrap"); if(wrap.getAttribute("data-ok")) { wrap.classList.remove("hidden"); return; } wrap.setAttribute("data-ok","1"); wrap.classList.remove("hidden");
+    var url = conUtm(CALENDLY + "?hide_gdpr_banner=1&hide_event_type_details=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf" + CAL_PRE)
+      + "&embed_domain=" + encodeURIComponent(location.hostname || "localhost") + "&embed_type=Inline";
+    var fr=document.createElement("iframe"); fr.src=url; fr.title="Elegí el día y la hora"; fr.setAttribute("scrolling","no"); wrap.appendChild(fr);
+    track("calendly_cargado", {});
+  }
+  var agendado=false;
+  window.addEventListener("message", function(e){
+    if(!/^https:\/\/([a-z0-9-]+\.)?calendly\.com$/.test(e.origin||"")) return;
+    var d=e.data; if(!d || typeof d.event!=="string" || d.event.indexOf("calendly.")!==0) return;
+    var wrap=byId("calwrap");
+    if(d.event==="calendly.page_height" && d.payload){ var h=parseInt(d.payload.height,10); if(h>300) wrap.style.height=(h+8)+"px"; }
+    else if(d.event==="calendly.event_scheduled" && !agendado){
+      agendado=true; track("dx_llamada_agendada", {utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+      var eid=""; try{ var uri=(d.payload && d.payload.invitee && d.payload.invitee.uri)||""; var m=uri.match(/invitees\/([0-9a-f-]+)/i); if(m) eid="cal_"+m[1]; }catch(err){}
+      try{ if(typeof fbq==="function") fbq("track","Schedule",{content_name:"llamada medicos", content_category:UTM.utm_campaign||""}, eid?{eventID:eid}:undefined); }catch(err){}
+    }
+  });
+  function cargarHorarios(){
+    var box=byId("slots"), mas=byId("slots-mas");
+    var fmtDia=new Intl.DateTimeFormat("es-CR",{weekday:"short", day:"numeric", month:"short", timeZone:"America/Costa_Rica"});
+    var fmtHora=new Intl.DateTimeFormat("es-CR",{hour:"numeric", minute:"2-digit", hour12:true, timeZone:"America/Costa_Rica"});
+    fetch("/.netlify/functions/horarios?n=3").then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+      if(!j || !j.espacios || !j.espacios.length) return;
+      box.innerHTML="";
+      j.espacios.forEach(function(s){
+        var d=new Date(s.inicio), a=document.createElement("a"); a.className="slot"; a.href=conUtm(s.url + "?" + CAL_PRE.replace(/^&/,""));
+        a.innerHTML="<span>"+fmtDia.format(d).replace(".","")+"</span><b>"+fmtHora.format(d).replace(/\s*(a|p)\.\s*m\./i,function(x){ return x.indexOf("a")>-1?" am":" pm"; })+"</b>";
+        a.addEventListener("click", function(){ track("slot_click", {v:s.inicio}); }); box.appendChild(a);
+      });
+      box.classList.remove("hidden"); mas.classList.remove("hidden"); byId("cta-cal").classList.add("hidden"); track("slots_vistos", {v:j.espacios.length});
+    }).catch(function(){});
+  }
+  function clickAgendar(e){ e.preventDefault(); track("click_agendar", {v:"dx"}); try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(err){} abrirCalendly(); byId("cta-cal").classList.add("hidden"); byId("slots-mas").classList.add("hidden"); }
+  byId("cta-cal").addEventListener("click", clickAgendar);
+  byId("ver-mas").addEventListener("click", clickAgendar);
+  byId("wa-link").addEventListener("click", function(){ track("dx_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp diagnostico"}); }catch(err){} });
+
+  // ===== Arranque: link personal (?d=) salta directo al resultado; si no, intro =====
+  byId("btn-empezar").addEventListener("click", function(){ track("dx_inicio", {}); ir("p-1"); });
+  (function(){
+    var q = new URLSearchParams(location.search), d = q.get("d");
+    if(d && decodificar(d)){
+      var guardado=null; try{ guardado=JSON.parse(localStorage.getItem("ei_dx")||"null"); }catch(e){}
+      if(guardado && guardado.s && guardado.s.nombre) S.nombre = S.nombre || guardado.s.nombre;
+      if(!S.des) S.des = Math.round(calcular().hoy*0.7/100000)*100000;
+      byId("r2-chip").textContent = "Nivel 1 de 3 · tu diagnóstico";
+      byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent("Hola Jose, abrí mi diagnóstico de la Caja y quiero la llamada de claridad. Mi página: "+linkPersonal());
+      pintarRes2(); ir("p-res2"); cargarHorarios(); track("dx_pagina_personal", {});
+    }
+  })();
+})();
+</script>
+</body>
+</html>
