@@ -151,6 +151,19 @@
   .fase .d{ font-size:12px; color:var(--gris-sec); margin-top:3px; line-height:1.3; }
   .fase.f1{ border-color:rgba(240,122,107,.5);} .fase.f2{ border-color:rgba(139,155,255,.5);} .fase.f3{ border-color:rgba(99,252,175,.5);}
 
+  /* secuencia */
+  .pasos-seq{ display:flex; gap:8px; margin-top:18px; overflow-x:auto; scrollbar-width:none; padding-bottom:4px; }
+  .pasos-seq::-webkit-scrollbar{ display:none; }
+  @media(min-width:640px){ .pasos-seq{ flex-wrap:wrap; overflow:visible; } }
+  .pasos-seq button{ flex:0 0 auto; font-family:inherit; font-size:14px; font-weight:600; color:var(--gris); background:var(--carta); border:1px solid var(--bd); border-radius:999px; padding:9px 14px 9px 9px; cursor:pointer; display:flex; align-items:center; gap:8px; }
+  .pasos-seq button span{ width:24px; height:24px; border-radius:50%; background:#232a35; color:var(--gris); display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+  .pasos-seq button.on{ border-color:var(--menta); color:var(--crema); }
+  .pasos-seq button.on span{ background:var(--menta); color:var(--tinta); }
+  .seq-cap{ font-size:15px; line-height:1.5; color:var(--gris); margin-top:14px; min-height:3em; }
+  .seq-cap b{ color:var(--crema); }
+  .frame.seq iframe{ height:980px; }
+  @media(min-width:640px){ .frame.seq iframe{ height:900px; } }
+
   /* papers */
   .papers{ display:grid; gap:10px; margin-top:20px; }
   @media(min-width:640px){ .papers{ grid-template-columns:repeat(3,1fr); } }
@@ -169,11 +182,17 @@
   .phone .scr{ border-radius:16px; overflow:hidden; aspect-ratio:9/14; background:#0d0f14; }
   .phone .scr img{ width:100%; height:100%; object-fit:cover; object-position:top; }
   .phone .cap{ font-size:12px; color:var(--gris-sec); text-align:center; padding:8px 4px 2px; }
-  .phones.alp{ grid-template-columns:1fr; }
-  .phones.alp .phone .scr{ aspect-ratio:auto; }
-  .phones.alp .phone .scr a{ display:block; }
-  .phones.alp .phone .scr img{ height:auto; }
-  @media(max-width:559px){ .phones.alp .phone{ flex:0 0 88%; max-width:none; } }
+  .vistas{ display:grid; gap:14px; margin-top:22px; }
+  .vista{ border-radius:18px; border:1px solid var(--bd); background:var(--carta); padding:18px 16px 14px; }
+  .vista h3{ font-size:clamp(19px,5.2vw,24px); font-weight:700; line-height:1.2; letter-spacing:-.01em; }
+  .vista p{ font-size:14px; line-height:1.5; color:var(--gris); margin:6px 0 12px; }
+  .vista a{ display:block; }
+  .vista img{ border-radius:10px; border:1px solid var(--bd); width:100%; }
+  .emergencia{ margin-top:24px; border-radius:20px; border:1px solid rgba(99,252,175,.5); background:linear-gradient(180deg,rgba(99,252,175,.08),rgba(99,252,175,0) 70%), var(--carta); padding:22px 18px 16px; }
+  .emergencia h3{ font-size:clamp(26px,7vw,36px); font-weight:700; line-height:1.1; letter-spacing:-.02em; }
+  .emergencia p{ font-size:16px; line-height:1.55; color:var(--gris); margin-top:10px; }
+  .emergencia p b{ color:var(--crema); }
+  .emergencia .tiles{ margin-top:16px; }
   .desk{ margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--bd); }
   @media(max-width:559px){ .desk{ display:none; } }
 
@@ -249,6 +268,7 @@
       <a href="#transferencia">Transferencia</a>
       <a href="#apalancamiento">Apalancamiento</a>
       <a href="#edge">Nuestro edge</a>
+      <a href="#secuencia">La secuencia</a>
       <a href="#papers">Los papers</a>
       <a href="#tiempo">Tu tiempo</a>
       <a href="#dashboard">Dashboard</a>
@@ -321,16 +341,27 @@
   <!-- 4 · PROTECCIÓN -->
   <section id="proteccion">
     <div class="num">4</div>
-    <h2>Qué pasa si el bróker quiebra</h2>
-    <p class="lede">Tres capas, una encima de la otra. Ninguna depende de que a Alpaca le vaya bien.</p>
+    <h2>Qué pasa si el bróker quiebra (y para qué sirve el SIPC)</h2>
+    <p class="lede"><b>Tus ETFs no están en el balance de Alpaca.</b> Por ley (regla SEC 15c3-3) están registrados a tu nombre en el DTC, el depósito central de valores de EE. UU., separados del dinero del bróker. Si Alpaca cerrara mañana, un fideicomisario traslada tus posiciones a otro bróker y seguís siendo dueño de cada acción.</p>
+
+    <div class="aviso" style="margin-top:16px"><b>¿Entonces cuándo entra el SIPC?</b> En el caso feo: que el bróker haya hecho algo indebido con la plata de los clientes (fraude, robo, registros mal llevados, como Madoff o MF Global) y al liquidar falten valores o efectivo. Ahí el SIPC repone lo que falte, hasta <b>$500,000 por cliente</b>, incluidos $250,000 en efectivo. Es la red de abajo, no la primera protección.</div>
 
     <div class="pila">
-      <div class="capa c"><div class="t"><b>Tus acciones están a tu nombre</b>Por ley (regla SEC 15c3-3) los valores de los clientes se guardan separados del dinero del bróker, en el DTC. Si Alpaca desaparece, tus ETFs siguen siendo tuyos.</div><div class="v">100%</div></div>
-      <div class="capa a"><div class="t"><b>SIPC</b>El seguro del sistema financiero de EE. UU. Cubre hasta $500,000 por cliente, de los cuales hasta $250,000 pueden ser efectivo.</div><div class="v">$500k</div></div>
-      <div class="capa b"><div class="t"><b>Excess SIPC con Lloyd's of London</b>Póliza adicional que Alpaca compró para lo que supere el SIPC: hasta $75 millones en valores y $75 millones en efectivo por cliente, con tope conjunto de $250 millones.</div><div class="v">$75M</div></div>
-      <div class="capa cr"><div class="t"><b>Para comparar: un banco en Costa Rica</b>La garantía de depósitos cubre hasta unos ₡6 millones por persona por entidad.</div><div class="v">≈ $12k</div></div>
+      <div class="capa c"><div class="t"><b>1 · Separación por ley</b>Tus ETFs están a tu nombre, fuera del balance del bróker. En una quiebra ordenada no se pierde nada: se trasladan.</div><div class="v">100%</div></div>
+      <div class="capa a"><div class="t"><b>2 · SIPC</b>Si al liquidar faltara algo por fraude o mal manejo, repone hasta $500,000 por cliente ($250,000 si es efectivo).</div><div class="v">$500k</div></div>
+      <div class="capa b"><div class="t"><b>3 · Excess SIPC con Lloyd's of London</b>Póliza adicional que Alpaca compró para lo que supere el SIPC: hasta $75 millones en valores y $75 millones en efectivo por cliente, con tope conjunto de $250 millones.</div><div class="v">$75M</div></div>
+      <div class="capa cr"><div class="t"><b>Lo que nadie cubre</b>Que el mercado baje. Ese riesgo existe siempre y se maneja con el plan (fases, horizonte y señal de salida), no con un seguro.</div><div class="v">—</div></div>
     </div>
-    <p class="nota">Lo que ninguna de estas capas cubre: que el mercado baje. Ese riesgo existe siempre y se maneja con el plan (fases, horizonte y señal de salida), no con un seguro. Quien te diga lo contrario te está vendiendo humo. Fuente: <a href="https://alpaca.markets/learn/customer-asset-protection-at-alpaca" target="_blank" rel="noopener">Alpaca, Customer Asset Protection</a>.</p>
+
+    <h3 style="font-size:18px; font-weight:700; margin-top:30px">Para comparar: lo que pasó en Costa Rica</h3>
+    <p class="nota" style="margin-top:6px">En un banco, una cooperativa o una financiera tu plata <b>sí</b> está en el balance de la entidad: ellos la prestan. Cuando la entidad pierde, el ahorrante pierde, y la garantía de depósitos llega hasta ₡6 millones por persona.</p>
+    <div class="tiles" style="margin-top:12px">
+      <div class="tile"><div class="n rojo">63%</div><div class="l"><b>Coopeservidores, 2024.</b> Los 5,511 ahorrantes con más de ₡6 millones recuperaron cerca del 63% de lo que excedía la garantía, y meses después.</div></div>
+      <div class="tile"><div class="n rojo">49%</div><div class="l"><b>Desyfin, 2024 a 2025.</b> 1,031 ahorrantes con más de ₡6 millones: la garantía más un 49% del resto, un año después de la intervención.</div></div>
+      <div class="tile"><div class="n">₡6 M</div><div class="l">Tope de la garantía de depósitos en Costa Rica, unos <b>$12,000</b> por persona por entidad.</div></div>
+      <div class="tile"><div class="n menta">$500k</div><div class="l">Tope del SIPC en EE. UU., encima de una separación de activos que acá no existe para el ahorro bancario.</div></div>
+    </div>
+    <p class="nota">Fuentes: <a href="https://alpaca.markets/learn/customer-asset-protection-at-alpaca" target="_blank" rel="noopener">Alpaca, Customer Asset Protection</a>; prensa costarricense sobre las resoluciones de Coopeservidores y Desyfin (El Financiero, La República, Semanario Universidad).</p>
   </section>
 
   <!-- 5 · CONTROL -->
@@ -356,12 +387,23 @@
 
     <div class="aviso"><b>Ley antilavado:</b> la plata solo entra a tu cuenta desde una cuenta bancaria <b>a tu mismo nombre</b>, y solo puede salir hacia una cuenta <b>a tu mismo nombre</b>. No se puede transferir a terceros, ni a familiares, ni a mí. Es una regla del sistema financiero de EE. UU. y es justamente lo que te protege.</div>
 
-    <div class="phones alp">
-      <div class="phone"><div class="scr"><a href="/info/img/alpaca-1.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-1.webp" alt="Alpaca: tu portafolio y tus posiciones" loading="lazy"></a></div><div class="cap">Tu portafolio, tu saldo y tus posiciones, en vivo</div></div>
-      <div class="phone"><div class="scr"><a href="/info/img/alpaca-2.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-2.webp" alt="Alpaca: historial de cada movimiento" loading="lazy"></a></div><div class="cap">Cada compra, venta, depósito e interés queda en el historial</div></div>
-      <div class="phone"><div class="scr"><a href="/info/img/alpaca-3.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-3.webp" alt="Alpaca: depositar y retirar" loading="lazy"></a></div><div class="cap">Depositar y retirar: botones que solo vos tenés</div></div>
+    <div class="vistas">
+      <div class="vista"><h3>Dashboard con toda la información</h3><p>Tu portafolio, tu saldo, tus posiciones y el interés que gana el efectivo. Lo ves cuando querás, desde el cel o la compu.</p><a href="/info/img/alpaca-1.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-1.webp" alt="Alpaca: dashboard de la cuenta" loading="lazy"></a></div>
+      <div class="vista"><h3>Transparencia en cada movimiento de dinero</h3><p>Cada compra, venta, depósito, dividendo e interés queda registrado con fecha y monto. Nada se mueve sin dejar huella.</p><a href="/info/img/alpaca-2.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-2.webp" alt="Alpaca: historial de movimientos" loading="lazy"></a></div>
+      <div class="vista"><h3>Depositar y sacar el dinero con absoluta libertad</h3><p>Los botones de depósito y retiro son tuyos. Sin plazos, sin mínimos y sin pedirle permiso a nadie.</p><a href="/info/img/alpaca-3.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-3.webp" alt="Alpaca: depositar y retirar" loading="lazy"></a></div>
     </div>
-    <p class="nota">Así se ve una cuenta real en Alpaca (el número de cuenta va tapado). Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones de retiro. Lo que yo hago queda en el historial de órdenes.</p>
+    <p class="nota">Así se ve una cuenta real en Alpaca. Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones de retiro. Lo que yo hago queda en el historial de órdenes.</p>
+
+    <div class="emergencia">
+      <div class="eyebrow" style="color:var(--menta)">La pregunta que todos hacen</div>
+      <h3>¿Y si tengo una emergencia?</h3>
+      <p>Sacás la plata. <b>Sin penalidad, sin plazo mínimo y sin obligación de seguir aportando.</b> Esto no es un plan de pensiones ni un seguro con valor de rescate: es tu cuenta. Los ETFs se venden en segundos en horario de bolsa y la transferencia a tu banco sale ese mismo día.</p>
+      <div class="tiles c3">
+        <div class="tile"><div class="n menta">$0</div><div class="l">de penalidad por retirar, parcial o total</div></div>
+        <div class="tile"><div class="n menta">0</div><div class="l">aportes obligatorios. Aportás cuando podés</div></div>
+        <div class="tile"><div class="n menta">3 a 5</div><div class="l">días hábiles para que el SWIFT llegue a tu banco en Costa Rica</div></div>
+      </div>
+    </div>
     <p class="nota">Al pasar los $100,000 te ayudamos a dejar un testamento de vida sobre la cuenta, para que tu familia sepa exactamente qué hay y cómo se accede.</p>
   </section>
 
@@ -435,9 +477,28 @@
     <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. Toda la cocina, con datos descargables para que la comprobés con la IA que usés, en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
   </section>
 
+
+  <!-- SECUENCIA · de la plata quieta al plan completo -->
+  <section id="secuencia">
+    <div class="num">9</div>
+    <h2>De la plata quieta a tu plan completo, en cinco pasos</h2>
+    <p class="lede">La misma historia real desde 1999, agregando una pieza a la vez. Cada paso es una animación: tocá el gráfico para repetirla.</p>
+
+    <div class="pasos-seq" id="seq-btns">
+      <button class="on" data-i="0"><span>1</span>Plata quieta vs Nasdaq</button>
+      <button data-i="1"><span>2</span>Nasdaq con nuestro edge</button>
+      <button data-i="2"><span>3</span>Apalancado con el edge</button>
+      <button data-i="3"><span>4</span>Con aportes mensuales</button>
+      <button data-i="4"><span>5</span>Tu plan completo</button>
+    </div>
+    <p class="seq-cap" id="seq-cap"></p>
+    <div class="frame seq"><iframe id="seq-frame" title="Simulación paso a paso" src="about:blank"></iframe></div>
+    <p class="nota">Simulación con datos históricos semanales, sin honorarios, en dólares corrientes. QLD y TQQQ reales desde su listado y simulados antes. Todos los supuestos y el simulador completo, con tu año, tu edad y tu aporte, en <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
+  </section>
+
   <!-- 9 · PAPERS -->
   <section id="papers">
-    <div class="num">9</div>
+    <div class="num">10</div>
     <h2>No lo inventamos nosotros</h2>
     <p class="lede">Tres investigaciones publicadas y premiadas llegaron a lo mismo que nuestro propio research. Lo inusual es juntarlas en un servicio para una persona.</p>
 
@@ -455,7 +516,7 @@
 
   <!-- 10 · TU TIEMPO -->
   <section id="tiempo">
-    <div class="num">10</div>
+    <div class="num">11</div>
     <h2>Diseñado para que vos casi no hagás nada</h2>
     <p class="lede">Sos bueno en lo tuyo y no tenés tiempo para esto. El servicio está armado al revés de un curso: <b>vos ponés el aporte, nosotros ponemos todo lo demás.</b></p>
 
@@ -477,7 +538,7 @@
 
   <!-- 11 · DASHBOARD -->
   <section id="dashboard">
-    <div class="num">11</div>
+    <div class="num">12</div>
     <h2>Lo ves todo, cuando querás</h2>
     <p class="lede">Dos ventanas a tu plata. La de <b>Alpaca</b>, con tu usuario, donde está la cuenta. Y tu <b>dashboard</b> en investorcr.com, donde está el plan: cuánto te falta, en qué fase vas, qué hizo la señal y qué puso el mercado.</p>
 
@@ -492,7 +553,7 @@
 
   <!-- 12 · PRECIO -->
   <section id="precio">
-    <div class="num">12</div>
+    <div class="num">13</div>
     <h2>Cuánto cuesta</h2>
     <div class="precio">
       <div class="p">$1,500<small>una sola vez</small></div>
@@ -515,7 +576,7 @@
 
   <!-- 13 · CLIENTES -->
   <section id="clientes">
-    <div class="num">13</div>
+    <div class="num">14</div>
     <h2>Quién está del otro lado</h2>
     <div class="jose">
       <img src="/assets/jose-montero.webp" alt="Jose Montero" loading="lazy">
@@ -565,6 +626,35 @@ track("info_vista", {});
 Array.prototype.forEach.call(document.querySelectorAll("[data-cta]"), function(el){
   el.addEventListener("click", function(){ track("click_cta_info", {cta: el.getAttribute("data-cta")}); });
 });
+
+// Secuencia: cinco vistas de /past con parámetros en la URL.
+(function(){
+  var base="/past/?embed=1&anio=1999&edad=30";
+  var PASOS=[
+    {q:"&sel=cash,qqq&inicial=10000&aporte=0", t:"<b>$10,000 guardados en 1999</b> contra los mismos $10,000 en el Nasdaq 100 comprando y manteniendo. Mirá las caídas de 2000 y de 2008: eso es lo que asusta, y aun así la plata quieta pierde por paliza."},
+    {q:"&sel=qqq,eqqq&inicial=10000&aporte=0", t:"<b>Mismo índice, misma plata, con nuestro edge:</b> cuando la tendencia se rompe, la plata se pasa a efectivo; cuando vuelve, se reentra. Menos caída y más plata con el mismo activo."},
+    {q:"&sel=tqqq,etqqq,eqqq&inicial=10000&aporte=0", t:"<b>Ahora apalancado.</b> TQQQ comprando y manteniendo se destruye en las caídas largas. Con el edge, el apalancamiento trabaja a favor: por eso solo lo usamos con la señal encendida."},
+    {q:"&sel=qqq,etqqq&inicial=10000&aporte=500", t:"<b>Con $500 al mes.</b> Así se ve la fase 1 de tu plan: cada aporte entra con el edge trabajando, contra comprar y mantener el Nasdaq. Compará cuánto pusiste con cuánto hay."},
+    {q:"&mode=fp&inicial=10000&aporte=500&meta=5000", t:"<b>Tu plan completo, el Freedom Point.</b> Arrancás apalancado con el edge y, conforme te acercás a la meta, la plata pasa al índice sin apalancar y luego a renta fija, que es tu piso. Meta: vivir con $5,000 al mes."}
+  ];
+  var fr=document.getElementById("seq-frame"), cap=document.getElementById("seq-cap"), btns=document.getElementById("seq-btns");
+  if(!fr) return;
+  function ir(i){
+    Array.prototype.forEach.call(btns.querySelectorAll("button"), function(b){ b.classList.toggle("on", parseInt(b.getAttribute("data-i"),10)===i); });
+    cap.innerHTML=PASOS[i].t; fr.src=base+PASOS[i].q;
+    track("info_secuencia", {paso:i+1});
+  }
+  function ajustar(){ try{ var d=fr.contentDocument; if(d && d.body){ var h=d.documentElement.scrollHeight; if(h>300) fr.style.height=(h+8)+"px"; } }catch(e){} }
+  fr.addEventListener("load", function(){ setTimeout(ajustar, 600); setTimeout(ajustar, 2500); });
+  window.addEventListener("resize", ajustar);
+  btns.addEventListener("click", function(e){ var b=e.target.closest("button"); if(b) ir(parseInt(b.getAttribute("data-i"),10)); });
+  // carga perezosa: la primera vista entra cuando la sección se acerca
+  var sec=document.getElementById("secuencia");
+  if("IntersectionObserver" in window){
+    var io2=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ cap.innerHTML=PASOS[0].t; fr.src=base+PASOS[0].q; io2.disconnect(); } }); }, {rootMargin:"400px"});
+    io2.observe(sec);
+  } else { ir(0); }
+})();
 
 // Barras del costo de oportunidad: crecen cuando entran en pantalla.
 (function(){
