@@ -320,6 +320,9 @@ function fmtPct(v){ return Math.round(v*100)+"%"; }
 function fmtAporte(v){ return v.toLocaleString("en-US"); }
 function niceStep(raw){ var p=Math.pow(10,Math.floor(Math.log10(raw))), m=raw/p; if(m<=1) return p; if(m<=2) return 2*p; if(m<=2.5) return 2.5*p; if(m<=5) return 5*p; return 10*p; }
 
+// ¿alguna línea en pantalla usa nuestro edge? Si no, no hay "adentro / afuera" que mostrar.
+function conEdge(){ return MODES[mode].lines.some(function(L){ return L.k.charAt(0)==="e" || L.k==="fp"; }); }
+
 // ---- canvas
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d"), cv2=document.getElementById("cv2"), ctx2=cv2.getContext("2d");
 var W=0,H=0,H2=0,DPR=1;
@@ -345,7 +348,7 @@ function draw(p){
   ctx.textBaseline="middle";
   var small=W<560;
   var fp=mode==="fp";
-  var mL=small?46:64, mR=small?104:150, mT=16, strip=fp?18:12, mB=30+strip+8;
+  var edg=conEdge(), mL=small?46:64, mR=small?104:150, mT=16, strip=fp?18:(edg?12:0), mB=30+strip+(edg?8:0);
   var pw=W-mL-mR, ph=H-mT-mB;
   var lines=MODES[mode].lines;
   var n=E-S, f=p*n, iI=Math.floor(f);
@@ -392,7 +395,7 @@ function draw(p){
 
   // franja: en FP la mezcla (TQQQ / QQQ / renta fija) con una línea fina adentro/afuera; si no, adentro (menta) / en efectivo (ámbar)
   var sy0=mT+ph+4;
-  for(var j6=0;j6<=Math.min(iI,n);j6++){
+  for(var j6=0;edg && j6<=Math.min(iI,n);j6++){
     var i0=S+j6, x0=X(DEC[i0]), x1=X(j6<n?DEC[i0+1]:DEC[i0]+0.02);
     if(j6===iI) x1=X(tCur);
     var ww=Math.max(0.6,x1-x0+0.6), inM=D.pos[i0]>=0.5;
@@ -485,6 +488,7 @@ function live(f, tCur, vNow, invNow){
   var age=Math.floor(edad+(DEC[i]-DEC[S])+1e-6);
   elEdad.textContent=age+" años"; elFecha.textContent=MESES[o.m-1]+" "+o.y;
   var inM=D.pos[i]>=0.5;
+  pill.style.display=conEdge()?"":"none";
   pill.className="pill"+(inM?"":" out"); pillT.textContent=inM?"Adentro del mercado":"Afuera, en efectivo";
   kpis(vNow, invNow, f>=E-S-1e-9);
 }
@@ -525,7 +529,7 @@ function kpis(vNow, invNow, done){
 function legend(){
   var h=MODES[mode].lines.map(function(L){ return '<span><i style="background:'+L.col+'"></i>'+L.nom+'</span>'; }).join("");
   if(mode==="fp") h+='<span><i class="sq" style="background:'+FP_COL.L+'"></i>TQQQ</span><span><i class="sq" style="background:'+FP_COL.E+'"></i>QQQ</span><span><i class="sq" style="background:'+FP_COL.F+'"></i>renta fija 8%</span>';
-  h+='<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
+  if(conEdge()) h+='<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
   document.getElementById("f-meta").classList.toggle("hid", !(mode==="fp" || (mode==="cust"&&SEL.fp)));
   document.getElementById("sel").classList.toggle("hid", mode!=="cust");
   document.getElementById("leg").innerHTML=h;
