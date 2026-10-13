@@ -9,57 +9,87 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap">
 <style>
-/* Página interna para la llamada de venta. Riel principal = pitch TFM (≤10 min). Lo técnico vive en anexos. Notas de Jose ocultas (tecla G). */
+/* Página interna para la llamada de venta. Riel = pitch TFM (≤10 min). Reusa los componentes de /medicos (clips, testimonios, FAQ); cero láminas de PPT. Notas de Jose ocultas (tecla G). */
 :root{
   --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
-  --muted:#9aa3b2; --linea:#262b33; --nota-bg:#2b2412; --nota-borde:#8a6d1a; --nota-fg:#ffd977;
+  --gris:#9aa3b2; --linea:#262b33; --input:#1d232b;
+  --nota-bg:#2b2412; --nota-borde:#8a6d1a; --nota-fg:#ffd977;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:18px;line-height:1.55}
-.wrap{max-width:1040px;margin:0 auto;padding:0 20px 120px}
-section{padding:72px 0 28px;border-bottom:1px solid var(--linea)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 120px}
+section{padding:68px 0 26px;border-bottom:1px solid var(--linea)}
 h1,h2,h3{line-height:1.12;text-wrap:balance;margin:0 0 14px}
-h1{font-size:clamp(34px,6vw,58px);font-weight:700}
-h2{font-size:clamp(26px,4vw,38px);font-weight:700}
+h1{font-size:clamp(34px,6vw,56px);font-weight:700}
+h2{font-size:clamp(25px,4vw,36px);font-weight:700}
+h2 em{color:var(--menta);font-style:italic}
 h3{font-size:20px;font-weight:600}
 p{margin:0 0 12px;max-width:68ch}
 .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--menta);font-weight:600;margin-bottom:10px}
-.menta{color:var(--menta)} .peri{color:#8b9bff}
+.menta{color:var(--menta)} .peri{color:#8b9bff} .muted{color:var(--gris)}
+ul{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:8px}
 .grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .card{background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;padding:22px;min-width:0}
 .card h3{color:var(--menta)}
 .paso{display:flex;gap:16px;align-items:baseline}
 .paso .n{font-size:40px;font-weight:700;color:var(--peri);font-variant-numeric:tabular-nums}
-img{max-width:100%;border-radius:12px;display:block}
-.imgline{border:1px solid var(--linea)}
-video{display:block;max-width:100%;max-height:540px;width:auto;margin:0 auto;border-radius:12px;background:#000}
 .btn{display:inline-block;background:var(--menta);color:#0b2416;font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;font-size:18px}
-.btn.ghost{background:transparent;color:var(--crema);border:1px solid var(--muted);font-weight:600}
-.btn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+.btn:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
 .fila-btn{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:18px}
-.precio{font-size:clamp(40px,7vw,72px);font-weight:700;color:var(--menta);margin:6px 0}
-ul{margin:0 0 12px;padding-left:22px}
-li{margin-bottom:8px}
-.muted{color:var(--muted)}
+.precio{font-size:clamp(40px,7vw,70px);font-weight:700;color:var(--menta);margin:6px 0}
 .num-row{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
-.num-row label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted);min-width:0}
-.num-row input{background:var(--tinta2);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:22px;font-weight:600;padding:10px 12px;border-radius:10px;width:150px;font-variant-numeric:tabular-nums}
+.num-row label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gris);min-width:0}
+.num-row input{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:22px;font-weight:600;padding:10px 12px;border-radius:10px;width:150px;font-variant-numeric:tabular-nums}
 .fp-out{background:var(--tinta2);border:1px solid var(--peri);border-radius:14px;padding:18px 22px;margin-top:8px}
-.fp-out .big{font-size:clamp(34px,6vw,54px);font-weight:700;color:var(--crema);font-variant-numeric:tabular-nums}
-details{background:var(--tinta2);border:1px solid var(--linea);border-radius:12px;margin:10px 0;overflow:hidden}
-summary{cursor:pointer;padding:16px 20px;font-weight:600;font-size:17px;list-style:none}
-summary::before{content:"+ ";color:var(--menta);font-weight:700}
-details[open] summary::before{content:"− "}
-details .inner{padding:4px 20px 20px}
-/* Notas de Jose (psicología de venta). Ocultas por defecto; tecla G o botón. Fondo ámbar para saber que están visibles. */
+.fp-out .big{font-size:clamp(32px,6vw,52px);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* ===== clips de doctores (mismo patrón de /medicos) ===== */
+.dgrid{display:grid;gap:18px;margin-top:10px}
+@media(min-width:860px){ .dgrid{grid-template-columns:repeat(3,1fr);gap:14px} }
+.dvid{margin:0}
+.dvid video{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:14px;background:#000;display:block}
+.dvid figcaption{margin-top:9px;font-size:14.5px;color:var(--gris);text-align:center}
+.dvid figcaption b{color:var(--crema)}
+.dvid .dq{display:block;font-size:13.5px;color:var(--menta);margin-top:3px;font-style:italic}
+
+/* ===== testimonios (mismo patrón de /medicos) ===== */
+.tfeat{position:relative;background:linear-gradient(180deg,#16231c,#171c22);border:1px solid rgba(99,252,175,.42);border-radius:20px;padding:28px 22px 22px;margin-top:26px;display:flex;gap:18px;align-items:flex-start}
+.tfeat-badge{position:absolute;top:-12px;left:22px;background:var(--menta);color:#082018;font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:5px 13px;border-radius:999px}
+.tfeat-photo{flex:0 0 auto;width:130px;height:130px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--input);box-shadow:0 0 0 3px rgba(99,252,175,.35)}
+.stars{color:var(--menta);letter-spacing:2px;font-size:14px}
+.tfeat .quote{font-size:15px;line-height:1.6;color:var(--crema);margin:10px 0 12px}
+.tname{font-size:15px;font-weight:700}
+.tname .role{font-weight:400;color:var(--gris);font-size:13px}
+@media(max-width:560px){ .tfeat{flex-direction:column;align-items:center;text-align:center;gap:14px} .tfeat-photo{width:120px;height:120px} }
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:560px){ .tgrid{grid-template-columns:1fr} }
+.tcard{background:var(--tinta2);border:1px solid var(--linea);border-radius:16px;padding:22px 20px;display:flex;flex-direction:column}
+.tcard .quote{font-size:14px;line-height:1.6;color:var(--gris);margin:10px 0 14px;flex:1}
+.tcard .who{display:flex;gap:14px;align-items:center}
+.tcard .who img{width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:top center;background:var(--input);flex:0 0 auto;box-shadow:0 0 0 3px rgba(99,252,175,.3)}
+.tcard .name{font-size:14.5px;font-weight:700}
+.tcard .role{font-size:12.5px;color:var(--gris);margin-top:1px}
+video.vert{display:block;max-width:100%;max-height:540px;width:auto;margin:0 auto;border-radius:14px;background:#000}
+
+/* ===== FAQ (mismo patrón de /medicos) ===== */
+.faq details{background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;margin-top:12px;padding:0 18px}
+.faq summary{cursor:pointer;list-style:none;padding:16px 0;font-size:15.5px;font-weight:600;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--menta);font-size:22px;flex:0 0 auto;line-height:1}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{font-size:14.5px;line-height:1.6;color:var(--gris);padding:0 0 14px;margin:0}
+.faq details p b{color:var(--crema)}
+.faq .gar{margin:0 0 14px;background:rgba(99,252,175,.06);border:1px solid rgba(99,252,175,.35);border-radius:12px;padding:12px 14px}
+
+/* ===== notas de Jose (guion). Ocultas por defecto; tecla G. ===== */
 .nota{display:none;background:var(--nota-bg);border:1px dashed var(--nota-borde);color:var(--nota-fg);border-radius:12px;padding:16px 18px;margin:18px 0 0;font-size:16px}
 .nota b{color:#ffe9ad}
 body.coach .nota{display:block}
 .nota .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:8px;color:#d9b753}
-#coachBtn{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--tinta2);border:1px solid var(--linea);color:var(--muted);border-radius:999px;padding:10px 16px;font:inherit;font-size:14px;cursor:pointer}
+#coachBtn{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--tinta2);border:1px solid var(--linea);color:var(--gris);border-radius:999px;padding:10px 16px;font:inherit;font-size:14px;cursor:pointer}
 body.coach #coachBtn{background:var(--nota-bg);border-color:var(--nota-borde);color:var(--nota-fg)}
 .aviso-coach{position:fixed;top:0;left:0;right:0;z-index:49;display:none;background:var(--nota-bg);color:var(--nota-fg);text-align:center;font-size:13px;padding:6px;border-bottom:1px solid var(--nota-borde)}
 body.coach .aviso-coach{display:block}
@@ -89,7 +119,7 @@ body.coach .aviso-coach{display:block}
 <!-- ============ 1 · TU NÚMERO ============ -->
 <section id="numero">
   <div class="eyebrow">1 · Tu número</div>
-  <h2>El retiro empieza por un número, no por un producto</h2>
+  <h2>El retiro empieza por <em>un número</em>, no por un producto</h2>
   <p>¿Con cuánto al mes bajás el ritmo sin trabajar por necesidad? Eso define tu <b>Freedom Point</b>: el capital que paga ese ingreso sin tocar el capital.</p>
   <div class="num-row">
     <label>Ingreso meta al mes (USD)<input id="ing" type="number" value="7000" min="500" step="500"></label>
@@ -115,15 +145,22 @@ body.coach .aviso-coach{display:block}
 <section id="jose">
   <div class="eyebrow">2 · Quién te acompaña</div>
   <h2>Jose Montero</h2>
-  <img class="imgline" src="img/jose.png" alt="Jose Montero: 11 años gestionando portafolios, 4 años en London Stock Exchange, $1.1M administrados" loading="lazy">
-  <p style="margin-top:12px">3 de cada 10 clientes nuestros son médicos. Esposo, papá de tres.</p>
+  <div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
+  <img src="/assets/jose-montero.webp" alt="Jose Montero" loading="lazy" style="width:150px;height:150px;border-radius:50%;object-fit:cover;object-position:top center;box-shadow:0 0 0 3px rgba(99,252,175,.35);flex:0 0 auto">
+  <ul style="flex:1;min-width:260px">
+    <li><b>11 años</b> gestionando portafolios en la bolsa de EE. UU.</li>
+    <li>4.5 años en <b>LSEG (London Stock Exchange Group)</b>; antes, una firma que manejaba $600 millones.</li>
+    <li><b>3 de cada 10 clientes nuestros son médicos.</b></li>
+    <li>Esposo. Papá de tres.</li>
+  </ul>
+  </div>
   <div class="nota"><span class="tag">Regla [TFM 06/008]</span>Dos cosas rápidas de quién sos y seguí. Nada de maestrías ni misión/visión: “decime cómo me hacés ganar plata”.</div>
 </section>
 
 <!-- ============ 3 · CÓMO FUNCIONA ============ -->
 <section id="pasos">
   <div class="eyebrow">3 · Cómo funciona</div>
-  <h2>Tres pasos simples, <span class="menta">~1 mes</span> para dejar listo tu sistema</h2>
+  <h2>Tres pasos simples, <em>~1 mes</em> para dejar listo tu sistema</h2>
   <div class="grid g2">
     <div class="card"><div class="paso"><span class="n">1</span><div><h3>Tu cuenta</h3><p>Formulario de apertura en el bróker (EE. UU., a tu nombre), firma de contrato. <b>Para</b> que la plata nunca salga de tu control.</p></div></div></div>
     <div class="card"><div class="paso"><span class="n">2</span><div><h3>Tu transferencia</h3><p>Guía paso a paso de la transferencia internacional, cuenta de ahorro de alto rendimiento habilitada, accesos para que yo solo pueda comprar y vender. <b>Para</b> que empecés seguro y sin trámites a ciegas.</p></div></div></div>
@@ -133,14 +170,14 @@ body.coach .aviso-coach{display:block}
   <div class="nota"><span class="tag">Pitch ≤10 min [TFM 06/005]</span>
     <b>Transición:</b> “Buenas noticias: sí te puedo ayudar a llegar a [su número]. Lo haríamos así. Te comparto pantalla.”
     · Personalizá: “¿te acordás que me dijiste X? Eso lo resolvemos en el Paso 2.”
-    · <b>No des la asesoría</b>: papers, Monte Carlo y señal viven en los anexos de abajo, SOLO si pregunta.
+    · <b>No des la asesoría</b>: papers, Monte Carlo y señal viven en los anexos, SOLO si pregunta.
     · Mencioná la duración 3 veces (“un mes… en ese mes… al final del mes”).
   </div>
 </section>
 
 <!-- ============ 4 · LA INVERSIÓN ============ -->
 <section id="inversion">
-  <div class="eyebrow">4 · La inversión</div>
+  <div class="eyebrow">4 · Qué incluye</div>
   <div class="precio">$2,000 <span style="font-size:.45em;color:var(--crema);font-weight:600">una única vez</span></div>
   <p><b>Incluye todo el primer año.</b> Desde el año 2, 1% anual sobre la cuenta. Nada más.</p>
   <ul>
@@ -155,59 +192,95 @@ body.coach .aviso-coach{display:block}
     Con la misma naturalidad con la que decís tu nombre. <b>“La inversión es de $2,000 por todo el primer año; desde el año 2 es 1% anual.” Y silencio.</b>
     PROHIBIDO: “es caro”, “tengo plan de pagos”, bajar el precio sin que lo pidan (Parra: −$1,000). Cuotas SOLO si las piden y al final.
     Después del precio, <b>segundo puente</b>: “Bueno, ahora sí lo importante…” y pasás a los casos.
-    <br><b>⚠ Coach:</b> el deck dice $2,000; el plan de foco dice $1,500 fijo; a Marco y Daniel les cobraste $1,500. <b>Elegí UNA cifra y usala siempre</b> — decidilo hoy.
+    <br><b>⚠ Coach:</b> el deck dice $2,000; el plan de foco dice $1,500 fijo; a Marco y Daniel les cobraste $1,500. <b>Elegí UNA cifra y usala siempre.</b>
   </div>
 </section>
 
 <!-- ============ 5 · CASOS REALES ============ -->
 <section id="casos">
   <div class="eyebrow">5 · Casos reales</div>
-  <h2>Gente como vos, con su plata <span class="menta">en su propia cuenta</span></h2>
-  <div class="grid g2" style="margin-bottom:18px">
-    <figure style="margin:0">
-      <video controls preload="none" poster="clips/pablo-poster.png" src="clips/pablo-mesen.mp4"></video>
-      <figcaption class="muted" style="margin-top:6px">Pablo Mesén — “¿por qué estás seguro de que no es estafa?”</figcaption>
+  <h2>Otros médicos, <em>con el plan andando</em></h2>
+  <div class="dgrid">
+    <figure class="dvid">
+      <video controls playsinline preload="none" poster="/medicos/clips/william.webp" oncontextmenu="return false">
+        <source src="/medicos/clips/william.mp4?v=3" type="video/mp4">
+      </video>
+      <figcaption><b>Dr. William Solís</b> · Urólogo<span class="dq">“A los 55 años ya no quiero hacer disponibilidades”</span></figcaption>
     </figure>
-    <figure style="margin:0">
-      <video controls preload="none" poster="clips/mariana-poster.png" src="clips/mariana-serrano.mp4"></video>
-      <figcaption class="muted" style="margin-top:6px">Mariana Serrano — “¿qué te hizo sentir seguridad?”</figcaption>
+    <figure class="dvid">
+      <video controls playsinline preload="none" poster="/medicos/clips/luis.webp" oncontextmenu="return false">
+        <source src="/medicos/clips/luis.mp4?v=3" type="video/mp4">
+      </video>
+      <figcaption><b>Dr. Luis Aguilar</b> · Anestesiólogo<span class="dq">“Desde un punto de vista es increíble, desde otro es esclavizante”</span></figcaption>
+    </figure>
+    <figure class="dvid">
+      <video controls playsinline preload="none" poster="/medicos/clips/mariana.webp" oncontextmenu="return false">
+        <source src="/medicos/clips/mariana.mp4?v=3" type="video/mp4">
+      </video>
+      <figcaption><b>Dra. Mariana Peña</b> · Ginecóloga<span class="dq">“Nadie busca hacer plata por hacer plata”</span></figcaption>
     </figure>
   </div>
-  <div class="grid g2">
-    <img class="imgline" src="img/t-mariana-pena.png" alt="Testimonio de Mariana Peña, ginecóloga UCR CCSS" loading="lazy">
-    <img class="imgline" src="img/t-andres-reyes.png" alt="Testimonio de Andrés Reyes, Senior Vice President Citibank" loading="lazy">
-    <img class="imgline" src="img/t-javier-vargas.png" alt="Testimonio de Javier Vargas, TAPP: 70% en dos años" loading="lazy">
-    <img class="imgline" src="img/t-monica.png" alt="Testimonio de Mónica Blanco, PHD Costa Rica" loading="lazy">
-    <img class="imgline" src="img/t-anne.png" alt="Testimonio de Anne Baudrit, JLL" loading="lazy">
-    <img class="imgline" src="img/t-andres-castro.png" alt="Testimonio de Andrés Castro, CEO CADMI" loading="lazy">
-    <img class="imgline" src="img/t-ramses.png" alt="Testimonio de Ramsés Espinoza, CocoJamboo" loading="lazy">
-    <img class="imgline" src="img/t-maricruz.png" alt="Testimonio de Maricruz Linares" loading="lazy">
-    <img class="imgline" src="img/t-agustin.png" alt="Testimonio de Agustín Fallas, fotógrafo" loading="lazy">
+
+  <div class="tfeat">
+    <span class="tfeat-badge">★ Médico especialista</span>
+    <img class="tfeat-photo" src="/assets/testimonios/foto-6-cara.webp" alt="Mariana Peña" loading="lazy">
+    <div>
+      <div class="stars">★★★★★</div>
+      <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas.</p>
+      <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
+    </div>
   </div>
-  <details style="margin-top:16px"><summary>Una cuenta real por dentro (inversión en tercios, caída de tarifas)</summary><div class="inner">
-    <img class="imgline" src="img/caso-andres-cuenta.png" alt="Reporte de cuenta de Andrés Reyes con entrada de TQQQ a 39.62" loading="lazy">
-    <img class="imgline" src="img/oportunidad-whatsapp.png" alt="WhatsApps de abril 2025 a abril 2026: así se ve una oportunidad" loading="lazy" style="margin-top:12px">
-  </div></details>
+
+  <div class="grid g2" style="margin-top:18px">
+    <figure style="margin:0">
+      <video class="vert" controls preload="none" poster="clips/pablo-poster.png" src="clips/pablo-mesen.mp4"></video>
+      <figcaption class="muted" style="margin-top:6px;text-align:center">Pablo Mesén — “¿por qué estás seguro de que no es estafa?”</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <video class="vert" controls preload="none" poster="clips/mariana-poster.png" src="clips/mariana-serrano.mp4"></video>
+      <figcaption class="muted" style="margin-top:6px;text-align:center">Mariana Serrano — “¿qué te hizo sentir seguridad?”</figcaption>
+    </figure>
+  </div>
+
+  <div class="tgrid">
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+      <div class="who"><img src="/assets/testimonios/foto-5-cara.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+      <div class="who"><img src="/assets/testimonios/foto-7-cara.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+      <div class="who"><img src="/assets/testimonios/foto-8-cara.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
+    </div>
+    <div class="tcard">
+      <div class="stars">★★★★★</div>
+      <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+      <div class="who"><img src="/assets/testimonios/foto-10-cara.webp" alt="Ramsés Espinoza" loading="lazy"><div><div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div></div>
+    </div>
+  </div>
   <div class="nota"><span class="tag">Regla [TFM 06/008]</span>
-    No los muestres todos: <b>elegí 2–3 parecidos a la persona</b> (médico → Peña + los clips; corporativo → Reyes/Vargas) y contalos de palabra: de dónde es, a qué se dedica, qué logró. La meta es que piense “ese puedo ser yo”.
+    No muestres todo: <b>elegí 2–3 parecidos a la persona</b> (médico → clips de William/Luis/Peña; corporativo → Reyes/Vargas; primera inversión → Maricruz/Mariana Serrano) y contalos de palabra: de dónde es, a qué se dedica, qué logró. La meta es que piense “ese puedo ser yo”.
+    <br>Permisos: clips de William, Luis y Peña confirmados (5 oct). El de Mariana Serrano es para uso en llamada; antes de pauta pública, pasale el clip como prometiste.
   </div>
 </section>
 
 <!-- ============ 6 · TU CUENTA, TU CONTROL ============ -->
 <section id="control">
   <div class="eyebrow">6 · Tu cuenta, tu control</div>
-  <h2>Yo solo puedo comprar y vender. <span class="menta">Ni un dólar sale sin vos.</span></h2>
+  <h2>Yo solo puedo comprar y vender. <em>Ni un dólar sale sin vos.</em></h2>
   <ul>
     <li>Cuenta a TU nombre en un bróker regulado de EE. UU. — protegida por SIPC hasta <b>$500,000</b> (en CR el banco cubre ~₡6 millones).</li>
-    <li>Depositás y retirás cuando querás. Cero letra menuda, cero penalidades.</li>
-    <li>Ves todo en vivo: posiciones, movimientos, cada comisión.</li>
-    <li>Al pasar $100k armamos testamento de vida. Contrato firmado desde el día 1.</li>
+    <li><b>Nunca nos transferís plata a nosotros:</b> va directo de tu banco a tu cuenta. Nuestro permiso es solo comprar y vender; no podemos depositar ni retirar.</li>
+    <li>Depositás y retirás cuando querás. Cero letra menuda, cero penalidades, sin contratos de permanencia.</li>
+    <li>Ves todo en vivo desde tu celular: posiciones, movimientos, cada comisión. Al pasar $100k armamos testamento de vida.</li>
   </ul>
-  <div class="grid g3">
-    <img class="imgline" src="img/alpaca-dashboard.png" alt="Dashboard de la cuenta en Alpaca" loading="lazy">
-    <img class="imgline" src="img/alpaca-actividades.png" alt="Historial de actividades: transparencia en cada movimiento" loading="lazy">
-    <img class="imgline" src="img/alpaca-transferencias.png" alt="Depósitos y retiros con libertad" loading="lazy">
-  </div>
+  <p class="muted">Si quiere verlo con sus ojos: abrí tu propia cuenta de Alpaca en pantalla (datos tapados) y mostrale posiciones, actividades y la pestaña de transferencias.</p>
   <div class="nota"><span class="tag">Decilo ANTES de que pregunten</span>
     Es tu respuesta más fuerte (cerró a William, Parra y Andrés) y la objeción por la que se cayó Hugo. Va dentro del Paso 2, no esperés el “¿y si te morís vos?”.
   </div>
@@ -216,60 +289,91 @@ body.coach .aviso-coach{display:block}
 <!-- ============ 7 · ARRANCAMOS ============ -->
 <section id="cierre">
   <div class="eyebrow">7 · Arrancamos</div>
-  <h2>El Paso 1 toma <span class="menta">10 minutos</span> y lo hacemos ahora</h2>
+  <h2>El Paso 1 toma <em>10 minutos</em> y lo hacemos ahora</h2>
   <p>Abrimos el formulario de la cuenta juntos, te paso el link de pago y quedamos con fecha para tu primera transferencia. Hoy salís con el sistema andando.</p>
   <div class="nota"><span class="tag">Cierre [TFM 06/006]</span>
     “Eso sería todo. Si algo no quedó claro, preguntame. Y si no, decime honestamente qué te gustaría hacer, si querés comenzar…” <b>SILENCIO.</b>
     Si dice sí: “Te paso el link ahora, hacemos el pago y empezamos. ¿Te parece?” — y abrís la cuenta EN la llamada (estándar Parra).
     <br><b>Toda llamada termina en:</b> (a) cuenta + pago + fecha de transferencia, o (b) razón concreta + fecha + tarea (pareja invitada a la 2.ª). “Pensalo” no es un resultado.
+    <br><b>Al cerrar (o al agendar la 2.ª): pedí UN referido</b> — “¿a qué colega de tu servicio le serviría esto? ¿me das permiso de escribirle?” [Hormozi, Leads].
     <br><b>Objeciones en una frase:</b> “en enero” → costo de esperar con SUS números · “mi pareja” → “invitala, lo vemos juntos el [día]” · “¿fase agresiva cuánto dura?” → “9–15 años históricos, y vos lo acortás con cada aporte; depende del avance, no del calendario” · “muy técnico” → resumí en 3 pasos, no agregués detalle.
   </div>
+</section>
+
+<!-- ============ PREGUNTAS FRECUENTES (las de /medicos) ============ -->
+<section class="faq" id="faq">
+  <div class="eyebrow">Si pregunta · respuestas listas</div>
+  <h2>Preguntas <em>frecuentes</em></h2>
+  <details>
+    <summary>¿Para quién tiene sentido? ¿Necesito un capital mínimo?</summary>
+    <p>El servicio tiene sentido si podés apartar alrededor de <b>$500 al mes</b> o tenés <b>$10k o más listos para invertir</b>. Nunca quedás "obligado" a aportar cada mes.</p>
+  </details>
+  <details>
+    <summary>¿Qué servicio me ofrecen y cómo cobran?</summary>
+    <p>Gestionamos tu portafolio dentro de tu propia cuenta, a tu nombre. El primer año se paga con el honorario único que viste arriba, que incluye todo el primer año de gestión. A partir del año 2, un honorario del <b>1% anual</b> sobre el monto administrado.</p>
+    <p>Sin contratos de permanencia ni letra pequeña: podés irte cuando querás y la cuenta sigue siendo tuya.</p>
+    <div class="gar">
+      <p><b>Garantía de satisfacción sobre el honorario inicial.</b> La garantía de 30 días contempla la devolución del honorario completo bajo estas condiciones: cuenta abierta, transferencia hecha y plan creado.</p>
+      <p>La garantía cubre el honorario, no el resultado de las inversiones: tu capital está en tu cuenta, sujeto a las subidas y bajadas del mercado.</p>
+    </div>
+  </details>
+  <details>
+    <summary>¿Qué los hace a ustedes diferentes?</summary>
+    <p>Tres cosas. Primero, <b>la plata nunca sale de tu control</b>: nada de empresas offshore ni fondos donde tu capital se mezcla con el de otros. Tu cuenta, a tu nombre, en un bróker regulado de EE.&nbsp;UU., y la ves desde tu celular cuando querás.</p>
+    <p>Segundo, <b>la metodología está basada en papers académicos</b> —como el de Yale (Ayres &amp; Nalebuff)—, adaptada a tu cuenta, y prioriza tu edad de retiro. Además tenemos <b>11 años de experiencia</b> en manejo de portafolios.</p>
+    <p>Tercero, <b>conocemos tu realidad</b>: 3 de cada 10 clientes nuestros son médicos. Sabemos lo que es una guardia, una dispo y un ingreso que varía mes a mes.</p>
+  </details>
+  <details>
+    <summary>¿Cuánto tiempo y esfuerzo me va a tomar?</summary>
+    <p>Lo menos posible: es un servicio <b>done for you</b> — el portafolio lo manejamos nosotros por vos.</p>
+    <p>Tu parte se resume en dos cosas: ir mandando plata a tu cuenta, e ir al banco una vez para dejar lista la plantilla de transferencias internacionales. Y en eso <b>te guiamos paso a paso, click por click</b>.</p>
+  </details>
+  <details>
+    <summary>¿Qué pasa si un mes no puedo aportar?</summary>
+    <p>Nada. No hay contratos de aporte obligatorio, ni multas, ni letra pequeña. El aporte es una meta de tu plan, no una obligación con nosotros: si un mes no podés, no aportás y el plan sigue.</p>
+    <p>Eso sí, la constancia es lo que hace que el plan llegue a la meta. Si tu situación cambia de forma más permanente, ajustamos el plan juntos.</p>
+  </details>
+  <details>
+    <summary>¿Qué pasa si necesito la plata por una emergencia?</summary>
+    <p>Es tu cuenta y tu plata: podés retirarla cuando querás, sin penalizaciones ni períodos de encierro. Nos avisás, vendemos lo necesario y transferís de tu cuenta en el bróker directo a tu banco. Pocos días hábiles.</p>
+    <p>Por eso recomendamos invertir solo plata que no vas a necesitar en el corto plazo.</p>
+  </details>
+  <details>
+    <summary>¿Cómo se hace la transferencia? ¿Se la hacen a ustedes?</summary>
+    <p><b>No. Nunca nos transferís plata a nosotros.</b> La transferencia va directo de tu banco a tu propia cuenta, a tu nombre, en el bróker regulado en EE.&nbsp;UU. Nosotros ni siquiera podemos tocarla: nuestro permiso es únicamente comprar y vender.</p>
+    <p>Te guiamos paso a paso en la transferencia internacional, igual que con todos nuestros clientes.</p>
+  </details>
+  <details>
+    <summary>¿Usted qué estudió? ¿Qué experiencia tiene?</summary>
+    <p>Estudié Administración de Empresas. Trabajé en una firma de inversión que manejaba $600 millones de dólares, y 4.5 años en LSEG (London Stock Exchange Group).</p>
+    <p>En total llevo 11 años manejando portafolios de inversión.</p>
+  </details>
 </section>
 
 <!-- ============ ANEXOS ============ -->
 <section id="anexos">
   <div class="eyebrow">Anexos · solo si preguntan</div>
-  <h2 class="muted" style="font-size:26px">La cocina por dentro</h2>
-  <details><summary>¿Por qué invertir? Inflación y costo de no invertir</summary><div class="inner">
-    <img class="imgline" src="img/a-inflacion.png" alt="La inflación mata el dinero: valor adquisitivo de 100 dólares y 100 colones desde 1960" loading="lazy">
-    <img class="imgline" src="img/a-10k-1999.png" alt="10 mil dólares invertidos desde abril 1999: Nasdaq 117k, S&P 73k, CDP 20k" loading="lazy" style="margin-top:12px">
-  </div></details>
-  <details><summary>Rendimientos históricos por alternativa (CDP, pensión voluntaria, bienes raíces, índices)</summary><div class="inner">
-    <img class="imgline" src="img/a-tabla-activos.png" alt="Tabla de activos: rendimiento histórico y riesgo" loading="lazy">
-    <img class="imgline" src="img/a-supen-vs-spy.png" alt="Fondo voluntario de pensiones vs S&P 500" loading="lazy" style="margin-top:12px">
-  </div></details>
-  <details><summary>Los riesgos, de frente: peores caídas del S&P 500 y del Nasdaq 100</summary><div class="inner">
-    <img class="imgline" src="img/a-drawdowns-sp.png" alt="Los 10 peores momentos del S&P 500" loading="lazy">
-    <img class="imgline" src="img/a-drawdowns-ndx.png" alt="Los 10 peores momentos del Nasdaq 100" loading="lazy" style="margin-top:12px">
-    <p class="muted" style="margin-top:10px">El contra real: que necesités la plata en una caída. Por eso el plan mide el avance a TU meta, no el mes a mes.</p>
-  </div></details>
-  <details><summary>Cómo proyectamos: ejemplo de estrategia y Monte Carlo</summary><div class="inner">
-    <img class="imgline" src="img/a-estrategia-ejemplo.png" alt="Ejemplo de estrategia de inversión a 20 años" loading="lazy">
-    <img class="imgline" src="img/a-metodologia.png" alt="Metodología: simulación Monte Carlo con datos 1983-2024" loading="lazy" style="margin-top:12px">
-    <img class="imgline" src="img/a-percentiles.png" alt="Resultados del portafolio por percentil" loading="lazy" style="margin-top:12px">
-  </div></details>
-  <details><summary>Research público (para mandar después, no para explicar en vivo)</summary><div class="inner">
-    <ul>
-      <li><a class="peri" href="/past/" target="_blank" rel="noopener">investorcr.com/past</a> — viaje al pasado: el edge del Nasdaq año por año</li>
-      <li><a class="peri" href="/horizonte/" target="_blank" rel="noopener">/horizonte</a> — probabilidad histórica por plazo (15 años: 99.9% positivo con dividendos)</li>
-      <li><a class="peri" href="/FreedomFunds/" target="_blank" rel="noopener">/FreedomFunds</a> — el plan de retiro de principio a fin, con el respaldo académico</li>
-      <li><a class="peri" href="/m39/" target="_blank" rel="noopener">/m39</a> — la señal que decide cuándo estar adentro</li>
-      <li><a class="peri" href="/info/" target="_blank" rel="noopener">/info</a> — cómo trabajamos (la página que puede leer solo)</li>
-    </ul>
-  </div></details>
+  <h2 class="muted" style="font-size:26px">La cocina por dentro (páginas del sitio, no láminas)</h2>
+  <ul>
+    <li><a class="peri" href="/past/" target="_blank" rel="noopener">/past</a> — viaje al pasado: el edge del Nasdaq año por año, por perfil de riesgo</li>
+    <li><a class="peri" href="/horizonte/" target="_blank" rel="noopener">/horizonte</a> — probabilidad histórica por plazo (a 15 años: 99.9% positivo con dividendos)</li>
+    <li><a class="peri" href="/FreedomFunds/" target="_blank" rel="noopener">/FreedomFunds</a> — el plan de retiro de principio a fin, con el respaldo académico (Yale, Dow Award)</li>
+    <li><a class="peri" href="/m39/" target="_blank" rel="noopener">/m39</a> — la señal que decide cuándo estar adentro</li>
+    <li><a class="peri" href="/fpf/" target="_blank" rel="noopener">/fpf</a> — la calculadora de fases con probabilidades</li>
+    <li><a class="peri" href="/info/" target="_blank" rel="noopener">/info</a> — cómo trabajamos (la página para leer a solas, mandala después de la llamada)</li>
+  </ul>
+  <div class="nota"><span class="tag">Regla de los anexos</span>Se abren SOLO si pregunta “¿y si cae?” o “¿por qué funciona?”. Dos frases y volvés al cierre. Si pide profundidad, se la mandás por WhatsApp después de cerrar fecha.</div>
 </section>
 
 <p class="muted" style="margin-top:28px;font-size:14px">Página interna de Empowered Investor para llamadas 1-1. No indexada. Los retornos históricos no garantizan resultados futuros.</p>
 </div>
 
 <script>
-/* Freedom Point en vivo */
 function fmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
 function calc(){
   var ing = +document.getElementById("ing").value || 0;
   var t = (+document.getElementById("tasa").value || 5)/100;
-  var anual = ing*12;
-  var fp = t>0 ? anual/t : 0;
+  var anual = ing*12, fp = t>0 ? anual/t : 0;
   document.getElementById("fp").textContent = fmt(fp);
   document.getElementById("fpnota").textContent = "retirando " + (t*100).toFixed(1).replace(".0","") + "% al año · " + fmt(anual) + " al año";
 }
@@ -277,7 +381,6 @@ document.getElementById("ing").addEventListener("input", calc);
 document.getElementById("tasa").addEventListener("input", calc);
 calc();
 
-/* Guion de Jose: tecla G o botón. Nunca queda activo por defecto. */
 var btn = document.getElementById("coachBtn");
 function toggleCoach(){
   var on = document.body.classList.toggle("coach");
