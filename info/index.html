@@ -250,11 +250,15 @@
   .precio ul{ list-style:none; margin-top:14px; }
   .precio li{ font-size:15px; line-height:1.4; color:var(--gris); padding:6px 0 6px 24px; position:relative; }
   .precio li::before{ content:"✓"; position:absolute; left:0; color:var(--menta); font-weight:700; }
+  .garantia{ display:flex; gap:16px; align-items:center; margin-top:12px; border-radius:18px; border:1px dashed rgba(99,252,175,.6); background:rgba(99,252,175,.05); padding:16px; }
+  .garantia .sello{ flex:0 0 72px; width:72px; height:72px; border-radius:50%; background:var(--menta); color:var(--tinta); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:28px; font-weight:700; line-height:1; }
+  .garantia .sello small{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-top:3px; }
+  .garantia h3{ font-size:18px; font-weight:700; line-height:1.25; }
+  .garantia p{ font-size:14.5px; line-height:1.5; color:var(--gris); margin-top:4px; }
+  .garantia p b{ color:var(--menta); }
   .anio2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
   @media(min-width:640px){ .anio2{ grid-template-columns:repeat(3,1fr); } }
 
-  /* testimonios */
-  .testis{ display:grid; gap:10px; margin-top:20px; }
   @media(min-width:640px){ .testis{ grid-template-columns:1fr 1fr; } }
   .testi{ border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px; }
   .testi p{ font-size:14px; line-height:1.5; color:var(--gris); }
@@ -263,10 +267,34 @@
   .testi .who b{ display:block; font-size:14px; }
   .testi .who span{ font-size:12px; color:var(--gris-sec); }
 
-  .jose{ display:flex; gap:16px; align-items:center; margin-top:20px; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px; }
-  .jose img{ width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
-  .jose p{ font-size:14px; line-height:1.5; color:var(--gris); }
-  .jose b{ color:var(--crema); }
+
+  /* bio y testimonios, igual que /medicos */
+  .sobre-grid{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:20px;}
+  @media(max-width:480px){ .sobre-grid{grid-template-columns:1fr;} .sobre-grid .foto{max-width:220px; margin:0 auto;} }
+  .sobre-grid .foto{border-radius:18px; overflow:hidden; border:1px solid var(--bd); background:var(--tinta2);}
+  .sobre-grid .foto img{display:block; width:100%; height:auto; object-fit:cover;}
+  .cred{list-style:none; display:grid; gap:8px;}
+  .cred li{position:relative; padding-left:24px; font-size:14.5px; line-height:1.45; color:var(--gris); font-weight:400;}
+  .cred li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700;}
+  .cred li b{color:var(--crema); font-weight:600;}
+  .familia{margin-top:12px; border-top:1px solid var(--bd); padding-top:10px; font-size:14.5px; color:var(--gris); font-weight:400;}
+  .familia b{color:var(--crema); font-weight:600;}
+  .tfeat{position:relative; background:linear-gradient(180deg,#16231c,#171c22); border:1px solid rgba(99,252,175,.42); border-radius:20px; padding:28px 22px 22px; margin-top:22px; display:flex; gap:18px; align-items:flex-start;}
+  .tfeat-badge{position:absolute; top:-12px; left:22px; background:var(--menta); color:#082018; font-size:11.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:5px 13px; border-radius:999px;}
+  .tfeat-photo{flex:0 0 auto; width:130px; height:130px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--tinta2); box-shadow:0 0 0 3px rgba(99,252,175,.35);}
+  .stars{color:var(--menta); font-size:15px; letter-spacing:2px;}
+  .tfeat .quote{font-size:15px; line-height:1.6; color:var(--crema); font-weight:400; margin:10px 0 12px;}
+  .tname{font-size:15px; font-weight:700; color:var(--crema);}
+  .tname .role{color:var(--gris); font-weight:400;}
+  @media(max-width:560px){ .tfeat{flex-direction:column; align-items:center; text-align:center; gap:14px;} .tfeat-photo{width:120px; height:120px;} }
+  .tgrid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+  @media(max-width:560px){ .tgrid{grid-template-columns:1fr;} }
+  .tcard{background:var(--carta); border:1px solid var(--bd); border-radius:16px; padding:22px 20px; display:flex; flex-direction:column;}
+  .tcard .quote{font-size:14px; line-height:1.6; color:var(--gris); font-weight:400; margin:10px 0 14px; flex:1;}
+  .tcard .who{display:flex; gap:14px; align-items:center;}
+  .tcard .who img{width:96px; height:96px; border-radius:50%; object-fit:cover; object-position:top center; background:var(--tinta2); flex:0 0 auto; box-shadow:0 0 0 3px rgba(99,252,175,.3);}
+  .tcard .name{font-size:14.5px; font-weight:700; color:var(--crema);}
+  .tcard .role{font-size:12.5px; color:var(--gris); margin-top:1px;}
 
   /* CTAs */
   .ctas{ margin-top:36px; display:grid; gap:10px; }
@@ -565,7 +593,7 @@
     </div>
 
     <div class="vista" style="margin-top:18px"><h3>Así la ves cada semana en tu dashboard</h3><p>El Nasdaq contra su máximo de 39 semanas, la línea de salida y cuánto falta para que toque salir.</p><a href="/info/img/mfp-senal.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-senal.webp?v=2" width="1068" height="682" alt="La señal de salida en el dashboard del cliente" loading="lazy"></a></div>
-    <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. Toda la cocina, con datos descargables para que la comprobés con la IA que usés, en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
+    <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. El detalle completo, con datos descargables para que lo comprobés con la IA que usés, está en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
   </section>
 
 
@@ -705,8 +733,14 @@
         <li>Sesión de plan: tu Freedom Point, tu fase y tu aporte</li>
         <li>Ejecución de todas las órdenes y la señal semanal</li>
         <li>Reporte de cierre de mes, dashboard y grupo de WhatsApp</li>
-        <li>Garantía de 30 días sobre el honorario: con cuenta abierta, transferencia hecha y plan creado</li>
       </ul>
+    </div>
+    <div class="garantia">
+      <div class="sello">30<small>días</small></div>
+      <div>
+        <h3>Garantía de satisfacción de 30 días</h3>
+        <p>Abrimos tu cuenta, hiciste la transferencia, tu plan está creado y empezamos a invertir. Si en los primeros 30 días no estás satisfecho, <b>te devolvemos los $1,500</b>. Sin preguntas.</p>
+      </div>
     </div>
     <div class="anio2">
       <div class="tile"><div class="n">1%</div><div class="l">anual desde el año 2, sobre el saldo al cierre del año anterior. Con $30,000 son $300 al año.</div></div>
@@ -720,21 +754,76 @@
   <section id="clientes">
     <div class="num">15</div>
     <h2>Quién está del otro lado</h2>
-    <div class="jose">
-      <img src="/assets/jose-montero.webp" alt="Jose Montero" loading="lazy">
-      <p><b>Jose Montero.</b> Licenciado en Administración de Empresas. Trabajé en una firma de inversión que manejaba $600 millones y 4.5 años en London Stock Exchange Group. Llevo más de 11 años gestionando portafolios en la bolsa de EE. UU. Esposo y papá de tres. Mi propia plata está en el mismo sistema que la tuya.</p>
+    <div class="sobre-grid">
+      <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
+      <div>
+        <ul class="cred">
+          <li><b>Fundador de Empowered Investor</b></li>
+          <li><b>Licenciado en Administración de Empresas</b></li>
+          <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
+          <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
+          <li><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU.</li>
+          <li><b>3 de cada 10 clientes</b> nuestros son médicos</li>
+        </ul>
+        <p class="familia">Esposo. <b>Papá de tres.</b></p>
+      </div>
     </div>
 
-    <div class="testis">
-      <div class="testi"><p>"El proceso de apertura de cuentas de inversión en el extranjero y la realización de transferencias internacionales fue guiado paso a paso, lo que me dio mucha seguridad y confianza."</p><div class="who"><img src="/assets/testimonios/foto-6-cara.webp" alt="" loading="lazy"><div><b>Mariana Peña</b><span>Ginecóloga UCR, CCSS</span></div></div></div>
-      <div class="testi"><p>"Estoy muy agradecido por explicarme los grandes riesgos a los que uno está expuesto al tener platas en bancos de Costa Rica que solo te cubren hasta aprox 6 millones de colones."</p><div class="who"><img src="/assets/testimonios/foto-10-cara.webp" alt="" loading="lazy"><div><b>Ramsés Espinoza</b><span>Founder &amp; CEO, CocoJamboo</span></div></div></div>
-      <div class="testi"><p>"Desde el inicio, José me guió paso a paso en la apertura de mis cuentas, explicándome con claridad cada etapa del proceso. Lo que más valoro es la comunicación: siempre abierta, fácil y transparente."</p><div class="who"><img src="/assets/testimonios/foto-5-cara.webp" alt="" loading="lazy"><div><b>Andrés Reyes</b><span>Senior Vice President, Citibank</span></div></div></div>
-      <div class="testi"><p>"De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo. Hemos protegido mi inversión de caídas de hasta 30% del mercado."</p><div class="who"><img src="/assets/testimonios/foto-7-cara.webp" alt="" loading="lazy"><div><b>Javier Vargas</b><span>Business Development, TAPP</span></div></div></div>
+    <h3 class="sub3" style="margin-top:34px">Profesionales que ya dieron el paso</h3>
+    <div class="tfeat">
+      <span class="tfeat-badge">★ Médico especialista</span>
+      <img class="tfeat-photo" src="/assets/testimonios/foto-6-cara.webp" alt="Mariana Peña" loading="lazy">
+      <div>
+        <div class="stars">★★★★★</div>
+        <p class="quote">Como médico especialista, mi conocimiento en inversiones era limitado y mi enfoque se centraba en el ahorro pasivo. José y su equipo no solo brindan asesoría, sino que realmente educan, explicando cada paso de forma clara y accesible. Incluso la apertura de cuentas en el extranjero y las transferencias internacionales fueron guiadas paso a paso. Hoy tengo una perspectiva completamente distinta sobre mis finanzas.</p>
+        <div class="tname">Mariana Peña <span class="role">· Ginecóloga UCR, CCSS</span></div>
+      </div>
     </div>
-
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Contar con el acompañamiento de José marcó una gran diferencia: me guió paso a paso en la apertura de mis cuentas y juntos definimos una estrategia alineada con mi perfil de riesgo. Lo que más valoro es la comunicación, siempre abierta, fácil y transparente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-5-cara.webp" alt="Andrés Reyes" loading="lazy"><div><div class="name">Andrés Reyes</div><div class="role">Senior Vice President, Citibank</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo, por su consistencia en resultados y asesoría constante. Más que un lugar donde invertir, es saber que tengo un aliado que me ayuda a tomar decisiones con mi mayor interés en mente.</p>
+        <div class="who"><img src="/assets/testimonios/foto-7-cara.webp" alt="Javier Vargas" loading="lazy"><div><div class="name">Javier Vargas</div><div class="role">Business Development, TAPP</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Hice mi primera inversión después de abrir mi propia cuenta gracias a José, y me siento muy tranquila y confiada con su asesoría. Me emociona porque no solo me ayudan a tomar decisiones, sino también a aprender para poder hacerlo sola en algún momento. Recomendadísimo.</p>
+        <div class="who"><img src="/assets/testimonios/foto-8-cara.webp" alt="Maricruz Linares" loading="lazy"><div><div class="name">Maricruz Linares</div><div class="role">MSc People Management · U. de Navarra</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">No solo aprendí los fundamentos de la inversión, sino que gané la confianza que necesitaba para dar el paso. El acompañamiento ha sido excepcional: cercano, claro y siempre dispuesto a resolver dudas. No solo te enseña a invertir, te empodera para tomar el control de tus finanzas.</p>
+        <div class="who"><img src="/assets/testimonios/foto-9-cara.webp" alt="Andrés Castro" loading="lazy"><div><div class="name">Andrés Castro</div><div class="role">Founder &amp; CEO, CADMI</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Estoy muy agradecido con la ayuda para invertir fuera del país y por explicarme los grandes riesgos a los que uno está expuesto al tener plata en bancos de Costa Rica, que solo te cubren hasta aprox. 6 millones de colones. Además, me empujaste a invertir y a diversificar mi portafolio. Para una persona como yo, que pasa enredada en el negocio, es necesario ese empujón.</p>
+        <div class="who"><img src="/assets/testimonios/foto-10-cara.webp" alt="Ramsés Espinoza" loading="lazy"><div><div class="name">Ramsés Espinoza</div><div class="role">Founder &amp; CEO, CocoJamboo</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Aunque llevo menos de un año invirtiendo, José se ha asegurado de que me sienta cómoda, está atento a mis dudas y me ha ido guiando en cada etapa, desde abrir la cuenta hasta realizar las primeras inversiones, con la confianza de que cuento con una persona que toma decisiones estratégicas procurando siempre lo mejor para mí.</p>
+        <div class="who"><img src="/assets/testimonios/foto-11-cara.webp" alt="Mónica Blanco" loading="lazy"><div><div class="name">Mónica Blanco</div><div class="role">Strategy Director, PHD Costa Rica</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Yo no entendía nada de inversiones, pero sabía que quería empezar. José se tomó el tiempo de explicarme cada opción de una manera súper clara y me fue guiando paso a paso, desde abrir la cuenta y transferir el dinero hasta realizar las inversiones. Estoy demasiado contenta de haber empezado.</p>
+        <div class="who"><img src="/assets/testimonios/foto-12-cara.webp" alt="Anne Baudrit" loading="lazy"><div><div class="name">Anne Baudrit</div><div class="role">Advertising Designer, JLL Real Estate</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <p class="quote">Llevo 3 años de invertir con Empowered Investor y la experiencia ha sido excelente. Desde la asesoría sobre niveles de riesgo y formas de invertir hasta poder personalizar mi portafolio a mis necesidades específicas, el equipo ha sido súper atento y profesional. Incluso, cuando mis necesidades y perfil cambiaron inesperadamente, me ayudaron a ajustar mi portafolio con mucha agilidad.</p>
+        <div class="who"><img src="/assets/testimonios/foto-13-cara.webp" alt="Agustín Fallas" loading="lazy"><div><div class="name">Agustín Fallas</div><div class="role">Fotógrafo</div></div></div>
+      </div>
+    </div>
     <a class="curso" href="/minicurso" data-cta="minicurso">
       <div class="ic">🎓</div>
-      <div><b>¿Querés entender la cocina por dentro primero?</b><span>Mini curso de 32 minutos: cómo se construye un plan de retiro con el Nasdaq, las fases y la señal. Gratis, a tu ritmo.</span></div>
+      <div><b>Mini curso gratis: cómo se arma tu plan de retiro</b><span>32 minutos sobre el Nasdaq, las fases y la señal de salida. A tu ritmo.</span></div>
     </a>
 
     <div class="ctas">
