@@ -11,137 +11,559 @@
   gtag('js', new Date());
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
+<script defer src="/js/pixel.js"></script>
 <title>Cómo trabajamos · Empowered Investor</title>
 <link rel="canonical" href="https://investorcr.com/info/">
-<meta name="description" content="Seis cosas que nos gustaría que sepás antes de hablar con nosotros. Tu cuenta a tu nombre, el SIPC, nuestra especialidad y nuestras alianzas.">
+<meta name="description" content="Todo lo que querés saber antes de decidir: tu cuenta a tu nombre en Alpaca, la protección SIPC, el costo de no invertir, el apalancamiento sin margin call, nuestro edge de timing, los papers, la transferencia paso a paso, el dashboard y el precio.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Cómo trabajamos · Empowered Investor">
-<meta property="og:description" content="Seis cosas que nos gustaría que sepás antes de hablar con nosotros. Va sin jerga.">
-<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<meta property="og:description" content="Tu cuenta, tu plata, nuestro manejo. Todo explicado en una página, sin letra menuda.">
+<meta property="og:image" content="https://investorcr.com/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --tinta:#15191E; --menta:#63FCAF; --peri:#556DFB;
-    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB;
+    --tinta:#0d0f14; --tinta2:#15191E; --carta:#171c24; --bd:#262d38;
+    --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#D9DCE1; --gris-sec:#8E96A3;
+    --rojo:#F07A6B; --ambar:#F5C26B;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
-  body{
-    background:var(--tinta); color:var(--crema);
-    font-family:'Bai Jamjuree',sans-serif; font-weight:300;
-    min-height:100vh; display:flex; flex-direction:column; align-items:center;
-  }
-  .wrap{width:100%; max-width:520px; margin:0 auto; padding:10px 22px 50px;
-    animation:entra .5s ease both;}
-  @keyframes entra{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
-  @media (prefers-reduced-motion: reduce){ .wrap{animation:none;} }
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:400;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img{ max-width:100%; display:block; }
+  a{ color:var(--menta); }
+  b,strong{ font-weight:700; }
 
-  .marca{display:block; text-align:center; margin:30px 0 22px;}
-  .marca img{width:130px; max-width:42%; height:auto;}
+  .wrap{ width:100%; max-width:760px; margin:0 auto; padding:0 18px 60px; }
 
-  h1{font-size:clamp(27px,7vw,34px); font-weight:700; line-height:1.16; letter-spacing:-.01em; margin-top:14px;}
-  .sub{font-size:17px; line-height:1.5; color:var(--gris); font-weight:400; margin:14px 0 8px;}
+  /* cabecera */
+  .top{ display:flex; align-items:center; justify-content:space-between; padding:18px 0 8px; }
+  .top img{ width:64px; height:64px; }
+  .top a.wa{ font-size:13px; font-weight:600; color:var(--tinta); background:var(--menta); text-decoration:none;
+    border-radius:999px; padding:9px 14px; }
 
-  section{margin-top:40px;}
-  h2{font-size:20px; font-weight:700; line-height:1.3; color:var(--crema); margin-bottom:12px;}
-  p{font-size:16px; line-height:1.6; color:var(--gris); font-weight:400;}
-  p + p{margin-top:14px;}
+  .hero{ padding:22px 0 10px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; margin-bottom:10px; }
+  h1{ font-size:clamp(30px,8vw,46px); font-weight:700; line-height:1.08; letter-spacing:-.02em; }
+  h1 em{ font-style:normal; color:var(--menta); }
+  .sub{ font-size:17px; line-height:1.5; color:var(--gris); margin-top:14px; max-width:560px; }
 
-  .links-alianza{margin-top:20px;}
-  .link-alianza{
-    display:block; text-align:center; text-decoration:none; margin-bottom:10px;
-    border:1px solid #2E3540; border-radius:999px; padding:12px 18px;
-    font-size:14px; color:var(--gris); transition:border-color .15s ease;
-  }
-  .link-alianza:hover{border-color:var(--menta);}
+  /* tiles */
+  .tiles{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:22px; }
+  @media(min-width:640px){ .tiles.c4{ grid-template-columns:repeat(4,1fr);} .tiles.c3{ grid-template-columns:repeat(3,1fr);} }
+  .tile{ background:var(--carta); border:1px solid var(--bd); border-radius:16px; padding:16px 14px; min-width:0; }
+  .tile .n{ font-size:clamp(22px,6vw,30px); font-weight:700; letter-spacing:-.02em; line-height:1.05; color:var(--crema); overflow-wrap:anywhere; }
+  .tile .n.menta{ color:var(--menta); } .tile .n.peri{ color:#8B9BFF; } .tile .n.rojo{ color:var(--rojo); } .tile .n.ambar{ color:var(--ambar); }
+  .tile .l{ font-size:13px; color:var(--gris-sec); margin-top:6px; line-height:1.35; }
+  .tile .l b{ color:var(--gris); font-weight:600; }
 
-  .ctas{margin-top:44px;}
-  .btn{
-    display:block; width:100%; text-align:center; text-decoration:none; cursor:pointer;
-    border:none; border-radius:999px; font-family:'Bai Jamjuree',sans-serif;
-    font-size:17px; font-weight:700; padding:16px 20px; margin-bottom:12px;
-    transition:transform .12s ease;
-  }
-  .btn:active{transform:scale(.98);}
-  .btn-menta{background:var(--menta); color:var(--tinta);}
-  .btn-crema{background:var(--crema); color:var(--tinta);}
-  .btn-ghost{background:transparent; color:var(--gris); border:1px solid #2E3540;}
-  .btn-ghost:hover{border-color:var(--menta);}
+  /* índice */
+  .chips{ display:flex; gap:8px; overflow-x:auto; padding:18px 0 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chips a{ flex:0 0 auto; font-size:13px; color:var(--gris); text-decoration:none; border:1px solid var(--bd); border-radius:999px; padding:7px 12px; white-space:nowrap; }
+  .chips a:hover{ border-color:var(--menta); color:var(--menta); }
 
-  .volver{display:block; text-align:center; color:var(--gris-sec); font-size:14px;
-    text-decoration:none; margin-top:26px;}
+  /* secciones */
+  section{ padding:44px 0 6px; border-top:1px solid var(--bd); margin-top:34px; }
+  .num{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%;
+    background:var(--menta); color:var(--tinta); font-weight:700; font-size:14px; margin-bottom:12px; }
+  h2{ font-size:clamp(24px,6.4vw,34px); font-weight:700; line-height:1.12; letter-spacing:-.02em; }
+  .lede{ font-size:16px; line-height:1.55; color:var(--gris); margin-top:10px; max-width:600px; }
+  .lede b{ color:var(--crema); }
+  .nota{ font-size:13px; line-height:1.5; color:var(--gris-sec); margin-top:12px; }
+  .nota a{ color:var(--gris); }
+  .mas{ display:inline-block; margin-top:14px; font-size:14px; font-weight:600; color:var(--menta); text-decoration:none; border-bottom:1px solid rgba(99,252,175,.4); padding-bottom:1px; }
 
-  footer{width:100%; max-width:520px; margin:0 auto; padding:26px 22px 30px; text-align:center;}
-  footer p{font-size:11px; color:var(--gris-sec); line-height:1.6; font-weight:300;}
+  /* pasos */
+  .pasos{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:640px){ .pasos.h3{ grid-template-columns:repeat(3,1fr);} }
+  .paso{ background:var(--carta); border:1px solid var(--bd); border-radius:16px; padding:16px; display:flex; gap:14px; align-items:flex-start; min-width:0; }
+  @media(min-width:640px){ .pasos.h3 .paso{ flex-direction:column; gap:10px; } }
+  .paso .k{ flex:0 0 36px; width:36px; height:36px; border-radius:12px; background:rgba(99,252,175,.12); color:var(--menta); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .paso h3{ font-size:17px; font-weight:700; line-height:1.25; }
+  .paso p{ font-size:14px; line-height:1.5; color:var(--gris); margin-top:4px; }
+
+  /* barras costo */
+  .barras{ margin-top:22px; display:grid; gap:12px; }
+  .barra{ display:grid; grid-template-columns:92px 1fr; gap:10px; align-items:center; }
+  .barra .et{ font-size:14px; font-weight:600; color:var(--gris); line-height:1.2; }
+  .barra .et small{ display:block; font-weight:400; color:var(--gris-sec); font-size:12px; }
+  .barra .pista{ position:relative; height:38px; background:var(--carta); border:1px solid var(--bd); border-radius:10px; overflow:hidden; }
+  .barra .rel{ position:absolute; left:0; top:0; bottom:0; width:0; border-radius:10px; transition:width 1.2s cubic-bezier(.2,.7,.2,1); }
+  .barra .val{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-weight:700; font-size:15px; color:var(--crema); text-shadow:0 1px 2px rgba(0,0,0,.6); white-space:nowrap; }
+  .barra.cash .rel{ background:#4b5563; } .barra.cdp .rel{ background:#7f8b9c; }
+  .barra.sp .rel{ background:var(--peri); } .barra.ndx .rel{ background:var(--menta); }
+  .barras.lista .barra.ndx .val{ color:var(--tinta); text-shadow:none; }
+  .barra.sp .val{ color:#fff; }
+
+  .frame{ margin-top:18px; border:1px solid var(--bd); border-radius:16px; overflow:hidden; background:var(--tinta2); }
+  .frame iframe{ display:block; width:100%; height:560px; border:0; }
+  .frame .cap{ font-size:12px; color:var(--gris-sec); padding:10px 14px; border-top:1px solid var(--bd); }
+  details.ver summary{ cursor:pointer; list-style:none; margin-top:16px; font-size:14px; font-weight:600; color:var(--menta); }
+  details.ver summary::-webkit-details-marker{ display:none; }
+  details.ver summary::before{ content:"▸ "; }
+  details.ver[open] summary::before{ content:"▾ "; }
+
+  /* protección apilada */
+  .pila{ margin-top:22px; display:grid; gap:8px; }
+  .capa{ border-radius:14px; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; border:1px solid var(--bd); background:var(--carta); }
+  .capa .t{ font-size:14px; color:var(--gris); line-height:1.35; }
+  .capa .t b{ color:var(--crema); display:block; font-size:16px; }
+  .capa .v{ font-size:clamp(20px,5.6vw,28px); font-weight:700; letter-spacing:-.02em; white-space:nowrap; }
+  .capa.a{ border-color:rgba(99,252,175,.5); } .capa.a .v{ color:var(--menta); }
+  .capa.b{ border-color:rgba(85,109,251,.6); } .capa.b .v{ color:#8B9BFF; }
+  .capa.c .v{ color:var(--crema); }
+  .capa.cr{ background:transparent; border-style:dashed; } .capa.cr .v{ color:var(--gris-sec); }
+
+  /* dos columnas sí / no */
+  .sino{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:560px){ .sino{ grid-template-columns:1fr 1fr; } }
+  .col{ border-radius:16px; padding:16px; border:1px solid var(--bd); background:var(--carta); min-width:0; }
+  .col h3{ font-size:15px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px; }
+  .col.si h3{ color:var(--menta); } .col.no h3{ color:var(--rojo); } .col.eq h3{ color:#8B9BFF; }
+  .col ul{ list-style:none; }
+  .col li{ font-size:15px; line-height:1.4; color:var(--gris); padding:7px 0 7px 26px; position:relative; border-top:1px solid var(--bd); }
+  .col li:first-child{ border-top:0; }
+  .col li::before{ position:absolute; left:0; top:7px; font-weight:700; }
+  .col.si li::before{ content:"✓"; color:var(--menta); }
+  .col.no li::before{ content:"✕"; color:var(--rojo); }
+  .col.eq li::before{ content:"●"; color:#8B9BFF; font-size:10px; top:11px; }
+  .aviso{ margin-top:12px; border-radius:14px; padding:14px 16px; background:rgba(245,194,107,.08); border:1px solid rgba(245,194,107,.35); font-size:14px; line-height:1.5; color:var(--gris); }
+  .aviso b{ color:var(--ambar); }
+
+  /* mock alpaca */
+  .mock{ margin-top:18px; border-radius:18px; border:1px solid var(--bd); background:#0b0d12; padding:16px; max-width:420px; }
+  .mock .mh{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--gris-sec); letter-spacing:.08em; text-transform:uppercase; }
+  .mock .mh span:last-child{ color:var(--menta); }
+  .mock .nom{ margin-top:14px; font-size:13px; color:var(--gris-sec); }
+  .mock .nom b{ display:block; font-size:18px; color:var(--crema); letter-spacing:.02em; }
+  .mock .eq{ margin-top:12px; font-size:12px; color:var(--gris-sec); }
+  .mock .eq b{ display:block; font-size:30px; color:var(--crema); letter-spacing:-.02em; }
+  .mock .bt{ margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .mock .bt div{ border-radius:10px; padding:10px; font-size:12px; text-align:center; border:1px solid var(--bd); color:var(--gris); }
+  .mock .bt div.lock{ border-color:rgba(99,252,175,.4); color:var(--menta); }
+  .mock .pie{ margin-top:10px; font-size:11px; color:var(--gris-sec); line-height:1.4; }
+
+  /* comparación apalancamiento */
+  .vs{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:560px){ .vs{ grid-template-columns:1fr 1fr; } }
+  .vs .col h3{ text-transform:none; letter-spacing:0; font-size:17px; }
+  .vs .col .tag{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:999px; padding:4px 10px; margin-bottom:10px; }
+  .vs .no .tag{ background:rgba(240,122,107,.15); color:var(--rojo); }
+  .vs .si .tag{ background:rgba(99,252,175,.14); color:var(--menta); }
+  .fases{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:16px; }
+  .fase{ border-radius:12px; padding:12px 8px; text-align:center; border:1px solid var(--bd); background:var(--carta); min-width:0; }
+  .fase .f{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gris-sec); }
+  .fase .a{ font-size:15px; font-weight:700; margin-top:4px; }
+  .fase .d{ font-size:12px; color:var(--gris-sec); margin-top:3px; line-height:1.3; }
+  .fase.f1{ border-color:rgba(240,122,107,.5);} .fase.f2{ border-color:rgba(139,155,255,.5);} .fase.f3{ border-color:rgba(99,252,175,.5);}
+
+  /* papers */
+  .papers{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:640px){ .papers{ grid-template-columns:repeat(3,1fr); } }
+  .paper{ border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:14px; min-width:0; }
+  .paper .logobox{ height:72px; border-radius:10px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:10px 14px; }
+  .paper .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); }
+  .paper .logobox img{ max-height:46px; max-width:90%; }
+  .paper .src{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gris-sec); margin-top:10px; }
+  .paper h3{ font-size:15px; font-weight:700; line-height:1.3; margin-top:4px; }
+  .paper p{ font-size:13px; line-height:1.45; color:var(--gris); margin-top:6px; }
+
+  /* dashboard */
+  .phones{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:20px; }
+  @media(max-width:559px){ .phones{ display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:6px; scrollbar-width:none; } .phones::-webkit-scrollbar{ display:none; } .phones .phone{ flex:0 0 76%; max-width:300px; scroll-snap-align:start; } .phones.uno{ display:grid; } .phones.uno .phone{ flex:none; max-width:none; } }
+  .phone{ border-radius:22px; border:1px solid var(--bd); background:#0b0d12; padding:8px; min-width:0; }
+  .phone .scr{ border-radius:16px; overflow:hidden; aspect-ratio:9/14; background:#0d0f14; }
+  .phone .scr img{ width:100%; height:100%; object-fit:cover; object-position:top; }
+  .phone .cap{ font-size:12px; color:var(--gris-sec); text-align:center; padding:8px 4px 2px; }
+  .desk{ margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--bd); }
+  @media(max-width:559px){ .desk{ display:none; } }
+
+  /* precio */
+  .precio{ margin-top:20px; border-radius:20px; border:1px solid rgba(99,252,175,.5); background:linear-gradient(180deg,rgba(99,252,175,.08),rgba(99,252,175,0) 60%), var(--carta); padding:22px 18px; }
+  .precio .p{ font-size:clamp(44px,13vw,64px); font-weight:700; letter-spacing:-.03em; line-height:1; color:var(--menta); }
+  .precio .p small{ font-size:16px; color:var(--gris); font-weight:500; letter-spacing:0; margin-left:6px; }
+  .precio ul{ list-style:none; margin-top:14px; }
+  .precio li{ font-size:15px; line-height:1.4; color:var(--gris); padding:6px 0 6px 24px; position:relative; }
+  .precio li::before{ content:"✓"; position:absolute; left:0; color:var(--menta); font-weight:700; }
+  .anio2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  @media(min-width:640px){ .anio2{ grid-template-columns:repeat(3,1fr); } }
+
+  /* testimonios */
+  .testis{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:640px){ .testis{ grid-template-columns:1fr 1fr; } }
+  .testi{ border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px; }
+  .testi p{ font-size:14px; line-height:1.5; color:var(--gris); }
+  .testi .who{ display:flex; align-items:center; gap:10px; margin-top:12px; }
+  .testi .who img{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
+  .testi .who b{ display:block; font-size:14px; }
+  .testi .who span{ font-size:12px; color:var(--gris-sec); }
+
+  .jose{ display:flex; gap:16px; align-items:center; margin-top:20px; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px; }
+  .jose img{ width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+  .jose p{ font-size:14px; line-height:1.5; color:var(--gris); }
+  .jose b{ color:var(--crema); }
+
+  /* CTAs */
+  .ctas{ margin-top:36px; display:grid; gap:10px; }
+  .btn{ display:block; width:100%; text-align:center; text-decoration:none; border:none; border-radius:999px; font-family:inherit;
+    font-size:17px; font-weight:700; padding:16px 20px; transition:transform .12s ease; }
+  .btn:active{ transform:scale(.98); }
+  .btn-menta{ background:var(--menta); color:var(--tinta); }
+  .btn-crema{ background:var(--crema); color:var(--tinta); }
+  .btn-ghost{ background:transparent; color:var(--gris); border:1px solid var(--bd); }
+  .curso{ margin-top:20px; display:flex; gap:14px; align-items:center; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:14px 16px; text-decoration:none; color:inherit; }
+  .curso .ic{ flex:0 0 48px; width:48px; height:48px; border-radius:12px; background:rgba(85,109,251,.2); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .curso b{ display:block; font-size:16px; }
+  .curso span{ font-size:13px; color:var(--gris-sec); line-height:1.4; }
+
+  footer{ width:100%; max-width:760px; margin:0 auto; padding:26px 18px 36px; border-top:1px solid var(--bd); }
+  footer p{ font-size:11px; color:var(--gris-sec); line-height:1.6; }
+  footer p + p{ margin-top:8px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a href="/" class="marca"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="220" height="220"></a>
 
-  <h1>Cómo trabajamos (y por qué es distinto)</h1>
-  <p class="sub">Seis cosas que nos gustaría que sepás antes de hablar con nosotros.</p>
+  <div class="top">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="64" height="64"></a>
+    <a class="wa" id="wa-top" href="#" target="_blank" rel="noopener" data-cta="wa_top">Escribime</a>
+  </div>
 
-  <section>
-    <h2>Tu plata nunca pasa por nuestras manos</h2>
-    <p>La cuenta de inversión se abre a tu nombre, en un bróker regulado en Estados Unidos. Nosotros solo tenemos permiso de comprar y vender dentro de tu cuenta, siguiendo la estrategia que definimos juntos. Sacar dinero, jamás. Ese permiso no existe. La única persona que puede retirar tu plata sos vos. Por eso nos llamamos Empowered Investor: acá el empoderado sos vos.</p>
-  </section>
+  <div class="hero">
+    <div class="eyebrow">Empowered Investor · Gestión de tu plan de retiro</div>
+    <h1>Tu cuenta. Tu plata. <em>Nuestro manejo.</em></h1>
+    <p class="sub">Todo lo que querés saber antes de decidir, en una sola página. Sin letra menuda y con los números a la vista.</p>
 
-  <section>
-    <h2>Protegida hasta por $500,000</h2>
-    <p>Invertir en Estados Unidos tiene una ventaja que pocos conocen: el SIPC, el seguro del sistema financiero americano. Si el bróker llegara a quebrar, tu cuenta está protegida hasta por $500,000. Ojo, eso no cubre que una inversión baje de precio (ese riesgo existe siempre y quien te diga lo contrario te está vendiendo humo). Cubre lo importante: que tus inversiones son tuyas y están resguardadas en un sistema regulado de verdad.</p>
-  </section>
+    <div class="tiles c4">
+      <div class="tile"><div class="n menta">A tu nombre</div><div class="l">Cuenta propia en un bróker regulado de EE. UU. Yo nunca toco tu plata.</div></div>
+      <div class="tile"><div class="n">Solo compro<br>y vendo</div><div class="l">Mi permiso llega hasta ahí. Retirar, <b>solo vos</b>.</div></div>
+      <div class="tile"><div class="n">$1,500</div><div class="l">Un solo pago que <b>incluye el primer año</b> completo.</div></div>
+      <div class="tile"><div class="n">11+ años</div><div class="l">Manejando portafolios en la bolsa de EE. UU.</div></div>
+    </div>
 
-  <section>
-    <h2>Nuestra especialidad: crecimiento</h2>
-    <p>Nos dedicamos a hacer crecer capital. El instrumento que más usamos es el Nasdaq, el índice de las empresas tecnológicas más grandes del mundo, y lo trabajamos con reglas que venimos afinando desde hace más de 11 años. Nuestro objetivo es un 15% anual. Es un objetivo, no una promesa: los mercados suben y bajan, y nadie serio te puede garantizar un retorno. Lo que sí te podemos decir es cómo lo buscamos, con qué reglas, y enseñarte la cocina por dentro cuando hablemos.</p>
-  </section>
+    <nav class="chips" aria-label="Índice">
+      <a href="#como">Cómo funciona</a>
+      <a href="#costo">No invertir cuesta</a>
+      <a href="#alpaca">Alpaca</a>
+      <a href="#proteccion">Protección</a>
+      <a href="#control">Es tu cuenta</a>
+      <a href="#transferencia">Transferencia</a>
+      <a href="#apalancamiento">Apalancamiento</a>
+      <a href="#edge">Nuestro edge</a>
+      <a href="#papers">Los papers</a>
+      <a href="#tiempo">Tu tiempo</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#precio">Precio</a>
+      <a href="#clientes">Clientes</a>
+    </nav>
+  </div>
 
-  <section>
-    <h2>Una estrategia a tu medida</h2>
-    <p>No usamos la misma receta para todos. Vemos tu edad de retiro y tu perfil de riesgo, y con eso armamos tu estrategia: más agresiva si tenés tiempo y te calza, más conservadora si estás cerca de la meta. Tomamos el riesgo que tu plan necesita.</p>
-  </section>
-
-  <section>
-    <h2>No estamos solos: nuestras alianzas</h2>
-    <p>Hay dos aliados que hacen que nuestro trabajo sea más completo.</p>
-    <p>El primero es Southland Group, una firma de finanzas corporativas con 18 años de trayectoria que ha asesorado fusiones y adquisiciones por más de $800 millones en la región. Southland está abriendo su área de wealth management para clientes de alto patrimonio, donde nosotros somos la pieza fundamental para el manejo de esas inversiones.</p>
-    <p>El segundo es San José Capital, un puesto de bolsa costarricense. Con ellos conocemos a fondo cada propiedad y cada proyecto detrás de sus vehículos de inversión conservadores, que pagan una buena tasa con respaldo real. Cuando un cliente calza con ese perfil, se lo recomendamos con confianza, porque sabemos exactamente qué hay adentro.</p>
-    <p>Funciona parecido a como invierte un banco cuando da un préstamo hipotecario: presta hasta el 80% del valor de la casa, y si el deudor no paga, el banco se queda la casa y la vende. Acá es algo así, pero sobre lotes y propiedades residenciales de alta calidad. Vos ponés la plata del lado del banco, no del lado del que debe.</p>
-    <div class="links-alianza">
-      <a class="link-alianza" href="https://www.southlandgroupcf.com/experiencia" target="_blank" rel="noopener" data-alianza="southland">Conocé Southland Group →</a>
-      <a class="link-alianza" href="https://sanjose.capital/projects/" target="_blank" rel="noopener" data-alianza="san_jose_capital">Conocé San José Capital →</a>
+  <!-- 1 · CÓMO FUNCIONA -->
+  <section id="como">
+    <div class="num">1</div>
+    <h2>Tres pasos y ya estás invirtiendo</h2>
+    <div class="pasos h3">
+      <div class="paso"><div class="k">1</div><div><h3>Abrimos tu cuenta</h3><p>En Alpaca, a tu nombre. Lo hacemos juntos en una llamada de 30 minutos. Firmás el W-8BEN y listo.</p></div></div>
+      <div class="paso"><div class="k">2</div><div><h3>Transferís desde tu banco</h3><p>Una transferencia internacional con la plantilla que te damos. Te acompaño en vivo hasta que llega.</p></div></div>
+      <div class="paso"><div class="k">3</div><div><h3>Armamos tu plan y lo ejecuto</h3><p>Definimos tu Freedom Point, compro según tu fase y vos lo ves todo en tu dashboard y en tu reporte mensual.</p></div></div>
     </div>
   </section>
 
-  <section>
-    <h2>¿Cómo se empieza?</h2>
-    <p>Primero, calculá tu número (toma 20 segundos y es gratis). Después, si querés, hablamos: una sesión de 30 minutos sin costo donde revisamos tus números y te decimos con honestidad si tu caso es para nosotros o no. Si no lo es, igual te vas con claridad.</p>
+  <!-- 2 · COSTO DE NO INVERTIR -->
+  <section id="costo">
+    <div class="num">2</div>
+    <h2>Lo que cuesta no invertir</h2>
+    <p class="lede"><b>$10,000 guardados en abril de 1999.</b> Esto es lo que valen hoy, ya descontada la inflación, según dónde los hayas puesto.</p>
+
+    <div class="barras" id="barras">
+      <div class="barra cash"><div class="et">Efectivo<small>debajo del colchón</small></div><div class="pista"><div class="rel" data-w="6.6"></div><div class="val">$5,017</div></div></div>
+      <div class="barra cdp"><div class="et">CDP<small>al 3% anual</small></div><div class="pista"><div class="rel" data-w="14.8"></div><div class="val">≈ $11,200</div></div></div>
+      <div class="barra sp"><div class="et">S&amp;P 500<small>las 500 grandes de EE. UU.</small></div><div class="pista"><div class="rel" data-w="58.6"></div><div class="val">$44,581</div></div></div>
+      <div class="barra ndx"><div class="et">Nasdaq 100<small>las 100 grandes tecnológicas</small></div><div class="pista"><div class="rel" data-w="100"></div><div class="val">$76,019</div></div></div>
+    </div>
+    <p class="nota">Retorno total con dividendos reinvertidos, en dólares de hoy (deflactado con la inflación de EE. UU.). Abril 1999 a julio 2026, un período que incluye el estallido puntocom, 2008, la pandemia y 2022. El CDP se asume al 3% anual fijo. Datos y gráfico animado en <a href="/costo" target="_blank" rel="noopener">/costo</a>.</p>
+
+    <div class="tiles" style="margin-top:18px">
+      <div class="tile"><div class="n rojo">−50%</div><div class="l">Poder de compra que perdió el <b>dólar</b> guardado sin invertir desde 1999 (2.5% al año).</div></div>
+      <div class="tile"><div class="n rojo">−78%</div><div class="l">Lo mismo con el <b>colón</b>: ₡10,000 de 1999 compran hoy lo que ₡2,178 (5.4% al año).</div></div>
+    </div>
+    <p class="nota">La inflación es un impuesto silencioso: no se ve en el estado de cuenta, pero se cobra todos los meses. Por eso tu meta, tu aporte y tus resultados los calculamos siempre <b>en plata de hoy</b>. Animación en <a href="/inflacion" target="_blank" rel="noopener">/inflacion</a>.</p>
+
+    <details class="ver">
+      <summary>Ver las dos animaciones acá mismo</summary>
+      <div class="frame"><iframe loading="lazy" src="/costo/" title="El costo de oportunidad"></iframe><div class="cap">La carrera de $10k desde 1999: efectivo, CDP, S&amp;P 500 y Nasdaq 100. Tocá el gráfico para repetir.</div></div>
+      <div class="frame"><iframe loading="lazy" src="/inflacion/" title="El impuesto silencioso"></iframe><div class="cap">$10,000 y ₡10,000 guardados sin invertir, perdiendo poder de compra.</div></div>
+    </details>
   </section>
 
-  <div class="ctas">
-    <a class="btn btn-menta" href="/calculadora" data-cta="calculadora">🎯 Calculá tu retiro</a>
-    <a class="btn btn-crema" id="cta-calendly" href="#" target="_blank" rel="noopener" data-cta="calendly">📞 Agendá tu sesión de diagnóstico</a>
-    <a class="btn btn-ghost" href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener" data-cta="instagram">📲 Escribinos por Instagram</a>
-  </div>
+  <!-- 3 · ALPACA -->
+  <section id="alpaca">
+    <div class="num">3</div>
+    <h2>Dónde vive tu plata: Alpaca</h2>
+    <p class="lede"><b>Alpaca Securities LLC</b> es un bróker de Estados Unidos regulado por la SEC y FINRA, miembro del SIPC. No es una app de moda: es la <b>infraestructura</b> sobre la que cientos de fintechs y bancos del mundo abren cuentas de inversión para sus clientes.</p>
 
-  <a class="volver" href="/">← Volver al inicio</a>
+    <div class="tiles c4">
+      <div class="tile"><div class="n menta">$1.15B</div><div class="l">Valoración en su ronda de enero 2026 ($150M, liderada por Drive Capital).</div></div>
+      <div class="tile"><div class="n">$435M</div><div class="l">Financiamiento total tras la ronda de julio 2026 liderada por Peak XV.</div></div>
+      <div class="tile"><div class="n">+9 M</div><div class="l">Cuentas de inversión abiertas sobre su plataforma.</div></div>
+      <div class="tile"><div class="n">40+</div><div class="l">Países donde opera. Fundada en 2015, sede en California.</div></div>
+    </div>
+
+    <div class="pasos" style="margin-top:12px">
+      <div class="paso"><div class="k">🏛</div><div><h3>Regulada y con custodia propia</h3><p>Bróker-dealer registrado en la SEC (8-69928) y FINRA (CRD 288202). Desde 2024 es <b>self-clearing</b>: liquida y custodia directamente en el DTC, el depósito central de valores de EE. UU., sin intermediarios.</p></div></div>
+      <div class="paso"><div class="k">🏆</div><div><h3>Reconocimientos</h3><p>Mejor bróker para trading algorítmico 2026 (BrokerChooser). Premios Benzinga Fintech tres años seguidos: 2022, 2023 y 2024. FinTech of the Year 2025 en los US Fintech Awards. Top 100 fintech de CB Insights.</p></div></div>
+      <div class="paso"><div class="k">🤝</div><div><h3>Quién está detrás</h3><p>Inversionistas como BNP Paribas (Opera Tech Ventures), Peak XV, Drive Capital y Elefund; financiamiento bancario de BMO y de Kraken. Socios como SBI Securities en Japón.</p></div></div>
+      <div class="paso"><div class="k">🔑</div><div><h3>El Trading API: una llave que solo compra y vende</h3><p>Alpaca nació para que programas y asesores operen cuentas por API. Vos generás una llave de <b>trading</b> desde tu cuenta y me la das. Con ella puedo ver posiciones y poner órdenes. <b>No existe</b> una llave que permita retirar o transferir: eso solo se hace con tu usuario, tu contraseña y tu segundo factor.</p></div></div>
+    </div>
+    <a class="mas" href="https://alpaca.markets/about-us" target="_blank" rel="noopener" data-cta="alpaca_about">Ver Alpaca por su cuenta →</a>
+  </section>
+
+  <!-- 4 · PROTECCIÓN -->
+  <section id="proteccion">
+    <div class="num">4</div>
+    <h2>Qué pasa si el bróker quiebra</h2>
+    <p class="lede">Tres capas, una encima de la otra. Ninguna depende de que a Alpaca le vaya bien.</p>
+
+    <div class="pila">
+      <div class="capa c"><div class="t"><b>Tus acciones están a tu nombre</b>Por ley (regla SEC 15c3-3) los valores de los clientes se guardan separados del dinero del bróker, en el DTC. Si Alpaca desaparece, tus ETFs siguen siendo tuyos.</div><div class="v">100%</div></div>
+      <div class="capa a"><div class="t"><b>SIPC</b>El seguro del sistema financiero de EE. UU. Cubre hasta $500,000 por cliente, de los cuales hasta $250,000 pueden ser efectivo.</div><div class="v">$500k</div></div>
+      <div class="capa b"><div class="t"><b>Excess SIPC con Lloyd's of London</b>Póliza adicional que Alpaca compró para lo que supere el SIPC: hasta $75 millones en valores y $75 millones en efectivo por cliente, con tope conjunto de $250 millones.</div><div class="v">$75M</div></div>
+      <div class="capa cr"><div class="t"><b>Para comparar: un banco en Costa Rica</b>La garantía de depósitos cubre hasta unos ₡6 millones por persona por entidad.</div><div class="v">≈ $12k</div></div>
+    </div>
+    <p class="nota">Lo que ninguna de estas capas cubre: que el mercado baje. Ese riesgo existe siempre y se maneja con el plan (fases, horizonte y señal de salida), no con un seguro. Quien te diga lo contrario te está vendiendo humo. Fuente: <a href="https://alpaca.markets/learn/customer-asset-protection-at-alpaca" target="_blank" rel="noopener">Alpaca, Customer Asset Protection</a>.</p>
+  </section>
+
+  <!-- 5 · CONTROL -->
+  <section id="control">
+    <div class="num">5</div>
+    <h2>La cuenta es tuya. Punto.</h2>
+    <p class="lede">Yo administro, pero no puedo mover un dólar fuera de tu cuenta. Así queda repartido el poder:</p>
+
+    <div class="sino">
+      <div class="col si"><h3>Lo que yo puedo hacer</h3><ul>
+        <li>Comprar y vender ETFs dentro de tu cuenta</li>
+        <li>Ver tus posiciones y tu saldo</li>
+        <li>Armar tu plan, tu señal y tu reporte mensual</li>
+        <li>Acompañarte en cada transferencia</li>
+      </ul></div>
+      <div class="col no"><h3>Lo que no puedo hacer</h3><ul>
+        <li>Retirar o transferir plata</li>
+        <li>Cambiar la cuenta bancaria vinculada</li>
+        <li>Entrar con tu usuario: la clave y el segundo factor son tuyos</li>
+        <li>Agregar beneficiarios o cerrar la cuenta</li>
+      </ul></div>
+    </div>
+
+    <div class="aviso"><b>Ley antilavado:</b> la plata solo entra a tu cuenta desde una cuenta bancaria <b>a tu mismo nombre</b>, y solo puede salir hacia una cuenta <b>a tu mismo nombre</b>. No se puede transferir a terceros, ni a familiares, ni a mí. Es una regla del sistema financiero de EE. UU. y es justamente lo que te protege.</div>
+
+    <!-- PANTALLAZO ALPACA: cuando Jose pase el pantallazo real, guardarlo como /info/img/alpaca-cuenta.webp
+         y reemplazar este bloque .mock por <img src="/info/img/alpaca-cuenta.webp" alt="Tu cuenta en Alpaca"> -->
+    <div class="mock" aria-label="Ilustración de la cuenta en Alpaca">
+      <div class="mh"><span>Alpaca · tu cuenta</span><span>● Activa</span></div>
+      <div class="nom">Titular<b>TU NOMBRE COMPLETO</b></div>
+      <div class="eq">Valor de la cuenta<b>$ ·· ,··· </b></div>
+      <div class="bt"><div class="lock">Retirar fondos · solo vos</div><div class="lock">Transferir · solo vos</div><div>Posiciones</div><div>API keys · trading</div></div>
+      <div class="pie">Ilustración de cómo se ve tu cuenta en Alpaca. Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones que solo vos tenés. Lo que yo hago queda en el historial de órdenes.</div>
+    </div>
+    <p class="nota">Al pasar los $100,000 te ayudamos a dejar un testamento de vida sobre la cuenta, para que tu familia sepa exactamente qué hay y cómo se accede.</p>
+  </section>
+
+  <!-- 6 · TRANSFERENCIA -->
+  <section id="transferencia">
+    <div class="num">6</div>
+    <h2>La transferencia internacional, paso a paso</h2>
+    <p class="lede">Es lo que más miedo da y lo que más veces hemos hecho. <b>Más de 200 transferencias acompañadas</b>, de clientes de todos los bancos de Costa Rica.</p>
+
+    <div class="tiles c3">
+      <div class="tile"><div class="n menta">+200</div><div class="l">Transferencias acompañadas hasta que llegó la plata.</div></div>
+      <div class="tile"><div class="n">1 a 3</div><div class="l">Días hábiles en acreditarse en tu cuenta de Alpaca.</div></div>
+      <div class="tile"><div class="n">≈ $60</div><div class="l">Costo típico del SWIFT desde Costa Rica. Por eso se aporta en bloques, no cada mes.</div></div>
+    </div>
+
+    <div class="pasos">
+      <div class="paso"><div class="k">1</div><div><h3>Te doy la plantilla exacta</h3><p>Banco receptor de Alpaca (BMO Harris, en EE. UU.), SWIFT, cuenta y tu identificador personal LPCA. Lista para copiar en tu banco o dársela al ejecutivo.</p></div></div>
+      <div class="paso"><div class="k">2</div><div><h3>Avisás a tu banco el día antes</h3><p>Le decís a tu ejecutivo que vas a mandar una transferencia internacional a una cuenta a tu nombre y revisamos tu límite diario: la app suele topar en unos $2,000; por web o en sucursal es mayor.</p></div></div>
+      <div class="paso"><div class="k">3</div><div><h3>La hacemos juntos</h3><p>15 minutos compartiendo pantalla. Vos la ejecutás; yo reviso que cada campo quede bien antes de que le des enviar.</p></div></div>
+      <div class="paso"><div class="k">4</div><div><h3>Aviso a Alpaca</h3><p>Te preparo el correo para Alpaca con el monto, la fecha y tu banco, para que la acrediten sin preguntas.</p></div></div>
+      <div class="paso"><div class="k">5</div><div><h3>Llega y empezamos</h3><p>Te aviso apenas entra, ejecuto las primeras compras según tu fase y esa misma semana ya lo ves en tu dashboard.</p></div></div>
+    </div>
+    <p class="nota">Volver la plata a Costa Rica es el mismo camino al revés: desde Alpaca a tu cuenta bancaria a tu nombre, cuando vos querás, sin penalidad.</p>
+  </section>
+
+  <!-- 7 · APALANCAMIENTO -->
+  <section id="apalancamiento">
+    <div class="num">7</div>
+    <h2>Apalancamiento sin margin call</h2>
+    <p class="lede">Hay dos formas de apalancarse. Nosotros usamos solo una, y la diferencia es todo.</p>
+
+    <div class="vs">
+      <div class="col no"><span class="tag">No lo hacemos</span><h3>Con margen: le pedís prestado al bróker</h3><ul>
+        <li>Si el mercado cae, el bróker te exige plata (margin call)</li>
+        <li>Si no la ponés, te liquida en el peor momento</li>
+        <li>Podés terminar debiendo más de lo que invertiste</li>
+        <li>Pagás intereses todos los días</li>
+      </ul></div>
+      <div class="col si"><span class="tag">Así lo hacemos</span><h3>En el activo: un ETF apalancado (TQQQ, QLD)</h3><ul>
+        <li>El apalancamiento vive <b>dentro del fondo</b>, no en tu cuenta</li>
+        <li>No hay margin call. Nadie te puede liquidar</li>
+        <li>Nunca podés perder más de lo que pusiste</li>
+        <li>Se compra y se vende como cualquier acción</li>
+      </ul></div>
+    </div>
+    <p class="nota">El costo honesto del ETF apalancado: en un crash puede caer 70% a 95%. Por eso se usa solo en la primera fase, con horizonte largo, y siempre con la señal de salida de la sección siguiente. Cuando la cuenta avanza hacia la meta, el riesgo baja solo:</p>
+    <div class="fases">
+      <div class="fase f1"><div class="f">Fase 1 · 0 a 70%</div><div class="a">TQQQ / QLD</div><div class="d">Nasdaq ×3 o ×2, con señal</div></div>
+      <div class="fase f2"><div class="f">Fase 2 · 70 a 100%</div><div class="a">QQQ / SPY</div><div class="d">índice sin apalancar</div></div>
+      <div class="fase f3"><div class="f">Fase 3 · meta</div><div class="a">Renta fija</div><div class="d">el piso que paga tu retiro</div></div>
+    </div>
+    <p class="nota">Las fases se cruzan por <b>% de avance a tu Freedom Point</b>, no por edad ni por calendario. Cada aporte extra te acerca al cambio de fase.</p>
+  </section>
+
+  <!-- 8 · EDGE -->
+  <section id="edge">
+    <div class="num">8</div>
+    <h2>Nuestro edge: salirse antes de que duela</h2>
+    <p class="lede">Una regla simple, revisada <b>una vez por semana</b>: se compara el Nasdaq con su máximo de las últimas 39 semanas. Si cae más de 18%, el lunes se sale a efectivo. Cuando recupera, se vuelve a entrar. Nada de intuición ni de noticias.</p>
+
+    <div class="tiles c4">
+      <div class="tile"><div class="n menta">10.9%</div><div class="l">anual con la regla <b>vs 8.4%</b> del Nasdaq sin regla, 2000 a 2026</div></div>
+      <div class="tile"><div class="n menta">−26%</div><div class="l">peor caída con la regla <b>vs −81%</b> sin regla</div></div>
+      <div class="tile"><div class="n">−9%</div><div class="l">peor año con la regla (2022) <b>vs −43%</b> sin regla (2000)</div></div>
+      <div class="tile"><div class="n">1.4</div><div class="l">órdenes al año. Se revisa seguido, se opera casi nunca</div></div>
+    </div>
+
+    <div class="phones uno" style="grid-template-columns:1fr; max-width:380px">
+      <div class="phone"><div class="scr" style="aspect-ratio:948/1080"><img src="/info/img/dash-senal.webp" alt="La señal de salida en el dashboard del cliente" loading="lazy"></div><div class="cap">Así la ves cada semana en tu dashboard: dónde está el Nasdaq, dónde está la línea de salida y cuánto falta.</div></div>
+    </div>
+    <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. Toda la cocina, con datos descargables para que la comprobés con la IA que usés, en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
+  </section>
+
+  <!-- 9 · PAPERS -->
+  <section id="papers">
+    <div class="num">9</div>
+    <h2>No lo inventamos nosotros</h2>
+    <p class="lede">Tres investigaciones publicadas y premiadas llegaron a lo mismo que nuestro propio research. Lo inusual es juntarlas en un servicio para una persona.</p>
+
+    <div class="papers">
+      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div><div class="src">Yale · Ayres &amp; Nalebuff · el paper de retiro</div><h3>Apalancarse de joven reduce el riesgo del retiro</h3><p><i>Lifecycle Investing</i>: tu verdadera riqueza de joven son los aportes que vas a hacer. Exponerse más al inicio y desapalancar por fases, según el % de la meta alcanzado, llega más seguido y con menos dispersión. Es la lógica de nuestras tres fases.</p></div>
+      <div class="paper"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div><div class="src">CMT Association · Dow Award 2016 · Gayed &amp; Bilello</div><h3>Apalancamiento + filtro de tendencia le gana a comprar y mantener</h3><p><i>Leverage for the Long Run</i>: la volatilidad es la enemiga del apalancamiento y una señal de tendencia identifica cuándo paga estar apalancado. Es la validación premiada de nuestra señal de salida.</p></div>
+      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/ra.svg" alt="Research Affiliates" loading="lazy"></div><div class="src">Research Affiliates · Arnott</div><h3>Los fondos de retiro tradicionales están al revés</h3><p><i>The Glidepath Illusion</i>, con 141 años de datos: mucha acción cuando sos joven y tenés poco, y poca cuando sos mayor y tenés mucho, ni maximiza la riqueza ni reduce la incertidumbre.</p></div>
+    </div>
+
+    <div class="tiles" style="margin-top:12px">
+      <div class="tile"><div class="n menta">99.9%</div><div class="l">de las ventanas de <b>15 años</b> del S&amp;P 500 desde 1871 terminaron en positivo, con dividendos. Ver <a href="/horizonte" target="_blank" rel="noopener">/horizonte</a>.</div></div>
+      <div class="tile"><div class="n">10,000</div><div class="l">vidas simuladas con las que estresamos el sistema antes de ofrecerlo. Ver <a href="/FreedomFunds" target="_blank" rel="noopener">/FreedomFunds</a>.</div></div>
+    </div>
+  </section>
+
+  <!-- 10 · TU TIEMPO -->
+  <section id="tiempo">
+    <div class="num">10</div>
+    <h2>Diseñado para que vos casi no hagás nada</h2>
+    <p class="lede">Sos bueno en lo tuyo y no tenés tiempo para esto. El servicio está armado al revés de un curso: <b>vos ponés el aporte, nosotros ponemos todo lo demás.</b></p>
+
+    <div class="sino">
+      <div class="col si"><h3>Vos · unos 10 minutos al mes</h3><ul>
+        <li>Una transferencia cuando tengás un bloque listo</li>
+        <li>Leer tu reporte de cierre de mes</li>
+        <li>Contestar un WhatsApp si algo cambió en tu vida</li>
+      </ul></div>
+      <div class="col eq"><h3>Nosotros · todo lo demás</h3><ul>
+        <li>La señal cada viernes y la ejecución el lunes</li>
+        <li>El cierre de mes y tu reporte al correo</li>
+        <li>Tu grupo de WhatsApp directo conmigo</li>
+        <li>Revisión del plan cada trimestre y cada año</li>
+        <li>Mensaje de calma antes de que preguntés cuando el mercado cae</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 11 · DASHBOARD -->
+  <section id="dashboard">
+    <div class="num">11</div>
+    <h2>Lo ves todo, cuando querás</h2>
+    <p class="lede">Dos ventanas a tu plata. La de <b>Alpaca</b>, con tu usuario, donde está la cuenta. Y tu <b>dashboard</b> en investorcr.com, donde está el plan: cuánto te falta, en qué fase vas, qué hizo la señal y qué puso el mercado.</p>
+
+    <div class="phones">
+      <div class="phone"><div class="scr"><img src="/info/img/dash-camino.webp" alt="Tu camino al Freedom Point" loading="lazy"></div><div class="cap">Tu avance al Freedom Point y tu fase</div></div>
+      <div class="phone"><div class="scr"><img src="/info/img/dash-reparto.webp" alt="Cómo está repartida tu plata" loading="lazy"></div><div class="cap">Cómo está repartida tu cuenta hoy</div></div>
+      <div class="phone"><div class="scr"><img src="/info/img/dash-top.webp" alt="Nota de Jose en el dashboard" loading="lazy"></div><div class="cap">Mis notas sobre lo que ejecuté y por qué</div></div>
+    </div>
+    <div class="desk"><img src="/info/img/dash-desktop.webp" alt="Dashboard del cliente en computadora" loading="lazy"></div>
+    <a class="mas" href="/mifreedompoint/#demo" target="_blank" rel="noopener" data-cta="demo_dashboard">Probá la demo con datos de ejemplo →</a>
+  </section>
+
+  <!-- 12 · PRECIO -->
+  <section id="precio">
+    <div class="num">12</div>
+    <h2>Cuánto cuesta</h2>
+    <div class="precio">
+      <div class="p">$1,500<small>una sola vez</small></div>
+      <ul>
+        <li><b>Incluye el primer año completo</b> de gestión</li>
+        <li>Apertura de cuenta, W-8BEN y plantilla de transferencia</li>
+        <li>Sesión de plan: tu Freedom Point, tu fase y tu aporte</li>
+        <li>Ejecución de todas las órdenes y la señal semanal</li>
+        <li>Reporte de cierre de mes, dashboard y grupo de WhatsApp</li>
+        <li>Garantía de 30 días sobre el honorario: con cuenta abierta, transferencia hecha y plan creado</li>
+      </ul>
+    </div>
+    <div class="anio2">
+      <div class="tile"><div class="n">1%</div><div class="l">anual desde el año 2, sobre el saldo al cierre del año anterior. Con $30,000 son $300 al año.</div></div>
+      <div class="tile"><div class="n menta">$0</div><div class="l">de comisión por operación en Alpaca. Sin penalidad por retirar ni por salirte.</div></div>
+      <div class="tile"><div class="n">Sin mínimo</div><div class="l">Tiene sentido con unos <b>$500 al mes</b> o <b>$10,000</b> listos. Si no, igual te decimos qué hacer.</div></div>
+    </div>
+    <p class="nota">¿Por qué un honorario inicial y no solo el 1%? Porque el primer año es donde está casi todo el trabajo (cuenta, transferencia, plan) y porque sobre una cuenta que arranca el 1% no cubriría ese trabajo. A partir del año 2 cobramos solo si seguís con nosotros.</p>
+  </section>
+
+  <!-- 13 · CLIENTES -->
+  <section id="clientes">
+    <div class="num">13</div>
+    <h2>Quién está del otro lado</h2>
+    <div class="jose">
+      <img src="/assets/jose-montero.webp" alt="Jose Montero" loading="lazy">
+      <p><b>Jose Montero.</b> Licenciado en Administración de Empresas. Trabajé en una firma de inversión que manejaba $600 millones y 4.5 años en London Stock Exchange Group. Llevo más de 11 años gestionando portafolios en la bolsa de EE. UU. Esposo y papá de tres. Mi propia plata está en el mismo sistema que la tuya.</p>
+    </div>
+
+    <div class="testis">
+      <div class="testi"><p>"El proceso de apertura de cuentas de inversión en el extranjero y la realización de transferencias internacionales fue guiado paso a paso, lo que me dio mucha seguridad y confianza."</p><div class="who"><img src="/assets/testimonios/foto-6-cara.webp" alt="" loading="lazy"><div><b>Mariana Peña</b><span>Ginecóloga UCR, CCSS</span></div></div></div>
+      <div class="testi"><p>"Estoy muy agradecido por explicarme los grandes riesgos a los que uno está expuesto al tener platas en bancos de Costa Rica que solo te cubren hasta aprox 6 millones de colones."</p><div class="who"><img src="/assets/testimonios/foto-10-cara.webp" alt="" loading="lazy"><div><b>Ramsés Espinoza</b><span>Founder &amp; CEO, CocoJamboo</span></div></div></div>
+      <div class="testi"><p>"Desde el inicio, José me guió paso a paso en la apertura de mis cuentas, explicándome con claridad cada etapa del proceso. Lo que más valoro es la comunicación: siempre abierta, fácil y transparente."</p><div class="who"><img src="/assets/testimonios/foto-5-cara.webp" alt="" loading="lazy"><div><b>Andrés Reyes</b><span>Senior Vice President, Citibank</span></div></div></div>
+      <div class="testi"><p>"De todas las estrategias y vehículos financieros que he intentado, Empowered Investor es donde me quedo. Hemos protegido mi inversión de caídas de hasta 30% del mercado."</p><div class="who"><img src="/assets/testimonios/foto-7-cara.webp" alt="" loading="lazy"><div><b>Javier Vargas</b><span>Business Development, TAPP</span></div></div></div>
+    </div>
+
+    <a class="curso" href="/minicurso" data-cta="minicurso">
+      <div class="ic">🎓</div>
+      <div><b>¿Querés entender la cocina por dentro primero?</b><span>Mini curso de 32 minutos: cómo se construye un plan de retiro con el Nasdaq, las fases y la señal. Gratis, a tu ritmo.</span></div>
+    </a>
+
+    <div class="ctas">
+      <a class="btn btn-menta" id="wa-cta" href="#" target="_blank" rel="noopener" data-cta="whatsapp">💬 Escribime por WhatsApp</a>
+      <a class="btn btn-crema" id="cta-calendly" href="#" target="_blank" rel="noopener" data-cta="calendly">📞 Agendá una llamada</a>
+      <a class="btn btn-ghost" href="/mifreedompoint/#demo" target="_blank" rel="noopener" data-cta="demo_abajo">Ver la demo del dashboard</a>
+    </div>
+  </section>
 </div>
 
 <footer>
-  <p>No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. Toda inversión implica riesgo, incluida la posible pérdida del capital. Empowered Investor · Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta, no desde la nuestra.</p>
+  <p>No se garantizan retornos. Los resultados pasados no garantizan resultados futuros. Toda inversión implica riesgo, incluida la posible pérdida del capital. Los ETFs apalancados pueden caer 70% a 95% en una crisis. Los datos de retorno citados son simulaciones sobre datos históricos públicos, netos de costos estimados, y están documentados en las páginas enlazadas.</p>
+  <p>Datos de Alpaca Securities LLC tomados de sus comunicados públicos (enero y julio de 2026) y de su página de protección de activos; pueden cambiar. SIPC no protege contra pérdidas de mercado. Empowered Investor es una marca de Midas Inversiones CR Ltda. Más de 11 años ayudándoles a nuestros clientes a manejar sus inversiones desde su propia cuenta, no desde la nuestra.</p>
 </footer>
 
 <script>
 "use strict";
-// Misma constante que la calculadora.
-var CALENDLY_URL = "https://calendly.com/empoweredinvestor/reunion-de-30-minutos";
-
+var CALENDLY_URL = "https://calendly.com/empoweredinvestor/medicos";
+var WA_NUMERO = "50670558296";
+var WA_MSG = "Hola Jose, leí la página de cómo trabajan y quiero avanzar con mi cuenta.";
+var waHref = "https://wa.me/" + WA_NUMERO + "?text=" + encodeURIComponent(WA_MSG);
+document.getElementById("wa-top").href = waHref;
+document.getElementById("wa-cta").href = waHref;
 document.getElementById("cta-calendly").href = CALENDLY_URL + "?utm_source=info";
 
 function track(evento, datos){
@@ -152,9 +574,22 @@ track("info_vista", {});
 Array.prototype.forEach.call(document.querySelectorAll("[data-cta]"), function(el){
   el.addEventListener("click", function(){ track("click_cta_info", {cta: el.getAttribute("data-cta")}); });
 });
-Array.prototype.forEach.call(document.querySelectorAll("[data-alianza]"), function(el){
-  el.addEventListener("click", function(){ track("click_alianza", {alianza: el.getAttribute("data-alianza")}); });
-});
+
+// Barras del costo de oportunidad: crecen cuando entran en pantalla.
+(function(){
+  var cont = document.getElementById("barras");
+  if(!cont) return;
+  function crecer(){
+    Array.prototype.forEach.call(cont.querySelectorAll(".rel"), function(r){ r.style.width = r.getAttribute("data-w") + "%"; });
+    setTimeout(function(){ cont.classList.add("lista"); }, 700);
+  }
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ crecer(); io.disconnect(); } });
+    }, {threshold:.3});
+    io.observe(cont);
+  } else { crecer(); }
+})();
 </script>
 </body>
 </html>
