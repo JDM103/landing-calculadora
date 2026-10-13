@@ -187,6 +187,30 @@
   .paper .logobox.texto{ background:#10161f; border:1px solid var(--bd); }
   .paper .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:17px; color:var(--crema); font-style:italic; }
 
+  /* legos */
+  .legos{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:640px){ .legos{ grid-template-columns:1fr 1fr; } }
+  .lego{ position:relative; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px 14px 14px; min-width:0; }
+  .lego .pieza-n{ position:absolute; top:-10px; left:14px; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:var(--tinta); box-shadow:0 3px 0 rgba(0,0,0,.35); }
+  .lego.l1 .pieza-n{ background:#F07A6B; } .lego.l2 .pieza-n{ background:#F5C26B; } .lego.l3 .pieza-n{ background:#63FCAF; } .lego.l4 .pieza-n{ background:#8B9BFF; }
+  .lego.l1{ border-color:rgba(240,122,107,.45); } .lego.l2{ border-color:rgba(245,194,107,.45); } .lego.l3{ border-color:rgba(99,252,175,.45); } .lego.l4{ border-color:rgba(139,155,255,.45); }
+  .lego .logobox{ height:64px; border-radius:10px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:8px 14px; margin-top:6px; }
+  .lego .logobox.oscuro, .lego .logobox.texto{ background:#10161f; border:1px solid var(--bd); }
+  .lego .logobox img{ max-height:40px; max-width:88%; }
+  .lego .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:17px; color:var(--crema); font-style:italic; }
+  .lego .ic-ldi{ font-size:30px; }
+  .lego .src{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gris-sec); margin-top:10px; line-height:1.4; }
+  .lego .src i{ text-transform:none; letter-spacing:0; }
+  .lego h3{ font-size:16px; font-weight:700; line-height:1.3; margin-top:4px; }
+  .lego p{ font-size:13.5px; line-height:1.5; color:var(--gris); margin-top:6px; }
+  .lego p b{ color:var(--crema); }
+  .lego .usamos{ margin-top:10px; font-size:13px; color:var(--gris); border-top:1px solid var(--bd); padding-top:8px; }
+  .lego .usamos b{ color:var(--crema); }
+  .quant{ margin-top:16px; border-radius:18px; border:1px solid rgba(139,155,255,.5); background:linear-gradient(180deg,rgba(85,109,251,.10),rgba(85,109,251,0) 70%), var(--carta); padding:20px 16px 14px; }
+  .quant h3{ font-size:clamp(20px,5.4vw,26px); font-weight:700; line-height:1.2; letter-spacing:-.01em; }
+  .quant > p{ font-size:15px; line-height:1.55; color:var(--gris); margin-top:8px; }
+  .quant .tiles{ margin-top:14px; }
+
   /* papers */
   .papers{ display:grid; gap:10px; margin-top:20px; }
   @media(min-width:640px){ .papers{ grid-template-columns:repeat(2,1fr); } }
@@ -293,7 +317,7 @@
       <a href="#apalancamiento">Apalancamiento</a>
       <a href="#edge">Nuestro edge</a>
       <a href="#secuencia">La secuencia</a>
-      <a href="#papers">Los papers</a>
+      <a href="#papers">Metodología</a>
       <a href="#tiempo">Tu tiempo</a>
       <a href="#dashboard">Dashboard</a>
       <a href="#precio">Precio</a>
@@ -566,19 +590,67 @@
   <!-- 9 · PAPERS -->
   <section id="papers">
     <div class="num">11</div>
-    <h2>No lo inventamos nosotros</h2>
-    <p class="lede">Cuatro investigaciones publicadas llegaron a lo mismo que nuestro propio research. Lo inusual es juntarlas en un servicio para una persona.</p>
+    <h2>Cuatro piezas de Lego, una metodología</h2>
+    <p class="lede">No copiamos un paper. Armamos nuestra metodología con <b>cuatro piezas</b> que tienen respaldo académico o institucional, y las ajustamos con nuestro propio research cuantitativo.</p>
 
-    <div class="papers">
-      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div><div class="src">Yale · Ayres &amp; Nalebuff · el paper de retiro</div><h3>Apalancarse de joven reduce el riesgo del retiro</h3><p><i>Lifecycle Investing</i>: tu verdadera riqueza de joven son los aportes que vas a hacer. Exponerse más al inicio y desapalancar por fases, según el % de la meta alcanzado, llega más seguido y con menos dispersión. Es la lógica de nuestras tres fases.</p></div>
-      <div class="paper"><div class="logobox texto"><span>The Journal of Finance</span></div><div class="src">George &amp; Hwang · el máximo de 52 semanas</div><h3>La distancia al máximo reciente dice hacia dónde va la tendencia</h3><p><i>The 52-Week High and Momentum Investing</i>: lo cerca o lejos que está un precio de su máximo del último año dice más de lo que viene que el retorno pasado. Es la base de nuestro freno: salir cuando el Nasdaq se aleja demasiado de su máximo.</p></div>
-      <div class="paper"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div><div class="src">CMT Association · Dow Award 2016 · Gayed &amp; Bilello</div><h3>Apalancamiento + filtro de tendencia le gana a comprar y mantener</h3><p><i>Leverage for the Long Run</i>: la volatilidad es la enemiga del apalancamiento y una señal de tendencia identifica cuándo paga estar apalancado. Es la validación premiada de nuestra señal de salida.</p></div>
-      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/ra.svg" alt="Research Affiliates" loading="lazy"></div><div class="src">Research Affiliates · Arnott</div><h3>Los fondos de retiro tradicionales están al revés</h3><p><i>The Glidepath Illusion</i>, con 141 años de datos: mucha acción cuando sos joven y tenés poco, y poca cuando sos mayor y tenés mucho, ni maximiza la riqueza ni reduce la incertidumbre.</p></div>
+    <div class="legos">
+      <div class="lego l1">
+        <div class="pieza-n">1</div>
+        <div class="cuerpo">
+          <div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div>
+          <div class="src">Yale · Ayres y Nalebuff · <i>Lifecycle Investing</i></div>
+          <h3>Apalancarse al inicio del plan de retiro es mejor metodología</h3>
+          <p>Cuando empezás, tu riqueza real son los aportes que todavía vas a hacer. Exponerse más al inicio, cuando el capital es chico, llega a la meta más seguido y con menos dispersión.</p>
+          <div class="usamos"><b>Lo usamos en:</b> la fase 1 con TQQQ o QLD.</div>
+        </div>
+      </div>
+      <div class="lego l2">
+        <div class="pieza-n">2</div>
+        <div class="cuerpo">
+          <div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div>
+          <div class="src">Gayed y Bilello · <i>Leverage for the Long Run</i> · Dow Award 2016</div>
+          <h3>Con apalancamiento, un filtro de tendencia es lo que más sentido tiene</h3>
+          <p>La volatilidad es la enemiga del apalancamiento. Estar apalancado solo cuando la tendencia es favorable, y salir cuando se rompe, le gana a comprar y mantener.</p>
+          <div class="usamos"><b>Lo usamos en:</b> nunca tenemos apalancado sin un filtro encendido.</div>
+        </div>
+      </div>
+      <div class="lego l3">
+        <div class="pieza-n">3</div>
+        <div class="cuerpo">
+          <div class="logobox texto"><span>The Journal of Finance</span></div>
+          <div class="src">George y Hwang · <i>The 52-Week High and Momentum Investing</i> · 2004</div>
+          <h3>El edge: la distancia al máximo de 52 semanas</h3>
+          <p>Lo cerca o lejos que está un precio de su máximo reciente dice mucho de hacia dónde va. Tomamos esa idea y la <b>adaptamos al Nasdaq</b>: ventana de 39 semanas, salida a −18% y reentrada a −6%, elegidas después de probar cientos de combinaciones.</p>
+          <div class="usamos"><b>Lo usamos en:</b> la señal de salida que revisamos cada viernes.</div>
+        </div>
+      </div>
+      <div class="lego l4">
+        <div class="pieza-n">4</div>
+        <div class="cuerpo">
+          <div class="logobox oscuro"><span class="ic-ldi">🏛️</span></div>
+          <div class="src">Fondos de pensiones · gestión por fondeo (LDI)</div>
+          <h3>El riesgo se mide por el avance a la meta</h3>
+          <p>Los fondos de pensiones grandes no bajan el riesgo por la edad de nadie: lo bajan según qué porcentaje de lo que deben pagar ya tienen. Es el riesgo dinámico por avance porcentual.</p>
+          <div class="usamos"><b>Lo usamos en:</b> las tres fases, que cambian con tu % de avance al Freedom Point.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quant">
+      <div class="eyebrow" style="color:#8B9BFF">Lo que las une</div>
+      <h3>Inversión cuantitativa: reglas probadas con datos, no corazonadas</h3>
+      <p>La inversión cuantitativa decide con reglas escritas que se prueban contra décadas de datos antes de usarse con plata real. Nada depende del ánimo del día, de las noticias ni de una intuición.</p>
+      <div class="tiles c3">
+        <div class="tile"><div class="n" style="color:#8B9BFF">1,792</div><div class="l">configuraciones de señales probadas en el laboratorio, con datos separados para no engañarnos</div></div>
+        <div class="tile"><div class="n" style="color:#8B9BFF">10,000</div><div class="l">vidas simuladas para estresar el plan antes de ofrecerlo</div></div>
+        <div class="tile"><div class="n" style="color:#8B9BFF">1928</div><div class="l">año desde el que replicamos los papers con datos reales</div></div>
+      </div>
+      <p class="nota">Los papers son el punto de partida. La metodología es nuestra: combinarlos en un solo plan, adaptarlos al Nasdaq y ajustarlos con 11 años manejando portafolios. Todo el research está publicado en <a href="/research" target="_blank" rel="noopener">/research</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/FreedomFunds" target="_blank" rel="noopener">/FreedomFunds</a>.</p>
     </div>
 
     <div class="tiles" style="margin-top:12px">
       <div class="tile"><div class="n menta">99.9%</div><div class="l">de las ventanas de <b>15 años</b> del S&amp;P 500 desde 1871 terminaron en positivo, con dividendos. Ver <a href="/horizonte" target="_blank" rel="noopener">/horizonte</a>.</div></div>
-      <div class="tile"><div class="n">10,000</div><div class="l">vidas simuladas con las que estresamos el sistema antes de ofrecerlo. Ver <a href="/FreedomFunds" target="_blank" rel="noopener">/FreedomFunds</a>.</div></div>
+      <div class="tile"><div class="n">15 años</div><div class="l">o más es el horizonte para el que está pensado el plan. Por eso aguanta las caídas de camino.</div></div>
     </div>
   </section>
 
@@ -590,16 +662,16 @@
 
     <div class="sino">
       <div class="col si"><h3>Vos · unos 10 minutos al mes</h3><ul>
-        <li>Una transferencia cuando tengás un bloque listo</li>
+        <li>Una transferencia cuando tenés unos <b>$3,000 o más</b> listos para enviar</li>
         <li>Leer tu reporte de cierre de mes</li>
-        <li>Contestar un WhatsApp si algo cambió en tu vida</li>
+        <li>Comunicación continua en tu grupo de WhatsApp</li>
       </ul></div>
       <div class="col eq"><h3>Nosotros · todo lo demás</h3><ul>
-        <li>La señal cada viernes y la ejecución el lunes</li>
+        <li>Monitoreo de las señales para entrar y salir</li>
         <li>El cierre de mes y tu reporte al correo</li>
         <li>Tu grupo de WhatsApp directo conmigo</li>
-        <li>Revisión del plan cada trimestre y cada año</li>
-        <li>Mensaje de calma antes de que preguntés cuando el mercado cae</li>
+        <li>Educación continua para que entendás cada paso</li>
+        <li>Sobre todo, acompañamiento emocional cuando el mercado cae</li>
       </ul></div>
     </div>
   </section>
