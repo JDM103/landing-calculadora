@@ -67,6 +67,7 @@
   .chips::-webkit-scrollbar{ display:none; }
   .chips a{ flex:0 0 auto; font-size:13px; color:var(--gris); text-decoration:none; border:1px solid var(--bd); border-radius:999px; padding:7px 12px; white-space:nowrap; }
   .chips a:hover{ border-color:var(--menta); color:var(--menta); }
+  @media(min-width:640px){ .chips{ flex-wrap:wrap; overflow:visible; } }
 
   /* secciones */
   section{ padding:44px 0 6px; border-top:1px solid var(--bd); margin-top:34px; }
@@ -233,8 +234,8 @@
     <p class="sub">Todo lo que querés saber antes de decidir, en una sola página. Sin letra menuda y con los números a la vista.</p>
 
     <div class="tiles c4">
-      <div class="tile"><div class="n menta">A tu nombre</div><div class="l">Cuenta propia en un bróker regulado de EE. UU. Yo nunca toco tu plata.</div></div>
-      <div class="tile"><div class="n">Solo compro<br>y vendo</div><div class="l">Mi permiso llega hasta ahí. Retirar, <b>solo vos</b>.</div></div>
+      <div class="tile"><div class="n menta">A tu nombre</div><div class="l">La cuenta es tuya, en un bróker regulado de EE. UU. Tu plata nunca pasa por mis manos.</div></div>
+      <div class="tile"><div class="n">Solo compro<br>y vendo</div><div class="l">Hasta ahí llega mi permiso. <b>Retirar dinero: solo vos.</b></div></div>
       <div class="tile"><div class="n">$1,500</div><div class="l">Un solo pago que <b>incluye el primer año</b> completo.</div></div>
       <div class="tile"><div class="n">11+ años</div><div class="l">Manejando portafolios en la bolsa de EE. UU.</div></div>
     </div>
@@ -273,24 +274,25 @@
     <h2>Lo que cuesta no invertir</h2>
     <p class="lede"><b>$10,000 guardados en abril de 1999.</b> Esto es lo que valen hoy, ya descontada la inflación, según dónde los hayas puesto.</p>
 
+    <div class="frame" style="margin-top:18px"><iframe loading="lazy" src="/costo/" title="El costo de oportunidad"></iframe><div class="cap">La carrera de $10,000 desde abril de 1999, en plata de hoy: efectivo, CDP al 3%, S&amp;P 500 y Nasdaq 100. Tocá el gráfico para repetirla. Página completa en <a href="/costo" target="_blank" rel="noopener">/costo</a>.</div></div>
+
+    <p class="lede" style="margin-top:22px; font-size:15px">Cómo terminan hoy:</p>
     <div class="barras" id="barras">
       <div class="barra cash"><div class="et">Efectivo<small>debajo del colchón</small></div><div class="pista"><div class="rel" data-w="6.6"></div><div class="val">$5,017</div></div></div>
       <div class="barra cdp"><div class="et">CDP<small>al 3% anual</small></div><div class="pista"><div class="rel" data-w="14.8"></div><div class="val">≈ $11,200</div></div></div>
       <div class="barra sp"><div class="et">S&amp;P 500<small>las 500 grandes de EE. UU.</small></div><div class="pista"><div class="rel" data-w="58.6"></div><div class="val">$44,581</div></div></div>
       <div class="barra ndx"><div class="et">Nasdaq 100<small>las 100 grandes tecnológicas</small></div><div class="pista"><div class="rel" data-w="100"></div><div class="val">$76,019</div></div></div>
     </div>
-    <p class="nota">Retorno total con dividendos reinvertidos, en dólares de hoy (deflactado con la inflación de EE. UU.). Abril 1999 a julio 2026, un período que incluye el estallido puntocom, 2008, la pandemia y 2022. El CDP se asume al 3% anual fijo. Datos y gráfico animado en <a href="/costo" target="_blank" rel="noopener">/costo</a>.</p>
+    <p class="nota">Retorno total con dividendos reinvertidos, deflactado con la inflación de EE. UU. Abril 1999 a julio 2026: el período incluye el estallido puntocom, 2008, la pandemia y 2022. El CDP se asume al 3% anual fijo.</p>
 
     <div class="tiles" style="margin-top:18px">
       <div class="tile"><div class="n rojo">−50%</div><div class="l">Poder de compra que perdió el <b>dólar</b> guardado sin invertir desde 1999 (2.5% al año).</div></div>
       <div class="tile"><div class="n rojo">−78%</div><div class="l">Lo mismo con el <b>colón</b>: ₡10,000 de 1999 compran hoy lo que ₡2,178 (5.4% al año).</div></div>
     </div>
-    <p class="nota">La inflación es un impuesto silencioso: no se ve en el estado de cuenta, pero se cobra todos los meses. Por eso tu meta, tu aporte y tus resultados los calculamos siempre <b>en plata de hoy</b>. Animación en <a href="/inflacion" target="_blank" rel="noopener">/inflacion</a>.</p>
-
+    <p class="nota">La inflación es un impuesto silencioso: no se ve en el estado de cuenta, pero se cobra todos los meses. Por eso tu meta, tu aporte y tus resultados los calculamos siempre <b>en plata de hoy</b>.</p>
     <details class="ver">
-      <summary>Ver las dos animaciones acá mismo</summary>
-      <div class="frame"><iframe loading="lazy" src="/costo/" title="El costo de oportunidad"></iframe><div class="cap">La carrera de $10k desde 1999: efectivo, CDP, S&amp;P 500 y Nasdaq 100. Tocá el gráfico para repetir.</div></div>
-      <div class="frame"><iframe loading="lazy" src="/inflacion/" title="El impuesto silencioso"></iframe><div class="cap">$10,000 y ₡10,000 guardados sin invertir, perdiendo poder de compra.</div></div>
+      <summary>Ver la animación de la inflación</summary>
+      <div class="frame"><iframe loading="lazy" src="/inflacion/" title="El impuesto silencioso"></iframe><div class="cap">$10,000 y ₡10,000 guardados sin invertir, perdiendo poder de compra. Página completa en <a href="/inflacion" target="_blank" rel="noopener">/inflacion</a>.</div></div>
     </details>
   </section>
 
@@ -313,7 +315,7 @@
       <div class="paso"><div class="k">🤝</div><div><h3>Quién está detrás</h3><p>Inversionistas como BNP Paribas (Opera Tech Ventures), Peak XV, Drive Capital y Elefund; financiamiento bancario de BMO y de Kraken. Socios como SBI Securities en Japón.</p></div></div>
       <div class="paso"><div class="k">🔑</div><div><h3>El Trading API: una llave que solo compra y vende</h3><p>Alpaca nació para que programas y asesores operen cuentas por API. Vos generás una llave de <b>trading</b> desde tu cuenta y me la das. Con ella puedo ver posiciones y poner órdenes. <b>No existe</b> una llave que permita retirar o transferir: eso solo se hace con tu usuario, tu contraseña y tu segundo factor.</p></div></div>
     </div>
-    <a class="mas" href="https://alpaca.markets/about-us" target="_blank" rel="noopener" data-cta="alpaca_about">Ver Alpaca por su cuenta →</a>
+    <a class="mas" href="https://alpaca.markets/about-us" target="_blank" rel="noopener" data-cta="alpaca_about">Página web de Alpaca →</a>
   </section>
 
   <!-- 4 · PROTECCIÓN -->
