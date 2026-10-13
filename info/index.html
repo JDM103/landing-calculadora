@@ -136,19 +136,6 @@
   .aviso{ margin-top:12px; border-radius:14px; padding:14px 16px; background:rgba(245,194,107,.08); border:1px solid rgba(245,194,107,.35); font-size:14px; line-height:1.5; color:var(--gris); }
   .aviso b{ color:var(--ambar); }
 
-  /* mock alpaca */
-  .mock{ margin-top:18px; border-radius:18px; border:1px solid var(--bd); background:#0b0d12; padding:16px; max-width:420px; }
-  .mock .mh{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--gris-sec); letter-spacing:.08em; text-transform:uppercase; }
-  .mock .mh span:last-child{ color:var(--menta); }
-  .mock .nom{ margin-top:14px; font-size:13px; color:var(--gris-sec); }
-  .mock .nom b{ display:block; font-size:18px; color:var(--crema); letter-spacing:.02em; }
-  .mock .eq{ margin-top:12px; font-size:12px; color:var(--gris-sec); }
-  .mock .eq b{ display:block; font-size:30px; color:var(--crema); letter-spacing:-.02em; }
-  .mock .bt{ margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-  .mock .bt div{ border-radius:10px; padding:10px; font-size:12px; text-align:center; border:1px solid var(--bd); color:var(--gris); }
-  .mock .bt div.lock{ border-color:rgba(99,252,175,.4); color:var(--menta); }
-  .mock .pie{ margin-top:10px; font-size:11px; color:var(--gris-sec); line-height:1.4; }
-
   /* comparación apalancamiento */
   .vs{ display:grid; gap:10px; margin-top:20px; }
   @media(min-width:560px){ .vs{ grid-template-columns:1fr 1fr; } }
@@ -181,6 +168,9 @@
   .phone .scr{ border-radius:16px; overflow:hidden; aspect-ratio:9/14; background:#0d0f14; }
   .phone .scr img{ width:100%; height:100%; object-fit:cover; object-position:top; }
   .phone .cap{ font-size:12px; color:var(--gris-sec); text-align:center; padding:8px 4px 2px; }
+  .phones.alp .phone .scr{ aspect-ratio:auto; }
+  .phones.alp .phone .scr img{ height:auto; }
+  @media(max-width:559px){ .phones.alp .phone{ flex:0 0 88%; max-width:none; } }
   .desk{ margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--bd); }
   @media(max-width:559px){ .desk{ display:none; } }
 
@@ -362,15 +352,12 @@
 
     <div class="aviso"><b>Ley antilavado:</b> la plata solo entra a tu cuenta desde una cuenta bancaria <b>a tu mismo nombre</b>, y solo puede salir hacia una cuenta <b>a tu mismo nombre</b>. No se puede transferir a terceros, ni a familiares, ni a mí. Es una regla del sistema financiero de EE. UU. y es justamente lo que te protege.</div>
 
-    <!-- PANTALLAZO ALPACA: cuando Jose pase el pantallazo real, guardarlo como /info/img/alpaca-cuenta.webp
-         y reemplazar este bloque .mock por <img src="/info/img/alpaca-cuenta.webp" alt="Tu cuenta en Alpaca"> -->
-    <div class="mock" aria-label="Ilustración de la cuenta en Alpaca">
-      <div class="mh"><span>Alpaca · tu cuenta</span><span>● Activa</span></div>
-      <div class="nom">Titular<b>TU NOMBRE COMPLETO</b></div>
-      <div class="eq">Valor de la cuenta<b>$ ·· ,··· </b></div>
-      <div class="bt"><div class="lock">Retirar fondos · solo vos</div><div class="lock">Transferir · solo vos</div><div>Posiciones</div><div>API keys · trading</div></div>
-      <div class="pie">Ilustración de cómo se ve tu cuenta en Alpaca. Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones que solo vos tenés. Lo que yo hago queda en el historial de órdenes.</div>
+    <div class="phones alp">
+      <div class="phone"><div class="scr"><img src="/info/img/alpaca-1.webp" alt="Alpaca: tu portafolio y tus posiciones" loading="lazy"></div><div class="cap">Tu portafolio, tu saldo y tus posiciones, en vivo</div></div>
+      <div class="phone"><div class="scr"><img src="/info/img/alpaca-2.webp" alt="Alpaca: historial de cada movimiento" loading="lazy"></div><div class="cap">Cada compra, venta, depósito e interés queda en el historial</div></div>
+      <div class="phone"><div class="scr"><img src="/info/img/alpaca-3.webp" alt="Alpaca: depositar y retirar" loading="lazy"></div><div class="cap">Depositar y retirar: botones que solo vos tenés</div></div>
     </div>
+    <p class="nota">Así se ve una cuenta real en Alpaca (el número de cuenta va tapado). Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones de retiro. Lo que yo hago queda en el historial de órdenes.</p>
     <p class="nota">Al pasar los $100,000 te ayudamos a dejar un testamento de vida sobre la cuenta, para que tu familia sepa exactamente qué hay y cómo se accede.</p>
   </section>
 
