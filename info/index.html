@@ -180,6 +180,13 @@
   .indice .emp{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
   .indice .emp span{ font-size:13px; color:var(--gris); border:1px solid var(--bd); border-radius:999px; padding:5px 10px; background:var(--tinta2); }
   .indice .emp span:last-child{ color:var(--menta); border-color:rgba(99,252,175,.4); }
+  .indice .marcas{ display:grid; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); gap:8px; }
+  .indice .marca{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 4px 10px; border-radius:12px; border:1px solid var(--bd); background:var(--tinta2); min-width:0; }
+  .indice .marca img{ width:28px; height:28px; }
+  .indice .marca span{ font-size:11.5px; color:var(--gris); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .indice .marca.mas{ grid-column:1/-1; flex-direction:row; justify-content:center; gap:8px; padding:10px; border-color:rgba(99,252,175,.45); }
+  .indice .marca.mas b{ font-size:18px; color:var(--menta); }
+  .indice .marca.mas span{ font-size:13px; }
   .indice .flecha{ color:var(--gris-sec); font-size:14px; margin:10px 0; }
   .indice .etf{ display:inline-block; border-radius:14px; border:1px solid rgba(99,252,175,.6); background:rgba(99,252,175,.08); padding:12px 22px; }
   .indice .etf b{ display:block; font-size:28px; color:var(--menta); letter-spacing:-.01em; }
@@ -506,7 +513,7 @@
     <div class="num">7</div>
     <div class="eyebrow" style="color:var(--menta)">La pregunta que más nos hacen</div>
     <h2>¿Cómo eligen las acciones?</h2>
-    <p class="lede">No elegimos empresas una por una. Compramos el índice entero con un ETF, y el trabajo lo ponemos en <b>cuándo</b> estar adentro.</p>
+    <p class="lede">No elegimos empresas una por una. Compramos índices enteros con ETFs, y el trabajo lo ponemos en <b>cuándo</b> estar adentro.</p>
 
     <div class="pasos">
       <div class="paso"><div class="k">1</div><div><h3>Qué es un índice</h3><p>Una lista de empresas que se mide como un solo número. El <b>Nasdaq 100</b> son las 100 empresas no financieras más grandes de la bolsa Nasdaq.</p></div></div>
@@ -514,9 +521,9 @@
     </div>
 
     <div class="indice">
-      <div class="emp"><span>Apple</span><span>Microsoft</span><span>Nvidia</span><span>Amazon</span><span>Alphabet</span><span>Meta</span><span>Broadcom</span><span>Tesla</span><span>Costco</span><span>Netflix</span><span>+ 90 más</span></div>
+      <div class="marcas"><div class="marca"><img src="/info/img/logos/apple.svg" alt="Apple" width="28" height="28" loading="lazy"><span>Apple</span></div><div class="marca"><img src="/info/img/logos/microsoft.svg" alt="Microsoft" width="28" height="28" loading="lazy"><span>Microsoft</span></div><div class="marca"><img src="/info/img/logos/nvidia.svg" alt="Nvidia" width="28" height="28" loading="lazy"><span>Nvidia</span></div><div class="marca"><img src="/info/img/logos/amazon.svg" alt="Amazon" width="28" height="28" loading="lazy"><span>Amazon</span></div><div class="marca"><img src="/info/img/logos/google.svg" alt="Google" width="28" height="28" loading="lazy"><span>Google</span></div><div class="marca"><img src="/info/img/logos/meta.svg" alt="Meta" width="28" height="28" loading="lazy"><span>Meta</span></div><div class="marca"><img src="/info/img/logos/broadcom.svg" alt="Broadcom" width="28" height="28" loading="lazy"><span>Broadcom</span></div><div class="marca"><img src="/info/img/logos/tesla.svg" alt="Tesla" width="28" height="28" loading="lazy"><span>Tesla</span></div><div class="marca"><img src="/info/img/logos/netflix.svg" alt="Netflix" width="28" height="28" loading="lazy"><span>Netflix</span></div><div class="marca"><img src="/info/img/logos/amd.svg" alt="AMD" width="28" height="28" loading="lazy"><span>AMD</span></div><div class="marca"><img src="/info/img/logos/adobe.svg" alt="Adobe" width="28" height="28" loading="lazy"><span>Adobe</span></div><div class="marca"><img src="/info/img/logos/palantir.svg" alt="Palantir" width="28" height="28" loading="lazy"><span>Palantir</span></div><div class="marca"><img src="/info/img/logos/pepsi.svg" alt="PepsiCo" width="28" height="28" loading="lazy"><span>PepsiCo</span></div><div class="marca"><img src="/info/img/logos/cisco.svg" alt="Cisco" width="28" height="28" loading="lazy"><span>Cisco</span></div><div class="marca"><img src="/info/img/logos/tmobile.svg" alt="T-Mobile" width="28" height="28" loading="lazy"><span>T-Mobile</span></div><div class="marca"><img src="/info/img/logos/starbucks.svg" alt="Starbucks" width="28" height="28" loading="lazy"><span>Starbucks</span></div><div class="marca"><img src="/info/img/logos/paypal.svg" alt="PayPal" width="28" height="28" loading="lazy"><span>PayPal</span></div><div class="marca"><img src="/info/img/logos/airbnb.svg" alt="Airbnb" width="28" height="28" loading="lazy"><span>Airbnb</span></div><div class="marca"><img src="/info/img/logos/intel.svg" alt="Intel" width="28" height="28" loading="lazy"><span>Intel</span></div><div class="marca"><img src="/info/img/logos/qualcomm.svg" alt="Qualcomm" width="28" height="28" loading="lazy"><span>Qualcomm</span></div><div class="marca"><img src="/info/img/logos/doordash.svg" alt="DoorDash" width="28" height="28" loading="lazy"><span>DoorDash</span></div><div class="marca mas"><b>+79</b><span>empresas más</span></div></div>
       <div class="flecha" aria-hidden="true">▼</div>
-      <div class="etf"><b>QQQ</b><small>1 ETF · las 100 empresas</small></div>
+      <div class="etf"><b>QQQ</b><small>1 ETF · las 100 empresas del Nasdaq 100</small></div>
     </div>
 
     <div class="sino" style="margin-top:14px">
@@ -530,7 +537,17 @@
       </ul></div>
     </div>
 
-    <div class="aviso" style="margin-top:12px; border-color:rgba(99,252,175,.4); background:rgba(99,252,175,.06)"><b style="color:var(--menta)">Por eso nos especializamos en un solo activo.</b> El Nasdaq 100 es el punto justo entre diversificación y crecimiento. En vez de adivinar qué empresa va a ganar, nos dedicamos a hacer bien una sola cosa: decidir cuándo entrar y cuándo salir de ese índice.</div>
+    <div class="sino" style="margin-top:14px">
+      <div class="col si"><h3>Nasdaq 100 · nuestra especialidad</h3><ul>
+        <li>Las 100 de crecimiento: el motor del plan</li>
+        <li>Donde aplicamos el timing de entrar y salir</li>
+      </ul></div>
+      <div class="col eq"><h3>S&amp;P 500 · también lo usamos</h3><ul>
+        <li>Las 500 empresas más grandes de EE. UU.</li>
+        <li>Más estable, entra conforme te acercás a la meta</li>
+      </ul></div>
+    </div>
+    <div class="aviso" style="margin-top:12px; border-color:rgba(99,252,175,.4); background:rgba(99,252,175,.06)"><b style="color:var(--menta)">Casi todo lo que manejamos está entre esos dos índices.</b> La diferencia no está en adivinar qué empresa va a ganar. Está en el timing y en metodologías basadas en research: una metodología de retiro, que decide cuánto riesgo llevás según tu avance a la meta, y una metodología para entrar y salir del Nasdaq.</div>
   </section>
 
   <!-- 7 · APALANCAMIENTO -->
