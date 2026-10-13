@@ -120,6 +120,8 @@
     .field .big{ font-size:26px; } .money .pre, .money input{ font-size:26px; }
     .leg{ gap:12px; font-size:12.5px; }
   }
+  .embed .logo, .embed .kicker, .embed h1, .embed .sub, .embed .perfiles, .embed .ctl, .embed .nota{ display:none; }
+  .embed .wrap{ padding-top:6px; padding-bottom:10px; }
 </style>
 </head>
 <body>
@@ -155,6 +157,10 @@
         <label>Ponés al mes</label>
         <div class="money"><span class="pre">$</span><input id="i-aporte" inputmode="numeric" value="500" aria-label="Aporte mensual en dólares">
           <div class="stp"><button data-d="1" aria-label="Subir aporte">▲</button><button data-d="-1" aria-label="Bajar aporte">▼</button></div></div>
+      </div>
+      <div class="field">
+        <label>Arrancás con</label>
+        <div class="money"><span class="pre">$</span><input id="i-inicial" inputmode="numeric" value="0" aria-label="Monto inicial en dólares"></div>
       </div>
       <div class="field hid" id="f-meta">
         <label>Querés vivir con ($/mes)</label>
@@ -236,13 +242,15 @@ var CAT=[
   {k:"tqqq",  nom:"TQQQ comprar y mantener", tip:"TQQQ B&H", col:"#E0525A"},
   {k:"qld",   nom:"QLD comprar y mantener",  tip:"QLD B&H",  col:"#9aa3ad"},
   {k:"qqq",   nom:"QQQ comprar y mantener",  tip:"QQQ B&H",  col:"#ffffff"},
-  {k:"spy",   nom:"S&P 500 · SPY", tip:"S&P 500", col:"#7386ff"} ];
+  {k:"spy",   nom:"S&P 500 · SPY", tip:"S&P 500", col:"#7386ff"},
+  {k:"cash",  nom:"Efectivo guardado", tip:"Efectivo", col:"#8b94a0"} ];
 var SEL={qqq:true, tqqq:true, etqqq:true};
 MODES.cust={ lab:"", nom:"A mi gusto", get lines(){ var L=CAT.filter(function(c){ return SEL[c.k]; }).map(function(c){ return {k:c.k, nom:c.nom, tip:c.tip||c.nom, col:c.col, w:c.k.charAt(0)==="e"||c.k==="fp"?2.6:2.1}; });
   if(!L.length) L=[{k:"qqq", nom:"QQQ comprar y mantener", tip:"QQQ B&H", col:"#ffffff", w:2.1}]; return L; } };
 
 // ---- estado
-var mode="qqq", anio=1987, edad=25, aporte=500, escala="lin", ingreso=5000;
+var mode="qqq", anio=1987, edad=25, aporte=500, inicial=0, escala="lin", ingreso=5000;
+function aporteTxt(){ return "$"+fmtAporte(aporte)+" al mes"+(inicial>0?" + $"+fmtAporte(inicial)+" al inicio":""); }
 var S=0, E=0, PATH={}, INV=[], DD={}, CASHPCT=0, FPIDX=[], FPALLOC=[], FPREACH=-1;
 function meta(){ return ingreso*12/0.04; }
 // pesos del glidepath por avance a la meta (igual que /fpf): fase 1 hasta el 70%, mezcla final al 100%, 70% en renta fija al llegar
@@ -260,6 +268,7 @@ function simFP(){
       eq*=(1+eqRet); sjc*=(1+sjcW);
       var tot1=eq+sjc; if(tot0>0) idx*=tot1/tot0;
     }
+    if(j===S) eq+=inicial;
     if(j===S || MON[j]!==MON[j-1]) eq+=aporte;
     var inv=eq+sjc, w2=fwW(phiPeak), want=w2[2]*inv; if(want>sjc){ var mv=Math.min(want-sjc,eq); sjc+=mv; eq-=mv; }   // piso con candado
     var ew=w2[0]+w2[1], ef=inv>0?eq/inv:1;
@@ -279,11 +288,13 @@ function build(){
   if(E<S+8) E=Math.min(N-1,S+8);
   PATH={}; INV=[];
   var inv=0;
-  for(var j2=S;j2<=E;j2++){ if(j2===S || MON[j2]!==MON[j2-1]) inv+=aporte; INV.push(inv); }
+  for(var j2=S;j2<=E;j2++){ if(j2===S) inv+=inicial; if(j2===S || MON[j2]!==MON[j2-1]) inv+=aporte; INV.push(inv); }
+  PATH.cash=INV.slice(); DD.cash=0;
   ALLKEYS.forEach(function(k){
     var L=D[k], p=[], v=0;
     for(var j3=S;j3<=E;j3++){
       if(j3>S) v=v*L[j3]/L[j3-1];
+      if(j3===S) v+=inicial;
       if(j3===S || MON[j3]!==MON[j3-1]) v+=aporte;
       p.push(v);
     }
@@ -343,7 +354,7 @@ function draw(p){
   var T0=DEC[S];
 
   // tope: máximo visto hasta ahora (monótono → zoom out)
-  var yTop=aporte*6, yMin=aporte*0.5;
+  var yTop=Math.max(aporte*6, inicial*1.3, 100), yMin=Math.max(aporte*0.5, inicial*0.5, 10);
   for(var j=0;j<=Math.min(iI,n);j++){ for(var l=0;l<lines.length;l++){ var v=PATH[lines[l].k][j]; if(v>yTop) yTop=v; } }
   var vNow=lines.map(function(L){ return valAt(L.k,f); });
   yTop=Math.max.apply(null,[yTop].concat(vNow))*1.14;
@@ -483,19 +494,19 @@ function kpis(vNow, invNow, done){
   var lines=MODES[mode].lines, h="";
   if(mode==="cust"){
     lines.forEach(function(L,li){ h+='<div class="kpi"><div class="k">'+L.nom+'</div><div class="v" style="color:'+L.col+'">'+fmtM(vNow[li])+'</div><div class="s">'+fmtX(vNow[li],invNow)+' lo que pusiste · peor caída '+fmtPct(DD[L.k])+'</div></div>'; });
-    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
   }else if(mode==="fp"){
     var reach=FPREACH>=0;
     h+='<div class="kpi hi"><div class="k">Freedom Point · con nosotros</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Tu meta</div><div class="v'+(reach&&done?' men':'')+'">'+fmtM(meta())+'</div><div class="s">'+(reach?'alcanzada a los '+Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+' años ('+ymd(S+FPREACH).y+')':'para vivir con $'+fmtAporte(ingreso)+' al mes')+'</div></div>';
-    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
     h+='<div class="kpi"><div class="k">Comprar y mantener · QQQ</div><div class="v">'+fmtM(vNow[1])+'</div><div class="s">'+fmtX(vNow[1],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD.fp)+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD.qqq)+'</span></div><div class="s">Freedom Point vs comprar y mantener</div></div>';
   }else if(mode!=="all"){
     var lab=MODES[mode].lab;
     h+='<div class="kpi hi"><div class="k">Con nosotros · '+lab+'</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
-    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
     h+='<div class="kpi"><div class="k">Comprar y mantener · '+lab+'</div><div class="v">'+fmtM(vNow[1])+'</div><div class="s">'+fmtX(vNow[1],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD[lines[0].k])+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD[lines[1].k])+'</span></div><div class="s">con nosotros vs comprar y mantener</div></div>';
@@ -505,7 +516,7 @@ function kpis(vNow, invNow, done){
     h+='<div class="kpi"><div class="k">Decidido · QLD</div><div class="v per">'+fmtM(vNow[1])+'</div><div class="s">peor caída '+fmtPct(DD.eqld)+'</div></div>';
     h+='<div class="kpi hi"><div class="k">Tranquilo · QQQ</div><div class="v">'+fmtM(vNow[2])+'</div><div class="s">peor caída '+fmtPct(DD.eqqq)+'</div></div>';
     h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v" style="color:#8b94a0">'+fmtM(vNow[3])+'</div><div class="s">peor caída '+fmtPct(DD.spy)+'</div></div>';
-    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+fmtAporte(aporte)+' al mes</div></div>';
+    h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
     h+='<div class="kpi"><div class="k">Tiempo en efectivo</div><div class="v amb">'+fmtPct(CASHPCT)+'</div><div class="s">del viaje, fuera del mercado</div></div>';
   }
   kp.innerHTML=h;
@@ -532,8 +543,12 @@ rA.addEventListener("input",function(){ document.getElementById("v-anio").textCo
 rA.addEventListener("change",function(){ anio=parseInt(rA.value,10); rebuild(); });
 rE.addEventListener("input",function(){ document.getElementById("v-edad").textContent=rE.value; });
 rE.addEventListener("change",function(){ edad=parseInt(rE.value,10); rebuild(); });
-function setAporte(v){ aporte=Math.max(50, Math.min(100000, Math.round(v/50)*50)); iA.value=fmtAporte(aporte); rebuild(); }
-iA.addEventListener("change",function(){ setAporte(parseFloat(iA.value.replace(/[^0-9.]/g,""))||500); });
+function setAporte(v){ aporte=Math.max(0, Math.min(100000, Math.round(v/50)*50)); if(aporte===0 && inicial===0) aporte=500; iA.value=fmtAporte(aporte); rebuild(); }
+var iI=document.getElementById("i-inicial");
+function setInicial(v){ inicial=Math.max(0, Math.min(10000000, Math.round(v/100)*100)); if(aporte===0 && inicial===0){ aporte=500; iA.value=fmtAporte(aporte); } iI.value=fmtAporte(inicial); rebuild(); }
+iI.addEventListener("change",function(){ setInicial(parseFloat(iI.value.replace(/[^0-9.]/g,""))||0); });
+iI.addEventListener("keydown",function(e){ if(e.key==="Enter") iI.blur(); });
+iA.addEventListener("change",function(){ var x=parseFloat(iA.value.replace(/[^0-9.]/g,"")); setAporte(isNaN(x)?500:x); });
 iA.addEventListener("keydown",function(e){ if(e.key==="Enter") iA.blur(); });
 var selEl=document.getElementById("sel");
 CAT.forEach(function(c){ var b=document.createElement("button"); b.className="chip"+(SEL[c.k]?" on":""); b.dataset.k=c.k;
@@ -566,9 +581,33 @@ function nota(){
     'El gráfico de abajo muestra cuánto estaba el valor de cada cartera (con los aportes ya adentro) por debajo de su máximo anterior. Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
 }
 
+// ---- parámetros en la URL (para enlaces y para embeber en otras páginas)
+(function(){
+  var Q=new URLSearchParams(location.search);
+  function num(k,lo,hi){ var v=parseFloat(Q.get(k)); return isNaN(v)?null:Math.max(lo,Math.min(hi,v)); }
+  var v;
+  if((v=num("anio",1987,2021))!==null){ anio=Math.round(v); rA.value=anio; document.getElementById("v-anio").textContent=anio; }
+  if((v=num("edad",18,64))!==null){ edad=Math.round(v); rE.value=edad; document.getElementById("v-edad").textContent=edad; }
+  if((v=num("inicial",0,10000000))!==null){ inicial=Math.round(v/100)*100; iI.value=fmtAporte(inicial); }
+  if((v=num("aporte",0,100000))!==null){ aporte=Math.round(v/50)*50; if(aporte===0 && inicial===0) aporte=500; iA.value=fmtAporte(aporte); }
+  if((v=num("meta",500,200000))!==null){ ingreso=Math.round(v/100)*100; iM.value=fmtAporte(ingreso); document.getElementById("v-meta").textContent=fmtM(meta()); }
+  var m=Q.get("mode"); if(m && MODES[m]){ mode=m; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on", x.dataset.m===m); }); }
+  var sel=Q.get("sel"); if(sel){ SEL={}; sel.split(",").forEach(function(k){ if(CAT.some(function(c){ return c.k===k; })) SEL[k]=true; });
+    document.querySelectorAll("#sel .chip").forEach(function(b){ b.classList.toggle("on", !!SEL[b.dataset.k]); }); if(!m){ mode="cust"; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on", x.dataset.m==="cust"); }); } }
+  if(Q.get("embed")) document.body.classList.add("embed");
+})();
 // ---- arranque
 build(); legend(); nota(); resize();
-if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ setTimeout(play,250); }); } else { setTimeout(play,400); }
+function arrancar(){
+  // embebido en otra página: esperar a que el gráfico esté a la vista para que la animación no corra antes de tiempo
+  if(document.body.classList.contains("embed") && "IntersectionObserver" in window){
+    draw(0);
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); setTimeout(play,150); } }); }, {threshold:0.35});
+    io.observe(cv); return;
+  }
+  setTimeout(play,250);
+}
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(arrancar); } else { setTimeout(arrancar,150); }
 </script>
 </body>
 </html>
