@@ -164,9 +164,32 @@
   .frame.seq iframe{ height:980px; }
   @media(min-width:640px){ .frame.seq iframe{ height:900px; } }
 
+  /* acelerador y freno */
+  .duo{ display:grid; gap:10px; margin-top:20px; }
+  @media(min-width:560px){ .duo{ grid-template-columns:1fr 1fr; } }
+  .pieza{ border-radius:16px; padding:18px 16px; border:1px solid var(--bd); background:var(--carta); min-width:0; }
+  .pieza .tag{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; border-radius:999px; padding:4px 10px; margin-bottom:10px; }
+  .pieza h3{ font-size:19px; font-weight:700; line-height:1.25; }
+  .pieza p{ font-size:14.5px; line-height:1.55; color:var(--gris); margin-top:8px; }
+  .pieza p b{ color:var(--crema); }
+  .pieza.acel{ border-color:rgba(240,122,107,.5); } .pieza.acel .tag{ background:rgba(240,122,107,.15); color:var(--rojo); }
+  .pieza.freno{ border-color:rgba(99,252,175,.5); } .pieza.freno .tag{ background:rgba(99,252,175,.14); color:var(--menta); }
+  .sub3{ font-size:18px; font-weight:700; line-height:1.3; margin-top:30px; }
+  /* índice */
+  .indice{ margin-top:16px; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:16px; text-align:center; }
+  .indice .emp{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+  .indice .emp span{ font-size:13px; color:var(--gris); border:1px solid var(--bd); border-radius:999px; padding:5px 10px; background:var(--tinta2); }
+  .indice .emp span:last-child{ color:var(--menta); border-color:rgba(99,252,175,.4); }
+  .indice .flecha{ color:var(--gris-sec); font-size:14px; margin:10px 0; }
+  .indice .etf{ display:inline-block; border-radius:14px; border:1px solid rgba(99,252,175,.6); background:rgba(99,252,175,.08); padding:12px 22px; }
+  .indice .etf b{ display:block; font-size:28px; color:var(--menta); letter-spacing:-.01em; }
+  .indice .etf small{ font-size:12px; color:var(--gris); }
+  .paper .logobox.texto{ background:#10161f; border:1px solid var(--bd); }
+  .paper .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:17px; color:var(--crema); font-style:italic; }
+
   /* papers */
   .papers{ display:grid; gap:10px; margin-top:20px; }
-  @media(min-width:640px){ .papers{ grid-template-columns:repeat(3,1fr); } }
+  @media(min-width:640px){ .papers{ grid-template-columns:repeat(2,1fr); } }
   .paper{ border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:14px; min-width:0; }
   .paper .logobox{ height:72px; border-radius:10px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:10px 14px; }
   .paper .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); }
@@ -266,6 +289,7 @@
       <a href="#proteccion">Protección</a>
       <a href="#control">Es tu cuenta</a>
       <a href="#transferencia">Transferencia</a>
+      <a href="#eleccion">Cómo elegimos</a>
       <a href="#apalancamiento">Apalancamiento</a>
       <a href="#edge">Nuestro edge</a>
       <a href="#secuencia">La secuencia</a>
@@ -426,12 +450,59 @@
     <p class="nota">Volver la plata a Costa Rica es el mismo camino al revés: desde Alpaca a tu cuenta bancaria a tu nombre, cuando vos querás, sin penalidad.</p>
   </section>
 
+  <!-- PREGUNTA FRECUENTE · cómo elegimos -->
+  <section id="eleccion">
+    <div class="num">7</div>
+    <div class="eyebrow" style="color:var(--menta)">La pregunta que más nos hacen</div>
+    <h2>¿Cómo eligen las acciones?</h2>
+    <p class="lede">No elegimos empresas una por una. Compramos el índice entero con un ETF, y el trabajo lo ponemos en <b>cuándo</b> estar adentro.</p>
+
+    <div class="pasos">
+      <div class="paso"><div class="k">1</div><div><h3>Qué es un índice</h3><p>Una lista de empresas que se mide como un solo número. El <b>Nasdaq 100</b> son las 100 empresas no financieras más grandes de la bolsa Nasdaq.</p></div></div>
+      <div class="paso"><div class="k">2</div><div><h3>Qué es un ETF de un índice</h3><p>Un fondo que se compra y se vende como una acción y que copia el índice. Con una sola compra de <b>QQQ</b> tenés las 100 empresas, en la misma proporción que el índice.</p></div></div>
+    </div>
+
+    <div class="indice">
+      <div class="emp"><span>Apple</span><span>Microsoft</span><span>Nvidia</span><span>Amazon</span><span>Alphabet</span><span>Meta</span><span>Broadcom</span><span>Tesla</span><span>Costco</span><span>Netflix</span><span>+ 90 más</span></div>
+      <div class="flecha" aria-hidden="true">▼</div>
+      <div class="etf"><b>QQQ</b><small>1 ETF · las 100 empresas</small></div>
+    </div>
+
+    <div class="sino" style="margin-top:14px">
+      <div class="col si"><h3>Diversificado</h3><ul>
+        <li>100 empresas: ninguna te hunde sola</li>
+        <li>El índice se renueva solo: la que se achica sale y la que crece entra</li>
+      </ul></div>
+      <div class="col eq"><h3>Concentrado en crecimiento</h3><ul>
+        <li>Son las empresas que más crecen del mundo</li>
+        <li>Es lo que le da el crecimiento al portafolio</li>
+      </ul></div>
+    </div>
+
+    <div class="aviso" style="margin-top:12px; border-color:rgba(99,252,175,.4); background:rgba(99,252,175,.06)"><b style="color:var(--menta)">Por eso nos especializamos en un solo activo.</b> El Nasdaq 100 es el punto justo entre diversificación y crecimiento. En vez de adivinar qué empresa va a ganar, nos dedicamos a hacer bien una sola cosa: decidir cuándo entrar y cuándo salir de ese índice.</div>
+  </section>
+
   <!-- 7 · APALANCAMIENTO -->
   <section id="apalancamiento">
-    <div class="num">7</div>
-    <h2>Apalancamiento sin margin call</h2>
-    <p class="lede">Hay dos formas de apalancarse. Nosotros usamos solo una, y la diferencia es todo.</p>
+    <div class="num">8</div>
+    <h2>Apalancados para crecer. Protegidos para no caer.</h2>
+    <p class="lede">El plan tiene un acelerador y un freno, y cada uno sale de una investigación publicada.</p>
 
+    <div class="duo">
+      <div class="pieza acel">
+        <div class="tag">El acelerador</div>
+        <h3>Apalancamiento en la primera fase</h3>
+        <p>El paper de <b>Yale</b> (Ayres y Nalebuff) muestra que exponerse más al inicio, cuando tu capital todavía es chico, aumenta la probabilidad de llegar a la meta. Por eso la fase 1 usa un ETF apalancado del Nasdaq: TQQQ o QLD.</p>
+      </div>
+      <div class="pieza freno">
+        <div class="tag">El freno</div>
+        <h3>Salirse antes de una caída severa</h3>
+        <p>El paper del <b>máximo de 52 semanas</b> (George y Hwang, Journal of Finance) muestra que la distancia al máximo reciente dice mucho de la tendencia. Nuestro edge usa esa idea: si el Nasdaq cae 18% bajo su máximo de 39 semanas, salimos del apalancado a efectivo y volvemos cuando se recupera.</p>
+      </div>
+    </div>
+    <p class="nota">Apalancarse sin freno es apostar. El freno sin acelerador es crecer despacio. Juntos son el plan. El freno se explica con datos en la <a href="#edge">sección siguiente</a>.</p>
+
+    <h3 class="sub3">Y el apalancamiento va dentro del fondo, nunca en tu cuenta</h3>
     <div class="vs">
       <div class="col no"><span class="tag">No lo hacemos</span><h3>Con margen: le pedís prestado al bróker</h3><ul>
         <li>Si el mercado cae, el bróker te exige plata (margin call)</li>
@@ -446,9 +517,10 @@
         <li>Se compra y se vende como cualquier acción</li>
       </ul></div>
     </div>
-    <p class="nota">El costo honesto del ETF apalancado: en un crash puede caer 70% a 95%. Por eso se usa solo en la primera fase, con horizonte largo, y siempre con la señal de salida de la sección siguiente. Cuando la cuenta avanza hacia la meta, el riesgo baja solo:</p>
+
+    <h3 class="sub3">Conforme te acercás a la meta, el acelerador se suelta solo</h3>
     <div class="fases">
-      <div class="fase f1"><div class="f">Fase 1 · 0 a 70%</div><div class="a">TQQQ / QLD</div><div class="d">Nasdaq ×3 o ×2, con señal</div></div>
+      <div class="fase f1"><div class="f">Fase 1 · 0 a 70%</div><div class="a">TQQQ / QLD</div><div class="d">Nasdaq ×3 o ×2, con el freno</div></div>
       <div class="fase f2"><div class="f">Fase 2 · 70 a 100%</div><div class="a">QQQ / SPY</div><div class="d">índice sin apalancar</div></div>
       <div class="fase f3"><div class="f">Fase 3 · meta</div><div class="a">Renta fija</div><div class="d">el piso que paga tu retiro</div></div>
     </div>
@@ -457,7 +529,7 @@
 
   <!-- 8 · EDGE -->
   <section id="edge">
-    <div class="num">8</div>
+    <div class="num">9</div>
     <h2>Nuestro edge: salirse antes de que duela</h2>
     <p class="lede">Una regla simple, revisada <b>una vez por semana</b>: se compara el Nasdaq con su máximo de las últimas 39 semanas. Si cae más de 18%, el lunes se sale a efectivo. Cuando recupera, se vuelve a entrar. Nada de intuición ni de noticias.</p>
 
@@ -475,7 +547,7 @@
 
   <!-- SECUENCIA · de la plata quieta al plan completo -->
   <section id="secuencia">
-    <div class="num">9</div>
+    <div class="num">10</div>
     <h2>De la plata quieta a tu plan completo, en cinco pasos</h2>
     <p class="lede">La misma historia real desde 1999, agregando una pieza a la vez. Cada paso es una animación: tocá el gráfico para repetirla.</p>
 
@@ -493,12 +565,13 @@
 
   <!-- 9 · PAPERS -->
   <section id="papers">
-    <div class="num">10</div>
+    <div class="num">11</div>
     <h2>No lo inventamos nosotros</h2>
-    <p class="lede">Tres investigaciones publicadas y premiadas llegaron a lo mismo que nuestro propio research. Lo inusual es juntarlas en un servicio para una persona.</p>
+    <p class="lede">Cuatro investigaciones publicadas llegaron a lo mismo que nuestro propio research. Lo inusual es juntarlas en un servicio para una persona.</p>
 
     <div class="papers">
       <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div><div class="src">Yale · Ayres &amp; Nalebuff · el paper de retiro</div><h3>Apalancarse de joven reduce el riesgo del retiro</h3><p><i>Lifecycle Investing</i>: tu verdadera riqueza de joven son los aportes que vas a hacer. Exponerse más al inicio y desapalancar por fases, según el % de la meta alcanzado, llega más seguido y con menos dispersión. Es la lógica de nuestras tres fases.</p></div>
+      <div class="paper"><div class="logobox texto"><span>The Journal of Finance</span></div><div class="src">George &amp; Hwang · el máximo de 52 semanas</div><h3>La distancia al máximo reciente dice hacia dónde va la tendencia</h3><p><i>The 52-Week High and Momentum Investing</i>: lo cerca o lejos que está un precio de su máximo del último año dice más de lo que viene que el retorno pasado. Es la base de nuestro freno: salir cuando el Nasdaq se aleja demasiado de su máximo.</p></div>
       <div class="paper"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div><div class="src">CMT Association · Dow Award 2016 · Gayed &amp; Bilello</div><h3>Apalancamiento + filtro de tendencia le gana a comprar y mantener</h3><p><i>Leverage for the Long Run</i>: la volatilidad es la enemiga del apalancamiento y una señal de tendencia identifica cuándo paga estar apalancado. Es la validación premiada de nuestra señal de salida.</p></div>
       <div class="paper"><div class="logobox"><img src="/assets/logos-academia/ra.svg" alt="Research Affiliates" loading="lazy"></div><div class="src">Research Affiliates · Arnott</div><h3>Los fondos de retiro tradicionales están al revés</h3><p><i>The Glidepath Illusion</i>, con 141 años de datos: mucha acción cuando sos joven y tenés poco, y poca cuando sos mayor y tenés mucho, ni maximiza la riqueza ni reduce la incertidumbre.</p></div>
     </div>
@@ -511,7 +584,7 @@
 
   <!-- 10 · TU TIEMPO -->
   <section id="tiempo">
-    <div class="num">11</div>
+    <div class="num">12</div>
     <h2>Diseñado para que vos casi no hagás nada</h2>
     <p class="lede">Sos bueno en lo tuyo y no tenés tiempo para esto. El servicio está armado al revés de un curso: <b>vos ponés el aporte, nosotros ponemos todo lo demás.</b></p>
 
@@ -533,7 +606,7 @@
 
   <!-- 11 · DASHBOARD -->
   <section id="dashboard">
-    <div class="num">12</div>
+    <div class="num">13</div>
     <h2>Lo ves todo, cuando querás</h2>
     <p class="lede">Dos ventanas a tu plata. La de <b>Alpaca</b>, con tu usuario, donde está la cuenta. Y tu <b>dashboard</b> en investorcr.com, donde está el plan: cuánto te falta, en qué fase vas, qué hizo la señal y qué puso el mercado.</p>
 
@@ -542,16 +615,15 @@
       <div class="vista"><h3>Cómo está repartida tu plata</h3><p>Lo que hay hoy en tu cuenta de Alpaca, pieza por pieza. Si querés un porcentaje fijo en algún ETF, lo pedís ahí mismo y yo lo ejecuto.</p><a href="/info/img/mfp-reparto.webp" target="_blank" rel="noopener"><img src="/info/img/mfp-reparto.webp" alt="Dashboard: reparto de la cuenta" loading="lazy"></a></div>
       <div class="vista"><h3>La mezcla: el riesgo baja solo</h3><p>Tu avance a la meta decide la mezcla, no el ánimo ni las noticias. Y el riesgo del plan solo baja: aunque el mercado te devuelva, la mezcla se queda en la de tu mejor momento.</p><a href="/info/img/mfp-mezcla.webp" target="_blank" rel="noopener"><img src="/info/img/mfp-mezcla.webp" alt="Dashboard: la mezcla por avance a la meta" loading="lazy"></a></div>
       <div class="vista"><h3>Tus aportes del año</h3><p>Tu compromiso anual y cuánto llevás, sin regaños. Aportás en bloques cuando podés.</p><a href="/info/img/mfp-aportes.webp" target="_blank" rel="noopener"><img src="/info/img/mfp-aportes.webp" alt="Dashboard: aportes del año" loading="lazy"></a></div>
-      <div class="vista"><h3>La señal de salida, cada viernes</h3><p>Dónde está el Nasdaq, dónde está la línea de salida y cuánto tendría que caer para que toque salir. Lo vigilamos nosotros y te avisamos.</p><a href="/info/img/mfp-senal.webp" target="_blank" rel="noopener"><img src="/info/img/mfp-senal.webp" alt="Dashboard: señal de salida" loading="lazy"></a></div>
       <div class="vista"><h3>Tu capital en el tiempo</h3><p>Con aportes o solo el rendimiento de los activos, como si no hubieras metido ni sacado plata. Desde el primer día de tu cuenta.</p><a href="/info/img/mfp-capital.webp" target="_blank" rel="noopener"><img src="/info/img/mfp-capital.webp" alt="Dashboard: capital en el tiempo" loading="lazy"></a></div>
     </div>
-    <p class="nota">Pantallazos del dashboard de un cliente real, con sus datos personales ocultos. Lo abrís en investorcr.com/mifreedompoint con tu correo y tu clave. Se actualiza con cada cierre de mes y cada viernes con la señal.</p>
+    <p class="nota">Además, la señal de salida de cada viernes que viste en la sección del edge. Pantallazos del dashboard de un cliente real, con sus datos personales ocultos. Lo abrís en investorcr.com/mifreedompoint con tu correo y tu clave. Se actualiza con cada cierre de mes y cada viernes con la señal.</p>
     <a class="mas" href="/mifreedompoint/#demo" target="_blank" rel="noopener" data-cta="demo_dashboard">Probá la demo con datos de ejemplo →</a>
   </section>
 
   <!-- 12 · PRECIO -->
   <section id="precio">
-    <div class="num">13</div>
+    <div class="num">14</div>
     <h2>Cuánto cuesta</h2>
     <div class="precio">
       <div class="p">$1,500<small>una sola vez</small></div>
@@ -574,7 +646,7 @@
 
   <!-- 13 · CLIENTES -->
   <section id="clientes">
-    <div class="num">14</div>
+    <div class="num">15</div>
     <h2>Quién está del otro lado</h2>
     <div class="jose">
       <img src="/assets/jose-montero.webp" alt="Jose Montero" loading="lazy">
