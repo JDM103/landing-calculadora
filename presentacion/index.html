@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Presentación · Empowered Investor</title>
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap">
+<style>
+/* Página interna para la llamada de venta. Riel principal = pitch TFM (≤10 min). Lo técnico vive en anexos. Notas de Jose ocultas (tecla G). */
+:root{
+  --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3;
+  --muted:#9aa3b2; --linea:#262b33; --nota-bg:#2b2412; --nota-borde:#8a6d1a; --nota-fg:#ffd977;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:18px;line-height:1.55}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 120px}
+section{padding:72px 0 28px;border-bottom:1px solid var(--linea)}
+h1,h2,h3{line-height:1.12;text-wrap:balance;margin:0 0 14px}
+h1{font-size:clamp(34px,6vw,58px);font-weight:700}
+h2{font-size:clamp(26px,4vw,38px);font-weight:700}
+h3{font-size:20px;font-weight:600}
+p{margin:0 0 12px;max-width:68ch}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--menta);font-weight:600;margin-bottom:10px}
+.menta{color:var(--menta)} .peri{color:#8b9bff}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;padding:22px;min-width:0}
+.card h3{color:var(--menta)}
+.paso{display:flex;gap:16px;align-items:baseline}
+.paso .n{font-size:40px;font-weight:700;color:var(--peri);font-variant-numeric:tabular-nums}
+img{max-width:100%;border-radius:12px;display:block}
+.imgline{border:1px solid var(--linea)}
+video{display:block;max-width:100%;max-height:540px;width:auto;margin:0 auto;border-radius:12px;background:#000}
+.btn{display:inline-block;background:var(--menta);color:#0b2416;font-weight:700;padding:14px 26px;border-radius:999px;text-decoration:none;font-size:18px}
+.btn.ghost{background:transparent;color:var(--crema);border:1px solid var(--muted);font-weight:600}
+.btn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+.fila-btn{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.precio{font-size:clamp(40px,7vw,72px);font-weight:700;color:var(--menta);margin:6px 0}
+ul{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:8px}
+.muted{color:var(--muted)}
+.num-row{display:flex;gap:14px;flex-wrap:wrap;margin:14px 0}
+.num-row label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--muted);min-width:0}
+.num-row input{background:var(--tinta2);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:22px;font-weight:600;padding:10px 12px;border-radius:10px;width:150px;font-variant-numeric:tabular-nums}
+.fp-out{background:var(--tinta2);border:1px solid var(--peri);border-radius:14px;padding:18px 22px;margin-top:8px}
+.fp-out .big{font-size:clamp(34px,6vw,54px);font-weight:700;color:var(--crema);font-variant-numeric:tabular-nums}
+details{background:var(--tinta2);border:1px solid var(--linea);border-radius:12px;margin:10px 0;overflow:hidden}
+summary{cursor:pointer;padding:16px 20px;font-weight:600;font-size:17px;list-style:none}
+summary::before{content:"+ ";color:var(--menta);font-weight:700}
+details[open] summary::before{content:"− "}
+details .inner{padding:4px 20px 20px}
+/* Notas de Jose (psicología de venta). Ocultas por defecto; tecla G o botón. Fondo ámbar para saber que están visibles. */
+.nota{display:none;background:var(--nota-bg);border:1px dashed var(--nota-borde);color:var(--nota-fg);border-radius:12px;padding:16px 18px;margin:18px 0 0;font-size:16px}
+.nota b{color:#ffe9ad}
+body.coach .nota{display:block}
+.nota .tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:8px;color:#d9b753}
+#coachBtn{position:fixed;right:14px;bottom:14px;z-index:50;background:var(--tinta2);border:1px solid var(--linea);color:var(--muted);border-radius:999px;padding:10px 16px;font:inherit;font-size:14px;cursor:pointer}
+body.coach #coachBtn{background:var(--nota-bg);border-color:var(--nota-borde);color:var(--nota-fg)}
+.aviso-coach{position:fixed;top:0;left:0;right:0;z-index:49;display:none;background:var(--nota-bg);color:var(--nota-fg);text-align:center;font-size:13px;padding:6px;border-bottom:1px solid var(--nota-borde)}
+body.coach .aviso-coach{display:block}
+@media (max-width:480px){ .num-row input{width:120px} }
+</style>
+</head>
+<body>
+<div class="aviso-coach">MODO GUION VISIBLE — tocá <b>G</b> para ocultarlo antes de compartir pantalla</div>
+<button id="coachBtn" aria-pressed="false" title="Mostrar u ocultar el guion (tecla G)">G · guion</button>
+
+<div class="wrap">
+
+<!-- ============ PORTADA ============ -->
+<section id="inicio">
+  <div class="eyebrow">Empowered Investor · Plan Freedom Point</div>
+  <h1>Tu cuenta, tu plata, <span class="menta">nuestro manejo</span>.</h1>
+  <p class="muted" style="font-size:20px">Plan de retiro desde tu propia cuenta en EE. UU. Vamos a ponerle un número a tu meta y te enseño, en tres pasos, cómo llegamos.</p>
+  <div class="nota"><span class="tag">Antes de abrir esta página en pantalla</span>
+    <b>Hielo máx. 2–3 min.</b> Después, el guion de claridad, de corrido [TFM 06/002]:
+    “Esta llamada es muy rápida y efectiva, tiene dos partes. Primero te hago unas preguntas sobre vos y tus metas.
+    Si veo que te puedo ayudar, te cuento qué hacemos. <b>Y si te hace sentido, la idea es comenzar hoy mismo.</b>”
+    · Detectá el color: médico = verde (estructura) con algo de rojo (números) [TFM 06/002].
+    · <b>Todavía no compartás pantalla:</b> primero el North Star, de viva voz.
+  </div>
+</section>
+
+<!-- ============ 1 · TU NÚMERO ============ -->
+<section id="numero">
+  <div class="eyebrow">1 · Tu número</div>
+  <h2>El retiro empieza por un número, no por un producto</h2>
+  <p>¿Con cuánto al mes bajás el ritmo sin trabajar por necesidad? Eso define tu <b>Freedom Point</b>: el capital que paga ese ingreso sin tocar el capital.</p>
+  <div class="num-row">
+    <label>Ingreso meta al mes (USD)<input id="ing" type="number" value="7000" min="500" step="500"></label>
+    <label>Tasa de retiro (%)<input id="tasa" type="number" value="5" min="3" max="8" step="0.5"></label>
+  </div>
+  <div class="fp-out">Tu Freedom Point: <span class="big" id="fp">$1,680,000</span><br><span class="muted" id="fpnota">retirando 5% al año · $84,000 al año</span></div>
+  <div class="fila-btn">
+    <a class="btn" href="/fpf/" target="_blank" rel="noopener">Abrir la calculadora completa (/fpf)</a>
+    <span class="muted">edad, aporte mensual, fases y probabilidades</span>
+  </div>
+  <div class="nota"><span class="tag">North Star — 80% de la venta [TFM 06/003]</span>
+    Las 7 preguntas, en orden, ANTES de este bloque: 1) “¿Qué estás buscando con esto de invertir para el retiro?”
+    2) <b>Tangible:</b> ¿a qué edad? ¿cuánto al mes? ¿con cuánto arrancás? ¿cuánto aportás? (silencio hasta tener el número)
+    3) ¿Qué has hecho con la plata hasta ahora? (Caja, ROP, CDP, seguro, Transcomer…)
+    4) ¿Hace cuánto venís pensando en esto? 5) ¿Así como vas, llegás? ¿o hay que hacer <i>pequeños</i> cambios? ¿por qué?
+    6) Aparte de la plata, ¿por qué importa? <b>¿Y por qué hoy?</b> 7) “¿Es el momento de comprometerte con esto?”
+    <br><b>Future pace:</b> “Imaginate a los 55 con $X al mes sin guardias… ¿qué cambia en tu semana?” ·
+    <b>Inacción:</b> “¿Y si en 5 años seguís igual, dónde estás a los 60?” — con SUS palabras. Convertí el aporte a unidades suyas (“un domingo de dispo al mes”).
+  </div>
+</section>
+
+<!-- ============ 2 · QUIÉN TE ACOMPAÑA ============ -->
+<section id="jose">
+  <div class="eyebrow">2 · Quién te acompaña</div>
+  <h2>Jose Montero</h2>
+  <img class="imgline" src="img/jose.png" alt="Jose Montero: 11 años gestionando portafolios, 4 años en London Stock Exchange, $1.1M administrados" loading="lazy">
+  <p style="margin-top:12px">3 de cada 10 clientes nuestros son médicos. Esposo, papá de tres.</p>
+  <div class="nota"><span class="tag">Regla [TFM 06/008]</span>Dos cosas rápidas de quién sos y seguí. Nada de maestrías ni misión/visión: “decime cómo me hacés ganar plata”.</div>
+</section>
+
+<!-- ============ 3 · CÓMO FUNCIONA ============ -->
+<section id="pasos">
+  <div class="eyebrow">3 · Cómo funciona</div>
+  <h2>Tres pasos simples, <span class="menta">~1 mes</span> para dejar listo tu sistema</h2>
+  <div class="grid g2">
+    <div class="card"><div class="paso"><span class="n">1</span><div><h3>Tu cuenta</h3><p>Formulario de apertura en el bróker (EE. UU., a tu nombre), firma de contrato. <b>Para</b> que la plata nunca salga de tu control.</p></div></div></div>
+    <div class="card"><div class="paso"><span class="n">2</span><div><h3>Tu transferencia</h3><p>Guía paso a paso de la transferencia internacional, cuenta de ahorro de alto rendimiento habilitada, accesos para que yo solo pueda comprar y vender. <b>Para</b> que empecés seguro y sin trámites a ciegas.</p></div></div></div>
+    <div class="card"><div class="paso"><span class="n">3</span><div><h3>Tu plan</h3><p>Perfil de riesgo y estrategia hacia tu Freedom Point: agresivo lejos de la meta, bajando el riesgo conforme te acercás. <b>Para</b> priorizar tu edad de retiro.</p></div></div></div>
+    <div class="card"><div class="paso"><span class="n">∞</span><div><h3>De manera continua</h3><p>Yo manejo el sistema, vos vivís tu vida: seguimiento, reportes, y acceso al instrumento de ingreso pasivo para el retiro. Trabajamos juntos el primer mes, y sigo con vos mes a mes.</p></div></div></div>
+  </div>
+  <div class="nota"><span class="tag">Pitch ≤10 min [TFM 06/005]</span>
+    <b>Transición:</b> “Buenas noticias: sí te puedo ayudar a llegar a [su número]. Lo haríamos así. Te comparto pantalla.”
+    · Personalizá: “¿te acordás que me dijiste X? Eso lo resolvemos en el Paso 2.”
+    · <b>No des la asesoría</b>: papers, Monte Carlo y señal viven en los anexos de abajo, SOLO si pregunta.
+    · Mencioná la duración 3 veces (“un mes… en ese mes… al final del mes”).
+  </div>
+</section>
+
+<!-- ============ 4 · LA INVERSIÓN ============ -->
+<section id="inversion">
+  <div class="eyebrow">4 · La inversión</div>
+  <div class="precio">$2,000 <span style="font-size:.45em;color:var(--crema);font-weight:600">una única vez</span></div>
+  <p><b>Incluye todo el primer año.</b> Desde el año 2, 1% anual sobre la cuenta. Nada más.</p>
+  <ul>
+    <li>Apertura de cuenta y firma de contrato</li>
+    <li>Perfil de riesgo y plan hacia tu Freedom Point</li>
+    <li>Guía completa de la transferencia bancaria</li>
+    <li>Manejo de la cuenta por 1 año</li>
+    <li>Llamadas y soporte por chat 1-1</li>
+  </ul>
+  <p class="muted">Garantía: 30 días sobre el honorario, con cuenta abierta + transferencia hecha + plan creado.</p>
+  <div class="nota"><span class="tag">Cómo decirlo [TFM 06/005, 008]</span>
+    Con la misma naturalidad con la que decís tu nombre. <b>“La inversión es de $2,000 por todo el primer año; desde el año 2 es 1% anual.” Y silencio.</b>
+    PROHIBIDO: “es caro”, “tengo plan de pagos”, bajar el precio sin que lo pidan (Parra: −$1,000). Cuotas SOLO si las piden y al final.
+    Después del precio, <b>segundo puente</b>: “Bueno, ahora sí lo importante…” y pasás a los casos.
+    <br><b>⚠ Coach:</b> el deck dice $2,000; el plan de foco dice $1,500 fijo; a Marco y Daniel les cobraste $1,500. <b>Elegí UNA cifra y usala siempre</b> — decidilo hoy.
+  </div>
+</section>
+
+<!-- ============ 5 · CASOS REALES ============ -->
+<section id="casos">
+  <div class="eyebrow">5 · Casos reales</div>
+  <h2>Gente como vos, con su plata <span class="menta">en su propia cuenta</span></h2>
+  <div class="grid g2" style="margin-bottom:18px">
+    <figure style="margin:0">
+      <video controls preload="none" poster="clips/pablo-poster.png" src="clips/pablo-mesen.mp4"></video>
+      <figcaption class="muted" style="margin-top:6px">Pablo Mesén — “¿por qué estás seguro de que no es estafa?”</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <video controls preload="none" poster="clips/mariana-poster.png" src="clips/mariana-serrano.mp4"></video>
+      <figcaption class="muted" style="margin-top:6px">Mariana Serrano — “¿qué te hizo sentir seguridad?”</figcaption>
+    </figure>
+  </div>
+  <div class="grid g2">
+    <img class="imgline" src="img/t-mariana-pena.png" alt="Testimonio de Mariana Peña, ginecóloga UCR CCSS" loading="lazy">
+    <img class="imgline" src="img/t-andres-reyes.png" alt="Testimonio de Andrés Reyes, Senior Vice President Citibank" loading="lazy">
+    <img class="imgline" src="img/t-javier-vargas.png" alt="Testimonio de Javier Vargas, TAPP: 70% en dos años" loading="lazy">
+    <img class="imgline" src="img/t-monica.png" alt="Testimonio de Mónica Blanco, PHD Costa Rica" loading="lazy">
+    <img class="imgline" src="img/t-anne.png" alt="Testimonio de Anne Baudrit, JLL" loading="lazy">
+    <img class="imgline" src="img/t-andres-castro.png" alt="Testimonio de Andrés Castro, CEO CADMI" loading="lazy">
+    <img class="imgline" src="img/t-ramses.png" alt="Testimonio de Ramsés Espinoza, CocoJamboo" loading="lazy">
+    <img class="imgline" src="img/t-maricruz.png" alt="Testimonio de Maricruz Linares" loading="lazy">
+    <img class="imgline" src="img/t-agustin.png" alt="Testimonio de Agustín Fallas, fotógrafo" loading="lazy">
+  </div>
+  <details style="margin-top:16px"><summary>Una cuenta real por dentro (inversión en tercios, caída de tarifas)</summary><div class="inner">
+    <img class="imgline" src="img/caso-andres-cuenta.png" alt="Reporte de cuenta de Andrés Reyes con entrada de TQQQ a 39.62" loading="lazy">
+    <img class="imgline" src="img/oportunidad-whatsapp.png" alt="WhatsApps de abril 2025 a abril 2026: así se ve una oportunidad" loading="lazy" style="margin-top:12px">
+  </div></details>
+  <div class="nota"><span class="tag">Regla [TFM 06/008]</span>
+    No los muestres todos: <b>elegí 2–3 parecidos a la persona</b> (médico → Peña + los clips; corporativo → Reyes/Vargas) y contalos de palabra: de dónde es, a qué se dedica, qué logró. La meta es que piense “ese puedo ser yo”.
+  </div>
+</section>
+
+<!-- ============ 6 · TU CUENTA, TU CONTROL ============ -->
+<section id="control">
+  <div class="eyebrow">6 · Tu cuenta, tu control</div>
+  <h2>Yo solo puedo comprar y vender. <span class="menta">Ni un dólar sale sin vos.</span></h2>
+  <ul>
+    <li>Cuenta a TU nombre en un bróker regulado de EE. UU. — protegida por SIPC hasta <b>$500,000</b> (en CR el banco cubre ~₡6 millones).</li>
+    <li>Depositás y retirás cuando querás. Cero letra menuda, cero penalidades.</li>
+    <li>Ves todo en vivo: posiciones, movimientos, cada comisión.</li>
+    <li>Al pasar $100k armamos testamento de vida. Contrato firmado desde el día 1.</li>
+  </ul>
+  <div class="grid g3">
+    <img class="imgline" src="img/alpaca-dashboard.png" alt="Dashboard de la cuenta en Alpaca" loading="lazy">
+    <img class="imgline" src="img/alpaca-actividades.png" alt="Historial de actividades: transparencia en cada movimiento" loading="lazy">
+    <img class="imgline" src="img/alpaca-transferencias.png" alt="Depósitos y retiros con libertad" loading="lazy">
+  </div>
+  <div class="nota"><span class="tag">Decilo ANTES de que pregunten</span>
+    Es tu respuesta más fuerte (cerró a William, Parra y Andrés) y la objeción por la que se cayó Hugo. Va dentro del Paso 2, no esperés el “¿y si te morís vos?”.
+  </div>
+</section>
+
+<!-- ============ 7 · ARRANCAMOS ============ -->
+<section id="cierre">
+  <div class="eyebrow">7 · Arrancamos</div>
+  <h2>El Paso 1 toma <span class="menta">10 minutos</span> y lo hacemos ahora</h2>
+  <p>Abrimos el formulario de la cuenta juntos, te paso el link de pago y quedamos con fecha para tu primera transferencia. Hoy salís con el sistema andando.</p>
+  <div class="nota"><span class="tag">Cierre [TFM 06/006]</span>
+    “Eso sería todo. Si algo no quedó claro, preguntame. Y si no, decime honestamente qué te gustaría hacer, si querés comenzar…” <b>SILENCIO.</b>
+    Si dice sí: “Te paso el link ahora, hacemos el pago y empezamos. ¿Te parece?” — y abrís la cuenta EN la llamada (estándar Parra).
+    <br><b>Toda llamada termina en:</b> (a) cuenta + pago + fecha de transferencia, o (b) razón concreta + fecha + tarea (pareja invitada a la 2.ª). “Pensalo” no es un resultado.
+    <br><b>Objeciones en una frase:</b> “en enero” → costo de esperar con SUS números · “mi pareja” → “invitala, lo vemos juntos el [día]” · “¿fase agresiva cuánto dura?” → “9–15 años históricos, y vos lo acortás con cada aporte; depende del avance, no del calendario” · “muy técnico” → resumí en 3 pasos, no agregués detalle.
+  </div>
+</section>
+
+<!-- ============ ANEXOS ============ -->
+<section id="anexos">
+  <div class="eyebrow">Anexos · solo si preguntan</div>
+  <h2 class="muted" style="font-size:26px">La cocina por dentro</h2>
+  <details><summary>¿Por qué invertir? Inflación y costo de no invertir</summary><div class="inner">
+    <img class="imgline" src="img/a-inflacion.png" alt="La inflación mata el dinero: valor adquisitivo de 100 dólares y 100 colones desde 1960" loading="lazy">
+    <img class="imgline" src="img/a-10k-1999.png" alt="10 mil dólares invertidos desde abril 1999: Nasdaq 117k, S&P 73k, CDP 20k" loading="lazy" style="margin-top:12px">
+  </div></details>
+  <details><summary>Rendimientos históricos por alternativa (CDP, pensión voluntaria, bienes raíces, índices)</summary><div class="inner">
+    <img class="imgline" src="img/a-tabla-activos.png" alt="Tabla de activos: rendimiento histórico y riesgo" loading="lazy">
+    <img class="imgline" src="img/a-supen-vs-spy.png" alt="Fondo voluntario de pensiones vs S&P 500" loading="lazy" style="margin-top:12px">
+  </div></details>
+  <details><summary>Los riesgos, de frente: peores caídas del S&P 500 y del Nasdaq 100</summary><div class="inner">
+    <img class="imgline" src="img/a-drawdowns-sp.png" alt="Los 10 peores momentos del S&P 500" loading="lazy">
+    <img class="imgline" src="img/a-drawdowns-ndx.png" alt="Los 10 peores momentos del Nasdaq 100" loading="lazy" style="margin-top:12px">
+    <p class="muted" style="margin-top:10px">El contra real: que necesités la plata en una caída. Por eso el plan mide el avance a TU meta, no el mes a mes.</p>
+  </div></details>
+  <details><summary>Cómo proyectamos: ejemplo de estrategia y Monte Carlo</summary><div class="inner">
+    <img class="imgline" src="img/a-estrategia-ejemplo.png" alt="Ejemplo de estrategia de inversión a 20 años" loading="lazy">
+    <img class="imgline" src="img/a-metodologia.png" alt="Metodología: simulación Monte Carlo con datos 1983-2024" loading="lazy" style="margin-top:12px">
+    <img class="imgline" src="img/a-percentiles.png" alt="Resultados del portafolio por percentil" loading="lazy" style="margin-top:12px">
+  </div></details>
+  <details><summary>Research público (para mandar después, no para explicar en vivo)</summary><div class="inner">
+    <ul>
+      <li><a class="peri" href="/past/" target="_blank" rel="noopener">investorcr.com/past</a> — viaje al pasado: el edge del Nasdaq año por año</li>
+      <li><a class="peri" href="/horizonte/" target="_blank" rel="noopener">/horizonte</a> — probabilidad histórica por plazo (15 años: 99.9% positivo con dividendos)</li>
+      <li><a class="peri" href="/FreedomFunds/" target="_blank" rel="noopener">/FreedomFunds</a> — el plan de retiro de principio a fin, con el respaldo académico</li>
+      <li><a class="peri" href="/m39/" target="_blank" rel="noopener">/m39</a> — la señal que decide cuándo estar adentro</li>
+      <li><a class="peri" href="/info/" target="_blank" rel="noopener">/info</a> — cómo trabajamos (la página que puede leer solo)</li>
+    </ul>
+  </div></details>
+</section>
+
+<p class="muted" style="margin-top:28px;font-size:14px">Página interna de Empowered Investor para llamadas 1-1. No indexada. Los retornos históricos no garantizan resultados futuros.</p>
+</div>
+
+<script>
+/* Freedom Point en vivo */
+function fmt(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+function calc(){
+  var ing = +document.getElementById("ing").value || 0;
+  var t = (+document.getElementById("tasa").value || 5)/100;
+  var anual = ing*12;
+  var fp = t>0 ? anual/t : 0;
+  document.getElementById("fp").textContent = fmt(fp);
+  document.getElementById("fpnota").textContent = "retirando " + (t*100).toFixed(1).replace(".0","") + "% al año · " + fmt(anual) + " al año";
+}
+document.getElementById("ing").addEventListener("input", calc);
+document.getElementById("tasa").addEventListener("input", calc);
+calc();
+
+/* Guion de Jose: tecla G o botón. Nunca queda activo por defecto. */
+var btn = document.getElementById("coachBtn");
+function toggleCoach(){
+  var on = document.body.classList.toggle("coach");
+  btn.setAttribute("aria-pressed", on ? "true" : "false");
+}
+btn.addEventListener("click", toggleCoach);
+document.addEventListener("keydown", function(e){
+  if((e.key==="g"||e.key==="G") && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) toggleCoach();
+});
+</script>
+</body>
+</html>
