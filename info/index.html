@@ -168,7 +168,9 @@
   .phone .scr{ border-radius:16px; overflow:hidden; aspect-ratio:9/14; background:#0d0f14; }
   .phone .scr img{ width:100%; height:100%; object-fit:cover; object-position:top; }
   .phone .cap{ font-size:12px; color:var(--gris-sec); text-align:center; padding:8px 4px 2px; }
+  .phones.alp{ grid-template-columns:1fr; }
   .phones.alp .phone .scr{ aspect-ratio:auto; }
+  .phones.alp .phone .scr a{ display:block; }
   .phones.alp .phone .scr img{ height:auto; }
   @media(max-width:559px){ .phones.alp .phone{ flex:0 0 88%; max-width:none; } }
   .desk{ margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--bd); }
@@ -353,9 +355,9 @@
     <div class="aviso"><b>Ley antilavado:</b> la plata solo entra a tu cuenta desde una cuenta bancaria <b>a tu mismo nombre</b>, y solo puede salir hacia una cuenta <b>a tu mismo nombre</b>. No se puede transferir a terceros, ni a familiares, ni a mí. Es una regla del sistema financiero de EE. UU. y es justamente lo que te protege.</div>
 
     <div class="phones alp">
-      <div class="phone"><div class="scr"><img src="/info/img/alpaca-1.webp" alt="Alpaca: tu portafolio y tus posiciones" loading="lazy"></div><div class="cap">Tu portafolio, tu saldo y tus posiciones, en vivo</div></div>
-      <div class="phone"><div class="scr"><img src="/info/img/alpaca-2.webp" alt="Alpaca: historial de cada movimiento" loading="lazy"></div><div class="cap">Cada compra, venta, depósito e interés queda en el historial</div></div>
-      <div class="phone"><div class="scr"><img src="/info/img/alpaca-3.webp" alt="Alpaca: depositar y retirar" loading="lazy"></div><div class="cap">Depositar y retirar: botones que solo vos tenés</div></div>
+      <div class="phone"><div class="scr"><a href="/info/img/alpaca-1.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-1.webp" alt="Alpaca: tu portafolio y tus posiciones" loading="lazy"></a></div><div class="cap">Tu portafolio, tu saldo y tus posiciones, en vivo</div></div>
+      <div class="phone"><div class="scr"><a href="/info/img/alpaca-2.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-2.webp" alt="Alpaca: historial de cada movimiento" loading="lazy"></a></div><div class="cap">Cada compra, venta, depósito e interés queda en el historial</div></div>
+      <div class="phone"><div class="scr"><a href="/info/img/alpaca-3.webp" target="_blank" rel="noopener"><img src="/info/img/alpaca-3.webp" alt="Alpaca: depositar y retirar" loading="lazy"></a></div><div class="cap">Depositar y retirar: botones que solo vos tenés</div></div>
     </div>
     <p class="nota">Así se ve una cuenta real en Alpaca (el número de cuenta va tapado). Vos entrás con tu usuario y ves exactamente lo mismo que yo, más los botones de retiro. Lo que yo hago queda en el historial de órdenes.</p>
     <p class="nota">Al pasar los $100,000 te ayudamos a dejar un testamento de vida sobre la cuenta, para que tu familia sepa exactamente qué hay y cómo se accede.</p>
