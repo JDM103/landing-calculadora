@@ -20,6 +20,9 @@ h1{font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0 0 10px;text-wrap:bal
 h1 em{color:var(--menta);font-style:italic}
 p{margin:0 0 14px}
 .muted{color:var(--gris)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--menta);font-weight:600;margin-bottom:10px}
+.mision{background:linear-gradient(180deg,#16231c,#171c22);border:1px solid rgba(99,252,175,.42);border-radius:14px;padding:16px 18px;font-size:16.5px;line-height:1.55}
+.mision b{color:var(--menta)}
 form{display:flex;flex-direction:column;gap:14px;margin-top:22px}
 label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gris)}
 input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:17px;padding:13px 14px;border-radius:12px;width:100%}
@@ -40,8 +43,10 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-o
 </head>
 <body>
 <div class="wrap">
-  <h1>Referí a un colega, <em>yo me encargo del resto</em></h1>
-  <p class="muted">Dejame sus datos y yo le escribo de tu parte para regalarle su proyección de retiro: 30 minutos, sin costo y sin compromiso. Vos quedás como quien hizo la referencia.</p>
+  <div class="eyebrow">Entre colegas · Empowered Investor</div>
+  <h1>Pedile permiso <em>y pasame el contacto</em></h1>
+  <p class="mision">Después de una vida cuidando a otros, ningún médico debería llegar a los 60 sin poder bajar el ritmo. <b>Ayudame a llegar a más colegas tuyos</b>, para que tengan un plan de retiro digno de su profesión.</p>
+  <p class="muted">Vos ya sabés quién es: el que se queja de las guardias en el pasillo. Contale, pedile permiso, y dejame sus datos acá. Yo le escribo de tu parte y le regalo su proyección de retiro: 30 minutos, sin costo y sin compromiso. Vos quedás como quien le abrió la puerta.</p>
 
   <form id="f" novalidate>
     <label>Tu nombre (quien refiere)
