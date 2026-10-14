@@ -11,7 +11,3 @@
 # La landing de médicos se movió de /medicos-plan-de-retiro a /medicos (los UTM se conservan solos).
 /medicos-plan-de-retiro      /medicos    301
 /medicos-plan-de-retiro/*    /medicos    301
-/referir/* /colegas/:splat 301
-/referir /colegas 301
-/entre-colegas/* /colegas/:splat 301
-/entre-colegas /colegas 301
