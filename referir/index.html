@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Referir a un colega · Empowered Investor</title>
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<style>
+/* Página corta para clientes: dejan los datos de un colega (ya hablado con él/ella) y Jose lo contacta.
+   El lead cae al mismo webhook/Sheet de /medicos con etapa "referido" y el referidor en utm_campaign. */
+:root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#9aa3b2; --linea:#262b33; --input:#1d232b; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:560px;margin:0 auto;padding:48px 20px 90px}
+h1{font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0 0 10px;text-wrap:balance}
+h1 em{color:var(--menta);font-style:italic}
+p{margin:0 0 14px}
+.muted{color:var(--gris)}
+form{display:flex;flex-direction:column;gap:14px;margin-top:22px}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gris)}
+input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:17px;padding:13px 14px;border-radius:12px;width:100%}
+.tel{display:flex;align-items:center;gap:0;background:var(--input);border:1px solid var(--linea);border-radius:12px}
+.tel span{padding:13px 0 13px 14px;color:var(--gris)}
+.tel input{border:0;background:transparent;flex:1;min-width:0}
+.chk{flex-direction:row;align-items:flex-start;gap:10px;font-size:15px;color:var(--crema);cursor:pointer}
+.chk input{width:20px;height:20px;accent-color:var(--menta);margin-top:2px;flex:0 0 auto}
+button{background:var(--menta);color:#0b2416;font:inherit;font-weight:700;font-size:18px;padding:15px 24px;border:0;border-radius:999px;cursor:pointer;margin-top:4px}
+button:disabled{opacity:.6;cursor:default}
+input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+.err{color:#ffb3a0;font-size:14.5px;margin:0}
+.ok{background:linear-gradient(180deg,#16231c,#171c22);border:1px solid rgba(99,252,175,.42);border-radius:16px;padding:24px 22px}
+.ok b{color:var(--menta)}
+.hidden{display:none}
+.nota-pie{font-size:13.5px;color:var(--gris);margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Referí a un colega, <em>yo me encargo del resto</em></h1>
+  <p class="muted">Dejame sus datos y yo le escribo de tu parte para regalarle su proyección de retiro: 30 minutos, sin costo y sin compromiso. Vos quedás como quien hizo la referencia.</p>
+
+  <form id="f" novalidate>
+    <label>Tu nombre (quien refiere)
+      <input type="text" id="ref-de" autocomplete="name" placeholder="Tu nombre">
+    </label>
+    <label>Nombre de tu colega
+      <input type="text" id="col-nom" placeholder="Dra. / Dr. …">
+    </label>
+    <label>WhatsApp de tu colega
+      <span class="tel"><span>+506</span><input type="tel" id="col-wa" inputmode="numeric" maxlength="8" placeholder="8888 8888"></span>
+    </label>
+    <label>Especialidad u oficio (opcional)
+      <input type="text" id="col-esp" placeholder="Anestesiología, odontología…">
+    </label>
+    <label class="chk"><input type="checkbox" id="hablado">Ya lo hablé con él/ella y me dijo que le escribás</label>
+    <p class="err hidden" id="err"></p>
+    <button type="submit" id="send">Enviar la referencia</button>
+  </form>
+
+  <div class="ok hidden" id="ok">
+    <p><b>¡Listo!</b> Le escribo a <span id="ok-col"></span> en las próximas 24 horas, diciéndole que vengo de tu parte.</p>
+    <p class="muted" style="margin:0">Te aviso cuando hablemos. Gracias por la confianza 🙌</p>
+  </div>
+
+  <p class="nota-pie">La proyección es gratuita y no lo compromete a nada. Jose Montero · Empowered Investor · 11 años gestionando portafolios.</p>
+</div>
+
+<script>
+var WEBHOOK = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+function $(id){ return document.getElementById(id); }
+/* ?de=alias precarga al referidor: cada cliente tiene su link personal /referir?de=luis-aguilar */
+var q = new URLSearchParams(location.search);
+var DE = (q.get("de")||"").trim();
+if(DE) $("ref-de").value = DE.replace(/-/g," ").replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+
+$("f").addEventListener("submit", function(e){
+  e.preventDefault();
+  var de=$("ref-de").value.trim(), nom=$("col-nom").value.trim(), wa=$("col-wa").value.replace(/\D/g,""), esp=$("col-esp").value.trim();
+  var falta=[];
+  if(!de) falta.push("tu nombre");
+  if(!nom) falta.push("el nombre de tu colega");
+  if(wa.length!==8) falta.push("un WhatsApp de 8 dígitos");
+  if(!$("hablado").checked) falta.push("confirmar que ya lo hablaste con él/ella");
+  var err=$("err");
+  if(falta.length){ err.textContent="Falta: "+falta.join(", ")+"."; err.classList.remove("hidden"); return; }
+  err.classList.add("hidden");
+  var btn=$("send"); btn.disabled=true; btn.textContent="Enviando…";
+  var payload={ timestamp:new Date().toISOString(), etapa:"referido",
+    nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)",
+    pagina:"/referir", utm_source:"referido", utm_medium:"cliente",
+    utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"hablado:si" };
+  try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
+  $("ok-col").textContent=nom.split(" ")[0];
+  $("f").classList.add("hidden"); $("ok").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
