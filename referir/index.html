@@ -25,6 +25,7 @@ p{margin:0 0 14px}
 .mision b{color:var(--menta)}
 form{display:flex;flex-direction:column;gap:14px;margin-top:22px}
 label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gris)}
+textarea{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:16px;padding:13px 14px;border-radius:12px;width:100%;resize:vertical;min-height:72px}
 input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:17px;padding:13px 14px;border-radius:12px;width:100%}
 .tel{display:flex;align-items:center;gap:0;background:var(--input);border:1px solid var(--linea);border-radius:12px}
 .tel span{padding:13px 0 13px 14px;color:var(--gris)}
@@ -33,7 +34,7 @@ input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--
 .chk input{width:20px;height:20px;accent-color:var(--menta);margin-top:2px;flex:0 0 auto}
 button{background:var(--menta);color:#0b2416;font:inherit;font-weight:700;font-size:18px;padding:15px 24px;border:0;border-radius:999px;cursor:pointer;margin-top:4px}
 button:disabled{opacity:.6;cursor:default}
-input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
 .err{color:#ffb3a0;font-size:14.5px;margin:0}
 .ok{background:linear-gradient(180deg,#16231c,#171c22);border:1px solid rgba(99,252,175,.42);border-radius:16px;padding:24px 22px}
 .ok b{color:var(--menta)}
@@ -63,6 +64,9 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-o
     </label>
     <label>Especialidad u oficio (opcional)
       <input type="text" id="col-esp" placeholder="Anestesiología, odontología…">
+    </label>
+    <label>¿Algo que quieras contarme? (opcional)
+      <textarea id="col-nota" rows="3" placeholder="Lo que te sirva: 'anda viendo lo del retiro', 'escribile mejor en la tarde', 'mencioná que somos del mismo servicio'…"></textarea>
     </label>
     <label class="chk"><input type="checkbox" id="hablado">Ya lo hablé con él/ella y me dijo que le escribás</label>
     <p class="err hidden" id="err"></p>
@@ -100,7 +104,7 @@ $("f").addEventListener("submit", function(e){
   err.classList.add("hidden");
   var btn=$("send"); btn.disabled=true; btn.textContent="Enviando…";
   var payload={ timestamp:new Date().toISOString(), etapa:"referido",
-    nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)", correo:mail||"",
+    nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)", correo:mail||"", nota:$("col-nota").value.trim().slice(0,500),
     pagina:"/referir", utm_source:"referido", utm_medium:"cliente",
     utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"hablado:si" };
   try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
