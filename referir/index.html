@@ -46,7 +46,7 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-o
   <div class="eyebrow">Entre colegas · Empowered Investor</div>
   <h1>Pedile permiso <em>y pasame el contacto</em></h1>
   <p class="mision">Después de una vida cuidando a otros, ningún médico debería llegar a los 60 sin poder bajar el ritmo. <b>Ayudame a llegar a más colegas tuyos</b>, para que tengan un plan de retiro digno de su profesión.</p>
-  <p class="muted">Vos ya sabés quién es: el que se queja de las guardias en el pasillo. Contale, pedile permiso, y dejame sus datos acá. Yo le escribo de tu parte y le regalo su proyección de retiro: 30 minutos, sin costo y sin compromiso. Vos quedás como quien le abrió la puerta.</p>
+  <p class="muted">Yo le escribo de tu parte y le regalo su proyección de retiro: 30 minutos, sin costo y sin compromiso. Vos quedás como quien le abrió la puerta.</p>
 
   <form id="f" novalidate>
     <label>Tu nombre (quien refiere)
@@ -57,6 +57,9 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-o
     </label>
     <label>WhatsApp de tu colega
       <span class="tel"><span>+506</span><input type="tel" id="col-wa" inputmode="numeric" maxlength="8" placeholder="8888 8888"></span>
+    </label>
+    <label>Correo de tu colega (opcional)
+      <input type="text" id="col-mail" inputmode="email" autocomplete="off" placeholder="nombre@correo.com">
     </label>
     <label>Especialidad u oficio (opcional)
       <input type="text" id="col-esp" placeholder="Anestesiología, odontología…">
@@ -85,6 +88,8 @@ if(DE) $("ref-de").value = DE.replace(/-/g," ").replace(/\b\w/g, function(c){ re
 $("f").addEventListener("submit", function(e){
   e.preventDefault();
   var de=$("ref-de").value.trim(), nom=$("col-nom").value.trim(), wa=$("col-wa").value.replace(/\D/g,""), esp=$("col-esp").value.trim();
+  var mail=$("col-mail").value.trim();
+  if(mail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){ $("err").textContent="El correo no se ve bien; revisalo o dejalo vacío."; $("err").classList.remove("hidden"); return; }
   var falta=[];
   if(!de) falta.push("tu nombre");
   if(!nom) falta.push("el nombre de tu colega");
@@ -95,7 +100,7 @@ $("f").addEventListener("submit", function(e){
   err.classList.add("hidden");
   var btn=$("send"); btn.disabled=true; btn.textContent="Enviando…";
   var payload={ timestamp:new Date().toISOString(), etapa:"referido",
-    nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)",
+    nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)", correo:mail||"",
     pagina:"/referir", utm_source:"referido", utm_medium:"cliente",
     utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"hablado:si" };
   try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
