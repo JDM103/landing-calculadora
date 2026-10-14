@@ -101,7 +101,7 @@ $("f").addEventListener("submit", function(e){
   var btn=$("send"); btn.disabled=true; btn.textContent="Enviando…";
   var payload={ timestamp:new Date().toISOString(), etapa:"referido",
     nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)", correo:mail||"", nota:$("col-nota").value.trim().slice(0,500),
-    pagina:"/entre-colegas", utm_source:"referido", utm_medium:"cliente",
+    pagina:"/colegas", utm_source:"referido", utm_medium:"cliente",
     utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"permiso-del-colega" };
   try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
   $("ok-col").textContent=nom.split(" ")[0];
