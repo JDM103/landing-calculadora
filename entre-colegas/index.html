@@ -30,8 +30,6 @@ input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--
 .tel{display:flex;align-items:center;gap:0;background:var(--input);border:1px solid var(--linea);border-radius:12px}
 .tel span{padding:13px 0 13px 14px;color:var(--gris)}
 .tel input{border:0;background:transparent;flex:1;min-width:0}
-.chk{flex-direction:row;align-items:flex-start;gap:10px;font-size:15px;color:var(--crema);cursor:pointer}
-.chk input{width:20px;height:20px;accent-color:var(--menta);margin-top:2px;flex:0 0 auto}
 button{background:var(--menta);color:#0b2416;font:inherit;font-weight:700;font-size:18px;padding:15px 24px;border:0;border-radius:999px;cursor:pointer;margin-top:4px}
 button:disabled{opacity:.6;cursor:default}
 input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
@@ -68,7 +66,6 @@ input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px soli
     <label>¿Algo que quieras contarme? (opcional)
       <textarea id="col-nota" rows="3" placeholder="Lo que te sirva: 'anda viendo lo del retiro', 'escribile mejor en la tarde'…"></textarea>
     </label>
-    <label class="chk"><input type="checkbox" id="hablado">Ya lo hablé con él/ella y me dijo que le escribás</label>
     <p class="err hidden" id="err"></p>
     <button type="submit" id="send">Enviar la referencia</button>
   </form>
@@ -98,7 +95,6 @@ $("f").addEventListener("submit", function(e){
   if(!de) falta.push("tu nombre");
   if(!nom) falta.push("el nombre de tu colega");
   if(wa.length!==8) falta.push("un WhatsApp de 8 dígitos");
-  if(!$("hablado").checked) falta.push("confirmar que ya lo hablaste con él/ella");
   var err=$("err");
   if(falta.length){ err.textContent="Falta: "+falta.join(", ")+"."; err.classList.remove("hidden"); return; }
   err.classList.add("hidden");
@@ -106,7 +102,7 @@ $("f").addEventListener("submit", function(e){
   var payload={ timestamp:new Date().toISOString(), etapa:"referido",
     nombre:nom, whatsapp:"506"+wa, especialidad:esp||"(sin especificar)", correo:mail||"", nota:$("col-nota").value.trim().slice(0,500),
     pagina:"/entre-colegas", utm_source:"referido", utm_medium:"cliente",
-    utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"hablado:si" };
+    utm_campaign:(DE||de).toLowerCase().replace(/\s+/g,"-"), utm_content:"permiso-del-colega" };
   try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
   $("ok-col").textContent=nom.split(" ")[0];
   $("f").classList.add("hidden"); $("ok").classList.remove("hidden");
