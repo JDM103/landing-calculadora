@@ -1707,7 +1707,11 @@ var TOKEN_RESET=null;
   // Modo asesor: /panel abrió esta pestaña con #asesor. Se le piden el token y el alias al
   // panel por postMessage (mismo origen); nunca viajan en la URL. Al cerrar la pestaña
   // se pierde la sesión, igual que en el panel.
-  if(location.hash==="#asesor" && !(ses && ses.asesor)){
+  // OJO: la pestaña nueva HEREDA el sessionStorage de la que la abrió (así funciona
+  // window.open en el mismo origen). Si ahí quedó una sesión de asesor vieja (otra cuenta,
+  // con privacidad encendida), NO se usa: con #asesor manda siempre lo que diga el panel.
+  if(location.hash==="#asesor"){
+    sessionStorage.removeItem("r_sesion");
     if(!window.opener){
       $("err").style.display="block"; $("err").textContent="Esta vista se abre desde el botón \"Abrir su dashboard\" del panel.";
       return;
@@ -1718,6 +1722,8 @@ var TOKEN_RESET=null;
       window.removeEventListener("message", onMsg);
       var s2={asesor:true, tok:String(e.data.tok), alias:String(e.data.alias)};
       sessionStorage.setItem("r_sesion", JSON.stringify(s2));
+      // la privacidad arranca como esté en el panel, no como quedó en otra pestaña
+      PRIV = e.data.priv===true; sessionStorage.setItem("r_priv", PRIV?"1":"0");
       history.replaceState(null, "", location.pathname+location.search);
       entrar(s2).then(function(j){ D=j; CORREO=null; ASESOR=s2; mostrar(); })
         .catch(function(err){ sessionStorage.removeItem("r_sesion"); $("ok-entrar").style.display="none";

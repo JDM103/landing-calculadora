@@ -719,7 +719,7 @@ function renderDet(){
     function onMsg(e){
       if(e.origin!==location.origin || e.source!==w || !e.data || e.data.tipo!=="r-asesor-listo") return;
       window.removeEventListener("message", onMsg);
-      w.postMessage({tipo:"r-asesor", tok:tok, alias:alias}, location.origin);
+      w.postMessage({tipo:"r-asesor", tok:tok, alias:alias, priv:PRIV}, location.origin);
     }
     window.addEventListener("message", onMsg);
     w=window.open("/r/#asesor","_blank");
