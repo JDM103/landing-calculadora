@@ -902,6 +902,80 @@ async function cargarOrdenes(c){
   }catch(e){ box.innerHTML='<div class="sub">Órdenes: error '+(e.message||e)+'</div>'; }
 }
 
+/* ===== refresco de UNA cuenta después de actuar (comprar / vender / reemplazar / cancelar) ===== */
+// Igual que operar en Alpaca directo: al confirmar la acción se traen equity, efectivo, posiciones
+// y órdenes SOLO de esa cuenta (nunca se recorren todas) y se repinta lo que estás viendo.
+// Dos pasadas: una casi de inmediato y otra unos segundos después, porque Alpaca confirma
+// ejecuciones y cancelaciones con un pequeño retraso.
+var REFRESCO={};   // alias -> número de pasada en curso (una respuesta vieja no pisa una nueva)
+function ponRefrescoMsg(html){ var el=$("mo-refresco"); if(el) el.innerHTML=html; }
+function ponOrdGlob(alias, abiertas){
+  if(!ORD_GLOB || !ORD_GLOB.datos) return;
+  var cu=ORD_GLOB.datos.cuentas||[], i=-1;
+  cu.forEach(function(x,j){ if(x.alias===alias) i=j; });
+  var fila={ alias:alias, ordenes:abiertas||[] };
+  if(i>=0) cu[i]=fila; else cu.push(fila);
+  ORD_GLOB.datos.cuentas=cu;
+}
+// En Modo acción la lista puede cambiar al refrescar (ej. la cuenta ya quedó según lo establecido
+// y el filtro "solo cuentas con acciones" la sacaría): se busca el índice de la cuenta otra vez.
+function irACuenta(alias){
+  var i0=-1, L0=listaAccion();
+  L0.lista.forEach(function(z,i){ if(z.c.alias===alias) i0=i; });
+  if(i0<0 && ACC_SOLO){
+    ACC_SOLO=false; L0=listaAccion();
+    L0.lista.forEach(function(z,i){ if(z.c.alias===alias) i0=i; });
+  }
+  if(i0>=0) ACC_IDX=i0;
+}
+function repintarCuenta(alias){
+  if(!DATOS) return;
+  if(MODO==="cuentas"){ renderLista(); if(SELECC===alias) renderDet(); }
+  else if(MODO==="accion"){ if(ACC_ALIAS===alias){ irACuenta(alias); renderAccion(); } }
+  else if(MODO==="ordenes") renderOrdenesGlob();
+}
+async function refrescarCuenta(alias, motivo){
+  var c=((DATOS&&DATOS.clientes)||[]).filter(function(x){return x.alias===alias;})[0];
+  if(!c || location.hash==="#demo") return;
+  var n=(REFRESCO[alias]||0)+1; REFRESCO[alias]=n;
+  ponRefrescoMsg('⏳ Actualizando esta cuenta en Alpaca…');
+  apiLog("req", "function 'cierre-mes' {alias} + 'ordenes' → Alpaca /v2/account · /v2/positions · /v2/orders SOLO de la cuenta "+alias+" · "+motivo, { alias:alias, sin_correo:true });
+  try{
+    var rr=await Promise.all([ llamar("cierre-mes",{sin_correo:true, alias:alias}), llamar("ordenes",{alias:alias}) ]);
+    if(REFRESCO[alias]!==n) return;   // ya corrió una pasada más nueva
+    var r=rr[0], ord=rr[1], snap=r.snap;
+    if(r.resultados && r.resultados[alias] && r.resultados[alias]!=="ok") throw new Error(r.resultados[alias]);
+    if(!snap){
+      // function sin modo por cuenta (versión vieja): se lee el snapshot de la base, sin tocar Alpaca
+      var d=await llamar("panel"), nv=(d.clientes||[]).filter(function(x){return x.alias===alias;})[0];
+      if(nv){ snap=nv.snap; c.prev=nv.prev; }
+    }
+    if(snap){ if(c.snap && c.snap.mes!==snap.mes) c.prev=c.snap; c.snap=snap; }
+    Object.keys(CACHE_HIST).forEach(function(k){ if(k.indexOf(alias+"|")===0) delete CACHE_HIST[k]; });
+    CACHE_ORD[alias]=ord;
+    ponOrdGlob(alias, ord.abiertas);
+    repintarCuenta(alias);
+    var pos=(c.snap&&c.snap.posiciones)||[], nAb=(ord.abiertas||[]).length;
+    apiLog("res", "cuenta "+alias+" actualizada (equity, efectivo, posiciones y órdenes de ESTA cuenta)",
+      { equity:c.snap? +c.snap.equity:null, cash:c.snap? +c.snap.cash:null,
+        posiciones:pos.map(function(p){ return p.s+" × "+p.q; }), abiertas:nAb });
+    ponRefrescoMsg('✅ Cuenta actualizada a las '+new Date().toTimeString().slice(0,5)
+      +(c.snap? ' · efectivo <b>'+fmt(c.snap.cash)+'</b> · '+pos.length+' posición'+(pos.length===1?'':'es'):'')
+      +' · '+nAb+' orden'+(nAb===1?'':'es')+' abierta'+(nAb===1?'':'s'));
+    var est=$("estado"); if(est) est.textContent="Cuenta "+(PRIV?"••••":alias)+" actualizada "+new Date().toTimeString().slice(0,5);
+  }catch(e){
+    if(REFRESCO[alias]!==n) return;
+    apiLog("res", "ERROR actualizando la cuenta "+alias+": "+(e.message||e), null);
+    ponRefrescoMsg('⚠️ No se pudo actualizar la cuenta ('+escapa(String(e.message||e))+'). Dale a <b>Actualizar datos</b> arriba.');
+  }
+}
+// Pasada 1 al segundo (Alpaca ya suele tener la ejecución) y pasada 2 a los 7 s (por si la
+// ejecución o la cancelación se confirmaron un poco después).
+function refrescarTrasAccion(c, motivo){
+  setTimeout(function(){ refrescarCuenta(c.alias, motivo); }, 1000);
+  setTimeout(function(){ refrescarCuenta(c.alias, motivo+" · segunda pasada"); }, 7000);
+}
+
 /* ================= MODO ACCIÓN: llevar cada cuenta a lo establecido ================= */
 /* Mezcla por avance, COPIADA de /mi-plan, /fpf y /r (φ como fracción, umbrales en %). */
 function fw(phi, p1, p2, Ff){
@@ -1309,10 +1383,10 @@ function abrirConfirmCancelar(c, o){
       }
       SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:"—", v:1 });
       renderSimLog();
-      delete CACHE_ORD[c.alias];
-      cargarOrdenes(c); escanearOrdenes(true);
       $("mo-cuerpo").innerHTML='<div class="enplan" style="margin-bottom:10px">🟢 <b>Orden cancelada en Alpaca.</b> '
-        +'Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>';
+        +'Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>'
+        +'<div class="sub" id="mo-refresco"></div>';
+      refrescarTrasAccion(c, "tras cancelar "+o.sym);
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
     })
@@ -1759,13 +1833,13 @@ function abrirConfirmOrden(c, p){
       SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(r.despues), v:1 });
       renderSimLog();
       BOLETA._reemplaza=null;
-      delete CACHE_ORD[c.alias];
-      cargarOrdenes(c); escanearOrdenes(true);
       $("mo-cuerpo").innerHTML=
         '<div class="enplan" style="margin-bottom:10px">🟢 <b>Orden '+(reempl? "reemplazada":"enviada")+' a Alpaca.</b> '
         +'Estado: <b>'+escapa(o.status||"?")+'</b>'+(o.id? ' · id <span style="font-size:11px">'+escapa(o.id)+'</span>':'')
         +'<br>Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>'
-        +'<div class="sub">La respuesta cruda completa está en la terminal.</div>';
+        +'<div class="sub">La respuesta cruda completa está en la terminal.</div>'
+        +'<div class="sub" id="mo-refresco" style="margin-top:6px"></div>';
+      refrescarTrasAccion(c, (reempl? "tras reemplazar ":"tras enviar ")+(B.lado==="buy"?"compra ":"venta ")+B.sym);
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
     })
@@ -1797,15 +1871,7 @@ function ponerModo(modo){
   });
   if(modo==="accion"){
     // el cliente elegido en Cuentas se perpetúa acá (y viceversa)
-    if(SELECC && DATOS){
-      var i0=-1, L0=listaAccion();
-      L0.lista.forEach(function(z,i){ if(z.c.alias===SELECC) i0=i; });
-      if(i0<0 && ACC_SOLO){
-        ACC_SOLO=false; L0=listaAccion();
-        L0.lista.forEach(function(z,i){ if(z.c.alias===SELECC) i0=i; });
-      }
-      if(i0>=0) ACC_IDX=i0;
-    }
+    if(SELECC && DATOS) irACuenta(SELECC);
     if(DATOS) renderAccion();
   } else {
     $("vista-accion").innerHTML="";
