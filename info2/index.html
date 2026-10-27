@@ -12,14 +12,14 @@
   gtag('config', 'G-FGQ2ZMVSLG');
 </script>
 <script defer src="/js/pixel.js"></script>
-<title>ATH Momentum · Empowered Investor</title>
+<title>Atalaya Momentum · Empowered Investor</title>
 <meta name="robots" content="noindex">
 <meta name="description" content="Mirá la regla de salida y reentrada día por día, adelantá y retrocedé en el tiempo, cambiá los parámetros y compará con las 960 versiones probadas.">
 <link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ATH Momentum · Empowered Investor">
-<meta property="og:description" content="Metodología basada en el paper The 52-Week High and Momentum Investing. Día por día, con los parámetros en tus manos.">
+<meta property="og:title" content="Atalaya Momentum · Empowered Investor">
+<meta property="og:description" content="Estrategia sistemática de momentum basada en el paper The 52-Week High and Momentum Investing. Día por día, con los parámetros en tus manos.">
 <meta property="og:image" content="https://investorcr.com/assets/logo-fondo-negro.png">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -225,8 +225,8 @@
 
   <div class="hero">
     <div class="eyebrow">Empowered Investor</div>
-    <h1>ATH <em>Momentum</em></h1>
-    <p class="sub">Metodología basada en el paper <i>The 52-Week High and Momentum Investing</i> (George y Hwang, Journal of Finance, 2004), confirmado después en 20 países (2011) y revisado por los mismos autores en el Journal of Financial Economics (2018).</p>
+    <h1>Atalaya <em>Momentum</em></h1>
+    <p class="sub">Estrategia sistemática de momentum basada en el paper <i>The 52-Week High and Momentum Investing</i> (George y Hwang, Journal of Finance, 2004), confirmado después en 20 países (2011) y revisado por los mismos autores en el Journal of Financial Economics (2018).</p>
     <nav class="chips" aria-label="Índice">
       <a href="#video">El video</a>
       <a href="#parametros">Los parámetros</a>
@@ -239,7 +239,7 @@
   <!-- 1 · VIDEO -->
   <section id="video">
     <div class="num">1</div>
-    <h2>La regla, día por día</h2>
+    <h2>Atalaya, día por día</h2>
     <p class="lede">Dos indicadores. Con los dos en verde, la plata está invertida. Con uno en rojo, está en efectivo ganando interés. <b>Flecha verde: entra. Flecha roja: sale.</b></p>
 
     <div class="card">
@@ -256,13 +256,18 @@
       <div class="ctl" id="rangos">
         <span class="lbl">Tramo</span>
         <button data-r="19990101,99999999" class="on">Desde 1999</button>
-        <button data-r="todo">Todo</button>
+        <button data-r="20000101,99999999">Desde 2000</button>
+        <button data-r="u5">Últimos 5 años</button>
+        <button data-r="u10">10</button>
+        <button data-r="u15">15</button>
+        <button data-r="u20">20</button>
+        <button data-r="todo">Desde 1987</button>
+        <span class="sep"></span>
         <button data-r="19870101,19881231">1987</button>
         <button data-r="19990101,20031231">1999 a 2003</button>
         <button data-r="20070601,20091231">2008</button>
         <button data-r="20191001,20201231">2020</button>
         <button data-r="20210901,20231231">2022</button>
-        <button data-r="u5">Últimos 5 años</button>
       </div>
       <div class="fechas">
         <label>Desde <input type="date" id="t-ini"></label>
@@ -534,7 +539,7 @@
   function setRango(r, auto){
     S.rango=r; var n=R.n;
     if(r==='todo'){ S.a=R.iniV; S.b=n-1; }
-    else if(r==='u5'){ S.a=Math.max(R.ini,n-1-252*5); S.b=n-1; }
+    else if(r.charAt(0)==='u'){ S.a=Math.max(R.iniV,n-1-252*(+r.slice(1))); S.b=n-1; }
     else if(r==='fechas'){ S.a=idxFecha(ymdDeInput($('t-ini').value)); S.b=idxFecha(ymdDeInput($('t-fin').value),true); if(S.b-S.a<20){ S.a=R.iniV; S.b=n-1; } }
     else { var p=r.split(','); S.a=idxFecha(+p[0]); S.b=idxFecha(+p[1],true); }
     S.cur=S.a; S.curF=S.a; S.hover=-1; parar();
@@ -730,11 +735,8 @@
   /* ---------- textos vivos ---------- */
   function escribirLector(){
     var i=(S.hover>=S.a&&S.hover<=S.cur)?S.hover:S.cur, c=R.c, vs=(c[i]/R.sma[i]-1)*100, vm=(c[i]/R.mx[i]-1)*100;
-    var html='<b>'+fFecha(R.d[i])+'</b> · '+S.A+' <b>'+fNum(c[i])+'</b>'
-      +' · vs promedio: <b>'+(isFinite(vs)?(vs>=0?'+':'')+vs.toFixed(1)+'%':'—')+'</b> ('+(R.iS[i]===1?'sí':'no')+')'
-      +' · vs máximo: <b>'+(isFinite(vm)?vm.toFixed(1)+'%':'—')+'</b> ('+(R.iM[i]===1?'sí':'no')+')'
-      +' → '+(R.sig[i]===1?'<b style="color:var(--menta)">invertido</b>':'<b style="color:var(--rojo)">fuera</b>, en efectivo');
-    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>'+fUSDtile(S._pnl.r(i))+'</b> · sin regla <b>'+fUSDtile(S._pnl.b(i))+'</b>'; }
+    var html='<b>'+fFecha(R.d[i])+'</b>';
+    if(S._pnl){ html+=' · $100,000 al inicio del tramo: con la regla <b>'+fUSDtile(S._pnl.r(i))+'</b> · sin regla <b>'+fUSDtile(S._pnl.b(i))+'</b>'; }
     if(S._dd){ html+=' · Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
     for(var k=0;k<R.ev.length;k++){
       var e=R.ev[k];
