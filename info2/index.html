@@ -315,7 +315,7 @@
 
       <div class="kpis">
         <div class="kpi"><div class="l">Estado</div><div class="v" id="k-estado">—</div><div class="s" id="k-estado-s"></div></div>
-        <div class="kpi"><div class="l">$100,000 al inicio, hoy</div><div class="v menta" id="k-usd-r">—</div><div class="s">sin regla: <b id="k-usd-b">—</b></div></div>
+        <div class="kpi"><div class="l" id="k-usd-l">$100,000 al inicio, hoy serían</div><div class="v menta" id="k-usd-r">—</div><div class="s">sin regla: <b id="k-usd-b">—</b></div></div>
         <div class="kpi"><div class="l">Tu plata, en este tramo</div><div class="v menta" id="k-ret-r">—</div><div class="s">sin regla: <b id="k-ret-b">—</b></div></div>
         <div class="kpi"><div class="l">Peor caída hasta hoy</div><div class="v menta" id="k-dd-r">—</div><div class="s">sin regla: <b id="k-dd-b">—</b></div></div>
         <div class="kpi"><div class="l">Anual en este tramo</div><div class="v menta" id="k-cagr-r">—</div><div class="s">sin regla: <b id="k-cagr-b">—</b></div></div>
@@ -752,6 +752,16 @@
     $('k-estado-s').textContent=dentro?('100% en '+nombre()):'en efectivo, ganando interés';
     var rr=R.eqR[i]/R.eqR[a]-1, rb=R.eqB[i]/R.eqB[a]-1;
     $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=0?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
+    var dAtras=i-a, tiempo;
+    if(dAtras<42) tiempo=(dAtras<=1?'ayer':'hace '+dAtras+' días');
+    else if(dAtras<252){ var ms=Math.round(dAtras/21); tiempo='hace '+ms+(ms===1?' mes':' meses'); }
+    else {
+      var u=function(x){ return Date.UTC(Math.floor(x/10000), Math.floor(x/100)%100-1, x%100); };
+      var ys=(u(R.d[i])-u(R.d[a]))/(365.25*864e5), ent=Math.floor(ys+0.02);
+      if(ys<10&&ys-ent>=0.15&&ys-ent<=0.85) tiempo='hace '+ys.toFixed(1).replace('.',',')+' años';
+      else { var yr2=Math.round(ys); tiempo='hace '+yr2+(yr2===1?' año':' años'); }
+    }
+    $('k-usd-l').textContent='$100,000 '+tiempo+', hoy serían';
     $('k-usd-r').textContent='$'+Math.round(INV*(1+rr)).toLocaleString('en-US'); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent='$'+Math.round(INV*(1+rb)).toLocaleString('en-US');
     var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
     $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v menta'; $('k-dd-b').textContent=fPctNeg(mb);
