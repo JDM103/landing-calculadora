@@ -77,12 +77,13 @@
 
   canvas{ display:block; width:100%; }
   #cv-precio{ height:380px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
+  #cv-pnl{ height:220px; margin-top:8px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
   #cv-dd{ height:150px; margin-top:8px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
-  @media(max-width:600px){ #cv-precio{ height:320px; } #cv-dd{ height:130px; } }
+  @media(max-width:600px){ #cv-precio{ height:320px; } #cv-pnl{ height:180px; } #cv-dd{ height:130px; } }
   .card.lleno{ position:fixed; inset:0; z-index:50; margin:0; border-radius:0; overflow:auto; padding:14px max(14px, env(safe-area-inset-right)) 24px max(14px, env(safe-area-inset-left)); background:var(--tinta); }
-  .card.lleno #cv-precio{ height:min(56vh, 620px); } .card.lleno #cv-dd{ height:min(20vh, 220px); }
+  .card.lleno #cv-precio{ height:min(44vh, 560px); } .card.lleno #cv-pnl{ height:min(22vh, 260px); } .card.lleno #cv-dd{ height:min(16vh, 200px); }
   .card.lleno .kpis{ grid-template-columns:repeat(3,1fr); }
-  @media(min-width:900px){ .card.lleno .kpis{ grid-template-columns:repeat(6,1fr); } }
+  @media(min-width:900px){ .card.lleno .kpis{ grid-template-columns:repeat(7,1fr); } }
   body.sin-scroll{ overflow:hidden; }
   .panel-t{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-top:12px; flex-wrap:wrap; }
   .panel-t h4{ font-size:13px; font-weight:700; color:var(--crema); }
@@ -123,7 +124,7 @@
   /* kpis vivos */
   .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
   @media(min-width:640px){ .kpis{ grid-template-columns:repeat(3,1fr); } }
-  @media(min-width:900px){ .kpis{ grid-template-columns:repeat(6,1fr); } }
+  @media(min-width:900px){ .kpis{ grid-template-columns:repeat(4,1fr); } }
   .kpi{ background:var(--tinta2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; min-width:0; }
   .kpi .l{ font-size:11px; color:var(--gris-sec); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
   .kpi .v{ font-size:20px; font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
@@ -283,6 +284,13 @@
       </div>
       <div class="lector" id="lector">Cargando…</div>
 
+      <div class="panel-t"><h4 id="t-pnl">Si hubieras puesto $100,000 al inicio del tramo</h4><span>Una sola vez, sin aportes. Cuánto habría en la cuenta cada día</span></div>
+      <canvas id="cv-pnl"></canvas>
+      <div class="leg">
+        <span><i style="background:var(--menta)"></i><span id="l-pnl-r">QQQ con la regla</span></span>
+        <span><i style="background:var(--gris-sec)"></i><span id="l-pnl-b">QQQ sin regla, comprar y mantener</span></span>
+      </div>
+
       <div class="panel-t"><h4 id="t-dd">Caída desde el último máximo</h4><span>0% es estar en el máximo. Más abajo, más lejos de él</span></div>
       <canvas id="cv-dd"></canvas>
       <div class="leg">
@@ -307,6 +315,7 @@
 
       <div class="kpis">
         <div class="kpi"><div class="l">Estado</div><div class="v" id="k-estado">—</div><div class="s" id="k-estado-s"></div></div>
+        <div class="kpi"><div class="l">$100,000 al inicio, hoy</div><div class="v menta" id="k-usd-r">—</div><div class="s">sin regla: <b id="k-usd-b">—</b></div></div>
         <div class="kpi"><div class="l">Tu plata, en este tramo</div><div class="v menta" id="k-ret-r">—</div><div class="s">sin regla: <b id="k-ret-b">—</b></div></div>
         <div class="kpi"><div class="l">Peor caída hasta hoy</div><div class="v menta" id="k-dd-r">—</div><div class="s">sin regla: <b id="k-dd-b">—</b></div></div>
         <div class="kpi"><div class="l">Anual en este tramo</div><div class="v menta" id="k-cagr-r">—</div><div class="s">sin regla: <b id="k-cagr-b">—</b></div></div>
@@ -333,7 +342,7 @@
       </div>
       <div class="ctl" style="margin-top:12px"><button id="b-reset">Volver a la regla que usamos (200, 3%, 39, −12, −6)</button></div>
 
-      <div class="panel-t"><h4 id="t-tray">Las 960 versiones en la historia · QQQ</h4><span>$1 al inicio, escala log. La cargada en blanco, las otras 959 de fondo</span></div>
+      <div class="panel-t"><h4 id="t-tray">Las 960 versiones en la historia · QQQ</h4><span>$1 en enero de 1999, escala log. La cargada en blanco, las otras 959 de fondo</span></div>
       <canvas id="cv-tray"></canvas>
       <div class="leg">
         <span><i style="background:var(--crema);height:3px"></i>La cargada</span>
@@ -647,6 +656,44 @@
     }
   }
 
+  /* ---------- dibujo: plata ---------- */
+  var CVL=document.getElementById('cv-pnl'), INV=100000;
+  function fUSD(v){ if(v>=1e6) return '$'+(v/1e6).toLocaleString('en-US',{maximumFractionDigits:v>=1e7?0:1})+'M'; if(v>=1e4) return '$'+Math.round(v/1000)+'k'; return '$'+Math.round(v).toLocaleString('en-US'); }
+  function dibujarPNL(){
+    var o=lienzo(CVL), g=o.g, W=o.W, H=o.H, a=S.a, b=S.b, cur=S.cur;
+    var mT=10, mB=H-18, vR=function(i){ return R.eqR[i]/R.eqR[a]*INV; }, vB=function(i){ return R.eqB[i]/R.eqB[a]*INV; };
+    var lo=Infinity, hi=-Infinity;
+    for(var i=a;i<=b;i++){ var x1=vR(i), x2=vB(i); if(x1<lo) lo=x1; if(x2<lo) lo=x2; if(x1>hi) hi=x1; if(x2>hi) hi=x2; }
+    lo=Math.max(lo, INV*0.005);
+    var log=hi/lo>3, Y;
+    if(log){ var lLo=Math.log(lo)-0.04, lHi=Math.log(hi)+0.04; Y=function(v){ return mT+(1-(Math.log(Math.max(v,lo))-lLo)/(lHi-lLo))*(mB-mT); }; }
+    else { var pad=(hi-lo)*0.06; lo-=pad; hi+=pad; Y=function(v){ return mT+(1-(v-lo)/(hi-lo))*(mB-mT); }; }
+    var Xi=function(i){ return X(i,W); };
+    g.fillStyle='rgba(13,15,20,.55)'; g.fillRect(Xi(cur),0,W-PADR-Xi(cur),H);
+    // rejilla
+    g.textAlign='left'; g.fillStyle=COL.grisOsc;
+    var ticks=[];
+    if(log){ for(var q=0;q<=3;q++) ticks.push(Math.exp(Math.log(lo)+q/3*(Math.log(hi)-Math.log(lo)))); }
+    else { for(var q2=0;q2<=3;q2++) ticks.push(lo+q2/3*(hi-lo)); }
+    ticks.forEach(function(v){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(PADL,y); g.lineTo(W-PADR,y); g.stroke(); g.fillText(fUSD(v), W-PADR+6, y+4); });
+    // línea de los $100,000
+    var y100=Y(INV); if(y100>mT&&y100<mB){ g.strokeStyle='rgba(254,249,243,.25)'; g.setLineDash([3,4]); g.beginPath(); g.moveTo(PADL,y100); g.lineTo(W-PADR,y100); g.stroke(); g.setLineDash([]); g.fillStyle=COL.grisSec; g.font="10px 'Bai Jamjuree'"; g.textAlign='right'; g.fillText('lo que pusiste: $100,000', W-PADR-6, y100-4); g.font="11px 'Bai Jamjuree'"; }
+    function linea(fn,color,ancho){ g.beginPath(); for(var i=a;i<=cur;i++){ var x=Xi(i), y=Y(fn(i)); i===a?g.moveTo(x,y):g.lineTo(x,y); } g.strokeStyle=color; g.lineWidth=ancho; g.stroke(); }
+    linea(vB,COL.grisSec,1.3); linea(vR,COL.menta,1.8);
+    // valores al día de hoy
+    var xr=Xi(cur), yr=Y(vR(cur)), yb=Y(vB(cur));
+    g.fillStyle=COL.menta; g.beginPath(); g.arc(xr,yr,3.5,0,7); g.fill();
+    g.fillStyle=COL.grisSec; g.beginPath(); g.arc(xr,yb,3,0,7); g.fill();
+    g.font="600 11px 'Bai Jamjuree'"; g.textAlign='right';
+    var sep=Math.abs(yr-yb)<14, up=yr<=yb;
+    g.fillStyle=COL.menta; g.fillText(fUSD(vR(cur)), xr-7, yr+(sep?(up?-6:14):4));
+    g.fillStyle=COL.gris; g.fillText(fUSD(vB(cur)), xr-7, yb+(sep?(up?14:-6):4));
+    g.font="11px 'Bai Jamjuree'";
+    g.strokeStyle='rgba(254,249,243,.6)'; g.lineWidth=1; g.beginPath(); g.moveTo(xr,mT); g.lineTo(xr,mB); g.stroke();
+    if(S.hover>=a&&S.hover<=cur&&S.hover!==cur){ var hh=Xi(S.hover); g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,3]); g.beginPath(); g.moveTo(hh,mT); g.lineTo(hh,mB); g.stroke(); g.setLineDash([]); g.fillStyle=COL.crema; g.beginPath(); g.arc(hh,Y(vR(S.hover)),3,0,7); g.fill(); }
+    S._pnl={r:vR,b:vB};
+  }
+
   /* ---------- dibujo: caída ---------- */
   function dibujarDD(){
     var o=lienzo(CVD), g=o.g, W=o.W, H=o.H, a=S.a, b=S.b, cur=S.cur;
@@ -682,7 +729,8 @@
       +' · vs promedio: <b>'+(isFinite(vs)?(vs>=0?'+':'')+vs.toFixed(1)+'%':'—')+'</b> ('+(R.iS[i]===1?'sí':'no')+')'
       +' · vs máximo: <b>'+(isFinite(vm)?vm.toFixed(1)+'%':'—')+'</b> ('+(R.iM[i]===1?'sí':'no')+')'
       +' → '+(R.sig[i]===1?'<b style="color:var(--menta)">invertido</b>':'<b style="color:var(--rojo)">fuera</b>, en efectivo');
-    if(S._dd){ html+='<br>Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
+    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>'+fUSD(S._pnl.r(i))+'</b> · sin regla <b>'+fUSD(S._pnl.b(i))+'</b>'; }
+    if(S._dd){ html+=' · Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
     for(var k=0;k<R.ev.length;k++){
       var e=R.ev[k];
       if(Math.abs(e.i-i)<=1){
@@ -700,6 +748,7 @@
     $('k-estado-s').textContent=dentro?('100% en '+nombre()):'en efectivo, ganando interés';
     var rr=R.eqR[i]/R.eqR[a]-1, rb=R.eqB[i]/R.eqB[a]-1;
     $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=0?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
+    $('k-usd-r').textContent=fUSD(INV*(1+rr)); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent=fUSD(INV*(1+rb));
     var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
     $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v menta'; $('k-dd-b').textContent=fPctNeg(mb);
     // anual y Sharpe del tramo hasta hoy
@@ -749,7 +798,7 @@
   NAV.addEventListener('pointermove', function(ev){ if(!NDRAG) return; moverVentana(NDRAG.a0+(ev.clientX-NDRAG.x0)/NDRAG.w*NDRAG.lim, true); });
   NAV.addEventListener('pointerup', function(){ NDRAG=null; }); NAV.addEventListener('pointercancel', function(){ NDRAG=null; });
   function sincFechas(){ var vi=inputDeYmd(R.d[S.a]), vf=inputDeYmd(R.d[S.b]); if($('t-ini').value!==vi) $('t-ini').value=vi; if($('t-fin').value!==vf) $('t-fin').value=vf; }
-  function dibujar(){ if(!R) return; dibujarPrecio(); dibujarDD(); escribirLector(); kpis(); SCRUB.value=S.cur; pintarNav(); sincFechas(); }
+  function dibujar(){ if(!R) return; dibujarPrecio(); dibujarPNL(); dibujarDD(); escribirLector(); kpis(); SCRUB.value=S.cur; pintarNav(); sincFechas(); }
   ['t-ini','t-fin'].forEach(function(id){ $(id).addEventListener('change', function(){ if(!$('t-ini').value||!$('t-fin').value) return; $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); }); setRango('fechas', true); }); });
 
   /* ---------- resultados completos y malla ---------- */
@@ -764,6 +813,7 @@
     $('t-precio-s').textContent=S.L>1?('La señal se calcula sobre el índice. La plata va en '+nombre()+' ×'+S.L):'La señal se calcula sobre el índice';
     $('t-dd').textContent='Caída desde el último máximo · '+nombre();
     $('l-dd-r').textContent=nombre()+' con la regla'; $('l-dd-b').textContent=nombre()+' sin regla, comprar y mantener';
+    $('l-pnl-r').textContent=nombre()+' con la regla'; $('l-pnl-b').textContent=nombre()+' sin regla, comprar y mantener';
   }
   function mallaInfo(){
     var ml=D.malla[S.A], P=S.P, sel=null, orden=ml.slice().sort(function(p,q){ return q[5]-p[5]; });
@@ -812,7 +862,8 @@
   var PASO=10;
   function trayectos(){
     var key=S.A+'x'+S.L; if(TR.cache[key]) return TR.cache[key];
-    var B=M.base(D,S.A,S.L), ml=D.malla[S.A], lista=[];
+    var B=Object.assign({}, M.base(D,S.A,S.L)), ml=D.malla[S.A], lista=[];
+    B.ini=Math.max(0, idxDesde(B.d, 19990104)); // las 960 trayectorias se ven desde enero de 1999
     ml.forEach(function(r){ lista.push({r:r, t:M.trayecto(B,{sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]},PASO)}); });
     var bh=M.trayecto(B,null,PASO), lo=Infinity, hi=-Infinity;
     lista.forEach(function(e){ for(var i=0;i<e.t.v.length;i++){ var v=e.t.v[i]; if(v<lo) lo=v; if(v>hi) hi=v; } });
@@ -1059,7 +1110,7 @@
   $('b-reset').addEventListener('click', function(){ setParams({sma:200,banda:3,sem:39,x:12,y:6}); });
 
   function idxDeX(cv, x){ var W=cv.clientWidth, f=(x-PADL)/Math.max(1,W-PADL-PADR); return Math.max(S.a, Math.min(S.b, Math.round(S.a+f*(S.b-S.a)))); }
-  [CVP,CVD].forEach(function(cv){
+  [CVP,CVL,CVD].forEach(function(cv){
     cv.addEventListener('mousemove', function(ev){ var r=cv.getBoundingClientRect(); S.hover=Math.min(S.cur, idxDeX(cv, ev.clientX-r.left)); if(!S.playing) dibujar(); else escribirLector(); });
     cv.addEventListener('mouseleave', function(){ S.hover=-1; if(!S.playing) dibujar(); });
     cv.addEventListener('click', function(ev){ var r=cv.getBoundingClientRect(); parar(); ir(idxDeX(cv, ev.clientX-r.left)); });
