@@ -102,5 +102,35 @@
     }
     return {v:Float32Array.from(out), i:idx};
   }
-  root.MOTOR={simular:simular, base:base, trayecto:trayecto};
+  /* Métricas de una versión (o sin regla con P=null) entre los índices i0 e i1, inclusive.
+     La señal se corre desde el inicio de la serie; las cuentas solo se hacen dentro del período. */
+  function metricas(B, P, i0, i1){
+    var n=B.n, c=B.c, rAct=B.rAct, rTb=B.rTb, i;
+    var cap=1, pico=1, dd=0, sEx=0, sEx2=0, k=0, cambios=0, exp=0;
+    if(!P){
+      for(i=i0+1;i<=i1;i++){ cap*=1+rAct[i]; if(cap>pico) pico=cap; var d0=cap/pico-1; if(d0<dd) dd=d0; var e0=rAct[i]-rTb[i]; sEx+=e0; sEx2+=e0*e0; k++; }
+    } else {
+      var w=P.sem*5, b=P.banda/100, X=-P.x/100, Y=-P.y/100, m=P.sma;
+      var sum=0, dq=new Int32Array(n), hd=0, tl=0, inS=1, inM=1, sig2=1, sig1=1, pos=1, posPrev=1, sma, mx;
+      for(i=0;i<=i1;i++){
+        sum+=c[i]; if(i>=m) sum-=c[i-m];
+        sma= i>=m-1 ? sum/m : NaN;
+        while(tl>hd && c[dq[tl-1]]<=c[i]) tl--;
+        dq[tl++]=i; while(dq[hd]<=i-w) hd++;
+        mx= i>=w-1 ? c[dq[hd]] : NaN;
+        if(sma===sma){ if(inS && c[i]<sma*(1-b)) inS=0; else if(!inS && c[i]>sma*(1+b)) inS=1; }
+        if(mx===mx){ var dist=c[i]/mx-1; if(inM && dist<X) inM=0; else if(!inM && dist>=Y) inM=1; }
+        var sig=(inS&&inM)?1:0;
+        posPrev=pos; pos= i>=2 ? sig2 : 1; sig2=sig1; sig1=sig;
+        if(i>i0){
+          var r=pos*rAct[i]+(1-pos)*rTb[i]-Math.abs(pos-posPrev)*0.0005;
+          cap*=1+r; if(cap>pico) pico=cap; var d1=cap/pico-1; if(d1<dd) dd=d1;
+          var e1=r-rTb[i]; sEx+=e1; sEx2+=e1*e1; k++; if(pos!==posPrev) cambios++; exp+=pos;
+        }
+      }
+    }
+    var mean=sEx/k, sd=Math.sqrt(Math.max(0,(sEx2-k*mean*mean)/(k-1)));
+    return {sharpe: sd>0?mean/sd*Math.sqrt(252):0, cagr:Math.pow(cap,252/k)-1, dd:dd, cambiosAnio:cambios/(k/252), exposicion:P?exp/k:1, fin:cap};
+  }
+  root.MOTOR={simular:simular, base:base, trayecto:trayecto, metricas:metricas};
 })(typeof window!=='undefined'?window:module.exports);

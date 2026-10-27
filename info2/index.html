@@ -111,6 +111,15 @@
   .scrub input::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--menta); cursor:pointer; border:2px solid var(--tinta); }
   .scrub .f{ font-size:12.5px; color:var(--gris); min-width:92px; text-align:right; font-variant-numeric:tabular-nums; }
 
+  .nav{ position:relative; height:26px; margin-top:8px; border-radius:8px; background:var(--tinta2); border:1px solid var(--bd); overflow:hidden; cursor:pointer; user-select:none; touch-action:none; display:none; }
+  .nav.ver{ display:block; }
+  .nav .yr{ position:absolute; top:0; bottom:0; width:1px; background:rgba(174,180,190,.12); }
+  .nav .yr span{ position:absolute; left:3px; top:6px; font-size:10px; color:var(--gris-sec); }
+  .nav .ventana{ position:absolute; top:0; bottom:0; background:rgba(99,252,175,.22); border-left:2px solid var(--menta); border-right:2px solid var(--menta); cursor:grab; }
+  .nav .ventana:active{ cursor:grabbing; }
+  .nav-txt{ font-size:11.5px; color:var(--gris-sec); margin-top:5px; display:none; }
+  .nav-txt.ver{ display:block; }
+
   /* kpis vivos */
   .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
   @media(min-width:640px){ .kpis{ grid-template-columns:repeat(3,1fr); } }
@@ -161,6 +170,24 @@
   @media(min-width:640px){ .mapas{ grid-template-columns:1fr 1fr; } }
   .mapa h4{ font-size:12.5px; font-weight:700; color:var(--crema); }
   .mapa canvas{ height:200px; margin-top:6px; border-radius:12px; background:var(--tinta2); cursor:pointer; }
+  #cv-vec{ height:360px; margin-top:10px; border-radius:12px; background:var(--tinta2); cursor:crosshair; }
+  @media(max-width:600px){ #cv-vec{ height:320px; } }
+  .fechas{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; }
+  .fechas label{ font-size:12px; color:var(--gris-sec); display:flex; align-items:center; gap:6px; }
+  .fechas input[type=date]{ font-family:inherit; font-size:13px; color:var(--crema); background:var(--tinta2); border:1px solid var(--bd); border-radius:10px; padding:7px 9px; color-scheme:dark; }
+  .fechas input[type=date]:focus{ outline:none; border-color:var(--menta); }
+  .top3{ display:grid; gap:8px; margin-top:12px; }
+  @media(min-width:640px){ .top3{ grid-template-columns:repeat(3,1fr); } }
+  .top3 button{ text-align:left; font-family:inherit; cursor:pointer; background:var(--tinta2); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; color:var(--gris); min-width:0; }
+  .top3 button:hover{ border-color:var(--menta); }
+  .top3 button.on{ border-color:var(--crema); }
+  .top3 .r{ display:flex; align-items:baseline; gap:8px; }
+  .top3 .r b{ font-size:22px; color:var(--menta); font-weight:700; }
+  .top3 .r span{ font-size:12.5px; color:var(--crema); font-weight:600; line-height:1.35; }
+  .top3 .d{ font-size:12px; color:var(--gris-sec); margin-top:6px; line-height:1.45; font-variant-numeric:tabular-nums; }
+  .top3 .d b{ color:var(--gris); font-weight:600; }
+  .concl{ margin-top:12px; border-radius:12px; border:1px solid rgba(99,252,175,.4); background:rgba(99,252,175,.06); padding:10px 12px; font-size:13px; line-height:1.5; color:var(--gris); }
+  .concl b{ color:var(--crema); }
   .tip{ position:absolute; pointer-events:none; z-index:5; background:#0d0f14; border:1px solid var(--bd); border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.45; color:var(--gris); max-width:260px; display:none; box-shadow:0 8px 24px rgba(0,0,0,.4); }
   .tip b{ color:var(--crema); }
   .rel{ position:relative; }
@@ -269,6 +296,8 @@
         <div class="vel" id="vel"><button data-v="0.5">½×</button><button data-v="1">1×</button><button data-v="2">2×</button><button data-v="4" class="on">4×</button></div>
       </div>
       <div class="scrub"><input type="range" id="scrub" min="0" max="100" value="0" step="1" aria-label="Tiempo"><div class="f" id="fecha"></div></div>
+      <div class="nav" id="nav" aria-label="Toda la historia"><div class="ventana" id="nav-win"></div></div>
+      <div class="nav-txt" id="nav-txt">Arrastrá la ventana verde para recorrer la historia con este zoom. Lo que ya está dibujado no se borra.</div>
 
       <div class="kpis">
         <div class="kpi"><div class="l">Estado</div><div class="v" id="k-estado">—</div><div class="s" id="k-estado-s"></div></div>
@@ -342,6 +371,32 @@
       </div>
       <p class="nota">Cada celda promedia todas las versiones que comparten esos dos valores. Una meseta pareja, sin un pico aislado, es la señal de que la idea funciona y no solo un número. Tocá una celda para cargar esos dos valores.</p>
       <div class="tip" id="tip"></div>
+    </div>
+
+    <h3 style="margin-top:28px; font-size:19px; font-weight:700; line-height:1.2">¿Cuál es la mejor zona en el período que vos querás?</h3>
+    <p class="lede">El mejor punto aislado casi siempre es suerte. Lo que vale es una zona donde las vecinas también funcionan. Elegí un período y se recalculan las 960 versiones ahí.</p>
+    <div class="card rel">
+      <div class="fechas">
+        <label>Desde <input type="date" id="v-ini"></label>
+        <label>Hasta <input type="date" id="v-fin"></label>
+        <span class="sep" style="width:1px;height:18px;background:var(--bd)"></span>
+        <div class="ctl" id="v-atajos" style="margin-top:0">
+          <button data-y="5">Últimos 5 años</button><button data-y="10">10</button><button data-y="15">15</button><button data-y="20">20</button><button data-y="2000">Desde 2000</button><button data-y="todo">Desde 1987</button>
+        </div>
+      </div>
+      <div class="panel-t"><h4 id="t-vec">Pico contra meseta · QQQ</h4><span>Cada punto es una versión. Derecha: buena ella. Arriba: buenas sus vecinas</span></div>
+      <canvas id="cv-vec"></canvas>
+      <div class="leg">
+        <span><i class="sq" style="background:var(--menta);opacity:.6;border-radius:50%"></i>Una versión</span>
+        <span><i class="sq" style="background:var(--ambar);border-radius:50%"></i>Los tres mejores vecindarios</span>
+        <span><i class="sq" style="background:var(--crema);border-radius:50%"></i>La cargada</span>
+        <span><i class="dash" style="color:var(--gris)"></i>Vecinas igual de buenas que ella</span>
+      </div>
+      <div class="lector" id="lector-vec">Calculando…</div>
+      <div class="top3" id="top3"></div>
+      <div class="concl" id="concl"></div>
+      <p class="nota">Vecindario: la versión y todas las que están a un paso en cualquiera de los cinco parámetros, hasta 243 en total. Su valor es el Sharpe promedio del grupo en el período. En los bordes de la malla hay menos vecinas. Tocá un vecindario para cargarlo en el video.</p>
+      <div class="tip"></div>
     </div>
   </section>
 
@@ -648,7 +703,38 @@
     $('k-ord').textContent=String(nS+nE); $('k-ord-s').textContent=nS+' salidas · '+nE+' entradas';
     var yrs=(i-a)/252; $('k-ret-r').title=yrs>0.5?('equivale a '+fPct(Math.pow(1+rr,1/yrs)-1,1)+' anual'):'';
   }
-  function dibujar(){ if(!R) return; dibujarPrecio(); dibujarDD(); escribirLector(); kpis(); SCRUB.value=S.cur; }
+  var NAV=$('nav'), NAVW=$('nav-win');
+  function pintarNav(){
+    var lim=R.n-1-R.iniV, span=S.b-S.a, ver=span<lim-5;
+    NAV.classList.toggle('ver', ver); $('nav-txt').classList.toggle('ver', ver);
+    if(!ver) return;
+    NAVW.style.left=((S.a-R.iniV)/lim*100)+'%'; NAVW.style.width=(span/lim*100)+'%';
+    if(!NAV.dataset.anios){ // marcas de año, una vez por activo
+      NAV.querySelectorAll('.yr').forEach(function(x){ x.remove(); });
+      var y0=Math.floor(R.d[R.iniV]/10000), y1=Math.floor(R.d[R.n-1]/10000), paso=NAV.clientWidth<520?10:(y1-y0)>25?5:(y1-y0)>12?3:1;
+      for(var yy=Math.ceil(y0/paso)*paso;yy<=y1;yy+=paso){ var i=idxFecha(yy*10000+101); var el=document.createElement('div'); el.className='yr'; el.style.left=((i-R.iniV)/lim*100)+'%'; el.innerHTML='<span>'+yy+'</span>'; NAV.insertBefore(el, NAVW); }
+      NAV.dataset.anios=S.A;
+    }
+  }
+  function moverVentana(aNuevo, dibujarTodo){
+    var span=S.b-S.a, lim=R.n-1-R.iniV;
+    aNuevo=Math.max(R.iniV, Math.min(R.n-1-span, Math.round(aNuevo)));
+    if(aNuevo===S.a) return;
+    S.a=aNuevo; S.b=aNuevo+span; S.rango='zoom'; S.hover=-1;
+    $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
+    SCRUB.min=S.a; SCRUB.max=S.b;
+    if(dibujarTodo||S.cur<S.a||S.cur>S.b){ S.cur=S.b; S.curF=S.b; }
+    dibujar();
+  }
+  var NDRAG=null;
+  NAV.addEventListener('pointerdown', function(ev){
+    parar(); var rc=NAV.getBoundingClientRect(), lim=R.n-1-R.iniV, span=S.b-S.a;
+    if(ev.target===NAVW){ NDRAG={x0:ev.clientX, a0:S.a, w:rc.width, lim:lim}; NAV.setPointerCapture(ev.pointerId); }
+    else { var f=(ev.clientX-rc.left)/rc.width; moverVentana(R.iniV+f*lim-span/2, true); }
+  });
+  NAV.addEventListener('pointermove', function(ev){ if(!NDRAG) return; moverVentana(NDRAG.a0+(ev.clientX-NDRAG.x0)/NDRAG.w*NDRAG.lim, true); });
+  NAV.addEventListener('pointerup', function(){ NDRAG=null; }); NAV.addEventListener('pointercancel', function(){ NDRAG=null; });
+  function dibujar(){ if(!R) return; dibujarPrecio(); dibujarDD(); escribirLector(); kpis(); SCRUB.value=S.cur; pintarNav(); }
 
   /* ---------- resultados completos y malla ---------- */
   function resultados(){
@@ -675,7 +761,7 @@
     if(S.L>1) html+='<br><span style="color:var(--gris-sec)">La malla está calculada sobre '+S.A+' sin apalancar. La señal es la misma.</span>';
     $('pos-malla').innerHTML=html;
     $('t-malla').textContent=S.A+' · Sharpe contra peor caída, '+Math.floor(R.d[R.ini]/10000)+' a '+Math.floor(R.d[R.n-1]/10000);
-    dibujarMalla(); dibujarMapas(); dibujarTray();
+    dibujarMalla(); dibujarMapas(); dibujarTray(); if(VEC.res){ dibujarVec(); escribirVec(); }
     $('lector-malla').innerHTML='Cargada: <b>'+descP(s)+'</b> → Sharpe '+s[5].toFixed(2)+' · '+fPct(s[6],1)+' anual · peor caída '+fPctNeg(s[7]);
   }
   function descP(r){ return 'promedio '+r[0]+' · banda '+r[1]+'% · máximo '+r[2]+' sem · sale −'+r[3]+'% · vuelve −'+r[4]+'%'; }
@@ -767,6 +853,104 @@
   CVT.addEventListener('mouseleave', function(){ TR.hover=-1; dibujarTray(); });
   CVT.addEventListener('touchmove', function(ev){ hoverTray(ev.touches[0].clientX); }, {passive:true});
 
+  /* ---------- vecindarios en un período editable ---------- */
+  var CVV=document.getElementById('cv-vec'), VEC={cache:{}, hover:null, res:null, pts:[], i0:0, i1:0};
+  var GRID={sma:[100,150,200,250],banda:[1,2,3,5],sem:[26,39,52],x:[8,10,12,15,18],y:[2,4,6,8]}, KS=['sma','banda','sem','x','y'];
+  var VECINOS=null; // índice de vecinas por combinación (igual para QQQ y SPY)
+  function claveP(r){ return r[0]+','+r[1]+','+r[2]+','+r[3]+','+r[4]; }
+  function armarVecinos(ml){
+    var pos={}; ml.forEach(function(r,i){ pos[claveP(r)]=i; });
+    VECINOS=ml.map(function(r){ var out=[]; (function rec(i,acc){ if(i===5){ out.push(pos[acc.join(',')]); return; } var g=GRID[KS[i]], j=g.indexOf(r[i]); for(var d=-1;d<=1;d++){ if(j+d>=0&&j+d<g.length) rec(i+1,acc.concat([g[j+d]])); } })(0,[]); return out; });
+  }
+  function ymdDeInput(v){ return v?+v.replace(/-/g,''):0; }
+  function inputDeYmd(n){ var t=String(n); return t.slice(0,4)+'-'+t.slice(4,6)+'-'+t.slice(6,8); }
+  function idxDesde(d,f){ for(var i=0;i<d.length;i++) if(d[i]>=f) return i; return d.length-1; }
+  function idxHasta(d,f){ for(var i=d.length-1;i>=0;i--) if(d[i]<=f) return i; return 0; }
+  function calcularVec(){
+    var B=M.base(D,S.A,S.L), d=B.d, ml=D.malla[S.A];
+    var f0=ymdDeInput($('v-ini').value), f1=ymdDeInput($('v-fin').value);
+    if(!f0||!f1) return;
+    var i0=Math.max(B.ini-0, idxDesde(d,f0)), i1=idxHasta(d,f1);
+    i0=Math.max(idxDesde(d,D.video[S.A]), idxDesde(d,f0));
+    if(i1-i0<252){ $('lector-vec').innerHTML='El período tiene que ser de al menos un año.'; $('top3').innerHTML=''; $('concl').innerHTML=''; lienzo(CVV); return; }
+    var key=S.A+'x'+S.L+'|'+i0+'|'+i1;
+    if(!VECINOS) armarVecinos(ml);
+    var res=VEC.cache[key];
+    if(!res){
+      var lista=ml.map(function(r){ return {r:r, m:M.metricas(B,{sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]},i0,i1)}; });
+      lista.forEach(function(e,i){ var v=VECINOS[i], sum=0; v.forEach(function(j){ sum+=lista[j].m.sharpe; }); e.vec=sum/v.length; e.nv=v.length; });
+      var orden=lista.slice().sort(function(a,b){ return b.vec-a.vec; });
+      var mejorSolo=lista.slice().sort(function(a,b){ return b.m.sharpe-a.m.sharpe; })[0];
+      res={lista:lista, top:orden.slice(0,3), mejorSolo:mejorSolo, bh:M.metricas(B,null,i0,i1), i0:i0, i1:i1};
+      VEC.cache[key]=res;
+    }
+    VEC.res=res; VEC.i0=i0; VEC.i1=i1;
+    dibujarVec(); escribirVec();
+  }
+  var VPL=44, VPR=12, VPT=12, VPB=28;
+  function dibujarVec(){
+    var res=VEC.res; if(!res) return;
+    var o=lienzo(CVV), g=o.g, W=o.W, H=o.H, L=res.lista;
+    var xs=L.map(function(e){ return e.m.sharpe; }), ys=L.map(function(e){ return e.vec; });
+    var lo=Math.min(Math.min.apply(null,xs),Math.min.apply(null,ys)), hi=Math.max(Math.max.apply(null,xs),Math.max.apply(null,ys));
+    var pad=(hi-lo)*0.06||0.1; lo-=pad; hi+=pad;
+    var X=function(v){ return VPL+(v-lo)/(hi-lo)*(W-VPL-VPR); }, Y=function(v){ return VPT+(1-(v-lo)/(hi-lo))*(H-VPT-VPB); };
+    g.fillStyle=COL.grisOsc; g.strokeStyle='rgba(174,180,190,.1)';
+    var paso=(hi-lo)>2?0.5:(hi-lo)>0.8?0.2:0.1;
+    for(var t=Math.ceil(lo/paso)*paso;t<=hi;t+=paso){ var x=X(t), y=Y(t); g.beginPath(); g.moveTo(x,VPT); g.lineTo(x,H-VPB); g.stroke(); g.beginPath(); g.moveTo(VPL,y); g.lineTo(W-VPR,y); g.stroke(); g.textAlign='center'; g.fillText(t.toFixed(1), x, H-VPB+14); g.textAlign='right'; g.fillText(t.toFixed(1), VPL-5, y+4); }
+    g.textAlign='center'; g.fillText('Sharpe de la versión (más a la derecha, mejor ella)', (VPL+W-VPR)/2, H-3);
+    g.save(); g.translate(10,(VPT+H-VPB)/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText('Sharpe promedio de sus vecinas (más arriba, mejor zona)', 0, 0); g.restore();
+    g.strokeStyle=COL.gris; g.setLineDash([5,4]); g.lineWidth=1; g.beginPath(); g.moveTo(X(lo),Y(lo)); g.lineTo(X(hi),Y(hi)); g.stroke(); g.setLineDash([]);
+    // sin regla
+    var bx=X(res.bh.sharpe); if(bx>VPL&&bx<W-VPR){ g.strokeStyle=COL.rojo; g.setLineDash([5,4]); g.beginPath(); g.moveTo(bx,VPT); g.lineTo(bx,H-VPB); g.stroke(); g.setLineDash([]); g.fillStyle=COL.rojo; g.textAlign='left'; g.fillText('sin regla '+res.bh.sharpe.toFixed(2), bx+4, H-VPB-6); }
+    VEC.pts=[];
+    L.forEach(function(e){ var x=X(e.m.sharpe), y=Y(e.vec); VEC.pts.push({x:x,y:y,e:e}); g.fillStyle=(e===VEC.hover)?COL.crema:'rgba(99,252,175,.5)'; g.beginPath(); g.arc(x,y,e===VEC.hover?5:3,0,7); g.fill(); });
+    // los tres mejores vecindarios
+    res.top.forEach(function(e,i){ var x=X(e.m.sharpe), y=Y(e.vec); g.fillStyle=COL.ambar; g.beginPath(); g.arc(x,y,7,0,7); g.fill(); g.fillStyle='#0d0f14'; g.textAlign='center'; g.font="700 10px 'Bai Jamjuree'"; g.fillText(String(i+1), x, y+3.5); g.font="11px 'Bai Jamjuree'"; });
+    // la cargada
+    var sel=L.filter(function(e){ var r=e.r, P=S.P; return r[0]===P.sma&&r[1]===P.banda&&r[2]===P.sem&&r[3]===P.x&&r[4]===P.y; })[0];
+    if(sel){ var sx=X(sel.m.sharpe), sy=Y(sel.vec); g.strokeStyle=COL.crema; g.lineWidth=2; g.beginPath(); g.arc(sx,sy,8,0,7); g.stroke(); g.fillStyle=COL.crema; g.beginPath(); g.arc(sx,sy,3.5,0,7); g.fill(); g.textAlign=sx>W*0.6?'right':'left'; g.font="600 11px 'Bai Jamjuree'"; g.fillText('la cargada', sx+(sx>W*0.6?-12:12), sy+4); }
+    // el mejor punto aislado
+    var ms=res.mejorSolo, mx=X(ms.m.sharpe), my=Y(ms.vec); g.strokeStyle=COL.rojo; g.lineWidth=1.5; g.beginPath(); g.arc(mx,my,7,0,7); g.stroke(); g.fillStyle=COL.rojo; g.textAlign=mx>W*0.6?'right':'left'; g.font="600 10.5px 'Bai Jamjuree'"; g.fillText('el mejor punto solo', mx+(mx>W*0.6?-11:11), my+16);
+    $('t-vec').textContent='Pico contra meseta · '+nombre()+' · '+fFecha(D[S.A].d[res.i0])+' a '+fFecha(D[S.A].d[res.i1]);
+  }
+  function escribirVec(){
+    var res=VEC.res, L=res.lista, ganan=L.filter(function(e){ return e.m.sharpe>res.bh.sharpe; }).length;
+    $('lector-vec').innerHTML='Período: <b>'+fFecha(D[S.A].d[res.i0])+' a '+fFecha(D[S.A].d[res.i1])+'</b> · '+nombre()+' sin regla: Sharpe <b>'+res.bh.sharpe.toFixed(2)+'</b>, '+fPct(res.bh.cagr,1)+' anual, caída '+fPctNeg(res.bh.dd)+' · <b>'+Math.round(ganan/9.6)+'%</b> de las 960 versiones le ganan.';
+    var html='';
+    res.top.forEach(function(e,i){
+      var r=e.r, on=(r[0]===S.P.sma&&r[1]===S.P.banda&&r[2]===S.P.sem&&r[3]===S.P.x&&r[4]===S.P.y);
+      html+='<button data-k="'+claveP(r)+'" class="'+(on?'on':'')+'"><div class="r"><b>'+(i+1)+'</b><span>promedio '+r[0]+' · banda '+r[1]+'%<br>máximo '+r[2]+' sem · sale −'+r[3]+'% · vuelve −'+r[4]+'%</span></div>'
+        +'<div class="d">Vecindario: Sharpe <b>'+e.vec.toFixed(2)+'</b> ('+e.nv+' vecinas)<br>Ella sola: Sharpe <b>'+e.m.sharpe.toFixed(2)+'</b> · <b>'+fPct(e.m.cagr,1)+'</b> anual · caída <b>'+fPctNeg(e.m.dd)+'</b> · '+e.m.cambiosAnio.toFixed(1)+' órdenes/año</div></button>';
+    });
+    $('top3').innerHTML=html;
+    var t=res.top[0], ms=res.mejorSolo, mismo=(t===ms);
+    var c='<b>Conclusión:</b> en este período la mejor zona está en <b>'+descP(t.r)+'</b> (vecindario '+t.vec.toFixed(2)+'). ';
+    c+= mismo ? 'Y además es el mejor punto aislado: pico y meseta coinciden.' : 'El mejor punto aislado es <b>'+descP(ms.r)+'</b> con Sharpe '+ms.m.sharpe.toFixed(2)+', pero sus vecinas promedian '+ms.vec.toFixed(2)+': '+(ms.vec<t.vec-0.03?'es un pico, no una zona.':'está cerca de la meseta.');
+    var cargada=L.filter(function(e){ var r=e.r, P=S.P; return r[0]===P.sma&&r[1]===P.banda&&r[2]===P.sem&&r[3]===P.x&&r[4]===P.y; })[0];
+    if(cargada){ var orden=L.slice().sort(function(a,b){ return b.vec-a.vec; }), puesto=orden.indexOf(cargada)+1; c+=' La cargada ('+descP(cargada.r)+') queda en el puesto <b>'+puesto+' de 960</b> por vecindario ('+cargada.vec.toFixed(2)+') y Sharpe propio '+cargada.m.sharpe.toFixed(2)+'.'; }
+    $('concl').innerHTML=c;
+  }
+  function cercaVec(ev){ var rc=CVV.getBoundingClientRect(), x=ev.clientX-rc.left, y=ev.clientY-rc.top, best=null, bd=144; VEC.pts.forEach(function(p){ var d=(p.x-x)*(p.x-x)+(p.y-y)*(p.y-y); if(d<bd){ bd=d; best=p; } }); return best; }
+  function tipVec(p){ var e=p.e; return '<b>'+descP(e.r)+'</b><br>Vecindario: Sharpe '+e.vec.toFixed(2)+' ('+e.nv+' vecinas)<br>Ella sola: Sharpe '+e.m.sharpe.toFixed(2)+' · '+fPct(e.m.cagr,1)+' anual · caída '+fPctNeg(e.m.dd)+'<br><span style="color:var(--gris-sec)">clic para cargarla</span>'; }
+  CVV.addEventListener('mousemove', function(ev){ var p=cercaVec(ev), h=p?p.e:null; if(h!==VEC.hover){ VEC.hover=h; dibujarVec(); } if(p) tip(CVV, ev, tipVec(p)); else CVV.closest('.rel').querySelector('.tip').style.display='none'; });
+  CVV.addEventListener('mouseleave', function(){ CVV.closest('.rel').querySelector('.tip').style.display='none'; if(VEC.hover){ VEC.hover=null; dibujarVec(); } });
+  CVV.addEventListener('click', function(ev){ var p=cercaVec(ev); if(!p) return; var r=p.e.r; setParams({sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]}); });
+  CVV.addEventListener('touchstart', function(ev){ var t=ev.touches[0], p=cercaVec(t); if(p) tip(CVV, t, tipVec(p)); }, {passive:true});
+  $('top3').addEventListener('click', function(ev){ var b=ev.target.closest('button'); if(!b) return; var v=b.dataset.k.split(',').map(Number); setParams({sma:v[0],banda:v[1],sem:v[2],x:v[3],y:v[4]}); });
+  function periodoAtajo(y){
+    var d=D[S.A].d, fin=d[d.length-1], ini;
+    if(y==='todo') ini=D.video[S.A]; else if(y==='2000') ini=D.inicio[S.A]; else { ini=fin-(+y)*10000; }
+    ini=Math.max(ini, D.video[S.A]);
+    $('v-ini').value=inputDeYmd(ini); $('v-fin').value=inputDeYmd(fin);
+    $('v-atajos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x.dataset.y===String(y)); });
+    calcularConAviso();
+  }
+  function calcularConAviso(){ $('lector-vec').innerHTML='Calculando las 960 versiones en este período…'; setTimeout(calcularVec, 20); }
+  $('v-atajos').addEventListener('click', function(ev){ var b=ev.target.closest('button'); if(!b) return; periodoAtajo(b.dataset.y); });
+  ['v-ini','v-fin'].forEach(function(id){ $(id).addEventListener('change', function(){ $('v-atajos').querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); }); calcularConAviso(); }); });
+  function limitesFechas(){ var d=D[S.A].d; $('v-ini').min=inputDeYmd(D.video[S.A]); $('v-ini').max=inputDeYmd(d[d.length-1]); $('v-fin').min=inputDeYmd(D.video[S.A]); $('v-fin').max=inputDeYmd(d[d.length-1]); }
+
   var MAPAS={h1:null,h2:null};
   function mediana(arr){ var s=arr.slice().sort(function(p,q){ return p-q; }); return s[Math.floor(s.length/2)]; }
   function dibujarMapa(cv, filas, cols, kf, kc, nf, nc, etqF, etqC, key){
@@ -821,7 +1005,7 @@
     a=Math.max(R.iniV, Math.min(R.n-1-nuevo, a));
     S.a=a; S.b=a+nuevo; S.rango='zoom'; S.hover=-1;
     $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
-    SCRUB.min=S.a; SCRUB.max=S.b; dibujar();
+    SCRUB.min=S.a; SCRUB.max=S.b; parar(); dibujar();
   }
   $('b-mas').addEventListener('click', function(){ zoomVista(0.5); });
   $('b-menos').addEventListener('click', function(){ zoomVista(2); });
@@ -843,7 +1027,7 @@
     var b=e.target.closest('button'); if(!b) return;
     S.A=b.dataset.a; S.L=+b.dataset.l;
     $('activos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
-    var r=S.rango==='zoom'?'todo':S.rango; parar(); simular(); setRango(r, true);
+    var r=S.rango==='zoom'?'todo':S.rango; parar(); simular(); NAV.dataset.anios=''; setRango(r, true); limitesFechas(); calcularConAviso();
   });
   $('rangos').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
@@ -869,11 +1053,12 @@
 
   // malla: hover y clic
   function tip(cv, ev, html){
-    var card=cv.closest('.rel'), rc=card.getBoundingClientRect();
-    TIP.innerHTML=html; TIP.style.display='block';
+    var card=cv.closest('.rel'), rc=card.getBoundingClientRect(), T=card.querySelector('.tip')||TIP;
+    document.querySelectorAll('.tip').forEach(function(x){ if(x!==T) x.style.display='none'; });
+    T.innerHTML=html; T.style.display='block';
     var x=ev.clientX-rc.left+14, y=ev.clientY-rc.top+14;
     if(x+270>rc.width) x=ev.clientX-rc.left-274; if(x<0) x=4;
-    TIP.style.left=x+'px'; TIP.style.top=y+'px';
+    T.style.left=x+'px'; T.style.top=y+'px';
   }
   function cerca(ev){
     var rc=CVM.getBoundingClientRect(), x=ev.clientX-rc.left, y=ev.clientY-rc.top, best=null, bd=144;
@@ -906,10 +1091,10 @@
     cv.addEventListener('click', function(ev){ var c=celdaEn(cv,key,ev); if(!c) return; var o={}; o[MAPAS[key].nf]=c.f; o[MAPAS[key].nc]=c.c; setParams(o); });
   });
 
-  window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); dibujarTray(); });
+  window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); dibujarTray(); if(VEC.res) dibujarVec(); });
 
   // arranque
-  simular(); setRango('todo', false); pintarParams();
+  simular(); setRango('todo', false); pintarParams(); limitesFechas(); periodoAtajo('2000');
 })();
 </script>
 </body>
