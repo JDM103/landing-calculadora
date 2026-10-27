@@ -254,7 +254,8 @@
       </div>
       <div class="ctl" id="rangos">
         <span class="lbl">Tramo</span>
-        <button data-r="todo" class="on">Todo</button>
+        <button data-r="19990101,99999999" class="on">Desde 1999</button>
+        <button data-r="todo">Todo</button>
         <button data-r="19870101,19881231">1987</button>
         <button data-r="19990101,20031231">1999 a 2003</button>
         <button data-r="20070601,20091231">2008</button>
@@ -490,7 +491,7 @@
   var IDX={QQQ:'Nasdaq 100', SPY:'S&P 500'};
   var MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   var BASE={sma:200,banda:3,sem:39,x:12,y:6};
-  var S={A:'QQQ', L:1, P:{sma:200,banda:3,sem:39,x:12,y:6}, a:0, b:0, cur:0, curF:0, playing:false, vel:4, hover:-1, rango:'todo'};
+  var S={A:'QQQ', L:1, P:{sma:200,banda:3,sem:39,x:12,y:6}, a:0, b:0, cur:0, curF:0, playing:false, vel:4, hover:-1, rango:'19990101,99999999'};
   var R=null, raf=null, tPrev=null;
 
   var CVP=document.getElementById('cv-precio'), CVD=document.getElementById('cv-dd'), CVM=document.getElementById('cv-malla'), H1=document.getElementById('cv-h1'), H2=document.getElementById('cv-h2');
@@ -1109,7 +1110,7 @@
   window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); dibujarTray(); if(VEC.res) dibujarVec(); });
 
   // arranque
-  simular(); setRango('todo', false); pintarParams(); limitesFechas(); periodoAtajo('2000');
+  simular(); setRango('19990101,99999999', false); pintarParams(); limitesFechas(); periodoAtajo('2000');
 })();
 </script>
 </body>
