@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atalaya Momentum · Resumen para junta directiva</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Resumen ejecutivo de Atalaya Momentum para junta directiva.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0d0f14; --tinta2:#15191E; --carta:#171c24; --bd:#262d38;
+    --menta:#63FCAF; --peri:#8B9BFF; --crema:#FEF9F3; --gris:#D9DCE1; --gris-sec:#8E96A3;
+    --rojo:#F07A6B; --ambar:#F5C26B;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; -webkit-font-smoothing:antialiased; }
+  body{ overflow-x:hidden; }
+  b,strong{ font-weight:700; }
+  button{ font-family:inherit; }
+  canvas{ display:block; width:100%; }
+
+  .deck{ display:flex; flex-direction:column; align-items:center; gap:24px; padding:24px 16px 140px; counter-reset:lam; }
+  .slide{ position:relative; width:100%; max-width:1280px; background:var(--carta); border:1px solid var(--bd); border-radius:14px;
+    padding:4.2cqw 4.4cqw 4cqw; display:flex; flex-direction:column; overflow:hidden; container-type:inline-size; counter-increment:lam; }
+  @media(min-width:700px){ .slide{ aspect-ratio:16/9; } }
+  .slide::after{ content:"Empowered Investor · Atalaya Momentum · " counter(lam); position:absolute; right:4.4cqw; bottom:2.2cqw; font-size:max(10px,1cqw); color:var(--gris-sec); letter-spacing:.04em; }
+  .slide.portada::after{ content:none; }
+
+  .eyebrow{ font-size:max(11px,1.15cqw); letter-spacing:.14em; text-transform:uppercase; color:var(--menta); font-weight:600; margin-bottom:max(8px,1cqw); }
+  h1{ font-size:max(30px,5.6cqw); font-weight:700; line-height:1.02; letter-spacing:-.025em; }
+  h1 em{ font-style:normal; color:var(--menta); }
+  h2{ font-size:max(22px,3.1cqw); font-weight:700; line-height:1.12; letter-spacing:-.02em; margin-bottom:max(10px,1.4cqw); }
+  h2 span{ color:var(--gris-sec); font-weight:500; }
+  p{ font-size:max(14px,1.5cqw); line-height:1.45; color:var(--gris); }
+  p b{ color:var(--crema); }
+  .sub{ font-size:max(16px,2cqw); line-height:1.35; color:var(--gris); max-width:72%; margin-top:max(12px,1.6cqw); }
+  .meta{ margin-top:auto; display:flex; gap:max(14px,2.4cqw); flex-wrap:wrap; font-size:max(12px,1.3cqw); color:var(--gris-sec); padding-top:max(12px,2cqw); }
+  .meta b{ color:var(--crema); font-weight:600; }
+  .logo{ width:max(44px,5.2cqw); height:auto; margin-bottom:max(14px,2.2cqw); }
+
+  .cols{ display:grid; grid-template-columns:1fr 1fr; gap:max(14px,2.4cqw); flex:1; min-height:0; }
+  .cols3{ display:grid; grid-template-columns:repeat(3,1fr); gap:max(12px,1.8cqw); }
+  @media(max-width:700px){ .cols, .cols3{ grid-template-columns:1fr; } .sub{ max-width:none; } }
+  .box{ background:var(--tinta2); border:1px solid var(--bd); border-radius:max(10px,1.2cqw); padding:max(12px,1.7cqw) max(14px,1.9cqw); }
+  .box h3{ font-size:max(13px,1.35cqw); letter-spacing:.08em; text-transform:uppercase; color:var(--menta); font-weight:700; margin-bottom:max(6px,.8cqw); }
+  .box h3.gris{ color:var(--gris-sec); }
+  .box h3.rojo{ color:var(--rojo); }
+  .box .n{ display:inline-flex; align-items:center; justify-content:center; width:max(26px,2.6cqw); height:max(26px,2.6cqw); border-radius:50%; background:var(--carta); border:1px solid var(--bd); font-size:max(13px,1.3cqw); font-weight:700; color:var(--menta); margin-bottom:max(8px,1cqw); }
+  .box p{ font-size:max(13px,1.4cqw); }
+  .box p + p{ margin-top:max(6px,.7cqw); }
+  ul{ padding-left:max(16px,1.6cqw); display:grid; gap:max(5px,.6cqw); }
+  li{ font-size:max(13px,1.42cqw); line-height:1.42; color:var(--gris); }
+  li b{ color:var(--crema); }
+  .ref{ font-size:max(11px,1.1cqw); color:var(--gris-sec); line-height:1.4; margin-top:max(6px,.8cqw); }
+  .ref b{ color:var(--gris); font-weight:600; }
+
+  .tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:max(8px,1cqw); margin-top:max(10px,1.2cqw); }
+  .tiles.t3{ grid-template-columns:repeat(3,1fr); }
+  .tiles.t2{ grid-template-columns:repeat(2,1fr); }
+  @media(max-width:700px){ .tiles, .tiles.t3{ grid-template-columns:repeat(2,1fr); } }
+  .tile{ background:var(--tinta2); border:1px solid var(--bd); border-radius:max(10px,1.1cqw); padding:max(9px,1.1cqw) max(11px,1.3cqw); }
+  .tile .l{ font-size:max(10px,1.05cqw); color:var(--gris-sec); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+  .tile .v{ font-size:max(20px,2.5cqw); font-weight:700; margin-top:2px; color:var(--crema); font-variant-numeric:tabular-nums; line-height:1.1; }
+  .tile .v.menta{ color:var(--menta); }
+  .tile .v.rojo{ color:var(--rojo); }
+  .tile .s{ font-size:max(11px,1.1cqw); color:var(--gris-sec); margin-top:3px; }
+  .tile .s b{ color:var(--gris); font-weight:600; }
+
+  .chart{ position:relative; flex:1; min-height:0; margin-top:max(8px,.8cqw); }
+  .chart canvas{ height:100%; border-radius:max(8px,1cqw); background:var(--tinta2); }
+  .chart.fijo{ flex:none; height:max(160px,30cqw); }
+  .leg{ display:flex; flex-wrap:wrap; gap:max(10px,1.6cqw); font-size:max(11px,1.15cqw); color:var(--gris-sec); margin-top:max(6px,.7cqw); }
+  .leg span{ display:inline-flex; align-items:center; gap:6px; }
+  .leg i{ display:inline-block; width:max(14px,1.6cqw); height:3px; border-radius:2px; }
+  .leg i.sombra{ height:max(10px,1.1cqw); background:rgba(240,122,107,.28); border-radius:2px; }
+
+  .minis{ display:grid; grid-template-columns:1fr 1fr; gap:max(10px,1.4cqw); flex:1; min-height:0; }
+  @media(max-width:700px){ .minis{ grid-template-columns:1fr; } }
+  .mini{ display:flex; flex-direction:column; min-height:0; background:var(--tinta2); border:1px solid var(--bd); border-radius:max(10px,1.1cqw); padding:max(9px,1cqw) max(11px,1.2cqw); }
+  .mini h3{ font-size:max(13px,1.35cqw); font-weight:700; color:var(--crema); display:flex; justify-content:space-between; gap:8px; }
+  .mini h3 span{ font-weight:600; font-size:max(11px,1.1cqw); padding:2px 8px; border-radius:999px; }
+  .mini h3 span.ok{ color:var(--tinta); background:var(--menta); }
+  .mini h3 span.mal{ color:var(--tinta); background:var(--rojo); }
+  .mini h3 span.medio{ color:var(--tinta); background:var(--ambar); }
+  .mini .num{ font-size:max(11px,1.15cqw); color:var(--gris-sec); margin-top:2px; }
+  .mini .num b{ color:var(--menta); font-weight:700; }
+  .mini .num b.rojo{ color:var(--rojo); }
+  .mini .num b.gris{ color:var(--gris); }
+  .mini .chart{ margin-top:max(5px,.5cqw); }
+  .mini .chart canvas{ background:var(--carta); }
+  .mini p{ font-size:max(11.5px,1.2cqw); margin-top:max(5px,.5cqw); line-height:1.35; }
+
+  table{ width:100%; border-collapse:collapse; font-size:max(12px,1.35cqw); margin-top:max(8px,.8cqw); }
+  th,td{ padding:max(6px,.75cqw) max(6px,.7cqw); border-bottom:1px solid var(--bd); text-align:left; line-height:1.3; }
+  th{ font-size:max(10px,1.05cqw); color:var(--gris-sec); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+  td:first-child{ color:var(--crema); font-weight:600; }
+  td{ color:var(--gris); font-variant-numeric:tabular-nums; }
+  td.menta{ color:var(--menta); font-weight:700; }
+  td.rojo{ color:var(--rojo); font-weight:600; }
+
+  .frase{ margin-top:auto; padding-top:max(10px,1.4cqw); font-size:max(15px,1.75cqw); line-height:1.35; color:var(--crema); border-top:1px solid var(--bd); }
+  .frase b{ color:var(--menta); }
+  .borrador{ position:absolute; top:max(12px,1.6cqw); right:max(12px,1.6cqw); font-size:max(10px,1.05cqw); letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--ambar); border:1px solid var(--ambar); border-radius:999px; padding:3px 10px; }
+
+  .barra{ position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center; align-items:center; gap:14px; flex-wrap:wrap; padding:12px 16px; background:rgba(13,15,20,.92); border-top:1px solid var(--bd); backdrop-filter:blur(6px); z-index:9; }
+  .barra button{ background:var(--menta); color:var(--tinta); border:0; border-radius:999px; padding:12px 22px; font-size:15px; font-weight:700; cursor:pointer; }
+  .barra button:hover{ filter:brightness(1.08); }
+  .barra small{ font-size:12px; color:var(--gris-sec); max-width:560px; line-height:1.35; }
+
+  @media print{
+    @page{ size:13.333in 7.5in; margin:0; }
+    html,body{ background:var(--carta); }
+    .deck{ display:block; padding:0; gap:0; }
+    .slide{ width:13.333in; height:7.5in; max-width:none; aspect-ratio:auto; border:0; border-radius:0; margin:0; break-after:page; page-break-after:always; break-inside:avoid; }
+    .slide:last-child{ break-after:auto; page-break-after:auto; }
+    .barra{ display:none; }
+    *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 · PORTADA -->
+  <section class="slide portada">
+    <img class="logo" src="/assets/logo-fondo-negro.png" alt="Empowered Investor">
+    <div class="eyebrow">Empowered Investor · Resumen para junta directiva</div>
+    <h1>Atalaya <em>Momentum</em></h1>
+    <p class="sub">Una regla para estar invertido en el Nasdaq 100 mientras sube y pasar a efectivo cuando el mercado pierde fuerza. Basada en investigación publicada, probada con 27 años de datos y aplicada hoy en cuentas reales.</p>
+    <div class="meta"><span>Octubre 2026</span><span>Datos de mercado al <b>18 de septiembre de 2026</b></span><span>Presenta: <b>________________</b></span></div>
+  </section>
+
+  <!-- 2 · LA IDEA EN TRES PASOS -->
+  <section class="slide">
+    <div class="eyebrow">De dónde viene y a dónde llega</div>
+    <h2>La idea, en tres pasos</h2>
+    <div class="cols3">
+      <div class="box"><div class="n">1</div><h3>Investigación</h3><p>El punto de partida es un hallazgo publicado en la revista académica más exigente de finanzas y confirmado después por otros equipos: <b>lo cerca que está un precio de su máximo reciente anticipa hacia dónde va</b>.</p></div>
+      <div class="box"><div class="n">2</div><h3>Confirmación en un nicho</h3><p>Se aplicó al <b>Nasdaq 100</b>, el índice donde ese comportamiento es más fuerte. 27 años de datos, 960 versiones de la regla probadas, resultado medido en cada crisis.</p></div>
+      <div class="box"><div class="n">3</div><h3>Aplicación por cliente</h3><p>La misma regla en cada cuenta. Lo que cambia según el perfil de riesgo es el vehículo: <b>el índice tal cual, ×2 o ×3</b>, y el peso que se le da en el plan de cada persona.</p></div>
+    </div>
+    <div class="frase"><b>Para qué sirve:</b> tener un mecanismo de respuesta listo si la burbuja de la inteligencia artificial revienta. <b>Qué cuesta:</b> rendir un poco menos en los años tranquilos.</div>
+  </section>
+
+  <!-- 3 · PASO 1 · RESEARCH -->
+  <section class="slide">
+    <div class="eyebrow">Paso 1 · Investigación</div>
+    <h2>El fundamento: un paper revisado por pares, confirmado durante 14 años</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>El paper principal</h3>
+        <p><b>The 52-Week High and Momentum Investing</b><br>George y Hwang · <b>The Journal of Finance</b>, 2004</p>
+        <ul style="margin-top:max(8px,1cqw)">
+          <li>Midieron cada acción de EE. UU. con un dato simple: <b>el precio de hoy dividido entre su máximo de las últimas 52 semanas</b>.</li>
+          <li>Las acciones cerca del máximo <b>siguieron subiendo más</b> que las que estaban lejos, durante los 6 y 12 meses siguientes.</li>
+          <li>Ese dato predijo <b>mejor que el momentum clásico</b> (cuánto subió cada acción en el último año).</li>
+          <li>La ganancia <b>no se devolvió después</b>. Con el momentum clásico sí: a los 2 o 3 años se revierte.</li>
+          <li>La explicación: la gente usa el máximo del año como ancla. Cerca de él duda en comprar; lejos de él duda en vender. La información entra al precio despacio y eso crea la tendencia.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="box">
+          <h3>Confirmado después, en otras revistas revisadas por pares</h3>
+          <ul>
+            <li><b>2011</b> · Liu, Liu y Ma, <i>Journal of International Money and Finance</i>: el efecto aparece en 20 países.</li>
+            <li><b>2013</b> · Bhootra y Hur, <i>Journal of Banking and Finance</i>: cuanto más reciente el máximo, más fuerte el efecto.</li>
+            <li><b>2018</b> · George, Hwang y Li, <i>Journal of Financial Economics</i>: la distancia al máximo también anticipa la rentabilidad futura de las empresas.</li>
+            <li><b>2018</b> · Hao, Chou, Ko y Yang, <i>International Review of Financial Analysis</i>: más fuerte cuando el ánimo del mercado está alto.</li>
+          </ul>
+        </div>
+        <div class="box" style="margin-top:max(10px,1.2cqw)">
+          <h3 class="gris">El segundo pilar, para la fase de crecimiento</h3>
+          <p><b>Lifecycle Investing</b> · Ayres y Nalebuff, Yale, 2008. Exponerse más al inicio, cuando el capital es chico, mejora el plan de retiro. Es la base del uso de ETFs ×2 y ×3 en la primera fase del plan de cada cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · PASO 2 · NASDAQ 100 Y LA REGLA -->
+  <section class="slide">
+    <div class="eyebrow">Paso 2 · Confirmación en el nicho</div>
+    <h2>Por qué el Nasdaq 100, y cómo queda la regla</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>Por qué el Nasdaq 100</h3>
+        <ul>
+          <li><b>Tendencias largas.</b> Subidas de años, no de semanas. Ahí vale más saber si la tendencia sigue viva o se rompió.</li>
+          <li><b>Caídas largas y profundas.</b> −83% entre 2000 y 2002, −53% en 2008, −35% en 2022. Salir a tiempo cambia el resultado de toda una vida de ahorro.</li>
+          <li><b>Concentrado en tecnología y crecimiento.</b> El tipo de acción donde el paper encontró el efecto más marcado.</li>
+          <li><b>Un índice, no acciones sueltas.</b> Así los costos de operar no se comen la ganancia, que era la advertencia del paper.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>La regla: dos semáforos</h3>
+        <ul>
+          <li><b>Tendencia.</b> El precio contra su promedio de los últimos 200 días, con un margen de 3% para no reaccionar al ruido.</li>
+          <li><b>Distancia al máximo.</b> El precio contra su máximo de las últimas 39 semanas. Sale si cae 12% desde ahí. Vuelve cuando recupera hasta quedar a 6%.</li>
+          <li><b>Los dos en verde:</b> 100% invertido. <b>Uno en rojo:</b> 100% en efectivo ganando interés. No hay posiciones a medias.</li>
+          <li>Se revisa al cierre de cada día. En 27 años hubo <b>1.4 cambios por año</b>.</li>
+        </ul>
+        <p class="ref" style="margin-top:max(10px,1.2cqw)">Se probaron <b>960 combinaciones</b> de estos parámetros. 957 mejoran la relación rendimiento/riesgo de comprar y mantener. Las 960 reducen la peor caída. La regla elegida está en el centro de esa zona, no es el mejor punto del pasado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · 1999 A HOY -->
+  <section class="slide">
+    <div class="eyebrow">Resultado · 1999 a hoy</div>
+    <h2>$100,000 en el Nasdaq 100 (QQQ), con la regla y sin ella</h2>
+    <div class="chart"><canvas id="cv-todo"></canvas></div>
+    <div class="leg"><span><i style="background:var(--menta)"></i>Con Atalaya</span><span><i style="background:var(--gris-sec)"></i>Sin regla, comprar y mantener</span><span><i class="sombra"></i>Días fuera del mercado, en efectivo</span></div>
+    <div class="tiles">
+      <div class="tile"><div class="l">Hoy serían</div><div class="v menta">$3.33M</div><div class="s">sin regla: <b>$1.84M</b></div></div>
+      <div class="tile"><div class="l">Rendimiento anual</div><div class="v menta">13.5%</div><div class="s">sin regla: <b>11.1%</b></div></div>
+      <div class="tile"><div class="l">Peor caída desde un máximo</div><div class="v menta">−26%</div><div class="s">sin regla: <b>−83%</b></div></div>
+      <div class="tile"><div class="l">Peor año</div><div class="v menta">−12%</div><div class="s">sin regla: <b>−42%</b></div></div>
+    </div>
+  </section>
+
+  <!-- 6 · 2000-2002 -->
+  <section class="slide">
+    <div class="eyebrow">La crisis que define a Atalaya</div>
+    <h2>2000 a 2002: el Nasdaq 100 perdió 83% y tardó casi 15 años en recuperarse</h2>
+    <div class="cols" style="grid-template-columns:3fr 2fr">
+      <div style="display:flex;flex-direction:column;min-height:0">
+        <div class="chart"><canvas id="cv-2000"></canvas></div>
+        <div class="leg"><span><i style="background:var(--menta)"></i>Con Atalaya</span><span><i style="background:var(--gris-sec)"></i>Sin regla</span><span><i class="sombra"></i>Fuera del mercado</span></div>
+      </div>
+      <div>
+        <div class="tiles t2" style="margin-top:0">
+          <div class="tile"><div class="l">2000 a 2002, con Atalaya</div><div class="v menta">+15%</div></div>
+          <div class="tile"><div class="l">Sin regla</div><div class="v rojo">−74%</div></div>
+        </div>
+        <div class="box" style="margin-top:max(10px,1.2cqw)">
+          <ul>
+            <li><b>Salió el 5 de abril de 2000</b>, una semana después del máximo histórico.</li>
+            <li><b>Volvió el 31 de marzo de 2003</b>, cuando la tendencia se confirmó de nuevo.</li>
+            <li>Tres años en efectivo ganando interés, mientras el índice perdía 83%.</li>
+            <li>Quien se quedó adentro recuperó su plata hasta 2015.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="frase">Esto es exactamente lo que Atalaya está hecha para hacer: <b>no adivinar la caída, responder a ella</b>.</div>
+  </section>
+
+  <!-- 7 · OTRAS CRISIS -->
+  <section class="slide">
+    <div class="eyebrow">Comportamiento en otras crisis</div>
+    <h2>Dos veces funcionó, una vez sufrió, una vez quedó a medias</h2>
+    <div class="minis">
+      <div class="mini"><h3>Crisis financiera 2008 <span class="ok">Funcionó</span></h3><div class="num">Oct 2007 a mar 2009: <b>−6%</b> con Atalaya · <b class="rojo">−41%</b> sin regla</div><div class="chart"><canvas id="cv-2008"></canvas></div><p>Salió el 8 de enero de 2008 y volvió el 15 de julio de 2009. Se saltó la peor parte.</p></div>
+      <div class="mini"><h3>2015 y 2016 <span class="mal">Sufrió</span></h3><div class="num">Dos años: <b class="rojo">−12%</b> con Atalaya · <b class="gris">+18%</b> sin regla</div><div class="chart"><canvas id="cv-2015"></canvas></div><p>Mercado lateral, sin tendencia. Seis cambios en dos años: salía después de la caída y entraba después del rebote.</p></div>
+      <div class="mini"><h3>Covid 2020 <span class="medio">A medias</span></h3><div class="num">Año 2020: <b>+19%</b> con Atalaya · <b class="gris">+46%</b> sin regla</div><div class="chart"><canvas id="cv-2020"></canvas></div><p>Salió el 2 de marzo y volvió el 12 de mayo. Evitó la caída, pero la recuperación en V fue tan rápida que se perdió parte del rebote.</p></div>
+      <div class="mini"><h3>2022 <span class="ok">Funcionó</span></h3><div class="num">Año 2022: <b>−10%</b> con Atalaya · <b class="rojo">−33%</b> sin regla</div><div class="chart"><canvas id="cv-2022"></canvas></div><p>Salió el 25 de enero de 2022 y volvió el 3 de abril de 2023. Un año entero de caída visto desde afuera.</p></div>
+    </div>
+  </section>
+
+  <!-- 8 · TRADE-OFF -->
+  <section class="slide">
+    <div class="eyebrow">El trade-off, sin maquillaje</div>
+    <h2>Qué se sacrifica y qué se gana</h2>
+    <div class="cols">
+      <div class="box">
+        <h3 class="rojo">Lo que se sacrifica</h3>
+        <ul>
+          <li><b>En los años tranquilos rinde menos.</b> 2010 a 2019: 10.9% anual con Atalaya contra 17.7% sin regla.</li>
+          <li><b>En mercados laterales entra y sale sin ganar.</b> 2015 y 2016 fueron eso.</li>
+          <li><b>En rebotes rápidos se pierde parte de la subida.</b> 2020 fue eso.</li>
+          <li><b>Últimos 5 años:</b> 11.2% anual contra 14.8% sin regla.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Lo que se gana</h3>
+        <ul>
+          <li><b>La peor caída pasa de −83% a −26%.</b> Ese es el número que decide si un plan de retiro sobrevive.</li>
+          <li><b>Ningún año peor que −12% en 27 años.</b> Sin regla: −42% en 2008, −37% en 2002, −33% en 2022.</li>
+          <li><b>Más rendimiento por unidad de riesgo:</b> Sharpe 0.75 contra 0.45.</li>
+          <li><b>Un plan escrito para la próxima crisis.</b> Nadie decide con el estómago en medio de la caída.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="frase">De 1999 a hoy el rendimiento anual fue mayor con la regla. Pero el valor no está en ganar más cada año. Está en <b>no perder lo que cuesta diez años recuperar</b>.</div>
+  </section>
+
+  <!-- 9 · PARA QUÉ SIRVE HOY -->
+  <section class="slide">
+    <div class="eyebrow">Para qué sirve hoy</div>
+    <h2>Si la burbuja de la inteligencia artificial revienta, hay con qué responder</h2>
+    <div class="cols3">
+      <div class="box"><h3 class="gris">El contexto</h3><p>El Nasdaq 100 está concentrado en pocas empresas de inteligencia artificial y sus proveedores. Nadie sabe si es una burbuja ni cuándo termina. En 2000 tampoco se sabía.</p></div>
+      <div class="box"><h3>Si se repite algo como 2000</h3><p>La regla sale cuando el índice cae alrededor de <b>12% desde su máximo</b> y espera en efectivo ganando interés. No intenta vender en el punto más alto. Intenta no estar adentro en la caída larga.</p></div>
+      <div class="box"><h3>Si no pasa nada</h3><p>Sigue invertida y rinde un poco menos que el índice por alguna salida falsa. Ese es el costo del mecanismo, y está medido: <b>1 a 2 cambios por año</b>.</p></div>
+    </div>
+    <div class="frase">Atalaya <b>no predice</b>. Responde con una regla fija, la misma que habría sacado a los clientes de 2000, de 2008 y de 2022.</div>
+  </section>
+
+  <!-- 10 · PASO 3 · CUENTAS INDIVIDUALES -->
+  <section class="slide">
+    <div class="eyebrow">Paso 3 · Aplicación en cuentas individuales</div>
+    <h2>Mismo índice, mismo semáforo. Cambia el vehículo según el perfil</h2>
+    <table>
+      <thead><tr><th>Perfil</th><th>Vehículo</th><th>Anual con Atalaya</th><th>Peor caída con Atalaya</th><th>Anual sin regla</th><th>Peor caída sin regla</th></tr></thead>
+      <tbody>
+        <tr><td>Conservador</td><td>QQQ · el índice tal cual</td><td class="menta">13.5%</td><td>−26%</td><td>11.1%</td><td class="rojo">−83%</td></tr>
+        <tr><td>Moderado</td><td>QLD · índice ×2</td><td class="menta">22.4%</td><td>−47%</td><td>11.4%</td><td class="rojo">−99%</td></tr>
+        <tr><td>Agresivo</td><td>TQQQ · índice ×3</td><td class="menta">29.4%</td><td>−62%</td><td>4.7%</td><td class="rojo">−100%</td></tr>
+      </tbody>
+    </table>
+    <p class="ref">1999 a septiembre de 2026, con costos de los ETFs apalancados incluidos. ×2 y ×3 simulados día a día desde el índice.</p>
+    <div class="cols" style="flex:none;margin-top:max(10px,1.2cqw)">
+      <div class="box"><h3 class="gris">Cómo se asigna</h3><p>Cada cliente tiene una meta y un plan por fases. Mientras el capital es chico frente a la meta, se usa más ×2 o ×3. Conforme se acerca, baja a ×1. Se puede combinar: por ejemplo, mitad QQQ y mitad TQQQ.</p></div>
+      <div class="box"><h3>Lo que no cambia</h3><p>Cuando el semáforo está en rojo, <b>todas las cuentas pasan a efectivo</b>, sin importar el vehículo. Sin la regla, el ×3 se destruye en una crisis larga. Con la regla, es la fila de arriba la que paga el plan de retiro.</p></div>
+    </div>
+  </section>
+
+  <!-- 11 · CÓMO SE OPERA -->
+  <section class="slide">
+    <div class="eyebrow">Operación</div>
+    <h2>Cómo se opera, todos los días</h2>
+    <div class="cols3">
+      <div class="box"><div class="n">1</div><h3>Revisión diaria</h3><p>Al cierre de Nueva York, 2:00 pm en Costa Rica, el sistema actualiza el promedio de 200 días, el máximo de 39 semanas y los dos semáforos.</p></div>
+      <div class="box"><div class="n">2</div><h3>Si la señal cambió</h3><p>La orden se ejecuta al cierre del día siguiente, en todas las cuentas a la vez, desde el panel del asesor. Si no cambió, no se hace nada.</p></div>
+      <div class="box"><div class="n">3</div><h3>Cuenta del cliente</h3><p>Cada cuenta está a nombre del cliente en Alpaca, bróker regulado en EE. UU. El cliente ve su plata en todo momento. El asesor solo opera, nunca retira.</p></div>
+    </div>
+    <div class="tiles t3">
+      <div class="tile"><div class="l">Cambios por año</div><div class="v">1 a 2</div><div class="s">promedio 1999 a hoy: 1.4</div></div>
+      <div class="tile"><div class="l">Decisiones a ojo</div><div class="v">0</div><div class="s">la regla está escrita y es la misma para todos</div></div>
+      <div class="tile"><div class="l">Efectivo cuando está afuera</div><div class="v">Con interés</div><div class="s">cuenta de alto rendimiento de Alpaca</div></div>
+    </div>
+  </section>
+
+  <!-- 12 · CUENTAS REALES -->
+  <section class="slide">
+    <span class="borrador">Borrador · números por validar</span>
+    <div class="eyebrow">Resultados en cuentas reales</div>
+    <h2>Lo que han rendido las cuentas administradas, desde marzo de 2024</h2>
+    <div class="tiles">
+      <div class="tile"><div class="l">Cuentas con aportes</div><div class="v">39</div><div class="s">abiertas entre marzo 2024 y octubre 2026</div></div>
+      <div class="tile"><div class="l">Capital administrado</div><div class="v">$1.07M</div><div class="s">aportado: <b>$1.03M</b> · retirado: <b>$61k</b></div></div>
+      <div class="tile"><div class="l">Rendimiento anual, todas</div><div class="v menta">13.1%</div><div class="s">tasa interna de retorno conjunta, con fechas reales de cada aporte</div></div>
+      <div class="tile"><div class="l">Cuentas con 12 meses o más</div><div class="v menta">18.3%</div><div class="s">21 cuentas · mediana por cuenta: <b>18.4%</b></div></div>
+    </div>
+    <div class="cols" style="flex:none;margin-top:max(10px,1.2cqw)">
+      <div class="box">
+        <h3 class="gris">Por año de apertura</h3>
+        <table style="margin-top:4px">
+          <thead><tr><th>Abiertas en</th><th>Cuentas</th><th>Anual</th><th>Lectura</th></tr></thead>
+          <tbody>
+            <tr><td>2024</td><td>12</td><td class="menta">13.4%</td><td>Más de dos años de historia</td></tr>
+            <tr><td>2025</td><td>11</td><td class="menta">29.0%</td><td>Entraron antes de la subida de 2025</td></tr>
+            <tr><td>2026</td><td>16</td><td class="rojo">−19%</td><td>Menos de 10 meses; anualizar pocos meses exagera</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="box">
+        <h3 class="gris">Cómo leer estos números</h3>
+        <ul>
+          <li>Son <b>rendimientos reales netos de ejecución</b>, con aportes y retiros en sus fechas, de todas las cuentas sin excluir ninguna.</li>
+          <li>La mayoría de las cuentas usa ×3 en la primera fase, así que son más volátiles que la fila de QQQ de la lámina anterior.</li>
+          <li>Las cuentas de 2026 todavía no tienen edad para medirse. Se muestran para no esconderlas.</li>
+          <li>Referencia: los mismos aportes, en las mismas fechas, en QQQ sin regla habrían dado 23% anual. 2024 a 2026 fue una subida casi continua con tres salidas falsas de la regla.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · COSTO -->
+  <section class="slide">
+    <div class="eyebrow">Costo del servicio</div>
+    <h2>Una tarifa simple, pensada para una relación de largo plazo</h2>
+    <div class="cols">
+      <div>
+        <div class="tiles t2" style="margin-top:0">
+          <div class="tile"><div class="l">Al inicio</div><div class="v">$2,000</div><div class="s">apertura, plan por fases y puesta en marcha</div></div>
+          <div class="tile"><div class="l">Cada año</div><div class="v">1%</div><div class="s">sobre el capital administrado</div></div>
+        </div>
+        <div class="box" style="margin-top:max(10px,1.2cqw)">
+          <h3>Qué incluye</h3>
+          <ul>
+            <li>Cuenta a nombre del cliente en un bróker regulado en EE. UU.</li>
+            <li>Plan de retiro por fases con meta y fecha.</li>
+            <li>Señal diaria, ejecución y rebalanceo según el plan.</li>
+            <li>Reporte mensual y acceso al panel del cliente.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="box">
+        <h3 class="gris">Se evaluó cobrar una comisión por rendimiento. Se descarta.</h3>
+        <ul>
+          <li><b>Cobra en los años equivocados.</b> Pagaría más en las subidas, cuando la regla aporta menos, y nada en 2000, 2008 o 2022, cuando más vale.</li>
+          <li><b>Empuja a tomar más riesgo.</b> El gestor gana si sale bien y no pierde si sale mal. Es el incentivo contrario al que necesita un plan de retiro.</li>
+          <li><b>Complica la relación.</b> Marcas de agua, cortes anuales, impuestos y contabilidad por cuenta, y una conversación incómoda cada vez que se cobra.</li>
+          <li><b>El 1% ya alinea.</b> El gestor gana solo si el capital del cliente crece y se queda.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · RESUMEN -->
+  <section class="slide">
+    <div class="eyebrow">Resumen</div>
+    <h2>Atalaya Momentum en cinco líneas</h2>
+    <ul style="gap:max(10px,1.3cqw);margin-top:max(6px,.8cqw)">
+      <li style="font-size:max(15px,1.8cqw)"><b>Base científica.</b> Un hallazgo publicado en The Journal of Finance en 2004 y confirmado en otras cuatro revistas revisadas por pares.</li>
+      <li style="font-size:max(15px,1.8cqw)"><b>Probada donde más importa.</b> Nasdaq 100, 1999 a hoy: 13.5% anual contra 11.1%, con la peor caída en −26% en vez de −83%.</li>
+      <li style="font-size:max(15px,1.8cqw)"><b>Honesta con sus límites.</b> Rinde menos en años tranquilos y sufre en mercados laterales. Está medido y se dice de frente.</li>
+      <li style="font-size:max(15px,1.8cqw)"><b>Aplicada hoy.</b> 39 cuentas reales, mismo semáforo para todas, vehículo según el perfil de cada cliente.</li>
+      <li style="font-size:max(15px,1.8cqw)"><b>Simple de pagar.</b> $2,000 al inicio y 1% al año. Sin comisión por rendimiento.</li>
+    </ul>
+    <div class="meta"><span><b>Empowered Investor</b> · investorcr.com</span><span>Jose Montero, fundador · 11 años gestionando portafolios en la bolsa de EE. UU. · 4.5 años en LSEG</span></div>
+  </section>
+
+</div>
+
+<div class="barra">
+  <button id="b-pdf" type="button">Exportar a PDF</button>
+  <small>Se abre el diálogo de impresión. Elegí <b>Guardar como PDF</b>, márgenes <b>Ninguno</b> y activá <b>Gráficos de fondo</b>. Cada lámina sale en una página.</small>
+</div>
+
+<script src="/atalaya/data.js"></script>
+<script src="/atalaya/motor.js"></script>
+<script>
+(function(){
+  'use strict';
+  var D=window.INFO2, M=window.MOTOR, P={sma:200,banda:3,sem:39,x:12,y:6}, INV=100000;
+  var COL={menta:'#63FCAF', gris:'#D9DCE1', grisSec:'#8E96A3', grisOsc:'#5b6572', crema:'#FEF9F3', rojo:'#F07A6B'};
+
+  /* serie diaria QQQ: capital con la regla y sin ella, y posición (1 adentro, 0 afuera) */
+  function serie(A){
+    var B=M.base(D,A,1), n=B.n, c=B.c, rAct=B.rAct, rTb=B.rTb, d=B.d;
+    var w=P.sem*5, b=P.banda/100, X=-P.x/100, Y=-P.y/100, m=P.sma;
+    var sum=0, dq=new Int32Array(n), hd=0, tl=0, inS=1, inM=1, sig2=1, sig1=1, pos=1, posPrev=1, sma, mx;
+    var eqR=new Float64Array(n), eqB=new Float64Array(n), posA=new Uint8Array(n), cR=1, cB=1;
+    for(var i=0;i<n;i++){
+      sum+=c[i]; if(i>=m) sum-=c[i-m]; sma= i>=m-1 ? sum/m : NaN;
+      while(tl>hd && c[dq[tl-1]]<=c[i]) tl--; dq[tl++]=i; while(dq[hd]<=i-w) hd++; mx= i>=w-1 ? c[dq[hd]] : NaN;
+      if(sma===sma){ if(inS && c[i]<sma*(1-b)) inS=0; else if(!inS && c[i]>sma*(1+b)) inS=1; }
+      if(mx===mx){ var dist=c[i]/mx-1; if(inM && dist<X) inM=0; else if(!inM && dist>=Y) inM=1; }
+      var sig=(inS&&inM)?1:0; posPrev=pos; pos= i>=2 ? sig2 : 1; sig2=sig1; sig1=sig;
+      if(i>0){ cR*=1+(pos*rAct[i]+(1-pos)*rTb[i]-Math.abs(pos-posPrev)*0.0005); cB*=1+rAct[i]; }
+      eqR[i]=cR; eqB[i]=cB; posA[i]=pos;
+    }
+    return {d:d, eqR:eqR, eqB:eqB, pos:posA, n:n};
+  }
+  var Q=serie('QQQ');
+  function idx(f){ var d=Q.d; for(var i=0;i<d.length;i++) if(d[i]>=f) return i; return d.length-1; }
+  function idxFin(f){ var i=idx(f); return Q.d[i]>f ? i-1 : i; }
+  function fUSD(v){ if(v>=1e6) return '$'+(v/1e6).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'M'; if(v>=1e4) return '$'+Math.round(v/1000)+'k'; return '$'+Math.round(v).toLocaleString('en-US'); }
+  function lienzo(cv){
+    var dpr=Math.max(2,window.devicePixelRatio||1), W=cv.clientWidth, H=cv.clientHeight;
+    if(!W||!H) return null;
+    if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+    var g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    return {g:g,W:W,H:H};
+  }
+  /* gráfico: $100,000 al inicio del tramo, con la regla y sin ella, sombreando los días fuera */
+  function grafico(id, f0, f1, mini){
+    var cv=document.getElementById(id), o=lienzo(cv); if(!o) return;
+    var g=o.g, W=o.W, H=o.H, a=idx(f0), b=idxFin(f1);
+    var fs=mini?11:12.5; g.font=fs+"px 'Bai Jamjuree'";
+    var PL=8, PR=mini?58:70, mT=10, mB=H-(mini?18:22);
+    var vR=function(i){ return Q.eqR[i]/Q.eqR[a]*INV; }, vB=function(i){ return Q.eqB[i]/Q.eqB[a]*INV; };
+    var lo=Infinity, hi=-Infinity;
+    for(var i=a;i<=b;i++){ var x1=vR(i), x2=vB(i); if(x1<lo) lo=x1; if(x2<lo) lo=x2; if(x1>hi) hi=x1; if(x2>hi) hi=x2; }
+    var log=hi/lo>3, Y;
+    if(log){ var lLo=Math.log(lo)-0.05, lHi=Math.log(hi)+0.05; Y=function(v){ return mT+(1-(Math.log(v)-lLo)/(lHi-lLo))*(mB-mT); }; }
+    else { var pad=(hi-lo)*0.08; var lo2=lo-pad, hi2=hi+pad; Y=function(v){ return mT+(1-(v-lo2)/(hi2-lo2))*(mB-mT); }; }
+    var X=function(i){ return PL+(i-a)/(b-a)*(W-PL-PR); };
+    // sombra: días fuera del mercado
+    g.fillStyle='rgba(240,122,107,.14)';
+    var ini=-1;
+    for(i=a;i<=b+1;i++){ var fuera= i<=b && !Q.pos[i]; if(fuera&&ini<0) ini=i; if(!fuera&&ini>=0){ g.fillRect(X(ini),mT,Math.max(1,X(Math.min(i,b))-X(ini)),mB-mT); ini=-1; } }
+    // rejilla y etiquetas en dólares
+    var ticks=[]; for(var q=0;q<=3;q++) ticks.push(log?Math.exp(Math.log(lo)+q/3*(Math.log(hi)-Math.log(lo))):(lo+q/3*(hi-lo)));
+    g.textAlign='left'; g.textBaseline='middle';
+    ticks.forEach(function(v,k){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.12)'; g.lineWidth=1; g.beginPath(); g.moveTo(PL,y); g.lineTo(W-PR,y); g.stroke(); if(k>0&&k<3){ g.fillStyle=COL.grisOsc; g.fillText(fUSD(v),W-PR+6,y); } });
+    // línea de los $100,000
+    var y100=Y(INV); if(y100>mT&&y100<mB){ g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,4]); g.beginPath(); g.moveTo(PL,y100); g.lineTo(W-PR,y100); g.stroke(); g.setLineDash([]); g.fillStyle=COL.grisSec; g.textAlign='left'; g.textBaseline='bottom'; g.fillText('lo invertido',PL+4,y100-3); }
+    // años
+    var anios=Math.floor(Q.d[b]/10000)-Math.floor(Q.d[a]/10000), paso=anios>12?Math.ceil(anios/9):1, ultimoAnio=-1;
+    g.textAlign='center'; g.textBaseline='top'; g.fillStyle=COL.grisSec;
+    for(i=a;i<=b;i++){ var y=Math.floor(Q.d[i]/10000); if(y!==ultimoAnio){ ultimoAnio=y; if(i>a && y%paso===0){ var x=X(i); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(x,mT); g.lineTo(x,mB); g.stroke(); g.fillText(String(y),x,mB+4); } } }
+    if(b-a<=560){ // tramo corto: meses (cada mes si cabe en un año, cada trimestre si no)
+      var ultimoMes=-1, MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'], cada= b-a<=270 ? 1 : 3;
+      for(i=a;i<=b;i++){ var mes=Math.floor(Q.d[i]/100)%100; if(mes!==ultimoMes){ ultimoMes=mes; if(i>a && (mes-1)%cada===0 && !(cada===3&&mes===1)){ var xm=X(i); g.strokeStyle='rgba(174,180,190,.08)'; g.beginPath(); g.moveTo(xm,mT); g.lineTo(xm,mB); g.stroke(); g.fillText(MES[mes-1],xm,mB+4); } } }
+    }
+    function linea(fn,color,ancho){ g.beginPath(); for(var i=a;i<=b;i++){ var x=X(i), y=Y(fn(i)); i===a?g.moveTo(x,y):g.lineTo(x,y); } g.strokeStyle=color; g.lineWidth=ancho; g.lineJoin='round'; g.stroke(); }
+    linea(vB,COL.grisSec,mini?1.3:1.6); linea(vR,COL.menta,mini?2:2.4);
+    // valores al final
+    var xr=X(b), yr=Y(vR(b)), yb=Y(vB(b));
+    g.fillStyle=COL.menta; g.beginPath(); g.arc(xr,yr,3.5,0,7); g.fill();
+    g.fillStyle=COL.grisSec; g.beginPath(); g.arc(xr,yb,3,0,7); g.fill();
+    g.font="600 "+(mini?11:12.5)+"px 'Bai Jamjuree'"; g.textAlign='right'; g.textBaseline='middle';
+    var cerca=Math.abs(yr-yb)<15, arriba=yr<=yb;
+    g.fillStyle=COL.menta; g.fillText(fUSD(vR(b)), xr-7, yr+(cerca?(arriba?-9:9):0));
+    g.fillStyle=COL.gris; g.fillText(fUSD(vB(b)), xr-7, yb+(cerca?(arriba?9:-9):0));
+  }
+  function dibujar(){
+    grafico('cv-todo',19990104,99999999,false);
+    grafico('cv-2000',19990701,20031231,false);
+    grafico('cv-2008',20070702,20091231,true);
+    grafico('cv-2015',20150102,20161230,true);
+    grafico('cv-2020',20200102,20201231,true);
+    grafico('cv-2022',20220103,20230630,true);
+  }
+  function listo(){ if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(dibujar); } else dibujar(); }
+  listo();
+  var t; window.addEventListener('resize',function(){ clearTimeout(t); t=setTimeout(dibujar,120); });
+  window.addEventListener('beforeprint',dibujar);
+  window.addEventListener('afterprint',function(){ setTimeout(dibujar,50); });
+  document.getElementById('b-pdf').addEventListener('click',function(){ dibujar(); setTimeout(function(){ window.print(); },60); });
+})();
+</script>
+</body>
+</html>
