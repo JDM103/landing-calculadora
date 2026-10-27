@@ -658,7 +658,8 @@
 
   /* ---------- dibujo: plata ---------- */
   var CVL=document.getElementById('cv-pnl'), INV=100000;
-  function fUSD(v){ if(v>=1e6) return '$'+(v/1e6).toLocaleString('en-US',{maximumFractionDigits:v>=1e7?0:1})+'M'; if(v>=1e4) return '$'+Math.round(v/1000)+'k'; return '$'+Math.round(v).toLocaleString('en-US'); }
+  function fUSD(v){ if(v>=1e6) return '$'+(v/1e6).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2})+'M'; if(v>=1e4) return '$'+Math.round(v/1000)+'k'; return '$'+Math.round(v).toLocaleString('en-US'); }
+  function fUSDtile(v){ if(v>=1e6) return '$'+(v/1e6).toLocaleString('en-US',{minimumFractionDigits:2, maximumFractionDigits:2})+'M'; return '$'+Math.round(v).toLocaleString('en-US'); }
   function dibujarPNL(){
     var o=lienzo(CVL), g=o.g, W=o.W, H=o.H, a=S.a, b=S.b, cur=S.cur;
     var mT=10, mB=H-18, vR=function(i){ return R.eqR[i]/R.eqR[a]*INV; }, vB=function(i){ return R.eqB[i]/R.eqB[a]*INV; };
@@ -733,7 +734,7 @@
       +' · vs promedio: <b>'+(isFinite(vs)?(vs>=0?'+':'')+vs.toFixed(1)+'%':'—')+'</b> ('+(R.iS[i]===1?'sí':'no')+')'
       +' · vs máximo: <b>'+(isFinite(vm)?vm.toFixed(1)+'%':'—')+'</b> ('+(R.iM[i]===1?'sí':'no')+')'
       +' → '+(R.sig[i]===1?'<b style="color:var(--menta)">invertido</b>':'<b style="color:var(--rojo)">fuera</b>, en efectivo');
-    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>$'+Math.round(S._pnl.r(i)).toLocaleString('en-US')+'</b> · sin regla <b>$'+Math.round(S._pnl.b(i)).toLocaleString('en-US')+'</b>'; }
+    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>'+fUSDtile(S._pnl.r(i))+'</b> · sin regla <b>'+fUSDtile(S._pnl.b(i))+'</b>'; }
     if(S._dd){ html+=' · Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
     for(var k=0;k<R.ev.length;k++){
       var e=R.ev[k];
@@ -762,7 +763,7 @@
       else { var yr2=ys>=10?Math.floor(ys+0.02):Math.round(ys); tiempo='hace '+yr2+(yr2===1?' año':' años'); }
     }
     $('k-usd-l').textContent='$100,000 '+tiempo+', hoy serían';
-    $('k-usd-r').textContent='$'+Math.round(INV*(1+rr)).toLocaleString('en-US'); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent='$'+Math.round(INV*(1+rb)).toLocaleString('en-US');
+    $('k-usd-r').textContent=fUSDtile(INV*(1+rr)); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent=fUSDtile(INV*(1+rb));
     var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
     $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v menta'; $('k-dd-b').textContent=fPctNeg(mb);
     // anual y Sharpe del tramo hasta hoy
