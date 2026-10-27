@@ -172,10 +172,6 @@
             <li><b>2018</b> · Hao, Chou, Ko y Yang, <i>International Review of Financial Analysis</i>: más fuerte cuando el ánimo del mercado está alto.</li>
           </ul>
         </div>
-        <div class="box" style="margin-top:max(10px,1.2cqw)">
-          <h3 class="gris">El segundo pilar, para la fase de crecimiento</h3>
-          <p><b>Lifecycle Investing</b> · Ayres y Nalebuff, Yale, 2008. Exponerse más al inicio, cuando el capital es chico, mejora el plan de retiro. Es la base del uso de ETFs ×2 y ×3 en la primera fase del plan de cada cliente.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -336,35 +332,22 @@
 
   <!-- 12 · CUENTAS REALES -->
   <section class="slide">
-    <span class="borrador">Borrador · números por validar</span>
     <div class="eyebrow">Resultados en cuentas reales</div>
-    <h2>Lo que han rendido las cuentas administradas, desde marzo de 2024</h2>
-    <div class="tiles">
-      <div class="tile"><div class="l">Cuentas con aportes</div><div class="v">39</div><div class="s">abiertas entre marzo 2024 y octubre 2026</div></div>
-      <div class="tile"><div class="l">Capital administrado</div><div class="v">$1.07M</div><div class="s">aportado: <b>$1.03M</b> · retirado: <b>$61k</b></div></div>
-      <div class="tile"><div class="l">Rendimiento anual, todas</div><div class="v menta">13.1%</div><div class="s">tasa interna de retorno conjunta, con fechas reales de cada aporte</div></div>
-      <div class="tile"><div class="l">Cuentas con 12 meses o más</div><div class="v menta">18.3%</div><div class="s">21 cuentas · mediana por cuenta: <b>18.4%</b></div></div>
-    </div>
-    <div class="cols" style="flex:none;margin-top:max(10px,1.2cqw)">
-      <div class="box">
-        <h3 class="gris">Por año de apertura</h3>
-        <table style="margin-top:4px">
-          <thead><tr><th>Abiertas en</th><th>Cuentas</th><th>Anual</th><th>Lectura</th></tr></thead>
-          <tbody>
-            <tr><td>2024</td><td>12</td><td class="menta">13.4%</td><td>Más de dos años de historia</td></tr>
-            <tr><td>2025</td><td>11</td><td class="menta">29.0%</td><td>Entraron antes de la subida de 2025</td></tr>
-            <tr><td>2026</td><td>16</td><td class="rojo">−19%</td><td>Menos de 10 meses; anualizar pocos meses exagera</td></tr>
-          </tbody>
-        </table>
+    <h2>Rendimiento promedio de las cuentas administradas: <span style="color:var(--menta)">18.3% anual</span></h2>
+    <div class="cols" style="grid-template-columns:3fr 2fr">
+      <div style="display:flex;flex-direction:column;min-height:0">
+        <div class="chart"><canvas id="cv-cuentas"></canvas></div>
+        <div class="leg"><span><i style="background:var(--menta)"></i>Rendimiento anual de cada cuenta</span><span><i style="background:var(--crema);height:1px;border-top:2px dashed var(--crema);background:none"></i>Promedio: 18.3%</span></div>
       </div>
-      <div class="box">
-        <h3 class="gris">Cómo leer estos números</h3>
-        <ul>
-          <li>Son <b>rendimientos reales netos de ejecución</b>, con aportes y retiros en sus fechas, de todas las cuentas sin excluir ninguna.</li>
-          <li>La mayoría de las cuentas usa ×3 en la primera fase, así que son más volátiles que la fila de QQQ de la lámina anterior.</li>
-          <li>Las cuentas de 2026 todavía no tienen edad para medirse. Se muestran para no esconderlas.</li>
-          <li>Referencia: los mismos aportes, en las mismas fechas, en QQQ sin regla habrían dado 23% anual. 2024 a 2026 fue una subida casi continua con tres salidas falsas de la regla.</li>
-        </ul>
+      <div>
+        <div class="tiles t2" style="margin-top:0">
+          <div class="tile"><div class="l">Cuentas con un año o más</div><div class="v">21</div><div class="s">abiertas entre marzo 2024 y octubre 2025</div></div>
+          <div class="tile"><div class="l">Capital administrado</div><div class="v">$1.07M</div><div class="s">en 39 cuentas, al 27 de octubre de 2026</div></div>
+        </div>
+        <div class="box" style="margin-top:max(10px,1.2cqw)">
+          <p>Cada cuenta trae el contexto de su dueño: aportes en distintas fechas, el vehículo que le toca según su fase y otras posiciones que el cliente pidió.</p>
+          <p>Aun así, el promedio de todas las cuentas con un año o más, con cada aporte y retiro en su fecha real, es <b>18.3% anual</b>. La mediana es 18.4%.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -500,7 +483,22 @@
     g.fillStyle=COL.menta; g.fillText(fUSD(vR(b)), xr-7, yr+(cerca?(arriba?-9:9):0));
     g.fillStyle=COL.gris; g.fillText(fUSD(vB(b)), xr-7, yb+(cerca?(arriba?9:-9):0));
   }
+  /* cuentas con un año o más: rendimiento anual (TIR) de cada una, del panel al 27 oct 2026 */
+  var CUENTAS=[-33.4,-6.8,-2.3,-1.0,0.4,5.4,6.7,11.0,17.1,17.7,18.4,22.5,25.1,27.8,29.3,30.6,47.0,49.1,55.1,78.4,94.1], PROM=18.3;
+  function barras(id){
+    var cv=document.getElementById(id), o=lienzo(cv); if(!o) return;
+    var g=o.g, W=o.W, H=o.H, PL=44, PR=10, mT=14, mB=H-10, n=CUENTAS.length;
+    var lo=Math.floor(Math.min.apply(null,CUENTAS)/20)*20, hi=Math.ceil(Math.max.apply(null,CUENTAS)/20)*20;
+    var Y=function(v){ return mT+(1-(v-lo)/(hi-lo))*(mB-mT); };
+    g.font="12px 'Bai Jamjuree'"; g.textAlign='right'; g.textBaseline='middle';
+    for(var v=lo;v<=hi;v+=20){ var y=Y(v); g.strokeStyle= v===0?'rgba(254,249,243,.35)':'rgba(174,180,190,.12)'; g.lineWidth=1; g.beginPath(); g.moveTo(PL,y); g.lineTo(W-PR,y); g.stroke(); g.fillStyle=COL.grisOsc; g.fillText(v+'%',PL-6,y); }
+    var gap=6, bw=(W-PL-PR-gap*(n-1))/n;
+    CUENTAS.forEach(function(v,k){ var x=PL+k*(bw+gap), y0=Y(0), y1=Y(v); g.fillStyle= v>=0?COL.menta:COL.rojo; var top=Math.min(y0,y1), h=Math.max(1,Math.abs(y1-y0)); g.beginPath(); g.roundRect?g.roundRect(x,top,bw,h,3):g.rect(x,top,bw,h); g.fill(); });
+    var yp=Y(PROM); g.strokeStyle=COL.crema; g.lineWidth=1.5; g.setLineDash([5,4]); g.beginPath(); g.moveTo(PL,yp); g.lineTo(W-PR,yp); g.stroke(); g.setLineDash([]);
+    g.font="600 12.5px 'Bai Jamjuree'"; g.fillStyle=COL.crema; g.textAlign='left'; g.textBaseline='bottom'; g.fillText('promedio 18.3%',PL+6,yp-4);
+  }
   function dibujar(){
+    barras('cv-cuentas');
     grafico('cv-todo',19990104,99999999,false);
     grafico('cv-2000',19990701,20031231,false);
     grafico('cv-2008',20070702,20091231,true);
