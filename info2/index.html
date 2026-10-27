@@ -131,6 +131,22 @@
   .pos-malla{ margin-top:12px; border-radius:12px; border:1px solid rgba(99,252,175,.4); background:rgba(99,252,175,.06); padding:10px 12px; font-size:13px; line-height:1.5; color:var(--gris); }
   .pos-malla b{ color:var(--crema); }
 
+  /* trayectos */
+  #cv-tray{ height:340px; margin-top:10px; border-radius:12px; background:var(--tinta2); cursor:crosshair; }
+  @media(max-width:600px){ #cv-tray{ height:280px; } }
+
+  /* bio, igual que /info */
+  .sobre-grid{display:grid; grid-template-columns:150px 1fr; gap:18px; align-items:start; margin-top:20px;}
+  @media(max-width:480px){ .sobre-grid{grid-template-columns:1fr;} .sobre-grid .foto{max-width:220px; margin:0 auto;} }
+  .sobre-grid .foto{border-radius:18px; overflow:hidden; border:1px solid var(--bd); background:var(--tinta2);}
+  .sobre-grid .foto img{display:block; width:100%; height:auto; object-fit:cover;}
+  .cred{list-style:none; display:grid; gap:8px;}
+  .cred li{position:relative; padding-left:24px; font-size:14.5px; line-height:1.45; color:var(--gris); font-weight:400;}
+  .cred li::before{content:"✓"; position:absolute; left:0; top:0; color:var(--menta); font-weight:700;}
+  .cred li b{color:var(--crema); font-weight:600;}
+  .familia{margin-top:12px; border-top:1px solid var(--bd); padding-top:10px; font-size:14.5px; color:var(--gris); font-weight:400;}
+  .familia b{color:var(--crema); font-weight:600;}
+
   /* malla */
   #cv-malla{ height:340px; margin-top:10px; border-radius:12px; background:var(--tinta2); cursor:crosshair; }
   @media(max-width:600px){ #cv-malla{ height:300px; } }
@@ -181,6 +197,7 @@
       <a href="#parametros">Los parámetros</a>
       <a href="#malla">Las 960 versiones</a>
       <a href="#papers">Los papers</a>
+      <a href="#quien">Quién soy</a>
     </nav>
   </div>
 
@@ -270,6 +287,15 @@
       </div>
       <div class="ctl" style="margin-top:12px"><button id="b-reset">Volver a la regla que usamos (200, 3%, 39, −12, −6)</button></div>
 
+      <div class="panel-t"><h4 id="t-tray">Las 960 versiones en la historia · QQQ</h4><span>$1 al inicio, escala log. La cargada en blanco, las otras 959 de fondo</span></div>
+      <canvas id="cv-tray"></canvas>
+      <div class="leg">
+        <span><i style="background:var(--crema);height:3px"></i>La cargada</span>
+        <span><i style="background:rgba(99,252,175,.35)"></i>Cada una de las otras versiones</span>
+        <span><i class="dash" style="color:var(--rojo)"></i>Sin regla, comprar y mantener</span>
+      </div>
+      <div class="lector" id="lector-tray"></div>
+
       <div class="tabla"><table class="res">
         <thead><tr><th id="res-t">Historia completa</th><th>Anual</th><th>Peor caída</th><th>Sharpe</th><th>Órdenes / año</th><th>Invertido</th></tr></thead>
         <tbody>
@@ -348,6 +374,26 @@
       <a class="link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener">Ver el paper en SSRN</a>
     </div>
     <p class="nota">Apalancarse sin freno es apostar. El freno sin acelerador es crecer despacio. Juntos son el plan.</p>
+  </section>
+
+  <!-- 5 · QUIÉN SOY -->
+  <section id="quien">
+    <div class="num">5</div>
+    <h2>Quién está del otro lado</h2>
+    <div class="sobre-grid">
+      <div class="foto"><img src="/assets/jose-montero.webp" alt="Jose Montero" width="360" height="480" loading="lazy"></div>
+      <div>
+        <ul class="cred">
+          <li><b>Fundador de Empowered Investor</b></li>
+          <li><b>Licenciado en Administración de Empresas</b></li>
+          <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
+          <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
+          <li><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU.</li>
+          <li><b>3 de cada 10 clientes</b> nuestros son médicos</li>
+        </ul>
+        <p class="familia">Esposo. <b>Papá de tres.</b></p>
+      </div>
+    </div>
   </section>
 
 </div>
@@ -607,7 +653,7 @@
     if(S.L>1) html+='<br><span style="color:var(--gris-sec)">La malla está calculada sobre '+S.A+' sin apalancar. La señal es la misma.</span>';
     $('pos-malla').innerHTML=html;
     $('t-malla').textContent=S.A+' · Sharpe contra peor caída, '+Math.floor(R.d[R.ini]/10000)+' a '+Math.floor(R.d[R.n-1]/10000);
-    dibujarMalla(); dibujarMapas();
+    dibujarMalla(); dibujarMapas(); dibujarTray();
     $('lector-malla').innerHTML='Cargada: <b>'+descP(s)+'</b> → Sharpe '+s[5].toFixed(2)+' · '+fPct(s[6],1)+' anual · peor caída '+fPctNeg(s[7]);
   }
   function descP(r){ return 'promedio '+r[0]+' · banda '+r[1]+'% · máximo '+r[2]+' sem · sale −'+r[3]+'% · vuelve −'+r[4]+'%'; }
@@ -637,6 +683,68 @@
     g.fillStyle=COL.crema; g.beginPath(); g.arc(sx,sy,4,0,7); g.fill();
     g.textAlign=sx>W*0.6?'right':'left'; g.font="600 11px 'Bai Jamjuree'"; g.fillText('la cargada', sx+(sx>W*0.6?-12:12), sy+4);
   }
+  /* ---------- trayectos de las 960 versiones ---------- */
+  var CVT=document.getElementById('cv-tray'), TR={cache:{}, fondo:null, fondoKey:'', hover:-1};
+  var PASO=10;
+  function trayectos(){
+    var key=S.A+'x'+S.L; if(TR.cache[key]) return TR.cache[key];
+    var B=M.base(D,S.A,S.L), ml=D.malla[S.A], lista=[];
+    ml.forEach(function(r){ lista.push({r:r, t:M.trayecto(B,{sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]},PASO)}); });
+    var bh=M.trayecto(B,null,PASO), lo=Infinity, hi=-Infinity;
+    lista.forEach(function(e){ for(var i=0;i<e.t.v.length;i++){ var v=e.t.v[i]; if(v<lo) lo=v; if(v>hi) hi=v; } });
+    for(var j=0;j<bh.v.length;j++){ if(bh.v[j]>hi) hi=bh.v[j]; if(bh.v[j]<lo) lo=bh.v[j]; }
+    lo=Math.max(lo,0.02); // piso del gráfico: −98%
+    TR.cache[key]={lista:lista, bh:bh, lo:lo, hi:hi, idx:lista[0].t.i, B:B};
+    return TR.cache[key];
+  }
+  var TPL=44, TPR=12, TPT=12, TPB=24;
+  function escalasTray(T,W,H){
+    var lLo=Math.log(T.lo)-0.05, lHi=Math.log(T.hi)+0.08, np=T.idx.length;
+    return { X:function(k){ return TPL+k/(np-1)*(W-TPL-TPR); }, Y:function(v){ return TPT+(1-(Math.log(Math.max(v,T.lo))-lLo)/(lHi-lLo))*(H-TPT-TPB); } };
+  }
+  function fondoTray(T,W,H,dpr){
+    var key=S.A+'x'+S.L+'|'+W+'x'+H+'|'+dpr; if(TR.fondoKey===key&&TR.fondo) return TR.fondo;
+    var off=document.createElement('canvas'); off.width=W*dpr; off.height=H*dpr;
+    var g=off.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.font="11px 'Bai Jamjuree'";
+    var E=escalasTray(T,W,H), np=T.idx.length;
+    g.fillStyle=COL.grisOsc; g.strokeStyle='rgba(174,180,190,.1)'; g.textAlign='right';
+    [0.05,0.1,0.25,0.5,1,2,5,10,20,50,100,200].forEach(function(v){ if(v<T.lo||v>T.hi) return; var y=E.Y(v); g.beginPath(); g.moveTo(TPL,y); g.lineTo(W-TPR,y); g.stroke(); g.fillText('$'+(v<1?v.toFixed(2):v), TPL-5, y+4); });
+    var y0=Math.floor(T.B.d[T.idx[0]]/10000), y1=Math.floor(T.B.d[T.idx[np-1]]/10000), paso=Math.max(1,Math.ceil((y1-y0)/(W<500?5:9)));
+    g.textAlign='center';
+    for(var yy=y0+1;yy<=y1;yy+=paso){ var k=0; while(k<np&&T.B.d[T.idx[k]]<yy*10000+101) k++; if(k>=np) break; var x=E.X(k); g.beginPath(); g.moveTo(x,TPT); g.lineTo(x,H-TPB); g.stroke(); g.fillText(String(yy), x, H-7); }
+    g.strokeStyle='rgba(99,252,175,.07)'; g.lineWidth=1;
+    T.lista.forEach(function(e){ var v=e.t.v; g.beginPath(); for(var i=0;i<np;i++){ var px=E.X(i), py=E.Y(v[i]); i?g.lineTo(px,py):g.moveTo(px,py); } g.stroke(); });
+    g.strokeStyle=COL.rojo; g.setLineDash([6,4]); g.lineWidth=1.3; g.beginPath();
+    for(var j=0;j<np;j++){ var qx=E.X(j), qy=E.Y(T.bh.v[j]); j?g.lineTo(qx,qy):g.moveTo(qx,qy); } g.stroke(); g.setLineDash([]);
+    TR.fondo=off; TR.fondoKey=key; return off;
+  }
+  function selTray(T){ var P=S.P; for(var i=0;i<T.lista.length;i++){ var r=T.lista[i].r; if(r[0]===P.sma&&r[1]===P.banda&&r[2]===P.sem&&r[3]===P.x&&r[4]===P.y) return T.lista[i]; } return null; }
+  function dibujarTray(){
+    var T=trayectos(), o=lienzo(CVT), g=o.g, W=o.W, H=o.H, dpr=Math.max(1,window.devicePixelRatio||1);
+    var fondo=fondoTray(T,W,H,dpr); g.save(); g.setTransform(1,0,0,1,0,0); g.drawImage(fondo,0,0); g.restore();
+    var E=escalasTray(T,W,H), np=T.idx.length, sel=selTray(T); if(!sel) return;
+    var v=sel.t.v;
+    g.beginPath(); for(var i=0;i<np;i++){ var px=E.X(i), py=E.Y(v[i]); i?g.lineTo(px,py):g.moveTo(px,py); }
+    g.strokeStyle='rgba(13,15,20,.9)'; g.lineWidth=4.5; g.stroke();
+    g.strokeStyle=COL.crema; g.lineWidth=2.2; g.stroke();
+    var vf=v[np-1], xf=E.X(np-1), yf=E.Y(vf);
+    g.fillStyle=COL.crema; g.beginPath(); g.arc(xf,yf,3.5,0,7); g.fill();
+    g.font="600 11px 'Bai Jamjuree'"; g.textAlign='right'; g.fillText('$'+vf.toFixed(1), xf-7, yf-7);
+    var vb=T.bh.v[np-1], yb=E.Y(vb); g.fillStyle=COL.rojo; g.fillText('$'+(vb<1?vb.toFixed(2):vb.toFixed(1)), xf-7, yb+(yb>yf?14:-7));
+    if(TR.hover>=0&&TR.hover<np){ var hx=E.X(TR.hover); g.strokeStyle='rgba(254,249,243,.35)'; g.setLineDash([3,3]); g.lineWidth=1; g.beginPath(); g.moveTo(hx,TPT); g.lineTo(hx,H-TPB); g.stroke(); g.setLineDash([]); g.fillStyle=COL.crema; g.beginPath(); g.arc(hx,E.Y(v[TR.hover]),4,0,7); g.fill(); }
+    $('t-tray').textContent='Las 960 versiones en la historia · '+nombre();
+    lectorTray(T,sel);
+  }
+  function lectorTray(T,sel){
+    var np=T.idx.length, k=(TR.hover>=0&&TR.hover<np)?TR.hover:np-1, vs=sel.t.v[k], vb=T.bh.v[k], mn=Infinity, mx=-Infinity, mejores=0;
+    T.lista.forEach(function(e){ var x=e.t.v[k]; if(x<mn) mn=x; if(x>mx) mx=x; if(x>vs) mejores++; });
+    $('lector-tray').innerHTML='<b>'+fFecha(T.B.d[T.idx[k]])+'</b> · $1 se volvió <b>$'+vs.toFixed(2)+'</b> con la cargada ('+descP(sel.r)+'). Sin regla: <b>$'+vb.toFixed(2)+'</b>. Las 960 van de $'+mn.toFixed(2)+' a $'+mx.toFixed(2)+'. '+mejores+' versiones van por encima de la cargada en esta fecha.';
+  }
+  function hoverTray(clientX){ var T=trayectos(), r=CVT.getBoundingClientRect(), W=CVT.clientWidth, np=T.idx.length; TR.hover=Math.max(0,Math.min(np-1,Math.round((clientX-r.left-TPL)/Math.max(1,W-TPL-TPR)*(np-1)))); dibujarTray(); }
+  CVT.addEventListener('mousemove', function(ev){ hoverTray(ev.clientX); });
+  CVT.addEventListener('mouseleave', function(){ TR.hover=-1; dibujarTray(); });
+  CVT.addEventListener('touchmove', function(ev){ hoverTray(ev.touches[0].clientX); }, {passive:true});
+
   var MAPAS={h1:null,h2:null};
   function mediana(arr){ var s=arr.slice().sort(function(p,q){ return p-q; }); return s[Math.floor(s.length/2)]; }
   function dibujarMapa(cv, filas, cols, kf, kc, nf, nc, etqF, etqC, key){
@@ -742,7 +850,7 @@
     else TIP.style.display='none';
   });
   CVM.addEventListener('mouseleave', function(){ TIP.style.display='none'; if(MP.hover){ MP.hover=null; dibujarMalla(); } });
-  CVM.addEventListener('click', function(ev){ var p=cerca(ev); if(!p) return; var r=p.r; setParams({sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]}); document.getElementById('parametros').scrollIntoView({behavior:'smooth'}); });
+  CVM.addEventListener('click', function(ev){ var p=cerca(ev); if(!p) return; var r=p.r; setParams({sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]}); });
   CVM.addEventListener('touchstart', function(ev){ var t=ev.touches[0], p=cerca(t); if(p) tip(CVM, t, '<b>'+descP(p.r)+'</b><br>Sharpe '+p.r[5].toFixed(2)+' · '+fPct(p.r[6],1)+' anual · peor caída '+fPctNeg(p.r[7])); }, {passive:true});
 
   function celdaEn(cv, key, ev){
@@ -761,7 +869,7 @@
     cv.addEventListener('click', function(ev){ var c=celdaEn(cv,key,ev); if(!c) return; var o={}; o[MAPAS[key].nf]=c.f; o[MAPAS[key].nc]=c.c; setParams(o); });
   });
 
-  window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); });
+  window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); dibujarTray(); });
 
   // arranque
   simular(); setRango('todo'); pintarParams();

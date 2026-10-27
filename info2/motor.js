@@ -57,5 +57,43 @@
     }
     return {ini:ini, n:n, d:d, c:c, sma:sma, mx:mx, iS:iS, iM:iM, sig:sig, pos:pos, eqR:eqR, eqB:eqB, ddR:ddR, ddB:ddB, ddRmin:ddRmin, ddBmin:ddBmin, ev:ev, met:met, P:P, L:L_, A:A};
   }
-  root.MOTOR={simular:simular};
+  /* Base por activo y apalancamiento: retornos diarios del activo y del efectivo (se calcula una vez). */
+  function base(D, A, L){
+    var s=D[A], d=s.d, a=s.a, y=s.y, n=d.length, L_=L||1;
+    var ini=0; while(ini<n && d[ini]<D.inicio[A]) ini++;
+    var rAct=new Float64Array(n), rTb=new Float64Array(n);
+    for(var i=1;i<n;i++){
+      var rEtf=a[i]/a[i-1]-1;
+      rTb[i]=Math.pow(1/(1-y[i]/100*91/360), diasCal(d[i-1],d[i])/91)-1;
+      rAct[i]= L_===1 ? rEtf : L_*rEtf-(L_-1)*rTb[i]-0.0095/252;
+    }
+    return {ini:ini, n:n, rAct:rAct, rTb:rTb, c:s.c, d:d};
+  }
+  /* Trayecto del capital con una versión de la regla, muestreado cada `paso` días desde ini (arranca en 1).
+     Sin regla: P=null. Devuelve Float32Array de puntos y el índice de cada punto. */
+  function trayecto(B, P, paso){
+    var n=B.n, ini=B.ini, c=B.c, rAct=B.rAct, rTb=B.rTb, out=[], idx=[];
+    var cap=1, i;
+    if(!P){
+      for(i=ini;i<n;i++){ if(i>ini) cap*=1+rAct[i]; if((i-ini)%paso===0||i===n-1){ out.push(cap); idx.push(i); } }
+      return {v:Float32Array.from(out), i:idx};
+    }
+    var w=P.sem*5, b=P.banda/100, X=-P.x/100, Y=-P.y/100, m=P.sma;
+    var sum=0, dq=new Int32Array(n), hd=0, tl=0, inS=1, inM=1, sig2=1, sig1=1, pos=1, posPrev=1, sma, mx;
+    for(i=0;i<n;i++){
+      sum+=c[i]; if(i>=m) sum-=c[i-m];
+      sma= i>=m-1 ? sum/m : NaN;
+      while(tl>hd && c[dq[tl-1]]<=c[i]) tl--;
+      dq[tl++]=i; while(dq[hd]<=i-w) hd++;
+      mx= i>=w-1 ? c[dq[hd]] : NaN;
+      if(sma===sma){ if(inS && c[i]<sma*(1-b)) inS=0; else if(!inS && c[i]>sma*(1+b)) inS=1; }
+      if(mx===mx){ var dist=c[i]/mx-1; if(inM && dist<X) inM=0; else if(!inM && dist>=Y) inM=1; }
+      var sig=(inS&&inM)?1:0;
+      posPrev=pos; pos= i>=2 ? sig2 : 1; sig2=sig1; sig1=sig;
+      if(i>ini){ cap*=1+(pos*rAct[i]+(1-pos)*rTb[i]-Math.abs(pos-posPrev)*0.0005); }
+      if(i>=ini && ((i-ini)%paso===0||i===n-1)){ out.push(cap); idx.push(i); }
+    }
+    return {v:Float32Array.from(out), i:idx};
+  }
+  root.MOTOR={simular:simular, base:base, trayecto:trayecto};
 })(typeof window!=='undefined'?window:module.exports);
