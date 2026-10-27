@@ -100,6 +100,7 @@
   .tr{ display:flex; align-items:center; gap:6px; margin-top:12px; flex-wrap:wrap; }
   .tr button{ border:1px solid var(--bd); background:var(--tinta2); color:var(--crema); border-radius:10px; min-width:40px; height:38px; padding:0 10px; font-size:13px; cursor:pointer; }
   .tr button:hover{ border-color:var(--menta); }
+  .tr button svg{ display:block; margin:0 auto; }
   .tr button.play{ background:var(--menta); color:var(--tinta); border-color:var(--menta); font-weight:700; min-width:88px; }
   .tr .vel{ margin-left:auto; display:flex; gap:4px; }
   .tr .vel button{ min-width:36px; font-size:12px; }
@@ -264,7 +265,7 @@
         <button id="b-fm" title="Un mes adelante">+1 m</button>
         <button id="b-fy" title="Un año adelante">+1 a</button>
         <button id="b-fin" title="Al final">⏭</button>
-        <button id="b-zoom" title="Ver el gráfico más grande">⛶ Zoom</button>
+        <button id="b-mas" title="Acercar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M7.5 10.5h6M10.5 7.5v6"/></svg></button><button id="b-menos" title="Alejar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M7.5 10.5h6"/></svg></button><button id="b-zoom" title="Pantalla completa"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button>
         <div class="vel" id="vel"><button data-v="0.5">½×</button><button data-v="1">1×</button><button data-v="2">2×</button><button data-v="4" class="on">4×</button></div>
       </div>
       <div class="scrub"><input type="range" id="scrub" min="0" max="100" value="0" step="1" aria-label="Tiempo"><div class="f" id="fecha"></div></div>
@@ -277,7 +278,7 @@
         <div class="kpi"><div class="l">Sharpe en este tramo</div><div class="v menta" id="k-sh-r">—</div><div class="s">sin regla: <b id="k-sh-b">—</b></div></div>
         <div class="kpi"><div class="l">Órdenes hasta hoy</div><div class="v" id="k-ord">—</div><div class="s" id="k-ord-s"></div></div>
       </div>
-      <p class="nota">Teclas: espacio para play y pausa, flechas para moverse un mes, con shift un año. Clic en el gráfico para saltar a ese día.</p>
+      <p class="nota">Teclas: espacio para play y pausa, flechas para moverse un mes, con shift un año. Clic en el gráfico para saltar a ese día. Las lupas acercan y alejan alrededor del día en que va el video.</p>
     </div>
   </section>
 
@@ -395,11 +396,11 @@
       <div>
         <ul class="cred">
           <li><b>Fundador de Empowered Investor</b></li>
+          <li><b>Inversión cuantitativa:</b> métodos basados en papers publicados, probados con décadas de datos antes de usarlos con plata real</li>
           <li><b>Licenciado en Administración de Empresas</b></li>
           <li>Trabajé en una firma de inversión que manejaba <b>$600 millones de dólares</b></li>
           <li><b>4.5 años en LSEG</b> (London Stock Exchange Group), una de las bolsas de valores más grandes del mundo</li>
           <li><b>11 años</b> gestionando portafolios en la bolsa de EE.&nbsp;UU.</li>
-          <li><b>3 de cada 10 clientes</b> nuestros son médicos</li>
         </ul>
         <p class="familia">Esposo. <b>Papá de tres.</b></p>
       </div>
@@ -810,9 +811,20 @@
   /* ---------- eventos ---------- */
   $('b-play').addEventListener('click', function(){ S.playing?parar():play(); });
   var CARD=document.querySelector('#video .card');
-  function zoom(on){ CARD.classList.toggle('lleno', on); document.body.classList.toggle('sin-scroll', on); $('b-zoom').textContent=on?'✕ Cerrar':'⛶ Zoom'; dibujar(); }
+  function zoom(on){ CARD.classList.toggle('lleno', on); document.body.classList.toggle('sin-scroll', on); $('b-zoom').innerHTML=on?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>'; $('b-zoom').title=on?'Cerrar':'Pantalla completa'; dibujar(); }
   $('b-zoom').addEventListener('click', function(){ zoom(!CARD.classList.contains('lleno')); });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape'&&CARD.classList.contains('lleno')) zoom(false); });
+  function zoomVista(f){
+    var span=S.b-S.a, nuevo=Math.round(span*f), lim=R.n-1-R.iniV;
+    nuevo=Math.max(60, Math.min(lim, nuevo)); if(nuevo===span) return;
+    var a=Math.round(S.cur-nuevo*(S.cur-S.a)/Math.max(1,span)); // mantiene la cabeza en la misma posición relativa
+    a=Math.max(R.iniV, Math.min(R.n-1-nuevo, a));
+    S.a=a; S.b=a+nuevo; S.rango='zoom'; S.hover=-1;
+    $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); });
+    SCRUB.min=S.a; SCRUB.max=S.b; dibujar();
+  }
+  $('b-mas').addEventListener('click', function(){ zoomVista(0.5); });
+  $('b-menos').addEventListener('click', function(){ zoomVista(2); });
   $('b-ini').addEventListener('click', function(){ parar(); ir(S.a); });
   $('b-fin').addEventListener('click', function(){ parar(); ir(S.b); });
   $('b-ay').addEventListener('click', function(){ mover(-252); });
@@ -831,7 +843,7 @@
     var b=e.target.closest('button'); if(!b) return;
     S.A=b.dataset.a; S.L=+b.dataset.l;
     $('activos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
-    var r=S.rango; parar(); simular(); setRango(r, true);
+    var r=S.rango==='zoom'?'todo':S.rango; parar(); simular(); setRango(r, true);
   });
   $('rangos').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
