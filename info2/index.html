@@ -498,7 +498,7 @@
   var $=function(id){ return document.getElementById(id); };
 
   function fFecha(n){ var y=Math.floor(n/10000), m=Math.floor(n/100)%100, d=n%100; return d+' '+MESES[m-1]+' '+y; }
-  function fPct(v,dec){ return (v>=0?'+':'−')+Math.abs(v*100).toFixed(dec===undefined?1:dec)+'%'; }
+  function fPct(v,dec){ var d=dec===undefined?1:dec; return (v>=0?'+':'−')+Math.abs(v*100).toLocaleString('en-US',{minimumFractionDigits:d, maximumFractionDigits:d})+'%'; }
   function fPctNeg(v){ return '−'+Math.abs(v*100).toFixed(0)+'%'; }
   function fNum(v){ return v>=100?Math.round(v).toLocaleString('en-US'):v.toFixed(2); }
   function nombre(){ return NOM[S.A][S.L]; }
