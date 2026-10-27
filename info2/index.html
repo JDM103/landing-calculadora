@@ -127,7 +127,7 @@
   @media(min-width:900px){ .kpis{ grid-template-columns:repeat(4,1fr); } }
   .kpi{ background:var(--tinta2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; min-width:0; }
   .kpi .l{ font-size:11px; color:var(--gris-sec); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
-  .kpi .v{ font-size:20px; font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+  .kpi .v{ font-size:clamp(15px, 4.2vw, 20px); font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
   .kpi .v.menta{ color:var(--menta); } .kpi .v.rojo{ color:var(--rojo); }
   .kpi .s{ font-size:11.5px; color:var(--gris-sec); margin-top:2px; }
   .kpi .s b{ color:var(--gris); font-weight:600; }
@@ -675,7 +675,7 @@
     var ticks=[];
     if(log){ for(var q=0;q<=3;q++) ticks.push(Math.exp(Math.log(lo)+q/3*(Math.log(hi)-Math.log(lo)))); }
     else { for(var q2=0;q2<=3;q2++) ticks.push(lo+q2/3*(hi-lo)); }
-    ticks.forEach(function(v){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(PADL,y); g.lineTo(W-PADR,y); g.stroke(); g.fillText(fUSD(v), W-PADR+6, y+4); });
+    ticks.forEach(function(v){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(PADL,y); g.lineTo(W-PADR,y); g.stroke(); g.fillStyle='rgba(142,150,163,.7)'; g.textAlign='left'; g.fillText(fUSD(v), PADL+4, Math.max(mT+9, y-3)); });
     // línea de los $100,000
     var y100=Y(INV); if(y100>mT&&y100<mB){ g.strokeStyle='rgba(254,249,243,.25)'; g.setLineDash([3,4]); g.beginPath(); g.moveTo(PADL,y100); g.lineTo(W-PADR,y100); g.stroke(); g.setLineDash([]); g.fillStyle=COL.grisSec; g.font="10px 'Bai Jamjuree'"; g.textAlign='right'; g.fillText('lo que pusiste: $100,000', W-PADR-6, y100-4); g.font="11px 'Bai Jamjuree'"; }
     function linea(fn,color,ancho){ g.beginPath(); for(var i=a;i<=cur;i++){ var x=Xi(i), y=Y(fn(i)); i===a?g.moveTo(x,y):g.lineTo(x,y); } g.strokeStyle=color; g.lineWidth=ancho; g.stroke(); }
@@ -684,10 +684,14 @@
     var xr=Xi(cur), yr=Y(vR(cur)), yb=Y(vB(cur));
     g.fillStyle=COL.menta; g.beginPath(); g.arc(xr,yr,3.5,0,7); g.fill();
     g.fillStyle=COL.grisSec; g.beginPath(); g.arc(xr,yb,3,0,7); g.fill();
-    g.font="600 11px 'Bai Jamjuree'"; g.textAlign='right';
-    var sep=Math.abs(yr-yb)<14, up=yr<=yb;
-    g.fillStyle=COL.menta; g.fillText(fUSD(vR(cur)), xr-7, yr+(sep?(up?-6:14):4));
-    g.fillStyle=COL.gris; g.fillText(fUSD(vB(cur)), xr-7, yb+(sep?(up?14:-6):4));
+    // valores finales, grandes, en el margen derecho
+    var tR=fUSD(vR(cur)), tB=fUSD(vB(cur)), yR=yr, yB=yb, alto=18, minSep=alto+2;
+    if(Math.abs(yR-yB)<minSep){ var mid=(yR+yB)/2; if(yr<=yb){ yR=mid-minSep/2; yB=mid+minSep/2; } else { yR=mid+minSep/2; yB=mid-minSep/2; } }
+    yR=Math.max(mT+alto/2, Math.min(mB-alto/2, yR)); yB=Math.max(mT+alto/2, Math.min(mB-alto/2, yB));
+    g.font="700 12.5px 'Bai Jamjuree'"; g.textAlign='left';
+    function etiqueta(txt, y, color){ var w=g.measureText(txt).width+10, x0=W-PADR+3; g.fillStyle='rgba(13,15,20,.92)'; g.fillRect(x0, y-alto/2, Math.min(w, PADR-4), alto); g.fillStyle=color; g.fillText(txt, x0+5, y+4.5); }
+    g.strokeStyle='rgba(174,180,190,.35)'; g.lineWidth=1; g.beginPath(); g.moveTo(xr,yr); g.lineTo(W-PADR+3,yR); g.stroke(); g.beginPath(); g.moveTo(xr,yb); g.lineTo(W-PADR+3,yB); g.stroke();
+    etiqueta(tR, yR, COL.menta); etiqueta(tB, yB, COL.gris);
     g.font="11px 'Bai Jamjuree'";
     g.strokeStyle='rgba(254,249,243,.6)'; g.lineWidth=1; g.beginPath(); g.moveTo(xr,mT); g.lineTo(xr,mB); g.stroke();
     if(S.hover>=a&&S.hover<=cur&&S.hover!==cur){ var hh=Xi(S.hover); g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,3]); g.beginPath(); g.moveTo(hh,mT); g.lineTo(hh,mB); g.stroke(); g.setLineDash([]); g.fillStyle=COL.crema; g.beginPath(); g.arc(hh,Y(vR(S.hover)),3,0,7); g.fill(); }
@@ -729,7 +733,7 @@
       +' · vs promedio: <b>'+(isFinite(vs)?(vs>=0?'+':'')+vs.toFixed(1)+'%':'—')+'</b> ('+(R.iS[i]===1?'sí':'no')+')'
       +' · vs máximo: <b>'+(isFinite(vm)?vm.toFixed(1)+'%':'—')+'</b> ('+(R.iM[i]===1?'sí':'no')+')'
       +' → '+(R.sig[i]===1?'<b style="color:var(--menta)">invertido</b>':'<b style="color:var(--rojo)">fuera</b>, en efectivo');
-    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>'+fUSD(S._pnl.r(i))+'</b> · sin regla <b>'+fUSD(S._pnl.b(i))+'</b>'; }
+    if(S._pnl){ html+='<br>$100,000 al inicio del tramo: con la regla <b>$'+Math.round(S._pnl.r(i)).toLocaleString('en-US')+'</b> · sin regla <b>$'+Math.round(S._pnl.b(i)).toLocaleString('en-US')+'</b>'; }
     if(S._dd){ html+=' · Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
     for(var k=0;k<R.ev.length;k++){
       var e=R.ev[k];
@@ -748,7 +752,7 @@
     $('k-estado-s').textContent=dentro?('100% en '+nombre()):'en efectivo, ganando interés';
     var rr=R.eqR[i]/R.eqR[a]-1, rb=R.eqB[i]/R.eqB[a]-1;
     $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=0?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
-    $('k-usd-r').textContent=fUSD(INV*(1+rr)); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent=fUSD(INV*(1+rb));
+    $('k-usd-r').textContent='$'+Math.round(INV*(1+rr)).toLocaleString('en-US'); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent='$'+Math.round(INV*(1+rb)).toLocaleString('en-US');
     var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
     $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v menta'; $('k-dd-b').textContent=fPctNeg(mb);
     // anual y Sharpe del tramo hasta hoy
