@@ -319,7 +319,7 @@
     <div class="eyebrow">Operación</div>
     <h2>Cómo se opera, todos los días</h2>
     <div class="cols3">
-      <div class="box"><div class="n">1</div><h3>Revisión diaria</h3><p>Al cierre de Nueva York, 2:00 pm en Costa Rica, el sistema actualiza el promedio de 200 días, el máximo de 39 semanas y los dos semáforos.</p></div>
+      <div class="box"><div class="n">1</div><h3>Revisión diaria</h3><p>Al cierre de Nueva York, 4:00 pm, el sistema actualiza el promedio de 200 días, el máximo de 39 semanas y los dos semáforos.</p></div>
       <div class="box"><div class="n">2</div><h3>Si la señal cambió</h3><p>La orden se ejecuta al cierre del día siguiente, en todas las cuentas a la vez, desde el panel del asesor. Si no cambió, no se hace nada.</p></div>
       <div class="box"><div class="n">3</div><h3>Cuenta del cliente</h3><p>Cada cuenta está a nombre del cliente en Alpaca, bróker regulado en EE. UU. El cliente ve su plata en todo momento. El asesor solo opera, nunca retira.</p></div>
     </div>
@@ -337,16 +337,16 @@
     <div class="cols" style="grid-template-columns:3fr 2fr">
       <div style="display:flex;flex-direction:column;min-height:0">
         <div class="chart"><canvas id="cv-cuentas"></canvas></div>
-        <div class="leg"><span><i style="background:var(--menta)"></i>Rendimiento anual de cada cuenta</span><span><i style="background:var(--crema);height:1px;border-top:2px dashed var(--crema);background:none"></i>Promedio: 18.3%</span></div>
+        <div class="leg"><span><i style="background:var(--menta)"></i>$100,000 creciendo al rendimiento promedio, marzo 2024 a octubre 2026</span></div>
       </div>
       <div>
         <div class="tiles t2" style="margin-top:0">
           <div class="tile"><div class="l">Cuentas con un año o más</div><div class="v">21</div><div class="s">abiertas entre marzo 2024 y octubre 2025</div></div>
-          <div class="tile"><div class="l">Capital administrado</div><div class="v">$1.07M</div><div class="s">en 39 cuentas, al 27 de octubre de 2026</div></div>
+          <div class="tile"><div class="l">Promedio anual</div><div class="v menta">18.3%</div><div class="s">mediana por cuenta: <b>18.4%</b></div></div>
         </div>
         <div class="box" style="margin-top:max(10px,1.2cqw)">
           <p>Cada cuenta trae el contexto de su dueño: aportes en distintas fechas, el vehículo según su perfil y otras posiciones que el cliente pidió.</p>
-          <p>Aun así, el promedio de todas las cuentas con un año o más, con cada aporte y retiro en su fecha real, es <b>18.3% anual</b>. La mediana es 18.4%.</p>
+          <p>Aun así, el promedio de las cuentas con un año o más, con cada aporte y retiro en su fecha real, es <b>18.3% anual</b>.</p>
         </div>
       </div>
     </div>
@@ -482,22 +482,26 @@
     g.fillStyle=COL.menta; g.fillText(fUSD(vR(b)), xr-7, yr+(cerca?(arriba?-9:9):0));
     g.fillStyle=COL.gris; g.fillText(fUSD(vB(b)), xr-7, yb+(cerca?(arriba?9:-9):0));
   }
-  /* cuentas con un año o más: rendimiento anual (TIR) de cada una, del panel al 27 oct 2026 */
-  var CUENTAS=[-33.4,-6.8,-2.3,-1.0,0.4,5.4,6.7,11.0,17.1,17.7,18.4,22.5,25.1,27.8,29.3,30.6,47.0,49.1,55.1,78.4,94.1], PROM=18.3;
-  function barras(id){
+  /* cuentas: $100,000 creciendo al rendimiento promedio (18.3% anual) de marzo 2024 a octubre 2026 */
+  var PROM=0.183, T0=Date.UTC(2024,2,26), T1=Date.UTC(2026,9,27);
+  function cuentas(id){
     var cv=document.getElementById(id), o=lienzo(cv); if(!o) return;
-    var g=o.g, W=o.W, H=o.H, PL=44, PR=10, mT=14, mB=H-10, n=CUENTAS.length;
-    var lo=Math.floor(Math.min.apply(null,CUENTAS)/20)*20, hi=Math.ceil(Math.max.apply(null,CUENTAS)/20)*20;
-    var Y=function(v){ return mT+(1-(v-lo)/(hi-lo))*(mB-mT); };
-    g.font="12px 'Bai Jamjuree'"; g.textAlign='right'; g.textBaseline='middle';
-    for(var v=lo;v<=hi;v+=20){ var y=Y(v); g.strokeStyle= v===0?'rgba(254,249,243,.35)':'rgba(174,180,190,.12)'; g.lineWidth=1; g.beginPath(); g.moveTo(PL,y); g.lineTo(W-PR,y); g.stroke(); g.fillStyle=COL.grisOsc; g.fillText(v+'%',PL-6,y); }
-    var gap=6, bw=(W-PL-PR-gap*(n-1))/n;
-    CUENTAS.forEach(function(v,k){ var x=PL+k*(bw+gap), y0=Y(0), y1=Y(v); g.fillStyle= v>=0?COL.menta:COL.rojo; var top=Math.min(y0,y1), h=Math.max(1,Math.abs(y1-y0)); g.beginPath(); g.roundRect?g.roundRect(x,top,bw,h,3):g.rect(x,top,bw,h); g.fill(); });
-    var yp=Y(PROM); g.strokeStyle=COL.crema; g.lineWidth=1.5; g.setLineDash([5,4]); g.beginPath(); g.moveTo(PL,yp); g.lineTo(W-PR,yp); g.stroke(); g.setLineDash([]);
-    g.font="600 12.5px 'Bai Jamjuree'"; g.fillStyle=COL.crema; g.textAlign='left'; g.textBaseline='bottom'; g.fillText('promedio 18.3%',PL+6,yp-4);
+    var g=o.g, W=o.W, H=o.H, PL=8, PR=70, mT=14, mB=H-22, N=400;
+    var anios=(T1-T0)/31557600000, fin=INV*Math.pow(1+PROM,anios), lo=INV*0.97, hi=fin*1.03;
+    var Y=function(v){ return mT+(1-(v-lo)/(hi-lo))*(mB-mT); }, X=function(k){ return PL+k/N*(W-PL-PR); };
+    g.font="12.5px 'Bai Jamjuree'"; g.textAlign='left'; g.textBaseline='middle';
+    for(var v=100000; v<=fin; v+=10000){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.12)'; g.lineWidth=1; g.beginPath(); g.moveTo(PL,y); g.lineTo(W-PR,y); g.stroke(); if((v/10000)%2===0){ g.fillStyle=COL.grisOsc; g.fillText(fUSD(v),W-PR+6,y); } }
+    g.textAlign='center'; g.textBaseline='top'; g.fillStyle=COL.grisSec;
+    [[2024,6],[2025,0],[2025,6],[2026,0],[2026,6]].forEach(function(m){ var t=Date.UTC(m[0],m[1],1), k=(t-T0)/(T1-T0)*N, x=X(k); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(x,mT); g.lineTo(x,mB); g.stroke(); g.fillText(m[1]===0?String(m[0]):'jul '+m[0],x,mB+4); });
+    g.beginPath(); for(var k=0;k<=N;k++){ var vv=INV*Math.pow(1+PROM,anios*k/N), x1=X(k), y1=Y(vv); k===0?g.moveTo(x1,y1):g.lineTo(x1,y1); }
+    g.strokeStyle=COL.menta; g.lineWidth=2.6; g.lineJoin='round'; g.stroke();
+    g.lineTo(X(N),mB); g.lineTo(X(0),mB); g.closePath(); g.fillStyle='rgba(99,252,175,.08)'; g.fill();
+    g.fillStyle=COL.menta; g.beginPath(); g.arc(X(N),Y(fin),4,0,7); g.fill();
+    g.font="600 13px 'Bai Jamjuree'"; g.textAlign='right'; g.textBaseline='bottom'; g.fillText(fUSD(fin),X(N)-8,Y(fin)-6);
+    g.fillStyle=COL.grisSec; g.font="12px 'Bai Jamjuree'"; g.textAlign='left'; g.textBaseline='bottom'; g.fillText('$100,000',X(0)+4,Y(INV)-5);
   }
   function dibujar(){
-    barras('cv-cuentas');
+    cuentas('cv-cuentas');
     grafico('cv-todo',19990104,99999999,false);
     grafico('cv-2000',19990701,20031231,false);
     grafico('cv-2008',20070702,20091231,true);
