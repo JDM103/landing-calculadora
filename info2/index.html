@@ -759,7 +759,7 @@
       var u=function(x){ return Date.UTC(Math.floor(x/10000), Math.floor(x/100)%100-1, x%100); };
       var ys=(u(R.d[i])-u(R.d[a]))/(365.25*864e5), ent=Math.floor(ys+0.02);
       if(ys<10&&ys-ent>=0.15&&ys-ent<=0.85) tiempo='hace '+ys.toFixed(1).replace('.',',')+' años';
-      else { var yr2=Math.round(ys); tiempo='hace '+yr2+(yr2===1?' año':' años'); }
+      else { var yr2=ys>=10?Math.floor(ys+0.02):Math.round(ys); tiempo='hace '+yr2+(yr2===1?' año':' años'); }
     }
     $('k-usd-l').textContent='$100,000 '+tiempo+', hoy serían';
     $('k-usd-r').textContent='$'+Math.round(INV*(1+rr)).toLocaleString('en-US'); $('k-usd-r').className='v '+(rr>=0?'menta':'rojo'); $('k-usd-b').textContent='$'+Math.round(INV*(1+rb)).toLocaleString('en-US');
