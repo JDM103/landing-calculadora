@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<script defer src="/js/pixel.js"></script>
+<title>El edge, como un video · Empowered Investor</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Mirá la regla de salida y reentrada día por día, adelantá y retrocedé en el tiempo, cambiá los parámetros y compará con las 960 versiones probadas.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="El edge, como un video · Empowered Investor">
+<meta property="og:description" content="La regla de salida y reentrada, día por día, con los parámetros en tus manos.">
+<meta property="og:image" content="https://investorcr.com/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0d0f14; --tinta2:#15191E; --carta:#171c24; --bd:#262d38;
+    --menta:#63FCAF; --peri:#8B9BFF; --crema:#FEF9F3; --gris:#D9DCE1; --gris-sec:#8E96A3;
+    --rojo:#F07A6B; --ambar:#F5C26B;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img{ max-width:100%; display:block; }
+  a{ color:var(--menta); }
+  b,strong{ font-weight:700; }
+  button{ font-family:inherit; }
+
+  .wrap{ width:100%; max-width:880px; margin:0 auto; padding:0 16px 60px; }
+  .top{ display:flex; align-items:center; justify-content:space-between; padding:18px 0 8px; }
+  .top img{ width:56px; height:56px; }
+  .top a.wa{ font-size:13px; font-weight:600; color:var(--tinta); background:var(--menta); text-decoration:none; border-radius:999px; padding:9px 14px; }
+
+  .hero{ padding:18px 0 6px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; margin-bottom:10px; }
+  h1{ font-size:clamp(28px,7vw,42px); font-weight:700; line-height:1.08; letter-spacing:-.02em; }
+  h1 em{ font-style:normal; color:var(--menta); }
+  .sub{ font-size:16px; line-height:1.5; color:var(--gris); margin-top:12px; max-width:600px; }
+  .chips{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 4px; scrollbar-width:none; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chips a{ flex:0 0 auto; font-size:13px; color:var(--gris); text-decoration:none; border:1px solid var(--bd); border-radius:999px; padding:7px 12px; white-space:nowrap; }
+  .chips a:hover{ border-color:var(--menta); color:var(--menta); }
+
+  section{ padding:36px 0 6px; border-top:1px solid var(--bd); margin-top:30px; }
+  .num{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--carta); border:1px solid var(--bd); font-size:13px; font-weight:700; color:var(--menta); margin-bottom:10px; }
+  h2{ font-size:clamp(22px,5.5vw,30px); font-weight:700; line-height:1.15; letter-spacing:-.02em; }
+  .lede{ font-size:15px; line-height:1.5; color:var(--gris); margin-top:8px; max-width:620px; }
+  .lede b{ color:var(--crema); }
+  .nota{ font-size:12.5px; line-height:1.5; color:var(--gris-sec); margin-top:10px; }
+  .nota a{ color:var(--gris); }
+
+  .card{ margin-top:16px; border-radius:18px; border:1px solid var(--bd); background:var(--carta); padding:14px; }
+  .card h3{ font-size:14px; font-weight:700; color:var(--crema); }
+  .card .q{ font-size:12.5px; color:var(--gris-sec); margin-top:3px; line-height:1.4; }
+
+  /* botones de control */
+  .ctl{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:10px; }
+  .ctl .lbl{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; margin-right:4px; flex:0 0 auto; }
+  .ctl button{ border:1px solid var(--bd); background:var(--tinta2); color:var(--gris); border-radius:999px; padding:6px 11px; font-size:12.5px; cursor:pointer; line-height:1; }
+  .ctl button:hover{ border-color:var(--menta); }
+  .ctl button.on{ background:var(--menta); color:var(--tinta); border-color:var(--menta); font-weight:700; }
+  .ctl button small{ font-weight:500; opacity:.75; margin-left:3px; }
+  .ctl .sep{ width:1px; height:18px; background:var(--bd); margin:0 4px; }
+
+  canvas{ display:block; width:100%; }
+  #cv-precio{ height:380px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
+  #cv-dd{ height:150px; margin-top:8px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
+  @media(max-width:600px){ #cv-precio{ height:320px; } #cv-dd{ height:130px; } }
+  .panel-t{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .panel-t h4{ font-size:13px; font-weight:700; color:var(--crema); }
+  .panel-t span{ font-size:12px; color:var(--gris-sec); }
+  .leg{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:11.5px; color:var(--gris-sec); }
+  .leg span{ display:inline-flex; align-items:center; gap:6px; }
+  .leg i{ display:inline-block; width:14px; height:3px; border-radius:2px; }
+  .leg i.dash{ background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px); height:2px; }
+  .leg i.sq{ width:12px; height:12px; border-radius:3px; }
+  .leg i.flecha{ width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; }
+  .lector{ font-size:12.5px; line-height:1.5; color:var(--gris); margin-top:8px; min-height:2.6em; }
+  .lector b{ color:var(--crema); }
+
+  /* transporte */
+  .tr{ display:flex; align-items:center; gap:6px; margin-top:12px; flex-wrap:wrap; }
+  .tr button{ border:1px solid var(--bd); background:var(--tinta2); color:var(--crema); border-radius:10px; min-width:40px; height:38px; padding:0 10px; font-size:13px; cursor:pointer; }
+  .tr button:hover{ border-color:var(--menta); }
+  .tr button.play{ background:var(--menta); color:var(--tinta); border-color:var(--menta); font-weight:700; min-width:88px; }
+  .tr .vel{ margin-left:auto; display:flex; gap:4px; }
+  .tr .vel button{ min-width:36px; font-size:12px; }
+  .tr .vel button.on{ border-color:var(--menta); color:var(--menta); }
+  .scrub{ margin-top:10px; display:flex; align-items:center; gap:10px; }
+  .scrub input{ flex:1; -webkit-appearance:none; appearance:none; height:6px; border-radius:3px; background:var(--bd); outline:none; }
+  .scrub input::-webkit-slider-thumb{ -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--menta); cursor:pointer; border:2px solid var(--tinta); }
+  .scrub input::-moz-range-thumb{ width:18px; height:18px; border-radius:50%; background:var(--menta); cursor:pointer; border:2px solid var(--tinta); }
+  .scrub .f{ font-size:12.5px; color:var(--gris); min-width:92px; text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* kpis vivos */
+  .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
+  @media(min-width:640px){ .kpis{ grid-template-columns:repeat(4,1fr); } }
+  .kpi{ background:var(--tinta2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; min-width:0; }
+  .kpi .l{ font-size:11px; color:var(--gris-sec); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
+  .kpi .v{ font-size:20px; font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+  .kpi .v.menta{ color:var(--menta); } .kpi .v.rojo{ color:var(--rojo); }
+  .kpi .s{ font-size:11.5px; color:var(--gris-sec); margin-top:2px; }
+  .kpi .s b{ color:var(--gris); font-weight:600; }
+
+  /* parámetros */
+  .params{ display:grid; gap:10px; margin-top:12px; }
+  .params .g{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .params .g .lbl{ flex:0 0 150px; font-size:12.5px; color:var(--gris); }
+  .params .g .lbl small{ display:block; font-size:11px; color:var(--gris-sec); }
+  @media(max-width:520px){ .params .g .lbl{ flex:0 0 100%; } }
+  .tabla{ margin-top:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table.res{ width:100%; min-width:460px; border-collapse:collapse; font-size:13px; }
+  table.res th,table.res td{ padding:8px 6px; text-align:right; border-bottom:1px solid var(--bd); font-variant-numeric:tabular-nums; }
+  table.res th{ font-size:11px; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+  table.res td:first-child,table.res th:first-child{ text-align:left; }
+  table.res tr.r td{ color:var(--crema); font-weight:600; } table.res tr.r td:first-child{ color:var(--menta); }
+  table.res tr.b td{ color:var(--gris-sec); }
+  .pos-malla{ margin-top:12px; border-radius:12px; border:1px solid rgba(99,252,175,.4); background:rgba(99,252,175,.06); padding:10px 12px; font-size:13px; line-height:1.5; color:var(--gris); }
+  .pos-malla b{ color:var(--crema); }
+
+  /* malla */
+  #cv-malla{ height:340px; margin-top:10px; border-radius:12px; background:var(--tinta2); cursor:crosshair; }
+  @media(max-width:600px){ #cv-malla{ height:300px; } }
+  .mapas{ display:grid; gap:10px; margin-top:12px; }
+  @media(min-width:640px){ .mapas{ grid-template-columns:1fr 1fr; } }
+  .mapa h4{ font-size:12.5px; font-weight:700; color:var(--crema); }
+  .mapa canvas{ height:200px; margin-top:6px; border-radius:12px; background:var(--tinta2); cursor:pointer; }
+  .tip{ position:absolute; pointer-events:none; z-index:5; background:#0d0f14; border:1px solid var(--bd); border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.45; color:var(--gris); max-width:260px; display:none; box-shadow:0 8px 24px rgba(0,0,0,.4); }
+  .tip b{ color:var(--crema); }
+  .rel{ position:relative; }
+
+  /* papers */
+  .paper{ margin-top:14px; border-radius:18px; border:1px solid var(--bd); background:var(--carta); padding:16px; }
+  .paper .logobox{ height:64px; border-radius:10px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:8px 14px; width:fit-content; min-width:180px; }
+  .paper .logobox.texto{ background:#10161f; border:1px solid var(--bd); }
+  .paper .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:17px; color:var(--crema); font-style:italic; }
+  .paper .logobox img{ max-height:40px; max-width:150px; }
+  .paper .src{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gris-sec); margin-top:10px; }
+  .paper h3{ font-size:17px; font-weight:700; line-height:1.3; margin-top:4px; }
+  .paper ul{ margin-top:10px; padding-left:0; list-style:none; display:grid; gap:7px; }
+  .paper li{ font-size:13.5px; line-height:1.45; color:var(--gris); padding-left:18px; position:relative; }
+  .paper li::before{ content:""; position:absolute; left:2px; top:8px; width:7px; height:7px; border-radius:50%; background:var(--menta); }
+  .paper .usamos{ margin-top:12px; display:grid; gap:8px; }
+  @media(min-width:640px){ .paper .usamos{ grid-template-columns:1fr 1fr; } }
+  .paper .usamos div{ border-radius:12px; border:1px solid var(--bd); background:var(--tinta2); padding:10px 12px; font-size:13px; line-height:1.45; color:var(--gris); }
+  .paper .usamos div b{ display:block; color:var(--menta); font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:4px; }
+  .paper .link{ display:inline-block; margin-top:10px; font-size:12.5px; color:var(--gris); }
+
+  footer{ width:100%; max-width:880px; margin:0 auto; padding:26px 16px 36px; border-top:1px solid var(--bd); }
+  footer p{ font-size:11px; color:var(--gris-sec); line-height:1.6; }
+  footer p + p{ margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="56" height="56"></a>
+    <a class="wa" href="/info/">Volver a /info</a>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Empowered Investor · El freno del plan</div>
+    <h1>El edge, <em>como un video.</em></h1>
+    <p class="sub">La regla que nos saca del mercado antes de una caída larga y nos vuelve a meter cuando pasa. Dale play, movete en el tiempo, cambiá los parámetros y mirá qué pasa.</p>
+    <nav class="chips" aria-label="Índice">
+      <a href="#video">El video</a>
+      <a href="#parametros">Los parámetros</a>
+      <a href="#malla">Las 960 versiones</a>
+      <a href="#papers">Los papers</a>
+    </nav>
+  </div>
+
+  <!-- 1 · VIDEO -->
+  <section id="video">
+    <div class="num">1</div>
+    <h2>La regla, día por día</h2>
+    <p class="lede">Dos indicadores. Con los dos en verde, la plata está invertida. Con uno en rojo, está en efectivo ganando interés. <b>Flecha verde: entra. Flecha roja: sale.</b></p>
+
+    <div class="card">
+      <div class="ctl" id="activos">
+        <span class="lbl">Activo</span>
+        <button data-a="QQQ" data-l="1" class="on">QQQ<small>Nasdaq 100</small></button>
+        <button data-a="QQQ" data-l="2">QLD<small>×2</small></button>
+        <button data-a="QQQ" data-l="3">TQQQ<small>×3</small></button>
+        <span class="sep"></span>
+        <button data-a="SPY" data-l="1">SPY<small>S&amp;P 500</small></button>
+        <button data-a="SPY" data-l="2">SSO<small>×2</small></button>
+        <button data-a="SPY" data-l="3">UPRO<small>×3</small></button>
+      </div>
+      <div class="ctl" id="rangos">
+        <span class="lbl">Tramo</span>
+        <button data-r="todo" class="on">Todo</button>
+        <button data-r="20000101,20031231">2000 a 2003</button>
+        <button data-r="20070601,20091231">2008</button>
+        <button data-r="20191001,20201231">2020</button>
+        <button data-r="20210901,20231231">2022</button>
+        <button data-r="u5">Últimos 5 años</button>
+      </div>
+
+      <div class="panel-t"><h4 id="t-precio">Nasdaq 100 (QQQ), escala log</h4><span id="t-precio-s">La señal se calcula sobre el índice</span></div>
+      <canvas id="cv-precio"></canvas>
+      <div class="leg">
+        <span><i style="background:var(--menta)"></i>Precio</span>
+        <span><i style="background:var(--peri)"></i>Promedio móvil y su banda</span>
+        <span><i style="background:var(--ambar)"></i>Máximo reciente</span>
+        <span><i class="dash" style="color:var(--rojo)"></i>Nivel de salida</span>
+        <span><i class="dash" style="color:var(--ambar)"></i>Nivel de reentrada</span>
+        <span><i class="flecha" style="border-bottom:8px solid var(--menta)"></i>Entra</span>
+        <span><i class="flecha" style="border-top:8px solid var(--rojo)"></i>Sale</span>
+        <span><i class="sq" style="background:rgba(240,122,107,.25)"></i>Fuera del mercado</span>
+      </div>
+      <div class="lector" id="lector">Cargando…</div>
+
+      <div class="panel-t"><h4 id="t-dd">Caída desde el último máximo</h4><span>0% es estar en el máximo. Más abajo, más lejos de él</span></div>
+      <canvas id="cv-dd"></canvas>
+      <div class="leg">
+        <span><i style="background:var(--menta)"></i><span id="l-dd-r">QQQ con la regla</span></span>
+        <span><i style="background:var(--gris-sec)"></i><span id="l-dd-b">QQQ sin regla, comprar y mantener</span></span>
+      </div>
+
+      <div class="tr">
+        <button id="b-ini" title="Al inicio">⏮</button>
+        <button id="b-ay" title="Un año atrás">−1 a</button>
+        <button id="b-am" title="Un mes atrás">−1 m</button>
+        <button id="b-play" class="play">▶ Play</button>
+        <button id="b-fm" title="Un mes adelante">+1 m</button>
+        <button id="b-fy" title="Un año adelante">+1 a</button>
+        <button id="b-fin" title="Al final">⏭</button>
+        <div class="vel" id="vel"><button data-v="0.5">½×</button><button data-v="1" class="on">1×</button><button data-v="2">2×</button><button data-v="4">4×</button></div>
+      </div>
+      <div class="scrub"><input type="range" id="scrub" min="0" max="100" value="0" step="1" aria-label="Tiempo"><div class="f" id="fecha"></div></div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="l">Estado</div><div class="v" id="k-estado">—</div><div class="s" id="k-estado-s"></div></div>
+        <div class="kpi"><div class="l">Tu plata, en este tramo</div><div class="v menta" id="k-ret-r">—</div><div class="s">sin regla: <b id="k-ret-b">—</b></div></div>
+        <div class="kpi"><div class="l">Peor caída hasta hoy</div><div class="v menta" id="k-dd-r">—</div><div class="s">sin regla: <b id="k-dd-b">—</b></div></div>
+        <div class="kpi"><div class="l">Órdenes hasta hoy</div><div class="v" id="k-ord">—</div><div class="s" id="k-ord-s"></div></div>
+      </div>
+      <p class="nota">Teclas: espacio para play y pausa, flechas para moverse un mes, con shift un año. Clic en el gráfico para saltar a ese día.</p>
+    </div>
+  </section>
+
+  <!-- 2 · PARÁMETROS -->
+  <section id="parametros">
+    <div class="num">2</div>
+    <h2>Cambiá los números</h2>
+    <p class="lede">Cada botón es un valor que probamos. Al cambiarlo, el video de arriba y los resultados de abajo se recalculan con la historia completa.</p>
+
+    <div class="card">
+      <div class="params" id="params">
+        <div class="g"><div class="lbl">Promedio móvil<small>días que promedia</small></div><button data-p="sma" data-v="100">100</button><button data-p="sma" data-v="150">150</button><button data-p="sma" data-v="200" class="on">200</button><button data-p="sma" data-v="250">250</button></div>
+        <div class="g"><div class="lbl">Banda del promedio<small>margen para no cambiar por ruido</small></div><button data-p="banda" data-v="1">1%</button><button data-p="banda" data-v="2">2%</button><button data-p="banda" data-v="3" class="on">3%</button><button data-p="banda" data-v="5">5%</button></div>
+        <div class="g"><div class="lbl">Máximo reciente<small>semanas hacia atrás</small></div><button data-p="sem" data-v="26">26</button><button data-p="sem" data-v="39" class="on">39</button><button data-p="sem" data-v="52">52</button></div>
+        <div class="g"><div class="lbl">Salida<small>caída desde el máximo que saca</small></div><button data-p="x" data-v="8">−8%</button><button data-p="x" data-v="10">−10%</button><button data-p="x" data-v="12" class="on">−12%</button><button data-p="x" data-v="15">−15%</button><button data-p="x" data-v="18">−18%</button></div>
+        <div class="g"><div class="lbl">Reentrada<small>distancia al máximo que vuelve a meter</small></div><button data-p="y" data-v="2">−2%</button><button data-p="y" data-v="4">−4%</button><button data-p="y" data-v="6" class="on">−6%</button><button data-p="y" data-v="8">−8%</button></div>
+      </div>
+      <div class="ctl" style="margin-top:12px"><button id="b-reset">Volver a la regla que usamos (200, 3%, 39, −12, −6)</button></div>
+
+      <div class="tabla"><table class="res">
+        <thead><tr><th id="res-t">Historia completa</th><th>Anual</th><th>Peor caída</th><th>Sharpe</th><th>Órdenes / año</th><th>Invertido</th></tr></thead>
+        <tbody>
+          <tr class="r"><td id="res-rn">Con la regla</td><td id="res-r-cagr"></td><td id="res-r-dd"></td><td id="res-r-sh"></td><td id="res-r-ord"></td><td id="res-r-exp"></td></tr>
+          <tr class="b"><td id="res-bn">Sin regla</td><td id="res-b-cagr"></td><td id="res-b-dd"></td><td id="res-b-sh"></td><td>0</td><td>100%</td></tr>
+        </tbody>
+      </table></div>
+      <div class="pos-malla" id="pos-malla"></div>
+      <p class="nota">Sharpe: retorno por encima del efectivo, dividido entre el riesgo. Más alto es mejor. Las versiones ×2 y ×3 se simulan día a día desde el índice, con el costo del préstamo y 0.95% anual de gastos.</p>
+    </div>
+  </section>
+
+  <!-- 3 · MALLA -->
+  <section id="malla">
+    <div class="num">3</div>
+    <h2>Las 960 versiones de la misma idea</h2>
+    <p class="lede">Cualquiera encuentra una combinación que se ve bien en el pasado. Por eso probamos todas. Cada punto es una versión. <b>Pasá el cursor para ver cuál es. Tocá una para cargarla en el video.</b></p>
+
+    <div class="card rel">
+      <div class="panel-t"><h4 id="t-malla">QQQ · Sharpe contra peor caída, 2000 a 2026</h4><span>El punto grande es la versión que tenés cargada</span></div>
+      <canvas id="cv-malla"></canvas>
+      <div class="leg">
+        <span><i class="sq" style="background:var(--menta);opacity:.6;border-radius:50%"></i>Una versión</span>
+        <span><i class="sq" style="background:var(--crema);border-radius:50%"></i>La cargada</span>
+        <span><i class="dash" style="color:var(--rojo)"></i>Índice sin regla</span>
+        <span><i class="dash" style="color:var(--gris)"></i>Mediana de las 960</span>
+      </div>
+      <div class="lector" id="lector-malla"></div>
+
+      <div class="mapas">
+        <div class="mapa rel"><h4>Sharpe mediano · promedio móvil × banda</h4><canvas id="cv-h1"></canvas></div>
+        <div class="mapa rel"><h4>Sharpe mediano · salida × reentrada</h4><canvas id="cv-h2"></canvas></div>
+      </div>
+      <p class="nota">Cada celda promedia todas las versiones que comparten esos dos valores. Una meseta pareja, sin un pico aislado, es la señal de que la idea funciona y no solo un número. Tocá una celda para cargar esos dos valores.</p>
+      <div class="tip" id="tip"></div>
+    </div>
+  </section>
+
+  <!-- 4 · PAPERS -->
+  <section id="papers">
+    <div class="num">4</div>
+    <h2>De dónde sale la idea</h2>
+    <p class="lede">Dos investigaciones publicadas. La primera es el freno. La segunda es el acelerador.</p>
+
+    <div class="paper">
+      <div class="logobox texto"><span>The Journal of Finance</span></div>
+      <div class="src">George y Hwang · <i>The 52-Week High and Momentum Investing</i> · 2004</div>
+      <h3>Lo cerca que está un precio de su máximo del año dice hacia dónde va</h3>
+      <ul>
+        <li>Midieron cada acción de EE. UU. con un dato simple: el precio de hoy dividido entre su máximo de las últimas 52 semanas.</li>
+        <li>Las que estaban cerca del máximo siguieron subiendo más que las que estaban lejos, durante los 6 y 12 meses siguientes.</li>
+        <li>Ese dato predijo mejor que el momentum clásico, que mira cuánto subió cada acción en el último año, y mejor que el momentum por industria.</li>
+        <li>La ganancia no se devolvió después. Con el momentum clásico sí pasa: a los dos o tres años se revierte. Acá no.</li>
+        <li>La explicación: la gente usa el máximo del año como ancla. Cerca de él, duda en comprar aunque lleguen buenas noticias. Lejos de él, duda en vender. La información entra al precio despacio y eso crea la tendencia.</li>
+        <li>Estudios posteriores lo encontraron en muchos otros mercados. Ojo: para escoger acciones una por una, los costos de operar se comen buena parte de la ganancia.</li>
+      </ul>
+      <div class="usamos">
+        <div><b>Lo que tomamos</b>La distancia al máximo reciente como medida de si la tendencia sigue viva o se rompió.</div>
+        <div><b>Lo que cambiamos</b>Lo aplicamos a un índice entero, no a acciones sueltas. Ventana de 39 semanas en vez de 52. Lo usamos para salir y volver a entrar, pocas veces al año, y lo combinamos con el promedio móvil para filtrar el ruido.</div>
+      </div>
+      <a class="link" href="https://doi.org/10.1111/j.1540-6261.2004.00695.x" target="_blank" rel="noopener">Ver el paper en el Journal of Finance</a>
+    </div>
+
+    <div class="paper">
+      <div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale University" loading="lazy"></div>
+      <div class="src">Yale · Ayres y Nalebuff · <i>Lifecycle Investing</i> · 2008</div>
+      <h3>Apalancarse de joven mejora el plan de retiro</h3>
+      <ul>
+        <li>Cuando empezás, tu riqueza real son los aportes que todavía vas a hacer. Exponerse más al inicio, cuando el capital es chico, reparte el riesgo a lo largo de la vida.</li>
+        <li>Con eso se llega a la meta más seguido y con menos dispersión que con el camino tradicional.</li>
+      </ul>
+      <div class="usamos">
+        <div><b>Lo que tomamos</b>La fase 1 del plan usa TQQQ o QLD, y el apalancamiento baja por fases según el avance a tu meta, no por edad.</div>
+        <div><b>Dónde está el detalle</b>Los números del plan con ETFs ×2 y ×3 están en <a href="/fpf" target="_blank" rel="noopener">/fpf</a>.</div>
+      </div>
+      <a class="link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1149340" target="_blank" rel="noopener">Ver el paper en SSRN</a>
+    </div>
+    <p class="nota">Apalancarse sin freno es apostar. El freno sin acelerador es crecer despacio. Juntos son el plan.</p>
+  </section>
+
+</div>
+<footer>
+  <p>Precios de cierre diario y cierre ajustado de QQQ (desde 1999) y SPY (desde 1993), Yahoo Finance. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. QLD, TQQQ, SSO y UPRO simulados desde el índice: el retorno diario por 2 o por 3, menos el costo del préstamo a la tasa de la letra y 0.95% anual de gastos.</p>
+  <p>Resultados pasados, con datos reales, de una regla escrita antes de mirar el resultado. No son una promesa de retorno futuro. Los datos y la especificación completa están en <a href="/edge">/edge</a>.</p>
+</footer>
+
+<script src="data.js"></script>
+<script src="motor.js"></script>
+<script>
+(function(){
+  var D=window.INFO2, M=window.MOTOR;
+  var COL={menta:'#63FCAF', peri:'#8B9BFF', rojo:'#F07A6B', ambar:'#F5C26B', crema:'#FEF9F3', gris:'#AEB4BE', grisSec:'#8E96A3', grisOsc:'#6E7681'};
+  var NOM={QQQ:{1:'QQQ',2:'QLD',3:'TQQQ'}, SPY:{1:'SPY',2:'SSO',3:'UPRO'}};
+  var IDX={QQQ:'Nasdaq 100', SPY:'S&P 500'};
+  var MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var BASE={sma:200,banda:3,sem:39,x:12,y:6};
+  var S={A:'QQQ', L:1, P:{sma:200,banda:3,sem:39,x:12,y:6}, a:0, b:0, cur:0, curF:0, playing:false, vel:1, hover:-1, rango:'todo'};
+  var R=null, raf=null, tPrev=null;
+
+  var CVP=document.getElementById('cv-precio'), CVD=document.getElementById('cv-dd'), CVM=document.getElementById('cv-malla'), H1=document.getElementById('cv-h1'), H2=document.getElementById('cv-h2');
+  var LECTOR=document.getElementById('lector'), SCRUB=document.getElementById('scrub'), FECHA=document.getElementById('fecha'), TIP=document.getElementById('tip');
+  var $=function(id){ return document.getElementById(id); };
+
+  function fFecha(n){ var y=Math.floor(n/10000), m=Math.floor(n/100)%100, d=n%100; return d+' '+MESES[m-1]+' '+y; }
+  function fPct(v,dec){ return (v>=0?'+':'−')+Math.abs(v*100).toFixed(dec===undefined?1:dec)+'%'; }
+  function fPctNeg(v){ return '−'+Math.abs(v*100).toFixed(0)+'%'; }
+  function fNum(v){ return v>=100?Math.round(v).toLocaleString('en-US'):v.toFixed(2); }
+  function nombre(){ return NOM[S.A][S.L]; }
+  function lienzo(cv){
+    var dpr=Math.max(1,window.devicePixelRatio||1), W=cv.clientWidth, H=cv.clientHeight;
+    if(cv.width!==W*dpr||cv.height!==H*dpr){ cv.width=W*dpr; cv.height=H*dpr; }
+    var g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H); g.font="11px 'Bai Jamjuree'";
+    return {g:g,W:W,H:H};
+  }
+  function idxFecha(f, desdeFinal){
+    var d=R.d;
+    if(desdeFinal){ for(var i=d.length-1;i>=R.ini;i--) if(d[i]<=f) return i; return R.ini; }
+    for(var j=R.ini;j<d.length;j++) if(d[j]>=f) return j;
+    return d.length-1;
+  }
+
+  /* ---------- simulación ---------- */
+  function simular(){
+    R=M.simular(D,S.A,S.P,S.L);
+    if(S.cur<R.ini) S.cur=R.ini;
+    resultados(); posMalla();
+  }
+  function setRango(r){
+    S.rango=r; var n=R.n;
+    if(r==='todo'){ S.a=R.ini; S.b=n-1; }
+    else if(r==='u5'){ S.a=Math.max(R.ini,n-1-252*5); S.b=n-1; }
+    else { var p=r.split(','); S.a=idxFecha(+p[0]); S.b=idxFecha(+p[1],true); }
+    S.cur=S.a; S.curF=S.a; S.hover=-1; parar();
+    SCRUB.min=S.a; SCRUB.max=S.b; SCRUB.value=S.cur;
+    dibujar();
+  }
+
+  /* ---------- dibujo: precio ---------- */
+  var PADL=8, PADR=56;
+  function X(i,W){ return PADL+((i-S.a)/Math.max(1,S.b-S.a))*(W-PADL-PADR); }
+  function dibujarPrecio(){
+    var o=lienzo(CVP), g=o.g, W=o.W, H=o.H, a=S.a, b=S.b, cur=S.cur, n=b-a+1;
+    var altF=18, gapF=5, padEje=20;
+    var fr2Y=H-padEje-altF, fr1Y=fr2Y-altF-gapF, mainB=fr1Y-12, mainT=12;
+    var c=R.c, sma=R.sma, mx=R.mx, bd=S.P.banda/100, xk=1-S.P.x/100, yk=1-S.P.y/100;
+    var lo=Infinity, hi=-Infinity;
+    for(var i=a;i<=b;i++){
+      var mn=Math.min(c[i], isFinite(mx[i])?mx[i]*xk:c[i], isFinite(sma[i])?sma[i]*(1-bd):c[i]);
+      var mxv=Math.max(c[i], isFinite(mx[i])?mx[i]:c[i], isFinite(sma[i])?sma[i]*(1+bd):c[i]);
+      if(mn<lo) lo=mn; if(mxv>hi) hi=mxv;
+    }
+    var lLo=Math.log(lo)-0.02, lHi=Math.log(hi)+0.02;
+    var Y=function(v){ return mainT+(1-(Math.log(v)-lLo)/(lHi-lLo))*(mainB-mainT); };
+    var Xi=function(i){ return X(i,W); };
+
+    // zona por venir, apagada
+    g.fillStyle='rgba(13,15,20,.55)'; g.fillRect(Xi(cur),0,W-PADR-Xi(cur),H);
+
+    // fuera del mercado (hasta hoy)
+    g.fillStyle='rgba(240,122,107,.14)';
+    var i0=-1;
+    for(var k=a;k<=cur+1;k++){
+      var fuera=(k<=cur)&&R.sig[k]===0;
+      if(fuera&&i0<0) i0=k;
+      if(!fuera&&i0>=0){ g.fillRect(Xi(i0),mainT,Math.max(1,Xi(k-1)-Xi(i0)),mainB-mainT); i0=-1; }
+    }
+    // eje Y
+    g.textAlign='left'; g.fillStyle=COL.grisOsc;
+    for(var q=0;q<=4;q++){
+      var v=Math.exp(lLo+q/4*(lHi-lLo)), y=Y(v);
+      g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(PADL,y); g.lineTo(W-PADR,y); g.stroke();
+      g.fillText(fNum(v), W-PADR+6, y+4);
+    }
+    // años
+    var y0=Math.floor(R.d[a]/10000), y1=Math.floor(R.d[b]/10000), paso=Math.max(1,Math.ceil((y1-y0)/(W<500?5:9)));
+    g.textAlign='center';
+    for(var yy=Math.ceil(y0);yy<=y1;yy+=paso){
+      var ii=idxFecha(yy*10000+101); if(ii<a||ii>b) continue;
+      if(Xi(ii)>=PADL+14) { g.fillStyle=COL.grisOsc; g.fillText(String(yy), Xi(ii), H-5); }
+      g.strokeStyle='rgba(174,180,190,.07)'; g.beginPath(); g.moveTo(Xi(ii),mainT); g.lineTo(Xi(ii),mainB); g.stroke();
+    }
+    function linea(fn,color,ancho,dash){
+      g.beginPath(); g.setLineDash(dash||[]); var pintando=false;
+      for(var i=a;i<=cur;i++){
+        var v=fn(i); if(!isFinite(v)){ pintando=false; continue; }
+        var x=Xi(i), yv=Y(v);
+        if(!pintando){ g.moveTo(x,yv); pintando=true; } else g.lineTo(x,yv);
+      }
+      g.strokeStyle=color; g.lineWidth=ancho; g.stroke(); g.setLineDash([]);
+    }
+    // banda del promedio
+    g.beginPath(); var ok=false;
+    for(var i3=a;i3<=cur;i3++){ if(!isFinite(sma[i3])) continue; var x3=Xi(i3), yv=Y(sma[i3]*(1+bd)); ok?g.lineTo(x3,yv):g.moveTo(x3,yv); ok=true; }
+    for(var i4=cur;i4>=a;i4--){ if(!isFinite(sma[i4])) continue; g.lineTo(Xi(i4),Y(sma[i4]*(1-bd))); }
+    g.closePath(); g.fillStyle='rgba(139,155,255,.14)'; g.fill();
+    linea(function(i){ return sma[i]; },COL.peri,1.2);
+    linea(function(i){ return mx[i]; },COL.ambar,1);
+    linea(function(i){ return mx[i]*xk; },COL.rojo,1.2,[6,4]);
+    linea(function(i){ return mx[i]*yk; },COL.ambar,1,[3,4]);
+    linea(function(i){ return c[i]; },COL.menta,1.8);
+
+    // franjas de los indicadores
+    function franja(arr,y0,nombre){
+      g.fillStyle='rgba(255,255,255,.04)'; g.fillRect(PADL,y0,W-PADL-PADR,altF-2);
+      var j0=a;
+      for(var k2=a;k2<=cur+1;k2++){
+        if(k2<=cur&&arr[k2]===arr[j0]) continue;
+        g.fillStyle=arr[j0]===1?'rgba(99,252,175,.45)':'rgba(240,122,107,.55)';
+        g.fillRect(Xi(j0),y0,Math.max(1,Xi(Math.min(k2,cur))-Xi(j0)+1),altF-2);
+        j0=k2;
+      }
+      g.fillStyle=COL.crema; g.textAlign='left'; g.font="600 10.5px 'Bai Jamjuree'";
+      g.fillText(nombre,PADL+6,y0+altF-7); g.font="11px 'Bai Jamjuree'";
+    }
+    franja(R.iS,fr1Y,'PROMEDIO '+S.P.sma+' DÍAS ±'+S.P.banda+'%');
+    franja(R.iM,fr2Y,'MÁXIMO '+S.P.sem+' SEMANAS −'+S.P.x+' / −'+S.P.y);
+    g.fillStyle=COL.grisOsc; g.textAlign='right'; g.font="10px 'Bai Jamjuree'";
+    g.fillText('verde sí · rojo no', W-PADR-4, fr1Y-3); g.font="11px 'Bai Jamjuree'";
+
+    // flechas de entrada y salida
+    var grande=n<1500, chico=(!grande&&W<520), s=grande?7:(chico?4:5), largo=grande?22:(chico?7:14);
+    R.ev.forEach(function(e){
+      if(e.i<a||e.i>cur) return;
+      var x=Xi(e.i), y=Y(c[e.i]);
+      g.lineWidth=2;
+      if(e.tipo==='salida'){
+        var top=y-8-largo;
+        g.strokeStyle=COL.rojo; g.beginPath(); g.moveTo(x,top); g.lineTo(x,y-8-s); g.stroke();
+        g.fillStyle=COL.rojo; g.beginPath(); g.moveTo(x,y-7); g.lineTo(x-s,y-7-s*1.4); g.lineTo(x+s,y-7-s*1.4); g.closePath(); g.fill();
+        if(grande){ g.fillStyle=COL.rojo; g.textAlign='center'; g.font="600 10px 'Bai Jamjuree'"; g.fillText('sale', x, top-4); }
+      } else {
+        var bot=y+8+largo;
+        g.strokeStyle=COL.menta; g.beginPath(); g.moveTo(x,bot); g.lineTo(x,y+8+s); g.stroke();
+        g.fillStyle=COL.menta; g.beginPath(); g.moveTo(x,y+7); g.lineTo(x-s,y+7+s*1.4); g.lineTo(x+s,y+7+s*1.4); g.closePath(); g.fill();
+        if(grande){ g.fillStyle=COL.menta; g.textAlign='center'; g.font="600 10px 'Bai Jamjuree'"; g.fillText('entra', x, bot+11); }
+      }
+      g.font="11px 'Bai Jamjuree'";
+    });
+
+    // cabeza de lectura
+    var hx=Xi(cur);
+    g.strokeStyle='rgba(254,249,243,.6)'; g.lineWidth=1; g.beginPath(); g.moveTo(hx,mainT); g.lineTo(hx,fr2Y+altF-2); g.stroke();
+    g.fillStyle=COL.crema; g.beginPath(); g.arc(hx,Y(c[cur]),4,0,7); g.fill();
+    // cursor del hover
+    if(S.hover>=a&&S.hover<=cur&&S.hover!==cur){
+      var hh=Xi(S.hover);
+      g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,3]); g.beginPath(); g.moveTo(hh,mainT); g.lineTo(hh,fr2Y+altF-2); g.stroke(); g.setLineDash([]);
+      g.fillStyle=COL.crema; g.beginPath(); g.arc(hh,Y(c[S.hover]),3,0,7); g.fill();
+    }
+  }
+
+  /* ---------- dibujo: caída ---------- */
+  function dibujarDD(){
+    var o=lienzo(CVD), g=o.g, W=o.W, H=o.H, a=S.a, b=S.b, cur=S.cur;
+    var mT=8, mB=H-18;
+    // caídas relativas al tramo: capital desde a
+    var mR=0,mB_=0,lo=0; var ddR=new Float64Array(b-a+1), ddB=new Float64Array(b-a+1);
+    for(var i=a;i<=b;i++){ var er=R.eqR[i], eb=R.eqB[i]; if(er>mR) mR=er; if(eb>mB_) mB_=eb; ddR[i-a]=er/mR-1; ddB[i-a]=eb/mB_-1; if(ddB[i-a]<lo) lo=ddB[i-a]; if(ddR[i-a]<lo) lo=ddR[i-a]; }
+    lo=Math.min(-0.1,lo*1.05);
+    var Y=function(v){ return mT+(v/lo)*(mB-mT); }, Xi=function(i){ return X(i,W); };
+    g.fillStyle='rgba(13,15,20,.55)'; g.fillRect(Xi(cur),0,W-PADR-Xi(cur),H);
+    // rejilla
+    g.textAlign='left'; g.fillStyle=COL.grisOsc;
+    [0,0.25,0.5,0.75,1].forEach(function(f){ var v=lo*f, y=Y(v); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(PADL,y); g.lineTo(W-PADR,y); g.stroke(); g.fillText(fPctNeg(v), W-PADR+6, y+4); });
+    function area(arr,fill,stroke){
+      g.beginPath(); g.moveTo(Xi(a),Y(0));
+      for(var i=a;i<=cur;i++) g.lineTo(Xi(i),Y(arr[i-a]));
+      g.lineTo(Xi(cur),Y(0)); g.closePath(); g.fillStyle=fill; g.fill();
+      g.beginPath(); for(var j=a;j<=cur;j++){ j===a?g.moveTo(Xi(j),Y(arr[j-a])):g.lineTo(Xi(j),Y(arr[j-a])); }
+      g.strokeStyle=stroke; g.lineWidth=1.3; g.stroke();
+    }
+    area(ddB,'rgba(142,150,163,.22)',COL.grisSec);
+    area(ddR,'rgba(99,252,175,.28)',COL.menta);
+    var hx=Xi(cur);
+    g.strokeStyle='rgba(254,249,243,.6)'; g.lineWidth=1; g.beginPath(); g.moveTo(hx,mT); g.lineTo(hx,mB); g.stroke();
+    if(S.hover>=a&&S.hover<=cur&&S.hover!==cur){ var hh=Xi(S.hover); g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,3]); g.beginPath(); g.moveTo(hh,mT); g.lineTo(hh,mB); g.stroke(); g.setLineDash([]); }
+    S._dd={r:ddR,b:ddB};
+  }
+
+  /* ---------- textos vivos ---------- */
+  function escribirLector(){
+    var i=(S.hover>=S.a&&S.hover<=S.cur)?S.hover:S.cur, c=R.c, vs=(c[i]/R.sma[i]-1)*100, vm=(c[i]/R.mx[i]-1)*100;
+    var html='<b>'+fFecha(R.d[i])+'</b> · '+S.A+' <b>'+fNum(c[i])+'</b>'
+      +' · vs promedio: <b>'+(isFinite(vs)?(vs>=0?'+':'')+vs.toFixed(1)+'%':'—')+'</b> ('+(R.iS[i]===1?'sí':'no')+')'
+      +' · vs máximo: <b>'+(isFinite(vm)?vm.toFixed(1)+'%':'—')+'</b> ('+(R.iM[i]===1?'sí':'no')+')'
+      +' → '+(R.sig[i]===1?'<b style="color:var(--menta)">invertido</b>':'<b style="color:var(--rojo)">fuera</b>, en efectivo');
+    if(S._dd){ html+='<br>Caída desde el máximo: con la regla <b>'+fPctNeg(S._dd.r[i-S.a])+'</b> · sin regla <b>'+fPctNeg(S._dd.b[i-S.a])+'</b>'; }
+    for(var k=0;k<R.ev.length;k++){
+      var e=R.ev[k];
+      if(Math.abs(e.i-i)<=1){
+        var nom=e.causa==='promedio'?'el promedio':e.causa==='maximo'?'la distancia al máximo':'los dos a la vez';
+        html+='<br>⚑ <b>'+(e.tipo==='salida'?'Sale':'Entra')+'</b> el '+fFecha(R.d[e.i])+'. Lo disparó '+nom+'. Se ejecuta al cierre del día siguiente.'; break;
+      }
+    }
+    LECTOR.innerHTML=html;
+  }
+  function kpis(){
+    var i=S.cur, a=S.a;
+    FECHA.textContent=fFecha(R.d[i]);
+    var dentro=R.sig[i]===1;
+    $('k-estado').textContent=dentro?'Invertido':'Fuera'; $('k-estado').className='v '+(dentro?'menta':'rojo');
+    $('k-estado-s').textContent=dentro?('100% en '+nombre()):'en efectivo, ganando interés';
+    var rr=R.eqR[i]/R.eqR[a]-1, rb=R.eqB[i]/R.eqB[a]-1;
+    $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=rb?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
+    var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
+    $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v '+(mr>=mb?'menta':'rojo'); $('k-dd-b').textContent=fPctNeg(mb);
+    var nS=0,nE=0; R.ev.forEach(function(e){ if(e.i>=a&&e.i<=i){ if(e.tipo==='salida') nS++; else nE++; } });
+    $('k-ord').textContent=String(nS+nE); $('k-ord-s').textContent=nS+' salidas · '+nE+' entradas';
+    var yrs=(i-a)/252; $('k-ret-r').title=yrs>0.5?('equivale a '+fPct(Math.pow(1+rr,1/yrs)-1,1)+' anual'):'';
+  }
+  function dibujar(){ if(!R) return; dibujarPrecio(); dibujarDD(); escribirLector(); kpis(); SCRUB.value=S.cur; }
+
+  /* ---------- resultados completos y malla ---------- */
+  function resultados(){
+    var m=R.met;
+    $('res-t').textContent='Historia completa · '+Math.floor(R.d[R.ini]/10000)+' a '+Math.floor(R.d[R.n-1]/10000);
+    $('res-rn').textContent=nombre()+' con la regla'; $('res-bn').textContent=nombre()+' sin regla';
+    $('res-r-cagr').textContent=fPct(m.cagr,1); $('res-r-dd').textContent=fPctNeg(m.dd); $('res-r-sh').textContent=m.sharpe.toFixed(2);
+    $('res-r-ord').textContent=m.cambiosAnio.toFixed(1); $('res-r-exp').textContent=Math.round(m.exposicion*100)+'%';
+    $('res-b-cagr').textContent=fPct(m.bh.cagr,1); $('res-b-dd').textContent=fPctNeg(m.bh.dd); $('res-b-sh').textContent=m.bh.sharpe.toFixed(2);
+    $('t-precio').textContent=IDX[S.A]+' ('+S.A+'), escala log';
+    $('t-precio-s').textContent=S.L>1?('La señal se calcula sobre el índice. La plata va en '+nombre()+' ×'+S.L):'La señal se calcula sobre el índice';
+    $('t-dd').textContent='Caída desde el último máximo · '+nombre();
+    $('l-dd-r').textContent=nombre()+' con la regla'; $('l-dd-b').textContent=nombre()+' sin regla, comprar y mantener';
+  }
+  function mallaInfo(){
+    var ml=D.malla[S.A], P=S.P, sel=null, orden=ml.slice().sort(function(p,q){ return q[5]-p[5]; });
+    for(var i=0;i<ml.length;i++){ var r=ml[i]; if(r[0]===P.sma&&r[1]===P.banda&&r[2]===P.sem&&r[3]===P.x&&r[4]===P.y){ sel=r; break; } }
+    var puesto=orden.indexOf(sel)+1, med=orden[Math.floor(orden.length/2)][5], bh=D.bh[S.A].sharpe, ganan=ml.filter(function(r){ return r[5]>bh; }).length;
+    return {sel:sel, puesto:puesto, med:med, bh:bh, ganan:ganan, orden:orden};
+  }
+  function posMalla(){
+    var m=mallaInfo(), s=m.sel;
+    var html='<b>En la malla de '+S.A+':</b> puesto <b>'+m.puesto+' de 960</b> por Sharpe ('+s[5].toFixed(2)+'). Mediana de las 960: '+m.med.toFixed(2)+'. '+S.A+' sin regla: '+m.bh.toFixed(2)+'. '+Math.round(m.ganan/9.6)+'% de las versiones le ganan al índice sin regla.';
+    if(S.L>1) html+='<br><span style="color:var(--gris-sec)">La malla está calculada sobre '+S.A+' sin apalancar. La señal es la misma.</span>';
+    $('pos-malla').innerHTML=html;
+    $('t-malla').textContent=S.A+' · Sharpe contra peor caída, '+Math.floor(R.d[R.ini]/10000)+' a '+Math.floor(R.d[R.n-1]/10000);
+    dibujarMalla(); dibujarMapas();
+    $('lector-malla').innerHTML='Cargada: <b>'+descP(s)+'</b> → Sharpe '+s[5].toFixed(2)+' · '+fPct(s[6],1)+' anual · peor caída '+fPctNeg(s[7]);
+  }
+  function descP(r){ return 'promedio '+r[0]+' · banda '+r[1]+'% · máximo '+r[2]+' sem · sale −'+r[3]+'% · vuelve −'+r[4]+'%'; }
+
+  var MP={pts:[]};
+  function dibujarMalla(){
+    var o=lienzo(CVM), g=o.g, W=o.W, H=o.H, ml=D.malla[S.A], m=mallaInfo();
+    var pl=40, pr=12, pt=12, pb=28;
+    var xs=ml.map(function(r){ return r[5]; }).concat([m.bh]), ys=ml.map(function(r){ return r[7]; });
+    var x0=Math.min.apply(null,xs)-0.03, x1=Math.max.apply(null,xs)+0.03, y0=Math.min.apply(null,ys)-0.02, y1=Math.max.apply(null,ys)+0.02;
+    var X=function(v){ return pl+(v-x0)/(x1-x0)*(W-pl-pr); }, Y=function(v){ return pt+(1-(v-y0)/(y1-y0))*(H-pt-pb); };
+    g.fillStyle=COL.grisOsc; g.strokeStyle='rgba(174,180,190,.1)';
+    for(var q=0;q<=4;q++){ var v=y0+q/4*(y1-y0), y=Y(v); g.beginPath(); g.moveTo(pl,y); g.lineTo(W-pr,y); g.stroke(); g.textAlign='right'; g.fillText(fPctNeg(v), pl-4, y+4); }
+    for(var t=Math.ceil(x0*10)/10;t<=x1;t+=0.1){ var x=X(t); g.beginPath(); g.moveTo(x,pt); g.lineTo(x,H-pb); g.stroke(); g.textAlign='center'; g.fillText(t.toFixed(1), x, H-pb+14); }
+    g.textAlign='center'; g.fillText('Sharpe (más a la derecha, mejor)', (pl+W-pr)/2, H-3);
+    g.save(); g.translate(10,(pt+H-pb)/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText('peor caída (más arriba, mejor)', 0, 0); g.restore();
+    // índice sin regla y mediana
+    g.setLineDash([5,4]); g.lineWidth=1;
+    g.strokeStyle=COL.rojo; g.beginPath(); g.moveTo(X(m.bh),pt); g.lineTo(X(m.bh),H-pb); g.stroke();
+    g.strokeStyle=COL.gris; g.beginPath(); g.moveTo(X(m.med),pt); g.lineTo(X(m.med),H-pb); g.stroke(); g.setLineDash([]);
+    g.textAlign='left'; g.fillStyle=COL.rojo; g.fillText('sin regla '+m.bh.toFixed(2), X(m.bh)+4, pt+10);
+    g.fillStyle=COL.gris; g.fillText('mediana '+m.med.toFixed(2), X(m.med)+4, pt+24);
+    MP.pts=[];
+    ml.forEach(function(r){ var x=X(r[5]), y=Y(r[7]); MP.pts.push({x:x,y:y,r:r}); g.fillStyle=(r===MP.hover)?COL.crema:'rgba(99,252,175,.55)'; g.beginPath(); g.arc(x,y,r===MP.hover?5:3.2,0,7); g.fill(); });
+    var s=m.sel, sx=X(s[5]), sy=Y(s[7]);
+    g.strokeStyle=COL.crema; g.lineWidth=2; g.beginPath(); g.arc(sx,sy,8,0,7); g.stroke();
+    g.fillStyle=COL.crema; g.beginPath(); g.arc(sx,sy,4,0,7); g.fill();
+    g.textAlign=sx>W*0.6?'right':'left'; g.font="600 11px 'Bai Jamjuree'"; g.fillText('la cargada', sx+(sx>W*0.6?-12:12), sy+4);
+  }
+  var MAPAS={h1:null,h2:null};
+  function mediana(arr){ var s=arr.slice().sort(function(p,q){ return p-q; }); return s[Math.floor(s.length/2)]; }
+  function dibujarMapa(cv, filas, cols, kf, kc, nf, nc, etqF, etqC, key){
+    var o=lienzo(cv), g=o.g, W=o.W, H=o.H, ml=D.malla[S.A];
+    var pl=38, pt=6, pb=22, pr=6, cw=(W-pl-pr)/cols.length, ch=(H-pt-pb)/filas.length;
+    var vals=[], lo=Infinity, hi=-Infinity;
+    filas.forEach(function(f,fi){ vals[fi]=[]; cols.forEach(function(c,ci){ var v=mediana(ml.filter(function(r){ return r[kf]===f&&r[kc]===c; }).map(function(r){ return r[5]; })); vals[fi][ci]=v; if(v<lo) lo=v; if(v>hi) hi=v; }); });
+    var celdas=[];
+    filas.forEach(function(f,fi){ cols.forEach(function(c,ci){
+      var v=vals[fi][ci], t=(v-lo)/Math.max(1e-9,hi-lo), x=pl+ci*cw, y=pt+fi*ch;
+      g.fillStyle='rgba(99,252,175,'+(0.08+0.62*t).toFixed(3)+')'; g.fillRect(x+1,y+1,cw-2,ch-2);
+      g.fillStyle=t>0.55?'#0d0f14':COL.crema; g.textAlign='center'; g.font="600 11px 'Bai Jamjuree'"; g.fillText(v.toFixed(2), x+cw/2, y+ch/2+4);
+      celdas.push({x:x,y:y,w:cw,h:ch,f:f,c:c,v:v});
+      if(S.P[nf]===f&&S.P[nc]===c){ g.strokeStyle=COL.crema; g.lineWidth=2; g.strokeRect(x+2,y+2,cw-4,ch-4); }
+    }); });
+    g.fillStyle=COL.grisOsc; g.font="10.5px 'Bai Jamjuree'";
+    filas.forEach(function(f,fi){ g.textAlign='right'; g.fillText(etqF(f), pl-4, pt+fi*ch+ch/2+4); });
+    cols.forEach(function(c,ci){ g.textAlign='center'; g.fillText(etqC(c), pl+ci*cw+cw/2, H-7); });
+    MAPAS[key]={celdas:celdas, nf:nf, nc:nc};
+  }
+  function dibujarMapas(){
+    dibujarMapa(H1,[100,150,200,250],[1,2,3,5],0,1,'sma','banda',function(f){ return f+' d'; },function(c){ return c+'%'; },'h1');
+    dibujarMapa(H2,[8,10,12,15,18],[2,4,6,8],3,4,'x','y',function(f){ return '−'+f+'%'; },function(c){ return '−'+c+'%'; },'h2');
+  }
+
+  /* ---------- reproducción ---------- */
+  function tick(ts){
+    if(!S.playing){ raf=null; return; }
+    if(tPrev===null) tPrev=ts;
+    var dt=(ts-tPrev)/1000; tPrev=ts;
+    var n=S.b-S.a+1, porSeg=n/Math.max(6, Math.min(40, n/252*1.6)); // ~1.6 s por año, mínimo 6 s
+    S.curF+=dt*porSeg*S.vel;
+    if(S.curF>=S.b){ S.curF=S.b; S.cur=S.b; parar(); dibujar(); return; }
+    S.cur=Math.floor(S.curF); dibujar();
+    raf=requestAnimationFrame(tick);
+  }
+  function play(){ if(S.cur>=S.b){ S.cur=S.a; } S.curF=S.cur; S.playing=true; tPrev=null; $('b-play').textContent='❚❚ Pausa'; if(!raf) raf=requestAnimationFrame(tick); }
+  function parar(){ S.playing=false; tPrev=null; $('b-play').textContent='▶ Play'; if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  function ir(i){ S.cur=Math.max(S.a,Math.min(S.b,Math.round(i))); S.curF=S.cur; dibujar(); }
+  function mover(d){ parar(); ir(S.cur+d); }
+
+  /* ---------- eventos ---------- */
+  $('b-play').addEventListener('click', function(){ S.playing?parar():play(); });
+  $('b-ini').addEventListener('click', function(){ parar(); ir(S.a); });
+  $('b-fin').addEventListener('click', function(){ parar(); ir(S.b); });
+  $('b-ay').addEventListener('click', function(){ mover(-252); });
+  $('b-am').addEventListener('click', function(){ mover(-21); });
+  $('b-fm').addEventListener('click', function(){ mover(21); });
+  $('b-fy').addEventListener('click', function(){ mover(252); });
+  $('vel').addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b) return; S.vel=+b.dataset.v; $('vel').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); }); });
+  SCRUB.addEventListener('input', function(){ parar(); ir(+SCRUB.value); });
+  document.addEventListener('keydown', function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='BUTTON') return;
+    if(e.code==='Space'){ e.preventDefault(); S.playing?parar():play(); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); mover(e.shiftKey?-252:-21); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); mover(e.shiftKey?252:21); }
+  });
+  $('activos').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    S.A=b.dataset.a; S.L=+b.dataset.l;
+    $('activos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+    var r=S.rango; parar(); simular(); setRango(r);
+  });
+  $('rangos').addEventListener('click', function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
+    setRango(b.dataset.r);
+  });
+  function pintarParams(){ $('params').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', S.P[x.dataset.p]===+x.dataset.v); }); }
+  function setParams(np){
+    for(var k in np) S.P[k]=np[k];
+    pintarParams(); var cur=S.cur; simular(); S.cur=Math.max(S.a,Math.min(S.b,cur)); S.curF=S.cur; dibujar();
+  }
+  $('params').addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b) return; var o={}; o[b.dataset.p]=+b.dataset.v; setParams(o); });
+  $('b-reset').addEventListener('click', function(){ setParams({sma:200,banda:3,sem:39,x:12,y:6}); });
+
+  function idxDeX(cv, x){ var W=cv.clientWidth, f=(x-PADL)/Math.max(1,W-PADL-PADR); return Math.max(S.a, Math.min(S.b, Math.round(S.a+f*(S.b-S.a)))); }
+  [CVP,CVD].forEach(function(cv){
+    cv.addEventListener('mousemove', function(ev){ var r=cv.getBoundingClientRect(); S.hover=Math.min(S.cur, idxDeX(cv, ev.clientX-r.left)); if(!S.playing) dibujar(); else escribirLector(); });
+    cv.addEventListener('mouseleave', function(){ S.hover=-1; if(!S.playing) dibujar(); });
+    cv.addEventListener('click', function(ev){ var r=cv.getBoundingClientRect(); parar(); ir(idxDeX(cv, ev.clientX-r.left)); });
+    cv.addEventListener('touchstart', function(ev){ var r=cv.getBoundingClientRect(); parar(); ir(idxDeX(cv, ev.touches[0].clientX-r.left)); }, {passive:true});
+    cv.addEventListener('touchmove', function(ev){ var r=cv.getBoundingClientRect(); ir(idxDeX(cv, ev.touches[0].clientX-r.left)); }, {passive:true});
+  });
+
+  // malla: hover y clic
+  function tip(cv, ev, html){
+    var card=cv.closest('.rel'), rc=card.getBoundingClientRect();
+    TIP.innerHTML=html; TIP.style.display='block';
+    var x=ev.clientX-rc.left+14, y=ev.clientY-rc.top+14;
+    if(x+270>rc.width) x=ev.clientX-rc.left-274; if(x<0) x=4;
+    TIP.style.left=x+'px'; TIP.style.top=y+'px';
+  }
+  function cerca(ev){
+    var rc=CVM.getBoundingClientRect(), x=ev.clientX-rc.left, y=ev.clientY-rc.top, best=null, bd=144;
+    MP.pts.forEach(function(p){ var d=(p.x-x)*(p.x-x)+(p.y-y)*(p.y-y); if(d<bd){ bd=d; best=p; } });
+    return best;
+  }
+  CVM.addEventListener('mousemove', function(ev){
+    var p=cerca(ev); var h=p?p.r:null;
+    if(h!==MP.hover){ MP.hover=h; dibujarMalla(); }
+    if(p) tip(CVM, ev, '<b>'+descP(p.r)+'</b><br>Sharpe '+p.r[5].toFixed(2)+' · '+fPct(p.r[6],1)+' anual · peor caída '+fPctNeg(p.r[7])+'<br><span style="color:var(--gris-sec)">clic para cargarla</span>');
+    else TIP.style.display='none';
+  });
+  CVM.addEventListener('mouseleave', function(){ TIP.style.display='none'; if(MP.hover){ MP.hover=null; dibujarMalla(); } });
+  CVM.addEventListener('click', function(ev){ var p=cerca(ev); if(!p) return; var r=p.r; setParams({sma:r[0],banda:r[1],sem:r[2],x:r[3],y:r[4]}); document.getElementById('parametros').scrollIntoView({behavior:'smooth'}); });
+  CVM.addEventListener('touchstart', function(ev){ var t=ev.touches[0], p=cerca(t); if(p) tip(CVM, t, '<b>'+descP(p.r)+'</b><br>Sharpe '+p.r[5].toFixed(2)+' · '+fPct(p.r[6],1)+' anual · peor caída '+fPctNeg(p.r[7])); }, {passive:true});
+
+  function celdaEn(cv, key, ev){
+    var rc=cv.getBoundingClientRect(), x=ev.clientX-rc.left, y=ev.clientY-rc.top, m=MAPAS[key]; if(!m) return null;
+    for(var i=0;i<m.celdas.length;i++){ var c=m.celdas[i]; if(x>=c.x&&x<c.x+c.w&&y>=c.y&&y<c.y+c.h) return c; }
+    return null;
+  }
+  [[H1,'h1'],[H2,'h2']].forEach(function(par){
+    var cv=par[0], key=par[1];
+    cv.addEventListener('mousemove', function(ev){
+      var c=celdaEn(cv,key,ev); if(!c){ TIP.style.display='none'; return; }
+      var m=MAPAS[key], lf=key==='h1'?'promedio '+c.f+' días':'sale a −'+c.f+'%', lc=key==='h1'?'banda '+c.c+'%':'vuelve a −'+c.c+'%';
+      tip(cv, ev, '<b>'+lf+' · '+lc+'</b><br>Sharpe mediano '+c.v.toFixed(2)+' de las '+(960/m.celdas.length)+' versiones con esos dos valores<br><span style="color:var(--gris-sec)">clic para cargar esos dos valores</span>');
+    });
+    cv.addEventListener('mouseleave', function(){ TIP.style.display='none'; });
+    cv.addEventListener('click', function(ev){ var c=celdaEn(cv,key,ev); if(!c) return; var o={}; o[MAPAS[key].nf]=c.f; o[MAPAS[key].nc]=c.c; setParams(o); });
+  });
+
+  window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); });
+
+  // arranque
+  simular(); setRango('todo'); pintarParams();
+})();
+</script>
+</body>
+</html>
