@@ -7,7 +7,9 @@
   }
   function simular(D, A, P, L){
     var s=D[A], d=s.d, c=s.c, a=s.a, y=s.y, n=d.length, L_=L||1;
-    var ini=0; while(ini<n && d[ini]<D.inicio[A]) ini++;
+    var ini=0; while(ini<n && d[ini]<D.inicio[A]) ini++;           // desde dónde se miden los resultados (igual que /edge)
+    var iniV=0; while(iniV<n && d[iniV]<(D.video&&D.video[A]||D.inicio[A])) iniV++; // desde dónde arranca el video
+    if(iniV>ini) iniV=ini;
     var w=P.sem*5, b=P.banda/100, X=-P.x/100, Y=-P.y/100;
     var sma=new Float64Array(n), mx=new Float64Array(n), iS=new Uint8Array(n), iM=new Uint8Array(n), sig=new Uint8Array(n);
     var sum=0, dq=[], hd=0;
@@ -31,31 +33,36 @@
       rR[i]= pos[i]*rAct[i]+(1-pos[i])*rTb[i]-Math.abs(pos[i]-pos[i-1])*0.0005;
     }
     pos[0]=1;
-    // capital y caídas desde ini (ambos arrancan en 1)
+    // capital y caídas desde iniV (ambos arrancan en 1); métricas desde ini
     var eqR=new Float64Array(n), eqB=new Float64Array(n), ddR=new Float64Array(n), ddB=new Float64Array(n), ddRmin=new Float64Array(n), ddBmin=new Float64Array(n);
-    var mR=1, mB=1, cR=1, cB=1, minR=0, minB=0, sumEx=0, nEx=0, sumEx2=0, cambios=0, exp=0;
-    for(i=ini;i<n;i++){
-      if(i>ini){ cR*=1+rR[i]; cB*=1+rAct[i]; var ex=rR[i]-rTb[i]; sumEx+=ex; sumEx2+=ex*ex; nEx++; if(pos[i]!==pos[i-1]) cambios++; exp+=pos[i]; }
+    var mR=1, mB=1, cR=1, cB=1, minR=0, minB=0, sumEx=0, nEx=0, sumEx2=0, cambios=0, exp=0, capR=1, capB=1;
+    for(i=iniV;i<n;i++){
+      if(i>iniV){ cR*=1+rR[i]; cB*=1+rAct[i]; }
+      if(i>ini){ capR*=1+rR[i]; capB*=1+rAct[i]; var ex=rR[i]-rTb[i]; sumEx+=ex; sumEx2+=ex*ex; nEx++; if(pos[i]!==pos[i-1]) cambios++; exp+=pos[i]; }
       eqR[i]=cR; eqB[i]=cB; if(cR>mR) mR=cR; if(cB>mB) mB=cB;
-      ddR[i]=cR/mR-1; ddB[i]=cB/mB-1; if(ddR[i]<minR) minR=ddR[i]; if(ddB[i]<minB) minB=ddB[i];
+      ddR[i]=cR/mR-1; ddB[i]=cB/mB-1;
+      if(i>=ini){ if(ddR[i]<minR) minR=ddR[i]; if(ddB[i]<minB) minB=ddB[i]; }
       ddRmin[i]=minR; ddBmin[i]=minB;
     }
     var dias=n-1-ini, anios=dias/252, mean=sumEx/nEx, sd=Math.sqrt((sumEx2-nEx*mean*mean)/(nEx-1));
+    // la caída máxima de las métricas se mide con el capital reiniciado en ini
+    minR=0; minB=0; var pR=1,pB=1,xR=1,xB=1;
+    for(i=ini+1;i<n;i++){ xR*=1+rR[i]; xB*=1+rAct[i]; if(xR>pR) pR=xR; if(xB>pB) pB=xB; var dR=xR/pR-1, dB=xB/pB-1; if(dR<minR) minR=dR; if(dB<minB) minB=dB; }
     // sharpe de comprar y mantener
     var sB=0,sB2=0; for(i=ini+1;i<n;i++){ var e2=rAct[i]-rTb[i]; sB+=e2; sB2+=e2*e2; }
     var mB2=sB/nEx, sdB=Math.sqrt((sB2-nEx*mB2*mB2)/(nEx-1));
     var met={
-      cagr:Math.pow(cR,252/dias)-1, sharpe:mean/sd*Math.sqrt(252), dd:minR, cambiosAnio:cambios/anios, exposicion:exp/nEx,
-      bh:{cagr:Math.pow(cB,252/dias)-1, sharpe:mB2/sdB*Math.sqrt(252), dd:minB}
+      cagr:Math.pow(capR,252/dias)-1, sharpe:mean/sd*Math.sqrt(252), dd:minR, cambiosAnio:cambios/anios, exposicion:exp/nEx,
+      bh:{cagr:Math.pow(capB,252/dias)-1, sharpe:mB2/sdB*Math.sqrt(252), dd:minB}
     };
     // eventos: cambios de señal (día en que se calcula) con el indicador que disparó
     var ev=[];
-    for(i=Math.max(1,ini);i<n;i++){
+    for(i=Math.max(1,iniV);i<n;i++){
       if(sig[i]===sig[i-1]) continue;
       var fS=iS[i]!==iS[i-1], fM=iM[i]!==iM[i-1];
       ev.push({i:i, tipo:sig[i]===1?'entrada':'salida', causa:(fS&&fM)?'ambos':(fS?'promedio':'maximo')});
     }
-    return {ini:ini, n:n, d:d, c:c, sma:sma, mx:mx, iS:iS, iM:iM, sig:sig, pos:pos, eqR:eqR, eqB:eqB, ddR:ddR, ddB:ddB, ddRmin:ddRmin, ddBmin:ddBmin, ev:ev, met:met, P:P, L:L_, A:A};
+    return {ini:ini, iniV:iniV, rR:rR, rAct:rAct, rTb:rTb, n:n, d:d, c:c, sma:sma, mx:mx, iS:iS, iM:iM, sig:sig, pos:pos, eqR:eqR, eqB:eqB, ddR:ddR, ddB:ddB, ddRmin:ddRmin, ddBmin:ddBmin, ev:ev, met:met, P:P, L:L_, A:A};
   }
   /* Base por activo y apalancamiento: retornos diarios del activo y del efectivo (se calcula una vez). */
   function base(D, A, L){

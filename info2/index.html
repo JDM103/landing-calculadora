@@ -79,6 +79,11 @@
   #cv-precio{ height:380px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
   #cv-dd{ height:150px; margin-top:8px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
   @media(max-width:600px){ #cv-precio{ height:320px; } #cv-dd{ height:130px; } }
+  .card.lleno{ position:fixed; inset:0; z-index:50; margin:0; border-radius:0; overflow:auto; padding:14px max(14px, env(safe-area-inset-right)) 24px max(14px, env(safe-area-inset-left)); background:var(--tinta); }
+  .card.lleno #cv-precio{ height:min(56vh, 620px); } .card.lleno #cv-dd{ height:min(20vh, 220px); }
+  .card.lleno .kpis{ grid-template-columns:repeat(3,1fr); }
+  @media(min-width:900px){ .card.lleno .kpis{ grid-template-columns:repeat(6,1fr); } }
+  body.sin-scroll{ overflow:hidden; }
   .panel-t{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; margin-top:12px; flex-wrap:wrap; }
   .panel-t h4{ font-size:13px; font-weight:700; color:var(--crema); }
   .panel-t span{ font-size:12px; color:var(--gris-sec); }
@@ -107,7 +112,8 @@
 
   /* kpis vivos */
   .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
-  @media(min-width:640px){ .kpis{ grid-template-columns:repeat(4,1fr); } }
+  @media(min-width:640px){ .kpis{ grid-template-columns:repeat(3,1fr); } }
+  @media(min-width:900px){ .kpis{ grid-template-columns:repeat(6,1fr); } }
   .kpi{ background:var(--tinta2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; min-width:0; }
   .kpi .l{ font-size:11px; color:var(--gris-sec); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
   .kpi .v{ font-size:20px; font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
@@ -221,7 +227,8 @@
       <div class="ctl" id="rangos">
         <span class="lbl">Tramo</span>
         <button data-r="todo" class="on">Todo</button>
-        <button data-r="20000101,20031231">2000 a 2003</button>
+        <button data-r="19870101,19881231">1987</button>
+        <button data-r="19990101,20031231">1999 a 2003</button>
         <button data-r="20070601,20091231">2008</button>
         <button data-r="20191001,20201231">2020</button>
         <button data-r="20210901,20231231">2022</button>
@@ -257,7 +264,8 @@
         <button id="b-fm" title="Un mes adelante">+1 m</button>
         <button id="b-fy" title="Un año adelante">+1 a</button>
         <button id="b-fin" title="Al final">⏭</button>
-        <div class="vel" id="vel"><button data-v="0.5">½×</button><button data-v="1" class="on">1×</button><button data-v="2">2×</button><button data-v="4">4×</button></div>
+        <button id="b-zoom" title="Ver el gráfico más grande">⛶ Zoom</button>
+        <div class="vel" id="vel"><button data-v="0.5">½×</button><button data-v="1">1×</button><button data-v="2">2×</button><button data-v="4" class="on">4×</button></div>
       </div>
       <div class="scrub"><input type="range" id="scrub" min="0" max="100" value="0" step="1" aria-label="Tiempo"><div class="f" id="fecha"></div></div>
 
@@ -265,6 +273,8 @@
         <div class="kpi"><div class="l">Estado</div><div class="v" id="k-estado">—</div><div class="s" id="k-estado-s"></div></div>
         <div class="kpi"><div class="l">Tu plata, en este tramo</div><div class="v menta" id="k-ret-r">—</div><div class="s">sin regla: <b id="k-ret-b">—</b></div></div>
         <div class="kpi"><div class="l">Peor caída hasta hoy</div><div class="v menta" id="k-dd-r">—</div><div class="s">sin regla: <b id="k-dd-b">—</b></div></div>
+        <div class="kpi"><div class="l">Anual en este tramo</div><div class="v menta" id="k-cagr-r">—</div><div class="s">sin regla: <b id="k-cagr-b">—</b></div></div>
+        <div class="kpi"><div class="l">Sharpe en este tramo</div><div class="v menta" id="k-sh-r">—</div><div class="s">sin regla: <b id="k-sh-b">—</b></div></div>
         <div class="kpi"><div class="l">Órdenes hasta hoy</div><div class="v" id="k-ord">—</div><div class="s" id="k-ord-s"></div></div>
       </div>
       <p class="nota">Teclas: espacio para play y pausa, flechas para moverse un mes, con shift un año. Clic en el gráfico para saltar a ese día.</p>
@@ -398,7 +408,7 @@
 
 </div>
 <footer>
-  <p>Precios de cierre diario y cierre ajustado de QQQ (desde 1999) y SPY (desde 1993), Yahoo Finance. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. QLD, TQQQ, SSO y UPRO simulados desde el índice: el retorno diario por 2 o por 3, menos el costo del préstamo a la tasa de la letra y 0.95% anual de gastos.</p>
+  <p>Precios de cierre diario y cierre ajustado de QQQ (desde marzo de 1999) y SPY (desde 1993), Yahoo Finance. Antes de 1999 el Nasdaq 100 se toma del índice (Stooq), escalado al precio de QQQ y sin dividendos. Los resultados de la historia completa y la malla se miden desde abril de 2000, igual que en /edge; el video arranca en 1987. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. QLD, TQQQ, SSO y UPRO simulados desde el índice: el retorno diario por 2 o por 3, menos el costo del préstamo a la tasa de la letra y 0.95% anual de gastos.</p>
   <p>Resultados pasados, con datos reales, de una regla escrita antes de mirar el resultado. No son una promesa de retorno futuro. Los datos y la especificación completa están en <a href="/edge">/edge</a>.</p>
 </footer>
 
@@ -412,7 +422,7 @@
   var IDX={QQQ:'Nasdaq 100', SPY:'S&P 500'};
   var MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
   var BASE={sma:200,banda:3,sem:39,x:12,y:6};
-  var S={A:'QQQ', L:1, P:{sma:200,banda:3,sem:39,x:12,y:6}, a:0, b:0, cur:0, curF:0, playing:false, vel:1, hover:-1, rango:'todo'};
+  var S={A:'QQQ', L:1, P:{sma:200,banda:3,sem:39,x:12,y:6}, a:0, b:0, cur:0, curF:0, playing:false, vel:4, hover:-1, rango:'todo'};
   var R=null, raf=null, tPrev=null;
 
   var CVP=document.getElementById('cv-precio'), CVD=document.getElementById('cv-dd'), CVM=document.getElementById('cv-malla'), H1=document.getElementById('cv-h1'), H2=document.getElementById('cv-h2');
@@ -432,25 +442,25 @@
   }
   function idxFecha(f, desdeFinal){
     var d=R.d;
-    if(desdeFinal){ for(var i=d.length-1;i>=R.ini;i--) if(d[i]<=f) return i; return R.ini; }
-    for(var j=R.ini;j<d.length;j++) if(d[j]>=f) return j;
+    if(desdeFinal){ for(var i=d.length-1;i>=R.iniV;i--) if(d[i]<=f) return i; return R.iniV; }
+    for(var j=R.iniV;j<d.length;j++) if(d[j]>=f) return j;
     return d.length-1;
   }
 
   /* ---------- simulación ---------- */
   function simular(){
     R=M.simular(D,S.A,S.P,S.L);
-    if(S.cur<R.ini) S.cur=R.ini;
+    if(S.cur<R.iniV) S.cur=R.iniV;
     resultados(); posMalla();
   }
-  function setRango(r){
+  function setRango(r, auto){
     S.rango=r; var n=R.n;
-    if(r==='todo'){ S.a=R.ini; S.b=n-1; }
+    if(r==='todo'){ S.a=R.iniV; S.b=n-1; }
     else if(r==='u5'){ S.a=Math.max(R.ini,n-1-252*5); S.b=n-1; }
     else { var p=r.split(','); S.a=idxFecha(+p[0]); S.b=idxFecha(+p[1],true); }
     S.cur=S.a; S.curF=S.a; S.hover=-1; parar();
     SCRUB.min=S.a; SCRUB.max=S.b; SCRUB.value=S.cur;
-    dibujar();
+    if(auto) play(); else { S.cur=S.b; S.curF=S.b; dibujar(); }
   }
 
   /* ---------- dibujo: precio ---------- */
@@ -619,9 +629,20 @@
     $('k-estado').textContent=dentro?'Invertido':'Fuera'; $('k-estado').className='v '+(dentro?'menta':'rojo');
     $('k-estado-s').textContent=dentro?('100% en '+nombre()):'en efectivo, ganando interés';
     var rr=R.eqR[i]/R.eqR[a]-1, rb=R.eqB[i]/R.eqB[a]-1;
-    $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=rb?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
+    $('k-ret-r').textContent=fPct(rr,0); $('k-ret-r').className='v '+(rr>=0?'menta':'rojo'); $('k-ret-b').textContent=fPct(rb,0);
     var mr=0,mb=0; if(S._dd){ for(var j=0;j<=i-a;j++){ if(S._dd.r[j]<mr) mr=S._dd.r[j]; if(S._dd.b[j]<mb) mb=S._dd.b[j]; } }
-    $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v '+(mr>=mb?'menta':'rojo'); $('k-dd-b').textContent=fPctNeg(mb);
+    $('k-dd-r').textContent=fPctNeg(mr); $('k-dd-r').className='v menta'; $('k-dd-b').textContent=fPctNeg(mb);
+    // anual y Sharpe del tramo hasta hoy
+    var dias=i-a;
+    if(dias>=60){
+      var cr=Math.pow(1+rr,252/dias)-1, cb=Math.pow(1+rb,252/dias)-1;
+      $('k-cagr-r').textContent=fPct(cr,1); $('k-cagr-r').className='v '+(cr>=0?'menta':'rojo'); $('k-cagr-b').textContent=fPct(cb,1);
+      var s1=0,s2=0,t1=0,t2=0,k2=0;
+      for(var q=a+1;q<=i;q++){ var e1=R.rR[q]-R.rTb[q], e2=R.rAct[q]-R.rTb[q]; s1+=e1; s2+=e1*e1; t1+=e2; t2+=e2*e2; k2++; }
+      var m1=s1/k2, v1=Math.sqrt((s2-k2*m1*m1)/(k2-1)), m2=t1/k2, v2=Math.sqrt((t2-k2*m2*m2)/(k2-1));
+      var shR=m1/v1*Math.sqrt(252), shB=m2/v2*Math.sqrt(252);
+      $('k-sh-r').textContent=shR.toFixed(2).replace('-','−'); $('k-sh-r').className='v '+(shR>=0?'menta':'rojo'); $('k-sh-b').textContent=shB.toFixed(2).replace('-','−');
+    } else { $('k-cagr-r').textContent='—'; $('k-cagr-b').textContent='—'; $('k-sh-r').textContent='—'; $('k-sh-b').textContent='—'; }
     var nS=0,nE=0; R.ev.forEach(function(e){ if(e.i>=a&&e.i<=i){ if(e.tipo==='salida') nS++; else nE++; } });
     $('k-ord').textContent=String(nS+nE); $('k-ord-s').textContent=nS+' salidas · '+nE+' entradas';
     var yrs=(i-a)/252; $('k-ret-r').title=yrs>0.5?('equivale a '+fPct(Math.pow(1+rr,1/yrs)-1,1)+' anual'):'';
@@ -788,6 +809,10 @@
 
   /* ---------- eventos ---------- */
   $('b-play').addEventListener('click', function(){ S.playing?parar():play(); });
+  var CARD=document.querySelector('#video .card');
+  function zoom(on){ CARD.classList.toggle('lleno', on); document.body.classList.toggle('sin-scroll', on); $('b-zoom').textContent=on?'✕ Cerrar':'⛶ Zoom'; dibujar(); }
+  $('b-zoom').addEventListener('click', function(){ zoom(!CARD.classList.contains('lleno')); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'&&CARD.classList.contains('lleno')) zoom(false); });
   $('b-ini').addEventListener('click', function(){ parar(); ir(S.a); });
   $('b-fin').addEventListener('click', function(){ parar(); ir(S.b); });
   $('b-ay').addEventListener('click', function(){ mover(-252); });
@@ -806,12 +831,12 @@
     var b=e.target.closest('button'); if(!b) return;
     S.A=b.dataset.a; S.L=+b.dataset.l;
     $('activos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
-    var r=S.rango; parar(); simular(); setRango(r);
+    var r=S.rango; parar(); simular(); setRango(r, true);
   });
   $('rangos').addEventListener('click', function(e){
     var b=e.target.closest('button'); if(!b) return;
     $('rangos').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on',x===b); });
-    setRango(b.dataset.r);
+    setRango(b.dataset.r, true);
   });
   function pintarParams(){ $('params').querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', S.P[x.dataset.p]===+x.dataset.v); }); }
   function setParams(np){
@@ -872,7 +897,7 @@
   window.addEventListener('resize', function(){ dibujar(); dibujarMalla(); dibujarMapas(); dibujarTray(); });
 
   // arranque
-  simular(); setRango('todo'); pintarParams();
+  simular(); setRango('todo', false); pintarParams();
 })();
 </script>
 </body>
