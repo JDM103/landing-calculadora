@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Tres reglas en vivo · Empowered Investor</title>
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<style>
+/* Página interna (noindex): simulación en vivo de tres reglas sobre QQQ. Los datos los da /.netlify/functions/live
+   (solo lectura de Alpaca); en localhost lee ./data.json generado con edges/live-sim/correr_local.js. */
+:root{--tinta:#0d0f14;--tinta2:#15191E;--tinta3:#1d2229;--borde:#2a3038;--crema:#FEF9F3;--crema2:#b9b4ae;--crema3:#7d7974;--menta:#63FCAF;--peri:#556DFB;--rojo:#ff7a59;--ambar:#ffc857;--blanco:#ffffff}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:var(--tinta);color:var(--crema);font:16px/1.5 "Bai Jamjuree",system-ui,sans-serif;padding:0 max(16px,env(safe-area-inset-left)) 56px max(16px,env(safe-area-inset-right))}
+a{color:var(--menta)}
+.wrap{max-width:1180px;margin:0 auto}
+header{padding:34px 0 16px}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--crema3);font-weight:600}
+h1{font-size:clamp(28px,4.4vw,42px);line-height:1.1;margin:8px 0 10px;font-weight:700;letter-spacing:-.01em}
+.lede{color:var(--crema2);max-width:72ch;margin:0;font-size:17px}
+.vivo{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin:16px 0 4px;font-size:14px;color:var(--crema2)}
+.vivo .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--menta);box-shadow:0 0 0 0 rgba(99,252,175,.6);animation:pulso 2s infinite;margin-right:7px;vertical-align:middle}
+.vivo .dot.off{background:var(--crema3);animation:none;box-shadow:none}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(99,252,175,.55)}70%{box-shadow:0 0 0 9px rgba(99,252,175,0)}100%{box-shadow:0 0 0 0 rgba(99,252,175,0)}}
+.vivo b{color:var(--crema);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0 18px}
+.tile{background:var(--tinta2);border:1px solid var(--borde);border-radius:14px;padding:14px 16px;border-top:3px solid var(--c,var(--borde));min-width:0}
+.tile .k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--crema3);font-weight:600}
+.tile .v{font-size:28px;font-weight:700;margin:6px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tile .p{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.tile .s{font-size:13px;color:var(--crema2);margin-top:8px;line-height:1.45}
+.tile .s b{color:var(--crema);font-weight:600}
+.pos{color:var(--menta)}.neg{color:var(--rojo)}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--borde);color:var(--crema2);margin-top:8px}
+.pill.in{border-color:var(--menta);color:var(--menta)}.pill.out{border-color:var(--ambar);color:var(--ambar)}.pill.short{border-color:var(--rojo);color:var(--rojo)}
+.card{background:var(--tinta2);border:1px solid var(--borde);border-radius:14px;padding:12px 14px 14px;position:relative}
+.bar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--borde);border-radius:9px;overflow:hidden}
+.seg button{background:var(--tinta3);color:var(--crema2);border:0;padding:7px 12px;font:600 13px "Bai Jamjuree",sans-serif;cursor:pointer}
+.seg button+button{border-left:1px solid var(--borde)}
+.seg button[aria-pressed="true"]{background:var(--peri);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--menta);outline-offset:2px}
+.sp{flex:1 1 auto}
+h4{margin:10px 0 2px;font-size:14px;font-weight:600}
+h4 span{color:var(--crema3);font-weight:500;font-size:12px;margin-left:8px}
+canvas{display:block;width:100%;touch-action:pan-y;cursor:crosshair}
+.leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--crema2);margin-top:6px}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+.leg i{display:inline-block;width:14px;height:3px;border-radius:2px}
+.leg i.box{height:10px;width:12px;border-radius:2px}
+.tip{position:absolute;pointer-events:none;background:var(--crema);color:var(--tinta);font-size:12px;line-height:1.5;padding:7px 10px;border-radius:7px;white-space:nowrap;display:none;z-index:5;font-variant-numeric:tabular-nums}
+.tip .sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+h2{font-size:22px;margin:30px 0 6px;font-weight:700}
+p.note{color:var(--crema2);font-size:14px;max-width:78ch;margin:4px 0 10px}
+.tablewrap{overflow-x:auto;border:1px solid var(--borde);border-radius:12px;background:var(--tinta2)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--borde);text-align:right;white-space:nowrap}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--crema3);text-align:right}
+th:first-child,td:first-child{text-align:left}td.l{text-align:left}
+ul.plain{padding-left:20px;color:var(--crema2);max-width:80ch;font-size:14px}
+ul.plain li{margin:4px 0}
+.err{background:#3a1d17;border:1px solid var(--rojo);color:var(--crema);padding:12px 14px;border-radius:12px;margin:14px 0;display:none}
+@media (max-width:600px){.card{padding:10px 8px 12px}th,td{padding:7px 7px;font-size:13px}.tile .v{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Empowered Investor · laboratorio · simulación</div>
+  <h1>Tres reglas sobre el Nasdaq, en vivo</h1>
+  <p class="lede">Plata de mentira, precios de verdad. Cada regla arranca con <b id="cap">$100,000</b> el <b id="ini">—</b> y se recalcula con cada barra de 30 minutos de QQQ. Nada de esto manda órdenes: es para ver, barra a barra, cómo se habrían comportado <b>Atalaya actual</b>, la <b>Atalaya de 30 minutos</b> (la mejor de la malla) y <b>Concretum</b> (momentum intradía, versión del paper).</p>
+  <div class="vivo"><span><span class="dot" id="dot"></span><b id="estado-dato">cargando…</b></span><span>última barra: <b id="ultima">—</b></span><span>próxima barra en <b id="cuenta">—</b></span><span id="atraso">los datos llegan con 15 minutos de atraso</span></div>
+</header>
+<div class="err" id="err"></div>
+<div class="tiles" id="tiles"></div>
+
+<div class="card" id="card">
+  <div class="bar">
+    <div class="seg" id="rangos" role="group" aria-label="Rango"><button data-r="1">Hoy</button><button data-r="5">1 sem</button><button data-r="21">1 mes</button><button data-r="0" aria-pressed="true">Todo</button></div>
+    <div class="seg"><button id="b-mas" aria-label="Acercar">＋</button><button id="b-menos" aria-label="Alejar">－</button><button id="b-izq" aria-label="Mover a la izquierda">◀</button><button id="b-der" aria-label="Mover a la derecha">▶</button></div>
+    <span class="sp"></span>
+    <span style="font-size:13px;color:var(--crema3)">Rueda del mouse para acercar, arrastrar para moverte</span>
+  </div>
+  <h4>QQQ, barras de 30 min <span>sombra verde: Concretum largo · roja: corto · triángulos: órdenes de las Atalayas</span></h4>
+  <canvas id="cv-px"></canvas>
+  <h4>Resultado desde el inicio <span>en % sobre los $100,000</span></h4>
+  <canvas id="cv-eq"></canvas>
+  <div class="leg"><span><i style="background:var(--peri)"></i>Atalaya actual</span><span><i style="background:var(--menta)"></i>Atalaya 30 min</span><span><i style="background:var(--ambar)"></i>Concretum</span><span><i style="background:var(--crema3)"></i>QQQ comprar y mantener</span></div>
+  <div class="tip" id="tip"></div>
+</div>
+
+<h2>Órdenes simuladas</h2>
+<p class="note">Las últimas de cada regla. Precio = cierre de la barra en que se decide (las MOC, el cierre del día). El total cuenta desde el inicio.</p>
+<div class="bar"><div class="seg" id="tabs" role="group" aria-label="Regla"><button data-k="s1" aria-pressed="true">Concretum</button><button data-k="r30" aria-pressed="false">Atalaya 30 min</button><button data-k="a2" aria-pressed="false">Atalaya actual</button></div><span id="tot" style="font-size:14px;color:var(--crema2)"></span></div>
+<div class="tablewrap" style="max-height:420px;overflow:auto"><table id="tbl"></table></div>
+
+<h2>Cómo está hecho</h2>
+<ul class="plain">
+  <li><b>Atalaya actual:</b> dentro si el cierre está sobre la media de 200 días +3% y a menos de 6% del máximo de 39 semanas; fuera si cae bajo la media −3% o más de 12% bajo el máximo. Se decide al cierre y la orden es MOC del día siguiente.</li>
+  <li><b>Atalaya 30 min:</b> lo mismo con barras de 30 minutos: media de 100 barras ±2% y máximo de 650 barras −12/−6. Se decide con la barra de las 15:30 y la orden es MOC del mismo día. Es la mejor de 2.540 combinaciones en QQQ 2017-2026; no está probada antes de 2016 ni en SPY.</li>
+  <li><b>Concretum:</b> cada 30 minutos, largo si el precio rompe la banda de ruido superior y está sobre el VWAP, corto si rompe la inferior y está bajo el VWAP, plano si no; todo se cierra con la MOC. Tamaño 2% ÷ volatilidad de 14 días, tope 4x.</li>
+  <li id="sup-costos">Costos: los medidos con datos reales de Alpaca en octubre de 2026 (0.6 pb por orden MOC, 0.83 pb por cambio de Concretum). Efectivo al 4% anual.</li>
+  <li>Datos: Alpaca, barras de 30 minutos ajustadas por splits, con 15 minutos de atraso. La función del servidor solo lee precios; no hay ninguna conexión a cuentas ni a órdenes.</li>
+</ul>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id); const LOCAL=location.hostname==='localhost'||location.hostname==='127.0.0.1';
+const URL_DATA=LOCAL?'./data.json':'/.netlify/functions/live';
+const COL={a2:'#556DFB',r30:'#63FCAF',s1:'#ffc857',qqq:'#7d7974',ink:'#FEF9F3',ink2:'#b9b4ae',ink3:'#7d7974',rule:'#2a3038',rule2:'#1f252c',long:'rgba(99,252,175,.13)',short:'rgba(255,122,89,.16)',paper:'#15191E'};
+const NOM={a2:'Atalaya actual',r30:'Atalaya 30 min',s1:'Concretum',qqq:'QQQ'};
+const fUSD=v=>'$'+Math.round(v).toLocaleString('en-US'), fPct=(v,d=2)=>(v>=0?'+':'')+(v*100).toFixed(d)+'%', fPx=v=>'$'+v.toFixed(2);
+const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const dstr=t=>{const [d,h]=t.split(' ');const [y,m,dd]=d.split('-');return `${+dd} ${MES[+m-1]} ${h}`;};
+let R=null,N=0,A=0,B=0,HOV=-1,TAB='s1';
+
+// ---------- carga
+async function cargar(){
+  try{const r=await fetch(URL_DATA,{cache:'no-store'});const j=await r.json();if(j.error){muestraErr(j.error);return;}R=j;$('err').style.display='none';pintar();}
+  catch(e){muestraErr('No se pudo leer la simulación: '+e.message);}
+}
+function muestraErr(m){$('err').textContent=m;$('err').style.display='block';$('estado-dato').textContent='sin datos';$('dot').classList.add('off');}
+function pintar(){
+  N=R.serie.t.length; if(B===0||B>N-1){A=0;B=N-1;}
+  $('ini').textContent=dstr(R.inicio+' ').trim(); $('cap').textContent=fUSD(R.capital); $('ultima').textContent=dstr(R.ultimaBarra)+' NY';
+  const gen=new Date(R.generado); $('estado-dato').textContent='actualizado '+gen.toLocaleTimeString('es-CR',{hour:'2-digit',minute:'2-digit'})+(LOCAL?' (local)':''); $('dot').classList.remove('off');
+  $('sup-costos').textContent=`Costos: los medidos con datos reales de Alpaca en octubre de 2026 (${R.supuestos.bpsMOC} pb por orden MOC, ${R.supuestos.bpsS1} pb por cambio de Concretum). Efectivo al ${(R.supuestos.rfAnual*100).toFixed(0)}% anual.`;
+  tiles(); tabla(); draw();
+}
+function tiles(){
+  const E=R.estado, q=R.equity, c=R.capital;
+  const card=(k,extra,pill)=>{const p=q[k]/c-1;return `<div class="tile" style="--c:${COL[k]}"><div class="k">${NOM[k]}</div><div class="v">${fUSD(q[k])}</div><div class="p ${p>=0?'pos':'neg'}">${fPct(p)} · ${(p>=0?'+':'−')+fUSD(Math.abs(q[k]-c)).slice(0)}</div>${pill}<div class="s">${extra}</div></div>`;};
+  const a2=E.a2, r30=E.r30, s1=E.s1;
+  $('tiles').innerHTML=
+    card('a2',`decidida ${a2.decidido}<br>media 200 d: <b>${fPct(a2.rel,1)}</b> · máximo 39 sem: <b>${fPct(a2.lvl,1)}</b><br>próxima decisión: ${a2.proximo} · ${R.nOrdenes.a2} órdenes`,`<span class="pill ${a2.dentro?'in':'out'}">${a2.dentro?'dentro del Nasdaq':'fuera, en efectivo'}</span>`)+
+    card('r30',`decidida ${r30.decidido}<br>media 100 b: <b>${fPct(r30.rel,1)}</b> · máximo 650 b: <b>${fPct(r30.lvl,1)}</b><br>próxima decisión: ${r30.proximo} · ${R.nOrdenes.r30} órdenes`,`<span class="pill ${r30.dentro?'in':'out'}">${r30.dentro?'dentro del Nasdaq':'fuera, en efectivo'}</span>`)+
+    card('s1',`tamaño hoy <b>${s1.L}x</b> · ${s1.ordenesHoy} órdenes hoy, ${R.nOrdenes.s1} en total<br>${s1.ub?`banda <b>${fPx(s1.lb)}</b> – <b>${fPx(s1.ub)}</b> · VWAP <b>${fPx(s1.vwap)}</b><br>`:''}próxima decisión: ${s1.proximo}`,`<span class="pill ${s1.exposicion>0?'in':s1.exposicion<0?'short':''}">${s1.exposicion>0?'largo '+s1.exposicion+'x':s1.exposicion<0?'corto '+Math.abs(s1.exposicion)+'x':'plano, sin posición'}</span>`)+
+    card('qqq',`comprar y mantener, de referencia<br>último precio <b>${fPx(R.serie.px[N-1])}</b>`,`<span class="pill in">siempre dentro</span>`);
+}
+function tabla(){
+  const o=R.ordenes[TAB]||[]; $('tot').textContent=`${R.nOrdenes[TAB]} órdenes desde el inicio`;
+  if(!o.length){$('tbl').innerHTML='<tbody><tr><td class="l" style="color:var(--crema3)">Todavía ninguna.</td></tr></tbody>';return;}
+  $('tbl').innerHTML=`<thead><tr><th>Cuándo (NY)</th><th>Orden</th><th>Precio</th><th>${TAB==='s1'?'Exposición':'Qué pasa'}</th></tr></thead><tbody>${o.slice().reverse().map(x=>`<tr><td class="l">${dstr(x.t)}</td><td class="${x.lado==='compra'?'pos':'neg'}">${x.lado}</td><td>${fPx(x.px)}</td><td>${TAB==='s1'?(x.exp>0?'largo '+x.exp+'x':x.exp<0?'corto '+Math.abs(x.exp)+'x':'plano')+' · '+x.nota:x.nota}</td></tr>`).join('')}</tbody>`;
+}
+$('tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{TAB=b.dataset.k;$('tabs').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));tabla();});
+
+// ---------- cuenta regresiva a la próxima barra (hora de Nueva York)
+function nyNow(){const p={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit',second:'2-digit',weekday:'short'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return {s:+p.hour*3600+ +p.minute*60+ +p.second,dow:p.weekday};}
+function cuenta(){const n=nyNow();const abierto=n.dow!=='Sat'&&n.dow!=='Sun'&&n.s>=9.5*3600&&n.s<16*3600;
+  if(!abierto){$('cuenta').textContent='mercado cerrado';return;}const next=Math.ceil((n.s+1)/1800)*1800;const d=next-n.s;$('cuenta').textContent=`${Math.floor(d/60)}:${String(d%60).padStart(2,'0')} (+15 min de atraso)`;}
+setInterval(cuenta,1000);cuenta();
+
+// ---------- gráficos (canvas con zoom)
+const DPR=()=>Math.min(2,window.devicePixelRatio||1), PAD={l:56,r:12};
+function prep(cv,h){const w=cv.parentNode.clientWidth-28;const d=DPR();cv.style.height=h+'px';cv.width=Math.round(w*d);cv.height=Math.round(h*d);const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,w,h);return {c,W:w,H:h};}
+const xs=W=>i=>PAD.l+(i-A)/(B-A||1)*(W-PAD.l-PAD.r), ixOf=(W,x)=>A+(x-PAD.l)/(W-PAD.l-PAD.r)*(B-A);
+function ticks(lo,hi,n){const raw=(hi-lo)/n||1,mag=Math.pow(10,Math.floor(Math.log10(raw))),r=raw/mag,st=mag*(r>=5?5:r>=2?2:1);const o=[];for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9;v+=st)o.push(+v.toFixed(10));return o;}
+function xTicks(c,W,H,top){const x=xs(W),ia=Math.max(0,Math.floor(A)),ib=Math.min(N-1,Math.ceil(B));const days=(ib-ia)/13;const out=[];let last='';
+  for(let i=ia;i<=ib;i++){const t=R.serie.t[i];const k=days>30?t.slice(0,7):days>4?t.slice(0,10):t.slice(0,13);if(k!==last){out.push(i);last=k;}}
+  const step=Math.max(1,Math.ceil(out.length/Math.max(2,Math.floor((W-PAD.l)/82))));c.font='11px "Bai Jamjuree"';c.fillStyle=COL.ink3;c.textAlign='left';
+  out.forEach((i,j)=>{if(j%step)return;const X=x(i);c.strokeStyle=COL.rule2;c.beginPath();c.moveTo(X,top);c.lineTo(X,H-20);c.stroke();const t=R.serie.t[i];const [d,h]=t.split(' ');const [y,m,dd]=d.split('-');c.fillText(days>30?`${MES[+m-1]} ${y.slice(2)}`:days>4?`${+dd} ${MES[+m-1]}`:`${+dd} ${MES[+m-1]} ${h}`,X+3,H-6);});}
+function line(c,f,x,y,ia,ib){c.beginPath();let first=true;for(let i=ia;i<=ib;i++){const v=f(i);if(v==null){first=true;continue;}const X=x(i),Y=y(v);first?c.moveTo(X,Y):c.lineTo(X,Y);first=false;}c.stroke();}
+function marks(c,W,H,top){if(HOV>=A&&HOV<=B){const X=xs(W)(HOV);c.strokeStyle=COL.ink3;c.setLineDash([3,3]);c.beginPath();c.moveTo(X,top);c.lineTo(X,H-20);c.stroke();c.setLineDash([]);}}
+function drawPx(){const S=R.serie,cv=$('cv-px'),{c,W,H}=prep(cv,window.innerWidth<600?220:280),x=xs(W),top=8,bot=H-24,ia=Math.max(0,Math.floor(A)),ib=Math.min(N-1,Math.ceil(B));
+  let lo=Infinity,hi=-Infinity;for(let i=ia;i<=ib;i++){if(S.px[i]<lo)lo=S.px[i];if(S.px[i]>hi)hi=S.px[i];}const pad=(hi-lo)*0.08+0.5,y=v=>bot-(v-(lo-pad))/((hi+pad)-(lo-pad))*(bot-top);
+  let i=ia;while(i<=ib){const s=Math.sign(S.ps1[i]);if(s){let j=i;while(j<=ib&&Math.sign(S.ps1[j])===s)j++;c.fillStyle=s>0?COL.long:COL.short;c.fillRect(x(i-1),top,Math.max(1,x(j-1)-x(i-1)),bot-top);i=j;}else i++;}
+  ticks(lo-pad,hi+pad,5).forEach(v=>{const Y=y(v);c.strokeStyle=COL.rule2;c.beginPath();c.moveTo(PAD.l,Y);c.lineTo(W-PAD.r,Y);c.stroke();c.fillStyle=COL.ink3;c.font='11px "Bai Jamjuree"';c.textAlign='right';c.fillText('$'+v.toFixed(0),PAD.l-6,Y+4);});xTicks(c,W,H,top);
+  c.strokeStyle=COL.ink;c.lineWidth=1.4;line(c,i=>S.px[i],x,y,ia,ib);c.lineWidth=1;
+  const tri=(X,Y,up,col)=>{c.beginPath();if(up){c.moveTo(X-6,Y+6);c.lineTo(X+6,Y+6);c.lineTo(X,Y-6);}else{c.moveTo(X-6,Y-6);c.lineTo(X+6,Y-6);c.lineTo(X,Y+6);}c.closePath();c.fillStyle=col;c.fill();};
+  for(let i=Math.max(ia,1);i<=ib;i++){if(S.pa2[i]!==S.pa2[i-1])tri(x(i-1),y(S.px[i-1])+(S.pa2[i]?18:-18),!!S.pa2[i],COL.a2);if(S.pr30[i]!==S.pr30[i-1])tri(x(i-1),y(S.px[i-1])+(S.pr30[i]?30:-30),!!S.pr30[i],COL.r30);}
+  if(HOV>=ia&&HOV<=ib){c.fillStyle=COL.ink;c.beginPath();c.arc(x(HOV),y(S.px[HOV]),3.5,0,7);c.fill();}marks(c,W,H,top);}
+function drawEq(){const S=R.serie,cv=$('cv-eq'),{c,W,H}=prep(cv,window.innerWidth<600?200:250),x=xs(W),top=8,bot=H-24,ia=Math.max(0,Math.floor(A)),ib=Math.min(N-1,Math.ceil(B)),K=['qqq','a2','r30','s1'];
+  const f=k=>i=>S[k][i]/R.capital-1;let lo=0,hi=0;K.forEach(k=>{for(let i=ia;i<=ib;i++){const v=f(k)(i);if(v<lo)lo=v;if(v>hi)hi=v;}});const pad=(hi-lo)*0.1+0.002,y=v=>bot-(v-(lo-pad))/((hi+pad)-(lo-pad))*(bot-top);
+  ticks(lo-pad,hi+pad,5).forEach(v=>{const Y=y(v);c.strokeStyle=COL.rule2;c.beginPath();c.moveTo(PAD.l,Y);c.lineTo(W-PAD.r,Y);c.stroke();c.fillStyle=COL.ink3;c.font='11px "Bai Jamjuree"';c.textAlign='right';c.fillText(fPct(v,Math.abs(hi-lo)<0.02?2:1),PAD.l-6,Y+4);});xTicks(c,W,H,top);
+  c.strokeStyle=COL.ink3;c.setLineDash([2,3]);c.beginPath();c.moveTo(PAD.l,y(0));c.lineTo(W-PAD.r,y(0));c.stroke();c.setLineDash([]);
+  K.forEach(k=>{c.strokeStyle=COL[k];c.lineWidth=k==='qqq'?1.2:2;line(c,f(k),x,y,ia,ib);});c.lineWidth=1;
+  if(HOV>=ia&&HOV<=ib)K.forEach(k=>{c.fillStyle=COL[k];c.beginPath();c.arc(x(HOV),y(f(k)(HOV)),3.2,0,7);c.fill();});marks(c,W,H,top);}
+function draw(){if(!R)return;drawPx();drawEq();}
+function clamp(a,b){let s=Math.max(12,Math.min(N-1,b-a));if(a<0)a=0;if(a+s>N-1)a=N-1-s;return [Math.max(0,a),Math.max(0,a)+s];}
+function setView(a,b,keep){[A,B]=clamp(a,b);if(!keep)$('rangos').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));draw();}
+$('rangos').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('rangos').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));const d=+b.dataset.r;if(!d){setView(0,N-1,true);return;}const hoy=R.serie.t[N-1].slice(0,10);let i0=N-1;if(d===1){while(i0>0&&R.serie.t[i0-1].slice(0,10)===hoy)i0--;setView(i0-1,N-1,true);}else setView(N-1-d*13,N-1,true);});
+const zoomBy=f=>{const c=(A+B)/2,s=(B-A)*f;setView(c-s/2,c+s/2,false);};$('b-mas').onclick=()=>zoomBy(0.5);$('b-menos').onclick=()=>zoomBy(2);$('b-izq').onclick=()=>{const s=(B-A)/2;setView(A-s,B-s,false);};$('b-der').onclick=()=>{const s=(B-A)/2;setView(A+s,B+s,false);};
+function tipAt(cv,ev){if(!R)return;const r=cv.getBoundingClientRect();let i=Math.round(ixOf(cv.clientWidth,ev.clientX-r.left));if(i<A||i>B||ev.clientX-r.left<PAD.l){HOV=-1;$('tip').style.display='none';draw();return;}HOV=Math.max(0,Math.min(N-1,i));draw();
+  const S=R.serie,tip=$('tip'),card=$('card').getBoundingClientRect(),e=S.ps1[HOV];
+  tip.innerHTML=`<b>${dstr(S.t[HOV])}</b> · QQQ ${fPx(S.px[HOV])}<br>Concretum ${e>0?'largo '+e+'x':e<0?'corto '+Math.abs(e)+'x':'plano'} · Atalaya actual ${S.pa2[HOV]?'dentro':'fuera'} · 30 min ${S.pr30[HOV]?'dentro':'fuera'}<br>`+['a2','r30','s1','qqq'].map(k=>`<span class="sw" style="background:${COL[k]}"></span>${NOM[k]} ${fUSD(S[k][HOV])} (${fPct(S[k][HOV]/R.capital-1)})`).join('<br>');
+  tip.style.display='block';let L=ev.clientX-card.left+16,T=ev.clientY-card.top+14;if(L+tip.offsetWidth>card.width-8)L=ev.clientX-card.left-tip.offsetWidth-16;if(L<4)L=4;tip.style.left=L+'px';tip.style.top=T+'px';}
+['cv-px','cv-eq'].forEach(id=>{const cv=$(id);let drag=null;
+  cv.addEventListener('pointerdown',ev=>{if(ev.pointerType==='touch')return;drag={x:ev.clientX,a:A,b:B,W:cv.clientWidth};cv.setPointerCapture(ev.pointerId);});
+  cv.addEventListener('pointermove',ev=>{if(drag){const di=(ev.clientX-drag.x)/(drag.W-PAD.l-PAD.r)*(drag.b-drag.a);setView(drag.a-di,drag.b-di,false);$('tip').style.display='none';return;}tipAt(cv,ev);});
+  cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointerleave',()=>{if(drag)return;HOV=-1;$('tip').style.display='none';draw();});
+  cv.addEventListener('wheel',ev=>{ev.preventDefault();const r=cv.getBoundingClientRect();const c=Math.max(A,Math.min(B,ixOf(cv.clientWidth,ev.clientX-r.left)));const f=ev.deltaY>0?1.25:0.8;setView(c-(c-A)*f,c+(B-c)*f,false);},{passive:false});});
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(draw,120);});
+cargar(); setInterval(cargar,60000);
+})();
+</script>
+</body>
+</html>

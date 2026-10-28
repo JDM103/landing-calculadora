@@ -98,3 +98,28 @@ Los logs de cada aviso quedan en Netlify → Functions → `calendly-capi`.
 - Las cancelaciones se ignoran: no son una conversión.
 - Ante un error de Meta la función igual responde 200, para que Calendly no
   reintente y termine duplicando el aviso. El error queda en los logs.
+
+# Simulación en vivo de tres reglas (/live)
+
+`live.js`: la página interna `/live` (noindex) muestra, barra de 30 minutos por barra,
+cómo se habrían comportado Atalaya actual, la Atalaya de 30 minutos (mejor punto de la
+malla de `META ADS/edges/atalaya-intradia`) y Concretum (momentum intradía, versión del
+paper) sobre QQQ con $100,000 de mentira cada una desde el 27 de octubre de 2026. Se
+reconstruye entera en cada llamada; no guarda estado.
+
+**Solo lee precios.** El único host que usa es `data.alpaca.markets`; no hay ninguna
+llamada al host de trading ni a cuentas. Las keys sirven únicamente para leer datos.
+
+Necesita en Netlify → Site configuration → Environment variables:
+
+| Variable | Dónde sale |
+|---|---|
+| `APCA_API_KEY_ID` | Alpaca → API keys. Conviene que sean de una **cuenta paper**: para leer datos sirven igual y no pueden mover plata |
+| `APCA_API_SECRET_KEY` | la pareja de la anterior |
+
+Sin esas variables la función responde 500 y la página muestra el aviso. Cachea 60 s.
+Datos SIP del plan gratis: 15 minutos de atraso, así que cada barra aparece un cuarto
+de hora después de cerrar. Para verla en localhost sin función: `node "C:\Users\Dell\repos\META ADS\edges\live-sim\correr_local.js"`
+genera `live/data.json` (no se commitea) y la página lo lee cuando corre en localhost.
+
+Probar en vivo: `https://investorcr.com/.netlify/functions/live`.
