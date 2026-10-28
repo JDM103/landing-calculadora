@@ -92,6 +92,21 @@ ul.plain li{margin:4px 0}
   <div class="tip" id="tip"></div>
 </div>
 
+<h2>Cinco años para atrás, y desde el 27 de octubre en vivo</h2>
+<p class="note">La parte apagada es backtest: las mismas tres reglas sobre las barras de 30 minutos de Alpaca desde octubre de 2021, con los mismos costos que la simulación. Está escalada para que el 26 de octubre de 2026 cada regla valga $100,000. A partir de la línea punteada son los datos en vivo de arriba: ahí es donde se prueba el slippage.</p>
+<div class="tiles" id="bt-tiles"></div>
+<div class="card" id="card2">
+  <div class="bar">
+    <div class="seg" id="rangos2" role="group" aria-label="Rango"><button data-r="live">Solo en vivo</button><button data-r="63">3 meses</button><button data-r="252">1 año</button><button data-r="0" aria-pressed="true">5 años</button></div>
+    <div class="seg"><button id="b2-mas" aria-label="Acercar">＋</button><button id="b2-menos" aria-label="Alejar">－</button><button id="b2-izq" aria-label="Mover a la izquierda">◀</button><button id="b2-der" aria-label="Mover a la derecha">▶</button></div>
+    <span class="sp"></span><span style="font-size:13px;color:var(--crema3)">escala log · backtest diario, en vivo cada 30 min</span>
+  </div>
+  <h4>$100,000 el 26 de octubre de 2026, hacia atrás y hacia adelante</h4>
+  <canvas id="cv-long"></canvas>
+  <div class="leg"><span><i style="background:var(--peri)"></i>Atalaya actual</span><span><i style="background:var(--menta)"></i>Atalaya 30 min</span><span><i style="background:var(--ambar)"></i>Concretum</span><span><i style="background:var(--crema3)"></i>QQQ</span><span><i class="box" style="background:rgba(99,252,175,.08);border:1px dashed var(--menta)"></i>datos en vivo</span></div>
+  <div class="tip" id="tip2"></div>
+</div>
+
 <h2>Órdenes simuladas</h2>
 <p class="note">Las últimas de cada regla. Precio = cierre de la barra en que se decide (las MOC, el cierre del día). El total cuenta desde el inicio.</p>
 <div class="bar"><div class="seg" id="tabs" role="group" aria-label="Regla"><button data-k="s1" aria-pressed="true">Concretum</button><button data-k="r30" aria-pressed="false">Atalaya 30 min</button><button data-k="a2" aria-pressed="false">Atalaya actual</button></div><span id="tot" style="font-size:14px;color:var(--crema2)"></span></div>
@@ -194,7 +209,39 @@ function tipAt(cv,ev){if(!R)return;const r=cv.getBoundingClientRect();let i=Math
   cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointerleave',()=>{if(drag)return;HOV=-1;$('tip').style.display='none';draw();});
   cv.addEventListener('wheel',ev=>{ev.preventDefault();const r=cv.getBoundingClientRect();const c=Math.max(A,Math.min(B,ixOf(cv.clientWidth,ev.clientX-r.left)));const f=ev.deltaY>0?1.25:0.8;setView(c-(c-A)*f,c+(B-c)*f,false);},{passive:false});});
 let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(draw,120);});
-cargar(); setInterval(cargar,60000);
+// ---------- cinco años: backtest diario + tramo en vivo
+let BT=null,LT=null,LA=0,LB=0,LH=-1;
+async function cargarBT(){try{const r=await fetch('./backtest.json',{cache:'no-store'});BT=await r.json();armarLargo();}catch(e){}}
+function armarLargo(){if(!BT||!R)return;const K=['a2','r30','s1','qqq'];const cap=R.capital;const t=BT.fechas.map(f=>f+' 16:00'),live=BT.fechas.map(()=>false);const v={};K.forEach(k=>v[k]=BT.eq[k].map(e=>e*cap));
+  R.serie.t.forEach((x,i)=>{t.push(x);live.push(true);K.forEach(k=>v[k].push(R.serie[k][i]));});LT={t,live,v,n:t.length,i0:BT.fechas.length};if(LB===0||LB>LT.n-1){LA=0;LB=LT.n-1;}
+  const st=BT.stats;$('bt-tiles').innerHTML=K.map(k=>`<div class="tile" style="--c:${COL[k]}"><div class="k">${NOM[k]} · 5 años backtest</div><div class="v">${fUSD(cap/BT.eq[k][0])}</div><div class="p pos">${fPct(1/BT.eq[k][0]-1,0)} · lo que serían hoy $100,000 puestos hace 5 años</div><div class="s">CAGR <b>${(st[k].CAGR*100).toFixed(1)}%</b> · Sharpe <b>${st[k].Sharpe.toFixed(2)}</b><br>caída máx. <b>${(st[k].MaxDD*100).toFixed(0)}%</b> · peor año <b>${(st[k].PeorAnio*100).toFixed(1)}%</b><br>${st[k].OrdenesAnio} órdenes al año</div></div>`).join('');
+  drawLong();}
+const xsL=W=>i=>PAD.l+(i-LA)/(LB-LA||1)*(W-PAD.l-PAD.r), ixL=(W,x)=>LA+(x-PAD.l)/(W-PAD.l-PAD.r)*(LB-LA);
+function drawLong(){if(!LT)return;const cv=$('cv-long'),{c,W,H}=prep(cv,window.innerWidth<600?260:340),x=xsL(W),top=8,bot=H-24,ia=Math.max(0,Math.floor(LA)),ib=Math.min(LT.n-1,Math.ceil(LB)),K=['qqq','a2','r30','s1'];
+  let lo=Infinity,hi=-Infinity;K.forEach(k=>{for(let i=ia;i<=ib;i++){const e=LT.v[k][i];if(e<lo)lo=e;if(e>hi)hi=e;}});const L0=Math.log(lo)-Math.log(hi/lo)*0.06-0.001,L1=Math.log(hi)+Math.log(hi/lo)*0.06+0.001,y=e=>bot-(Math.log(e)-L0)/(L1-L0)*(bot-top);
+  if(LT.i0<=ib){c.fillStyle='rgba(99,252,175,.07)';c.fillRect(x(Math.max(ia,LT.i0)-0.5),top,Math.max(1,x(ib)-x(Math.max(ia,LT.i0)-0.5)),bot-top);}
+  const tk=[];const base=[1,1.5,2,3,5,7];for(let e=4;e<=6;e++)base.forEach(m=>{const v=m*Math.pow(10,e);if(v>=Math.exp(L0)&&v<=Math.exp(L1))tk.push(v);});
+  tk.forEach(v=>{const Y=y(v);c.strokeStyle=COL.rule2;c.beginPath();c.moveTo(PAD.l,Y);c.lineTo(W-PAD.r,Y);c.stroke();c.fillStyle=COL.ink3;c.font='11px "Bai Jamjuree"';c.textAlign='right';c.fillText('$'+(v/1000).toFixed(0)+'k',PAD.l-6,Y+4);});
+  const days=(ib-ia);const out=[];let last='';for(let i=ia;i<=ib;i++){const t=LT.t[i];const k=days>500?t.slice(0,4):days>60?t.slice(0,7):t.slice(0,10);if(k!==last){out.push(i);last=k;}}
+  const step=Math.max(1,Math.ceil(out.length/Math.max(2,Math.floor((W-PAD.l)/70))));c.font='11px "Bai Jamjuree"';c.fillStyle=COL.ink3;c.textAlign='left';
+  out.forEach((i,j)=>{if(j%step)return;const X=x(i);c.strokeStyle=COL.rule2;c.beginPath();c.moveTo(X,top);c.lineTo(X,H-20);c.stroke();const d=LT.t[i].split(' ')[0];const yy=d.slice(0,4),m=d.slice(5,7),dd=d.slice(8,10);c.fillText(days>500?yy:days>60?`${MES[+m-1]} ${yy.slice(2)}`:`${+dd} ${MES[+m-1]}`,X+3,H-6);});
+  K.forEach(k=>{c.strokeStyle=COL[k];c.lineWidth=k==='qqq'?1.2:1.8;c.globalAlpha=.5;line(c,i=>i<=LT.i0?LT.v[k][i]:null,x,y,ia,Math.min(ib,LT.i0));c.globalAlpha=1;c.lineWidth=k==='qqq'?1.4:2.4;line(c,i=>i>=LT.i0-1?LT.v[k][i]:null,x,y,Math.max(ia,LT.i0-1),ib);});c.lineWidth=1;
+  if(LT.i0>=ia&&LT.i0<=ib){const X=x(LT.i0-0.5);c.strokeStyle=COL.r30;c.setLineDash([5,4]);c.beginPath();c.moveTo(X,top);c.lineTo(X,bot);c.stroke();c.setLineDash([]);c.fillStyle=COL.r30;c.font='600 12px "Bai Jamjuree"';const der=X>W-170;c.textAlign=der?'right':'left';c.fillText('desde aquí, datos en vivo',X+(der?-6:6),top+14);}
+  if(LH>=ia&&LH<=ib){const X=x(LH);c.strokeStyle=COL.ink3;c.setLineDash([3,3]);c.beginPath();c.moveTo(X,top);c.lineTo(X,bot);c.stroke();c.setLineDash([]);K.forEach(k=>{c.fillStyle=COL[k];c.beginPath();c.arc(X,y(LT.v[k][LH]),3.2,0,7);c.fill();});}}
+function clampL(a,b){let s=Math.max(12,Math.min(LT.n-1,b-a));if(a<0)a=0;if(a+s>LT.n-1)a=LT.n-1-s;return [Math.max(0,a),Math.max(0,a)+s];}
+function setViewL(a,b,keep){if(!LT)return;[LA,LB]=clampL(a,b);if(!keep)$('rangos2').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));drawLong();}
+$('rangos2').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(!LT)return;$('rangos2').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));const r=b.dataset.r;if(r==='live')setViewL(LT.i0-2,LT.n-1,true);else if(r==='0')setViewL(0,LT.n-1,true);else setViewL(LT.i0-(+r),LT.n-1,true);});
+const zoomL=f=>{const c=(LA+LB)/2,s=(LB-LA)*f;setViewL(c-s/2,c+s/2,false);};$('b2-mas').onclick=()=>zoomL(0.5);$('b2-menos').onclick=()=>zoomL(2);$('b2-izq').onclick=()=>{const s=(LB-LA)/2;setViewL(LA-s,LB-s,false);};$('b2-der').onclick=()=>{const s=(LB-LA)/2;setViewL(LA+s,LB+s,false);};
+(function(){const cv=$('cv-long');let drag=null;
+  cv.addEventListener('pointerdown',ev=>{if(ev.pointerType==='touch'||!LT)return;drag={x:ev.clientX,a:LA,b:LB,W:cv.clientWidth};cv.setPointerCapture(ev.pointerId);});
+  cv.addEventListener('pointermove',ev=>{if(!LT)return;if(drag){const di=(ev.clientX-drag.x)/(drag.W-PAD.l-PAD.r)*(drag.b-drag.a);setViewL(drag.a-di,drag.b-di,false);$('tip2').style.display='none';return;}
+    const r=cv.getBoundingClientRect();let i=Math.round(ixL(cv.clientWidth,ev.clientX-r.left));if(i<LA||i>LB||ev.clientX-r.left<PAD.l){LH=-1;$('tip2').style.display='none';drawLong();return;}LH=Math.max(0,Math.min(LT.n-1,i));drawLong();
+    const tip=$('tip2'),card=$('card2').getBoundingClientRect();tip.innerHTML=`<b>${dstr(LT.t[LH])}</b> · ${LT.live[LH]?'en vivo':'backtest'}<br>`+['a2','r30','s1','qqq'].map(k=>`<span class="sw" style="background:${COL[k]}"></span>${NOM[k]} ${fUSD(LT.v[k][LH])} (${fPct(LT.v[k][LH]/R.capital-1,1)})`).join('<br>');
+    tip.style.display='block';let L=ev.clientX-card.left+16,T=ev.clientY-card.top+14;if(L+tip.offsetWidth>card.width-8)L=ev.clientX-card.left-tip.offsetWidth-16;if(L<4)L=4;tip.style.left=L+'px';tip.style.top=T+'px';});
+  cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointerleave',()=>{if(drag)return;LH=-1;$('tip2').style.display='none';drawLong();});
+  cv.addEventListener('wheel',ev=>{if(!LT)return;ev.preventDefault();const r=cv.getBoundingClientRect();const c=Math.max(LA,Math.min(LB,ixL(cv.clientWidth,ev.clientX-r.left)));const f=ev.deltaY>0?1.25:0.8;setViewL(c-(c-LA)*f,c+(LB-c)*f,false);},{passive:false});})();
+window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(drawLong,140);});
+cargar().then(cargarBT); setInterval(()=>cargar().then(armarLargo),60000);
 })();
 </script>
 </body>
