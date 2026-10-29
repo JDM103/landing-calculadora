@@ -39,6 +39,7 @@
   .paper .logobox{ height:46px; border-radius:8px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:6px; } .paper .logobox img{ max-height:32px; max-width:100%; }
   .paper .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); } .paper .logobox.texto{ background:#10161f; border:1px solid var(--bd); } .paper .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:11px; color:var(--crema); font-style:italic; text-align:center; line-height:1.15; }
   .paper .src{ font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--gris-sec); } .paper p{ font-size:13px; line-height:1.35; margin:2px 0 0; color:var(--gris); }
+  .paper .rev{ font-size:11.5px; line-height:1.35; color:var(--gris-sec); margin-top:5px; padding-top:5px; border-top:1px solid var(--bd); } .paper .rev b{ color:var(--menta); }
   .cmp{ position:relative; width:100%; margin-top:6px; } .cmp canvas{ width:100%; display:block; cursor:pointer; }
   .legend{ display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12px; color:var(--gris-sec); margin-top:4px; } .legend span{ white-space:nowrap; } .legend i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
   .prog{ flex:1; max-width:160px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
@@ -186,9 +187,8 @@
   <section class="p" id="q5d">
     <h1>Lo hacemos con método. Y el método sale de papers.</h1>
     <div class="papers">
-      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale" loading="lazy"></div><div><div class="src">Yale · Ayres y Nalebuff · <i>Lifecycle Investing</i></div><p>Exponerse más al inicio, cuando el capital es chico, llega a la meta más seguido.</p></div></div>
-      <div class="paper"><div class="logobox texto"><span>The Journal of Finance</span></div><div><div class="src">George y Hwang · <i>The 52-Week High</i> · 2004</div><p>La distancia al máximo reciente dice hacia dónde va el precio. Lo adaptamos al Nasdaq: si cae 18% bajo su máximo de 39 semanas, salimos a efectivo; cuando recupera, volvemos.</p></div></div>
-      <div class="paper"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div><div><div class="src">Gayed y Bilello · Dow Award 2016</div><p>Apalancado solo cuando la tendencia es favorable. Nunca sin un filtro encendido.</p></div></div>
+      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale" loading="lazy"></div><div><div class="src">Yale · Ayres y Nalebuff · <i>Lifecycle Investing</i> · 2008</div><p>Exponerse más al inicio, cuando el capital es chico, llega a la meta más seguido.</p><div class="rev"><b>Revisiones:</b> libro en 2010 (Basic Books) y versión revisada en 2013 en el <i>Journal of Portfolio Management</i>.</div></div></div>
+      <div class="paper"><div class="logobox texto"><span>The Journal of Finance</span></div><div><div class="src">George y Hwang · <i>The 52-Week High</i> · 2004</div><p>La distancia al máximo reciente dice hacia dónde va el precio. Lo adaptamos al Nasdaq: si cae 18% bajo su máximo de 39 semanas, salimos a efectivo; cuando recupera, volvemos.</p><div class="rev"><b>Revisiones:</b> 2011 (20 países, <i>J. of International Money and Finance</i>), 2013 (<i>J. of Banking and Finance</i>) y 2018 (<i>J. of Financial Economics</i> e <i>Int. Review of Financial Analysis</i>).</div></div></div>
     </div>
     <p class="nota">Se revisa una vez por semana. Nada de noticias ni corazonadas. El research completo está en <a href="/atalaya" target="_blank" rel="noopener" style="color:var(--menta)">/atalaya</a>.</p>
     <button class="btn" id="n5d">Ver el método en el gráfico</button>
