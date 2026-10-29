@@ -365,9 +365,9 @@
 
   // 6 productos → diferencias
   var FB_PROD = {
-    transcomer: "<p><b>Transcomer (hoy TBI):</b> te pagan sobre el <b>valor futuro</b> de un proyecto: lo que esas propiedades van a valer y rendir, no lo que valen hoy. La tasa fija sale de ese supuesto; si el proyecto no llega, la tasa tampoco. Y nadie lo supervisa: lo dijo la Sugef en 2026. La plata va a un fideicomiso de la misma empresa, con plazo cerrado.</p>",
+    transcomer: "<p><b>Transcomer (hoy TBI):</b> te pagan sobre el <b>valor futuro</b> de un proyecto: lo que esas propiedades van a valer y rendir, no lo que valen hoy. Si el proyecto no llega, la tasa fija tampoco. Nadie lo supervisa, lo dijo la Sugef en 2026, y la plata va a un fideicomiso de la misma empresa con plazo cerrado.</p>",
     offshore:   "<p><b>Dominion, RL360, Investors Trust, Zurich:</b> seguros de ahorro desde Isla de Man o Caimán. La comisión del asesor se paga por adelantado y no se publica; por eso son 20 años y salirte cuesta. En RL360, salir en los primeros 2 años da cero.</p>",
-    eeuu:       "<p><b>Cuenta en Estados Unidos:</b> la plata queda a tu nombre, protegida hasta $500.000. El asesor solo compra y vende, no puede sacar un dólar. Sin plazo ni penalidad.</p>",
+    eeuu:       "<p><b>Cuenta en Estados Unidos:</b> así trabajamos nosotros. Abrís tu propia cuenta, a tu nombre, protegida hasta $500.000. Nosotros solo podemos comprar y vender adentro: llevamos tu portafolio y te mandamos los reportes, vos no tenés que hacer nada. No podemos sacar un solo dólar. No hay plazo fijo ni penalidad: si hay una emergencia, retirás. Aportás lo que podás, cuando podás. Lo que hacemos es un plan, y le damos seguimiento.</p>",
     ninguno:    "<p><b>Mejor.</b> Te van a llegar. La pregunta que los desarma: ¿a nombre de quién queda la plata y cuánto recibo si salgo a los 2 años?</p>"
   };
   Array.prototype.forEach.call(byId("q6").querySelectorAll(".op"), function(b){
@@ -378,7 +378,7 @@
         if(S.prod.indexOf(v)>-1){ S.prod=S.prod.filter(function(x){ return x!==v; }); b.classList.remove("sel"); } else { S.prod.push(v); b.classList.add("sel"); } }
       // Se muestra el consejo del último que marcó; el resumen de todos va en el resultado.
       var f=byId("fb-prod"), ult = S.prod.indexOf(v)>-1 ? v : S.prod[S.prod.length-1];
-      f.innerHTML = ult ? FB_PROD[ult] + (ult==="transcomer"||ult==="offshore" ? "<p><b>En una cuenta en Estados Unidos</b> la plata queda a tu nombre, sin plazo ni penalidad, y el asesor no puede sacar un dólar.</p>" : "") : "";
+      f.innerHTML = ult ? FB_PROD[ult] + (ult==="transcomer"||ult==="offshore" ? "<p><b>Nosotros lo hacemos al revés:</b> abrís tu propia cuenta en Estados Unidos, a tu nombre. Nosotros solo compramos y vendemos adentro y te damos los reportes. No podemos sacar un dólar, y no hay plazo ni penalidad si necesitás retirar.</p>" : "") : "";
       f.classList.toggle("on", S.prod.length>0);
       byId("n6").classList.toggle("hidden", S.prod.length===0); track("pm_prod",{v:S.prod.join(",")});
     });
@@ -425,7 +425,7 @@
     li.push([S.pres==="si"?"v":(S.pres==="cabeza"?"a":"r"), "<b>Presupuesto:</b> "+(S.pres==="si" ? "lo llevás. Revisá que el 20% esté saliendo primero." : "50/30/20. El 20% sale primero, el día que te pagan.")]);
     if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> te pagan sobre el valor futuro de un proyecto, sin supervisor. Hablemos de cómo salir."]);
     if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Plan offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
-    if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien. Falta que el 20% llegue ahí todos los meses."]);
+    if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien, es la estructura que usamos. Falta que el 20% llegue ahí con un plan."]);
     byId("res-l").innerHTML = li.map(function(x){ return "<li><i class='"+x[0]+"'></i><span>"+x[1]+"</span></li>"; }).join("");
     byId("res-20").innerHTML=din(a); byId("res-ndx").innerHTML=dinM(ndx);
   }
