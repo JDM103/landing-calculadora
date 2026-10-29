@@ -30,6 +30,8 @@
   small.usd{ display:block; font-size:12px; font-weight:600; color:var(--gris-sec); margin-top:1px; }
   .kp .v{ font-size:17px; }
   .lead{ font-size:15.5px; font-weight:700; color:var(--crema); margin:8px 0 0; }
+  .cmp{ position:relative; width:100%; margin-top:6px; } .cmp canvas{ width:100%; display:block; cursor:pointer; }
+  .legend{ display:flex; gap:16px; font-size:12.5px; color:var(--gris-sec); margin-top:4px; } .legend i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
   .prog{ flex:1; max-width:160px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
   .back{ background:none; border:none; color:var(--menta); font-family:inherit; font-size:15px; line-height:1; padding:0 4px; cursor:pointer; visibility:hidden; }
   .back.on{ visibility:visible; }
@@ -145,15 +147,11 @@
   <section class="p" id="q5">
     <h1>Tu 20% es</h1>
     <div class="big men" id="v-20" style="font-size:clamp(26px,8vw,36px)">₡800,000<small>al mes, para ahorrar e invertir</small></div>
-    <p class="sub" style="margin:6px 0 0"><b>Primero el colchón:</b> 3 meses de ingreso, <b id="v-colchon"></b>, en una cuenta con la plata disponible.</p>
+    <p class="sub" style="margin:6px 0 0"><b>Primero el colchón:</b> 3 meses de ingreso, <b id="v-colchon"></b>, en una cuenta con la plata disponible, ojalá de buen interés.</p>
     <p class="lead">El resto, invertido cada mes los últimos 20 años, hoy serían:</p>
-    <div class="kp" style="margin:8px 0">
-      <div><div class="k">En el Nasdaq 100</div><div class="v per" id="v-ndx"></div></div>
-      <div><div class="k">En un CDP al 5%</div><div class="v" id="v-cdp"></div></div>
-      <div><div class="k">Pusiste de tu bolsillo</div><div class="v" id="v-puesto"></div></div>
-      <div><div class="k">Te pagaría hoy, al mes</div><div class="v men" id="v-renta"></div></div>
-    </div>
-    <p class="nota">Nasdaq 100 al 11,5% anual, su promedio histórico. CDP al 5%. Renta: el 5% al año sin tocar el capital. Dólar a ₡<span id="v-tc"></span><span id="v-tc-f"></span>.</p>
+    <div class="cmp"><canvas id="cv-cmp"></canvas></div>
+    <div class="legend"><span><i style="background:var(--menta)"></i> Nasdaq 100</span><span><i style="background:var(--peri)"></i> CDP</span></div>
+    <p class="nota">Nasdaq 100 al 11,5% anual, su promedio histórico. CDP al 4% en colones, 3% en dólares. Tocá el gráfico para repetir. Dólar a ₡<span id="v-tc"></span><span id="v-tc-f"></span>.</p>
     <button class="btn" id="n5">Siguiente</button>
   </section>
 
@@ -237,7 +235,8 @@
   var fmtN = new Intl.NumberFormat("es-CR", {maximumFractionDigits:0});
   function col(n){ return "₡" + fmtN.format(Math.round(n||0)); }
   function colM(n){ n=Math.round(n||0); if(Math.abs(n)>=1e7) return "₡"+Math.round(n/1e6).toLocaleString("es-CR")+" millones"; if(Math.abs(n)>=1e6) return "₡"+(Math.round(n/1e5)/10).toLocaleString("es-CR")+" millones"; return col(n); }
-  var NDX = 11.5, CDP = 5, RETIRO = 5, MESES = 240;
+  var NDX = 11.5, CDP_CRC = 4, CDP_USD = 3, RETIRO = 5, MESES = 240;
+  function cdpTasa(){ return MODO==="usd" ? CDP_USD : CDP_CRC; }
   // Tipo de cambio: venta del Ministerio de Hacienda (hoy); si no responde, 450.
   var TC = 450, TC_FUENTE = " (referencia)";
   var MODO = "ambos"; // siempre arranca en ambas monedas
@@ -376,15 +375,50 @@
 
   // 4 ingreso
   byId("r-ing").addEventListener("input", function(){ S.ing=+this.value; byId("v-ing").innerHTML=dinIng(S.ing); });
-  byId("n4").addEventListener("click", function(){ pintar20(); ir("q5"); track("pm_ingreso",{v:S.ing}); });
+  byId("n4").addEventListener("click", function(){ ir("q5"); cmpResize(); pintar20(); cmpPlay(); track("pm_ingreso",{v:S.ing}); });
 
   // 5 el 20% y la proyección
   function pintar20(){
-    var a=veinte(), ndx=fv(a,NDX,MESES), cdp=fv(a,CDP,MESES);
+    var a=veinte();
     byId("v-20").innerHTML = (MODO==="usd" ? usdN(a) : col(a))+"<small>al mes, para ahorrar e invertir"+(MODO==="ambos" ? " · "+usdN(a) : "")+"</small>"; byId("v-colchon").innerHTML = MODO==="usd" ? usdN(S.ing*3) : col(S.ing*3)+(MODO==="ambos" ? " ("+usdN(S.ing*3)+")" : "");
-    byId("v-ndx").innerHTML=dinM(ndx); byId("v-cdp").innerHTML=dinM(cdp);
-    byId("v-puesto").innerHTML=dinM(a*MESES); byId("v-renta").innerHTML=din(ndx*RETIRO/100/12); pintarTc();
+    pintarTc(); dibujarCmp(1);
   }
+
+  // ===== Gráfico: el 20% cada mes, 20 años, Nasdaq 100 vs CDP =====
+  var cv=byId("cv-cmp"), cx=cv.getContext("2d"), CW=0, CH=0, DPR=1, cmpRaf=null, cmpT0=null, cmpProg=1;
+  function cmpResize(){ var w=cv.parentNode.clientWidth||340; CH=Math.round(Math.max(180, Math.min(240, w*0.6))); DPR=Math.max(1,Math.min(3,window.devicePixelRatio||1)); cv.width=Math.round(w*DPR); cv.height=Math.round(CH*DPR); cv.style.height=CH+"px"; CW=w; }
+  function cmpMonto(n){ if(MODO==="usd") return usdM(n); return colM(n); }
+  function cmpMontoChico(n){ return MODO==="ambos" ? usdM(n) : ""; }
+  function dibujarCmp(p){
+    cmpProg=p; if(!CW) cmpResize();
+    cx.setTransform(DPR,0,0,DPR,0,0); cx.clearRect(0,0,CW,CH); cx.textBaseline="middle";
+    var a=veinte(), tC=cdpTasa(), mL=8, mR=118, mT=12, mB=22, pw=CW-mL-mR, ph=CH-mT-mB;
+    var mCur=Math.max(1, Math.round(MESES*p)), top=fv(a,NDX,MESES)*1.08;
+    function X(m){ return mL+m/MESES*pw; } function Y(v){ return mT+ph-v/top*ph; }
+    cx.strokeStyle="rgba(255,255,255,.07)"; cx.lineWidth=1;
+    for(var g=1; g<=4; g++){ var y=mT+ph-ph*g/4; cx.beginPath(); cx.moveTo(mL,y); cx.lineTo(mL+pw,y); cx.stroke(); }
+    cx.fillStyle="#8b94a0"; cx.font="11px 'Bai Jamjuree'"; cx.textAlign="center";
+    [0,5,10,15,20].forEach(function(yr){ cx.fillText(yr===0?"hoy":yr+" años", X(yr*12), CH-8); });
+    var series=[{t:tC, col:"#7C8FF7", nom:"CDP "+tC+"%"},{t:NDX, col:"#63FCAF", nom:"Nasdaq 100"}], puntas=[];
+    series.forEach(function(s){
+      cx.strokeStyle=s.col; cx.lineWidth=2.6; cx.lineJoin="round"; cx.beginPath();
+      for(var m=0; m<=mCur; m++){ var v=fv(a,s.t,m), x=X(m), y=Y(v); m?cx.lineTo(x,y):cx.moveTo(x,y); }
+      cx.stroke(); var vf=fv(a,s.t,mCur); cx.fillStyle=s.col; cx.beginPath(); cx.arc(X(mCur),Y(vf),3.5,0,Math.PI*2); cx.fill();
+      puntas.push({nom:s.nom, col:s.col, v:vf, y:Y(vf)});
+    });
+    puntas.sort(function(u,w){ return u.y-w.y; }); var gap=MODO==="ambos"?46:34;
+    if(puntas[1].y-puntas[0].y<gap) puntas[1].y=puntas[0].y+gap;
+    var over=puntas[1].y-(CH-mB-6); if(over>0){ puntas[1].y-=over; if(puntas[1].y-puntas[0].y<gap) puntas[0].y=puntas[1].y-gap; }
+    cx.textAlign="left"; var lx=X(mCur)+8;
+    puntas.forEach(function(q){ var y0=Math.max(mT+6, q.y-(MODO==="ambos"?14:8));
+      cx.fillStyle=q.col; cx.font="600 11px 'Bai Jamjuree'"; cx.fillText(q.nom, lx, y0);
+      cx.font="700 14px 'Bai Jamjuree'"; cx.fillText(cmpMonto(q.v), lx, y0+15);
+      var ch=cmpMontoChico(q.v); if(ch){ cx.fillStyle="#8b94a0"; cx.font="500 11px 'Bai Jamjuree'"; cx.fillText(ch, lx, y0+29); } });
+  }
+  function cmpTick(ts){ if(cmpT0===null) cmpT0=ts; var p=Math.min(1,(ts-cmpT0)/2600); p=p*p*(3-2*p); dibujarCmp(p); if(p<1) cmpRaf=requestAnimationFrame(cmpTick); }
+  function cmpPlay(){ if(cmpRaf) cancelAnimationFrame(cmpRaf); cmpT0=null; cmpRaf=requestAnimationFrame(cmpTick); }
+  cv.addEventListener("click", cmpPlay);
+  window.addEventListener("resize", function(){ if(byId("q5").classList.contains("on")){ cmpResize(); dibujarCmp(cmpProg); } });
   byId("n5").addEventListener("click", function(){ ir("q5b"); });
 
   // 5b inflación → dato
