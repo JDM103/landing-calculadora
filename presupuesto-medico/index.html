@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chequeo financiero para médicos · Empowered Investor</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Siete preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
+<meta name="description" content="Siete preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20%, cuánto sería hoy si lo hubieras invertido 20 años y qué le hace la inflación a la plata sentada.">
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
@@ -44,7 +44,7 @@
   input[type=range]{ width:100%; margin:12px 0 4px; accent-color:var(--menta); height:34px; }
   .ext{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--gris-sec); font-weight:600; }
   .kp{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
-  .kp div{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; }
+  .kp div{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:8px 11px; }
   .kp .k{ font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); } .kp .v{ font-size:19px; font-weight:800; color:var(--crema); margin-top:2px; overflow-wrap:anywhere; }
   .kp .v.per{ color:var(--peri); } .kp .v.men{ color:var(--menta); }
   input[type=text], input[type=email], input[type=tel]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema); font-family:inherit; font-size:16px; padding:11px 13px; }
@@ -123,16 +123,37 @@
   <!-- 5 · EL 20% Y LA PROYECCIÓN -->
   <section class="p" id="q5">
     <h1>Tu 20% es</h1>
-    <div class="big men" id="v-20">₡800,000<small>al mes, para el retiro</small></div>
-    <p class="sub" style="margin-top:10px">Si lo hubieras puesto cada mes durante los últimos 20 años:</p>
+    <div class="big men" id="v-20" style="font-size:clamp(26px,8vw,36px)">₡800,000<small>al mes, para ahorrar e invertir</small></div>
+    <p class="sub" style="margin-top:8px"><b>Primero el colchón:</b> 3 meses de ingreso, <b id="v-colchon"></b>, en una cuenta donde la plata esté disponible. El resto, invertido cada mes los últimos 20 años:</p>
     <div class="kp">
       <div><div class="k">En el Nasdaq 100</div><div class="v per" id="v-ndx"></div></div>
       <div><div class="k">En un CDP al 5%</div><div class="v" id="v-cdp"></div></div>
       <div><div class="k">Pusiste de tu bolsillo</div><div class="v" id="v-puesto"></div></div>
       <div><div class="k">Te pagaría hoy, al mes</div><div class="v men" id="v-renta"></div></div>
     </div>
-    <p class="nota">Nasdaq 100 al 11,5% anual, que es su promedio histórico. El CDP al 5%. La renta es retirando el 5% al año sin tocar el capital. Números nominales, en colones de hoy.</p>
+    <p class="nota">Nasdaq 100 al 11,5% anual, su promedio histórico. CDP al 5%. Renta: el 5% al año sin tocar el capital.</p>
     <button class="btn" id="n5">Siguiente</button>
+  </section>
+
+  <!-- 5b · INFLACIÓN -->
+  <section class="p" id="q5b">
+    <h1>¿Tenés claro qué le hace la inflación a la plata sentada?</h1>
+    <p class="sub">La que está en la cuenta, en efectivo o en un CDP.</p>
+    <div class="ops" data-q="infl">
+      <button class="op" data-v="si">Sí, lo tengo claro</button>
+      <button class="op" data-v="algo">Más o menos</button>
+      <button class="op" data-v="no">No</button>
+    </div>
+    <div class="fb" id="fb-infl"></div>
+    <button class="btn hidden" id="n5b">Ver el gráfico</button>
+  </section>
+
+  <!-- 5c · GRÁFICO EFECTIVO vs CDP vs ÍNDICES -->
+  <section class="p" id="q5c">
+    <h1>$10 mil desde 1999, en plata de hoy</h1>
+    <p class="sub">Efectivo, CDP, S&amp;P 500 y Nasdaq 100, con la inflación ya descontada.</p>
+    <iframe id="fr-costo" title="Efectivo, CDP, S&amp;P 500 y Nasdaq 100 desde 1999" style="width:100%; height:446px; border:0; border-radius:12px; background:#0d0f14"></iframe>
+    <button class="btn" id="n5c">Siguiente</button>
   </section>
 
   <!-- 6 · QUÉ TE HAN OFRECIDO -->
@@ -236,7 +257,7 @@
   window.addEventListener("pagehide", flush);
 
   // ===== Estado =====
-  var S = { lugar:"", ase:"", pres:"", ing:4000000, prod:[], nombre:"", esp:"" };
+  var S = { lugar:"", ase:"", pres:"", ing:4000000, infl:"", prod:[], nombre:"", esp:"" };
   var ESPS = ["Anestesiología","Cardiología","Cirugía general","Cirugía plástica","Dermatología","Emergencias","Endocrinología","Fisiatría","Gastroenterología","Geriatría","Ginecología y obstetricia","Hematología","Infectología","Medicina familiar","Medicina general","Medicina interna","Nefrología","Neumología","Neurocirugía","Neurología","Oftalmología","Oncología","Ortopedia","Otorrinolaringología","Patología","Pediatría","Psiquiatría","Radiología","Reumatología","Urología","Vascular periférico"];
   var dl=byId("esps"); ESPS.forEach(function(e){ var o=document.createElement("option"); o.value=e; dl.appendChild(o); });
 
@@ -244,11 +265,12 @@
   function veinte(){ return S.ing*0.2; }
 
   // ===== Navegación =====
-  var ORDEN = ["q1","q2","q3","q4","q5","q6","q7","res"];
+  var ORDEN = ["q1","q2","q3","q4","q5","q5b","q5c","q6","q7","res"];
+  var NUM = { q1:1, q2:2, q3:3, q4:4, q5:4, q5b:5, q5c:5, q6:6, q7:7, res:7 };
   function ir(id){
     ORDEN.forEach(function(p){ byId(p).classList.toggle("on", p===id); });
-    var n = ORDEN.indexOf(id);
-    var total = S.lugar==="privado" ? 6 : 7, num = n+1 - (S.lugar==="privado" && n>=2 ? 1 : 0);
+    var total = S.lugar==="privado" ? 6 : 7, num = NUM[id] - (S.lugar==="privado" && NUM[id]>=2 ? 1 : 0);
+    if(id==="q5c"){ var fr=byId("fr-costo"); if(!fr.getAttribute("src")) fr.setAttribute("src","/costo/?embed=1"); }
     var prog = byId("pt").parentNode; prog.style.visibility = id==="res" ? "hidden" : "visible";
     byId("pt").textContent = "Pregunta "+Math.min(num,total)+" de "+total; byId("pb").style.width = (Math.min(num,total)/total*100)+"%";
     window.scrollTo(0,0); track("pm_pantalla", {v:id});
@@ -296,11 +318,24 @@
   // 5 el 20% y la proyección
   function pintar20(){
     var a=veinte(), ndx=fv(a,NDX,MESES), cdp=fv(a,CDP,MESES);
-    byId("v-20").innerHTML = col(a)+"<small>al mes, para el retiro</small>";
+    byId("v-20").innerHTML = col(a)+"<small>al mes, para ahorrar e invertir</small>"; byId("v-colchon").textContent = col(S.ing*3);
     byId("v-ndx").textContent=colM(ndx); byId("v-cdp").textContent=colM(cdp);
     byId("v-puesto").textContent=colM(a*MESES); byId("v-renta").textContent=col(ndx*RETIRO/100/12);
   }
-  byId("n5").addEventListener("click", function(){ ir("q6"); });
+  byId("n5").addEventListener("click", function(){ ir("q5b"); });
+
+  // 5b inflación → dato
+  var FB_INFL = {
+    "si":   "<p><b>Entonces esto no te sorprende.</b> ₡10 mil guardados en 1999 compran hoy lo que compraban ₡2.200. $10 mil, lo que $5.000. Un CDP apenas empata con la inflación. Mirá cómo se ve contra el índice.</p>",
+    "algo": "<p><b>En corto:</b> ₡10 mil guardados en 1999 compran hoy lo que compraban ₡2.200. $10 mil, lo que $5.000. La plata sentada pierde todos los años aunque el número de la cuenta no cambie. Un CDP apenas empata. Mirá cómo se ve contra el índice.</p>",
+    "no":   "<p><b>Es el impuesto que nadie cobra.</b> ₡10 mil guardados en 1999 compran hoy lo que compraban ₡2.200. $10 mil, lo que $5.000. La plata sentada pierde todos los años aunque el número de la cuenta no cambie. Un CDP apenas empata. Mirá cómo se ve contra el índice.</p>"
+  };
+  Array.prototype.forEach.call(byId("q5b").querySelectorAll(".op"), function(b){
+    b.addEventListener("click", function(){ S.infl=b.getAttribute("data-v"); marcar(b.parentNode,b);
+      var f=byId("fb-infl"); f.innerHTML=FB_INFL[S.infl]; f.classList.add("on"); byId("n5b").classList.remove("hidden"); track("pm_infl",{v:S.infl}); });
+  });
+  byId("n5b").addEventListener("click", function(){ ir("q5c"); });
+  byId("n5c").addEventListener("click", function(){ ir("q6"); });
 
   // 6 productos → diferencias
   var FB_PROD = {
@@ -336,7 +371,7 @@
     S.nombre=nombre; S.esp=esp;
     var a=veinte(), ndx=fv(a,NDX,MESES);
     var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
-      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, ingreso_hoy:S.ing, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
+      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, inflacion:S.infl, ingreso_hoy:S.ing, colchon:S.ing*3, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
       productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
       pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
       sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
