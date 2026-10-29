@@ -183,7 +183,7 @@
     <p class="sub">Marcá los que apliquen.</p>
     <div class="ops" data-q="prod" data-multi="1">
       <button class="op" data-v="transcomer">Transcomer</button>
-      <button class="op" data-v="offshore">Dominion, RL360, Investors Trust, Zurich<small>Planes de ahorro a 15 o 25 años</small></button>
+      <button class="op" data-v="offshore">Inversiones offshore<small>Dominion, RL360, Investors Trust, Zurich: planes de ahorro a 15 o 25 años</small></button>
       <button class="op" data-v="eeuu">Cuenta de inversión en Estados Unidos</button>
       <button class="op" data-v="ninguno">Ninguno</button>
     </div>
@@ -426,7 +426,7 @@
   // 6 productos → diferencias
   var FB_PROD = {
     transcomer: "<p><b>Transcomer (hoy TBI):</b> te pagan sobre el <b>valor futuro</b> de un proyecto, lo que esas propiedades van a valer, no lo que valen hoy. Si el proyecto no llega, la tasa fija tampoco.</p>",
-    offshore:   "<p><b>Dominion, RL360, Investors Trust, Zurich:</b> seguros de ahorro desde Isla de Man o Caimán. La comisión del asesor se paga por adelantado y no se publica; por eso son 20 años y salirte cuesta. En RL360, salir en los primeros 2 años da cero.</p>",
+    offshore:   "<p><b>Inversiones offshore (Dominion, RL360, Investors Trust, Zurich):</b> seguros de ahorro emitidos desde paraísos fiscales como Isla de Man, Caimán o Guernsey. La comisión del asesor se paga por adelantado y no se publica; por eso son 20 años y salirte cuesta. En RL360, salir en los primeros 2 años da cero.</p>",
     eeuu:       "<p><b>Cuenta en Estados Unidos:</b> así trabajamos nosotros. Abrís tu propia cuenta, a tu nombre, protegida hasta $500.000. Nosotros solo podemos comprar y vender adentro: llevamos tu portafolio y te mandamos los reportes, vos no tenés que hacer nada. No podemos sacar un solo dólar. No hay plazo fijo ni penalidad: si hay una emergencia, retirás. Aportás lo que podás, cuando podás. Lo que hacemos es un plan, y le damos seguimiento.</p>",
     ninguno:    "<p><b>Mejor.</b> Te van a llegar. La pregunta que los desarma: ¿a nombre de quién queda la plata y cuánto recibo si salgo a los 2 años?</p>"
   };
@@ -485,7 +485,7 @@
     li.push([S.pres==="si"?"v":(S.pres==="cabeza"?"a":"r"), "<b>Presupuesto:</b> "+(S.pres==="si" ? "lo llevás. Revisá que el 20% esté saliendo primero." : "50/30/20. El 20% sale primero, el día que te pagan.")]);
     if(S.hogar==="pareja"||S.hogar==="familia") li.push(["v","<b>Presupuesto "+(S.hogar==="pareja"?"en pareja":"familiar")+":</b> la app de gastos se activa en la llamada, para los dos."]);
     if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> te pagan sobre el valor futuro de un proyecto. Hablemos de cómo salir."]);
-    if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Plan offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
+    if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Inversión offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
     if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien, es la estructura que usamos. Falta que el 20% llegue ahí con un plan."]);
     byId("res-l").innerHTML = li.map(function(x){ return "<li><i class='"+x[0]+"'></i><span>"+x[1]+"</span></li>"; }).join("");
     byId("res-20").innerHTML=din(a); byId("res-ndx").innerHTML=dinM(ndx);
