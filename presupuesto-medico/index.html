@@ -338,9 +338,9 @@
 
   // 3 presupuesto → 50/30/20
   var FB_PRES = {
-    "si":     "<p><b>Bien.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. Con lo que gana un médico, lo único que importa es que el 20% exista y vaya a algún lado que crezca.</p>",
-    "cabeza": "<p><b>Con el ingreso de médico, en la cabeza no alcanza.</b> Un mes son tres cirugías y otro ninguna. Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. Lo que sigue es ver cuánto es tu 20%.</p>",
-    "no":     "<p><b>Casi nadie lleva.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. No hace falta anotar gastos: hace falta que el 20% salga primero, el día que te pagan.</p>"
+    "si":     "<p><b>Bien.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para ahorrar e invertir. Lo que importa es que el 20% exista y vaya a algún lado que crezca.</p>",
+    "cabeza": "<p><b>Normal: con ingreso variable es difícil llevarlo de memoria.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para ahorrar e invertir. Para que no tengás que anotar nada, tenemos una app que lleva las categorías y el seguimiento sola, conectada al correo, y asesoría personalizada encima. Te la mostramos en la llamada.</p>",
+    "no":     "<p><b>Casi nadie lleva, y menos con guardias.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para ahorrar e invertir. No hace falta anotar gastos: tenemos una app que lleva las categorías y el seguimiento sola, conectada al correo, y asesoría personalizada encima. Te la mostramos en la llamada.</p>"
   };
   Array.prototype.forEach.call(byId("q3").querySelectorAll(".op"), function(b){
     b.addEventListener("click", function(){ S.pres=b.getAttribute("data-v"); marcar(b.parentNode,b);
