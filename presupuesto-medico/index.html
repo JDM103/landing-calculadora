@@ -220,14 +220,15 @@
   <!-- 7 · DATOS -->
   <section class="p" id="q7">
     <h1>Último paso</h1>
-    <p class="sub">La especialidad es para preparar la llamada: no gana ni gasta igual un anestesiólogo con dispos que un pediatra con consultorio. Si estás en residencia, poné la que estás haciendo.</p>
+    <p class="sub">La especialidad es para preparar la llamada: no gana ni gasta igual un anestesiólogo con dispos que un pediatra con consultorio.</p>
     <form id="lead" novalidate>
       <div class="f2">
         <div><label class="l" for="l-nom">Nombre</label><input type="text" id="l-nom" autocomplete="given-name"></div>
         <div><label class="l" for="l-ape">Apellidos</label><input type="text" id="l-ape" autocomplete="family-name"></div>
       </div>
-      <label class="l" for="l-esp">Especialidad</label><input type="text" id="l-esp" list="esps" autocomplete="off" placeholder="Si sos residente, cuál">
+      <label class="l" for="l-esp">Especialidad</label><input type="text" id="l-esp" list="esps" autocomplete="off" placeholder="Pediatría, anestesiología…">
       <datalist id="esps"></datalist>
+      <label class="cons" style="margin-top:8px"><input type="checkbox" id="l-res"><span>Estoy en residencia</span></label>
       <div class="f2">
         <div><label class="l" for="l-wa">WhatsApp</label><div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" maxlength="8"></div></div>
         <div><label class="l" for="l-mail">Correo (opcional)</label><input type="email" id="l-mail" inputmode="email" autocomplete="email"></div>
@@ -532,18 +533,18 @@
     var ok = nombre && ape && esp && wa.length===8 && (!mail || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail));
     byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
     var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
-    S.nombre=nombre; S.esp=esp;
+    S.nombre=nombre; S.esp=esp; var residente=byId("l-res").checked;
     var a=veinte(), ndx=fvNdx(a);
     var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
-      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, hogar:S.hogar, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
+      especialidad:esp, residente: residente ? "si" : "no", lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, hogar:S.hogar, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
       productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
       pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
       sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
     try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
     track("pm_lead", {especialidad:esp, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
     try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"presupuesto medico", content_category:esp}); }catch(err){}
-    CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+(mail ? "&email="+encodeURIComponent(mail) : "")+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp);
-    var msg="Hola Jose, soy "+nombre+", "+esp.toLowerCase()+". Hice el chequeo y quiero mi llamada gratuita.";
+    CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+(mail ? "&email="+encodeURIComponent(mail) : "")+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp+(residente ? " (residente)" : ""));
+    var msg="Hola Jose, soy "+nombre+", "+(residente ? "residente de " : "")+esp.toLowerCase()+". Hice el chequeo y quiero mi llamada gratuita.";
     byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
     pintarRes(); ir("res"); cargarHorarios();
   });
