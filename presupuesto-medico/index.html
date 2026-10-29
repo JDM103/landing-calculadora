@@ -34,8 +34,13 @@
   .carro{ background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:8px 10px; display:grid; grid-template-columns:52px 1fr; grid-template-rows:auto auto; column-gap:10px; align-items:center; }
   .carro svg{ width:52px; height:46px; grid-row:1/3; } .carro .line{ fill:none; stroke:var(--gris-sec); stroke-width:3; stroke-linejoin:round; stroke-linecap:round; } .carro .fill{ fill:var(--menta); }
   .carro b{ color:var(--crema); font-size:15px; } .carro span{ font-size:12.5px; color:var(--gris-sec); }
+  .papers{ display:grid; gap:8px; margin-top:10px; }
+  .paper{ display:grid; grid-template-columns:78px 1fr; gap:10px; align-items:center; background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:9px 10px; }
+  .paper .logobox{ height:46px; border-radius:8px; background:#F7F3EA; display:flex; align-items:center; justify-content:center; padding:6px; } .paper .logobox img{ max-height:32px; max-width:100%; }
+  .paper .logobox.oscuro{ background:#10161f; border:1px solid var(--bd); } .paper .logobox.texto{ background:#10161f; border:1px solid var(--bd); } .paper .logobox.texto span{ font-family:Georgia,"Times New Roman",serif; font-size:11px; color:var(--crema); font-style:italic; text-align:center; line-height:1.15; }
+  .paper .src{ font-size:10.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--gris-sec); } .paper p{ font-size:13px; line-height:1.35; margin:2px 0 0; color:var(--gris); }
   .cmp{ position:relative; width:100%; margin-top:6px; } .cmp canvas{ width:100%; display:block; cursor:pointer; }
-  .legend{ display:flex; gap:16px; font-size:12.5px; color:var(--gris-sec); margin-top:4px; } .legend i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .legend{ display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12px; color:var(--gris-sec); margin-top:4px; } .legend span{ white-space:nowrap; } .legend i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
   .prog{ flex:1; max-width:160px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
   .back{ background:rgba(99,252,175,.12); border:1px solid rgba(99,252,175,.45); border-radius:999px; color:var(--menta); font-family:inherit; font-size:18px; font-weight:700; line-height:1; padding:3px 10px; cursor:pointer; visibility:hidden; }
   .back.on{ visibility:visible; }
@@ -172,9 +177,31 @@
   <!-- 5c · GRÁFICO EFECTIVO vs CDP vs ÍNDICES -->
   <section class="p" id="q5c">
     <h1>$10 mil desde 1999, en plata de hoy</h1>
-    <p class="sub">Efectivo, CDP, S&amp;P 500 y Nasdaq 100, <u style="text-decoration-color:var(--menta); text-underline-offset:3px">con la inflación ya descontada</u>.</p>
+    <p class="sub">Efectivo, CDP, S&amp;P 500 y Nasdaq 100, <u style="text-decoration-color:var(--menta); text-underline-offset:3px">con la inflación ya descontada</u>. Tocá el gráfico para repetir.</p>
     <iframe id="fr-costo" title="Efectivo, CDP, S&amp;P 500 y Nasdaq 100 desde 1999" style="width:100%; height:446px; border:0; border-radius:12px; background:#0d0f14"></iframe>
-    <button class="btn" id="n5c">Siguiente</button>
+    <button class="btn" id="n5c">Ver cómo lo hacemos con método</button>
+  </section>
+
+  <!-- 5d · EL MÉTODO SALE DE PAPERS -->
+  <section class="p" id="q5d">
+    <h1>Lo hacemos con método. Y el método sale de papers.</h1>
+    <div class="papers">
+      <div class="paper"><div class="logobox"><img src="/assets/logos-academia/yale.svg" alt="Yale" loading="lazy"></div><div><div class="src">Yale · Ayres y Nalebuff · <i>Lifecycle Investing</i></div><p>Exponerse más al inicio, cuando el capital es chico, llega a la meta más seguido.</p></div></div>
+      <div class="paper"><div class="logobox texto"><span>The Journal of Finance</span></div><div><div class="src">George y Hwang · <i>The 52-Week High</i> · 2004</div><p>La distancia al máximo reciente dice hacia dónde va el precio. Lo adaptamos al Nasdaq: si cae 18% bajo su máximo de 39 semanas, salimos a efectivo; cuando recupera, volvemos.</p></div></div>
+      <div class="paper"><div class="logobox oscuro"><img src="/assets/logos-academia/cmt.png" alt="CMT Association" loading="lazy"></div><div><div class="src">Gayed y Bilello · Dow Award 2016</div><p>Apalancado solo cuando la tendencia es favorable. Nunca sin un filtro encendido.</p></div></div>
+    </div>
+    <p class="nota">Se revisa una vez por semana. Nada de noticias ni corazonadas. El research completo está en <a href="/atalaya" target="_blank" rel="noopener" style="color:var(--menta)">/atalaya</a>.</p>
+    <button class="btn" id="n5d">Ver el método en el gráfico</button>
+  </section>
+
+  <!-- 5e · MISMOS ACTIVOS, CON EL MÉTODO -->
+  <section class="p" id="q5e">
+    <h1>Los mismos $10 mil desde 1999, ahora con el método</h1>
+    <p class="sub">Igual que antes, más el Nasdaq 100 con nuestro método de entrada y salida. Tocá el gráfico para repetir.</p>
+    <div class="cmp"><canvas id="cv-met"></canvas></div>
+    <div class="legend" id="leg-met"></div>
+    <p class="nota">Datos semanales reales, en dólares corrientes, sin honorarios. CDP al 3%. El método: salir a efectivo cuando el Nasdaq cae 18% bajo su máximo de 39 semanas y volver cuando recupera.</p>
+    <button class="btn" id="n5e">Siguiente</button>
   </section>
 
   <!-- 6 · QUÉ TE HAN OFRECIDO -->
@@ -310,8 +337,8 @@
   function veinte(){ return S.ing*0.2; }
 
   // ===== Navegación =====
-  var ORDEN = ["q1","q2","q3","q3b","q4","q5","q5b","q5c","q6","q7","res"];
-  var NUM = { q1:1, q2:2, q3:3, q3b:4, q4:5, q5:5, q5b:5, q5c:5, q6:6, q7:7, res:7 };
+  var ORDEN = ["q1","q2","q3","q3b","q4","q5","q5b","q5c","q5d","q5e","q6","q7","res"];
+  var NUM = { q1:1, q2:2, q3:3, q3b:4, q4:5, q5:5, q5b:5, q5c:5, q5d:5, q5e:5, q6:6, q7:7, res:7 };
   var HIST=[], ACTUAL="q1";
   function ir(id, atras){
     if(!atras && ACTUAL!==id && id!=="res") HIST.push(ACTUAL);
@@ -319,8 +346,10 @@
     ACTUAL=id; byId("atras").classList.toggle("on", HIST.length>0 && id!=="res");
     ORDEN.forEach(function(p){ byId(p).classList.toggle("on", p===id); });
     var total = S.lugar==="privado" ? 6 : 7, num = NUM[id] - (S.lugar==="privado" && NUM[id]>=2 ? 1 : 0);
-    if(id==="q5c"){ var fr=byId("fr-costo"); if(!fr.getAttribute("src")) fr.setAttribute("src","/costo/?embed=1"); }
+    if(id==="q5c"){ var fr=byId("fr-costo"); if(!fr.getAttribute("src")) fr.setAttribute("src","/costo/?embed=1&guia=1"); }
     if(id==="q5b"){ var fi=byId("fr-infl"); if(!fi.getAttribute("src")) fi.setAttribute("src","/inflacion/?embed=1"); }
+    if(id==="q5d") cargarPast();
+    if(id==="q5e") metPlay();
     var prog = byId("pt").parentNode; prog.style.visibility = id==="res" ? "hidden" : "visible";
     byId("pt").textContent = "Pregunta "+Math.min(num,total)+" de "+total; byId("pb").style.width = (Math.min(num,total)/total*100)+"%";
     window.scrollTo(0,0); track("pm_pantalla", {v:id});
@@ -421,7 +450,57 @@
 
   // 5b la inflación: pantalla de presentación, sin pregunta
   byId("n5b").addEventListener("click", function(){ ir("q5c"); });
-  byId("n5c").addEventListener("click", function(){ ir("q6"); });
+  byId("n5c").addEventListener("click", function(){ ir("q5d"); });
+  byId("n5d").addEventListener("click", function(){ ir("q5e"); });
+  byId("n5e").addEventListener("click", function(){ ir("q6"); });
+
+  // ===== 5e: $10 mil desde abr-1999 con los datos semanales de /past (dólares corrientes) =====
+  var pastListo=false, pastPedido=false, MET=null;
+  function cargarPast(){ if(pastPedido) return; pastPedido=true; var s=document.createElement("script"); s.src="/past/data.js"; s.onload=function(){ pastListo=true; armarMet(); if(byId("q5e").classList.contains("on")) metPlay(); }; document.head.appendChild(s); }
+  function armarMet(){
+    var D=window.PAST; if(!D) return; var i0=0; for(var i=0;i<D.dates.length;i++){ if(D.dates[i]>=19990401){ i0=i; break; } }
+    var n=D.dates.length-i0, yrs=[], s={cash:[], cdp:[], spy:[], qqq:[], eqqq:[]};
+    function dec(d){ var y=Math.floor(d/10000), m=Math.floor(d/100)%100, dd=d%100; return y+(m-1)/12+(dd-1)/365.25; }
+    var t0=dec(D.dates[i0]);
+    for(var j=i0;j<D.dates.length;j++){ var y=dec(D.dates[j])-t0; yrs.push(y);
+      s.cash.push(10000); s.cdp.push(10000*Math.pow(1.03,y)); s.spy.push(10000*D.spy[j]/D.spy[i0]); s.qqq.push(10000*D.qqq[j]/D.qqq[i0]); s.eqqq.push(10000*D.eqqq[j]/D.eqqq[i0]); }
+    MET={ yrs:yrs, n:n, s:s, y0:Math.floor(t0), series:[
+      {k:"cash", nom:"Efectivo", col:"#E0525A", w:2},
+      {k:"cdp",  nom:"CDP 3%", col:"#7C8FF7", w:2},
+      {k:"spy",  nom:"S&P 500", col:"#ffffff", w:2},
+      {k:"qqq",  nom:"Nasdaq 100", col:"#63FCAF", w:2.2},
+      {k:"eqqq", nom:"Nasdaq 100 con el método", col:"#F5C26B", w:3} ] };
+    byId("leg-met").innerHTML = MET.series.map(function(q){ return "<span><i style='background:"+q.col+"'></i> "+q.nom+"</span>"; }).join("");
+  }
+  var cvm=byId("cv-met"), cxm=cvm.getContext("2d"), MW=0, MH=0, metRaf=null, metT0=null, metProg=1;
+  function metResize(){ var w=cvm.parentNode.clientWidth||340; MH=Math.round(Math.max(200, Math.min(260, w*0.66))); var dpr=Math.max(1,Math.min(3,window.devicePixelRatio||1)); cvm.width=Math.round(w*dpr); cvm.height=Math.round(MH*dpr); cvm.style.height=MH+"px"; MW=w; cxm.setTransform(dpr,0,0,dpr,0,0); }
+  function kUsd(v){ return v>=1e6 ? "$"+(Math.round(v/1e5)/10).toLocaleString("es-CR")+" M" : "$"+Math.round(v/1000)+"k"; }
+  function dibujarMet(p){
+    metProg=p; if(!MW) metResize(); cxm.clearRect(0,0,MW,MH); cxm.textBaseline="middle";
+    if(!MET){ cxm.fillStyle="#8b94a0"; cxm.font="13px 'Bai Jamjuree'"; cxm.textAlign="center"; cxm.fillText("Cargando los datos…", MW/2, MH/2); return; }
+    var mL=8, mR=112, mT=12, mB=22, pw=MW-mL-mR, ph=MH-mT-mB, N=MET.n-1, iCur=Math.max(1, Math.round(N*p)), yTot=MET.yrs[N];
+    var top=0; MET.series.forEach(function(q){ var a=MET.s[q.k]; for(var i=0;i<=iCur;i++){ if(a[i]>top) top=a[i]; } }); top*=1.08;
+    function X(y){ return mL+y/yTot*pw; } function Y(v){ return mT+ph-v/top*ph; }
+    cxm.strokeStyle="rgba(255,255,255,.07)"; cxm.lineWidth=1;
+    for(var g=1; g<=4; g++){ var yy=mT+ph-ph*g/4; cxm.beginPath(); cxm.moveTo(mL,yy); cxm.lineTo(mL+pw,yy); cxm.stroke(); }
+    cxm.fillStyle="#8b94a0"; cxm.font="11px 'Bai Jamjuree'";
+    for(var yr=0; yr<=yTot; yr+=5){ cxm.textAlign = yr===0 ? "left" : "center"; cxm.fillText(String(MET.y0+yr), X(yr), MH-8); }
+    var puntas=[];
+    MET.series.forEach(function(q){ var a=MET.s[q.k];
+      cxm.strokeStyle=q.col; cxm.lineWidth=q.w; cxm.lineJoin="round"; cxm.beginPath();
+      for(var i=0;i<=iCur;i++){ var x=X(MET.yrs[i]), y=Y(a[i]); i?cxm.lineTo(x,y):cxm.moveTo(x,y); }
+      cxm.stroke(); cxm.fillStyle=q.col; cxm.beginPath(); cxm.arc(X(MET.yrs[iCur]),Y(a[iCur]),3,0,Math.PI*2); cxm.fill();
+      puntas.push({nom:q.nom, col:q.col, v:a[iCur], y:Y(a[iCur])}); });
+    puntas.sort(function(u,w){ return u.y-w.y; }); var gap=30;
+    for(var k=1;k<puntas.length;k++){ if(puntas[k].y-puntas[k-1].y<gap) puntas[k].y=puntas[k-1].y+gap; }
+    var over=puntas[puntas.length-1].y-(MH-mB-4); if(over>0){ for(var k2=puntas.length-1;k2>=0;k2--){ puntas[k2].y-=over; if(k2>0) over=Math.max(0, puntas[k2-1].y-(puntas[k2].y-gap)); } }
+    cxm.textAlign="left"; var lx=X(MET.yrs[iCur])+8;
+    puntas.forEach(function(q){ cxm.fillStyle=q.col; cxm.font="600 10.5px 'Bai Jamjuree'"; cxm.fillText(q.nom.replace(" con el método"," + método"), lx, q.y-8); cxm.font="700 13px 'Bai Jamjuree'"; cxm.fillText(kUsd(q.v), lx, q.y+7); });
+  }
+  function metTick(ts){ if(metT0===null) metT0=ts; var p=Math.min(1,(ts-metT0)/7000); dibujarMet(p); if(p<1) metRaf=requestAnimationFrame(metTick); }
+  function metPlay(){ metResize(); if(!MET){ dibujarMet(1); return; } if(metRaf) cancelAnimationFrame(metRaf); metT0=null; metRaf=requestAnimationFrame(metTick); }
+  cvm.addEventListener("click", metPlay);
+  window.addEventListener("resize", function(){ if(byId("q5e").classList.contains("on")){ metResize(); dibujarMet(metProg); } });
 
   // 6 productos → diferencias
   var FB_PROD = {

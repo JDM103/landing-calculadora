@@ -114,6 +114,8 @@ var QS=new URLSearchParams(location.search);
 var REEL=QS.get("reel")!==null;
 if(REEL) document.body.classList.add("reel");
 if(QS.get("embed")!==null) document.body.classList.add("embed");
+// Modo guía (?guia=1): la animación se detiene en el piso del Nasdaq (oct 2002) con un texto, sigue, y al final señala la punta.
+var GUIA=QS.get("guia")!==null, ANOT="";
 
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d");
 var W=0,H=0,DPR=1;
@@ -253,10 +255,38 @@ function draw(p){
       ctx.fillText(L.pct, lx, y0+(small?29:37));
     }
   });
+
+  if(GUIA && ANOT){
+    var px=X(tCur), py=Y(vNow[1]);
+    var lineas = ANOT==="caida" ? ["Sí, las inversiones fluctúan:", "en el corto plazo hay periodos adversos."] : ["Pero a largo plazo", "el mercado tiende a subir."];
+    ctx.font="700 "+(small?"13px":"15px")+" 'Bai Jamjuree'";
+    var tw=0; lineas.forEach(function(s){ tw=Math.max(tw, ctx.measureText(s).width); });
+    var bw=tw+22, bh=(small?44:52), bx, by;
+    if(ANOT==="caida"){ bx=Math.max(mL+4, Math.min(mL+pw-bw-8, mL+pw*0.42-bw/2)); by=mT+6; }
+    else { bx=mL+6; by=mT+ph*0.34; }
+    ctx.fillStyle="rgba(13,15,20,.88)"; ctx.strokeStyle="rgba(99,252,175,.7)"; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx,by,bw,bh,10) : ctx.rect(bx,by,bw,bh); ctx.fill(); ctx.stroke();
+    ctx.fillStyle="#FEF9F3"; ctx.textAlign="left";
+    ctx.fillText(lineas[0], bx+11, by+bh*0.32); ctx.fillText(lineas[1], bx+11, by+bh*0.70);
+    // flecha de la caja al punto del Nasdaq
+    var ax = ANOT==="caida" ? bx+bw*0.8 : bx+bw, ay = ANOT==="caida" ? by+bh : by+bh*0.5;
+    var dx=px-ax, dy=py-ay, len=Math.sqrt(dx*dx+dy*dy)||1, ux=dx/len, uy=dy/len, ex=px-ux*9, ey=py-uy*9;
+    ctx.strokeStyle="#63FCAF"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(ax,ay); ctx.lineTo(ex,ey); ctx.stroke();
+    ctx.fillStyle="#63FCAF"; ctx.beginPath(); ctx.moveTo(px-ux*2,py-uy*2); ctx.lineTo(ex-uy*5, ey+ux*5); ctx.lineTo(ex+uy*5, ey-ux*5); ctx.closePath(); ctx.fill();
+  }
 }
 
 function tick(ts){
   if(t_start===null) t_start=ts;
+  if(GUIA){
+    var P1=(2002.775-T0)/YRS, A=3200, PAUSA=3200, B=8000, el=ts-t_start, p;
+    if(el<A){ p=ease(el/A)*P1; ANOT=""; }
+    else if(el<A+PAUSA){ p=P1; ANOT="caida"; }
+    else if(el<A+PAUSA+B){ p=P1+ease((el-A-PAUSA)/B)*(1-P1); ANOT=""; }
+    else { p=1; ANOT="sube"; }
+    draw(p); if(el<A+PAUSA+B+50) raf=requestAnimationFrame(tick);
+    return;
+  }
   var p=Math.min(1,(ts-t_start)/DUR);
   draw(ease(p));
   if(p<1) raf=requestAnimationFrame(tick);
@@ -272,6 +302,7 @@ resize();
 var pFix=QS.get("p");
 if(pFix!==null){
   var p0=Math.max(0,Math.min(1,parseFloat(pFix)||0));
+  if(GUIA && QS.get("anot")) ANOT=QS.get("anot"); // estado fijo de la guía, para capturas
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ draw(p0); }); }
   draw(p0);
 }else if(document.fonts && document.fonts.ready){
