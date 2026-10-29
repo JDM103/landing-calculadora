@@ -483,7 +483,7 @@
       li.push(["a","<b>Sin Caja:</b> nadie te descuenta nada para el retiro. El 20% sale solo si vos lo apartás el día que cobrás."]);
     }
     li.push([S.pres==="si"?"v":(S.pres==="cabeza"?"a":"r"), "<b>Presupuesto:</b> "+(S.pres==="si" ? "lo llevás. Revisá que el 20% esté saliendo primero." : "50/30/20. El 20% sale primero, el día que te pagan.")]);
-    if(S.hogar==="pareja"||S.hogar==="familia") li.push(["v","<b>Presupuesto "+(S.hogar==="pareja"?"en pareja":"familiar")+":</b> la app de gastos se activa en la llamada, para los dos."]);
+    if(S.hogar==="pareja"||S.hogar==="familia") li.push(["v","<b>App de gastos y plan de retiro "+(S.hogar==="pareja"?"en pareja":"en familia")+".</b>"]);
     if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> te pagan sobre el valor futuro de un proyecto. Hablemos de cómo salir."]);
     if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Inversión offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
     if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien, es la estructura que usamos. Falta que el 20% llegue ahí con un plan."]);
