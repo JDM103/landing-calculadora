@@ -51,7 +51,8 @@
   h1{ font-size:clamp(22px,6vw,28px); font-weight:800; color:var(--crema); line-height:1.15; margin:0 0 6px; text-wrap:balance; }
   .sub{ font-size:14.5px; color:var(--gris-sec); margin:0 0 14px; } .sub b{ color:var(--crema); }
   .ops{ display:flex; flex-direction:column; gap:8px; }
-  .op{ text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer; border-radius:12px; font-family:inherit; font-size:16px; font-weight:600; padding:13px 15px; }
+  .op{ text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer; border-radius:12px; font-family:inherit; font-size:16px; font-weight:600; padding:12px 15px; }
+  #q6 .op{ padding:10px 14px; }
   .op small{ display:block; font-weight:500; color:var(--gris-sec); font-size:13px; }
   .op:hover{ border-color:var(--menta); } .op.sel{ background:rgba(99,252,175,.12); border-color:var(--menta); }
   .fb{ display:none; margin-top:10px; line-height:1.36; background:var(--card2); border-left:3px solid var(--menta); border-radius:0 12px 12px 0; padding:9px 12px; font-size:14px; color:var(--gris); }
@@ -206,11 +207,11 @@
   <!-- 6 · QUÉ TE HAN OFRECIDO -->
   <section class="p" id="q6">
     <h1>¿Cuál de estos te han ofrecido o tenés?</h1>
-    <p class="sub">Marcá los que apliquen.</p>
     <div class="ops" data-q="prod" data-multi="1">
       <button class="op" data-v="transcomer">Transcomer</button>
       <button class="op" data-v="offshore">Inversiones offshore<small>Dominion, RL360, Investors Trust, Zurich</small></button>
       <button class="op" data-v="eeuu">Cuenta de inversión en Estados Unidos</button>
+      <button class="op" data-v="raices">Airbnb o bienes raíces</button>
       <button class="op" data-v="ninguno">Ninguno</button>
     </div>
     <div class="fb" id="fb-prod"></div>
@@ -507,6 +508,7 @@
     transcomer: "<p><b>Transcomer (hoy TBI):</b> te pagan sobre el <b>valor futuro</b> de un proyecto, lo que esas propiedades van a valer, no lo que valen hoy. Si el proyecto no llega, la tasa fija tampoco.</p>",
     offshore:   "<p><b>Inversiones offshore:</b> seguros de ahorro emitidos desde paraísos fiscales (Isla de Man, Caimán, Guernsey). La comisión del asesor se paga por adelantado y no se publica; por eso son 20 años y salirte cuesta. En RL360, salir en los primeros 2 años da cero.</p>",
     eeuu:       "<p><b>Cuenta en Estados Unidos:</b> así trabajamos nosotros. Abrís tu propia cuenta, a tu nombre, protegida hasta $500.000. Nosotros solo podemos comprar y vender adentro: llevamos tu portafolio y te mandamos los reportes, vos no tenés que hacer nada. No podemos sacar un solo dólar. No hay plazo fijo ni penalidad: si hay una emergencia, retirás. Aportás lo que podás, cuando podás. Lo que hacemos es un plan, y le damos seguimiento.</p>",
+    raices:     "<p><b>Bienes raíces:</b> históricamente una buena inversión, pero para después, cuando ya pasaste la etapa de crecimiento y acumulaste capital. Los contras: volverlo plata líquida es lento, y la ganancia neta cuesta verla después del fontanero, dos meses sin alquilar y a veces un administrador para el Airbnb.</p>",
     ninguno:    "<p><b>Mejor.</b> Te van a llegar. La pregunta que los desarma: ¿a nombre de quién queda la plata y cuánto recibo si salgo a los 2 años?</p>"
   };
   Array.prototype.forEach.call(byId("q6").querySelectorAll(".op"), function(b){
@@ -566,6 +568,7 @@
     if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> te pagan sobre el valor futuro de un proyecto. Hablemos de cómo salir."]);
     if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Inversión offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
     if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien, es la estructura que usamos. Falta que el 20% llegue ahí con un plan."]);
+    if(S.prod.indexOf("raices")>-1) li.push(["a","<b>Bienes raíces:</b> buena inversión para después de la etapa de crecimiento. Primero el capital líquido."]);
     byId("res-l").innerHTML = li.map(function(x){ return "<li><i class='"+x[0]+"'></i><span>"+x[1]+"</span></li>"; }).join("");
     byId("res-20").innerHTML=din(a); byId("res-ndx").innerHTML=dinM(ndx);
   }
