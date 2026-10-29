@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chequeo financiero para médicos · Empowered Investor</title>
+<title>Tamizaje financiero · Empowered Investor</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Siete preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20%, cuánto sería hoy si lo hubieras invertido 20 años y qué le hace la inflación a la plata sentada.">
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Chequeo financiero para médicos">
+<meta property="og:title" content="Tamizaje financiero para médicos">
 <meta property="og:description" content="Siete preguntas, dos minutos. Cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,6 +97,7 @@
 
   <!-- 1 · DÓNDE TRABAJÁS -->
   <section class="p on" id="q1">
+    <div style="font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); margin-bottom:4px">Tamizaje financiero</div>
     <h1>¿Dónde trabajás?</h1>
     <p class="sub">Hecho para médicos residentes o especialistas. Siete preguntas, dos minutos, y al final te damos tu resultado.</p>
     <div class="ops" data-q="lugar">
@@ -302,7 +303,7 @@
     registrar(ev, valor, ev==="pm_lead" || ev==="click_agendar");
   }
   var UTM = (function(){
-    var o={ utm_source:"presupuesto-medico", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
+    var o={ utm_source:"tamizajefinanciero", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
     try{ var q=new URLSearchParams(location.search); Object.keys(o).forEach(function(k){ var v=q.get(k); if(v) o[k]=v; });
       if(!q.get("utm_source") && q.get("fbclid")){ o.utm_source="meta"; o.utm_medium="paid"; } }catch(e){}
     return o;
@@ -538,16 +539,16 @@
     var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
     S.nombre=nombre; S.esp=esp; var residente=byId("l-res").checked;
     var a=veinte(), ndx=fvNdx(a);
-    var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
+    var payload = { timestamp:new Date().toISOString(), etapa:"tamizaje_financiero", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
       especialidad:esp, residente: residente ? "si" : "no", lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, hogar:S.hogar, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
       productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
       pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
       sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
     try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
     track("pm_lead", {especialidad:esp, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
-    try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"presupuesto medico", content_category:esp}); }catch(err){}
+    try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"tamizaje financiero", content_category:esp}); }catch(err){}
     CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+(mail ? "&email="+encodeURIComponent(mail) : "")+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp+(residente ? " (residente)" : ""));
-    var msg="Hola Jose, soy "+nombre+", "+(residente ? "residente de " : "")+esp.toLowerCase()+". Hice el chequeo y quiero mi llamada gratuita.";
+    var msg="Hola Jose, soy "+nombre+", "+(residente ? "residente de " : "")+esp.toLowerCase()+". Hice el tamizaje y quiero mi llamada gratuita.";
     byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
     pintarRes(); ir("res"); cargarHorarios();
   });
@@ -613,7 +614,7 @@
   function clickAgendar(e){ e.preventDefault(); track("click_agendar", {v:"pm"}); try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(err){} abrirCalendly(); byId("cta-cal").classList.add("hidden"); byId("slots-mas").classList.add("hidden"); }
   byId("cta-cal").addEventListener("click", clickAgendar);
   byId("ver-mas").addEventListener("click", clickAgendar);
-  byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp chequeo medico"}); }catch(err){} });
+  byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp tamizaje financiero"}); }catch(err){} });
 
   byId("v-ing").innerHTML=dinIng(S.ing); pintarTc();
   byId("atras").addEventListener("click", function(){ if(!HIST.length) return; var prev=HIST.pop(); ir(prev, true); track("pm_atras",{v:prev}); });
