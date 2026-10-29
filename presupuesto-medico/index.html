@@ -355,9 +355,16 @@
     "pareja":  "<p><b>Mejor así.</b> Un presupuesto que lleva uno solo dura un mes. "+APP+", los dos con el mismo número. Te la mostramos en la llamada.</p>",
     "familia": "<p><b>Con hijos es donde más se nota.</b> Colegio, cuido y lo imprevisto se comen el 20% sin que nadie lo vea. "+APP+", los dos con el mismo número. Te la mostramos en la llamada.</p>"
   };
+  // Si ya lleva presupuesto con números, la app se menciona suave, sin discurso.
+  var SUAVE = " Si algún día querés dejar de anotar, tenemos una app que lo hace sola desde el correo. En la llamada te la enseñamos, si te interesa.";
+  var FB_HOGAR_OK = {
+    "solo":    "<p><b>Buenísimo.</b> Con números y una sola cabeza, es lo más fácil de ordenar."+SUAVE+"</p>",
+    "pareja":  "<p><b>Buenísimo.</b> Los dos con el mismo número es lo que más dura."+SUAVE+"</p>",
+    "familia": "<p><b>Buenísimo.</b> Con hijos es donde más sirve llevarlo con números."+SUAVE+"</p>"
+  };
   Array.prototype.forEach.call(byId("q3b").querySelectorAll(".op"), function(b){
     b.addEventListener("click", function(){ S.hogar=b.getAttribute("data-v"); marcar(b.parentNode,b);
-      var f=byId("fb-hogar"); f.innerHTML=FB_HOGAR[S.hogar]; f.classList.add("on"); byId("n3b").classList.remove("hidden"); track("pm_hogar",{v:S.hogar}); });
+      var f=byId("fb-hogar"); f.innerHTML=(S.pres==="si" ? FB_HOGAR_OK : FB_HOGAR)[S.hogar]; f.classList.add("on"); byId("n3b").classList.remove("hidden"); track("pm_hogar",{v:S.hogar}); });
   });
   byId("n3b").addEventListener("click", function(){ ir("q4"); });
 
