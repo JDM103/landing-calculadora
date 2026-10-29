@@ -398,7 +398,7 @@
     cx.strokeStyle="rgba(255,255,255,.07)"; cx.lineWidth=1;
     for(var g=1; g<=4; g++){ var y=mT+ph-ph*g/4; cx.beginPath(); cx.moveTo(mL,y); cx.lineTo(mL+pw,y); cx.stroke(); }
     cx.fillStyle="#8b94a0"; cx.font="11px 'Bai Jamjuree'"; cx.textAlign="center";
-    [0,5,10,15,20].forEach(function(yr){ cx.fillText(yr===0?"hoy":yr+" años", X(yr*12), CH-8); });
+    [0,5,10,15,20].forEach(function(yr){ cx.textAlign = yr===0 ? "left" : "center"; cx.fillText(yr===0?"hoy":yr+" años", X(yr*12), CH-8); });
     var series=[{t:tC, col:"#7C8FF7", nom:"CDP "+tC+"%"},{t:NDX, col:"#63FCAF", nom:"Nasdaq 100"}], puntas=[];
     series.forEach(function(s){
       cx.strokeStyle=s.col; cx.lineWidth=2.6; cx.lineJoin="round"; cx.beginPath();
