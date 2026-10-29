@@ -325,11 +325,11 @@
   // 2 ASECCSS → consejo
   var FB_ASE = {
     "5":   "<p><b>Quedate ahí.</b> Por tu 5% la Caja pone 2% encima. Es 40% de retorno de una vez, y eso no lo da ningún mercado.</p><p>Lo que sí: los excedentes de febrero no se gastan. Ese depósito es para el retiro.</p>",
-    "mas": "<p><b>El 5% sí, lo de encima no.</b> El 5% vale por el 2% que pone la Caja. Lo que aportás de más rinde 7% u 8% en colones, y eso rinde más afuera.</p>",
+    "mas": "<p><b>El 5% sí, lo de encima no.</b> El 5% vale la pena por el 2% que la Caja pone encima. Lo que aportás por encima del 5% no recibe ese 2%: solo gana los excedentes, 7% u 8% al año en colones. Esa parte rinde más invertida en el índice.</p>",
     "no":  "<p><b>Afiliate con el 5%.</b> La Caja pone 2% encima de lo tuyo. Es 40% de retorno de una vez. No hay otra cosa así en la colilla.</p>",
     "nose":"<p><b>Revisá la colilla.</b> Si dice ASECCSS, estás. Si no, afiliate con el 5%: la Caja pone 2% encima, 40% de retorno de una vez.</p>"
   };
-  var FB_FRE = "<p><b>El fondo de retiro de la Caja (FRE)</b> no es plata tuya, la pone la Caja. Paga entre ₡71 mil y ₡140 mil al mes, tiene hueco actuarial y hay un proyecto de ley para cerrarlo. No contés con él.</p><p><b>El FAP</b> (ahorro voluntario del fondo) solo si usás el crédito barato. Si no, ese flujo va al retiro.</p>";
+  var FB_FRE = "<p><b>El FRE</b> (fondo de retiro de la Caja) no es plata tuya: lo paga la Caja, da ₡71 mil a ₡140 mil al mes y hay un proyecto de ley para cerrarlo. No contés con él.</p><p><b>El FAP</b> (el ahorro voluntario del fondo de la Caja) solo tiene sentido si vas a pedir un préstamo ahí: el crédito sobre tus ahorros sale más barato que un personal del banco, que anda entre 15% y 20%. Si no vas a pedir crédito, ese ahorro rinde más invertido.</p>";
   Array.prototype.forEach.call(byId("q2").querySelectorAll(".op"), function(b){
     b.addEventListener("click", function(){ S.ase=b.getAttribute("data-v"); marcar(b.parentNode,b);
       var f=byId("fb-ase"); f.innerHTML=FB_ASE[S.ase]+FB_FRE; f.classList.add("on"); byId("n2").classList.remove("hidden"); track("pm_ase",{v:S.ase}); });
