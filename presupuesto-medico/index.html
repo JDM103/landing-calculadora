@@ -149,7 +149,7 @@
     <p class="lead">El resto, invertido cada mes los últimos 20 años, hoy serían:</p>
     <div class="cmp"><canvas id="cv-cmp"></canvas></div>
     <div class="legend"><span><i style="background:var(--menta)"></i> Nasdaq 100</span><span><i style="background:var(--peri)"></i> CDP</span></div>
-    <p class="nota">Nasdaq 100 al 11,5% anual, su promedio histórico. CDP al 4% en colones, 3% en dólares. Tocá el gráfico para repetir. Dólar a ₡<span id="v-tc"></span><span id="v-tc-f"></span>.</p>
+    <p class="nota">Nasdaq 100: su recorrido real de jul-2006 a jul-2026, con dividendos, en dólares. CDP al 4% en colones, 3% en dólares. Tocá el gráfico para repetir. Dólar a ₡<span id="v-tc"></span><span id="v-tc-f"></span>.</p>
     <button class="btn" id="n5">Siguiente</button>
   </section>
 
@@ -214,7 +214,7 @@
     <ul class="lista" id="res-l"></ul>
     <div class="kp" style="margin-top:10px">
       <div><div class="k">Tu 20%</div><div class="v men" id="res-20"></div></div>
-      <div><div class="k">En 20 años, Nasdaq 100</div><div class="v per" id="res-ndx"></div></div>
+      <div><div class="k">20 años en el Nasdaq 100</div><div class="v per" id="res-ndx"></div></div>
     </div>
     <p class="sub" style="margin:8px 0 0">Llamada gratuita de 45 minutos con Jose: lo pasamos a un plan, cuánto, a dónde y desde cuándo. Si querés, con tu pareja.</p>
     <div class="slots hidden" id="slots"></div>
@@ -222,7 +222,7 @@
     <div class="cal hidden" id="calwrap"></div>
     <a class="btn" id="cta-cal" href="#">Elegir día y hora</a>
     <a class="btn ghost" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
-    <p class="nota">Supuestos: IVM con tope ₡1.765.859, FRE tabla 2021, ASECCSS 5% + 2%, Nasdaq 100 al 11,5% histórico. No es asesoría. La cuenta es tuya: Empowered Investor no custodia plata.</p>
+    <p class="nota">Supuestos: IVM con tope ₡1.765.859, FRE tabla 2021, ASECCSS 5% + 2%, Nasdaq 100 con su recorrido real jul-2006 a jul-2026. No es asesoría. La cuenta es tuya: Empowered Investor no custodia plata.</p>
   </section>
 </div>
 
@@ -235,6 +235,12 @@
   function colM(n){ n=Math.round(n||0); if(Math.abs(n)>=1e7) return "₡"+Math.round(n/1e6).toLocaleString("es-CR")+" millones"; if(Math.abs(n)>=1e6) return "₡"+(Math.round(n/1e5)/10).toLocaleString("es-CR")+" millones"; return col(n); }
   var NDX = 11.5, CDP_CRC = 4, CDP_USD = 3, RETIRO = 5, MESES = 240;
   function cdpTasa(){ return MODO==="usd" ? CDP_USD : CDP_CRC; }
+  // Nasdaq 100 real: [meses transcurridos, factor de crecimiento] por punto, retorno total nominal en dólares, jul-2006 a jul-2026 (mismos datos de /costo, real × deflactor CPI). CAGR 17.0%.
+  var NDX_REAL = [[0.924,1.01642],[1.152,1.09856],[0.912,1.05788],[0.924,1.01411],[1.152,1.03386],[0.924,1.01978],[0.924,0.96847],[1.152,0.97667],[0.912,1.04244],[0.924,1.04774],[1.152,1.02165],[0.912,1.04487],[0.924,0.94752],[1.152,1.04103],[0.912,1.08812],[0.924,0.93399],[1.152,1.01945],[0.924,0.92412],[0.924,0.92663],[1.152,0.96907],[0.912,1.04884],[0.924,1.08869],[1.152,1.00344],[0.924,0.9218],[0.912,1.06205],[1.152,0.91765],[0.924,0.72171],[1.152,0.92524],[0.912,1.02407],[0.9,1.01471],[1.152,1.012],[0.912,0.94444],[0.924,1.14802],[1.152,1.01305],[0.924,1.09827],[0.912,0.95408],[1.152,1.13482],[0.924,1.04766],[0.912,1.02404],[1.152,1.0361],[0.924,1.00276],[0.924,1.05659],[1.152,0.94002],[0.924,1.08234],[0.912,1.03626],[1.152,0.9572],[0.924,0.9696],[1.152,0.97828],[0.912,1.00845],[0.924,1.04206],[1.152,1.10763],[0.912,1.01986],[0.924,1.03768],[1.164,1.04803],[0.912,1.02536],[0.924,0.96664],[1.152,1.00427],[0.912,1.0311],[0.924,0.93544],[1.152,1.06102],[0.924,0.92603],[0.912,0.99267],[1.152,1.09611],[0.924,0.99427],[0.912,0.98573],[1.164,1.02431],[0.924,1.07365],[0.912,1.04078],[1.152,1.01969],[0.924,0.96976],[0.912,0.97948],[1.152,1.01046],[0.924,1.05491],[1.152,1.04961],[0.912,0.9529],[0.924,0.95133],[1.152,1.01972],[0.888,1.04554],[0.924,1.0109],[1.152,1.01],[0.912,1.02084],[0.924,1.04441],[1.152,0.98948],[0.924,1.04506],[0.912,1.01582],[1.152,1.02056],[0.924,1.01802],[1.152,1.05964],[0.912,1.01065],[0.936,1.03212],[1.14,1.02875],[0.924,0.99138],[0.924,0.95071],[1.152,1.04287],[0.912,1.05258],[0.924,1.03468],[1.152,1.0224],[0.912,1.02139],[0.924,0.95159],[1.152,1.09284],[0.924,0.99472],[0.924,1.00329],[1.152,1.04177],[0.912,0.98534],[0.924,1.02526],[1.152,1.01698],[0.924,0.9924],[0.912,0.99213],[1.152,1.0266],[0.924,0.95531],[0.912,1.01157],[1.152,1.03102],[0.924,1.00863],[0.924,0.94172],[1.152,0.94244],[0.924,1.08634],[0.912,1.02657],[1.152,0.96793],[0.924,1.03263],[1.152,1.02898],[0.912,1.0483],[0.924,0.97507],[1.152,1.02763],[0.912,0.98854],[0.924,1.03194],[1.128,1.03367],[0.924,1.03423],[0.912,1.03153],[1.152,0.99456],[0.924,1.06282],[0.912,1.01],[1.152,1.01804],[0.924,0.99985],[1.152,1.02794],[0.912,1.01775],[0.924,1.03606],[1.152,1.0258],[0.924,1.04554],[0.924,0.94901],[1.152,1.09558],[0.912,0.94515],[0.924,1.0501],[1.152,1.04434],[0.912,1.01708],[0.924,1.00504],[1.152,1.01926],[0.912,0.94909],[0.924,0.98395],[1.152,0.93917],[0.924,1.00037],[0.924,1.04898],[1.152,1.05813],[0.912,1.04388],[0.924,0.9955],[1.152,0.98722],[0.924,1.06199],[0.912,0.9636],[1.152,1.03248],[0.924,0.99456],[1.152,1.06172],[0.912,1.02113],[0.936,1.05653],[1.14,1.07422],[0.924,0.81972],[0.924,1.04651],[1.152,1.11158],[0.912,1.05653],[0.924,1.12101],[1.152,1.031],[0.912,0.9937],[0.924,1.05646],[1.152,1.01821],[0.924,1.03758],[0.888,1.05881],[1.152,1.05463],[0.924,0.93761],[0.912,1.06998],[1.152,0.96819],[0.924,1.04552],[1.152,1.04916],[0.912,1.03137],[0.924,1.02107],[1.152,0.98076],[0.912,1.06979],[0.924,1.0084],[1.164,0.95603],[0.912,0.9133],[0.924,0.93467],[1.152,1.04454],[0.912,0.8922],[0.924,0.95659],[1.152,1.01247],[0.924,1.13192],[0.912,0.92952],[1.152,0.85055],[0.924,1.10438],[0.912,0.97944],[1.164,0.99862],[0.924,1.06666],[0.912,0.96284],[1.152,1.10573],[0.924,1.02024],[0.912,1.09068],[1.152,1.07078],[0.924,0.96614],[1.152,1.01251],[0.912,0.98649],[0.924,1.0359],[1.152,1.0712],[0.924,1.01296],[0.924,1.06715],[1.152,0.99283],[0.912,1.01136],[0.924,1.00865],[1.152,1.08406],[0.912,1.03418],[0.924,0.91026],[1.152,1.05537],[0.912,1.03936],[0.924,1.04207],[1.152,1.03195],[0.9,0.95752],[1.14,1.06105],[0.924,0.89137],[0.924,0.9487],[1.152,1.1477],[0.912,1.01044],[0.924,1.05282],[1.152,1.04178],[0.912,1.01616],[0.924,1.00601],[1.152,1.03285],[0.924,1.00781],[0.924,1.02255],[1.152,0.96055],[0.912,0.98635],[0.924,1.03051],[1.152,1.16015],[0.924,1.01748],[0.684,0.98899]];
+  var NDX_DESDE = "jul-2006", NDX_HASTA = "jul-2026", NDX_CAGR = 17.0;
+  // Serie del aporte mensual a siguiendo el Nasdaq real: devuelve [{m: meses, v: valor}], y la del CDP en los mismos meses
+  function serieNdx(a){ var out=[{m:0,v:0}], v=0, m=0; NDX_REAL.forEach(function(q){ v=v*q[1]+a*q[0]; m+=q[0]; out.push({m:m, v:v}); }); return out; }
+  function fvNdx(a){ var s=serieNdx(a); return s[s.length-1].v; }
   // Tipo de cambio: venta del Ministerio de Hacienda (hoy); si no responde, 450.
   var TC = 450, TC_FUENTE = " (referencia)";
   var MODO = "ambos"; // siempre arranca en ambas monedas
@@ -376,29 +382,34 @@
     cmpProg=p; if(!CW) cmpResize();
     cx.setTransform(DPR,0,0,DPR,0,0); cx.clearRect(0,0,CW,CH); cx.textBaseline="middle";
     var a=veinte(), tC=cdpTasa(), mL=8, mR=118, mT=12, mB=22, pw=CW-mL-mR, ph=CH-mT-mB;
-    var mCur=Math.max(1, Math.round(MESES*p)), top=fv(a,NDX,MESES)*1.08;
-    function X(m){ return mL+m/MESES*pw; } function Y(v){ return mT+ph-v/top*ph; }
+    var sn=serieNdx(a), N=sn.length-1, iCur=Math.max(1, Math.round(N*p)), mTot=sn[N].m;
+    var top=0; sn.forEach(function(q){ if(q.v>top) top=q.v; }); top=Math.max(top, fv(a,tC,mTot))*1.08;
+    function X(m){ return mL+m/mTot*pw; } function Y(v){ return mT+ph-v/top*ph; }
     cx.strokeStyle="rgba(255,255,255,.07)"; cx.lineWidth=1;
     for(var g=1; g<=4; g++){ var y=mT+ph-ph*g/4; cx.beginPath(); cx.moveTo(mL,y); cx.lineTo(mL+pw,y); cx.stroke(); }
-    cx.fillStyle="#8b94a0"; cx.font="11px 'Bai Jamjuree'"; cx.textAlign="center";
-    [0,5,10,15,20].forEach(function(yr){ cx.textAlign = yr===0 ? "left" : "center"; cx.fillText(yr===0?"hoy":yr+" años", X(yr*12), CH-8); });
-    var series=[{t:tC, col:"#7C8FF7", nom:"CDP "+tC+"%"},{t:NDX, col:"#63FCAF", nom:"Nasdaq 100"}], puntas=[];
-    series.forEach(function(s){
-      cx.strokeStyle=s.col; cx.lineWidth=2.6; cx.lineJoin="round"; cx.beginPath();
-      for(var m=0; m<=mCur; m++){ var v=fv(a,s.t,m), x=X(m), y=Y(v); m?cx.lineTo(x,y):cx.moveTo(x,y); }
-      cx.stroke(); var vf=fv(a,s.t,mCur); cx.fillStyle=s.col; cx.beginPath(); cx.arc(X(mCur),Y(vf),3.5,0,Math.PI*2); cx.fill();
-      puntas.push({nom:s.nom, col:s.col, v:vf, y:Y(vf)});
-    });
+    cx.fillStyle="#8b94a0"; cx.font="11px 'Bai Jamjuree'";
+    [0,5,10,15,20].forEach(function(yr){ cx.textAlign = yr===0 ? "left" : "center"; cx.fillText(yr===0?"hoy":yr+" años", X(Math.min(yr*12,mTot)), CH-8); });
+    var puntas=[];
+    // CDP suave, mismos meses
+    cx.strokeStyle="#7C8FF7"; cx.lineWidth=2.4; cx.lineJoin="round"; cx.beginPath();
+    for(var i=0;i<=iCur;i++){ var mc=sn[i].m, vc=fv(a,tC,mc); i?cx.lineTo(X(mc),Y(vc)):cx.moveTo(X(mc),Y(vc)); }
+    cx.stroke(); var vC=fv(a,tC,sn[iCur].m); cx.fillStyle="#7C8FF7"; cx.beginPath(); cx.arc(X(sn[iCur].m),Y(vC),3.5,0,Math.PI*2); cx.fill();
+    puntas.push({nom:"CDP "+tC+"%", col:"#7C8FF7", v:vC, y:Y(vC)});
+    // Nasdaq 100 real, con sus caídas
+    cx.strokeStyle="#63FCAF"; cx.lineWidth=2.6; cx.beginPath();
+    for(var j=0;j<=iCur;j++){ j?cx.lineTo(X(sn[j].m),Y(sn[j].v)):cx.moveTo(X(sn[j].m),Y(sn[j].v)); }
+    cx.stroke(); var vN=sn[iCur].v; cx.fillStyle="#63FCAF"; cx.beginPath(); cx.arc(X(sn[iCur].m),Y(vN),3.5,0,Math.PI*2); cx.fill();
+    puntas.push({nom:"Nasdaq 100", col:"#63FCAF", v:vN, y:Y(vN)});
     puntas.sort(function(u,w){ return u.y-w.y; }); var gap=MODO==="ambos"?46:34;
     if(puntas[1].y-puntas[0].y<gap) puntas[1].y=puntas[0].y+gap;
     var over=puntas[1].y-(CH-mB-6); if(over>0){ puntas[1].y-=over; if(puntas[1].y-puntas[0].y<gap) puntas[0].y=puntas[1].y-gap; }
-    cx.textAlign="left"; var lx=X(mCur)+8;
+    cx.textAlign="left"; var lx=X(sn[iCur].m)+8;
     puntas.forEach(function(q){ var y0=Math.max(mT+6, q.y-(MODO==="ambos"?14:8));
       cx.fillStyle=q.col; cx.font="600 11px 'Bai Jamjuree'"; cx.fillText(q.nom, lx, y0);
       cx.font="700 14px 'Bai Jamjuree'"; cx.fillText(cmpMonto(q.v), lx, y0+15);
       var ch=cmpMontoChico(q.v); if(ch){ cx.fillStyle="#8b94a0"; cx.font="500 11px 'Bai Jamjuree'"; cx.fillText(ch, lx, y0+29); } });
   }
-  function cmpTick(ts){ if(cmpT0===null) cmpT0=ts; var p=Math.min(1,(ts-cmpT0)/2600); p=p*p*(3-2*p); dibujarCmp(p); if(p<1) cmpRaf=requestAnimationFrame(cmpTick); }
+  function cmpTick(ts){ if(cmpT0===null) cmpT0=ts; var p=Math.min(1,(ts-cmpT0)/4000); dibujarCmp(p); if(p<1) cmpRaf=requestAnimationFrame(cmpTick); }
   function cmpPlay(){ if(cmpRaf) cancelAnimationFrame(cmpRaf); cmpT0=null; cmpRaf=requestAnimationFrame(cmpTick); }
   cv.addEventListener("click", cmpPlay);
   window.addEventListener("resize", function(){ if(byId("q5").classList.contains("on")){ cmpResize(); dibujarCmp(cmpProg); } });
@@ -449,7 +460,7 @@
     byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
     var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
     S.nombre=nombre; S.esp=esp;
-    var a=veinte(), ndx=fv(a,NDX,MESES);
+    var a=veinte(), ndx=fvNdx(a);
     var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
       especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, hogar:S.hogar, inflacion:S.infl, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
       productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
@@ -466,7 +477,7 @@
 
   // 8 resultado
   function pintarRes(){
-    var a=veinte(), ndx=fv(a,NDX,MESES), li=[];
+    var a=veinte(), ndx=fvNdx(a), li=[];
     byId("res-t").textContent = S.nombre+", así estás";
     if(S.lugar!=="privado"){
       if(S.ase==="5") li.push(["v","<b>ASECCSS:</b> bien, al 5%. Excedentes de febrero al retiro."]);
