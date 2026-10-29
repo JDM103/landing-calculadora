@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chequeo financiero para médicos · Empowered Investor</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Siete preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20%, cuánto sería hoy si lo hubieras invertido 20 años y qué le hace la inflación a la plata sentada.">
+<meta name="description" content="Ocho preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20%, cuánto sería hoy si lo hubieras invertido 20 años y qué le hace la inflación a la plata sentada.">
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Chequeo financiero para médicos">
-<meta property="og:description" content="Siete preguntas, dos minutos. Cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
+<meta property="og:description" content="Ocho preguntas, dos minutos. Cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -77,13 +77,13 @@
   <div class="top">
     <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
     <div class="mon" id="mon" title="Moneda"><button data-m="crc">₡</button><button data-m="ambos" class="on">₡ $</button><button data-m="usd">$</button></div>
-    <div class="prog"><div class="t" id="pt">Pregunta 1 de 7</div><div class="b"><i id="pb"></i></div></div>
+    <div class="prog"><div class="t" id="pt">Pregunta 1 de 8</div><div class="b"><i id="pb"></i></div></div>
   </div>
 
   <!-- 1 · DÓNDE TRABAJÁS -->
   <section class="p on" id="q1">
     <h1>¿Dónde trabajás?</h1>
-    <p class="sub">Siete preguntas. Dos minutos. Al final te decimos qué hacer con tu plata y cuánto es.</p>
+    <p class="sub">Ocho preguntas. Dos minutos. Al final te decimos qué hacer con tu plata y cuánto es.</p>
     <div class="ops" data-q="lugar">
       <button class="op" data-v="caja">Solo en la Caja</button>
       <button class="op" data-v="ambas">Caja y privado</button>
@@ -115,6 +115,18 @@
     </div>
     <div class="fb" id="fb-pres"></div>
     <button class="btn hidden" id="n3">Siguiente</button>
+  </section>
+
+  <!-- 3b · CON QUIÉN -->
+  <section class="p" id="q3b">
+    <h1>¿La plata la manejás solo o con alguien?</h1>
+    <div class="ops" data-q="hogar">
+      <button class="op" data-v="solo">Solo yo</button>
+      <button class="op" data-v="pareja">En pareja</button>
+      <button class="op" data-v="familia">En familia, con hijos</button>
+    </div>
+    <div class="fb" id="fb-hogar"></div>
+    <button class="btn hidden" id="n3b">Siguiente</button>
   </section>
 
   <!-- 4 · INGRESO -->
@@ -191,10 +203,9 @@
       <datalist id="esps"></datalist>
       <div class="f2">
         <div><label class="l" for="l-wa">WhatsApp</label><div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" maxlength="8"></div></div>
-        <div><label class="l" for="l-mail">Correo</label><input type="email" id="l-mail" inputmode="email" autocomplete="email"></div>
+        <div><label class="l" for="l-mail">Correo (opcional)</label><input type="email" id="l-mail" inputmode="email" autocomplete="email"></div>
       </div>
-      <label class="cons"><input type="checkbox" id="l-ok"><span>Acepto que Empowered Investor guarde estos datos para mandarme el resultado y contactarme. No se comparten con nadie.</span></label>
-      <p class="err" id="l-err">Falta algo: nombre, apellidos, especialidad, WhatsApp de 8 dígitos, correo y la casilla.</p>
+      <p class="err" id="l-err">Falta algo: nombre, apellidos, especialidad y WhatsApp de 8 dígitos.</p>
       <button class="btn" type="submit" id="l-send">Ver mi resultado</button>
     </form>
   </section>
@@ -207,13 +218,13 @@
       <div><div class="k">Tu 20%</div><div class="v men" id="res-20"></div></div>
       <div><div class="k">En 20 años, Nasdaq 100</div><div class="v per" id="res-ndx"></div></div>
     </div>
-    <p class="sub" style="margin:8px 0 0">En 45 minutos con Jose lo pasamos a un plan: cuánto, a dónde y desde cuándo. Si querés, con tu pareja.</p>
+    <p class="sub" style="margin:8px 0 0">Llamada gratuita de 45 minutos con Jose: lo pasamos a un plan, cuánto, a dónde y desde cuándo. Si querés, con tu pareja.</p>
     <div class="slots hidden" id="slots"></div>
     <p class="micro hidden" id="slots-mas"><button class="link" id="ver-mas" type="button">Ver más horarios</button></p>
     <div class="cal hidden" id="calwrap"></div>
     <a class="btn" id="cta-cal" href="#">Elegir día y hora</a>
     <a class="btn ghost" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
-    <p class="nota">Supuestos: IVM con tope de ₡1.765.859; FRE según tabla 2021; ASECCSS 5% obrero y 2% patronal; Nasdaq 100 al 11,5% anual histórico. No es asesoría. La cuenta de inversión es tuya, Empowered Investor no custodia plata.</p>
+    <p class="nota">Supuestos: IVM con tope ₡1.765.859, FRE tabla 2021, ASECCSS 5% + 2%, Nasdaq 100 al 11,5% histórico. No es asesoría. La cuenta es tuya: Empowered Investor no custodia plata.</p>
   </section>
 </div>
 
@@ -283,7 +294,7 @@
   window.addEventListener("pagehide", flush);
 
   // ===== Estado =====
-  var S = { lugar:"", ase:"", pres:"", ing:4000000, infl:"", prod:[], nombre:"", esp:"" };
+  var S = { lugar:"", ase:"", pres:"", hogar:"", ing:4000000, infl:"", prod:[], nombre:"", esp:"" };
   var ESPS = ["Anestesiología","Cardiología","Cirugía general","Cirugía plástica","Dermatología","Emergencias","Endocrinología","Fisiatría","Gastroenterología","Geriatría","Ginecología y obstetricia","Hematología","Infectología","Medicina familiar","Medicina general","Medicina interna","Nefrología","Neumología","Neurocirugía","Neurología","Oftalmología","Oncología","Ortopedia","Otorrinolaringología","Patología","Pediatría","Psiquiatría","Radiología","Reumatología","Urología","Vascular periférico"];
   var dl=byId("esps"); ESPS.forEach(function(e){ var o=document.createElement("option"); o.value=e; dl.appendChild(o); });
 
@@ -291,11 +302,11 @@
   function veinte(){ return S.ing*0.2; }
 
   // ===== Navegación =====
-  var ORDEN = ["q1","q2","q3","q4","q5","q5b","q5c","q6","q7","res"];
-  var NUM = { q1:1, q2:2, q3:3, q4:4, q5:4, q5b:5, q5c:5, q6:6, q7:7, res:7 };
+  var ORDEN = ["q1","q2","q3","q3b","q4","q5","q5b","q5c","q6","q7","res"];
+  var NUM = { q1:1, q2:2, q3:3, q3b:4, q4:5, q5:5, q5b:6, q5c:6, q6:7, q7:8, res:8 };
   function ir(id){
     ORDEN.forEach(function(p){ byId(p).classList.toggle("on", p===id); });
-    var total = S.lugar==="privado" ? 6 : 7, num = NUM[id] - (S.lugar==="privado" && NUM[id]>=2 ? 1 : 0);
+    var total = S.lugar==="privado" ? 7 : 8, num = NUM[id] - (S.lugar==="privado" && NUM[id]>=2 ? 1 : 0);
     if(id==="q5c"){ var fr=byId("fr-costo"); if(!fr.getAttribute("src")) fr.setAttribute("src","/costo/?embed=1"); }
     var prog = byId("pt").parentNode; prog.style.visibility = id==="res" ? "hidden" : "visible";
     byId("pt").textContent = "Pregunta "+Math.min(num,total)+" de "+total; byId("pb").style.width = (Math.min(num,total)/total*100)+"%";
@@ -335,7 +346,20 @@
     b.addEventListener("click", function(){ S.pres=b.getAttribute("data-v"); marcar(b.parentNode,b);
       var f=byId("fb-pres"); f.innerHTML=FB_PRES[S.pres]; f.classList.add("on"); byId("n3").classList.remove("hidden"); track("pm_pres",{v:S.pres}); });
   });
-  byId("n3").addEventListener("click", function(){ ir("q4"); });
+  byId("n3").addEventListener("click", function(){ ir("q3b"); });
+
+  // 3b con quién → la app de gastos
+  var APP = "Tenemos una app que lleva los gastos sola: no hay que anotar nada, se conecta al correo, arma las categorías del presupuesto y avisa cuando una se pasa. Así se ve en tiempo real a dónde se va la plata";
+  var FB_HOGAR = {
+    "solo":    "<p><b>Más fácil de ordenar.</b> "+APP+", sin pelear con un Excel. Te la mostramos en la llamada.</p>",
+    "pareja":  "<p><b>Mejor así.</b> Un presupuesto que lleva uno solo dura un mes. "+APP+", los dos con el mismo número. Te la mostramos en la llamada.</p>",
+    "familia": "<p><b>Con hijos es donde más se nota.</b> Colegio, cuido y lo imprevisto se comen el 20% sin que nadie lo vea. "+APP+", los dos con el mismo número. Te la mostramos en la llamada.</p>"
+  };
+  Array.prototype.forEach.call(byId("q3b").querySelectorAll(".op"), function(b){
+    b.addEventListener("click", function(){ S.hogar=b.getAttribute("data-v"); marcar(b.parentNode,b);
+      var f=byId("fb-hogar"); f.innerHTML=FB_HOGAR[S.hogar]; f.classList.add("on"); byId("n3b").classList.remove("hidden"); track("pm_hogar",{v:S.hogar}); });
+  });
+  byId("n3b").addEventListener("click", function(){ ir("q4"); });
 
   // 4 ingreso
   byId("r-ing").addEventListener("input", function(){ S.ing=+this.value; byId("v-ing").innerHTML=dinIng(S.ing); });
@@ -391,21 +415,21 @@
   byId("lead").addEventListener("submit", function(e){
     e.preventDefault();
     var nombre=byId("l-nom").value.trim(), ape=byId("l-ape").value.trim(), esp=byId("l-esp").value.trim(), mail=byId("l-mail").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
-    var ok = nombre && ape && esp && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) && wa.length===8 && byId("l-ok").checked;
+    var ok = nombre && ape && esp && wa.length===8 && (!mail || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail));
     byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
     var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
     S.nombre=nombre; S.esp=esp;
     var a=veinte(), ndx=fv(a,NDX,MESES);
     var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
-      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, inflacion:S.infl, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
+      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, hogar:S.hogar, inflacion:S.infl, ingreso_hoy:S.ing, colchon:S.ing*3, tc:Math.round(TC), moneda:MODO, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
       productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
       pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
       sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
     try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
     track("pm_lead", {especialidad:esp, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
     try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"presupuesto medico", content_category:esp}); }catch(err){}
-    CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+"&email="+encodeURIComponent(mail)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp);
-    var msg="Hola Jose, soy "+nombre+", "+esp.toLowerCase()+". Hice el chequeo: mi 20% es "+col(a)+" al mes. Quiero la llamada.";
+    CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+(mail ? "&email="+encodeURIComponent(mail) : "")+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp);
+    var msg="Hola Jose, soy "+nombre+", "+esp.toLowerCase()+". Hice el chequeo y quiero mi llamada gratuita.";
     byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
     pintarRes(); ir("res"); cargarHorarios();
   });
@@ -423,6 +447,7 @@
       li.push(["a","<b>Sin Caja:</b> nadie te descuenta nada para el retiro. El 20% sale solo si vos lo apartás el día que cobrás."]);
     }
     li.push([S.pres==="si"?"v":(S.pres==="cabeza"?"a":"r"), "<b>Presupuesto:</b> "+(S.pres==="si" ? "lo llevás. Revisá que el 20% esté saliendo primero." : "50/30/20. El 20% sale primero, el día que te pagan.")]);
+    if(S.hogar==="pareja"||S.hogar==="familia") li.push(["v","<b>Presupuesto "+(S.hogar==="pareja"?"en pareja":"familiar")+":</b> la app de gastos se activa en la llamada, para los dos."]);
     if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> te pagan sobre el valor futuro de un proyecto, sin supervisor. Hablemos de cómo salir."]);
     if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Plan offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
     if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien, es la estructura que usamos. Falta que el 20% llegue ahí con un plan."]);
