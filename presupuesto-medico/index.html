@@ -199,7 +199,7 @@
     <p class="sub">Igual que antes, más el Nasdaq 100 con nuestro método de entrada y salida. Tocá el gráfico para repetir.</p>
     <div class="cmp"><canvas id="cv-met"></canvas></div>
     <div class="legend" id="leg-met"></div>
-    <p class="nota">Datos semanales reales, en dólares corrientes, sin honorarios. CDP al 3%. El método: salir a efectivo cuando el Nasdaq cae 18% bajo su máximo de 39 semanas y volver cuando recupera.</p>
+    <p class="nota">Datos semanales reales, en dólares corrientes. CDP al 3%. La línea del método ya descuenta nuestro honorario del 1% anual. El método: salir a efectivo cuando el Nasdaq cae 18% bajo su máximo de 39 semanas y volver cuando recupera.</p>
     <button class="btn" id="n5e">Siguiente</button>
   </section>
 
@@ -460,9 +460,9 @@
     var D=window.PAST; if(!D) return; var i0=0; for(var i=0;i<D.dates.length;i++){ if(D.dates[i]>=19990401){ i0=i; break; } }
     var n=D.dates.length-i0, yrs=[], s={cash:[], cdp:[], spy:[], qqq:[], eqqq:[]};
     function dec(d){ var y=Math.floor(d/10000), m=Math.floor(d/100)%100, dd=d%100; return y+(m-1)/12+(dd-1)/365.25; }
-    var t0=dec(D.dates[i0]);
+    var t0=dec(D.dates[i0]), FEE=0.01; // honorario anual sobre la línea del método
     for(var j=i0;j<D.dates.length;j++){ var y=dec(D.dates[j])-t0; yrs.push(y);
-      s.cash.push(10000); s.cdp.push(10000*Math.pow(1.03,y)); s.spy.push(10000*D.spy[j]/D.spy[i0]); s.qqq.push(10000*D.qqq[j]/D.qqq[i0]); s.eqqq.push(10000*D.eqqq[j]/D.eqqq[i0]); }
+      s.cash.push(10000); s.cdp.push(10000*Math.pow(1.03,y)); s.spy.push(10000*D.spy[j]/D.spy[i0]); s.qqq.push(10000*D.qqq[j]/D.qqq[i0]); s.eqqq.push(10000*D.eqqq[j]/D.eqqq[i0]*Math.pow(1-FEE,y)); }
     MET={ yrs:yrs, n:n, s:s, y0:Math.floor(t0), series:[
       {k:"cash", nom:"Efectivo", col:"#E0525A", w:2},
       {k:"cdp",  nom:"CDP 3%", col:"#7C8FF7", w:2},
