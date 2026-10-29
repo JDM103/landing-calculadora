@@ -30,7 +30,9 @@
   small.usd{ display:block; font-size:12px; font-weight:600; color:var(--gris-sec); margin-top:1px; }
   .kp .v{ font-size:17px; }
   .lead{ font-size:15.5px; font-weight:700; color:var(--crema); margin:8px 0 0; }
-  .prog{ flex:1; max-width:160px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; text-align:right; margin-bottom:4px; }
+  .prog{ flex:1; max-width:160px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
+  .back{ background:none; border:none; color:var(--menta); font-family:inherit; font-size:15px; line-height:1; padding:0 4px; cursor:pointer; visibility:hidden; }
+  .back.on{ visibility:visible; }
   .prog .b{ height:5px; background:var(--card2); border-radius:999px; overflow:hidden; } .prog .b i{ display:block; height:100%; width:0; background:var(--menta); border-radius:999px; transition:width .3s; }
   .p{ display:none; flex:1; flex-direction:column; justify-content:center; animation:entra .3s ease both; } .p.on{ display:flex; }
   @keyframes entra{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
@@ -77,7 +79,7 @@
   <div class="top">
     <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
     <div class="mon" id="mon" title="Moneda"><button data-m="crc">₡</button><button data-m="ambos" class="on">₡ $</button><button data-m="usd">$</button></div>
-    <div class="prog"><div class="t" id="pt">Pregunta 1 de 8</div><div class="b"><i id="pb"></i></div></div>
+    <div class="prog"><div class="t"><button class="back" id="atras" type="button" aria-label="Pregunta anterior" title="Pregunta anterior">←</button><span id="pt">Pregunta 1 de 8</span></div><div class="b"><i id="pb"></i></div></div>
   </div>
 
   <!-- 1 · DÓNDE TRABAJÁS -->
@@ -238,7 +240,7 @@
   var NDX = 11.5, CDP = 5, RETIRO = 5, MESES = 240;
   // Tipo de cambio: venta del Ministerio de Hacienda (hoy); si no responde, 450.
   var TC = 450, TC_FUENTE = " (referencia)";
-  var MODO = "ambos"; try{ MODO = localStorage.getItem("ei_moneda") || "ambos"; }catch(e){}
+  var MODO = "ambos"; // siempre arranca en ambas monedas
   function usdN(n){ return "$" + fmtN.format(Math.round(n/TC)); }
   function usdM(n){ var d=n/TC; return d>=1e6 ? "$"+(Math.round(d/1e5)/10).toLocaleString("es-CR")+" millones" : usdN(n); }
   // Monto según el modo elegido: colones, dólares, o colones con dólares en pequeño
@@ -250,7 +252,7 @@
     var v = j && j.dolar && j.dolar.venta && parseFloat(j.dolar.venta.valor); if(v && v>300 && v<1000){ TC=v; TC_FUENTE=" (Hacienda, hoy)"; repintar(); } }).catch(function(){}); }catch(e){}
   function repintar(){ pintarTc(); byId("v-ing").innerHTML=dinIng(S.ing); if(byId("q5").classList.contains("on")||byId("res").classList.contains("on")||S.nombre){ pintar20(); if(S.nombre) pintarRes(); } }
   Array.prototype.forEach.call(byId("mon").querySelectorAll("button"), function(b){
-    b.addEventListener("click", function(){ MODO=b.getAttribute("data-m"); try{ localStorage.setItem("ei_moneda", MODO); }catch(e){}
+    b.addEventListener("click", function(){ MODO=b.getAttribute("data-m");
       Array.prototype.forEach.call(byId("mon").querySelectorAll("button"), function(x){ x.classList.toggle("on", x===b); }); repintar(); track("pm_moneda",{v:MODO}); });
   });
   Array.prototype.forEach.call(byId("mon").querySelectorAll("button"), function(x){ x.classList.toggle("on", x.getAttribute("data-m")===MODO); });
@@ -304,7 +306,11 @@
   // ===== Navegación =====
   var ORDEN = ["q1","q2","q3","q3b","q4","q5","q5b","q5c","q6","q7","res"];
   var NUM = { q1:1, q2:2, q3:3, q3b:4, q4:5, q5:5, q5b:6, q5c:6, q6:7, q7:8, res:8 };
-  function ir(id){
+  var HIST=[], ACTUAL="q1";
+  function ir(id, atras){
+    if(!atras && ACTUAL!==id && id!=="res") HIST.push(ACTUAL);
+    if(id==="res") HIST=[];
+    ACTUAL=id; byId("atras").classList.toggle("on", HIST.length>0 && id!=="res");
     ORDEN.forEach(function(p){ byId(p).classList.toggle("on", p===id); });
     var total = S.lugar==="privado" ? 7 : 8, num = NUM[id] - (S.lugar==="privado" && NUM[id]>=2 ? 1 : 0);
     if(id==="q5c"){ var fr=byId("fr-costo"); if(!fr.getAttribute("src")) fr.setAttribute("src","/costo/?embed=1"); }
@@ -504,6 +510,7 @@
   byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp chequeo medico"}); }catch(err){} });
 
   byId("v-ing").innerHTML=dinIng(S.ing); pintarTc();
+  byId("atras").addEventListener("click", function(){ if(!HIST.length) return; var prev=HIST.pop(); ir(prev, true); track("pm_atras",{v:prev}); });
   ir("q1");
 })();
 </script>
