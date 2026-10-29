@@ -3,337 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nadie te enseñó esto en la residencia · Finanzas para médicos sin tiempo · Empowered Investor</title>
+<title>Chequeo financiero para médicos · Empowered Investor</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Siete decisiones sobre tu plata, ya resueltas con tus números: cuántas dispos al mes compran tu retiro, qué hacer con el CDP, la ASECCSS y lo que te vendieron en la sala de residentes. 12 minutos en el celular y 60 días de acompañamiento.">
+<meta name="description" content="Siete preguntas, dos minutos. Qué hacer con la ASECCSS y el fondo de la Caja, cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Nadie te enseñó esto en la residencia. Y no hace falta que lo estudiés.">
-<meta property="og:description" content="Finanzas para médicos de la Caja que no tienen tiempo: tu número en dispos, presupuesto de tres bolsas, CDP, ASECCSS y Transcomer, en 12 minutos.">
+<meta property="og:title" content="Chequeo financiero para médicos">
+<meta property="og:description" content="Siete preguntas, dos minutos. Cuánto es tu 20% y cuánto sería hoy si lo hubieras invertido 20 años.">
 <meta property="og:image" content="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- Píxel de Meta (el ID vive en /js/pixel.js) y Clarity, como en /medicos y /diagnostico-medico -->
 <script defer src="/js/pixel.js"></script>
 <script defer src="/js/clarity.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
     --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --rojo:#E0525A; --naranja:#F2A54A; }
   *{box-sizing:border-box} html,body{margin:0;padding:0}
-  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif;
-    line-height:1.55; -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden; }
-  .wrap{ max-width:620px; margin:0 auto; padding:18px 18px 70px; }
-  a.logo{ display:block; text-align:center; margin-bottom:6px; } a.logo img{ height:64px; }
-  .chip{ display:inline-block; font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase;
-    color:var(--menta); background:rgba(99,252,175,.1); border:1px solid rgba(99,252,175,.35); border-radius:999px; padding:5px 14px; }
-  .chip.gris{ color:var(--gris-sec); background:transparent; border-color:var(--bd); }
-  h1{ font-size:clamp(27px,7vw,36px); font-weight:800; color:var(--crema); line-height:1.1; letter-spacing:-.5px; margin:14px 0 10px; text-wrap:balance; }
-  h1 em{ font-style:normal; color:var(--menta); }
-  h2{ font-size:clamp(21px,5.6vw,27px); font-weight:800; color:var(--crema); line-height:1.2; letter-spacing:-.3px; margin:6px 0 8px; text-wrap:balance; }
-  h3{ font-size:17px; font-weight:800; color:var(--crema); margin:0 0 6px; }
-  .sub{ font-size:15.5px; color:var(--gris-sec); margin:0 0 16px; } .sub b{ color:var(--crema); }
-  .eyeb{ font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); margin-top:44px; }
-  .nota{ font-size:12.5px; color:var(--gris-sec); margin-top:12px; line-height:1.5; }
-  p{ margin:0 0 10px; } p b{ color:var(--crema); }
-  ul{ padding-left:20px; margin:6px 0 10px; } li{ margin-bottom:6px; } li b{ color:var(--crema); }
-  .btn{ display:block; width:100%; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer;
-    border-radius:999px; font-family:inherit; font-size:17px; font-weight:800; padding:16px 20px; transition:transform .12s ease; text-decoration:none; }
-  .btn:active{ transform:scale(.98); } .btn:disabled{ opacity:.6; cursor:default; }
-  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; } .btn.ghost:hover{ border-color:var(--menta); }
-  .btn + .btn{ margin-top:10px; }
-  .btn:focus-visible, input:focus-visible, button:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
-  .hidden{ display:none !important; }
-  /* objeciones del hero */
-  .obj{ display:grid; grid-template-columns:1fr; gap:10px; margin:16px 0 20px; }
-  .obj div{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; }
-  .obj div b{ display:block; color:var(--crema); font-size:15px; } .obj div span{ font-size:14px; color:var(--gris-sec); }
-  .obj div b::before{ content:"“"; color:var(--naranja); } .obj div b::after{ content:"”"; color:var(--naranja); }
-  /* calculadora (mismo lenguaje visual que /fpf) */
-  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }
-  .field{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:9px 11px; min-width:0; }
-  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); margin-bottom:5px; }
-  .field .row{ display:flex; align-items:center; gap:6px; }
-  .field input{ flex:1; width:100%; min-width:0; font-size:19px; font-weight:800; color:var(--crema); background:transparent; border:1px solid transparent; border-radius:6px; padding:1px 4px; font-family:inherit; }
-  .field input:hover{ border-color:var(--bd); } .field input:focus{ outline:none; border-color:var(--menta); background:var(--input); }
-  .steps{ display:flex; flex-direction:column; gap:2px; flex:0 0 auto; }
-  .stp{ background:var(--input); border:1px solid var(--bd); color:var(--gris); border-radius:5px; font-size:9px; line-height:1; padding:4px 7px; cursor:pointer; font-family:inherit; }
-  .stp:hover{ border-color:var(--menta); color:var(--crema); }
-  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin:12px 0; }
-  .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; min-width:0; }
-  .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; }
-  .kpi .v{ font-size:21px; font-weight:800; color:var(--crema); margin-top:2px; overflow-wrap:anywhere; }
-  .kpi .v.men{ color:var(--menta); } .kpi .v.per{ color:var(--peri); } .kpi .v.nar{ color:var(--naranja); }
-  .kpi small{ display:block; font-size:12px; color:var(--gris-sec); margin-top:2px; }
-  .card{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:16px 18px; margin:12px 0; }
-  .card.verde{ border-color:rgba(99,252,175,.5); } .card.alerta{ border-color:rgba(242,165,74,.6); }
-  .chart-wrap{ position:relative; height:260px; margin:6px 0; }
-  .legend{ display:flex; flex-wrap:wrap; gap:14px; font-size:12.5px; color:var(--gris-sec); margin-top:6px; }
-  .legend i{ display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:5px; vertical-align:middle; }
-  /* formulario */
-  input[type=text], input[type=email], input[type=tel]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:12px; color:var(--crema);
-    font-family:inherit; font-size:17px; padding:14px 16px; }
-  input[type=text]:focus, input[type=email]:focus, input[type=tel]:focus{ outline:none; border-color:var(--menta); }
-  label.lbl{ display:block; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; margin:14px 0 6px; }
-  .fila2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; } @media(max-width:420px){ .fila2{ grid-template-columns:1fr; } }
-  .wa{ display:flex; align-items:center; gap:8px; } .wa span{ color:var(--gris-sec); font-weight:700; white-space:nowrap; }
-  .consent{ display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--gris-sec); margin:16px 0 8px; }
-  .consent input{ margin-top:3px; accent-color:var(--menta); width:18px; height:18px; flex:none; }
-  .error{ display:none; color:var(--rojo); font-size:13.5px; font-weight:600; margin:8px 0 0; }
-  .micro{ font-size:12px; color:var(--gris-sec); text-align:center; margin-top:12px; }
-  /* módulos */
-  .mod{ margin-top:34px; scroll-margin-top:12px; }
-  .mod .num{ font-size:12px; font-weight:800; letter-spacing:1.2px; text-transform:uppercase; color:var(--peri); }
-  .semaforo{ display:grid; grid-template-columns:1fr; gap:8px; margin:10px 0; }
-  .semaforo div{ display:grid; grid-template-columns:14px 1fr; gap:10px; align-items:start; background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; font-size:14px; }
-  .semaforo i{ width:14px; height:14px; border-radius:50%; margin-top:4px; }
-  .semaforo b{ color:var(--crema); }
-  .v{ background:#2f7d5a; } .a{ background:var(--naranja); } .r{ background:var(--rojo); }
-  table{ width:100%; border-collapse:collapse; font-size:13.5px; margin:8px 0; } th,td{ text-align:left; padding:7px 6px; border-bottom:1px solid var(--bd); vertical-align:top; }
-  th{ color:var(--gris-sec); font-size:11px; text-transform:uppercase; letter-spacing:.4px; } td b{ color:var(--crema); }
-  .tabla-wrap{ overflow-x:auto; }
-  .frase{ background:var(--card2); border-left:3px solid var(--menta); border-radius:0 10px 10px 0; padding:8px 12px; margin:8px 0; font-size:14.5px; color:var(--crema); }
-  .bolsas{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:10px; }
-  .bolsa{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; }
-  .bolsa .t{ font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); } .bolsa .n{ font-size:19px; font-weight:800; color:var(--crema); } .bolsa p{ font-size:13.5px; color:var(--gris-sec); margin:4px 0 0; }
-  .bloqueo{ opacity:.75; } .lock{ display:inline-block; font-size:11px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--gris-sec); border:1px solid var(--bd); border-radius:999px; padding:3px 10px; margin-bottom:8px; }
-  .bloqueo h3{ font-size:15px; } .bloqueo p{ font-size:13.5px; color:var(--gris-sec); margin:0; }
-  .enlace{ display:flex; gap:8px; margin-top:8px; } .enlace input{ font-size:13px; padding:10px 12px; color:var(--gris-sec); }
-  .slots{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; } @media(max-width:420px){ .slots{ grid-template-columns:1fr; } }
-  .slot{ display:block; text-align:center; background:var(--card2); border:1px solid rgba(99,252,175,.55); border-radius:14px; color:var(--crema); text-decoration:none; padding:10px 8px; font-weight:600; font-size:14px; line-height:1.3; }
-  .slot span{ display:block; font-size:12px; color:var(--gris-sec); font-weight:600; } .slot b{ color:var(--menta); }
-  .cal-wrap{ margin-top:12px; border-radius:14px; overflow:hidden; background:#15191e; min-height:640px; } .cal-wrap iframe{ width:100%; height:100%; min-height:640px; border:0; display:block; }
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif; line-height:1.45; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .wrap{ max-width:520px; margin:0 auto; padding:12px 16px 24px; min-height:100svh; display:flex; flex-direction:column; }
+  .top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+  .top img{ height:40px; }
+  .prog{ flex:1; max-width:200px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; text-align:right; margin-bottom:4px; }
+  .prog .b{ height:5px; background:var(--card2); border-radius:999px; overflow:hidden; } .prog .b i{ display:block; height:100%; width:0; background:var(--menta); border-radius:999px; transition:width .3s; }
+  .p{ display:none; flex:1; flex-direction:column; justify-content:center; animation:entra .3s ease both; } .p.on{ display:flex; }
+  @keyframes entra{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  h1{ font-size:clamp(22px,6vw,28px); font-weight:800; color:var(--crema); line-height:1.15; margin:0 0 6px; text-wrap:balance; }
+  .sub{ font-size:14.5px; color:var(--gris-sec); margin:0 0 14px; } .sub b{ color:var(--crema); }
+  .ops{ display:flex; flex-direction:column; gap:8px; }
+  .op{ text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer; border-radius:12px; font-family:inherit; font-size:16px; font-weight:600; padding:13px 15px; }
+  .op small{ display:block; font-weight:500; color:var(--gris-sec); font-size:13px; }
+  .op:hover{ border-color:var(--menta); } .op.sel{ background:rgba(99,252,175,.12); border-color:var(--menta); }
+  .fb{ display:none; margin-top:10px; line-height:1.38; background:var(--card2); border-left:3px solid var(--menta); border-radius:0 12px 12px 0; padding:10px 14px; font-size:14.5px; color:var(--gris); }
+  .fb.on{ display:block; } .fb b{ color:var(--crema); } .fb p{ margin:0 0 6px; } .fb p:last-child{ margin:0; }
+  .fb.nar{ border-color:var(--naranja); }
+  .btn{ display:block; width:100%; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer; border-radius:999px; font-family:inherit; font-size:16px; font-weight:800; padding:14px 18px; text-decoration:none; margin-top:12px; }
+  .btn:disabled{ opacity:.5; cursor:default; } .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; margin-top:8px; }
+  .big{ font-size:clamp(30px,9vw,42px); font-weight:800; color:var(--crema); text-align:center; margin:6px 0 2px; font-variant-numeric:tabular-nums; }
+  .big.men{ color:var(--menta); } .big small{ display:block; font-size:13px; color:var(--gris-sec); font-weight:600; }
+  input[type=range]{ width:100%; margin:12px 0 4px; accent-color:var(--menta); height:34px; }
+  .ext{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--gris-sec); font-weight:600; }
+  .kp{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0; }
+  .kp div{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; }
+  .kp .k{ font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); } .kp .v{ font-size:19px; font-weight:800; color:var(--crema); margin-top:2px; overflow-wrap:anywhere; }
+  .kp .v.per{ color:var(--peri); } .kp .v.men{ color:var(--menta); }
+  input[type=text], input[type=email], input[type=tel]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema); font-family:inherit; font-size:16px; padding:11px 13px; }
+  input:focus{ outline:none; border-color:var(--menta); }
+  label.l{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; margin:9px 0 4px; }
+  .f2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .wa{ display:flex; align-items:center; gap:8px; } .wa span{ color:var(--gris-sec); font-weight:700; }
+  .cons{ display:flex; gap:8px; align-items:flex-start; font-size:12px; color:var(--gris-sec); margin:10px 0 0; } .cons input{ margin-top:2px; accent-color:var(--menta); width:16px; height:16px; flex:none; }
+  .err{ display:none; color:var(--rojo); font-size:13px; font-weight:600; margin-top:6px; }
+  .nota{ font-size:11.5px; color:var(--gris-sec); margin-top:10px; line-height:1.4; }
+  .lista{ margin:8px 0 0; padding:0; list-style:none; } .lista li{ display:grid; grid-template-columns:12px 1fr; gap:8px; align-items:start; font-size:14px; padding:6px 0; border-bottom:1px solid var(--bd); }
+  .lista i{ width:12px; height:12px; border-radius:50%; margin-top:5px; } .v{ background:#2f7d5a; } .a{ background:var(--naranja); } .r{ background:var(--rojo); } .lista b{ color:var(--crema); }
+  .slots{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; } @media(max-width:400px){ .slots{ grid-template-columns:1fr; } }
+  .slot{ display:block; text-align:center; background:var(--card2); border:1px solid rgba(99,252,175,.55); border-radius:12px; color:var(--crema); text-decoration:none; padding:9px 6px; font-weight:600; font-size:14px; line-height:1.3; }
+  .slot span{ display:block; font-size:12px; color:var(--gris-sec); } .slot b{ color:var(--menta); }
+  .cal{ margin-top:10px; border-radius:12px; overflow:hidden; background:#15191e; min-height:640px; } .cal iframe{ width:100%; min-height:640px; border:0; display:block; }
   .link{ background:none; border:none; color:var(--menta); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; text-decoration:underline; padding:0; }
-  .toc{ display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 0; } .toc a{ font-size:12.5px; color:var(--gris); text-decoration:none; border:1px solid var(--bd); border-radius:999px; padding:5px 10px; } .toc a:hover{ border-color:var(--menta); }
-  .footerchico{ font-size:11.5px; color:var(--gris-sec); line-height:1.5; margin-top:40px; }
+  .hidden{ display:none !important; }
+  .micro{ font-size:12px; color:var(--gris-sec); text-align:center; margin-top:8px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <a class="logo" href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
-
-  <!-- ===== HERO ===== -->
-  <section id="hero">
-    <span class="chip">Guía para médicos de la Caja · 12 minutos · gratis</span>
-    <h1>Nadie te enseñó esto en la residencia. <em>Y no hace falta que lo estudiés.</em></h1>
-    <p class="sub">Siete decisiones sobre tu plata, ya resueltas con <b>tus números</b>: cuántas dispos al mes compran tu retiro, qué hacer con el CDP, con la asociación y con lo que te vendieron en la sala de residentes. Lo hacés en el celular entre consultas. El resto lo hacemos con vos durante 60 días.</p>
-    <div class="obj">
-      <div><b>Soy médico, no sé de finanzas</b><span>Son cinco decisiones, y vienen tomadas con tus números. Vos solo confirmás.</span></div>
-      <div><b>No tengo tiempo</b><span>Dos minutos para tu número, doce para toda la guía. Nada de PDF de 40 páginas.</span></div>
-      <div><b>Yo voy a la segura</b><span>El CDP no es el enemigo. Acá ves para qué sí sirve y cuánto te cuesta usarlo para todo.</span></div>
-    </div>
-    <a class="btn" href="#calc" id="btn-empezar">Empezar por mi número</a>
-    <div class="toc">
-      <a href="#m1">1 Presupuesto</a><a href="#m2">2 CDP</a><a href="#m3">3 ASECCSS</a><a href="#m4">4 Retiro</a><a href="#m5">5 Transcomer</a><a href="#m6">6 App 60 días</a><a href="#m7">7 Llamada</a>
-    </div>
-  </section>
-
-  <!-- ===== PASO 1 · CALCULADORA ===== -->
-  <section id="calc">
-    <div class="eyeb">Paso 1 · 2 minutos</div>
-    <h2>¿Cuántas dispos al mes compran tu retiro?</h2>
-    <p class="sub">Movés cualquier número y todo se recalcula. Todo en colones de hoy; la inflación ya está descontada.</p>
-    <div class="grid">
-      <div class="field"><label>Edad hoy</label><div class="row"><input id="i-edad" inputmode="numeric" value="36" aria-label="Edad hoy"><div class="steps"><button class="stp" data-s="edad" data-d="1" aria-label="más">▲</button><button class="stp" data-s="edad" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      <div class="field"><label>Edad para bajar el ritmo</label><div class="row"><input id="i-edadret" inputmode="numeric" value="58" aria-label="Edad para bajar el ritmo"><div class="steps"><button class="stp" data-s="edadret" data-d="1" aria-label="más">▲</button><button class="stp" data-s="edadret" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      <div class="field"><label>Querés vivir con (₡/mes)</label><div class="row"><input id="i-des" inputmode="numeric" value="3,000,000" aria-label="Ingreso mensual deseado"><div class="steps"><button class="stp" data-m="des" data-d="1" aria-label="más">▲</button><button class="stp" data-m="des" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      <div class="field"><label>Lo que ya tenés invertido (₡)</label><div class="row"><input id="i-cap" inputmode="numeric" value="0" aria-label="Capital actual"><div class="steps"><button class="stp" data-m="cap" data-d="1" aria-label="más">▲</button><button class="stp" data-m="cap" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      <div class="field"><label>Una dispo tuya vale (₡)</label><div class="row"><input id="i-dispo" inputmode="numeric" value="500,000" aria-label="Valor de una dispo"><div class="steps"><button class="stp" data-m="dispo" data-d="1" aria-label="más">▲</button><button class="stp" data-m="dispo" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      <div class="field"><label>Crecimiento esperado (%/año)</label><div class="row"><input id="i-crec" inputmode="numeric" value="12" aria-label="Crecimiento esperado"><div class="steps"><button class="stp" data-s="crec" data-d="1" aria-label="más">▲</button><button class="stp" data-s="crec" data-d="-1" aria-label="menos">▼</button></div></div></div>
-    </div>
-    <div class="kpis">
-      <div class="kpi"><div class="k">Meta de capital</div><div class="v per" id="k-meta">₡0</div><small id="k-meta-usd"></small></div>
-      <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Aporte requerido /mes</div><div class="v men" id="k-aporte">₡0</div><small id="k-aporte-usd"></small></div>
-      <div class="kpi" style="border-color:rgba(242,165,74,.5)"><div class="k">En dispos al mes</div><div class="v nar" id="k-dispos">0</div><small>dedicadas solo a esto</small></div>
-      <div class="kpi"><div class="k">Años para juntar</div><div class="v" id="k-anios">0</div><small id="k-total"></small></div>
-    </div>
-    <div class="card">
-      <div class="chart-wrap"><canvas id="proj-chart"></canvas></div>
-      <div class="legend"><span><i style="background:var(--menta)"></i> Lo que tenés</span><span><i style="background:var(--gris-sec)"></i> Lo que pusiste de tu bolsillo</span><span><i style="background:var(--peri)"></i> Bajás el ritmo</span></div>
-      <p class="nota" id="proj-txt"></p>
-    </div>
-    <p class="nota">Supuestos: la meta de capital es la que te paga lo que querés vivir retirando el 5% al año. Crecimiento del 12% es el del plan de crecimiento; probá con 8% si querés ver el índice solo, y con 5% para ver qué pasa con un CDP. Inflación 3%. Dólar a ₡<span id="v-tc"></span>. La pensión de la Caja queda aparte como colchón a los 65.</p>
-  </section>
-
-  <!-- ===== PASO 2 · CAPTURA ===== -->
-  <section id="lead-sec">
-    <div class="eyeb">Paso 2 · 1 minuto</div>
-    <h2>Te mandamos la guía con tus números adentro</h2>
-    <p class="sub">Siete entregas cortas por WhatsApp y correo, una cada pocos días, con tu aporte en dispos ya calculado. Y abajo se abre todo ahora mismo.</p>
-    <div class="card" id="lead-card">
-      <form id="lead" novalidate>
-        <div class="fila2">
-          <div><label class="lbl" for="l-nom">Nombre</label><input type="text" id="l-nom" autocomplete="given-name" placeholder="Tu nombre"></div>
-          <div><label class="lbl" for="l-ape">Apellidos</label><input type="text" id="l-ape" autocomplete="family-name" placeholder="Tus apellidos"></div>
-        </div>
-        <label class="lbl" for="l-esp">Especialidad</label><input type="text" id="l-esp" list="esps" placeholder="Anestesiología, residente de pediatría…" autocomplete="off">
-        <datalist id="esps"></datalist>
-        <label class="lbl" for="l-mail">Correo</label><input type="email" id="l-mail" autocomplete="email" inputmode="email" placeholder="tucorreo@gmail.com">
-        <label class="lbl" for="l-wa">WhatsApp</label>
-        <div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" autocomplete="tel-national" placeholder="8888 8888" maxlength="9"></div>
-        <label class="consent"><input type="checkbox" id="l-ok"><span>Acepto que Empowered Investor guarde estos datos para mandarme la guía y contactarme por WhatsApp o correo. Nada se comparte con terceros.</span></label>
-        <p class="error" id="l-err">Faltan datos: nombre, apellidos, correo válido, WhatsApp de 8 dígitos y la casilla.</p>
-        <button class="btn" type="submit" id="l-send" style="margin-top:10px">Quiero la guía con mis números</button>
-        <p class="micro">Sin costo. Sin llamadas que no pediste.</p>
-      </form>
-    </div>
-    <div class="card verde hidden" id="lead-ok">
-      <h3 id="ok-titulo">Listo. Abajo está todo.</h3>
-      <p class="sub" id="ok-sub" style="margin:0"></p>
-      <div class="enlace"><input type="text" id="mi-link" readonly aria-label="Tu link"><button class="btn ghost" id="copiar" type="button" style="width:auto; padding:10px 14px; font-size:14px">Copiar</button></div>
-      <p class="nota">Ese link guarda tus números. Abrilo cuando querás, o mandáselo a tu pareja para que lo vea con vos.</p>
-    </div>
-
-    <!-- vista previa de los módulos antes de dejar los datos -->
-    <div id="preview">
-      <div class="card bloqueo"><span class="lock">1 · 3 minutos</span><h3>Presupuesto familiar de médico: las tres bolsas</h3><p>Salario de la Caja, dispos y privado van a bolsas distintas. La regla que cambia todo: las dispos no pagan el estilo de vida.</p></div>
-      <div class="card bloqueo"><span class="lock">2 · 2 minutos</span><h3>El CDP: para qué sí y cuánto te cuesta usarlo para todo</h3><p>Una dispo al mes por 20 años en CDP contra el índice, con tu dispo.</p></div>
-      <div class="card bloqueo"><span class="lock">3 · 2 minutos</span><h3>ASECCSS, FAP, Coopecaja y el fondo de la Caja: semáforo</h3><p>Qué dejar, qué cortar y qué contar en cero.</p></div>
-      <div class="card bloqueo"><span class="lock">4 · 2 minutos</span><h3>Plan de retiro sin depender de la Caja</h3><p>El techo del IVM, tu número y las tres fases del plan.</p></div>
-      <div class="card bloqueo"><span class="lock">5 · 3 minutos</span><h3>Lo que te vendieron en la sala de residentes</h3><p>Transcomer y los planes offshore, con hechos y seis preguntas que los desarman.</p></div>
-      <div class="card bloqueo"><span class="lock">6 · 60 días</span><h3>La app de gastos</h3><p>Te dice a dónde se fue cada dispo, sin que anotés nada.</p></div>
-      <div class="card bloqueo"><span class="lock">7 · 45 minutos</span><h3>Llamada de claridad con Jose</h3><p>Tu número en vivo y el plan en una hoja.</p></div>
-    </div>
-  </section>
-
-  <!-- ===== MÓDULOS (se abren al dejar los datos o con el link personal) ===== -->
-  <div id="modulos" class="hidden">
-
-    <section class="mod" id="m1">
-      <div class="num">Módulo 1 · 3 minutos</div>
-      <h2>Presupuesto familiar de médico: las tres bolsas</h2>
-      <p>Tu ingreso no es un número. Son tres, y se comportan distinto. El salario ordinario de la Caja llega fijo. Las dispos y guardias son el 60% de lo que ganás y dependen de que trabajés noches y domingos. El privado no cotiza a nada y se gasta solo si no lo apartás.</p>
-      <p><b>La regla:</b> el estilo de vida se paga con el ordinario. Las dispos compran el retiro. El privado es el fondo anual: colegio, viaje, impuestos, consultorio.</p>
-      <div class="grid" style="margin-top:12px">
-        <div class="field"><label>Salario ordinario (₡/mes)</label><div class="row"><input id="b-ord" inputmode="numeric" value="2,850,000" aria-label="Salario ordinario"></div></div>
-        <div class="field"><label>Dispos y guardias (₡/mes)</label><div class="row"><input id="b-ext" inputmode="numeric" value="2,000,000" aria-label="Dispos y guardias"></div></div>
-        <div class="field"><label>Privado (₡/mes promedio)</label><div class="row"><input id="b-priv" inputmode="numeric" value="0" aria-label="Privado"></div></div>
-        <div class="field"><label>Hijos en colegio privado</label><div class="row"><input id="b-hijos" inputmode="numeric" value="1" aria-label="Hijos"><div class="steps"><button class="stp" data-b="hijos" data-d="1" aria-label="más">▲</button><button class="stp" data-b="hijos" data-d="-1" aria-label="menos">▼</button></div></div></div>
-      </div>
-      <div class="bolsas">
-        <div class="bolsa"><div class="t">Bolsa 1 · Vivir (el ordinario)</div><div class="n" id="b1"></div><p id="b1-txt"></p></div>
-        <div class="bolsa"><div class="t">Bolsa 2 · Retiro (las dispos)</div><div class="n" id="b2"></div><p id="b2-txt"></p></div>
-        <div class="bolsa"><div class="t">Bolsa 3 · Fondo anual (el privado y lo que sobre)</div><div class="n" id="b3"></div><p id="b3-txt"></p></div>
-      </div>
-      <p class="nota" id="b-veredicto"></p>
-      <ul style="margin-top:12px">
-        <li><b>Piso mensual, meta anual.</b> Un mes son tres cirugías y otro ninguna. Fijá el aporte mínimo del mes y la meta del año; en diciembre y en febrero (excedentes) se completa.</li>
-        <li><b>Dos monedas.</b> Lo que cobrás en dólares no se pasa a colones: va directo al plan. El cambio de ida y vuelta es un impuesto que te cobrás vos mismo.</li>
-        <li><b>En pareja.</b> Llenalo con la persona con la que decidís. Si el presupuesto lo hace uno solo, dura un mes.</li>
-        <li><b>El salto de residente a especialista</b> es la oportunidad más grande de tu vida financiera. Si el ordinario sube y el estilo de vida se queda seis meses donde estaba, ese delta es tu retiro casi entero.</li>
-      </ul>
-      <button class="btn ghost" type="button" id="btn-plantilla">Bajar mi plantilla de presupuesto (Excel)</button>
-    </section>
-
-    <section class="mod" id="m2">
-      <div class="num">Módulo 2 · 2 minutos</div>
-      <h2>El CDP: para qué sí y cuánto te cuesta usarlo para todo</h2>
-      <p>Ir a la segura está bien. El problema es usar la misma herramienta para el fondo de emergencia y para el retiro.</p>
-      <div class="semaforo">
-        <div><i class="v"></i><span><b>Sí, CDP:</b> fondo de emergencia de 3 a 6 meses de gastos y cualquier plata que vas a usar en menos de 2 años (prima, carro, consultorio).</span></div>
-        <div><i class="r"></i><span><b>No, CDP:</b> la plata del retiro. A 20 años un CDP en colones pierde contra la inflación después de impuestos y no acumula nada que se parezca a una pensión.</span></div>
-      </div>
-      <p style="margin-top:12px">Con <b>una dispo tuya al mes</b> (<span id="c-dispo"></span>) durante 20 años:</p>
-      <div class="kpis">
-        <div class="kpi"><div class="k">En CDP al 5%</div><div class="v" id="c-cdp">₡0</div></div>
-        <div class="kpi"><div class="k">En el índice S&amp;P 500</div><div class="v per" id="c-spy">₡0</div><small>10% en dólares, ~8% en colones</small></div>
-        <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Plan de crecimiento al 12%</div><div class="v men" id="c-plan">₡0</div></div>
-      </div>
-      <p class="nota" id="c-txt"></p>
-      <p class="nota">El costo de oportunidad se mide así: no es lo que ganás en el CDP, es lo que dejás de ganar en el otro lado por 20 años. Las tres cifras son nominales, sin descontar inflación, para que se comparen entre sí.</p>
-    </section>
-
-    <section class="mod" id="m3">
-      <div class="num">Módulo 3 · 2 minutos</div>
-      <h2>ASECCSS, FAP, Coopecaja y el fondo de la Caja: semáforo</h2>
-      <p>Nadie te explicó qué es cada cosa que te descuentan de la colilla. Acá va el veredicto, uno por uno.</p>
-      <div class="semaforo">
-        <div><i class="v"></i><span><b>ASECCSS al 5% mínimo: quedate.</b> La Caja pone 2% encima de tu 5%. Eso es un 40% de retorno inmediato que ningún mercado te da. Los excedentes de febrero no se gastan: ese depósito va completo al plan de retiro.</span></div>
-        <div><i class="a"></i><span><b>FAP (ahorro voluntario del fondo): solo si usás el crédito.</b> Ahorrar ahí al 5% o más del salario tiene sentido si vas a pedir un préstamo barato con esa garantía. Si no, ese flujo rinde más en el plan.</span></div>
-        <div><i class="r"></i><span><b>Coopecaja como inversión: no.</b> El capital social rindió 4,5% en 2025, en colones, y queda ilíquido hasta que renunciás. Mantené el mínimo si tenés un crédito ahí (al salir, la tasa sube 3 puntos). Nunca como plan de retiro.</span></div>
-        <div><i class="r"></i><span><b>FRE (la pensión complementaria de la Caja): contala en cero.</b> No es plata tuya, la pone la Caja. Paga entre ₡71.000 y ₡140.000 al mes, tiene un déficit actuarial de ₡237.722 millones y hay un proyecto de ley para cerrarlo. Si renunciás a la Caja te devuelven el 1,5% de tus salarios ordinarios más rendimientos y perdés la antigüedad.</span></div>
-      </div>
-      <p class="nota">Pendiente que te lo confirme la asociación: si permiten retiros parciales del ahorro obrero sin desafiliarse. Si sí, el excedente de ahorro por encima del mínimo también se mueve al plan.</p>
-    </section>
-
-    <section class="mod" id="m4">
-      <div class="num">Módulo 4 · 2 minutos</div>
-      <h2>Plan de retiro sin depender de la Caja</h2>
-      <p>La pensión del IVM tiene techo: <b>₡1.765.859</b> al mes sin postergar, aunque hayás cotizado sobre ₡6 millones. Sumale el FRE y el ROP y un especialista con dispos se pensiona con el <b>30% o menos</b> de lo que ganaba. Las dispos desaparecen el día que las dejás, y la pensión no las repone.</p>
-      <div class="card verde">
-        <div class="k" style="font-size:11px;text-transform:uppercase;color:var(--gris-sec);letter-spacing:.4px">Tu número, de la calculadora de arriba</div>
-        <p id="m4-num" style="font-size:17px;margin:4px 0 0"></p>
-      </div>
-      <h3 style="margin-top:14px">Las tres fases</h3>
-      <ul>
-        <li><b>Crecer.</b> Cuenta a tu nombre en Estados Unidos, protegida hasta $500.000, y un aporte en bloques: cada vez que juntás $3.000 a $5.000 hacés una transferencia. Un SWIFT desde Costa Rica cuesta unos $60, por eso no se manda mensual.</li>
-        <li><b>Llegar.</b> Cuando el capital pasa del 70% de la meta se baja el riesgo, no antes. Una mala década justo antes de bajar el ritmo es lo único que de verdad puede arruinar el plan, y se maneja con la mezcla, no con adivinar el mercado.</li>
-        <li><b>Vivir del interés.</b> Retirás el 5% al año y el capital sigue trabajando. La pensión de la Caja llega a los 65 y queda como extra, no como base.</li>
-      </ul>
-      <p class="nota">Quién hace qué: la cuenta es tuya. El asesor solo puede comprar y vender adentro de ella, no puede transferir ni un dólar hacia afuera. El honorario es fijo y visible. No hay plazo cerrado ni penalidad de salida.</p>
-    </section>
-
-    <section class="mod" id="m5">
-      <div class="num">Módulo 5 · 3 minutos</div>
-      <h2>Lo que te vendieron en la sala de residentes</h2>
-      <p>A casi todos los médicos les llegó alguien con un "plan de ahorro" de 7% a 9% fijo en dólares, o un "plan de inversión" a 20 años. Acá van hechos, sin adjetivos, para que vos decidás.</p>
-      <h3>Transcomer (hoy TBI)</h3>
-      <div class="frase">No lo supervisa ninguna superintendencia. Eso lo dijo la Sugef en abril de 2026, no nosotros.</div>
-      <div class="frase">La Sugeval resolvió en enero de 2025 que sus productos MACAB son valores de oferta pública sin inscribir. Hay una medida cautelar y el caso sigue abierto.</div>
-      <div class="frase">La plata entra a un fideicomiso que arma la misma empresa. No está a tu nombre en ningún banco.</div>
-      <div class="frase">Te prometen 7% a 9% fijo en dólares con inmuebles que hay que revender. El riesgo lo cargás vos y el plazo es cerrado.</div>
-      <div class="frase">El 23 de abril de 2026 todos los contratos pasaron a otra sociedad. Si no te enteraste, ese es el problema.</div>
-      <h3 style="margin-top:16px">Los planes offshore (RL360, Investors Trust, Dominion, Zurich Vista y parecidos)</h3>
-      <p>Son seguros de aporte mensual emitidos desde Isla de Man, Caimán o Guernsey. La aseguradora le paga al asesor la comisión completa por adelantado y nunca la publica. Por eso te venden 20 o 25 años y por eso salirte cuesta.</p>
-      <div class="tabla-wrap"><table>
-        <tr><th>Plan</th><th>Cargo principal</th><th>Si salís en los primeros 2 años</th><th>$500 al mes por 25 años</th></tr>
-        <tr><td><b>RL360 Quantum</b></td><td>6% al año sobre los aportes de los primeros 18 a 24 meses, durante todo el plazo, más 1,5% y $8 al mes</td><td>Recibís cero</td><td>Un 30% menos que en un ETF</td></tr>
-        <tr><td><b>Investors Trust Evolution</b></td><td>1,9% al año por 10 años, más 1,5% y $7 al mes</td><td>Pagás todos los cargos pendientes</td><td>Un 25% menos que en un ETF</td></tr>
-        <tr><td><b>Dominion</b></td><td>2,65% al año a 5 años, bajando a 1,15% a 15 o más, con fondos propios</td><td>Penalidad según plazo</td><td>Depende del plazo</td></tr>
-      </table></div>
-      <p class="nota">Cálculo propio con 8% bruto anual y los cargos publicados por cada emisor. Un ETF del índice cobra entre 0,10% y 0,15% al año.</p>
-      <h3 style="margin-top:16px">Seis preguntas que desarman cualquiera de estos productos</h3>
-      <ul>
-        <li>¿Cuánta comisión ganás vos con mi contrato y quién te la paga?</li>
-        <li>¿Quién te autoriza a vos y quién supervisa el producto en Costa Rica?</li>
-        <li>¿A nombre de quién queda la plata? ¿Qué documento acredita mi participación?</li>
-        <li>¿Cuánto recibo si salgo a los 2, 5 y 10 años? Escribímelo en números.</li>
-        <li>¿Cuál es el costo total anual sumando administración, estructura, póliza y fondos?</li>
-        <li>¿Cobrás honorario fijo o comisión por venderme esto?</li>
-      </ul>
-      <p>Con <b>una dispo al mes por 20 años</b>: en CDP al 5% terminás con <span id="t-cdp"></span>; en un MACAB al 12,5% prometido, con plazo cerrado y sin supervisor, con <span id="t-macab"></span>; en el índice S&amp;P 500, con <span id="t-spy"></span>. El número alto solo vale si la empresa paga 20 años seguidos. El del índice lo respaldan 500 empresas y una cuenta a tu nombre. La pregunta no es cuál tasa es más alta. Es quién te debe la plata y qué pasa si necesitás salir.</p>
-    </section>
-
-    <section class="mod" id="m6">
-      <div class="num">Módulo 6 · 60 días</div>
-      <h2>La app de gastos: a dónde se fue cada dispo</h2>
-      <p>No tenés tiempo de anotar gastos y no vas a empezar ahora. La app lee los correos de tus tarjetas y cuentas, categoriza sola y te manda un resumen por WhatsApp. Al final de cada mes sabés cuántas dispos se fueron en qué, sin tocar nada.</p>
-      <ul>
-        <li><b>Semana 1:</b> conectás los correos del banco. Diez minutos, una sola vez.</li>
-        <li><b>Días 30 y 60:</b> revisión con tu resumen, y ajuste de las tres bolsas.</li>
-        <li><b>Día 60:</b> ya sabés tu piso mensual real, y el aporte deja de ser una intención.</li>
-      </ul>
-      <p class="nota">Se activa en la llamada de claridad, porque el alta es a mano y queremos que arranque con tus bolsas ya definidas.</p>
-    </section>
-
-    <section class="mod" id="m7">
-      <div class="num">Módulo 7 · 45 minutos</div>
-      <h2>Llamada de claridad con Jose</h2>
-      <p>Tu número en vivo, el contra real de tu caso y el plan en una hoja. No es una clase: la guía ya enseñó. Salís sabiendo cuántas dispos van al plan, a dónde, y desde cuándo. Si querés, con tu pareja en la llamada.</p>
-      <div class="card">
-        <div class="slots hidden" id="slots"></div>
-        <p class="micro hidden" id="slots-mas"><button class="link" id="ver-mas" type="button">Ver más horarios</button></p>
-        <div class="cal-wrap hidden" id="calwrap"></div>
-        <a class="btn" id="cta-cal" href="#" style="margin-top:4px">Elegir día y hora</a>
-        <a class="btn ghost" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
-      </div>
-    </section>
-
+  <div class="top">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+    <div class="prog"><div class="t" id="pt">Pregunta 1 de 7</div><div class="b"><i id="pb"></i></div></div>
   </div>
 
-  <p class="footerchico">Estimaciones con reglas públicas: IVM 2026 (tope ₡1.765.859 sin postergar), Fondo de Retiro de Empleados de la CCSS (reforma 2021, tope ₡324.120), ROP al 4,25%, ASECCSS (aporte obrero 5% y patronal 2%), Coopecaja (rendimiento 4,50% en 2025). Los datos de Transcomer salen de resoluciones de Sugeval y Sugef y de prensa nacional; los de los planes offshore, de los documentos de producto de cada emisor. No es asesoría ni una resolución de la CCSS. Empowered Investor no maneja ni custodia tu plata: la cuenta es tuya.</p>
+  <!-- 1 · DÓNDE TRABAJÁS -->
+  <section class="p on" id="q1">
+    <h1>¿Dónde trabajás?</h1>
+    <p class="sub">Siete preguntas. Dos minutos. Al final te decimos qué hacer con tu plata y cuánto es.</p>
+    <div class="ops" data-q="lugar">
+      <button class="op" data-v="caja">Solo en la Caja</button>
+      <button class="op" data-v="ambas">Caja y privado</button>
+      <button class="op" data-v="privado">Solo privado</button>
+    </div>
+  </section>
+
+  <!-- 2 · ASECCSS -->
+  <section class="p" id="q2">
+    <h1>¿Aportás a la ASECCSS?</h1>
+    <p class="sub">La asociación solidarista. Aparece en la colilla.</p>
+    <div class="ops" data-q="ase">
+      <button class="op" data-v="5">Sí, el 5%</button>
+      <button class="op" data-v="mas">Sí, más del 5%</button>
+      <button class="op" data-v="no">No</button>
+      <button class="op" data-v="nose">No sé</button>
+    </div>
+    <div class="fb" id="fb-ase"></div>
+    <button class="btn hidden" id="n2">Siguiente</button>
+  </section>
+
+  <!-- 3 · PRESUPUESTO -->
+  <section class="p" id="q3">
+    <h1>¿Llevás presupuesto?</h1>
+    <div class="ops" data-q="pres">
+      <button class="op" data-v="si">Sí, con números</button>
+      <button class="op" data-v="cabeza">Más o menos, en la cabeza</button>
+      <button class="op" data-v="no">No</button>
+    </div>
+    <div class="fb" id="fb-pres"></div>
+    <button class="btn hidden" id="n3">Siguiente</button>
+  </section>
+
+  <!-- 4 · INGRESO -->
+  <section class="p" id="q4">
+    <h1>¿Cuánto ganaste al mes, en promedio, los últimos 3 meses?</h1>
+    <p class="sub">Todo junto: Caja, dispos, guardias y privado. Bruto, más o menos.</p>
+    <div class="big" id="v-ing">₡4,000,000</div>
+    <input type="range" id="r-ing" min="1000000" max="15000000" step="100000" value="4000000" aria-label="Ingreso mensual">
+    <div class="ext"><span>₡1 millón</span><span>₡15 millones</span></div>
+    <button class="btn" id="n4">Ver mi 20%</button>
+  </section>
+
+  <!-- 5 · EL 20% Y LA PROYECCIÓN -->
+  <section class="p" id="q5">
+    <h1>Tu 20% es</h1>
+    <div class="big men" id="v-20">₡800,000<small>al mes, para el retiro</small></div>
+    <p class="sub" style="margin-top:10px">Si lo hubieras puesto cada mes durante los últimos 20 años:</p>
+    <div class="kp">
+      <div><div class="k">En el Nasdaq 100</div><div class="v per" id="v-ndx"></div></div>
+      <div><div class="k">En un CDP al 5%</div><div class="v" id="v-cdp"></div></div>
+      <div><div class="k">Pusiste de tu bolsillo</div><div class="v" id="v-puesto"></div></div>
+      <div><div class="k">Te pagaría hoy, al mes</div><div class="v men" id="v-renta"></div></div>
+    </div>
+    <p class="nota">Nasdaq 100 al 11,5% anual, que es su promedio histórico. El CDP al 5%. La renta es retirando el 5% al año sin tocar el capital. Números nominales, en colones de hoy.</p>
+    <button class="btn" id="n5">Siguiente</button>
+  </section>
+
+  <!-- 6 · QUÉ TE HAN OFRECIDO -->
+  <section class="p" id="q6">
+    <h1>¿Cuál de estos te han ofrecido o tenés?</h1>
+    <p class="sub">Marcá los que apliquen.</p>
+    <div class="ops" data-q="prod" data-multi="1">
+      <button class="op" data-v="transcomer">Transcomer</button>
+      <button class="op" data-v="offshore">Dominion, RL360, Investors Trust, Zurich<small>Planes de ahorro a 15 o 25 años</small></button>
+      <button class="op" data-v="eeuu">Cuenta de inversión en Estados Unidos</button>
+      <button class="op" data-v="ninguno">Ninguno</button>
+    </div>
+    <div class="fb" id="fb-prod"></div>
+    <button class="btn hidden" id="n6">Siguiente</button>
+  </section>
+
+  <!-- 7 · DATOS -->
+  <section class="p" id="q7">
+    <h1>Último paso</h1>
+    <p class="sub">Esto es para médicos especialistas. Con tu nombre y especialidad lo confirmamos y te mandamos el resultado.</p>
+    <form id="lead" novalidate>
+      <div class="f2">
+        <div><label class="l" for="l-nom">Nombre</label><input type="text" id="l-nom" autocomplete="given-name"></div>
+        <div><label class="l" for="l-ape">Apellidos</label><input type="text" id="l-ape" autocomplete="family-name"></div>
+      </div>
+      <label class="l" for="l-esp">Especialidad</label><input type="text" id="l-esp" list="esps" autocomplete="off" placeholder="Si sos residente, cuál">
+      <datalist id="esps"></datalist>
+      <div class="f2">
+        <div><label class="l" for="l-wa">WhatsApp</label><div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" maxlength="8"></div></div>
+        <div><label class="l" for="l-mail">Correo</label><input type="email" id="l-mail" inputmode="email" autocomplete="email"></div>
+      </div>
+      <label class="cons"><input type="checkbox" id="l-ok"><span>Acepto que Empowered Investor guarde estos datos para mandarme el resultado y contactarme. No se comparten con nadie.</span></label>
+      <p class="err" id="l-err">Falta algo: nombre, apellidos, especialidad, WhatsApp de 8 dígitos, correo y la casilla.</p>
+      <button class="btn" type="submit" id="l-send">Ver mi resultado</button>
+    </form>
+  </section>
+
+  <!-- 8 · RESULTADO -->
+  <section class="p" id="res">
+    <h1 id="res-t">Así estás</h1>
+    <ul class="lista" id="res-l"></ul>
+    <div class="kp" style="margin-top:10px">
+      <div><div class="k">Tu 20%</div><div class="v men" id="res-20"></div></div>
+      <div><div class="k">En 20 años, Nasdaq 100</div><div class="v per" id="res-ndx"></div></div>
+    </div>
+    <p class="sub" style="margin:8px 0 0">En 45 minutos con Jose lo pasamos a un plan: cuánto, a dónde y desde cuándo. Si querés, con tu pareja.</p>
+    <div class="slots hidden" id="slots"></div>
+    <p class="micro hidden" id="slots-mas"><button class="link" id="ver-mas" type="button">Ver más horarios</button></p>
+    <div class="cal hidden" id="calwrap"></div>
+    <a class="btn" id="cta-cal" href="#">Elegir día y hora</a>
+    <a class="btn ghost" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
+    <p class="nota">Supuestos: IVM con tope de ₡1.765.859; FRE según tabla 2021; ASECCSS 5% obrero y 2% patronal; Nasdaq 100 al 11,5% anual histórico. No es asesoría. La cuenta de inversión es tuya, Empowered Investor no custodia plata.</p>
+  </section>
 </div>
 
 <script>
@@ -343,13 +195,10 @@
   var fmtN = new Intl.NumberFormat("es-CR", {maximumFractionDigits:0});
   function col(n){ return "₡" + fmtN.format(Math.round(n||0)); }
   function colM(n){ n=Math.round(n||0); if(Math.abs(n)>=1e6) return "₡"+(Math.round(n/1e5)/10).toLocaleString("es-CR")+" millones"; return col(n); }
-  function usd(n){ return "$" + fmtN.format(Math.round(n||0)); }
-  function num(s){ var d=String(s||"").replace(/[^0-9]/g,""); var n=parseInt(d,10); return isNaN(n)?0:n; }
-  var TC = 500, INFLACION = 3, RETIRO = 5, CREC_RET = 8;
-  var UMBRAL_APORTE_CRC = 250000, UMBRAL_CAPITAL_CRC = 5000000;
-  byId("v-tc").textContent = TC;
+  var NDX = 11.5, CDP = 5, RETIRO = 5, MESES = 240;
+  var UMBRAL_APORTE_CRC = 250000;
 
-  // ===== Tracking (igual que /diagnostico-medico): GA4 si está, pixel, Clarity y "Eventos Landing" =====
+  // ===== Tracking (igual que /diagnostico-medico) =====
   function track(ev, data){
     try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){}
     try{ if(typeof fbq==="function") fbq("trackCustom", ev, data||{}); }catch(e){}
@@ -387,211 +236,141 @@
   window.addEventListener("pagehide", flush);
 
   // ===== Estado =====
-  var S = { edad:36, edadret:58, des:3000000, cap:0, dispo:500000, crec:12, ord:2850000, ext:2000000, priv:0, hijos:1, nombre:"", esp:"" };
-  var LIM = { edad:[22,70], edadret:[40,80], crec:[0,30] };
-  var STEP = { des:100000, cap:1000000, dispo:50000 };
+  var S = { lugar:"", ase:"", pres:"", ing:4000000, prod:[], nombre:"", esp:"" };
   var ESPS = ["Anestesiología","Cardiología","Cirugía general","Cirugía plástica","Dermatología","Emergencias","Endocrinología","Fisiatría","Gastroenterología","Geriatría","Ginecología y obstetricia","Hematología","Infectología","Medicina familiar","Medicina general","Medicina interna","Nefrología","Neumología","Neurocirugía","Neurología","Oftalmología","Oncología","Ortopedia","Otorrinolaringología","Patología","Pediatría","Psiquiatría","Radiología","Reumatología","Urología","Vascular periférico"];
-  var dl = byId("esps"); ESPS.forEach(function(e){ var o=document.createElement("option"); o.value=e; dl.appendChild(o); });
+  var dl=byId("esps"); ESPS.forEach(function(e){ var o=document.createElement("option"); o.value=e; dl.appendChild(o); });
 
-  // ===== Matemática (misma del /fpf y /diagnostico-medico) =====
-  function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0;
-    var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f;
-    if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
-  function fvSerie(pmt, anualPct, meses, pv){ var i=anualPct/100/12, f=Math.pow(1+i,meses); return (pv||0)*f + (Math.abs(i)<1e-12 ? pmt*meses : pmt*(f-1)/i); }
-  function anios(){ return Math.max(1, S.edadret - S.edad); }
-  function metaCapital(){ return S.des*12/(RETIRO/100); }
-  function aporte(){ return aporteReq(metaCapital(), S.cap, S.crec-INFLACION, anios()*12); }
-  function plan(){
-    var ap = aporte(), fp = metaCapital();
-    var dispos = S.dispo>0 ? ap/S.dispo : 0;
-    var calificado = ap>=UMBRAL_APORTE_CRC || S.cap>=UMBRAL_CAPITAL_CRC || (S.ord+S.ext)*0.2>=UMBRAL_APORTE_CRC;
-    return { ap:ap, fp:fp, dispos:dispos, calificado:calificado };
-  }
-  // Serie por edad en plata de hoy: acumulación hasta edadret, después retiro del ingreso deseado con CREC_RET
-  function serieVida(){
-    var ap=aporte(), iA=(S.crec-INFLACION)/100/12, iR=(Math.min(S.crec,CREC_RET)-INFLACION)/100/12;
-    var v=S.cap, puesto=S.cap, labels=[], tengo=[], bolsillo=[], fin=null;
-    var hasta = Math.min(95, S.edadret+30);
-    for(var e=S.edad; e<=hasta; e++){
-      labels.push(e); tengo.push(Math.max(0,v)); bolsillo.push(puesto);
-      for(var m=0;m<12;m++){
-        if(e<S.edadret){ v=v*(1+iA)+ap; puesto+=ap; }
-        else { v=v*(1+iR)-S.des; if(v<0){ v=0; if(fin===null) fin=e; } }
-      }
-    }
-    var tend = fin!==null ? "seacaba" : (tengo[tengo.length-1] > tengo[Math.max(0,S.edadret-S.edad)]*1.02 ? "crece" : "estable");
-    return { labels:labels, tengo:tengo, bolsillo:bolsillo, fin:fin, tend:tend };
-  }
-  function fmtDispos(d){ return d<1 ? "menos de 1" : (Math.round(d*2)/2).toString().replace(".5",",5"); }
+  function fv(pmt, anualPct, meses){ var i=anualPct/100/12; return pmt*(Math.pow(1+i,meses)-1)/i; }
+  function veinte(){ return S.ing*0.2; }
 
-  // ===== Gráfico =====
-  var chart=null;
-  function drawProj(v){
-    var ctx=byId("proj-chart"); if(!ctx||typeof Chart==="undefined") return;
-    var idxRet = Math.max(0, S.edadret-S.edad);
-    var marker = v.labels.map(function(e,i){ return i===idxRet ? v.tengo[i] : null; });
-    var data = { labels:v.labels, datasets:[
-      { label:"Lo que tenés", data:v.tengo, borderColor:"#63FCAF", backgroundColor:"rgba(99,252,175,.12)", fill:true, tension:.25, pointRadius:0, borderWidth:2 },
-      { label:"De tu bolsillo", data:v.bolsillo, borderColor:"#9AA1AB", borderDash:[5,4], fill:false, tension:0, pointRadius:0, borderWidth:1.5 },
-      { label:"Bajás el ritmo", data:marker, borderColor:"#7C8FF7", backgroundColor:"#7C8FF7", pointRadius:6, pointHoverRadius:7, showLine:false }
-    ]};
-    var opts = { responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:"index", intersect:false},
-      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ title:function(it){ return "A los "+it[0].label+" años"; }, label:function(it){ return it.dataset.label+": "+colM(it.parsed.y); } } } },
-      scales:{ x:{ ticks:{ color:"#9AA1AB", maxTicksLimit:9 }, grid:{ color:"rgba(42,49,64,.5)" } },
-               y:{ ticks:{ color:"#9AA1AB", callback:function(x){ return x>=1e6 ? "₡"+Math.round(x/1e6)+"M" : "₡"+Math.round(x/1e3)+"k"; } }, grid:{ color:"rgba(42,49,64,.5)" }, beginAtZero:true } } };
-    if(chart){ chart.data=data; chart.update(); } else { chart=new Chart(ctx, {type:"line", data:data, options:opts}); }
+  // ===== Navegación =====
+  var ORDEN = ["q1","q2","q3","q4","q5","q6","q7","res"];
+  function ir(id){
+    ORDEN.forEach(function(p){ byId(p).classList.toggle("on", p===id); });
+    var n = ORDEN.indexOf(id);
+    var total = S.lugar==="privado" ? 6 : 7, num = n+1 - (S.lugar==="privado" && n>=2 ? 1 : 0);
+    var prog = byId("pt").parentNode; prog.style.visibility = id==="res" ? "hidden" : "visible";
+    byId("pt").textContent = "Pregunta "+Math.min(num,total)+" de "+total; byId("pb").style.width = (Math.min(num,total)/total*100)+"%";
+    window.scrollTo(0,0); track("pm_pantalla", {v:id});
+  }
+  function marcar(box, b, multi){
+    if(!multi){ Array.prototype.forEach.call(box.querySelectorAll(".op"), function(x){ x.classList.toggle("sel", x===b); }); }
   }
 
-  // ===== Pintar =====
-  function pintarCalc(){
-    var p=plan();
-    byId("k-meta").textContent = colM(p.fp); byId("k-meta-usd").textContent = "≈ "+usd(p.fp/TC)+", retirando 5% al año";
-    byId("k-aporte").textContent = col(p.ap); byId("k-aporte-usd").textContent = "≈ "+usd(p.ap/TC)+" al mes";
-    byId("k-dispos").textContent = S.dispo>0 ? fmtDispos(p.dispos) : "—";
-    byId("k-anios").textContent = anios(); byId("k-total").textContent = "de tu bolsillo en total: "+colM(p.ap*12*anios());
-    var v=serieVida(); drawProj(v);
-    var t;
-    if(S.edadret<=S.edad) t="Subí la edad para bajar el ritmo: tiene que ser mayor que tu edad de hoy.";
-    else if(p.ap<=0) t="Con lo que ya tenés llegás a "+colM(p.fp)+" a los "+S.edadret+" sin aportar más. Lo que sigue es protegerlo.";
-    else {
-      t="Para bajar el ritmo a los <b>"+S.edadret+"</b> con <b>"+col(S.des)+"</b> al mes necesitás juntar <b>"+colM(p.fp)+"</b>, aportando <b>"+col(p.ap)+"</b> al mes: <b>"+fmtDispos(p.dispos)+" dispos</b> de las que ya hacés, apartadas solo a esto. ";
-      if(v.tend==="crece") t+="Después, sacando "+col(S.des)+" al mes, tu plata sigue creciendo: sobra y queda de herencia.";
-      else if(v.tend==="estable") t+="Después, sacando "+col(S.des)+" al mes, tu plata se mantiene: vivís del interés sin tocar el capital.";
-      else t+="Después, sacando "+col(S.des)+" al mes, tu plata <b style='color:var(--rojo)'>se acaba a los "+v.fin+"</b>. Para que dure: bajá el ritmo más tarde, o pedile menos al mes.";
-    }
-    byId("proj-txt").innerHTML=t;
-    pintarCdp(); pintarM4();
-  }
-  function pintarCdp(){
-    var d=S.dispo, m=240;
-    var cdp=fvSerie(d,5,m), spy=fvSerie(d,8,m), pl=fvSerie(d,12,m), macab=fvSerie(d,12.5,m);
-    byId("c-dispo").textContent=col(d);
-    byId("c-cdp").textContent=colM(cdp); byId("c-spy").textContent=colM(spy); byId("c-plan").textContent=colM(pl);
-    byId("c-txt").innerHTML="Pusiste <b>"+colM(d*m)+"</b> de tu bolsillo en los 20 años. El CDP te deja <b>"+colM(cdp-d*m)+"</b> de ganancia; el índice, <b>"+colM(spy-d*m)+"</b>. Esa diferencia de <b>"+colM(spy-cdp)+"</b> es lo que cuesta ir a la segura con la plata del retiro.";
-    byId("t-cdp").textContent=colM(cdp); byId("t-macab").textContent=colM(macab); byId("t-spy").textContent=colM(spy);
-  }
-  function pintarM4(){
-    var p=plan();
-    byId("m4-num").innerHTML = p.ap>0 ? "Para bajar el ritmo a los <b>"+S.edadret+"</b> con <b>"+col(S.des)+"</b> al mes: <b>"+col(p.ap)+"</b> al mes, o sea <b>"+fmtDispos(p.dispos)+" dispos</b>, durante "+anios()+" años. Meta: "+colM(p.fp)+" ("+usd(p.fp/TC)+")." : "Con lo que ya tenés llegás a la meta a los "+S.edadret+". Lo que sigue es protegerlo.";
-  }
-  function pintarBolsas(){
-    var ord=S.ord, ext=S.ext, priv=S.priv, total=ord+ext+priv;
-    var ap=plan().ap, colegio=S.hijos*400000;
-    byId("b1").textContent=col(ord); byId("b1-txt").textContent="Casa, carro, comida, colegio ("+col(colegio)+" por "+S.hijos+" hijo"+(S.hijos===1?"":"s")+" a ₡400 mil cada uno), seguros y gustos. Si el ordinario no cubre esto, el estilo de vida está apoyado en las guardias.";
-    var aExt = ext>0 ? Math.min(ext, Math.max(ap, ext*0.5)) : 0;
-    byId("b2").textContent=col(aExt)+" de "+col(ext); byId("b2-txt").textContent= ext>0 ? (ap>ext ? "Tu aporte requerido ("+col(ap)+") es más que tus dispos: acá entran todas y el resto sale del fondo anual o de más años." : "Tu aporte requerido es "+col(ap)+". Con la mitad de las dispos ("+col(ext*0.5)+") lo cubrís y te sobra. El resto de las dispos es tuyo, sin culpa.") : "Sin dispos: el aporte sale del ordinario y del privado.";
-    var sobra=Math.max(0, ext-aExt)+priv;
-    byId("b3").textContent=col(sobra)+"/mes"; byId("b3-txt").textContent="Viaje, marchamo, impuestos, consultorio, excedentes de febrero y aguinaldo. Lo que no se use en el año se pasa a la bolsa 2.";
-    var veinte=total*0.2;
-    byId("b-veredicto").innerHTML="Tu 20% según la regla 50/30/20 sobre el ingreso total ("+col(total)+") es <b>"+col(veinte)+"</b>. "+(veinte>=ap ? "Cubre el aporte: el problema no es cuánto ganás, es que hoy ese 20% no va a ningún lado que crezca." : "No cubre el aporte de "+col(ap)+": las palancas son bajar el ritmo más tarde, pedirle menos al mes al plan, o el capital que ya tengás.");
-  }
+  // 1 lugar
+  Array.prototype.forEach.call(byId("q1").querySelectorAll(".op"), function(b){
+    b.addEventListener("click", function(){ S.lugar=b.getAttribute("data-v"); marcar(b.parentNode,b); track("pm_lugar",{v:S.lugar});
+      setTimeout(function(){ ir(S.lugar==="privado" ? "q3" : "q2"); }, 150); });
+  });
 
-  // ===== Inputs de la calculadora =====
-  function comas(el, key, cb){ el.addEventListener("input", function(){ var d=el.value.replace(/[^0-9]/g,""); var p=el.selectionStart, a=el.value.length;
-    el.value = d ? Number(d).toLocaleString("en-US") : ""; var bb=el.value.length; try{ el.setSelectionRange(Math.max(0,p+(bb-a)),Math.max(0,p+(bb-a))); }catch(e){}
-    S[key]=num(el.value); cb(); }); }
-  function entero(el, key, cb){ el.addEventListener("input", function(){ var v=parseInt(el.value.replace(/[^0-9]/g,""),10); if(isNaN(v)) return; S[key]=v; cb(); });
-    el.addEventListener("blur", function(){ var lo=LIM[key][0], hi=LIM[key][1]; S[key]=Math.min(hi,Math.max(lo,S[key])); if(key==="edad"&&S.edad>=S.edadret) S.edad=S.edadret-1; if(key==="edadret"&&S.edadret<=S.edad) S.edadret=S.edad+1; el.value=S[key]; cb(); }); }
-  entero(byId("i-edad"),"edad",pintarCalc); entero(byId("i-edadret"),"edadret",pintarCalc); entero(byId("i-crec"),"crec",pintarCalc);
-  comas(byId("i-des"),"des",pintarCalc); comas(byId("i-cap"),"cap",pintarCalc); comas(byId("i-dispo"),"dispo",function(){ pintarCalc(); pintarBolsas(); });
-  comas(byId("b-ord"),"ord",pintarBolsas); comas(byId("b-ext"),"ext",pintarBolsas); comas(byId("b-priv"),"priv",pintarBolsas);
-  Array.prototype.forEach.call(document.querySelectorAll(".stp"), function(b){
+  // 2 ASECCSS → consejo
+  var FB_ASE = {
+    "5":   "<p><b>Quedate ahí.</b> Por tu 5% la Caja pone 2% encima. Es 40% de retorno de una vez, y eso no lo da ningún mercado.</p><p>Lo que sí: los excedentes de febrero no se gastan. Ese depósito es para el retiro.</p>",
+    "mas": "<p><b>El 5% sí, lo de encima no.</b> El 5% vale por el 2% que pone la Caja. Lo que aportás de más rinde 7% u 8% en colones, y eso rinde más afuera.</p>",
+    "no":  "<p><b>Afiliate con el 5%.</b> La Caja pone 2% encima de lo tuyo. Es 40% de retorno de una vez. No hay otra cosa así en la colilla.</p>",
+    "nose":"<p><b>Revisá la colilla.</b> Si dice ASECCSS, estás. Si no, afiliate con el 5%: la Caja pone 2% encima, 40% de retorno de una vez.</p>"
+  };
+  var FB_FRE = "<p><b>El fondo de retiro de la Caja (FRE)</b> no es plata tuya, la pone la Caja. Paga entre ₡71 mil y ₡140 mil al mes, tiene hueco actuarial y hay un proyecto de ley para cerrarlo. No contés con él.</p><p><b>El FAP</b> (ahorro voluntario del fondo) solo si usás el crédito barato. Si no, ese flujo va al retiro.</p>";
+  Array.prototype.forEach.call(byId("q2").querySelectorAll(".op"), function(b){
+    b.addEventListener("click", function(){ S.ase=b.getAttribute("data-v"); marcar(b.parentNode,b);
+      var f=byId("fb-ase"); f.innerHTML=FB_ASE[S.ase]+FB_FRE; f.classList.add("on"); byId("n2").classList.remove("hidden"); track("pm_ase",{v:S.ase}); });
+  });
+  byId("n2").addEventListener("click", function(){ ir("q3"); });
+
+  // 3 presupuesto → 50/30/20
+  var FB_PRES = {
+    "si":     "<p><b>Bien.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. Con lo que gana un médico, lo único que importa es que el 20% exista y vaya a algún lado que crezca.</p>",
+    "cabeza": "<p><b>Con el ingreso de médico, en la cabeza no alcanza.</b> Un mes son tres cirugías y otro ninguna. Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. Lo que sigue es ver cuánto es tu 20%.</p>",
+    "no":     "<p><b>Casi nadie lleva.</b> Lo sugerido es 50/30/20: 50% para vivir, 30% para gustos y 20% para el retiro. No hace falta anotar gastos: hace falta que el 20% salga primero, el día que te pagan.</p>"
+  };
+  Array.prototype.forEach.call(byId("q3").querySelectorAll(".op"), function(b){
+    b.addEventListener("click", function(){ S.pres=b.getAttribute("data-v"); marcar(b.parentNode,b);
+      var f=byId("fb-pres"); f.innerHTML=FB_PRES[S.pres]; f.classList.add("on"); byId("n3").classList.remove("hidden"); track("pm_pres",{v:S.pres}); });
+  });
+  byId("n3").addEventListener("click", function(){ ir("q4"); });
+
+  // 4 ingreso
+  byId("r-ing").addEventListener("input", function(){ S.ing=+this.value; byId("v-ing").textContent=col(S.ing); });
+  byId("n4").addEventListener("click", function(){ pintar20(); ir("q5"); track("pm_ingreso",{v:S.ing}); });
+
+  // 5 el 20% y la proyección
+  function pintar20(){
+    var a=veinte(), ndx=fv(a,NDX,MESES), cdp=fv(a,CDP,MESES);
+    byId("v-20").innerHTML = col(a)+"<small>al mes, para el retiro</small>";
+    byId("v-ndx").textContent=colM(ndx); byId("v-cdp").textContent=colM(cdp);
+    byId("v-puesto").textContent=colM(a*MESES); byId("v-renta").textContent=col(ndx*RETIRO/100/12);
+  }
+  byId("n5").addEventListener("click", function(){ ir("q6"); });
+
+  // 6 productos → diferencias
+  var FB_PROD = {
+    transcomer: "<p><b>Transcomer (hoy TBI):</b> no lo supervisa ninguna superintendencia, lo dijo la Sugef en 2026. La plata va a un fideicomiso de la misma empresa, no queda a tu nombre, y el plazo es cerrado.</p>",
+    offshore:   "<p><b>Dominion, RL360, Investors Trust, Zurich:</b> seguros de ahorro desde Isla de Man o Caimán. La comisión del asesor se paga por adelantado y no se publica; por eso son 20 años y salirte cuesta. En RL360, salir en los primeros 2 años da cero.</p>",
+    eeuu:       "<p><b>Cuenta en Estados Unidos:</b> la plata queda a tu nombre, protegida hasta $500.000. El asesor solo compra y vende, no puede sacar un dólar. Sin plazo ni penalidad.</p>",
+    ninguno:    "<p><b>Mejor.</b> Te van a llegar. La pregunta que los desarma: ¿a nombre de quién queda la plata y cuánto recibo si salgo a los 2 años?</p>"
+  };
+  Array.prototype.forEach.call(byId("q6").querySelectorAll(".op"), function(b){
     b.addEventListener("click", function(){
-      var d=parseInt(b.getAttribute("data-d"),10), s=b.getAttribute("data-s"), m=b.getAttribute("data-m"), bb=b.getAttribute("data-b");
-      if(s){ var v=S[s]+d, lo=LIM[s][0], hi=LIM[s][1]; if(s==="edad"&&v>=S.edadret) v=S.edadret-1; if(s==="edadret"&&v<=S.edad) v=S.edad+1; S[s]=Math.min(hi,Math.max(lo,v)); byId("i-"+s).value=S[s]; pintarCalc(); }
-      else if(m){ S[m]=Math.max(0, S[m]+d*STEP[m]); byId("i-"+m).value=Number(S[m]).toLocaleString("en-US"); pintarCalc(); if(m==="dispo") pintarBolsas(); }
-      else if(bb){ S.hijos=Math.max(0, Math.min(6, S.hijos+d)); byId("b-hijos").value=S.hijos; pintarBolsas(); }
-      track("pm_ajuste", {v:s||m||bb});
+      var v=b.getAttribute("data-v");
+      if(v==="ninguno"){ S.prod=["ninguno"]; Array.prototype.forEach.call(b.parentNode.querySelectorAll(".op"), function(x){ x.classList.toggle("sel", x===b); }); }
+      else { S.prod=S.prod.filter(function(x){ return x!=="ninguno"; }); byId("q6").querySelector('[data-v="ninguno"]').classList.remove("sel");
+        if(S.prod.indexOf(v)>-1){ S.prod=S.prod.filter(function(x){ return x!==v; }); b.classList.remove("sel"); } else { S.prod.push(v); b.classList.add("sel"); } }
+      // Se muestra el consejo del último que marcó; el resumen de todos va en el resultado.
+      var f=byId("fb-prod"), ult = S.prod.indexOf(v)>-1 ? v : S.prod[S.prod.length-1];
+      f.innerHTML = ult ? FB_PROD[ult] + (ult==="transcomer"||ult==="offshore" ? "<p><b>En una cuenta en Estados Unidos</b> la plata queda a tu nombre, sin plazo ni penalidad, y el asesor no puede sacar un dólar.</p>" : "") : "";
+      f.classList.toggle("on", S.prod.length>0);
+      byId("n6").classList.toggle("hidden", S.prod.length===0); track("pm_prod",{v:S.prod.join(",")});
     });
   });
-  byId("b-hijos").addEventListener("input", function(){ var v=parseInt(this.value.replace(/[^0-9]/g,""),10); if(!isNaN(v)){ S.hijos=Math.max(0,Math.min(6,v)); pintarBolsas(); } });
-  byId("btn-empezar").addEventListener("click", function(){ track("pm_inicio", {}); });
-  var calcVisto=false; window.addEventListener("scroll", function(){ if(!calcVisto && byId("calc").getBoundingClientRect().top<window.innerHeight*0.6){ calcVisto=true; track("pm_calc_vista", {}); } }, {passive:true});
+  byId("n6").addEventListener("click", function(){ ir("q7"); });
 
-  // ===== Plantilla de presupuesto (CSV que abre Excel y Sheets) =====
-  byId("btn-plantilla").addEventListener("click", function(){
-    var p=plan(), ap=Math.round(p.ap), sep=";";
-    var filas=[
-      ["Presupuesto familiar de medico", "Empowered Investor", "Colones por mes"],
-      [],
-      ["INGRESOS","Mes normal","Mes flojo (piso)"],
-      ["Salario ordinario Caja", S.ord, S.ord],
-      ["Dispos y guardias", S.ext, Math.round(S.ext*0.5)],
-      ["Privado", S.priv, Math.round(S.priv*0.5)],
-      ["Total", S.ord+S.ext+S.priv, S.ord+Math.round((S.ext+S.priv)*0.5)],
-      [],
-      ["BOLSA 1 - VIVIR (sale del ordinario)","Presupuesto","Real"],
-      ["Casa (alquiler o hipoteca)","",""],["Carro (cuota, gasolina, marchamo/12)","",""],["Comida y super","",""],["Colegio y cuido ("+S.hijos+" hijos)", S.hijos*400000,""],["Servicios (luz, agua, internet, celular)","",""],["Seguros y salud","",""],["Gustos (salidas, ropa, suscripciones)","",""],["Otros","",""],["Total bolsa 1","",""],
-      [],
-      ["BOLSA 2 - RETIRO (sale de las dispos)","Presupuesto","Real"],
-      ["Aporte al plan (tu numero: "+ap+")", ap, ""],["Equivale a dispos al mes", fmtDispos(p.dispos), ""],["Meta anual (x12)", ap*12, ""],
-      [],
-      ["BOLSA 3 - FONDO ANUAL (privado y lo que sobre)","Presupuesto","Real"],
-      ["Viaje","",""],["Impuestos y marchamo","",""],["Consultorio y equipo","",""],["Excedentes ASECCSS (febrero) -> bolsa 2","",""],["Aguinaldo -> bolsa 2","",""],["Total bolsa 3","",""],
-      [],
-      ["Reglas","1. El estilo de vida se paga con el ordinario.","2. Las dispos compran el retiro.","3. Piso mensual, meta anual.","4. Lo que cobras en dolares no se pasa a colones."]
-    ];
-    var csv="﻿"+filas.map(function(r){ return r.map(function(c){ return '"'+String(c===undefined?"":c).replace(/"/g,'""')+'"'; }).join(sep); }).join("\r\n");
-    var blob=new Blob([csv],{type:"text/csv;charset=utf-8"}), a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="presupuesto-medico.csv"; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
-    track("pm_plantilla", {});
-  });
-
-  // ===== Captura =====
+  // 7 datos
   byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
+  var CAL_PRE="";
   byId("lead").addEventListener("submit", function(e){
     e.preventDefault();
-    var nombre=byId("l-nom").value.trim(), ape=byId("l-ape").value.trim(), mail=byId("l-mail").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,""), esp=byId("l-esp").value.trim();
-    var ok = nombre && ape && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) && wa.length===8 && byId("l-ok").checked;
+    var nombre=byId("l-nom").value.trim(), ape=byId("l-ape").value.trim(), esp=byId("l-esp").value.trim(), mail=byId("l-mail").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
+    var ok = nombre && ape && esp && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail) && wa.length===8 && byId("l-ok").checked;
     byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
     var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
     S.nombre=nombre; S.esp=esp;
-    var p=plan(), link=linkPersonal();
+    var a=veinte(), ndx=fv(a,NDX,MESES);
     var payload = { timestamp:new Date().toISOString(), etapa:"presupuesto_medico", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
-      especialidad:esp, edad:S.edad, edad_meta:S.edadret, ingreso_deseado:S.des, capital:S.cap, valor_dispo:S.dispo, crecimiento:S.crec,
-      salario_ordinario:S.ord, extras_mes:S.ext, privado_mes:S.priv, hijos:S.hijos, ingreso_hoy:S.ord+S.ext+S.priv,
-      freedom_point:Math.round(p.fp), aporte_mes:Math.round(p.ap), dispos_req:Math.round(p.dispos*10)/10, calificado: p.calificado ? "si" : "no",
-      link_personal:link, pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
+      especialidad:esp, lugar:S.lugar, aseccss:S.ase, presupuesto:S.pres, ingreso_hoy:S.ing, veinte_pct:Math.round(a), proyeccion_ndx_20a:Math.round(ndx),
+      productos:S.prod.join(","), calificado: a>=UMBRAL_APORTE_CRC ? "si" : "no",
+      pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
       sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
     try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
     track("pm_lead", {especialidad:esp, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
     try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"presupuesto medico", content_category:esp}); }catch(err){}
     CAL_PRE = "&name="+encodeURIComponent(nombre+" "+ape)+"&email="+encodeURIComponent(mail)+"&a1="+encodeURIComponent("+506 "+wa)+"&a2="+encodeURIComponent(esp);
-    var msg="Hola Jose, soy "+nombre+(esp?", "+esp.toLowerCase():"")+". Hice la guía: mi retiro se compra con "+fmtDispos(p.dispos)+" dispos al mes. Quiero la llamada de claridad. Mi página: "+link;
+    var msg="Hola Jose, soy "+nombre+", "+esp.toLowerCase()+". Hice el chequeo: mi 20% es "+col(a)+" al mes. Quiero la llamada.";
     byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
-    try{ localStorage.setItem("ei_pm", JSON.stringify({s:S, link:link})); }catch(err){}
-    abrirModulos(nombre); cargarHorarios();
-  });
-  function abrirModulos(nombre){
-    byId("lead-card").classList.add("hidden"); byId("preview").classList.add("hidden");
-    byId("lead-ok").classList.remove("hidden"); byId("modulos").classList.remove("hidden");
-    byId("ok-titulo").textContent = (nombre ? nombre.split(" ")[0]+", listo." : "Listo.")+" Abajo está todo.";
-    byId("ok-sub").textContent = "Las siete entregas te van llegando por WhatsApp y correo. Si querés adelantarte, la llamada está al final.";
-    byId("mi-link").value = linkPersonal();
-    pintarBolsas(); pintarCdp(); pintarM4();
-    try{ history.replaceState(null,"",location.pathname+"?d="+codificar()); }catch(e){}
-    setTimeout(function(){ byId("lead-ok").scrollIntoView({behavior:"smooth", block:"start"}); }, 120);
-  }
-
-  // ===== Página personal: el estado viaja en la URL, sin datos de contacto =====
-  function codificar(){ var o={e:S.edad,r:S.edadret,d:S.des,c:S.cap,v:S.dispo,g:S.crec,o:S.ord,x:S.ext,p:S.priv,h:S.hijos,nm:S.nombre,sp:S.esp};
-    return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
-  function decodificar(s){ try{ s=s.replace(/-/g,"+").replace(/_/g,"/"); while(s.length%4) s+="="; var o=JSON.parse(decodeURIComponent(escape(atob(s))));
-    S.edad=+o.e||36; S.edadret=+o.r||58; S.des=+o.d||3000000; S.cap=+o.c||0; S.dispo=+o.v||500000; S.crec=+o.g||12; S.ord=+o.o||2850000; S.ext=+o.x||0; S.priv=+o.p||0; S.hijos=+o.h||0; S.nombre=o.nm||""; S.esp=o.sp||""; return true; }catch(e){ return false; } }
-  function linkPersonal(){ return location.origin + location.pathname + "?d=" + codificar(); }
-  function volcarInputs(){
-    byId("i-edad").value=S.edad; byId("i-edadret").value=S.edadret; byId("i-crec").value=S.crec;
-    ["des","cap","dispo"].forEach(function(k){ byId("i-"+k).value=Number(S[k]).toLocaleString("en-US"); });
-    byId("b-ord").value=Number(S.ord).toLocaleString("en-US"); byId("b-ext").value=Number(S.ext).toLocaleString("en-US"); byId("b-priv").value=Number(S.priv).toLocaleString("en-US"); byId("b-hijos").value=S.hijos;
-  }
-  byId("copiar").addEventListener("click", function(){
-    var inp=byId("mi-link"), b=this;
-    function listo(){ b.textContent="Copiado"; setTimeout(function(){ b.textContent="Copiar"; }, 1800); }
-    try{ navigator.clipboard.writeText(inp.value).then(listo, function(){ inp.select(); listo(); }); }catch(e){ inp.select(); listo(); }
-    track("pm_link_copiado", {});
+    pintarRes(); ir("res"); cargarHorarios();
   });
 
-  // ===== Calendly: 3 horarios de un click + inline, mismo patrón de /medicos =====
-  var CALENDLY = "https://calendly.com/empoweredinvestor/medicos", CAL_PRE = "", WA_NUMERO = "50670558296";
+  // 8 resultado
+  function pintarRes(){
+    var a=veinte(), ndx=fv(a,NDX,MESES), li=[];
+    byId("res-t").textContent = S.nombre+", así estás";
+    if(S.lugar!=="privado"){
+      if(S.ase==="5") li.push(["v","<b>ASECCSS:</b> bien, al 5%. Excedentes de febrero al retiro."]);
+      else if(S.ase==="mas") li.push(["a","<b>ASECCSS:</b> dejá el 5%, lo de encima al retiro."]);
+      else li.push(["r","<b>ASECCSS:</b> afiliate con el 5%. La Caja pone 2% encima."]);
+      li.push(["r","<b>FRE:</b> contalo en cero. Paga ₡71 mil a ₡140 mil al mes y hay proyecto para cerrarlo."]);
+    } else {
+      li.push(["a","<b>Sin Caja:</b> nadie te descuenta nada para el retiro. El 20% sale solo si vos lo apartás el día que cobrás."]);
+    }
+    li.push([S.pres==="si"?"v":(S.pres==="cabeza"?"a":"r"), "<b>Presupuesto:</b> "+(S.pres==="si" ? "lo llevás. Revisá que el 20% esté saliendo primero." : "50/30/20. El 20% sale primero, el día que te pagan.")]);
+    if(S.prod.indexOf("transcomer")>-1) li.push(["r","<b>Transcomer:</b> sin supervisor y sin la plata a tu nombre. Hablemos de cómo salir."]);
+    if(S.prod.indexOf("offshore")>-1) li.push(["r","<b>Plan offshore:</b> pedí por escrito cuánto recibís si salís hoy. Con eso se decide."]);
+    if(S.prod.indexOf("eeuu")>-1) li.push(["v","<b>Cuenta en EE. UU.:</b> bien. Falta que el 20% llegue ahí todos los meses."]);
+    byId("res-l").innerHTML = li.map(function(x){ return "<li><i class='"+x[0]+"'></i><span>"+x[1]+"</span></li>"; }).join("");
+    byId("res-20").textContent=col(a)+"/mes"; byId("res-ndx").textContent=colM(ndx);
+  }
+
+  // ===== Calendly, mismo patrón de /medicos =====
+  var CALENDLY = "https://calendly.com/empoweredinvestor/medicos", WA_NUMERO = "50670558296";
   function abrirCalendly(){
     var wrap=byId("calwrap"); if(wrap.getAttribute("data-ok")) { wrap.classList.remove("hidden"); return; } wrap.setAttribute("data-ok","1"); wrap.classList.remove("hidden");
     var url = conUtm(CALENDLY + "?hide_gdpr_banner=1&hide_event_type_details=1&background_color=15191e&text_color=fef9f3&primary_color=63fcaf" + CAL_PRE)
@@ -629,19 +408,9 @@
   function clickAgendar(e){ e.preventDefault(); track("click_agendar", {v:"pm"}); try{ if(typeof fbq==="function") fbq("track","InitiateCheckout",{content_name:"llamada medicos"}); }catch(err){} abrirCalendly(); byId("cta-cal").classList.add("hidden"); byId("slots-mas").classList.add("hidden"); }
   byId("cta-cal").addEventListener("click", clickAgendar);
   byId("ver-mas").addEventListener("click", clickAgendar);
-  byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp presupuesto"}); }catch(err){} });
+  byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp chequeo medico"}); }catch(err){} });
 
-  // ===== Arranque =====
-  (function(){
-    var q = new URLSearchParams(location.search), d = q.get("d");
-    if(d && decodificar(d)){
-      var guardado=null; try{ guardado=JSON.parse(localStorage.getItem("ei_pm")||"null"); }catch(e){}
-      if(guardado && guardado.s && guardado.s.nombre) S.nombre = S.nombre || guardado.s.nombre;
-      volcarInputs(); pintarCalc(); pintarBolsas();
-      byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent("Hola Jose, abrí mi guía de presupuesto y quiero la llamada de claridad. Mi página: "+linkPersonal());
-      abrirModulos(S.nombre); cargarHorarios(); track("pm_pagina_personal", {});
-    } else { pintarCalc(); pintarBolsas(); }
-  })();
+  ir("q1");
 })();
 </script>
 </body>
