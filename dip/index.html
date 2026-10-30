@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FGQ2ZMVSLG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FGQ2ZMVSLG');
+</script>
+<script defer src="/js/pixel.js"></script>
+<title>Comprar la caída · Empowered Investor</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Qué caída del Nasdaq ha valido la pena comprar desde 2009, cuándo soltarla, y por qué sola no alcanza pero pegada a Atalaya sí.">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Comprar la caída · Empowered Investor">
+<meta property="og:description" content="Qué caída del Nasdaq ha valido la pena comprar desde 2009, cuándo soltarla, y por qué sola no alcanza pero pegada a Atalaya sí.">
+<meta property="og:image" content="https://investorcr.com/assets/logo-fondo-negro.png">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#0d0f14; --tinta2:#15191E; --carta:#171c24; --bd:#262d38;
+    --menta:#63FCAF; --peri:#8B9BFF; --crema:#FEF9F3; --gris:#D9DCE1; --gris-sec:#8E96A3;
+    --rojo:#F07A6B; --ambar:#F5C26B;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img{ max-width:100%; display:block; }
+  a{ color:var(--menta); }
+  b,strong{ font-weight:700; }
+  button{ font-family:inherit; }
+
+  .wrap{ width:100%; max-width:880px; margin:0 auto; padding:0 16px 60px; }
+  .top{ display:flex; align-items:center; justify-content:space-between; padding:18px 0 8px; }
+  .top img{ width:56px; height:56px; }
+  .top a.wa{ font-size:13px; font-weight:600; color:var(--tinta); background:var(--menta); text-decoration:none; border-radius:999px; padding:9px 14px; }
+
+  .hero{ padding:18px 0 6px; }
+  .eyebrow{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; margin-bottom:10px; }
+  h1{ font-size:clamp(28px,7vw,42px); font-weight:700; line-height:1.08; letter-spacing:-.02em; }
+  h1 em{ font-style:normal; color:var(--menta); }
+  .sub{ font-size:16px; line-height:1.5; color:var(--gris); margin-top:12px; max-width:620px; }
+  .chips{ display:flex; gap:8px; overflow-x:auto; padding:16px 0 4px; scrollbar-width:none; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chips a{ flex:0 0 auto; font-size:13px; color:var(--gris); text-decoration:none; border:1px solid var(--bd); border-radius:999px; padding:7px 12px; white-space:nowrap; }
+  .chips a:hover{ border-color:var(--menta); color:var(--menta); }
+
+  section{ padding:36px 0 6px; border-top:1px solid var(--bd); margin-top:30px; }
+  .num{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; background:var(--carta); border:1px solid var(--bd); font-size:13px; font-weight:700; color:var(--menta); margin-bottom:10px; }
+  h2{ font-size:clamp(22px,5.5vw,30px); font-weight:700; line-height:1.15; letter-spacing:-.02em; }
+  .lede{ font-size:15px; line-height:1.5; color:var(--gris); margin-top:8px; max-width:640px; }
+  .lede b{ color:var(--crema); }
+  .lede + .lede{ margin-top:10px; }
+  .nota{ font-size:12.5px; line-height:1.5; color:var(--gris-sec); margin-top:10px; }
+  .nota a, .nota b{ color:var(--gris); }
+
+  .card{ margin-top:16px; border-radius:18px; border:1px solid var(--bd); background:var(--carta); padding:14px; }
+  .card h3{ font-size:14px; font-weight:700; color:var(--crema); }
+  .card .q{ font-size:12.5px; color:var(--gris-sec); margin-top:3px; line-height:1.4; }
+
+  .ctl{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:10px; }
+  .ctl .lbl{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; margin-right:4px; flex:0 0 auto; }
+  .ctl button{ border:1px solid var(--bd); background:var(--tinta2); color:var(--gris); border-radius:999px; padding:6px 11px; font-size:12.5px; cursor:pointer; line-height:1; }
+  .ctl button:hover{ border-color:var(--menta); }
+  .ctl button.on{ background:var(--menta); color:var(--tinta); border-color:var(--menta); font-weight:700; }
+
+  /* resumen en 3 tarjetas */
+  .res{ display:grid; gap:10px; margin-top:18px; }
+  @media(min-width:640px){ .res{ grid-template-columns:repeat(3,1fr); } }
+  .res .r{ background:var(--carta); border:1px solid var(--bd); border-radius:16px; padding:14px; }
+  .res .r .t{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; }
+  .res .r .g{ font-size:clamp(22px,5vw,28px); font-weight:700; color:var(--menta); margin-top:6px; letter-spacing:-.02em; line-height:1.1; }
+  .res .r .g.rojo{ color:var(--rojo); }
+  .res .r .g.peri{ color:var(--peri); }
+  .res .r p{ font-size:13px; color:var(--gris); line-height:1.45; margin-top:6px; }
+
+  /* mapas de calor */
+  .mapa{ margin-top:12px; overflow-x:auto; }
+  .grid{ display:grid; gap:3px; min-width:420px; }
+  .grid .h{ font-size:11px; color:var(--gris-sec); text-align:center; align-self:end; padding-bottom:2px; }
+  .grid .y{ font-size:12px; color:var(--gris); display:flex; align-items:center; justify-content:flex-end; padding-right:6px; font-variant-numeric:tabular-nums; }
+  .grid .c{ border-radius:7px; min-height:46px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; cursor:default; position:relative; color:var(--crema); }
+  .grid .c small{ font-size:10.5px; font-weight:500; opacity:.8; margin-top:1px; }
+  .grid .c.pick{ outline:2px solid var(--menta); outline-offset:-2px; }
+  .grid .c.oscuro{ color:var(--tinta); }
+  .ejes{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--gris-sec); margin-top:6px; }
+  .esc{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--gris-sec); margin-top:8px; flex-wrap:wrap; }
+  .esc i{ display:inline-block; width:14px; height:10px; border-radius:3px; }
+  .lector{ font-size:12.5px; line-height:1.5; color:var(--gris); margin-top:8px; min-height:2.6em; }
+  .lector b{ color:var(--crema); }
+
+  canvas{ display:block; width:100%; }
+  #cv-curvas{ height:360px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
+  #cv-precio{ height:340px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y; }
+  @media(max-width:600px){ #cv-curvas{ height:300px; } #cv-precio{ height:280px; } }
+  .leg{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:11.5px; color:var(--gris-sec); }
+  .leg span{ display:inline-flex; align-items:center; gap:6px; }
+  .leg i{ display:inline-block; width:14px; height:3px; border-radius:2px; }
+  .leg i.dash{ background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px); height:2px; }
+  .leg i.sq{ width:12px; height:12px; border-radius:3px; }
+
+  .kpis{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px; }
+  @media(min-width:640px){ .kpis{ grid-template-columns:repeat(4,1fr); } }
+  .kpi{ background:var(--tinta2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; min-width:0; }
+  .kpi .l{ font-size:11px; color:var(--gris-sec); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
+  .kpi .v{ font-size:clamp(15px, 4.2vw, 20px); font-weight:700; margin-top:3px; letter-spacing:-.01em; font-variant-numeric:tabular-nums; }
+  .kpi .v.menta{ color:var(--menta); } .kpi .v.rojo{ color:var(--rojo); } .kpi .v.peri{ color:var(--peri); }
+  .kpi .s{ font-size:11.5px; color:var(--gris-sec); margin-top:2px; }
+  .kpi .s b{ color:var(--gris); font-weight:600; }
+
+  /* tabla */
+  .tabla{ width:100%; border-collapse:collapse; margin-top:12px; font-size:13px; }
+  .tabla th{ text-align:left; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gris-sec); font-weight:600; padding:8px 8px; border-bottom:1px solid var(--bd); }
+  .tabla td{ padding:9px 8px; border-bottom:1px solid var(--bd); color:var(--gris); font-variant-numeric:tabular-nums; vertical-align:top; }
+  .tabla td:first-child{ color:var(--crema); }
+  .tabla tr.destacada td{ color:var(--crema); background:rgba(99,252,175,.06); }
+  .tabla td.menta{ color:var(--menta); font-weight:700; }
+  .tabla td.rojo{ color:var(--rojo); font-weight:700; }
+  .tabla .r{ text-align:right; }
+  .scrollx{ overflow-x:auto; margin-top:4px; }
+  .scrollx .tabla{ min-width:560px; }
+
+  /* lista de puntos */
+  .puntos{ list-style:none; margin-top:12px; display:grid; gap:10px; }
+  .puntos li{ display:flex; gap:12px; align-items:flex-start; font-size:14.5px; line-height:1.45; color:var(--gris); }
+  .puntos li i{ flex:0 0 26px; height:26px; border-radius:50%; background:var(--tinta2); border:1px solid var(--bd); display:inline-flex; align-items:center; justify-content:center; font-style:normal; font-size:12px; font-weight:700; color:var(--menta); margin-top:1px; }
+  .puntos li b{ color:var(--crema); }
+
+  .frase{ margin-top:16px; border-left:3px solid var(--menta); padding:10px 14px; background:var(--carta); border-radius:0 14px 14px 0; font-size:15px; line-height:1.55; color:var(--crema); }
+  .frase small{ display:block; font-size:12px; color:var(--gris-sec); margin-top:6px; }
+
+  #tip{ position:fixed; z-index:60; pointer-events:none; display:none; background:#0b0d12; border:1px solid var(--bd); border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.4; color:var(--gris); max-width:260px; box-shadow:0 6px 24px rgba(0,0,0,.4); }
+  #tip b{ color:var(--crema); }
+
+  footer{ width:100%; max-width:880px; margin:0 auto; padding:26px 16px 36px; border-top:1px solid var(--bd); }
+  footer p{ font-size:11px; color:var(--gris-sec); line-height:1.6; }
+  footer p + p{ margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor" width="56" height="56"></a>
+    <a class="wa" href="/atalaya/">Ver Atalaya</a>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Empowered Investor · Investigación</div>
+    <h1>Comprar la caída: <em>qué caída y hasta cuándo</em></h1>
+    <p class="sub">Todo el mundo dice "comprá cuando baja". Nadie dice cuánto tiene que bajar ni cuándo soltar. Tomamos el Nasdaq 100 desde que terminó la crisis de 2008 y probamos 660 versiones de la idea, con la misma regla de medir que usamos en Atalaya: la distancia al máximo de las últimas semanas. Y al final, lo que importa: qué pasa cuando la caída se le pega a Atalaya, con cuánto capital y con qué fondo.</p>
+    <nav class="chips" aria-label="Índice">
+      <a href="#resumen">En tres líneas</a>
+      <a href="#cual">Qué caída</a>
+      <a href="#soltar">Cuándo soltar</a>
+      <a href="#honesta">La prueba honesta</a>
+      <a href="#atalaya">Pegada a Atalaya</a>
+      <a href="#precio">En el precio</a>
+      <a href="#hacemos">Qué hacemos</a>
+      <a href="#completa">La estrategia completa</a>
+    </nav>
+  </div>
+
+  <!-- 0 · RESUMEN -->
+  <section id="resumen" style="border-top:0; margin-top:6px; padding-top:18px;">
+    <div class="res">
+      <div class="r">
+        <div class="t">Qué caída</div>
+        <div class="g">−10% del máximo de 39 semanas</div>
+        <p>Desde 2009, comprar ahí dio <b id="r-m26">16%</b> en los seis meses siguientes contra <b id="r-i26">10%</b> de comprar cualquier día, y salió positivo <b id="r-pos">19 de 20</b> veces. Caídas de 3% o 5% no sirven de nada.</p>
+      </div>
+      <div class="r">
+        <div class="t">Cuándo soltar</div>
+        <div class="g peri">A los 3 a 6 meses</div>
+        <p>Por tiempo, no por señal. Vender en días regala el rebote. Y vender cuando el precio vuelve al nivel donde Atalaya recompra es la peor salida de todas: suelta justo antes del tramo que paga.</p>
+      </div>
+      <div class="r">
+        <div class="t">Lo que de verdad importa</div>
+        <div class="g">Pegada a Atalaya</div>
+        <p>Sola, esperar la caída con la plata en efectivo rinde lo mismo que una mezcla fija. Pegada a Atalaya recupera el retorno que la regla de tendencia cede en los rebotes: <b>15.3% al año contra 11.2%</b> desde 2000, con casi la misma caída. <a href="#completa">La estrategia completa, al final.</a></p>
+      </div>
+    </div>
+    <p class="nota">Nasdaq 100 vía el fondo QQQ, cierres diarios del 1 de julio de 2009 al <span id="fecha-datos">28 de octubre de 2026</span>. La señal se calcula al cierre y se ejecuta al cierre siguiente, con costo por operación. Los detalles y lo que no cuadra están al final.</p>
+  </section>
+
+  <!-- 1 · QUÉ CAÍDA -->
+  <section id="cual">
+    <div class="num">1</div>
+    <h2>Qué caída vale la pena comprar</h2>
+    <p class="lede">Medimos la caída igual que Atalaya: cuánto está el precio por debajo de su máximo de las últimas N semanas. Cada celda es una regla: "comprar el día que el Nasdaq cruza X% bajo su máximo de N semanas". El color dice cuánto más rindió esa compra que comprar un día cualquiera, y el número chico cuántas veces pasó de verdad (episodios separados por al menos tres meses).</p>
+    <div class="card">
+      <div class="ctl"><span class="lbl">Período</span><button class="on" data-per="2009">Desde jul 2009</button><button data-per="2000">2000 a 2008, para comparar</button><span class="lbl" style="margin-left:10px">Horizonte</span><button data-h="13">13 semanas</button><button class="on" data-h="26">26 semanas</button></div>
+      <div class="mapa"><div class="grid" id="g-eventos"></div></div>
+      <div class="ejes"><span>↑ caída X bajo el máximo</span><span>máximo de N semanas →</span></div>
+      <div class="esc"><i style="background:#F07A6B"></i> peor que un día cualquiera <i style="background:#2a3140; margin-left:8px"></i> igual <i style="background:#63FCAF; margin-left:8px"></i> mucho mejor · las celdas apagadas pueden ser azar (probabilidad mayor a 10%) · tocá una celda para leerla</div>
+      <p class="lector" id="l-eventos">Tocá una celda.</p>
+    </div>
+    <p class="lede">Tres cosas salen del mapa. <b>Entre −8% y −12% está la zona buena</b>: suficientes episodios para creerle y 3 a 8 puntos de ventaja a seis meses. <b>Más abajo (−15%, −20%) el número es más grande pero son 4 a 9 casos</b>, y a tres meses el −20% solo salió bien 6 de cada 10 veces. Y <b>−3% o −5% es comprar cualquier día</b> con otro nombre.</p>
+    <p class="lede">Cambiá a 2000 a 2008 y mirá cómo se pone rojo. En un mercado bajista largo, "la caída" es el principio de otra caída. Por eso esta idea no se puede usar sola.</p>
+  </section>
+
+  <!-- 2 · CUÁNDO SOLTAR -->
+  <section id="soltar">
+    <div class="num">2</div>
+    <h2>Cuándo soltar lo que compraste</h2>
+    <p class="lede">Acá la estrategia es completa: la plata espera en letras del Tesoro, entra cuando llega la caída y sale según la regla. Probamos tres familias de salida: por tiempo (vender a los N días), por recuperación (vender cuando el precio vuelve a cierto nivel bajo el máximo, que es exactamente la reentrada de Atalaya al revés) y con tope de pérdida. El color compara con lo que daba simplemente tener el Nasdaq todo el tiempo.</p>
+    <div class="card">
+      <h3>Salida por tiempo</h3>
+      <p class="q">Sharpe de la estrategia según la profundidad al comprar y los días que se mantiene. Blanco = el Sharpe del Nasdaq sin hacer nada (<span id="bh-sharpe">0.91</span>). Mediana de las cuatro ventanas del máximo.</p>
+      <div class="mapa"><div class="grid" id="g-tiempo"></div></div>
+      <div class="ejes"><span>↑ caída al comprar</span><span>días hábiles hasta vender →</span></div>
+      <p class="lector" id="l-tiempo">Tocá una celda.</p>
+    </div>
+    <div class="card">
+      <h3>Salida por recuperación: Atalaya al revés</h3>
+      <p class="q">Comprar a −X% del máximo y vender cuando el precio vuelve a −Y%. La fila −12% con la columna −6% es exactamente lo contrario de Atalaya: comprar donde ella vende, vender donde ella compra.</p>
+      <div class="mapa"><div class="grid" id="g-recupera"></div></div>
+      <div class="ejes"><span>↑ comprar a −X%</span><span>vender al volver a −Y% del máximo →</span></div>
+      <p class="lector" id="l-recupera">Tocá una celda.</p>
+    </div>
+    <p class="lede"><b>Soltar rápido destruye la idea.</b> A 5, 10 o 20 días la ganancia por operación es de 1% a 4%, que se la comen los costos y el azar. El rebote se cosecha entre el segundo y el sexto mes. <b>De 3 meses a un año da más o menos igual</b>; 3 meses tiene la ventaja de devolverle el control a Atalaya antes.</p>
+    <p class="lede"><b>Vender donde Atalaya recompra es lo peor.</b> La Atalaya invertida pura (comprar a −12%, vender a −6%) dio 6% al año estando invertida solo el 16% del tiempo, y es la única regla de todo el estudio que pierde contra una mezcla pasiva con significancia estadística. Tiene lógica: si Atalaya recompra ahí es porque ahí empieza la tendencia, y vos estarías vendiendo justo en ese punto.</p>
+  </section>
+
+  <!-- 3 · PRUEBA HONESTA -->
+  <section id="honesta">
+    <div class="num">3</div>
+    <h2>La prueba honesta: ¿es una ventaja o es plata a medias?</h2>
+    <p class="lede">Una estrategia que está invertida un tercio del tiempo tiene un tercio del riesgo. Compararla con el Nasdaq a secas es trampa. La comparación justa es contra una mezcla fija de Nasdaq y letras del Tesoro que tenga la misma volatilidad, o la misma exposición promedio. Si no le gana a eso, lo que hace es diluir, no elegir el momento.</p>
+    <div class="kpis" id="k-honesta"></div>
+    <div class="scrollx">
+      <table class="tabla" id="t-solas">
+        <thead><tr><th>Las mejores de 660</th><th class="r">Retorno anual</th><th class="r">Sharpe</th><th class="r">Peor caída</th><th class="r">Tiempo invertida</th><th class="r">Operaciones ganadoras</th><th class="r">Mezcla fija de igual riesgo</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="lede">El "cuándo" existe: los días en que la mejor estrategia está invertida, el Nasdaq rinde a un ritmo de <b id="cagrinv">51%</b> anual, contra <b id="cagract">20%</b> en promedio. Lo que la mata es el otro 67% del tiempo en letras al 1% o 4% mientras el mercado subía 20% al año. Al final, una mezcla fija con el mismo riesgo le empata.</p>
+    <div class="card">
+      <h3>¿Y si me llega plata nueva, espero la caída?</h3>
+      <p class="q">Cada mes entra dinero. "Esperar hasta W meses a que el Nasdaq caiga X% bajo su máximo de 39 semanas, y si no llega entrar igual" contra "entrar hoy". Diferencia de retorno anual a 5 años, solo en los meses en que había decisión que tomar.</p>
+      <div class="scrollx"><table class="tabla" id="t-cash"><thead><tr><th>Esperar una caída de</th><th class="r">Hasta</th><th class="r">La caída llegó</th><th class="r">Esperar vs entrar hoy</th><th class="r">Esperar ganó</th></tr></thead><tbody></tbody></table></div>
+      <p class="nota">Misma conclusión que el estudio de <a href="/past/">entradas por caída</a>: cuando la caída no llega, lo que se pierde esperando es más que lo que se gana cuando sí llega. La plata nueva entra ya.</p>
+    </div>
+  </section>
+
+  <!-- 4 · PEGADA A ATALAYA -->
+  <section id="atalaya">
+    <div class="num">4</div>
+    <h2>Donde sí suma: pegada a Atalaya</h2>
+    <p class="lede"><a href="/atalaya/">Atalaya</a> sale cuando el Nasdaq cae 12% bajo su máximo de 39 semanas y vuelve a entrar cuando el precio ya recuperó hasta −6% y está sobre su promedio de 200 días. Entre la salida y la reentrada queda un hueco, y ese hueco es exactamente el rebote en V que la regla se pierde: diciembre de 2018, marzo de 2020, los tres rebotes de 2022, abril de 2025.</p>
+    <p class="lede">La regla combinada es simple: <b>estás dentro si Atalaya dice que sí, o si el Nasdaq cayó 8% bajo su máximo de 39 semanas (entrás y te quedás 63 días hábiles, después volvés a lo que diga Atalaya)</b>. Cuando Atalaya ya está dentro, la caída no agrega nada. Cuando está fuera, la caída te vuelve a meter tres meses.</p>
+    <div class="card">
+      <div class="ctl"><span class="lbl">Ventana</span><button class="on" data-win="2000">Desde 2000</button><button data-win="2009">Desde jul 2009</button></div>
+      <canvas id="cv-curvas"></canvas>
+      <div class="leg">
+        <span><i style="background:#8E96A3"></i> Nasdaq sin hacer nada</span>
+        <span><i style="background:#8B9BFF"></i> Atalaya</span>
+        <span><i style="background:#63FCAF"></i> Atalaya + comprar la caída</span>
+        <span><i style="background:#F5C26B"></i> Solo la caída, efectivo el resto</span>
+      </div>
+      <div class="kpis" id="k-curvas"></div>
+      <p class="lector" id="l-curvas">Pasá el cursor por el gráfico para ver la fecha.</p>
+    </div>
+    <div class="kpis" id="k-boot"></div>
+    <p class="lede">Dos pruebas más, porque "más retorno" solo puede ser "más riesgo" disfrazado. <b>Contra Atalaya sola</b>, la diferencia de Sharpe es positiva en el 99% de las 5,000 remuestras por bloques de un año (2000 a 2026); es la primera variante en toda nuestra serie de estudios que mejora a Atalaya con el intervalo entero sobre cero. <b>Contra un control que mantiene un porcentaje fijo de Nasdaq cuando Atalaya está fuera</b>, con la misma exposición promedio, la combinación también gana, y la diferencia grande está en la caída: el control se come −45% en 2000 a 2002 porque está dentro también en las piernas bajistas largas; la caída de 63 días no, porque se sale sola.</p>
+  </section>
+
+  <!-- 5 · EN EL PRECIO -->
+  <section id="precio">
+    <div class="num">5</div>
+    <h2>Cómo se ve en el precio</h2>
+    <p class="lede">Nasdaq 100 desde 2018. La línea punteada de arriba es el máximo de 39 semanas; la naranja es 8% abajo (donde entra la caída) y la violeta 12% abajo (donde Atalaya se va). Las franjas violeta son los períodos en que Atalaya estuvo fuera; las franjas verdes, los tramos de 63 días que la compra de la caída metió. Fijate cómo las verdes caen casi siempre dentro de las violeta.</p>
+    <div class="card">
+      <canvas id="cv-precio"></canvas>
+      <div class="leg">
+        <span><i style="background:#FEF9F3"></i> Nasdaq 100 (QQQ)</span>
+        <span><i class="dash" style="color:#8E96A3"></i> Máximo de 39 semanas</span>
+        <span><i class="dash" style="color:#F5C26B"></i> −8%: entra la caída</span>
+        <span><i class="dash" style="color:#8B9BFF"></i> −12%: Atalaya sale</span>
+        <span><i class="sq" style="background:rgba(99,252,175,.28)"></i> dentro por la caída</span>
+        <span><i class="sq" style="background:rgba(139,155,255,.22)"></i> Atalaya fuera</span>
+      </div>
+      <p class="lector" id="l-precio">Pasá el cursor por el gráfico.</p>
+    </div>
+    <div class="scrollx">
+      <table class="tabla" id="t-tramos"><thead><tr><th>Tramos que la caída agregó con Atalaya fuera</th><th class="r">Días</th><th class="r">Resultado</th></tr></thead><tbody></tbody></table>
+    </div>
+    <p class="nota">Solo se listan los tramos en que la combinación estuvo dentro y Atalaya sola estaba fuera, desde 2000. Los de uno a tres días son cruces en que las dos señales cambiaron casi al mismo tiempo.</p>
+  </section>
+
+  <!-- 6 · QUÉ HACEMOS -->
+  <section id="hacemos">
+    <div class="num">6</div>
+    <h2>Qué hacemos con esto</h2>
+    <ul class="puntos">
+      <li><i>1</i><span><b>La regla de los clientes no cambia hoy.</b> Atalaya es un seguro y sigue siéndolo. Nada de este estudio dice que esté mal.</span></li>
+      <li><i>2</i><span><b>La combinación entra a la simulación en vivo</b> como una regla más al lado de Atalaya, para ver si en los próximos meses se parece a lo que dice la historia. Son una o dos órdenes extra cada dos o tres años.</span></li>
+      <li><i>3</i><span><b>Para vos, el dato útil es el del mapa 1:</b> si el Nasdaq está 10% abajo de su máximo del último año, es buen momento para adelantar un aporte que ya tenías pensado o mover plata de otro lado. Lo que no es, es razón para quedarte en efectivo esperando.</span></li>
+    </ul>
+    <div class="frase">"Cuando el Nasdaq cae 10% desde su máximo del último año, históricamente ha sido mejor momento para comprar que un día cualquiera: 16% a seis meses contra 10%, y positivo 19 de 20 veces desde 2009. Pero eso no justifica quedarse en efectivo esperando la caída, porque la espera cuesta más de lo que la caída devuelve. Lo que sí hacemos es que si Atalaya nos tiene afuera y el mercado cae 8% desde su máximo, volvemos a entrar por tres meses, porque ese rebote es justo el que la regla de tendencia se pierde."
+      <small>Cómo se lo explicamos a un cliente.</small></div>
+    <h3 style="font-size:15px; margin-top:26px; color:var(--crema)">Lo que no cuadra del todo, para que lo sepás</h3>
+    <ul class="puntos">
+      <li><i>a</i><span><b>2000 a 2008.</b> Ahí la combinación empató con Atalaya en retorno y tuvo 5 puntos más de caída (−22% contra −17.5%). La caída paga en mercados alcistas con sustos y cobra en bajistas largos, al revés que Atalaya. Por eso se suman bien, pero quien eligió Atalaya por la caída mínima no debería llevarla.</span></li>
+      <li><i>b</i><span><b>En el S&amp;P 500 funciona a medias.</b> Mejora el Sharpe pero sube la caída, y un control de exposición fija lo iguala. El efecto vive en el Nasdaq, que rebota más fuerte y más rápido.</span></li>
+      <li><i>c</i><span><b>Son 17 años, un activo y 72 combinaciones probadas.</b> Que 35 de las 72 mejoren a Atalaya dice que es una meseta y no un golpe de suerte, pero la muestra es la que es. Primero papel, después plata.</span></li>
+    </ul>
+  </section>
+
+  <!-- 7 · LA ESTRATEGIA COMPLETA -->
+  <section id="completa">
+    <div class="num">7</div>
+    <h2>La estrategia completa: cuánto capital y con qué</h2>
+    <p class="lede">Tomamos Atalaya + caída como una sola estrategia y le hicimos las dos preguntas que siguen. <b>¿Cuánto del capital entra en la caída?</b> La mitad, tres cuartos o todo. <b>¿Y con qué?</b> QQQ, QLD (el Nasdaq por dos) o TQQQ (por tres). Probamos también la caída como refuerzo: que actúe aunque Atalaya esté dentro, moviendo una parte del QQQ al fondo apalancado durante los 63 días. En total 198 versiones, todas desde 2000 para que 2000 a 2002 y 2008 cuenten.</p>
+    <div class="card">
+      <div class="ctl"><span class="lbl">Ventana</span><button class="on" data-w7="2000">Desde 2000</button><button data-w7="2009">Desde jul 2009</button><button data-w7="2000_2008">2000 a 2008</button><button data-w7="2020">Desde 2020</button></div>
+      <div class="scrollx">
+        <table class="tabla" id="t-menu"><thead><tr><th>Versión</th><th class="r">Retorno anual</th><th class="r">Sharpe</th><th class="r">Peor caída</th><th class="r">Peor año</th></tr></thead><tbody></tbody></table>
+      </div>
+      <p class="nota">Exposición efectiva = capital × apalancamiento, promedio del período. QLD y TQQQ con sus precios reales desde que existen (2006 y 2010) y simulados antes: retorno diario por 2 o por 3, menos el costo del préstamo a la tasa de la letra más 0.6%, menos 0.95% anual de gastos.</p>
+    </div>
+    <div class="card">
+      <div class="ctl"><span class="lbl">Ventana</span><button class="on" data-c7="2000">Desde 2000</button><button data-c7="2009">Desde jul 2009</button></div>
+      <canvas id="cv-completa" style="height:360px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y;"></canvas>
+      <div class="leg" id="leg-completa"></div>
+      <p class="lector" id="l-completa">Pasá el cursor por el gráfico para ver la fecha.</p>
+    </div>
+    <ul class="puntos">
+      <li><i>1</i><span><b>Apalancar la caída no mejora la estrategia, solo la agranda.</b> Un tercio del capital en TQQQ es exactamente la misma exposición que todo en QQQ, y da el mismo resultado menos un poco de costo. Todo el capital en TQQQ en cada hueco sube el retorno a 19.5% al año pero la caída se va a −60%: peor que Atalaya sola en Sharpe.</span></li>
+      <li><i>2</i><span><b>Lo que sí vale es el refuerzo moderado.</b> Que la caída actúe también cuando Atalaya está dentro, pasando un tercio del QQQ a TQQQ (o la mitad a QLD) por 63 días: 17.6% al año desde 2000 con −31% de caída, el mismo Sharpe que la regla base y 2 puntos más de retorno. Desde 2009, 22.6% al año. Y en 2000 a 2008 fue de lo mejor del mapa (9.5% contra 7.2% de Atalaya), porque las caídas de 8% dentro de la tendencia son justo donde el Nasdaq rebota más.</span></li>
+      <li><i>3</i><span><b>Si lo que querés es la caída de Atalaya, usá la mitad del capital.</b> 50% del capital a QQQ en cada hueco: 13.4% al año desde 2000 (Atalaya: 11.2%), caída −21% (Atalaya: −26%) y peor año −11%. Es la versión para el conservador: 2 puntos más de retorno con menos caída que la regla que ya tiene.</span></li>
+      <li><i>4</i><span><b>Comprar a −8% es mejor que a −10% o −12% en todas las ventanas</b>, y 63 días sigue siendo el plazo. Apalancar toda la tendencia (Atalaya entera en TQQQ) da 22% al año pero con −61% de caída: la caída es el lugar donde conviene el apalancamiento, no la tendencia entera.</span></li>
+    </ul>
+    <div class="frase">Las tres versiones que quedan sobre la mesa, de más conservadora a más agresiva: <b>la mitad del capital a QQQ en cada hueco</b> (13.4% al año, caída −21%), <b>todo el capital a QQQ en cada hueco</b> (15.3%, −29%) y <b>el refuerzo con un tercio a TQQQ</b> (17.6%, −31%). Las tres mejoran a Atalaya en retorno con el mismo o mejor Sharpe. Ninguna le gana a la base en Sharpe: el apalancamiento compra retorno con caída, no con calidad.
+      <small>Ninguna reemplaza hoy la regla de los clientes. Las tres van a la simulación en vivo.</small></div>
+  </section>
+
+</div>
+<div id="tip"></div>
+<footer>
+  <p>Precios de cierre diario y cierre ajustado de QQQ (Yahoo Finance), 1999 a 2026; la muestra principal va del 1 de julio de 2009 (fin de la recesión según el NBER) al 28 de octubre de 2026, y 2000 a 2008 se usa como contraste fuera de muestra. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. El estudio de eventos usa episodios independientes (primer cruce de cada racimo, racimos separados al menos 63 días hábiles) y una prueba de Monte Carlo de 10,000 muestras contra fechas al azar del mismo período. Las pruebas de la sección 4 son remuestreos por bloques de 12 meses de la diferencia de Sharpe, 5,000 réplicas.</p>
+  <p>Resultados pasados, con datos reales, de reglas escritas antes de mirar el resultado. No son una promesa de retorno futuro. Atalaya se explica en <a href="/atalaya/">/atalaya</a>; el estudio de entradas por caída, en <a href="/past/">/past</a>.</p>
+</footer>
+<script src="data.js"></script>
+<script>
+(function(){
+  var D=window.DIP; if(!D) return;
+  var TIP=document.getElementById('tip');
+  var fmtP=function(v,d){ return (v*100).toFixed(d==null?1:d)+'%'; };
+  var fmtN=function(v,d){ return (v>=0?'+':'')+v.toFixed(d==null?1:d); };
+  var MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  var fFecha=function(s){ var p=s.split('-'); return parseInt(p[2],10)+' '+MESES[parseInt(p[1],10)-1]+' '+p[0]; };
+  function tip(ev, html){ TIP.innerHTML=html; TIP.style.display='block'; var w=TIP.offsetWidth, h=TIP.offsetHeight, x=ev.clientX+14, y=ev.clientY+14; if(x+w>window.innerWidth-8) x=ev.clientX-w-14; if(y+h>window.innerHeight-8) y=ev.clientY-h-14; TIP.style.left=x+'px'; TIP.style.top=y+'px'; }
+  function hideTip(){ TIP.style.display='none'; }
+  document.getElementById('fecha-datos').textContent=fFecha(D.fecha_datos);
+
+  // ---------- colores
+  function mix(a,b,t){ t=Math.max(0,Math.min(1,t)); var pa=a.match(/\w\w/g).map(function(h){return parseInt(h,16);}), pb=b.match(/\w\w/g).map(function(h){return parseInt(h,16);}); return 'rgb('+pa.map(function(v,i){return Math.round(v+(pb[i]-v)*t);}).join(',')+')'; }
+  var NEU='#2a3140', VERDE='#63FCAF', ROJO='#F07A6B';
+  function colorDiv(v, lim){ return v>=0? mix(NEU,VERDE,v/lim) : mix(NEU,ROJO,-v/lim); }
+  function esOscuro(v, lim){ return Math.abs(v)/lim>0.55; }
+
+  // ---------- mapa 1: eventos
+  var EV={per:'2009',h:'26'};
+  function pintarEventos(){
+    var rows=D['eventos_'+EV.per], Ns=[13,26,39,52], Xs=[3,5,8,10,12,15,20], g=document.getElementById('g-eventos');
+    g.style.gridTemplateColumns='52px repeat(4,1fr)'; g.innerHTML='';
+    g.appendChild(cel('h','')); Ns.forEach(function(n){ var c=cel('h', n+' sem'); g.appendChild(c); });
+    Xs.forEach(function(x){
+      g.appendChild(cel('y','−'+x+'%'));
+      Ns.forEach(function(n){
+        var r=rows.filter(function(q){return q.N===n&&q.X===x;})[0]; var e=EV.h==='13'?r.e13:r.e26, m=EV.h==='13'?r.m13:r.m26, inc=EV.h==='13'?r.inc13:r.inc26, p=EV.h==='13'?r.p13:r.p26;
+        var c=cel('c',''); c.innerHTML='<span>'+fmtN(e,0)+'</span><small>'+r.ep+' veces</small>'; c.style.background=colorDiv(e,16); if(esOscuro(e,16)) c.classList.add('oscuro'); if(p>0.10) c.style.opacity='0.45';
+        var txt='<b>Comprar a −'+x+'% del máximo de '+n+' semanas</b>, '+(EV.per==='2009'?'jul 2009 a oct 2026':'2000 a 2008')+'<br>'+r.ep+' episodios independientes · a '+EV.h+' semanas: '+m.toFixed(1)+'% en promedio contra '+inc.toFixed(1)+'% de cualquier día ('+fmtN(e,1)+' puntos)'+(EV.h==='26'?'<br>'+r.pos26+'% de las veces positivo · peor 10%: '+r.p10.toFixed(1)+'%':'')+'<br>probabilidad de que sea azar: '+(p*100).toFixed(1)+'%';
+        c.addEventListener('mousemove', function(ev){ tip(ev, txt); }); c.addEventListener('mouseleave', hideTip);
+        c.addEventListener('click', function(){ document.querySelectorAll('#g-eventos .pick').forEach(function(k){k.classList.remove('pick');}); c.classList.add('pick'); document.getElementById('l-eventos').innerHTML=txt.replace(/<br>/g,' · '); });
+        g.appendChild(c);
+      });
+    });
+  }
+  function cel(cls, txt){ var d=document.createElement('div'); d.className=cls; d.textContent=txt; return d; }
+  document.querySelectorAll('#cual .ctl button').forEach(function(b){ b.addEventListener('click', function(){ var k=b.dataset.per?'per':'h'; EV[k]=b.dataset.per||b.dataset.h; b.parentNode.querySelectorAll('button[data-'+k+']').forEach(function(o){o.classList.toggle('on',o===b);}); pintarEventos(); }); });
+  pintarEventos();
+  // resumen con el dato real de 39w -10%
+  (function(){ var r=D.eventos_2009.filter(function(q){return q.N===39&&q.X===10;})[0]; document.getElementById('r-m26').textContent=Math.round(r.m26)+'%'; document.getElementById('r-i26').textContent=Math.round(r.inc26)+'%'; document.getElementById('r-pos').textContent=Math.round(r.pos26*r.ep/100)+' de '+r.ep; })();
+
+  // ---------- mapa 2: tiempo
+  var BH=D.bh_sharpe; document.getElementById('bh-sharpe').textContent=BH.toFixed(2);
+  (function(){
+    var T=D.tiempo, g=document.getElementById('g-tiempo'); g.style.gridTemplateColumns='52px repeat('+T.n.length+',1fr)'; g.innerHTML='';
+    g.appendChild(cel('h','')); T.n.forEach(function(n){ g.appendChild(cel('h', n+' d')); });
+    T.X.forEach(function(x,i){
+      g.appendChild(cel('y','−'+x+'%'));
+      T.n.forEach(function(n,j){
+        var s=T.sharpe[i][j], ro=T.retop[i][j], c=cel('c',''); c.innerHTML='<span>'+s.toFixed(2)+'</span><small>'+fmtN(ro,1)+'% por op.</small>';
+        var d=s-BH; c.style.background=d>=0? mix('#2a3140','#63FCAF',d/0.15) : mix('#2a3140','#F07A6B',-d/0.8); if(d>0.08) c.classList.add('oscuro');
+        var txt='<b>Comprar a −'+x+'%, vender a los '+n+' días hábiles</b><br>Sharpe '+s.toFixed(2)+' (Nasdaq sin hacer nada: '+BH.toFixed(2)+') · '+fmtN(ro,1)+'% por operación en promedio';
+        c.addEventListener('mousemove', function(ev){ tip(ev, txt); }); c.addEventListener('mouseleave', hideTip);
+        c.addEventListener('click', function(){ document.querySelectorAll('#g-tiempo .pick').forEach(function(k){k.classList.remove('pick');}); c.classList.add('pick'); document.getElementById('l-tiempo').innerHTML=txt.replace(/<br>/g,' · '); });
+        g.appendChild(c);
+      });
+    });
+  })();
+  // ---------- mapa 3: recupera
+  (function(){
+    var R=D.recupera, Xs=[5,8,10,12,15,20], Ys=[0,3,6], g=document.getElementById('g-recupera'); g.style.gridTemplateColumns='52px repeat(3,1fr)'; g.innerHTML='';
+    g.appendChild(cel('h','')); Ys.forEach(function(y){ g.appendChild(cel('h', y===0?'al nuevo máximo':'−'+y+'%')); });
+    Xs.forEach(function(x){
+      g.appendChild(cel('y','−'+x+'%'));
+      Ys.forEach(function(y){
+        var r=R.filter(function(q){return q.X===x&&q.Y===y;})[0]; var c=cel('c','');
+        if(!r){ c.style.background='transparent'; g.appendChild(c); return; }
+        var s=r.s, d=s-BH; c.innerHTML='<span>'+s.toFixed(2)+'</span>'+(x===12&&y===6?'<small>Atalaya al revés</small>':''); c.style.background=d>=0? mix('#2a3140','#63FCAF',d/0.15) : mix('#2a3140','#F07A6B',-d/0.8);
+        var txt='<b>Comprar a −'+x+'%, vender al volver a '+(y===0?'un nuevo máximo':'−'+y+'%')+'</b><br>Sharpe '+s.toFixed(2)+' (Nasdaq sin hacer nada: '+BH.toFixed(2)+')';
+        c.addEventListener('mousemove', function(ev){ tip(ev, txt); }); c.addEventListener('mouseleave', hideTip);
+        c.addEventListener('click', function(){ document.querySelectorAll('#g-recupera .pick').forEach(function(k){k.classList.remove('pick');}); c.classList.add('pick'); document.getElementById('l-recupera').innerHTML=txt.replace(/<br>/g,' · '); });
+        g.appendChild(c);
+      });
+    });
+  })();
+
+  // ---------- sección 3: honesta
+  (function(){
+    var M=D.malla, k=document.getElementById('k-honesta');
+    k.innerHTML=[['Versiones probadas', M.n, '', 'caídas de 3% a 20%, 4 ventanas del máximo, 3 familias de salida'],
+                 ['Ganan a la mezcla de igual riesgo', Math.round(M.gana_vol*100)+'%', 'rojo', 'en Sharpe, por cualquier margen'],
+                 ['Ganan por un margen que valga', Math.round(M.gana_ambas*100)+'%', 'rojo', 'Sharpe +0.10 sobre las dos mezclas'],
+                 ['Ganan al Nasdaq sin hacer nada', Math.round(M.gana_bh*100)+'%', 'rojo', 'en Sharpe']].map(function(x){ return '<div class="kpi"><div class="l">'+x[0]+'</div><div class="v '+x[2]+'">'+x[1]+'</div><div class="s">'+x[3]+'</div></div>'; }).join('');
+    var tb=document.querySelector('#t-solas tbody'); tb.innerHTML=D.top_solas.map(function(s,i){
+      var nombre=s.regla.replace(/(\d+)w -(\d+)% \| tiempo (\d+)b/, 'Máximo de $1 semanas, comprar a −$2%, vender a los $3 días');
+      return '<tr'+(i===0?' class="destacada"':'')+'><td>'+nombre+'</td><td class="r">'+fmtP(s.cagr)+'</td><td class="r">'+s.sharpe.toFixed(2)+'</td><td class="r">'+fmtP(s.dd)+'</td><td class="r">'+Math.round(s.expo*100)+'%</td><td class="r">'+Math.round(s.gana*100)+'% · '+fmtN(s.retop*100,1)+'%</td><td class="r">'+fmtP(s.mix_cagr)+' · Sharpe '+s.mix_sharpe.toFixed(2)+'</td></tr>';
+    }).join('');
+    document.getElementById('cagrinv').textContent=Math.round(D.top_solas[0].cagrinv*100)+'%'; document.getElementById('cagract').textContent=fmtP(D.kpis['2009'].qqq.cagr,1);
+    var tc=document.querySelector('#t-cash tbody'); tc.innerHTML=D.cash.map(function(c){ return '<tr><td>−'+c.X+'% del máximo de 39 semanas</td><td class="r">'+c.W+' meses</td><td class="r">'+c.llego+'% de las veces</td><td class="r '+(c.dif<-0.3?'rojo':'')+'">'+fmtN(c.dif,1)+' puntos al año</td><td class="r">'+c.gana+'% de las veces</td></tr>'; }).join('');
+  })();
+
+  // ---------- curvas
+  var CV=document.getElementById('cv-curvas'), WIN='2000', CUR={hover:null};
+  var SER=[['qqq','#8E96A3','Nasdaq sin hacer nada'],['a2','#8B9BFF','Atalaya'],['combo','#63FCAF','Atalaya + comprar la caída'],['sola','#F5C26B','Solo la caída']];
+  function prep(cv){ var dpr=window.devicePixelRatio||1, w=cv.clientWidth, h=cv.clientHeight; if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){ cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr); } var ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h); return {ctx:ctx,w:w,h:h}; }
+  function dibujarCurvas(){
+    var P=prep(CV), ctx=P.ctx, w=P.w, h=P.h, L=46, R=10, T=14, B=26;
+    var i0=0; if(WIN==='2009'){ for(var i=0;i<D.fechas.length;i++){ if(D.fechas[i]>='2009-07-01'){ i0=i; break; } } }
+    var n=D.fechas.length-i0, ymin=1e9, ymax=0, base={};
+    SER.forEach(function(s){ base[s[0]]=D.curvas[s[0]][i0]; for(var i=i0;i<D.fechas.length;i++){ var v=D.curvas[s[0]][i]/base[s[0]]; if(v<ymin) ymin=v; if(v>ymax) ymax=v; } });
+    var ly0=Math.log(ymin*0.92), ly1=Math.log(ymax*1.08);
+    var X=function(i){ return L+(i-i0)/(n-1)*(w-L-R); }, Y=function(v){ return T+(1-(Math.log(v)-ly0)/(ly1-ly0))*(h-T-B); };
+    ctx.font='11px Bai Jamjuree, sans-serif'; ctx.textBaseline='middle';
+    [0.25,0.5,1,2,4,8,16,32].forEach(function(t){ if(t<ymin*0.92||t>ymax*1.08) return; var y=Y(t); ctx.strokeStyle='rgba(174,180,190,.12)'; ctx.beginPath(); ctx.moveTo(L,y); ctx.lineTo(w-R,y); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.textAlign='right'; ctx.fillText(t+'x', L-6, y); });
+    ctx.textAlign='center'; ctx.textBaseline='top'; var lastY=null;
+    for(var i=i0;i<D.fechas.length;i++){ var yr=D.fechas[i].slice(0,4); if(yr!==lastY){ lastY=yr; if(parseInt(yr,10)%(WIN==='2000'?2:2)===0){ var x=X(i); ctx.strokeStyle='rgba(174,180,190,.08)'; ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.fillText(yr, x, h-B+6); } } }
+    if(WIN==='2000'){ var xa=X(i0), xb=X(D.fechas.findIndex(function(f){return f>='2009-07-01';})); ctx.fillStyle='rgba(174,180,190,.06)'; ctx.fillRect(xa,T,xb-xa,h-T-B); ctx.fillStyle='#8E96A3'; ctx.textAlign='left'; ctx.fillText('antes de jul 2009: fuera de la muestra principal', xa+6, T+4); }
+    SER.forEach(function(s){ ctx.strokeStyle=s[1]; ctx.lineWidth=s[0]==='combo'?2.2:1.4; ctx.beginPath(); for(var i=i0;i<D.fechas.length;i++){ var x=X(i), y=Y(D.curvas[s[0]][i]/base[s[0]]); if(i===i0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); });
+    if(CUR.hover!=null){ var hi=CUR.hover, x=X(hi); ctx.strokeStyle='rgba(254,249,243,.35)'; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.setLineDash([]); SER.forEach(function(s){ var y=Y(D.curvas[s[0]][hi]/base[s[0]]); ctx.fillStyle=s[1]; ctx.beginPath(); ctx.arc(x,y,3.5,0,Math.PI*2); ctx.fill(); }); }
+    CUR.X=X; CUR.i0=i0; CUR.n=n; CUR.base=base; CUR.L=L; CUR.R=R; CUR.w=w;
+    var K=D.kpis[WIN], k=document.getElementById('k-curvas');
+    k.innerHTML=SER.map(function(s){ var q=K[s[0]]; return '<div class="kpi"><div class="l" style="color:'+s[1]+'">'+s[2]+'</div><div class="v">'+fmtP(q.cagr)+' <span style="font-size:12px;font-weight:500;color:var(--gris-sec)">al año</span></div><div class="s">Sharpe <b>'+q.sharpe.toFixed(2)+'</b> · peor caída <b>'+fmtP(q.dd,0)+'</b>'+(s[0]!=='qqq'?' · dentro <b>'+Math.round(q.expo*100)+'%</b> del tiempo':'')+'</div></div>'; }).join('');
+  }
+  function hoverCurvas(ev){ var rc=CV.getBoundingClientRect(), x=ev.clientX-rc.left; var i=Math.round(CUR.i0+(x-CUR.L)/(CUR.w-CUR.L-CUR.R)*(CUR.n-1)); i=Math.max(CUR.i0,Math.min(D.fechas.length-1,i)); CUR.hover=i; dibujarCurvas(); var html='<b>'+fFecha(D.fechas[i])+'</b>'+SER.map(function(s){ return '<br><span style="color:'+s[1]+'">●</span> '+s[2]+': '+(D.curvas[s[0]][i]/CUR.base[s[0]]).toFixed(2)+'x'; }).join(''); tip(ev, html); document.getElementById('l-curvas').innerHTML=html.replace(/<br>/g,' · '); }
+  CV.addEventListener('mousemove', hoverCurvas); CV.addEventListener('mouseleave', function(){ CUR.hover=null; hideTip(); dibujarCurvas(); });
+  CV.addEventListener('touchstart', function(ev){ hoverCurvas(ev.touches[0]); hideTip(); }, {passive:true}); CV.addEventListener('touchmove', function(ev){ hoverCurvas(ev.touches[0]); hideTip(); }, {passive:true});
+  document.querySelectorAll('#atalaya .ctl button').forEach(function(b){ b.addEventListener('click', function(){ WIN=b.dataset.win; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); CUR.hover=null; dibujarCurvas(); }); });
+  dibujarCurvas();
+  // kpis bootstrap (cifras del informe)
+  document.getElementById('k-boot').innerHTML=[['Contra Atalaya sola, 2000 a 2026','+0.20','menta','diferencia de Sharpe · intervalo +0.02 a +0.38 · 99% de las remuestras a favor'],['Contra Atalaya sola, desde 2009','+0.30','menta','intervalo +0.09 a +0.52 · 100% a favor'],['Contra exposición fija, 2000 a 2026','+0.26','menta','intervalo +0.06 a +0.48 · el control cae −45%, la combinación −29%'],['Combinaciones en la meseta','35 de 72','peri','mejoran Sharpe y retorno de Atalaya sin empeorar la caída más de 10 puntos']].map(function(x){ return '<div class="kpi"><div class="l">'+x[0]+'</div><div class="v '+x[2]+'">'+x[1]+'</div><div class="s">'+x[3]+'</div></div>'; }).join('');
+
+  // ---------- precio
+  var CP=document.getElementById('cv-precio'), PR={hover:null};
+  function dibujarPrecio(){
+    var P=prep(CP), ctx=P.ctx, w=P.w, h=P.h, L=40, R=10, T=12, B=26, Q=D.precio, n=Q.fechas.length;
+    var ymin=1e9, ymax=0; for(var i=0;i<n;i++){ if(Q.close[i]<ymin) ymin=Q.close[i]; if(Q.hi[i]>ymax) ymax=Q.hi[i]; }
+    var ly0=Math.log(ymin*0.95), ly1=Math.log(ymax*1.04);
+    var X=function(i){ return L+i/(n-1)*(w-L-R); }, Y=function(v){ return T+(1-(Math.log(v)-ly0)/(ly1-ly0))*(h-T-B); };
+    // franjas
+    function franjas(arr, val, color){ var i=0; while(i<n){ if(arr[i]===val){ var j=i; while(j<n&&arr[j]===val) j++; ctx.fillStyle=color; ctx.fillRect(X(i),T,Math.max(1,X(j-1)-X(i)),h-T-B); i=j; } else i++; } }
+    franjas(Q.a2, 0, 'rgba(139,155,255,.20)'); franjas(Q.dip, 1, 'rgba(99,252,175,.26)');
+    ctx.font='11px Bai Jamjuree, sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='right';
+    [150,200,250,300,400,500,600,700].forEach(function(t){ if(t<ymin*0.95||t>ymax*1.04) return; var y=Y(t); ctx.strokeStyle='rgba(174,180,190,.12)'; ctx.beginPath(); ctx.moveTo(L,y); ctx.lineTo(w-R,y); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.fillText(t, L-6, y); });
+    ctx.textAlign='center'; ctx.textBaseline='top'; var lastY=null;
+    for(var i=0;i<n;i++){ var yr=Q.fechas[i].slice(0,4); if(yr!==lastY){ lastY=yr; var x=X(i); ctx.strokeStyle='rgba(174,180,190,.08)'; ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.fillText(yr, x+14, h-B+6); } }
+    function linea(arr, f, color, dash, lw){ ctx.strokeStyle=color; ctx.lineWidth=lw||1; ctx.setLineDash(dash||[]); ctx.beginPath(); for(var i=0;i<n;i++){ var v=arr[i]*f; if(v==null||isNaN(v)) continue; var x=X(i), y=Y(v); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); ctx.setLineDash([]); }
+    linea(Q.hi, 1, '#8E96A3', [4,3], 1); linea(Q.hi, 0.92, '#F5C26B', [2,3], 1); linea(Q.hi, 0.88, '#8B9BFF', [2,3], 1); linea(Q.close, 1, '#FEF9F3', [], 1.3);
+    if(PR.hover!=null){ var hi=PR.hover, x=X(hi); ctx.strokeStyle='rgba(254,249,243,.35)'; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#FEF9F3'; ctx.beginPath(); ctx.arc(x,Y(Q.close[hi]),3.5,0,Math.PI*2); ctx.fill(); }
+    PR.X=X; PR.L=L; PR.R=R; PR.w=w; PR.n=n;
+  }
+  function hoverPrecio(ev){ var rc=CP.getBoundingClientRect(), x=ev.clientX-rc.left, Q=D.precio; var i=Math.round((x-PR.L)/(PR.w-PR.L-PR.R)*(PR.n-1)); i=Math.max(0,Math.min(PR.n-1,i)); PR.hover=i; dibujarPrecio(); var niv=(Q.close[i]/Q.hi[i]-1)*100; var html='<b>'+fFecha(Q.fechas[i])+'</b><br>QQQ '+Q.close[i].toFixed(0)+' · '+niv.toFixed(1)+'% bajo el máximo de 39 semanas<br>'+(Q.a2[i]?'Atalaya dentro':'<span style="color:#8B9BFF">Atalaya fuera</span>')+(Q.dip[i]?' · <span style="color:#63FCAF">dentro por la caída</span>':''); tip(ev, html); document.getElementById('l-precio').innerHTML=html.replace(/<br>/g,' · '); }
+  CP.addEventListener('mousemove', hoverPrecio); CP.addEventListener('mouseleave', function(){ PR.hover=null; hideTip(); dibujarPrecio(); });
+  CP.addEventListener('touchstart', function(ev){ hoverPrecio(ev.touches[0]); hideTip(); }, {passive:true}); CP.addEventListener('touchmove', function(ev){ hoverPrecio(ev.touches[0]); hideTip(); }, {passive:true});
+  dibujarPrecio();
+  // tramos extra
+  (function(){ var tb=document.querySelector('#t-tramos tbody'); var tr=D.tramos_extra.filter(function(t){return t.dias>=5;}); tb.innerHTML=tr.map(function(t){ return '<tr><td>'+fFecha(t.ini)+' a '+fFecha(t.fin)+'</td><td class="r">'+t.dias+'</td><td class="r '+(t.ret>=0?'menta':'rojo')+'">'+fmtN(t.ret,1)+'%</td></tr>'; }).join(''); var g=tr.filter(function(t){return t.ret>0;}).length; tb.innerHTML+='<tr class="destacada"><td>'+tr.length+' tramos de 5 días o más · '+g+' ganaron</td><td class="r"></td><td class="r">'+fmtN(tr.reduce(function(a,t){return a+t.ret;},0)/tr.length,1)+'% promedio</td></tr>'; })();
+
+  // ---------- seccion 7: la estrategia completa
+  var N7=D.n7, W7='2000', C7='2000', S7={hover:null};
+  var SER7=[['qqq','#8E96A3','Nasdaq sin hacer nada'],['a2','#8B9BFF','Atalaya sola'],['combo50','#F5C26B','Mitad del capital a QQQ en el hueco'],['combo100','#63FCAF','Todo a QQQ en el hueco (base)'],['ref33t','#FEF9F3','Refuerzo: un tercio a TQQQ'],['combo100t','#F07A6B','Todo a TQQQ en el hueco']];
+  function pintarMenu(){
+    var tb=document.querySelector('#t-menu tbody'); tb.innerHTML=N7.menu.map(function(m){ var k=m.k[W7]; var dest=/50% QQQ|100% QQQ|refuerzo \| 33% TQQQ/.test(m.regla); var sh=k.sharpe, a2=N7.menu[0].k[W7].sharpe; return '<tr'+(dest?' class="destacada"':'')+'><td><b>'+m.nombre+'</b>'+(m.desc?'<br><span style="font-size:12px;color:var(--gris-sec)">'+m.desc+'</span>':'')+'</td><td class="r">'+fmtP(k.cagr)+'</td><td class="r '+(sh>a2+0.02?'menta':(sh<a2-0.02?'rojo':''))+'">'+sh.toFixed(2)+'</td><td class="r '+(k.dd<-0.45?'rojo':'')+'">'+fmtP(k.dd,0)+'</td><td class="r">'+(k.peor==null?'':fmtP(k.peor,0))+'</td></tr>'; }).join('');
+  }
+  document.querySelectorAll('#completa .ctl button[data-w7]').forEach(function(b){ b.addEventListener('click', function(){ W7=b.dataset.w7; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); pintarMenu(); }); });
+  pintarMenu();
+  var C7V=document.getElementById('cv-completa');
+  document.getElementById('leg-completa').innerHTML=SER7.map(function(s){ return '<span><i style="background:'+s[1]+'"></i> '+s[2]+'</span>'; }).join('');
+  function dibujarCompleta(){
+    var P=prep(C7V), ctx=P.ctx, w=P.w, h=P.h, L=46, R=10, T=14, B=26, F=N7.fechas;
+    var i0=0; if(C7==='2009'){ for(var i=0;i<F.length;i++){ if(F[i]>='2009-07-01'){ i0=i; break; } } }
+    var n=F.length-i0, ymin=1e9, ymax=0, base={};
+    SER7.forEach(function(s){ base[s[0]]=N7.curvas[s[0]][i0]; for(var i=i0;i<F.length;i++){ var v=N7.curvas[s[0]][i]/base[s[0]]; if(v<ymin) ymin=v; if(v>ymax) ymax=v; } });
+    var ly0=Math.log(ymin*0.92), ly1=Math.log(ymax*1.08);
+    var X=function(i){ return L+(i-i0)/(n-1)*(w-L-R); }, Y=function(v){ return T+(1-(Math.log(v)-ly0)/(ly1-ly0))*(h-T-B); };
+    ctx.font='11px Bai Jamjuree, sans-serif'; ctx.textBaseline='middle';
+    [0.1,0.25,0.5,1,2,4,8,16,32,64].forEach(function(t){ if(t<ymin*0.92||t>ymax*1.08) return; var y=Y(t); ctx.strokeStyle='rgba(174,180,190,.12)'; ctx.beginPath(); ctx.moveTo(L,y); ctx.lineTo(w-R,y); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.textAlign='right'; ctx.fillText(t+'x', L-6, y); });
+    ctx.textAlign='center'; ctx.textBaseline='top'; var lastY=null;
+    for(var i=i0;i<F.length;i++){ var yr=F[i].slice(0,4); if(yr!==lastY){ lastY=yr; if(parseInt(yr,10)%2===0){ var x=X(i); ctx.strokeStyle='rgba(174,180,190,.08)'; ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.fillText(yr, x, h-B+6); } } }
+    SER7.forEach(function(s){ ctx.strokeStyle=s[1]; ctx.lineWidth=(s[0]==='combo100'||s[0]==='ref33t')?2.2:1.3; ctx.beginPath(); for(var i=i0;i<F.length;i++){ var x=X(i), y=Y(N7.curvas[s[0]][i]/base[s[0]]); if(i===i0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); });
+    if(S7.hover!=null){ var hi=S7.hover, x=X(hi); ctx.strokeStyle='rgba(254,249,243,.35)'; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.setLineDash([]); SER7.forEach(function(s){ ctx.fillStyle=s[1]; ctx.beginPath(); ctx.arc(x,Y(N7.curvas[s[0]][hi]/base[s[0]]),3.5,0,Math.PI*2); ctx.fill(); }); }
+    S7.X=X; S7.i0=i0; S7.n=n; S7.base=base; S7.L=L; S7.R=R; S7.w=w;
+  }
+  function hoverCompleta(ev){ var rc=C7V.getBoundingClientRect(), x=ev.clientX-rc.left, F=N7.fechas; var i=Math.round(S7.i0+(x-S7.L)/(S7.w-S7.L-S7.R)*(S7.n-1)); i=Math.max(S7.i0,Math.min(F.length-1,i)); S7.hover=i; dibujarCompleta(); var html='<b>'+fFecha(F[i])+'</b>'+SER7.map(function(s){ return '<br><span style="color:'+s[1]+'">●</span> '+s[2]+': '+(N7.curvas[s[0]][i]/S7.base[s[0]]).toFixed(2)+'x'; }).join(''); tip(ev, html); document.getElementById('l-completa').innerHTML=html.replace(/<br>/g,' · '); }
+  C7V.addEventListener('mousemove', hoverCompleta); C7V.addEventListener('mouseleave', function(){ S7.hover=null; hideTip(); dibujarCompleta(); });
+  C7V.addEventListener('touchstart', function(ev){ hoverCompleta(ev.touches[0]); hideTip(); }, {passive:true}); C7V.addEventListener('touchmove', function(ev){ hoverCompleta(ev.touches[0]); hideTip(); }, {passive:true});
+  document.querySelectorAll('#completa .ctl button[data-c7]').forEach(function(b){ b.addEventListener('click', function(){ C7=b.dataset.c7; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); S7.hover=null; dibujarCompleta(); }); });
+  dibujarCompleta();
+
+  window.addEventListener('resize', function(){ dibujarCurvas(); dibujarPrecio(); dibujarCompleta(); });
+})();
+</script>
+</body>
+</html>
