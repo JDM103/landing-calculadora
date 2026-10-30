@@ -355,6 +355,8 @@
     return {g:g,W:W,H:H};
   }
   var MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  /* texto con halo oscuro alrededor, para que se lea encima de las líneas */
+  function txt(g,t,x,y){ var sw=g.strokeStyle, lw=g.lineWidth, lj=g.lineJoin; g.strokeStyle='rgba(13,15,20,.92)'; g.lineWidth=4; g.lineJoin='round'; g.strokeText(t,x,y); g.fillText(t,x,y); g.strokeStyle=sw; g.lineWidth=lw; g.lineJoin=lj; }
 
   /* gráfico de capital: $100,000 al inicio del tramo, con la regla y sin ella, sombreando los días fuera */
   function grafico(id, f0, f1, mini){
@@ -375,7 +377,7 @@
     var ticks=[]; for(var q=0;q<=3;q++) ticks.push(log?Math.exp(Math.log(lo)+q/3*(Math.log(hi)-Math.log(lo))):(lo+q/3*(hi-lo)));
     g.textAlign='left'; g.textBaseline='middle';
     ticks.forEach(function(v,k){ var y=Y(v); g.strokeStyle='rgba(174,180,190,.12)'; g.lineWidth=1; g.beginPath(); g.moveTo(PL,y); g.lineTo(W-PR,y); g.stroke(); if(k>0&&k<3){ g.fillStyle=COL.grisOsc; g.fillText(fUSD(v),W-PR+6,y); } });
-    var y100=Y(INV); if(y100>mT&&y100<mB){ g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,4]); g.beginPath(); g.moveTo(PL,y100); g.lineTo(W-PR,y100); g.stroke(); g.setLineDash([]); g.fillStyle=COL.grisSec; g.textAlign='left'; g.textBaseline='bottom'; g.fillText('lo invertido',PL+4,y100-3); }
+    var y100=Y(INV); if(y100>mT&&y100<mB){ g.strokeStyle='rgba(254,249,243,.3)'; g.setLineDash([3,4]); g.beginPath(); g.moveTo(PL,y100); g.lineTo(W-PR,y100); g.stroke(); g.setLineDash([]); g.fillStyle=COL.grisSec; g.textAlign='left'; g.textBaseline='bottom'; txt(g,'lo invertido',PL+4,y100-3); }
     var anios=Math.floor(Q.d[b]/10000)-Math.floor(Q.d[a]/10000), paso=anios>12?Math.ceil(anios/9):1, ultimoAnio=-1;
     g.textAlign='center'; g.textBaseline='top'; g.fillStyle=COL.grisSec;
     for(i=a;i<=b;i++){ var y=Math.floor(Q.d[i]/10000); if(y!==ultimoAnio){ ultimoAnio=y; if(i>a && y%paso===0){ var x=X(i); g.strokeStyle='rgba(174,180,190,.1)'; g.beginPath(); g.moveTo(x,mT); g.lineTo(x,mB); g.stroke(); g.fillText(String(y),x,mB+4); } } }
@@ -388,8 +390,8 @@
     g.fillStyle=COL.grisSec; g.beginPath(); g.arc(xr,yb,3,0,7); g.fill();
     g.font="600 "+(mini?11:12.5)+"px 'Bai Jamjuree'"; g.textAlign='right'; g.textBaseline='middle';
     var cerca=Math.abs(yr-yb)<15, arriba=yr<=yb;
-    g.fillStyle=COL.menta; g.fillText(fUSD(vR(b)), xr-7, yr+(cerca?(arriba?-9:9):0));
-    g.fillStyle=COL.gris; g.fillText(fUSD(vB(b)), xr-7, yb+(cerca?(arriba?9:-9):0));
+    g.fillStyle=COL.menta; txt(g,fUSD(vR(b)), xr-7, yr+(cerca?(arriba?-9:9):0));
+    g.fillStyle=COL.gris; txt(g,fUSD(vB(b)), xr-7, yb+(cerca?(arriba?9:-9):0));
   }
 
   /* fotograma: precio, máximo de 39 semanas y línea de salida hasta una fecha de corte; el resto del tramo queda vacío */
@@ -417,7 +419,7 @@
       g.fillStyle= sale?COL.rojo:COL.menta; g.beginPath();
       if(sale){ g.moveTo(x,yv-6); g.lineTo(x-6,yv-16); g.lineTo(x+6,yv-16); } else { g.moveTo(x,yv+6); g.lineTo(x-6,yv+16); g.lineTo(x+6,yv+16); }
       g.closePath(); g.fill();
-      g.font="600 "+(simple?13:10.5)+"px 'Bai Jamjuree'"; if(simple){ g.textAlign='left'; g.textBaseline='middle'; g.fillText(sale?'Sale':'Entra', x+10, sale?yv-11:yv+11); } else { g.textAlign='center'; g.textBaseline= sale?'bottom':'top'; g.fillText(sale?'Sale':'Vuelve', x, sale?yv-18:yv+18); } } }
+      g.font="600 "+(simple?13:10.5)+"px 'Bai Jamjuree'"; if(simple){ g.textAlign='left'; g.textBaseline='middle'; txt(g,sale?'Sale':'Entra', x+10, sale?yv-11:yv+11); } else { g.textAlign='center'; g.textBaseline= sale?'bottom':'top'; txt(g,sale?'Sale':'Vuelve', x, sale?yv-18:yv+18); } } }
     // punto al día del corte
     if(k<b){ g.fillStyle=COL.crema; g.beginPath(); g.arc(X(k),Y(Q.c[k]),3,0,7); g.fill(); }
   }
@@ -442,7 +444,7 @@
       g.fillStyle= sale?COL.rojo:COL.menta; g.beginPath();
       if(sale){ g.moveTo(x,yv-t*0.6); g.lineTo(x-t*0.7,yv-t*1.8); g.lineTo(x+t*0.7,yv-t*1.8); } else { g.moveTo(x,yv+t*0.6); g.lineTo(x-t*0.7,yv+t*1.8); g.lineTo(x+t*0.7,yv+t*1.8); }
       g.closePath(); g.fill();
-      g.textBaseline= sale?'bottom':'top'; g.fillText(sale?'Sale':'Entra', x, sale?yv-t*2.1:yv+t*2.1); } }
+      g.textBaseline= sale?'bottom':'top'; txt(g,sale?'Sale':'Entra', x, sale?yv-t*2.1:yv+t*2.1); } }
   }
   function secuencia(pref, f0, f1, cortes){ for(var j=0;j<4;j++) cuadro(pref+(j+1), f0, f1, cortes[j]); }
 
