@@ -433,6 +433,7 @@
     g.fillStyle='rgba(240,122,107,.10)'; var ini=-1;
     for(i=a;i<=b+1;i++){ var fuera= i<=b && !Q.pos[i]; if(fuera&&ini<0) ini=i; if(!fuera&&ini>=0){ g.fillRect(X(ini),mT-10,Math.max(1,X(Math.min(i,b))-X(ini)),mB-mT+20); ini=-1; } }
     function linea(fn,color,ancho,dash){ g.beginPath(); var on=false; for(var i=a;i<=b;i++){ var v=fn(i); if(v!==v){ on=false; continue; } var x=X(i), yy=Y(v); on?g.lineTo(x,yy):g.moveTo(x,yy); on=true; } g.strokeStyle=color; g.lineWidth=ancho; g.setLineDash(dash||[]); g.lineJoin='round'; g.stroke(); g.setLineDash([]); }
+    linea(function(i){ return Q.mx[i]*0.88; }, 'rgba(240,122,107,.55)', 1.2, [4,5]);
     linea(function(i){ return Q.mx[i]; }, 'rgba(99,252,175,.7)', 1.8);
     linea(function(i){ return Q.c[i]; }, 'rgba(254,249,243,.9)', 2);
     var fs=Math.max(12,Math.round(W*0.026));
