@@ -136,12 +136,11 @@
   <!-- 2 · QUÉ ES -->
   <section class="slide">
     <div class="eyebrow">Qué es</div>
-    <h2>Atalaya en tres frases</h2>
-    <p style="margin-bottom:max(10px,1.4cqw)">El Nasdaq 100 es el índice de las 100 empresas de tecnología más grandes de Estados Unidos. Atalaya es la regla que decide cuándo estar adentro y cuándo no.</p>
-    <div class="cols3">
-      <div class="box grande"><div class="n">1</div><p>Cuando el Nasdaq sube, <b>estamos adentro</b>.</p></div>
-      <div class="box grande"><div class="n">2</div><p>Cuando cae fuerte, <b>nos salimos a efectivo</b> y la plata gana interés mientras espera.</p></div>
-      <div class="box grande"><div class="n">3</div><p>Cuando se recupera, <b>volvemos a entrar</b>.</p></div>
+    <h2>Atalaya en tres momentos</h2>
+    <div class="cuadros" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cuadro"><p style="min-height:0;margin-top:0"><span class="k">1</span>&nbsp; Cuando el Nasdaq sube, <b>estamos adentro</b>.</p><div class="chart"><canvas id="q-1"></canvas></div><p style="min-height:0;color:var(--gris-sec)">2023 a 2024</p></div>
+      <div class="cuadro"><p style="min-height:0;margin-top:0"><span class="k">2</span>&nbsp; Cuando cae fuerte, <b class="rojo">nos salimos a efectivo</b>.</p><div class="chart"><canvas id="q-2"></canvas></div><p style="min-height:0;color:var(--gris-sec)">Enero de 2022</p></div>
+      <div class="cuadro"><p style="min-height:0;margin-top:0"><span class="k">3</span>&nbsp; Cuando se recupera, <b class="menta">volvemos a entrar</b>.</p><div class="chart"><canvas id="q-3"></canvas></div><p style="min-height:0;color:var(--gris-sec)">Abril de 2023</p></div>
     </div>
     <div class="frase">No adivina lo que va a pasar. <b>Reacciona</b>, siempre con la misma regla.</div>
   </section>
@@ -394,7 +393,7 @@
   }
 
   /* fotograma: precio, máximo de 39 semanas y línea de salida hasta una fecha de corte; el resto del tramo queda vacío */
-  function cuadro(id, f0, f1, corte){
+  function cuadro(id, f0, f1, corte, simple){
     var cv=document.getElementById(id), o=lienzo(cv); if(!o) return;
     var g=o.g, W=o.W, H=o.H, a=idx(f0), b=idxFin(f1), k=Math.min(b, idxFin(corte));
     var PL=6, PR=6, mT=8, mB=H-16;
@@ -403,13 +402,14 @@
     var pad=(hi-lo)*0.08; lo-=pad; hi+=pad;
     var Y=function(v){ return mT+(1-(v-lo)/(hi-lo))*(mB-mT); }, X=function(i){ return PL+(i-a)/(b-a)*(W-PL-PR); };
     // sombra: días afuera, solo hasta el corte
+    if(simple){ g.fillStyle='rgba(99,252,175,.07)'; var ini0=-1; for(i=a;i<=k+1;i++){ var dentro= i<=k && Q.pos[i]; if(dentro&&ini0<0) ini0=i; if(!dentro&&ini0>=0){ g.fillRect(X(ini0),mT,Math.max(1,X(Math.min(i,k))-X(ini0)),mB-mT); ini0=-1; } } }
     g.fillStyle='rgba(240,122,107,.16)'; var ini=-1;
     for(i=a;i<=k+1;i++){ var fuera= i<=k && !Q.pos[i]; if(fuera&&ini<0) ini=i; if(!fuera&&ini>=0){ g.fillRect(X(ini),mT,Math.max(1,X(Math.min(i,k))-X(ini)),mB-mT); ini=-1; } }
     // años al pie
     g.font="10px 'Bai Jamjuree'"; g.textAlign='center'; g.textBaseline='top'; g.fillStyle=COL.grisSec; var ua=-1;
-    for(i=a;i<=b;i++){ var y=Math.floor(Q.d[i]/10000); if(y!==ua){ ua=y; if(i>a){ var x=X(i); g.strokeStyle='rgba(174,180,190,.12)'; g.beginPath(); g.moveTo(x,mT); g.lineTo(x,mB); g.stroke(); g.fillText(String(y),x,mB+3); } } }
+    for(i=a;i<=b && !simple;i++){ var y=Math.floor(Q.d[i]/10000); if(y!==ua){ ua=y; if(i>a){ var x=X(i); g.strokeStyle='rgba(174,180,190,.12)'; g.beginPath(); g.moveTo(x,mT); g.lineTo(x,mB); g.stroke(); g.fillText(String(y),x,mB+3); } } }
     function linea(fn,color,ancho,dash){ g.beginPath(); var on=false; for(var i=a;i<=k;i++){ var v=fn(i); if(v!==v){ on=false; continue; } var x=X(i), yy=Y(v); on?g.lineTo(x,yy):g.moveTo(x,yy); on=true; } g.strokeStyle=color; g.lineWidth=ancho; g.setLineDash(dash||[]); g.lineJoin='round'; g.stroke(); g.setLineDash([]); }
-    linea(function(i){ return Q.mx[i]*0.88; }, COL.rojo, 1, [3,3]);
+    if(!simple) linea(function(i){ return Q.mx[i]*0.88; }, COL.rojo, 1, [3,3]);
     linea(function(i){ return Q.mx[i]; }, COL.menta, 1.6);
     linea(function(i){ return Q.c[i]; }, COL.crema, 1.4);
     // flechas de salida y entrada dentro del tramo mostrado
@@ -417,7 +417,7 @@
       g.fillStyle= sale?COL.rojo:COL.menta; g.beginPath();
       if(sale){ g.moveTo(x,yv-6); g.lineTo(x-6,yv-16); g.lineTo(x+6,yv-16); } else { g.moveTo(x,yv+6); g.lineTo(x-6,yv+16); g.lineTo(x+6,yv+16); }
       g.closePath(); g.fill();
-      g.font="600 10.5px 'Bai Jamjuree'"; g.textAlign='center'; g.textBaseline= sale?'bottom':'top'; g.fillText(sale?'Sale':'Vuelve', x, sale?yv-18:yv+18); } }
+      g.font="600 "+(simple?13:10.5)+"px 'Bai Jamjuree'"; if(simple){ g.textAlign='left'; g.textBaseline='middle'; g.fillText(sale?'Sale':'Entra', x+10, sale?yv-11:yv+11); } else { g.textAlign='center'; g.textBaseline= sale?'bottom':'top'; g.fillText(sale?'Sale':'Vuelve', x, sale?yv-18:yv+18); } } }
     // punto al día del corte
     if(k<b){ g.fillStyle=COL.crema; g.beginPath(); g.arc(X(k),Y(Q.c[k]),3,0,7); g.fill(); }
   }
@@ -448,6 +448,9 @@
 
   function dibujar(){
     portada();
+    cuadro('q-1',20230403,20240705,99999999,true);
+    cuadro('q-2',20211101,20221230,99999999,true);
+    cuadro('q-3',20221001,20231229,99999999,true);
     secuencia('s22-', 20210601, 20230731, [20211231, 20220215, 20221231, 20230731]);
     secuencia('s08-', 20070401, 20091231, [20071115, 20080215, 20090331, 20091231]);
     secuencia('s00-', 19990601, 20031031, [20000327, 20000515, 20021031, 20031031]);
