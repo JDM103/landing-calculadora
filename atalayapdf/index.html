@@ -320,6 +320,8 @@
     if(!W||!H) return null;
     if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
     var g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    // el fondo se pinta dentro del canvas para que salga igual en el PDF aunque el navegador no imprima fondos CSS
+    if(cv.id!=='cv-portada'){ g.fillStyle= cv.closest('.cuadro') ? '#171c24' : '#15191E'; g.fillRect(0,0,W,H); }
     return {g:g,W:W,H:H};
   }
   var MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
