@@ -161,12 +161,12 @@
     <nav class="chips" aria-label="Índice">
       <a href="#resumen">En tres líneas</a>
       <a href="#cual">Qué caída</a>
-      <a href="#soltar">Cuándo soltar</a>
       <a href="#honesta">La prueba honesta</a>
       <a href="#atalaya">Pegada a Atalaya</a>
       <a href="#precio">En el precio</a>
       <a href="#hacemos">Qué hacemos</a>
       <a href="#completa">La estrategia completa</a>
+      <a href="#venda">Hasta que Atalaya venda</a>
     </nav>
   </div>
 
@@ -180,8 +180,8 @@
       </div>
       <div class="r">
         <div class="t">Cuándo soltar</div>
-        <div class="g peri">A los 3 a 6 meses</div>
-        <p>Por tiempo, no por señal. Vender en días regala el rebote. Y vender cuando el precio vuelve al nivel donde Atalaya recompra es la peor salida de todas: suelta justo antes del tramo que paga.</p>
+        <div class="g peri">A los 3 meses, o cuando Atalaya venda</div>
+        <p>Vender en días regala el rebote. Soltar a los 63 días y quedarse hasta la próxima venta de Atalaya dan el mismo Sharpe; la segunda con un tercio en TQQQ sube el retorno a 19% al año, pero sin freno depende de un número. <a href="#venda">Está al final.</a></p>
       </div>
       <div class="r">
         <div class="t">Lo que de verdad importa</div>
@@ -208,32 +208,9 @@
     <p class="lede">Cambiá a 2000 a 2008 y mirá cómo se pone rojo. En un mercado bajista largo, "la caída" es el principio de otra caída. Por eso esta idea no se puede usar sola.</p>
   </section>
 
-  <!-- 2 · CUÁNDO SOLTAR -->
-  <section id="soltar">
-    <div class="num">2</div>
-    <h2>Cuándo soltar lo que compraste</h2>
-    <p class="lede">Acá la estrategia es completa: la plata espera en letras del Tesoro, entra cuando llega la caída y sale según la regla. Probamos tres familias de salida: por tiempo (vender a los N días), por recuperación (vender cuando el precio vuelve a cierto nivel bajo el máximo, que es exactamente la reentrada de Atalaya al revés) y con tope de pérdida. El color compara con lo que daba simplemente tener el Nasdaq todo el tiempo.</p>
-    <div class="card">
-      <h3>Salida por tiempo</h3>
-      <p class="q">Sharpe de la estrategia según la profundidad al comprar y los días que se mantiene. Blanco = el Sharpe del Nasdaq sin hacer nada (<span id="bh-sharpe">0.91</span>). Mediana de las cuatro ventanas del máximo.</p>
-      <div class="mapa"><div class="grid" id="g-tiempo"></div></div>
-      <div class="ejes"><span>↑ caída al comprar</span><span>días hábiles hasta vender →</span></div>
-      <p class="lector" id="l-tiempo">Tocá una celda.</p>
-    </div>
-    <div class="card">
-      <h3>Salida por recuperación: Atalaya al revés</h3>
-      <p class="q">Comprar a −X% del máximo y vender cuando el precio vuelve a −Y%. La fila −12% con la columna −6% es exactamente lo contrario de Atalaya: comprar donde ella vende, vender donde ella compra.</p>
-      <div class="mapa"><div class="grid" id="g-recupera"></div></div>
-      <div class="ejes"><span>↑ comprar a −X%</span><span>vender al volver a −Y% del máximo →</span></div>
-      <p class="lector" id="l-recupera">Tocá una celda.</p>
-    </div>
-    <p class="lede"><b>Soltar rápido destruye la idea.</b> A 5, 10 o 20 días la ganancia por operación es de 1% a 4%, que se la comen los costos y el azar. El rebote se cosecha entre el segundo y el sexto mes. <b>De 3 meses a un año da más o menos igual</b>; 3 meses tiene la ventaja de devolverle el control a Atalaya antes.</p>
-    <p class="lede"><b>Vender donde Atalaya recompra es lo peor.</b> La Atalaya invertida pura (comprar a −12%, vender a −6%) dio 6% al año estando invertida solo el 16% del tiempo, y es la única regla de todo el estudio que pierde contra una mezcla pasiva con significancia estadística. Tiene lógica: si Atalaya recompra ahí es porque ahí empieza la tendencia, y vos estarías vendiendo justo en ese punto.</p>
-  </section>
-
-  <!-- 3 · PRUEBA HONESTA -->
+  <!-- 2 · PRUEBA HONESTA -->
   <section id="honesta">
-    <div class="num">3</div>
+    <div class="num">2</div>
     <h2>La prueba honesta: ¿es una ventaja o es plata a medias?</h2>
     <p class="lede">Una estrategia que está invertida un tercio del tiempo tiene un tercio del riesgo. Compararla con el Nasdaq a secas es trampa. La comparación justa es contra una mezcla fija de Nasdaq y letras del Tesoro que tenga la misma volatilidad, o la misma exposición promedio. Si no le gana a eso, lo que hace es diluir, no elegir el momento.</p>
     <div class="kpis" id="k-honesta"></div>
@@ -252,9 +229,9 @@
     </div>
   </section>
 
-  <!-- 4 · PEGADA A ATALAYA -->
+  <!-- 3 · PEGADA A ATALAYA -->
   <section id="atalaya">
-    <div class="num">4</div>
+    <div class="num">3</div>
     <h2>Donde sí suma: pegada a Atalaya</h2>
     <p class="lede"><a href="/atalaya/">Atalaya</a> sale cuando el Nasdaq cae 12% bajo su máximo de 39 semanas y vuelve a entrar cuando el precio ya recuperó hasta −6% y está sobre su promedio de 200 días. Entre la salida y la reentrada queda un hueco, y ese hueco es exactamente el rebote en V que la regla se pierde: diciembre de 2018, marzo de 2020, los tres rebotes de 2022, abril de 2025.</p>
     <p class="lede">La regla combinada es simple: <b>estás dentro si Atalaya dice que sí, o si el Nasdaq cayó 8% bajo su máximo de 39 semanas (entrás y te quedás 63 días hábiles, después volvés a lo que diga Atalaya)</b>. Cuando Atalaya ya está dentro, la caída no agrega nada. Cuando está fuera, la caída te vuelve a meter tres meses.</p>
@@ -274,9 +251,9 @@
     <p class="lede">Dos pruebas más, porque "más retorno" solo puede ser "más riesgo" disfrazado. <b>Contra Atalaya sola</b>, la diferencia de Sharpe es positiva en el 99% de las 5,000 remuestras por bloques de un año (2000 a 2026); es la primera variante en toda nuestra serie de estudios que mejora a Atalaya con el intervalo entero sobre cero. <b>Contra un control que mantiene un porcentaje fijo de Nasdaq cuando Atalaya está fuera</b>, con la misma exposición promedio, la combinación también gana, y la diferencia grande está en la caída: el control se come −45% en 2000 a 2002 porque está dentro también en las piernas bajistas largas; la caída de 63 días no, porque se sale sola.</p>
   </section>
 
-  <!-- 5 · EN EL PRECIO -->
+  <!-- 4 · EN EL PRECIO -->
   <section id="precio">
-    <div class="num">5</div>
+    <div class="num">4</div>
     <h2>Cómo se ve en el precio</h2>
     <p class="lede">Nasdaq 100 desde 2018. La línea punteada de arriba es el máximo de 39 semanas; la naranja es 8% abajo (donde entra la caída) y la violeta 12% abajo (donde Atalaya se va). Las franjas violeta son los períodos en que Atalaya estuvo fuera; las franjas verdes, los tramos de 63 días que la compra de la caída metió. Fijate cómo las verdes caen casi siempre dentro de las violeta.</p>
     <div class="card">
@@ -297,9 +274,9 @@
     <p class="nota">Solo se listan los tramos en que la combinación estuvo dentro y Atalaya sola estaba fuera, desde 2000. Los de uno a tres días son cruces en que las dos señales cambiaron casi al mismo tiempo.</p>
   </section>
 
-  <!-- 6 · QUÉ HACEMOS -->
+  <!-- 5 · QUÉ HACEMOS -->
   <section id="hacemos">
-    <div class="num">6</div>
+    <div class="num">5</div>
     <h2>Qué hacemos con esto</h2>
     <ul class="puntos">
       <li><i>1</i><span><b>La regla de los clientes no cambia hoy.</b> Atalaya es un seguro y sigue siéndolo. Nada de este estudio dice que esté mal.</span></li>
@@ -316,9 +293,9 @@
     </ul>
   </section>
 
-  <!-- 7 · LA ESTRATEGIA COMPLETA -->
+  <!-- 6 · LA ESTRATEGIA COMPLETA -->
   <section id="completa">
-    <div class="num">7</div>
+    <div class="num">6</div>
     <h2>La estrategia completa: cuánto capital y con qué</h2>
     <p class="lede">Tomamos Atalaya + caída como una sola estrategia y le hicimos las dos preguntas que siguen. <b>¿Cuánto del capital entra en la caída?</b> La mitad, tres cuartos o todo. <b>¿Y con qué?</b> QQQ, QLD (el Nasdaq por dos) o TQQQ (por tres). Probamos también la caída como refuerzo: que actúe aunque Atalaya esté dentro, moviendo una parte del QQQ al fondo apalancado durante los 63 días. En total 198 versiones, todas desde 2000 para que 2000 a 2002 y 2008 cuenten.</p>
     <div class="card">
@@ -344,10 +321,63 @@
       <small>Ninguna reemplaza hoy la regla de los clientes. Las tres van a la simulación en vivo.</small></div>
   </section>
 
+  <!-- 7 · HASTA QUE ATALAYA VENDA -->
+  <section id="venda">
+    <div class="num">7</div>
+    <h2>Quedarse hasta que Atalaya vuelva a vender</h2>
+    <p class="lede">La pregunta que siguió: en vez de soltar la caída a los 63 días, ¿qué pasa si la pata se queda hasta que Atalaya venda otra vez? La regla: <b>Atalaya vendió y el Nasdaq está 8% o más bajo su máximo de 39 semanas: una parte del capital entra en QQQ o en TQQQ y se queda hasta la próxima venta de Atalaya</b>. Para que Atalaya venda otra vez primero tiene que volver a comprar, así que la pata acompaña entero el siguiente tramo de Atalaya. El resto del capital sigue a Atalaya como siempre.</p>
+    <p class="lede">Y la variante con freno, para que si la compra sale mal el tiempo en el mercado sea fijo: <b>a los 3 o 6 meses, si la pata va perdiendo se vende; si va ganando, se queda hasta que Atalaya venda.</b> Probamos 462 versiones: dos entradas, tres profundidades, siete salidas y once combinaciones de fondo y fracción del capital, todas desde 2000.</p>
+
+    <div class="card">
+      <h3>Armá tu versión</h3>
+      <p class="q">Cada botón cambia una pieza de la regla. Las cifras se comparan con Atalaya sola y con la base de la sección 6 (caída con todo a QQQ, 63 días) en la misma ventana.</p>
+      <div class="ctl" data-k="e"><span class="lbl">Entrada</span><button class="on" data-v="0">Cuando Atalaya vende</button><button data-v="1">Al cruzar, esté como esté Atalaya</button></div>
+      <div class="ctl" data-k="x"><span class="lbl">Caída</span><button class="on" data-v="0">−8%</button><button data-v="1">−10%</button><button data-v="2">−12%</button></div>
+      <div class="ctl" data-k="s"><span class="lbl">Salida</span><button class="on" data-v="0">Hasta que Atalaya venda</button><button data-v="1">63 días</button><button data-v="2">126 días</button><button data-v="3">Atalaya, o a los 63 d si pierde</button><button data-v="4">Atalaya, o a los 126 d si pierde</button><button data-v="5">Atalaya, o desde el día 63 si pierde</button><button data-v="6">Atalaya, o desde el día 126 si pierde</button></div>
+      <div class="ctl" data-k="i"><span class="lbl">Con qué</span><button data-v="0">25% QQQ</button><button data-v="1">50% QQQ</button><button data-v="2">75% QQQ</button><button data-v="3">100% QQQ</button><button data-v="4">25% QLD</button><button data-v="5">50% QLD</button><button data-v="6">10% TQQQ</button><button data-v="7">20% TQQQ</button><button class="on" data-v="8">33% TQQQ</button><button data-v="9">50% TQQQ</button><button data-v="10">100% TQQQ</button></div>
+      <div class="ctl" data-k="w"><span class="lbl">Ventana</span><button class="on" data-v="0">Desde 2000</button><button data-v="1">Desde jul 2009</button><button data-v="2">Desde 2020</button></div>
+      <div class="kpis" id="k-venda"></div>
+      <p class="lector" id="l-venda"></p>
+    </div>
+
+    <div class="card">
+      <div class="ctl"><span class="lbl">Ventana</span><button class="on" data-w8="2000">Desde 2000</button><button data-w8="2009">Desde jul 2009</button><button data-w8="2000_2008">2000 a 2008</button><button data-w8="2020">Desde 2020</button></div>
+      <div class="scrollx">
+        <table class="tabla" id="t-menu8"><thead><tr><th>Versión (caída de −8% del máximo de 39 semanas)</th><th class="r">Retorno anual</th><th class="r">Sharpe</th><th class="r">Peor caída</th><th class="r">Peor año</th><th class="r">Operaciones · ganan · días</th></tr></thead><tbody></tbody></table>
+      </div>
+      <p class="nota">"Operaciones" cuenta solo las de la pata de la caída, en toda la ventana. Sharpe en verde si supera a Atalaya sola en la ventana; en rojo si queda por debajo. QLD y TQQQ como en la sección 6: reales desde que existen, simulados antes.</p>
+    </div>
+
+    <div class="card">
+      <div class="ctl"><span class="lbl">Ventana</span><button class="on" data-c8="2000">Desde 2000</button><button data-c8="2009">Desde jul 2009</button></div>
+      <canvas id="cv-venda" style="height:360px; margin-top:12px; border-radius:12px; background:var(--tinta2); cursor:crosshair; touch-action:pan-y;"></canvas>
+      <div class="leg" id="leg-venda"></div>
+      <p class="lector" id="l-cvenda">Pasá el cursor por el gráfico para ver la fecha.</p>
+    </div>
+
+    <div class="card">
+      <h3>Las operaciones de la pata, un tercio en TQQQ, desde 2000</h3>
+      <div class="ctl"><span class="lbl">Regla</span><button class="on" data-ops="atalaya">Hasta que Atalaya venda</button><button data-ops="n63">Con chequeo a los 63 días</button><button data-ops="cruce">Al cruzar, esté como esté Atalaya</button></div>
+      <div class="scrollx">
+        <table class="tabla" id="t-ops8"><thead><tr><th>Entra</th><th>Sale</th><th class="r">Días</th><th class="r">TQQQ en el tramo</th></tr></thead><tbody></tbody></table>
+      </div>
+      <p class="nota">Resultado del fondo entre la entrada y la salida, menos el costo de ida y vuelta. Con un tercio del capital, el efecto sobre el total es más o menos un tercio de eso.</p>
+    </div>
+
+    <ul class="puntos">
+      <li><i>1</i><span><b>Quedarse hasta que Atalaya venda da el mismo Sharpe que vender a los 63 días, con menos operaciones.</b> Todo a QQQ: 14.8% al año desde 2000 (la base: 15.3%), Sharpe 0.77 en las dos, caída −29% en las dos. Pero son 15 operaciones en 27 años en vez de 26, 14 ganaron, y el peor año baja de −13.8% a −9.4%, que es el de Atalaya. Las operaciones duran en promedio 288 días hábiles porque acompañan el tramo entero de Atalaya: de junio de 2016 a octubre de 2018, de diciembre de 2012 a agosto de 2015.</span></li>
+      <li><i>2</i><span><b>Con un tercio en TQQQ, 19.2% al año, caída −35%, peor año −16.5%.</b> Es la versión que pedía la pregunta. Desde 2009, 24.8% al año con Sharpe 0.95 (la base: 20.4% y 0.98). Mejora a Atalaya sola en Sharpe con el intervalo entero sobre cero (+0.11, de +0.02 a +0.22), y contra la base la diferencia es −0.08 con intervalo de −0.22 a +0.06: no es peor, no es mejor, es más grande. Con la mitad en TQQQ: 22.8% y caída −46%; con todo: 31% y −70%. Mismo Sharpe, más susto.</span></li>
+      <li><i>3</i><span><b>El chequeo a los 3 meses empeora, y el de 6 meses no hace nada.</b> A los 63 días vende con pérdida cuatro veces: 2006, 2008, 2010 y 2018. Solo la de 2008 era la que había que vender; las otras tres siguieron subiendo (la de 2010 terminó en +58%, la de 2018 en +50%). Resultado: Sharpe 0.72 en vez de 0.76 y 17.7% en vez de 19.2%. A los 126 días la pata nunca estuvo perdiendo en 27 años, así que es exactamente la misma regla que sin chequeo. El freno por tiempo protege de algo que a −8% no pasó.</span></li>
+      <li><i>4</i><span><b>Lo que sí pasó: sin freno, la regla depende de que el número sea −8%.</b> Con −10% la pata entra el 12 de abril de 2000, Atalaya no vuelve a comprar hasta 2004, y la pata se come el bajista entero (TQQQ −99.8% en ese tramo); en mayo de 2008 lo mismo. Resultado: caída −84%, peor año −44%, Sharpe 0.45. Con −12%, igual. A −8% no pasó porque en 2000 a 2002 y en 2008 el Nasdaq nunca volvió a quedar a 8% de su máximo mientras Atalaya estaba fuera. Eso es suerte de parámetro, no diseño. El chequeo a los 63 días la alivia a −10% (caída −57% en vez de −84%) pero no la arregla; la salida fija a los 63 días tampoco (−55%). Entrar al cruzar −8% esté como esté Atalaya es peor en todo (Sharpe 0.70): la pata compra a −8% y Atalaya la vende a −12% unos días después.</span></li>
+    </ul>
+    <div class="frase">Quedarse hasta que Atalaya venda no es una mejor salida que los 63 días: es la misma calidad con menos operaciones y, con TQQQ, más retorno a cambio de más caída. Lo que la hace peligrosa es que no tiene salida propia: si el mercado nunca recupera, la pata se queda. A −8% la historia la salvó; a −10% no. Antes de llevarla a la simulación en vivo hay que darle una salida que no dependa de Atalaya ni del número: un tope de pérdida sobre la pata, que es la prueba que sigue.
+      <small>Lo que queda sobre la mesa para /live sigue siendo la base de la sección 6. Esta versión se queda en estudio hasta tener ese tope.</small></div>
+  </section>
+
 </div>
 <div id="tip"></div>
 <footer>
-  <p>Precios de cierre diario y cierre ajustado de QQQ (Yahoo Finance), 1999 a 2026; la muestra principal va del 1 de julio de 2009 (fin de la recesión según el NBER) al 28 de octubre de 2026, y 2000 a 2008 se usa como contraste fuera de muestra. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. El estudio de eventos usa episodios independientes (primer cruce de cada racimo, racimos separados al menos 63 días hábiles) y una prueba de Monte Carlo de 10,000 muestras contra fechas al azar del mismo período. Las pruebas de la sección 4 son remuestreos por bloques de 12 meses de la diferencia de Sharpe, 5,000 réplicas.</p>
+  <p>Precios de cierre diario y cierre ajustado de QQQ (Yahoo Finance), 1999 a 2026; la muestra principal va del 1 de julio de 2009 (fin de la recesión según el NBER) al 28 de octubre de 2026, y 2000 a 2008 se usa como contraste fuera de muestra. Efectivo al rendimiento de la letra del Tesoro a 3 meses (FRED, DTB3). La señal se calcula con el cierre del día y se ejecuta al cierre del día siguiente. Costo de 0.05% por cada cambio de posición. Sin honorarios ni impuestos. El estudio de eventos usa episodios independientes (primer cruce de cada racimo, racimos separados al menos 63 días hábiles) y una prueba de Monte Carlo de 10,000 muestras contra fechas al azar del mismo período. Las pruebas de la sección 3 son remuestreos por bloques de 12 meses de la diferencia de Sharpe, 5,000 réplicas.</p>
   <p>Resultados pasados, con datos reales, de reglas escritas antes de mirar el resultado. No son una promesa de retorno futuro. Atalaya se explica en <a href="/atalaya/">/atalaya</a>; el estudio de entradas por caída, en <a href="/past/">/past</a>.</p>
 </footer>
 <script src="data.js"></script>
@@ -393,42 +423,7 @@
   // resumen con el dato real de 39w -10%
   (function(){ var r=D.eventos_2009.filter(function(q){return q.N===39&&q.X===10;})[0]; document.getElementById('r-m26').textContent=Math.round(r.m26)+'%'; document.getElementById('r-i26').textContent=Math.round(r.inc26)+'%'; document.getElementById('r-pos').textContent=Math.round(r.pos26*r.ep/100)+' de '+r.ep; })();
 
-  // ---------- mapa 2: tiempo
-  var BH=D.bh_sharpe; document.getElementById('bh-sharpe').textContent=BH.toFixed(2);
-  (function(){
-    var T=D.tiempo, g=document.getElementById('g-tiempo'); g.style.gridTemplateColumns='52px repeat('+T.n.length+',1fr)'; g.innerHTML='';
-    g.appendChild(cel('h','')); T.n.forEach(function(n){ g.appendChild(cel('h', n+' d')); });
-    T.X.forEach(function(x,i){
-      g.appendChild(cel('y','−'+x+'%'));
-      T.n.forEach(function(n,j){
-        var s=T.sharpe[i][j], ro=T.retop[i][j], c=cel('c',''); c.innerHTML='<span>'+s.toFixed(2)+'</span><small>'+fmtN(ro,1)+'% por op.</small>';
-        var d=s-BH; c.style.background=d>=0? mix('#2a3140','#63FCAF',d/0.15) : mix('#2a3140','#F07A6B',-d/0.8); if(d>0.08) c.classList.add('oscuro');
-        var txt='<b>Comprar a −'+x+'%, vender a los '+n+' días hábiles</b><br>Sharpe '+s.toFixed(2)+' (Nasdaq sin hacer nada: '+BH.toFixed(2)+') · '+fmtN(ro,1)+'% por operación en promedio';
-        c.addEventListener('mousemove', function(ev){ tip(ev, txt); }); c.addEventListener('mouseleave', hideTip);
-        c.addEventListener('click', function(){ document.querySelectorAll('#g-tiempo .pick').forEach(function(k){k.classList.remove('pick');}); c.classList.add('pick'); document.getElementById('l-tiempo').innerHTML=txt.replace(/<br>/g,' · '); });
-        g.appendChild(c);
-      });
-    });
-  })();
-  // ---------- mapa 3: recupera
-  (function(){
-    var R=D.recupera, Xs=[5,8,10,12,15,20], Ys=[0,3,6], g=document.getElementById('g-recupera'); g.style.gridTemplateColumns='52px repeat(3,1fr)'; g.innerHTML='';
-    g.appendChild(cel('h','')); Ys.forEach(function(y){ g.appendChild(cel('h', y===0?'al nuevo máximo':'−'+y+'%')); });
-    Xs.forEach(function(x){
-      g.appendChild(cel('y','−'+x+'%'));
-      Ys.forEach(function(y){
-        var r=R.filter(function(q){return q.X===x&&q.Y===y;})[0]; var c=cel('c','');
-        if(!r){ c.style.background='transparent'; g.appendChild(c); return; }
-        var s=r.s, d=s-BH; c.innerHTML='<span>'+s.toFixed(2)+'</span>'+(x===12&&y===6?'<small>Atalaya al revés</small>':''); c.style.background=d>=0? mix('#2a3140','#63FCAF',d/0.15) : mix('#2a3140','#F07A6B',-d/0.8);
-        var txt='<b>Comprar a −'+x+'%, vender al volver a '+(y===0?'un nuevo máximo':'−'+y+'%')+'</b><br>Sharpe '+s.toFixed(2)+' (Nasdaq sin hacer nada: '+BH.toFixed(2)+')';
-        c.addEventListener('mousemove', function(ev){ tip(ev, txt); }); c.addEventListener('mouseleave', hideTip);
-        c.addEventListener('click', function(){ document.querySelectorAll('#g-recupera .pick').forEach(function(k){k.classList.remove('pick');}); c.classList.add('pick'); document.getElementById('l-recupera').innerHTML=txt.replace(/<br>/g,' · '); });
-        g.appendChild(c);
-      });
-    });
-  })();
-
-  // ---------- sección 3: honesta
+  // ---------- sección 2: honesta
   (function(){
     var M=D.malla, k=document.getElementById('k-honesta');
     k.innerHTML=[['Versiones probadas', M.n, '', 'caídas de 3% a 20%, 4 ventanas del máximo, 3 familias de salida'],
@@ -499,7 +494,7 @@
   // tramos extra
   (function(){ var tb=document.querySelector('#t-tramos tbody'); var tr=D.tramos_extra.filter(function(t){return t.dias>=5;}); tb.innerHTML=tr.map(function(t){ return '<tr><td>'+fFecha(t.ini)+' a '+fFecha(t.fin)+'</td><td class="r">'+t.dias+'</td><td class="r '+(t.ret>=0?'menta':'rojo')+'">'+fmtN(t.ret,1)+'%</td></tr>'; }).join(''); var g=tr.filter(function(t){return t.ret>0;}).length; tb.innerHTML+='<tr class="destacada"><td>'+tr.length+' tramos de 5 días o más · '+g+' ganaron</td><td class="r"></td><td class="r">'+fmtN(tr.reduce(function(a,t){return a+t.ret;},0)/tr.length,1)+'% promedio</td></tr>'; })();
 
-  // ---------- seccion 7: la estrategia completa
+  // ---------- seccion 6: la estrategia completa
   var N7=D.n7, W7='2000', C7='2000', S7={hover:null};
   var SER7=[['qqq','#8E96A3','Nasdaq sin hacer nada'],['a2','#8B9BFF','Atalaya sola'],['combo50','#F5C26B','Mitad del capital a QQQ en el hueco'],['combo100','#63FCAF','Todo a QQQ en el hueco (base)'],['ref33t','#FEF9F3','Refuerzo: un tercio a TQQQ'],['combo100t','#F07A6B','Todo a TQQQ en el hueco']];
   function pintarMenu(){
@@ -530,7 +525,57 @@
   document.querySelectorAll('#completa .ctl button[data-c7]').forEach(function(b){ b.addEventListener('click', function(){ C7=b.dataset.c7; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); S7.hover=null; dibujarCompleta(); }); });
   dibujarCompleta();
 
-  window.addEventListener('resize', function(){ dibujarCurvas(); dibujarPrecio(); dibujarCompleta(); });
+  // ---------- seccion 7: hasta que Atalaya venda
+  var N8=D.n8, SEL8={e:0,x:0,s:0,i:8,w:0}, W8='2000', C8='2000', S8={hover:null};
+  var LAB8={e:['cuando Atalaya vende','al cruzar, esté como esté Atalaya'],x:['−8%','−10%','−12%'],s:['hasta que Atalaya venda','a los 63 días','a los 126 días','cuando Atalaya venda, o a los 63 días si va perdiendo','cuando Atalaya venda, o a los 126 días si va perdiendo','cuando Atalaya venda, o desde el día 63 si va perdiendo','cuando Atalaya venda, o desde el día 126 si va perdiendo'],i:N8.ins.map(function(q){return Math.round(q[1]*100)+'% '+q[0];}),w:['desde 2000','desde julio de 2009','desde 2020']};
+  var fP1=function(v){return v==null?'—':fmtP(v,1);}, fP0=function(v){return v==null?'—':fmtP(v,0);}, f2=function(v){return v==null?'—':v.toFixed(2);};
+  function pintarVenda(){
+    var k=N8.grid[((SEL8.e*3+SEL8.x)*7+SEL8.s)*11+SEL8.i][SEL8.w], a=N8.refs.a2[SEL8.w], b=N8.refs.base7[SEL8.w];
+    function cmp(ra,rb,f){ return 'Atalaya <b>'+f(ra)+'</b> · base <b>'+f(rb)+'</b>'; }
+    var shc=k[1]>a[1]+0.02?'menta':(k[1]<a[1]-0.02?'rojo':'');
+    document.getElementById('k-venda').innerHTML=[['Retorno anual',fP1(k[0]),k[0]>b[0]?'menta':'',cmp(a[0],b[0],fP1)],['Sharpe',f2(k[1]),shc,cmp(a[1],b[1],f2)],['Peor caída',fP0(k[2]),k[2]<-0.45?'rojo':'',cmp(a[2],b[2],fP0)],['Peor año',fP0(k[3]),k[3]<-0.3?'rojo':'',cmp(a[3],b[3],fP0)],['Exposición efectiva',k[4].toFixed(2),'','capital × apalancamiento, promedio'],['Operaciones',k[10],'',Math.round(k[9]*100)+'% del tiempo con la pata dentro'],['Operaciones que ganan',k[6]==null?'—':Math.round(k[6]*100)+'%','',k[7]==null?'':fmtN(k[7]*100,1)+'% por operación, en el fondo'],['Días por operación',k[8]==null?'—':k[8],'','hábiles, en promedio']].map(function(x){ return '<div class="kpi"><div class="l">'+x[0]+'</div><div class="v '+x[2]+'">'+x[1]+'</div><div class="s">'+x[3]+'</div></div>'; }).join('');
+    document.getElementById('l-venda').innerHTML='<b>Entra '+LAB8.e[SEL8.e]+', a '+LAB8.x[SEL8.x]+' del máximo de 39 semanas, con '+LAB8.i[SEL8.i]+'. Sale '+LAB8.s[SEL8.s]+'.</b> Ventana '+LAB8.w[SEL8.w]+'. La base es la caída con todo a QQQ por 63 días, de la sección 6.';
+  }
+  document.querySelectorAll('#venda .ctl[data-k] button').forEach(function(b){ b.addEventListener('click', function(){ var k=b.parentNode.dataset.k; SEL8[k]=parseInt(b.dataset.v,10); b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); pintarVenda(); }); });
+  pintarVenda();
+  function pintarMenu8(){
+    var tb=document.querySelector('#t-menu8 tbody'), a2=N8.menu[0].k[W8][1];
+    tb.innerHTML=N8.menu.map(function(m){ var k=m.k[W8], sh=k[1], dest=/hasta que Atalaya venda \| (100% QQQ|33% TQQQ)$/.test(m.regla); return '<tr'+(dest?' class="destacada"':'')+'><td><b>'+m.nombre+'</b>'+(m.desc?'<br><span style="font-size:12px;color:var(--gris-sec)">'+m.desc+'</span>':'')+'</td><td class="r">'+fmtP(k[0])+'</td><td class="r '+(sh>a2+0.02?'menta':(sh<a2-0.02?'rojo':''))+'">'+sh.toFixed(2)+'</td><td class="r '+(k[2]<-0.45?'rojo':'')+'">'+fmtP(k[2],0)+'</td><td class="r">'+(k[3]==null?'':fmtP(k[3],0))+'</td><td class="r">'+(k[6]==null?'—':(k[10]+' · '+Math.round(k[6]*100)+'% · '+k[8]))+'</td></tr>'; }).join('');
+  }
+  document.querySelectorAll('#venda .ctl button[data-w8]').forEach(function(b){ b.addEventListener('click', function(){ W8=b.dataset.w8; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); pintarMenu8(); }); });
+  pintarMenu8();
+  var C8V=document.getElementById('cv-venda');
+  var SER8=[['qqq','#8E96A3','Nasdaq sin hacer nada'],['a2','#8B9BFF','Atalaya sola'],['base7','#F5C26B','Base: todo a QQQ, 63 días'],['h8_at_100q','#63FCAF','Hasta que Atalaya venda, todo a QQQ'],['h8_at_33t','#FEF9F3','Hasta que Atalaya venda, un tercio en TQQQ'],['h8_n63_33t','#F07A6B','Un tercio en TQQQ, chequeo a los 63 días']];
+  document.getElementById('leg-venda').innerHTML=SER8.map(function(s){ return '<span><i style="background:'+s[1]+'"></i> '+s[2]+'</span>'; }).join('');
+  function dibujarVenda(){
+    var P=prep(C8V), ctx=P.ctx, w=P.w, h=P.h, L=46, R=10, T=14, B=26, F=N8.fechas;
+    var i0=0; if(C8==='2009'){ for(var i=0;i<F.length;i++){ if(F[i]>='2009-07-01'){ i0=i; break; } } }
+    var n=F.length-i0, ymin=1e9, ymax=0, base={};
+    SER8.forEach(function(s){ base[s[0]]=N8.curvas[s[0]][i0]; for(var i=i0;i<F.length;i++){ var v=N8.curvas[s[0]][i]/base[s[0]]; if(v<ymin) ymin=v; if(v>ymax) ymax=v; } });
+    var ly0=Math.log(ymin*0.92), ly1=Math.log(ymax*1.08);
+    var X=function(i){ return L+(i-i0)/(n-1)*(w-L-R); }, Y=function(v){ return T+(1-(Math.log(v)-ly0)/(ly1-ly0))*(h-T-B); };
+    ctx.font='11px Bai Jamjuree, sans-serif'; ctx.textBaseline='middle';
+    [0.1,0.25,0.5,1,2,4,8,16,32,64].forEach(function(t){ if(t<ymin*0.92||t>ymax*1.08) return; var y=Y(t); ctx.strokeStyle='rgba(174,180,190,.12)'; ctx.beginPath(); ctx.moveTo(L,y); ctx.lineTo(w-R,y); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.textAlign='right'; ctx.fillText(t+'x', L-6, y); });
+    ctx.textAlign='center'; ctx.textBaseline='top'; var lastY=null;
+    for(var i=i0;i<F.length;i++){ var yr=F[i].slice(0,4); if(yr!==lastY){ lastY=yr; if(parseInt(yr,10)%2===0){ var x=X(i); ctx.strokeStyle='rgba(174,180,190,.08)'; ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.fillStyle='#8E96A3'; ctx.fillText(yr, x, h-B+6); } } }
+    SER8.forEach(function(s){ ctx.strokeStyle=s[1]; ctx.lineWidth=(s[0]==='h8_at_100q'||s[0]==='h8_at_33t')?2.2:1.3; ctx.beginPath(); for(var i=i0;i<F.length;i++){ var x=X(i), y=Y(N8.curvas[s[0]][i]/base[s[0]]); if(i===i0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); });
+    if(S8.hover!=null){ var hi=S8.hover, x=X(hi); ctx.strokeStyle='rgba(254,249,243,.35)'; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(x,T); ctx.lineTo(x,h-B); ctx.stroke(); ctx.setLineDash([]); SER8.forEach(function(s){ ctx.fillStyle=s[1]; ctx.beginPath(); ctx.arc(x,Y(N8.curvas[s[0]][hi]/base[s[0]]),3.5,0,Math.PI*2); ctx.fill(); }); }
+    S8.X=X; S8.i0=i0; S8.n=n; S8.base=base; S8.L=L; S8.R=R; S8.w=w;
+  }
+  function hoverVenda(ev){ var rc=C8V.getBoundingClientRect(), x=ev.clientX-rc.left, F=N8.fechas; var i=Math.round(S8.i0+(x-S8.L)/(S8.w-S8.L-S8.R)*(S8.n-1)); i=Math.max(S8.i0,Math.min(F.length-1,i)); S8.hover=i; dibujarVenda(); var html='<b>'+fFecha(F[i])+'</b>'+SER8.map(function(s){ return '<br><span style="color:'+s[1]+'">●</span> '+s[2]+': '+(N8.curvas[s[0]][i]/S8.base[s[0]]).toFixed(2)+'x'; }).join(''); tip(ev, html); document.getElementById('l-cvenda').innerHTML=html.replace(/<br>/g,' · '); }
+  C8V.addEventListener('mousemove', hoverVenda); C8V.addEventListener('mouseleave', function(){ S8.hover=null; hideTip(); dibujarVenda(); });
+  C8V.addEventListener('touchstart', function(ev){ hoverVenda(ev.touches[0]); hideTip(); }, {passive:true}); C8V.addEventListener('touchmove', function(ev){ hoverVenda(ev.touches[0]); hideTip(); }, {passive:true});
+  document.querySelectorAll('#venda .ctl button[data-c8]').forEach(function(b){ b.addEventListener('click', function(){ C8=b.dataset.c8; b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); S8.hover=null; dibujarVenda(); }); });
+  dibujarVenda();
+  function pintarOps8(key){
+    var tr=N8.ops[key], tb=document.querySelector('#t-ops8 tbody');
+    tb.innerHTML=tr.map(function(t){ return '<tr><td>'+fFecha(t.ini)+'</td><td>'+fFecha(t.fin)+'</td><td class="r">'+t.dias+'</td><td class="r '+(t.ret>=0?'menta':'rojo')+'">'+fmtN(t.ret,1)+'%</td></tr>'; }).join('');
+    var g=tr.filter(function(t){return t.ret>0;}).length; tb.innerHTML+='<tr class="destacada"><td colspan="2">'+tr.length+' operaciones · '+g+' ganaron</td><td class="r">'+Math.round(tr.reduce(function(a,t){return a+t.dias;},0)/tr.length)+'</td><td class="r">'+fmtN(tr.reduce(function(a,t){return a+t.ret;},0)/tr.length,1)+'% promedio</td></tr>';
+  }
+  document.querySelectorAll('#venda .ctl button[data-ops]').forEach(function(b){ b.addEventListener('click', function(){ b.parentNode.querySelectorAll('button').forEach(function(o){o.classList.toggle('on',o===b);}); pintarOps8(b.dataset.ops); }); });
+  pintarOps8('atalaya');
+
+  window.addEventListener('resize', function(){ dibujarCurvas(); dibujarPrecio(); dibujarCompleta(); dibujarVenda(); });
 })();
 </script>
 </body>
