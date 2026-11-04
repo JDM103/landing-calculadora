@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Viajá al pasado · Empowered Investor</title>
-<meta name="description" content="Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con nuestro edge en el Nasdaq frente a comprar y mantener.">
+<title>Backtest · Empowered Investor</title>
+<meta name="description" content="Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con Atalaya, con comprar la caída, con las dos juntas o con el Freedom Point, frente a comprar y mantener.">
 <link rel="icon" href="/assets/logo-fondo-negro.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,7 @@
   .sub{ text-align:center; color:var(--gris); font-size:15.5px; max-width:560px; margin:0 auto 22px; line-height:1.5; }
 
   /* perfiles */
-  .perfiles{ display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:12px; }
+  .perfiles{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:12px; }
   .perfil{
     background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:12px 10px; cursor:pointer;
     text-align:center; color:var(--crema); font-family:inherit; transition:border-color .15s, background .15s;
@@ -72,6 +72,9 @@
   .sel .chip{ display:inline-flex; align-items:center; gap:7px; opacity:.55; }
   .sel .chip i{ width:10px; height:10px; border-radius:50%; display:inline-block; }
   .sel .chip.on{ opacity:1; border-color:var(--crema); }
+  #sub .chip.on{ border-color:var(--menta); color:var(--menta); }
+  #sub .lab{ width:auto; align-self:center; margin-right:2px; }
+  #sub .grp{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; width:100%; } #sub .grp.hid, #sub .chip.hid{ display:none; }
 
   /* viaje */
   .viaje{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:14px 14px 10px; }
@@ -80,6 +83,7 @@
   .live .edad small{ font-size:14px; color:var(--gris); font-weight:500; margin-left:8px; }
   .pill{ display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; background:var(--panel2); border:1px solid var(--bd); }
   .pill i{ width:9px; height:9px; border-radius:50%; background:var(--menta); display:inline-block; box-shadow:0 0 10px var(--menta); }
+  .pill.dip i{ background:#FEF9F3; box-shadow:0 0 10px #FEF9F3; }
   .pill.out i{ background:var(--ambar); box-shadow:0 0 10px var(--ambar); }
   .leg{ display:flex; gap:18px; flex-wrap:wrap; font-size:13.5px; font-weight:500; margin:6px 0 4px; color:var(--crema); }
   .leg span{ display:flex; align-items:center; gap:7px; }
@@ -127,20 +131,24 @@
 <body>
 <div class="wrap">
   <a class="logo" href="/"><img src="/assets/logo-fondo-negro.png" alt="Empowered Investor"></a>
-  <div class="kicker">Viaje al pasado</div>
+  <div class="kicker">Backtest · viaje al pasado</div>
   <h1>¿Y si hubieras empezado <em>antes</em>?</h1>
-  <p class="sub">Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con nuestro edge en el Nasdaq, frente a comprar y mantener.</p>
+  <p class="sub">Elegí el año, tu edad y cuánto ponés al mes. Mirá a dónde habrías llegado con Atalaya, con comprar la caída, con las dos juntas o con el plan completo del Freedom Point, frente a comprar y mantener.</p>
 
   <div class="perfiles" id="perfiles">
-    <button class="perfil on" data-m="qqq"><b>Tranquilo</b><small>QQQ · Nasdaq 100</small></button>
-    <button class="perfil" data-m="qld"><b>Decidido</b><small>QLD · 2× diario</small></button>
-    <button class="perfil" data-m="tqqq"><b>Audaz</b><small>TQQQ · 3× diario</small></button>
-    <button class="perfil" data-m="all"><b>Los tres</b><small>comparar perfiles</small></button>
+    <button class="perfil on" data-m="ata"><b>Atalaya sola</b><small>la regla de tendencia</small></button>
+    <button class="perfil" data-m="dip"><b>La caída sola</b><small>−8% del máximo, 63 días</small></button>
+    <button class="perfil" data-m="mix"><b>Las dos juntas</b><small>la mejor combinación</small></button>
     <button class="perfil" data-m="fp"><b>Freedom Point</b><small>TQQQ → QQQ → renta fija</small></button>
     <button class="perfil" data-m="cust"><b>A mi gusto</b><small>elegí qué comparar</small></button>
   </div>
 
   <div class="ctl">
+    <div class="sel" id="sub">
+      <div class="grp" id="g-act"><span class="lab">Activo</span><button class="chip on" data-a="qqq">Tranquilo · QQQ</button><button class="chip" data-a="qld">Decidido · QLD ×2</button><button class="chip" data-a="tqqq">Audaz · TQQQ ×3</button><button class="chip hid" data-a="m33">QQQ, y un tercio en TQQQ en la caída</button></div>
+      <div class="grp hid" id="g-sal"><span class="lab">La caída se suelta</span><button class="chip on" data-s="63">a los 63 días · la mejor</button><button class="chip" data-s="venda">cuando Atalaya vuelva a vender</button></div>
+      <div class="grp hid" id="g-fpb"><span class="lab">El plan corre con</span><button class="chip on" data-f="ata">Atalaya</button><button class="chip" data-f="mix">Atalaya + comprar la caída</button></div>
+    </div>
     <div class="sel hid" id="sel"><span class="lab">Comparar</span></div>
     <div class="grid">
       <div class="field">
@@ -208,19 +216,26 @@ for(var q=0;q<N;q++){ var o=ymd(q); DEC.push(o.y+(o.m-1)/12+(o.d-1)/365.25); MON
 var FV=0; (function(){ var f=parseInt(D.firstValid.replace(/-/g,""),10); for(var i=0;i<N;i++){ if(D.dates[i]>=f){ FV=i; break; } } })();
 var LASTYEAR=ymd(N-1).y;
 
+// activo elegido (qqq / qld / tqqq; m33 = QQQ con un tercio en TQQQ en la caída, solo para "las dos juntas"), salida de la caída (63 días o hasta que Atalaya venda) y base del Freedom Point
+var asset="qqq", salida="63", fpBase="ata";
+var ANOM={qqq:"QQQ", qld:"QLD", tqqq:"TQQQ", m33:"QQQ + ⅓ TQQQ"};
+function aBase(){ return asset==="m33"?"qqq":asset; }
+function mixKey(){ return (salida==="63"?"c":"v")+(asset==="m33"?"33t":asset); }
 var MODES={
-  qqq:{ lab:"QQQ", nom:"Tranquilo", lines:[
-    {k:"eqqq", nom:"Con nosotros · QQQ", col:"#63FCAF", w:2.8},
-    {k:"qqq",  nom:"Comprar y mantener · QQQ", nomS:"Sin edge", col:"#ffffff", w:2.1},
-    {k:"spy",  nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
-  qld:{ lab:"QLD", nom:"Decidido", lines:[
-    {k:"eqld", nom:"Con nosotros · QLD", col:"#63FCAF", w:2.8},
-    {k:"qld",  nom:"Comprar y mantener · QLD", nomS:"Sin edge", col:"#ffffff", w:2.1},
-    {k:"spy",  nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
-  tqqq:{ lab:"TQQQ", nom:"Audaz", lines:[
-    {k:"etqqq", nom:"Con nosotros · TQQQ", col:"#63FCAF", w:2.8},
-    {k:"tqqq",  nom:"Comprar y mantener · TQQQ", nomS:"Sin edge", col:"#ffffff", w:2.1},
-    {k:"spy",   nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ] },
+  ata:{ lab:"", nom:"Atalaya sola", get lines(){ var a=aBase(); return [
+    {k:"e"+a, nom:"Atalaya · "+ANOM[a], col:"#63FCAF", w:2.8},
+    {k:a,     nom:"Comprar y mantener · "+ANOM[a], nomS:"Sin edge", col:"#ffffff", w:2.1},
+    {k:"spy", nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ]; } },
+  dip:{ lab:"", nom:"La caída sola", get lines(){ var a=aBase(); return [
+    {k:"d"+a, nom:"La caída sola · "+ANOM[a], col:"#63FCAF", w:2.8},
+    {k:"e"+a, nom:"Atalaya sola · "+ANOM[a], tip:"Atalaya", col:"#C77DFF", w:2.1},
+    {k:a,     nom:"Comprar y mantener · "+ANOM[a], nomS:"Sin edge", col:"#ffffff", w:2.1},
+    {k:"spy", nom:"S&P 500 · SPY", col:"#7386ff", w:2.0} ]; } },
+  mix:{ lab:"", nom:"Las dos juntas", get lines(){ var a=aBase(); return [
+    {k:mixKey(), nom:"Las dos juntas · "+ANOM[asset], tip:"Las dos juntas", col:"#63FCAF", w:2.8},
+    {k:"e"+a, nom:"Atalaya sola · "+ANOM[a], tip:"Atalaya", col:"#C77DFF", w:2.1},
+    {k:"d"+a, nom:"La caída sola · "+ANOM[a], tip:"La caída", col:"#4CC9F0", w:2.1},
+    {k:a,     nom:"Comprar y mantener · "+ANOM[a], nomS:"Sin edge", col:"#ffffff", w:2.1} ]; } },
   fp:{ lab:"FP", nom:"Freedom Point", lines:[
     {k:"fp",  nom:"Freedom Point · con nosotros", col:"#63FCAF", w:2.8},
     {k:"qqq", nom:"Comprar y mantener · QQQ", nomS:"Sin edge", col:"#ffffff", w:2.1},
@@ -231,14 +246,24 @@ var MODES={
     {k:"eqqq",  nom:"Tranquilo · QQQ", col:"#63FCAF", w:2.6},
     {k:"spy",   nom:"S&P 500 · SPY", col:"#8b94a0", w:1.8} ] }
 };
-var ALLKEYS=["spy","qqq","qld","tqqq","eqqq","eqld","etqqq"];
+var ALLKEYS=["spy","qqq","qld","tqqq","eqqq","eqld","etqqq","dqqq","dqld","dtqqq","cqqq","cqld","ctqqq","vqqq","vqld","vtqqq","c33t","v33t"];
+// franja de estado de cada serie: con qué arreglo semanal se pinta "comprando la caída" y si usa la señal de Atalaya
+function bandOf(k){ var c=k.charAt(0); if(k==="fp"||k==="fp2") return {leg:(k==="fp2"||fpBase==="mix")?"lh":null, pos:true}; if(c==="d") return {leg:"ld", pos:false}; if(c==="c") return {leg:k==="c33t"?"ld":"lh", pos:true}; if(c==="v") return {leg:"lv", pos:true}; if(c==="e") return {leg:null, pos:true}; return null; }
+function estado(i, b){ if(b.leg && D[b.leg][i]>=0.5) return 2; if(b.pos && D.pos[i]>=0.5) return 1; return 0; }
 var FP_COL={L:"#E0B07A", E:"#63FCAF", F:"#7386ff"};
 // catálogo para "A mi gusto": orden de dibujo, nombre, color
 var CAT=[
   {k:"etqqq", nom:"TQQQ con nosotros", col:"#E0B07A"},
   {k:"eqld",  nom:"QLD con nosotros",  col:"#4CC9F0"},
   {k:"eqqq",  nom:"QQQ con nosotros",  col:"#63FCAF"},
+  {k:"dqqq",  nom:"QQQ solo la caída", tip:"La caída · QQQ", col:"#4CC9F0"},
+  {k:"dtqqq", nom:"TQQQ solo la caída", tip:"La caída · TQQQ", col:"#F07A6B"},
+  {k:"cqqq",  nom:"QQQ las dos juntas", tip:"Las dos · QQQ", col:"#B9FBC0"},
+  {k:"ctqqq", nom:"TQQQ las dos juntas", tip:"Las dos · TQQQ", col:"#FFB86B"},
+  {k:"c33t",  nom:"QQQ y ⅓ en TQQQ en la caída", tip:"Las dos · ⅓ TQQQ", col:"#F5C26B"},
+  {k:"vqqq",  nom:"QQQ las dos, hasta que Atalaya venda", tip:"Hasta que venda · QQQ", col:"#7FD8BE"},
   {k:"fp",    nom:"Freedom Point",     col:"#C77DFF"},
+  {k:"fp2",   nom:"Freedom Point + la caída", tip:"FP + la caída", col:"#E39BFF"},
   {k:"tqqq",  nom:"TQQQ comprar y mantener", tip:"TQQQ B&H", col:"#E0525A"},
   {k:"qld",   nom:"QLD comprar y mantener",  tip:"QLD B&H",  col:"#9aa3ad"},
   {k:"qqq",   nom:"QQQ comprar y mantener",  tip:"QQQ B&H",  col:"#ffffff"},
@@ -249,7 +274,7 @@ MODES.cust={ lab:"", nom:"A mi gusto", get lines(){ var L=CAT.filter(function(c)
   if(!L.length) L=[{k:"qqq", nom:"QQQ comprar y mantener", tip:"QQQ B&H", col:"#ffffff", w:2.1}]; return L; } };
 
 // ---- estado
-var mode="qqq", anio=1987, edad=25, aporte=500, inicial=0, escala="lin", ingreso=5000;
+var mode="ata", anio=1987, edad=25, aporte=500, inicial=0, escala="lin", ingreso=5000;
 function aporteTxt(){ return "$"+fmtAporte(aporte)+" al mes"+(inicial>0?" + $"+fmtAporte(inicial)+" al inicio":""); }
 var S=0, E=0, PATH={}, INV=[], DD={}, CASHPCT=0, FPIDX=[], FPALLOC=[], FPREACH=-1;
 function meta(){ return ingreso*12/0.04; }
@@ -257,9 +282,9 @@ function meta(){ return ingreso*12/0.04; }
 function fwW(phi){ var p1=0.7, p2=1.0, Ff=0.7, wL,wE,wF;
   if(phi<=p1){ wL=1-phi/p1; wE=phi/p1; wF=0; } else if(phi<=p2){ var u=(phi-p1)/(p2-p1); wF=Ff*u; wL=0; wE=1-wF; } else { wL=0; wF=Ff; wE=1-Ff; }
   return [wL,wE,wF]; }
-function simFP(){
-  var M=meta(), sjcW=Math.pow(1.08,1/52)-1, L=D.etqqq, Q=D.eqqq;
-  var eq=0, sjc=0, phiPeak=0, idx=1, p=[], al=[], ix=[]; FPREACH=-1;
+function simFP(withDip, outKey){
+  var M=meta(), sjcW=Math.pow(1.08,1/52)-1, L=withDip?D.ctqqq:D.etqqq, Q=withDip?D.cqqq:D.eqqq, reach=-1;
+  var eq=0, sjc=0, phiPeak=0, idx=1, p=[], al=[], ix=[];
   for(var j=S;j<=E;j++){
     if(j>S){
       var tot0=eq+sjc, phi=M>0?tot0/M:0; if(phi>phiPeak) phiPeak=phi;
@@ -274,9 +299,10 @@ function simFP(){
     var ew=w2[0]+w2[1], ef=inv>0?eq/inv:1;
     al.push([ew>1e-9?ef*w2[0]/ew:0, ew>1e-9?ef*w2[1]/ew:0, inv>0?sjc/inv:0]);
     p.push(eq+sjc); ix.push(idx);
-    if(FPREACH<0 && eq+sjc>=M) FPREACH=j-S;
+    if(reach<0 && eq+sjc>=M) reach=j-S;
   }
-  PATH.fp=p; FPALLOC=al; FPIDX=ix; DD.fp=maxDD(p);
+  PATH[outKey]=p; DD[outKey]=maxDD(p);
+  if(outKey==="fp"){ FPALLOC=al; FPIDX=ix; FPREACH=reach; }
 }
 
 function build(){
@@ -300,8 +326,9 @@ function build(){
     }
     PATH[k]=p; DD[k]=maxDD(p);
   });
-  var sum=0; for(var j5=S;j5<=E;j5++) sum+=D.pos[j5]; CASHPCT=1-sum/(E-S+1);
-  simFP();
+  var b0=bandOf(MODES[mode].lines[0].k)||{leg:null,pos:true}, sum=0;
+  for(var j5=S;j5<=E;j5++) sum+=Math.max(b0.pos?D.pos[j5]:0, b0.leg?D[b0.leg][j5]:0); CASHPCT=1-sum/(E-S+1);
+  simFP(fpBase==="mix", "fp"); simFP(true, "fp2");
 }
 function maxDD(p){ var mx=-1, dd=0; for(var q=0;q<p.length;q++){ if(p[q]>mx) mx=p[q]; var x=p[q]/mx-1; if(x<dd) dd=x; } return dd; }
 
@@ -321,7 +348,7 @@ function fmtAporte(v){ return v.toLocaleString("en-US"); }
 function niceStep(raw){ var p=Math.pow(10,Math.floor(Math.log10(raw))), m=raw/p; if(m<=1) return p; if(m<=2) return 2*p; if(m<=2.5) return 2.5*p; if(m<=5) return 5*p; return 10*p; }
 
 // ¿alguna línea en pantalla usa nuestro edge? Si no, no hay "adentro / afuera" que mostrar.
-function conEdge(){ return MODES[mode].lines.some(function(L){ return L.k.charAt(0)==="e" || L.k==="fp"; }); }
+function conEdge(){ return MODES[mode].lines.some(function(L){ return !!bandOf(L.k); }); }
 
 // ---- canvas
 var cv=document.getElementById("cv"), ctx=cv.getContext("2d"), cv2=document.getElementById("cv2"), ctx2=cv2.getContext("2d");
@@ -398,7 +425,7 @@ function draw(p){
   for(var j6=0;edg && j6<=Math.min(iI,n);j6++){
     var i0=S+j6, x0=X(DEC[i0]), x1=X(j6<n?DEC[i0+1]:DEC[i0]+0.02);
     if(j6===iI) x1=X(tCur);
-    var ww=Math.max(0.6,x1-x0+0.6), inM=D.pos[i0]>=0.5;
+    var ww=Math.max(0.6,x1-x0+0.6), inM=D.pos[i0]>=0.5, st0=estado(i0, bandOf(lines[0].k)||{leg:null,pos:true});
     if(fp){
       var a=FPALLOC[j6], hs=strip-4, y=sy0;
       ctx.fillStyle=FP_COL.L; ctx.fillRect(x0,y,ww,hs*a[0]); y+=hs*a[0];
@@ -406,7 +433,7 @@ function draw(p){
       ctx.fillStyle=FP_COL.F; ctx.fillRect(x0,y,ww,hs*a[2]);
       ctx.fillStyle=inM?"rgba(99,252,175,0.55)":"rgba(224,176,122,0.85)"; ctx.fillRect(x0, sy0+strip-3, ww, 3);
     }else{
-      ctx.fillStyle=inM?"rgba(99,252,175,0.55)":"rgba(224,176,122,0.85)";
+      ctx.fillStyle=st0===2?"#FEF9F3":st0===1?"rgba(99,252,175,0.55)":"rgba(224,176,122,0.85)";
       ctx.fillRect(x0, sy0, ww, strip);
     }
   }
@@ -487,9 +514,9 @@ function live(f, tCur, vNow, invNow){
   var i=Math.min(E,S+Math.floor(f)); var o=ymd(i);
   var age=Math.floor(edad+(DEC[i]-DEC[S])+1e-6);
   elEdad.textContent=age+" años"; elFecha.textContent=MESES[o.m-1]+" "+o.y;
-  var inM=D.pos[i]>=0.5;
+  var b0=bandOf(MODES[mode].lines[0].k), st0=b0?estado(i,b0):1;
   pill.style.display=conEdge()?"":"none";
-  pill.className="pill"+(inM?"":" out"); pillT.textContent=inM?"Adentro del mercado":"Afuera, en efectivo";
+  pill.className="pill"+(st0===2?" dip":st0===1?"":" out"); pillT.textContent=st0===2?"Comprando la caída":st0===1?"Adentro del mercado":"Afuera, en efectivo";
   kpis(vNow, invNow, f>=E-S-1e-9);
 }
 
@@ -508,12 +535,11 @@ function kpis(vNow, invNow, done){
     h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD.fp)+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD.qqq)+'</span></div><div class="s">Freedom Point vs comprar y mantener</div></div>';
   }else if(mode!=="all"){
-    var lab=MODES[mode].lab;
-    h+='<div class="kpi hi"><div class="k">Con nosotros · '+lab+'</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
+    var bh=lines.filter(function(L){ return ["qqq","qld","tqqq"].indexOf(L.k)>=0; })[0]||lines[1];
+    h+='<div class="kpi hi"><div class="k">'+lines[0].nom+'</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
-    h+='<div class="kpi"><div class="k">Comprar y mantener · '+lab+'</div><div class="v">'+fmtM(vNow[1])+'</div><div class="s">'+fmtX(vNow[1],invNow)+' lo que pusiste</div></div>';
-    h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
-    h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD[lines[0].k])+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD[lines[1].k])+'</span></div><div class="s">con nosotros vs comprar y mantener</div></div>';
+    lines.forEach(function(L,li){ if(li===0) return; h+='<div class="kpi"><div class="k">'+L.nom+'</div><div class="v" style="color:'+L.col+'">'+fmtM(vNow[li])+'</div><div class="s">'+fmtX(vNow[li],invNow)+' lo que pusiste · peor caída '+fmtPct(DD[L.k])+'</div></div>'; });
+    h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(DD[lines[0].k])+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(DD[bh.k])+'</span></div><div class="s">'+lines[0].nom.split(" · ")[0]+' vs comprar y mantener</div></div>';
     h+='<div class="kpi"><div class="k">Tiempo en efectivo</div><div class="v amb">'+fmtPct(CASHPCT)+'</div><div class="s">del viaje, fuera del mercado</div></div>';
   }else{
     h+='<div class="kpi"><div class="k">Audaz · TQQQ</div><div class="v amb">'+fmtM(vNow[0])+'</div><div class="s">peor caída '+fmtPct(DD.etqqq)+'</div></div>';
@@ -529,7 +555,13 @@ function kpis(vNow, invNow, done){
 function legend(){
   var h=MODES[mode].lines.map(function(L){ return '<span><i style="background:'+L.col+'"></i>'+L.nom+'</span>'; }).join("");
   if(mode==="fp") h+='<span><i class="sq" style="background:'+FP_COL.L+'"></i>TQQQ</span><span><i class="sq" style="background:'+FP_COL.E+'"></i>QQQ</span><span><i class="sq" style="background:'+FP_COL.F+'"></i>renta fija 8%</span>';
-  if(conEdge()) h+='<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
+  var b0=bandOf(MODES[mode].lines[0].k);
+  if(conEdge()) h+=(b0&&b0.pos?'<span><i class="sq" style="background:rgba(99,252,175,.55)"></i>adentro</span>':'')+(b0&&b0.leg?'<span><i class="sq" style="background:#FEF9F3"></i>comprando la caída</span>':'')+'<span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span>';
+  document.getElementById("g-act").classList.toggle("hid", !(mode==="ata"||mode==="dip"||mode==="mix"));
+  document.querySelector('#g-act [data-a="m33"]').classList.toggle("hid", mode!=="mix");
+  document.getElementById("g-sal").classList.toggle("hid", mode!=="mix");
+  document.getElementById("g-fpb").classList.toggle("hid", mode!=="fp");
+  document.getElementById("sub").classList.toggle("hid", !(mode==="ata"||mode==="dip"||mode==="mix"||mode==="fp"));
   document.getElementById("f-meta").classList.toggle("hid", !(mode==="fp" || (mode==="cust"&&SEL.fp)));
   document.getElementById("sel").classList.toggle("hid", mode!=="cust");
   document.getElementById("leg").innerHTML=h;
@@ -564,7 +596,12 @@ iM.addEventListener("change",function(){ setIngreso(parseFloat(iM.value.replace(
 iM.addEventListener("keydown",function(e){ if(e.key==="Enter") iM.blur(); });
 document.querySelectorAll(".stp button").forEach(function(b){ b.addEventListener("click",function(){ var d=parseInt(b.dataset.d,10), st=aporte>=2000?500:aporte>=500?100:50; setAporte(aporte+d*st); }); });
 document.getElementById("perfiles").addEventListener("click",function(e){ var b=e.target.closest(".perfil"); if(!b) return;
-  document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on",x===b); }); mode=b.dataset.m; rebuild(); });
+  document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on",x===b); }); mode=b.dataset.m;
+  if(mode!=="mix" && asset==="m33"){ asset="qqq"; setChip("g-act","a",asset); } rebuild(); });
+function setChip(g,attr,v){ document.querySelectorAll("#"+g+" .chip").forEach(function(x){ x.classList.toggle("on", x.dataset[attr]===v); }); }
+document.getElementById("sub").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return;
+  if(b.dataset.a){ asset=b.dataset.a; setChip("g-act","a",asset); } else if(b.dataset.s){ salida=b.dataset.s; setChip("g-sal","s",salida); } else if(b.dataset.f){ fpBase=b.dataset.f; setChip("g-fpb","f",fpBase); }
+  rebuild(); });
 document.getElementById("chips").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return;
   var y=b.dataset.y; if(y==="az"){ var lo=1987, hi=LASTYEAR-8; y=lo+Math.floor(Math.random()*(hi-lo+1)); }
   anio=parseInt(y,10); rA.value=anio; document.getElementById("v-anio").textContent=anio; rebuild(); });
@@ -578,10 +615,11 @@ function nota(){
   var fin=ymd(E), ini=ymd(S);
   document.getElementById("nota").innerHTML=
     'Simulación con datos históricos de '+MESES[ini.m-1]+' '+ini.y+' a '+MESES[fin.m-1]+' '+fin.y+(E===N-1?' (último dato)':' (tus 65 años)')+', aportes al inicio de cada mes, en dólares corrientes y antes de impuestos. '+
-    '<b>Con nosotros</b> aplica la regla de tendencia de <a href="/edge/">investorcr.com/edge</a> sobre el Nasdaq 100 (media móvil de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%): mientras la señal está adentro se tiene el ETF; cuando sale, se pasa a letras del Tesoro a 3 meses. Con un día de rezago en la ejecución y sin honorarios. '+
+    '<b>Atalaya</b> es la regla de tendencia de <a href="/atalaya/">investorcr.com/atalaya</a> sobre el Nasdaq 100 (media móvil de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%): mientras la señal está adentro se tiene el ETF; cuando sale, se pasa a letras del Tesoro a 3 meses. Con un día de rezago en la ejecución y sin honorarios. '+
+    '<b>Comprar la caída</b> es la regla de <a href="/dip/">investorcr.com/dip</a>: cuando el Nasdaq 100 cruza 8% por debajo de su máximo de 39 semanas se compra el ETF y se mantiene 63 días hábiles; sola, el resto del tiempo está en efectivo. <b>Las dos juntas</b>: Atalaya manda, y cuando Atalaya está afuera y el índice está 8% o más bajo su máximo, se compra la caída por 63 días (la mejor combinación del estudio). La variante "hasta que Atalaya vuelva a vender" se queda con la compra hasta la próxima venta de Atalaya: con los datos del índice entra en abril de 2000 y no sale hasta 2004, por eso se ve tan mal desde 1987; es la versión frágil y está para que se vea. "Un tercio en TQQQ en la caída": el resto sigue a Atalaya en QQQ. '+
     'QQQ comprar y mantener: solo precio, sin dividendos (índice hasta marzo 1999, QQQ desde entonces); el edge sobre QQQ sí reinvierte dividendos. S&P 500: índice más 3,4% de dividendos hasta enero 1993 y SPY con dividendos desde entonces. '+
     'QLD y TQQQ: ETF real desde su listado (junio 2006 y febrero 2010); antes, simulación con rebalanceo diario, financiamiento a la tasa del T-bill + 0,6% y 0,95% de gasto. '+
-    (mode==="fp"?'<b>Freedom Point</b>: la meta es el capital que paga tu ingreso mensual retirando 4% al año. Arrancás en TQQQ y, conforme avanzás hacia la meta, la plata pasa a QQQ (al 70% de la meta ya no queda TQQQ) y luego a renta fija al 8% anual, hasta llegar con 70% en renta fija y 30% en QQQ; la renta fija es un piso que nunca se vende para volver a riesgo. El edge se aplica a la parte en ETFs. ':'')+
+    (mode==="fp"||(mode==="cust"&&(SEL.fp||SEL.fp2))?'<b>Freedom Point</b>: la meta es el capital que paga tu ingreso mensual retirando 4% al año. Arrancás en TQQQ y, conforme avanzás hacia la meta, la plata pasa a QQQ (al 70% de la meta ya no queda TQQQ) y luego a renta fija al 8% anual, hasta llegar con 70% en renta fija y 30% en QQQ; la renta fija es un piso que nunca se vende para volver a riesgo. A la parte en ETFs se le aplica Atalaya, o Atalaya con comprar la caída si así lo elegís. ':'')+
     'El gráfico de abajo muestra cuánto estaba el valor de cada cartera (con los aportes ya adentro) por debajo de su máximo anterior. Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
 }
 
@@ -595,7 +633,12 @@ function nota(){
   if((v=num("inicial",0,10000000))!==null){ inicial=Math.round(v/100)*100; iI.value=fmtAporte(inicial); }
   if((v=num("aporte",0,100000))!==null){ aporte=Math.round(v/50)*50; if(aporte===0 && inicial===0) aporte=500; iA.value=fmtAporte(aporte); }
   if((v=num("meta",500,200000))!==null){ ingreso=Math.round(v/100)*100; iM.value=fmtAporte(ingreso); document.getElementById("v-meta").textContent=fmtM(meta()); }
-  var m=Q.get("mode"); if(m && MODES[m]){ mode=m; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on", x.dataset.m===m); }); }
+  var m=Q.get("mode"); if(m && {qqq:1,qld:1,tqqq:1}[m]){ asset=m; m="ata"; }
+  if(m && MODES[m]){ mode=m; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on", x.dataset.m===m); }); }
+  var qa=Q.get("act"); if(qa && ANOM[qa] && (qa!=="m33"||mode==="mix")) asset=qa;
+  var qs=Q.get("salida"); if(qs==="63"||qs==="venda") salida=qs;
+  var qf=Q.get("fpb"); if(qf==="ata"||qf==="mix") fpBase=qf;
+  setChip("g-act","a",asset); setChip("g-sal","s",salida); setChip("g-fpb","f",fpBase);
   var sel=Q.get("sel"); if(sel){ SEL={}; sel.split(",").forEach(function(k){ if(CAT.some(function(c){ return c.k===k; })) SEL[k]=true; });
     document.querySelectorAll("#sel .chip").forEach(function(b){ b.classList.toggle("on", !!SEL[b.dataset.k]); }); if(!m){ mode="cust"; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on", x.dataset.m==="cust"); }); } }
   if(Q.get("embed")) document.body.classList.add("embed");
