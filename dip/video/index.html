@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Comprar la caída · cuatro activos · Empowered Investor</title>
+<meta name="description" content="La misma regla de comprar la caída con Atalaya, animada sobre el Nasdaq 100, el S&P 500 y sus versiones triples, desde lo más viejo que hay de cada uno.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --tinta:#0d0f14; --panel:#15191E; --panel2:#1b2029; --bd:#262d3a; --menta:#63FCAF; --peri:#7386ff; --ambar:#E0B07A; --rojo:#E0525A; --crema:#FEF9F3; --gris:#9aa3ad; --gris2:#6f7883; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ overflow-x:hidden; }
+  body{ background:var(--tinta); color:var(--crema); font-family:'Bai Jamjuree',sans-serif; font-weight:300; padding:28px 16px 70px; }
+  .wrap{ width:100%; max-width:940px; min-width:0; margin:0 auto; }
+  a.logo{ display:block; text-align:center; margin-bottom:10px; } a.logo img{ height:78px; }
+  .kicker{ text-align:center; color:var(--menta); font-weight:600; font-size:12.5px; letter-spacing:.38em; text-transform:uppercase; margin-bottom:12px; }
+  h1{ text-align:center; font-weight:700; font-size:clamp(30px,6vw,50px); letter-spacing:-.015em; line-height:1.05; margin-bottom:10px; } h1 em{ color:var(--menta); font-style:normal; }
+  .sub{ text-align:center; color:var(--gris); font-size:15.5px; max-width:620px; margin:0 auto 22px; line-height:1.5; }
+  .perfiles{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:12px; }
+  .perfil{ background:var(--panel); border:1px solid var(--bd); border-radius:14px; padding:12px 10px; cursor:pointer; text-align:center; color:var(--crema); font-family:inherit; transition:border-color .15s, background .15s; }
+  .perfil b{ display:block; font-size:16px; font-weight:700; } .perfil small{ display:block; color:var(--gris); font-size:12px; margin-top:3px; font-weight:500; }
+  .perfil.on{ border-color:var(--menta); background:rgba(99,252,175,.08); } .perfil.on small{ color:var(--menta); }
+  .ctl{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:12px 16px; margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .ctl .lbl{ font-size:12px; color:var(--gris); text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin-right:4px; }
+  .chip{ background:var(--panel2); border:1px solid var(--bd); color:var(--crema); border-radius:999px; padding:7px 14px; cursor:pointer; font-family:inherit; font-size:13.5px; font-weight:500; }
+  .chip.on{ border-color:var(--menta); color:var(--menta); background:rgba(99,252,175,.08); }
+  .card{ background:var(--panel); border:1px solid var(--bd); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .live{ display:flex; justify-content:space-between; align-items:flex-end; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
+  .live .fecha{ font-size:30px; font-weight:700; line-height:1; } .live .fecha small{ display:block; font-size:12px; color:var(--gris); text-transform:uppercase; letter-spacing:.12em; font-weight:600; margin-bottom:4px; }
+  .pill{ display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; background:var(--panel2); border:1px solid var(--bd); }
+  .pill i{ width:9px; height:9px; border-radius:50%; background:var(--menta); display:inline-block; box-shadow:0 0 10px var(--menta); }
+  .pill.out i{ background:var(--ambar); box-shadow:0 0 10px var(--ambar); } .pill.dip i{ background:var(--crema); box-shadow:0 0 10px var(--crema); }
+  .leg{ display:flex; gap:18px; flex-wrap:wrap; font-size:13.5px; font-weight:500; margin:6px 0 4px; color:var(--crema); }
+  .leg span{ display:flex; align-items:center; gap:7px; } .leg i{ width:11px; height:11px; border-radius:50%; display:inline-block; } .leg i.sq{ border-radius:2px; }
+  canvas{ width:100%; max-width:100%; display:block; cursor:pointer; }
+  .under{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px; flex-wrap:wrap; }
+  .under .btns{ display:flex; gap:8px; }
+  .btn{ background:var(--panel2); border:1px solid var(--bd); color:var(--crema); border-radius:9px; padding:7px 12px; cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; }
+  .seg{ display:inline-flex; border:1px solid var(--bd); border-radius:9px; overflow:hidden; }
+  .seg button{ background:var(--panel2); border:none; color:var(--gris); padding:7px 12px; cursor:pointer; font-family:inherit; font-size:13px; font-weight:600; } .seg button.on{ color:var(--menta); background:rgba(99,252,175,.1); }
+  .kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+  .kpi{ background:var(--panel2); border:1px solid var(--bd); border-radius:12px; padding:10px 12px; } .kpi.hi{ border-color:rgba(99,252,175,.45); }
+  .kpi .k{ font-size:11.5px; color:var(--gris); text-transform:uppercase; letter-spacing:.1em; font-weight:600; } .kpi .v{ font-size:24px; font-weight:700; line-height:1.15; margin:3px 0 2px; } .kpi .s{ font-size:12.5px; color:var(--gris); }
+  .men{ color:var(--menta); } .per{ color:var(--peri); } .amb{ color:var(--ambar); } .roj{ color:var(--rojo); }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; } th{ text-align:left; color:var(--gris); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.1em; padding:6px 8px; border-bottom:1px solid var(--bd); }
+  td{ padding:6px 8px; border-bottom:1px solid rgba(38,45,58,.6); } td.r, th.r{ text-align:right; } tr.fut{ opacity:.22; }
+  .scrollx{ overflow-x:auto; }
+  .nota{ color:var(--gris2); font-size:12.5px; line-height:1.55; margin-top:14px; } .nota b{ color:var(--gris); font-weight:600; } .nota a{ color:var(--gris); }
+  .embed body{ padding:12px; } .embed .logo, .embed .kicker, .embed h1, .embed .sub, .embed .perfiles, .embed .ctl, .embed .nota, .embed .ops, .embed .under{ display:none; }
+  @media (max-width:640px){ .perfiles{ grid-template-columns:repeat(2,1fr); } .perfil:last-child{ grid-column:span 2; } .kpis{ grid-template-columns:repeat(2,1fr); } .live .fecha{ font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="logo" href="/"><img src="/assets/logo-fondo-negro.png" alt="Empowered Investor"></a>
+  <div class="kicker">Comprar la caída · misma regla</div>
+  <h1>La misma regla, <em>cuatro activos</em></h1>
+  <p class="sub">Atalaya vende, el índice está 8% o más bajo su máximo de 39 semanas: se compra la caída con todo el capital por 63 días. Aquí corre, año por año, sobre el Nasdaq 100, el S&amp;P 500 y sus versiones triples, desde lo más viejo que hay de cada uno.</p>
+
+  <div class="perfiles" id="perfiles">
+    <button class="perfil on" data-a="QQQ"><b>QQQ</b><small>Nasdaq 100</small></button>
+    <button class="perfil" data-a="TQQQ"><b>TQQQ</b><small>Nasdaq 100 ×3</small></button>
+    <button class="perfil" data-a="SPY"><b>SPY</b><small>S&amp;P 500</small></button>
+    <button class="perfil" data-a="UPRO"><b>UPRO</b><small>S&amp;P 500 ×3</small></button>
+    <button class="perfil" data-a="all"><b>Los cuatro</b><small>comparar</small></button>
+  </div>
+  <div class="ctl" id="desde"><span class="lbl">Desde</span><button class="chip on" data-d="todo">Lo más viejo</button><button class="chip" data-d="2000">2000 · burbuja punto com</button><button class="chip" data-d="2009">Julio 2009</button><button class="chip" data-d="2020">2020 · pandemia</button></div>
+
+  <div class="card">
+    <div class="live">
+      <div class="fecha"><small>Estamos en</small><span id="l-fecha">—</span></div>
+      <div class="pill" id="pill"><i></i><span id="pill-t">Adentro del mercado</span></div>
+    </div>
+    <div class="leg" id="leg"></div>
+    <canvas id="cv"></canvas>
+    <canvas id="cv2"></canvas>
+    <div class="under">
+      <div class="btns"><button class="btn" id="b-rep">↻ Repetir</button><button class="btn" id="b-fin">Ir al final ⏭</button></div>
+      <div class="seg" id="seg-esc"><button data-e="lin">Lineal</button><button data-e="log" class="on">Log</button></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </div>
+
+  <div class="card ops" id="ops-card">
+    <div class="live"><div class="fecha"><small>Las compras de la caída</small><span id="ops-t">—</span></div></div>
+    <div class="scrollx"><table><thead><tr><th>Entra</th><th>Sale</th><th class="r">Días</th><th class="r">Resultado</th></tr></thead><tbody id="ops"></tbody></table></div>
+  </div>
+
+  <p class="nota" id="nota"></p>
+</div>
+<script src="data.js"></script>
+<script>
+var D=window.DIPV, F=D.fechas, N=F.length, MESES=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+var COL={estrategia:"#63FCAF", atalaya:"#7386ff", bh:"#8b94a0", QQQ:"#63FCAF", TQQQ:"#FEF9F3", SPY:"#7386ff", UPRO:"#E0B07A"};
+var act="QQQ", desde="todo", escala="log", prog=0, raf=null, t_start=null, DUR=10000;
+var cv=document.getElementById("cv"), ctx=cv.getContext("2d"), cv2=document.getElementById("cv2"), ctx2=cv2.getContext("2d"), DPR=1, W=0, H=0, H2=0;
+var S=0, E=N-1, LINES=[], BASE={}, PATH={}, DDF={}, ENT=[];
+function fy(s){ return parseInt(s.slice(0,4),10); }
+function fFecha(s){ return MESES[parseInt(s.slice(5,7),10)-1]+" "+s.slice(0,4); }
+function fmtX(v){ return (v>=100?Math.round(v):v>=10?v.toFixed(1):v.toFixed(2))+"x"; }
+function fmtPct(v,d){ return (v*100).toFixed(d==null?0:d)+"%"; }
+function dMin(){ return desde==="todo"?"0000":desde==="2000"?"2000-01-03":desde==="2009"?"2009-07-01":"2020-01-01"; }
+function build(){
+  var A=act==="all"?["QQQ","TQQQ","SPY","UPRO"]:[act]; LINES=[];
+  if(act==="all"){ A.forEach(function(a){ LINES.push({k:a, ser:D.activos[a].curvas.estrategia, nom:D.activos[a].nombre, col:COL[a], w:a==="QQQ"?2.6:1.8}); }); }
+  else{ var a=D.activos[act]; LINES=[{k:"estrategia", ser:a.curvas.estrategia, nom:"Con la regla · "+act, col:COL.estrategia, w:2.6},{k:"atalaya", ser:a.curvas.atalaya, nom:"Atalaya sola · "+act, col:COL.atalaya, w:1.6},{k:"bh", ser:a.curvas.bh, nom:"Comprar y mantener · "+act, col:COL.bh, w:1.6}]; }
+  var lo=dMin(); S=0; while(S<N && (F[S]<lo || LINES.some(function(L){ return L.ser[S]==null; }))) S++;
+  E=N-1; PATH={}; DDF={};
+  LINES.forEach(function(L){ var b=L.ser[S], p=[], mx=0, dd=[]; for(var i=S;i<=E;i++){ var v=L.ser[i]/b; p.push(v); if(v>mx) mx=v; dd.push(v/mx-1); } PATH[L.k]=p; DDF[L.k]=dd; });
+  ENT=[]; if(act!=="all"){ var st=D.activos[act].estado; for(var i=S+1;i<=E;i++){ if(st[i]===2 && st[i-1]!==2) ENT.push(i); } }
+  legend(); nota(); ops(); kpisFin();
+}
+function legend(){
+  var h=LINES.map(function(L){ return '<span><i style="background:'+L.col+'"></i>'+L.nom+'</span>'; }).join("");
+  if(act!=="all") h+='<span><i class="sq" style="background:rgba(99,252,175,.5)"></i>Atalaya adentro</span><span><i class="sq" style="background:rgba(224,176,122,.85)"></i>en efectivo</span><span><i class="sq" style="background:#FEF9F3"></i>comprando la caída</span>';
+  document.getElementById("leg").innerHTML=h;
+}
+function resize(){ DPR=window.devicePixelRatio||1; W=cv.clientWidth; H=Math.max(260, Math.min(420, Math.round(W*0.46))); H2=Math.max(70, Math.round(H*0.28)); cv.width=W*DPR; cv.height=H*DPR; cv.style.height=H+"px"; cv2.width=W*DPR; cv2.height=H2*DPR; cv2.style.height=H2+"px"; draw(prog); }
+function ease(p){ return p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2; }
+function valAt(k,f){ var P=PATH[k], j=Math.floor(f), r=f-j; if(j>=P.length-1) return P[P.length-1]; return P[j]+(P[j+1]-P[j])*r; }
+function draw(p){
+  prog=p; var n=E-S, f=p*n, jMax=Math.min(n, Math.floor(f)), small=W<520;
+  ctx.setTransform(DPR,0,0,DPR,0,0); ctx.clearRect(0,0,W,H); ctx.textBaseline="middle";
+  var mL=small?44:56, mR=small?92:150, mT=14, mB=24, pw=W-mL-mR, ph=H-mT-mB;
+  var yMax=1, yMin=1; LINES.forEach(function(L){ var P=PATH[L.k]; for(var j=0;j<=jMax;j++){ if(P[j]>yMax) yMax=P[j]; if(P[j]<yMin) yMin=P[j]; } });
+  var log=escala==="log"; var lo=log?Math.log(Math.min(yMin,1)*0.85):0, hi=log?Math.log(yMax*1.25):yMax*1.08;
+  function X(i){ return mL+(i-S)/n*pw; } function Y(v){ var t=log?Math.log(v):v; return mT+ph-(t-lo)/(hi-lo)*ph; }
+  // bandas de estado (solo un activo)
+  if(act!=="all"){ var st=D.activos[act].estado, bh=6, by=mT+ph-bh; for(var i=S;i<=S+jMax;i++){ var s=st[i]; if(s==null) continue; ctx.fillStyle=s===2?"#FEF9F3":s===1?"rgba(99,252,175,.5)":"rgba(224,176,122,.85)"; ctx.fillRect(X(i), by, Math.max(1, pw/n+0.5), bh); } }
+  // rejilla
+  ctx.font=(small?"10.5px":"12px")+" 'Bai Jamjuree'"; ctx.fillStyle="#8b94a0"; ctx.strokeStyle="rgba(255,255,255,0.07)"; ctx.lineWidth=1; ctx.textAlign="right";
+  var ticks=log?[0.25,0.5,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000,20000,50000]:(function(){ var s=Math.pow(10,Math.floor(Math.log10(yMax))), st=yMax/s<2?s/4:yMax/s<5?s/2:s, o=[]; for(var v=0;v<=yMax*1.08;v+=st) o.push(v); return o; })();
+  ticks.forEach(function(t){ if(log&&(t<Math.exp(lo)||t>Math.exp(hi))) return; var y=Y(t); ctx.beginPath(); ctx.moveTo(mL,y); ctx.lineTo(mL+pw,y); ctx.stroke(); ctx.fillText(fmtX(t), mL-8, y); });
+  ctx.textAlign="center"; ctx.textBaseline="top"; var y0=fy(F[S]), y1=fy(F[E]), step=(y1-y0)>24?4:(y1-y0)>12?2:1, last=null;
+  for(var i=S;i<=E;i++){ var yr=fy(F[i]); if(yr!==last){ last=yr; if((yr-y0)%step===0 && i>S) ctx.fillText(yr, X(i), mT+ph+8); } }
+  ctx.textBaseline="middle";
+  // líneas
+  for(var li=LINES.length-1;li>=0;li--){ var L=LINES[li], P=PATH[L.k]; ctx.strokeStyle=L.col; ctx.lineWidth=L.w; ctx.lineJoin="round"; ctx.beginPath();
+    for(var j=0;j<=jMax;j++){ var x=X(S+j), y=Y(P[j]); j?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+    ctx.lineTo(X(S+f), Y(valAt(L.k,f))); ctx.stroke(); }
+  // compras de la caída
+  if(act!=="all"){ ENT.forEach(function(i){ if(i>S+jMax) return; var x=X(i), y=Y(PATH.estrategia[i-S]); ctx.fillStyle="#FEF9F3"; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill(); ctx.strokeStyle="#0d0f14"; ctx.lineWidth=1.5; ctx.stroke(); }); }
+  // etiquetas vivas
+  var labs=LINES.map(function(L){ var v=valAt(L.k,f); return {nom:L.nom.replace(/ · .*/,""), val:fmtX(v), col:L.col, y:Y(v)}; }).sort(function(a,b){ return a.y-b.y; });
+  var gap=small?34:40; for(var i2=1;i2<labs.length;i2++){ if(labs[i2].y-labs[i2-1].y<gap) labs[i2].y=labs[i2-1].y+gap; }
+  var over=labs[labs.length-1].y-(mT+ph-8); if(over>0){ for(var i3=labs.length-1;i3>=0;i3--){ labs[i3].y-=over; if(i3>0) over=Math.max(0, labs[i3-1].y-(labs[i3].y-gap)); } }
+  var lx=X(S+f)+10; ctx.textAlign="left";
+  labs.forEach(function(Lb){ var yy=Math.max(mT+10, Lb.y-10); ctx.fillStyle=Lb.col; ctx.font="600 "+(small?"10.5px":"12.5px")+" 'Bai Jamjuree'"; ctx.fillText(Lb.nom, lx, yy); ctx.font="700 "+(small?"13px":"16px")+" 'Bai Jamjuree'"; ctx.fillText(Lb.val, lx, yy+(small?14:18)); });
+  drawDD(f, jMax, X, mL, pw, small); live(f, jMax);
+}
+function drawDD(f, jMax, X, mL, pw, small){
+  ctx2.setTransform(DPR,0,0,DPR,0,0); ctx2.clearRect(0,0,W,H2); ctx2.textBaseline="middle";
+  var mT=8, mB=6, ph=H2-mT-mB, yBot=-0.1;
+  LINES.forEach(function(L){ var a=DDF[L.k]; for(var j=0;j<=jMax;j++){ if(a[j]<yBot) yBot=a[j]; } }); yBot=Math.max(-1, yBot*1.12);
+  function Y(v){ return mT+(v/yBot)*ph; }
+  ctx2.font=(small?"10.5px":"12px")+" 'Bai Jamjuree'"; ctx2.fillStyle="#8b94a0"; ctx2.textAlign="right"; ctx2.strokeStyle="rgba(255,255,255,0.07)"; ctx2.lineWidth=1;
+  var stp=yBot<-0.6?0.25:yBot<-0.3?0.1:0.05;
+  for(var g=0; g>=yBot-1e-9; g-=stp){ ctx2.beginPath(); ctx2.moveTo(mL,Y(g)); ctx2.lineTo(mL+pw,Y(g)); ctx2.stroke(); ctx2.fillText(g===0?"0%":Math.round(g*100)+"%", mL-8, Y(g)); }
+  for(var li=LINES.length-1;li>=0;li--){ var L=LINES[li], a=DDF[L.k]; ctx2.strokeStyle=L.col; ctx2.lineWidth=L.w*0.8; ctx2.beginPath();
+    for(var j=0;j<=jMax;j++){ var x=X(S+j), y=Y(a[j]); j?ctx2.lineTo(x,y):ctx2.moveTo(x,y); } ctx2.stroke();
+    if(li===0){ ctx2.fillStyle="rgba(99,252,175,0.10)"; ctx2.lineTo(X(S+jMax),Y(0)); ctx2.lineTo(mL,Y(0)); ctx2.closePath(); ctx2.fill(); } }
+  var labs=LINES.map(function(L){ var v=DDF[L.k][jMax]; return {col:L.col, v:v, y:Y(v)}; }).sort(function(a,b){ return a.y-b.y; });
+  var gap=small?13:15; for(var i2=1;i2<labs.length;i2++){ if(labs[i2].y-labs[i2-1].y<gap) labs[i2].y=labs[i2-1].y+gap; }
+  var over=labs[labs.length-1].y-(H2-mB-4); if(over>0){ for(var i3=labs.length-1;i3>=0;i3--){ labs[i3].y-=over; if(i3>0) over=Math.max(0, labs[i3-1].y-(labs[i3].y-gap)); } }
+  ctx2.textAlign="left"; ctx2.font="700 "+(small?"11px":"12.5px")+" 'Bai Jamjuree'";
+  labs.forEach(function(Lb){ ctx2.fillStyle=Lb.col; ctx2.fillText((Lb.v>-0.005?"0":Math.round(Lb.v*100))+"%", X(S+jMax)+10, Math.max(mT+6,Lb.y)); });
+}
+var pill=document.getElementById("pill"), pillT=document.getElementById("pill-t");
+function live(f, jMax){
+  var i=S+jMax; document.getElementById("l-fecha").textContent=fFecha(F[i]);
+  if(act==="all"){ pill.style.display="none"; }
+  else{ pill.style.display=""; var s=D.activos[act].estado[i]; pill.className="pill"+(s===2?" dip":s===0?" out":""); pillT.textContent=s===2?"Comprando la caída":s===0?"Afuera, en efectivo":"Adentro del mercado"; }
+  // operaciones ya ocurridas
+  var rows=document.querySelectorAll("#ops tr[data-i]"); rows.forEach(function(r){ r.classList.toggle("fut", r.dataset.i>F[i]); });
+  var kv=document.querySelectorAll("#kpis .v[data-k]"); kv.forEach(function(el){ el.textContent=fmtX(valAt(el.dataset.k, f)); });
+}
+function kpisFin(){
+  var w=desde, h="";
+  if(act==="all"){ ["QQQ","TQQQ","SPY","UPRO"].forEach(function(a){ var k=D.activos[a].k[w], e=k.estrategia, b=k.bh; h+='<div class="kpi'+(a==="QQQ"?' hi':'')+'"><div class="k">'+D.activos[a].nombre+'</div><div class="v" style="color:'+COL[a]+'" data-k="'+a+'">1x</div><div class="s">'+fmtPct(e[0],1)+' al año · Sharpe '+e[1].toFixed(2)+' · peor caída '+fmtPct(e[2])+'<br>sin hacer nada: '+fmtPct(b[0],1)+' · '+b[1].toFixed(2)+' · '+fmtPct(b[2])+'</div></div>'; }); }
+  else{ var k=D.activos[act].k[w], e=k.estrategia, at=k.atalaya, b=k.bh, o=k.ops;
+    h+='<div class="kpi hi"><div class="k">Con la regla</div><div class="v men" data-k="estrategia">1x</div><div class="s">'+fmtPct(e[0],1)+' al año · Sharpe '+e[1].toFixed(2)+' · peor año '+fmtPct(e[3])+'</div></div>';
+    h+='<div class="kpi"><div class="k">Atalaya sola</div><div class="v per" data-k="atalaya">1x</div><div class="s">'+fmtPct(at[0],1)+' al año · Sharpe '+at[1].toFixed(2)+' · peor año '+fmtPct(at[3])+'</div></div>';
+    h+='<div class="kpi"><div class="k">Comprar y mantener</div><div class="v" style="color:#8b94a0" data-k="bh">1x</div><div class="s">'+fmtPct(b[0],1)+' al año · Sharpe '+b[1].toFixed(2)+' · peor año '+fmtPct(b[3])+'</div></div>';
+    h+='<div class="kpi"><div class="k">Peor caída</div><div class="v"><span class="men">'+fmtPct(e[2])+'</span> <span style="font-size:.6em;color:var(--gris)">vs</span> <span class="roj">'+fmtPct(b[2])+'</span></div><div class="s">con la regla vs comprar y mantener · Atalaya sola '+fmtPct(at[2])+'</div></div>';
+    h+='<div class="kpi"><div class="k">Compras de la caída</div><div class="v" style="color:#FEF9F3">'+o[0]+'</div><div class="s">'+(o[1]==null?'':Math.round(o[1]*100)+'% ganaron · '+fmtPct(o[2],1)+' por compra, en el fondo')+'</div></div>';
+    h+='<div class="kpi"><div class="k">Tiempo en efectivo</div><div class="v amb">'+fmtPct(k.efectivo)+'</div><div class="s">del viaje, fuera del mercado</div></div>'; }
+  document.getElementById("kpis").innerHTML=h;
+}
+function ops(){
+  var card=document.getElementById("ops-card"); if(act==="all"){ card.style.display="none"; return; } card.style.display="";
+  var lo=dMin(), o=D.activos[act].ops.filter(function(t){ return t.ini>=lo; }), g=o.filter(function(t){ return t.ret>0; }).length;
+  document.getElementById("ops-t").textContent=o.length+" compras · "+g+" ganaron";
+  document.getElementById("ops").innerHTML=o.map(function(t){ return '<tr data-i="'+t.ini+'" class="fut"><td>'+fFecha(t.ini)+'</td><td>'+fFecha(t.fin)+'</td><td class="r">'+t.dias+'</td><td class="r '+(t.ret>=0?'men':'roj')+'">'+(t.ret>=0?'+':'')+(t.ret*100).toFixed(1)+'%</td></tr>'; }).join("");
+}
+function nota(){
+  var a=act==="all"?null:D.activos[act], ini=F[S], fin=F[E];
+  document.getElementById("nota").innerHTML='Datos de '+fFecha(ini)+' a '+fFecha(fin)+', con dividendos reinvertidos, en dólares corrientes y antes de impuestos. <b>La regla</b> es la base de la sección 6 de <a href="/dip/">investorcr.com/dip</a>: Atalaya (media de 200 días con banda de ±3% y distancia al máximo de 39 semanas de −12%/−6%) sobre el índice; mientras está adentro, todo en el activo; cuando vende y el índice está 8% o más bajo su máximo de 39 semanas, se compra la caída con todo el capital por 63 días hábiles; el resto del tiempo, letras del Tesoro a 3 meses. Dos días de rezago en la ejecución y 0,05% por cambio de posición. '+
+  (a&&a.lev===3?'<b>'+act+'</b>: la señal se calcula sobre '+a.sub+' y la posición se toma en el ETF triple: real desde '+fFecha(a.real_desde)+'; antes, simulación con rebalanceo diario, financiamiento a la tasa del T-bill + 0,6% y 0,95% de gasto. ':'')+
+  (act==="all"?'Los triples usan la señal de su índice (QQQ o SPY) y el ETF real desde que existe, simulado antes. ':'')+
+  'La franja de abajo marca el estado: adentro con Atalaya, en efectivo, o comprando la caída; los puntos son cada compra. El gráfico inferior es cuánto estaba cada cartera por debajo de su máximo anterior. Rendimientos pasados no garantizan rendimientos futuros; los apalancados pueden perder casi todo su valor.';
+}
+function tick(ts){ if(t_start===null) t_start=ts; var p=Math.min(1,(ts-t_start)/DUR); draw(ease(p)); if(p<1) raf=requestAnimationFrame(tick); else raf=null; }
+function play(){ if(raf) cancelAnimationFrame(raf); var yrs=(E-S)/52; DUR=Math.max(5500, Math.min(15000, yrs*420)); t_start=null; raf=requestAnimationFrame(tick); }
+function finish(){ if(raf) cancelAnimationFrame(raf); raf=null; draw(1); }
+function rebuild(){ build(); play(); }
+document.getElementById("perfiles").addEventListener("click",function(e){ var b=e.target.closest(".perfil"); if(!b) return; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on",x===b); }); act=b.dataset.a; rebuild(); });
+document.getElementById("desde").addEventListener("click",function(e){ var b=e.target.closest(".chip"); if(!b) return; document.querySelectorAll("#desde .chip").forEach(function(x){ x.classList.toggle("on",x===b); }); desde=b.dataset.d; rebuild(); });
+document.getElementById("seg-esc").addEventListener("click",function(e){ var b=e.target.closest("button"); if(!b) return; document.querySelectorAll("#seg-esc button").forEach(function(x){ x.classList.toggle("on",x===b); }); escala=b.dataset.e; draw(prog); });
+document.getElementById("b-rep").addEventListener("click",play); document.getElementById("b-fin").addEventListener("click",finish);
+cv.addEventListener("click",function(){ if(raf) finish(); else play(); });
+window.addEventListener("resize",resize);
+(function(){ var Q=new URLSearchParams(location.search), a=Q.get("act"), d=Q.get("desde");
+  if(a && (D.activos[a]||a==="all")){ act=a; document.querySelectorAll(".perfil").forEach(function(x){ x.classList.toggle("on",x.dataset.a===a); }); }
+  if(d && ["todo","2000","2009","2020"].indexOf(d)>=0){ desde=d; document.querySelectorAll("#desde .chip").forEach(function(x){ x.classList.toggle("on",x.dataset.d===d); }); }
+  if(Q.get("esc")==="lin"){ escala="lin"; document.querySelectorAll("#seg-esc button").forEach(function(x){ x.classList.toggle("on",x.dataset.e==="lin"); }); }
+  if(Q.get("embed")) document.documentElement.classList.add("embed"); })();
+build(); resize();
+function arrancar(){ setTimeout(play, 250); }
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(arrancar); } else { setTimeout(arrancar,150); }
+</script>
+</body>
+</html>
