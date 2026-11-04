@@ -457,9 +457,9 @@
   byId("n5d").addEventListener("click", function(){ ir("q5e"); });
   byId("n5e").addEventListener("click", function(){ ir("q6"); });
 
-  // ===== 5e: $10 mil desde abr-1999 con los datos semanales de /past (dólares corrientes) =====
+  // ===== 5e: $10 mil desde abr-1999 con los datos semanales de /backtest (dólares corrientes) =====
   var pastListo=false, pastPedido=false, MET=null;
-  function cargarPast(){ if(pastPedido) return; pastPedido=true; var s=document.createElement("script"); s.src="/past/data.js"; s.onload=function(){ pastListo=true; armarMet(); if(byId("q5e").classList.contains("on")) metPlay(); }; document.head.appendChild(s); }
+  function cargarPast(){ if(pastPedido) return; pastPedido=true; var s=document.createElement("script"); s.src="/backtest/data.js"; s.onload=function(){ pastListo=true; armarMet(); if(byId("q5e").classList.contains("on")) metPlay(); }; document.head.appendChild(s); }
   function armarMet(){
     var D=window.PAST; if(!D) return; var i0=0; for(var i=0;i<D.dates.length;i++){ if(D.dates[i]>=19990401){ i0=i; break; } }
     var n=D.dates.length-i0, yrs=[], s={cash:[], cdp:[], spy:[], qqq:[], eqqq:[]};

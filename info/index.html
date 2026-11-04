@@ -639,7 +639,7 @@
     </div>
 
     <div class="vista" style="margin-top:18px"><h3>Así la ves cada semana en tu dashboard</h3><p>El Nasdaq contra su máximo de 39 semanas, la línea de salida y cuánto falta para que toque salir.</p><a href="/info/img/mfp-senal.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-senal.webp?v=2" width="1068" height="682" alt="La señal de salida en el dashboard del cliente" loading="lazy"></a></div>
-    <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. El detalle completo, con datos descargables para que lo comprobés con la IA que usés, está en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
+    <p class="nota">Lo que la regla no hace: no adivina el piso ni el techo. Entra tarde a los rebotes rápidos (2020) y a cambio se salta las caídas largas (2000 a 2002, 2008, 2022), que son las que destruyen un plan apalancado. El detalle completo, con datos descargables para que lo comprobés con la IA que usés, está en <a href="/edge" target="_blank" rel="noopener">/edge</a>, <a href="/m39" target="_blank" rel="noopener">/m39</a> y <a href="/backtest" target="_blank" rel="noopener">/backtest</a>.</p>
   </section>
 
 
@@ -658,7 +658,7 @@
     </div>
     <p class="seq-cap" id="seq-cap"></p>
     <div class="frame seq"><iframe id="seq-frame" title="Simulación paso a paso" src="about:blank"></iframe></div>
-    <p class="nota">Simulación con datos históricos semanales, sin honorarios, en dólares corrientes. QLD y TQQQ reales desde su listado y simulados antes. Todos los supuestos y el simulador completo, con tu año, tu edad y tu aporte, en <a href="/past" target="_blank" rel="noopener">/past</a>.</p>
+    <p class="nota">Simulación con datos históricos semanales, sin honorarios, en dólares corrientes. QLD y TQQQ reales desde su listado y simulados antes. Todos los supuestos y el simulador completo, con tu año, tu edad y tu aporte, en <a href="/backtest" target="_blank" rel="noopener">/backtest</a>.</p>
   </section>
 
   <!-- 9 · PAPERS -->
@@ -954,9 +954,9 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-cta]"), function(e
   el.addEventListener("click", function(){ track("click_cta_info", {cta: el.getAttribute("data-cta")}); });
 });
 
-// Secuencia: cinco vistas de /past con parámetros en la URL.
+// Secuencia: cinco vistas de /backtest con parámetros en la URL.
 (function(){
-  var base="/past/?embed=1&anio=1999&edad=30";
+  var base="/backtest/?embed=1&anio=1999&edad=30";
   var PASOS=[
     {q:"&sel=cash,qqq&inicial=10000&aporte=0", t:"<b>$10,000 guardados en 1999</b> contra los mismos $10,000 en el Nasdaq 100 comprando y manteniendo. Mirá las caídas de 2000 y de 2008: eso es lo que asusta, y aun así la plata quieta pierde por paliza."},
     {q:"&sel=qqq,eqqq&inicial=10000&aporte=0", t:"<b>Mismo índice, misma plata, con nuestro edge:</b> cuando la tendencia se rompe, la plata se pasa a efectivo; cuando vuelve, se reentra. Menos caída y más plata con el mismo activo."},

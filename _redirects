@@ -11,3 +11,6 @@
 # La landing de médicos se movió de /medicos-plan-de-retiro a /medicos (los UTM se conservan solos).
 /medicos-plan-de-retiro      /medicos    301
 /medicos-plan-de-retiro/*    /medicos    301
+# /past se renombró a /backtest (nov 2026); los parámetros de la URL se conservan solos.
+/past      /backtest/        301
+/past/*    /backtest/:splat  301
