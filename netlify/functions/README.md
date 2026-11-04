@@ -103,7 +103,7 @@ Los logs de cada aviso quedan en Netlify → Functions → `calendly-capi`.
 
 `live.js`: la página interna `/live` (noindex) muestra, barra de 30 minutos por barra,
 cómo se habrían comportado Atalaya actual, la Atalaya de 30 minutos (mejor punto de la
-malla de `META ADS/edges/atalaya-intradia`) y Concretum (momentum intradía, versión del
+malla de `research/edges/atalaya-intradia`) y Concretum (momentum intradía, versión del
 paper) sobre QQQ con $100,000 de mentira cada una desde el 27 de octubre de 2026. Se
 reconstruye entera en cada llamada; no guarda estado.
 
@@ -119,7 +119,7 @@ Necesita en Netlify → Site configuration → Environment variables:
 
 Sin esas variables la función responde 500 y la página muestra el aviso. Cachea 60 s.
 Datos SIP del plan gratis: 15 minutos de atraso, así que cada barra aparece un cuarto
-de hora después de cerrar. Para verla en localhost sin función: `node "C:\Users\Dell\repos\META ADS\edges\live-sim\correr_local.js"`
+de hora después de cerrar. Para verla en localhost sin función: `node "C:\Users\Dell\repos\Negocio\research\edges\live-sim\correr_local.js"`
 genera `live/data.json` (no se commitea) y la página lo lee cuando corre en localhost.
 
 Probar en vivo: `https://investorcr.com/.netlify/functions/live`.

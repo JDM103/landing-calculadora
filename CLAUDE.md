@@ -31,6 +31,6 @@ Reglas OBLIGATORIAS para cualquier AI o colaborador que toque este repo:
 
 ## 4 · Sistema de clientes (repo aparte)
 - El backend (Supabase: panel, reportes, señal, cierre de mes) vive en
-  `c:/Users/Dell/repos/ei-sistema` — leer su README antes de tocar functions.
+  `c:/Users/Dell/repos/Negocio/ei-sistema` — leer su README antes de tocar functions.
 - El research cuantitativo (M39 vs LRS, laboratorio de señales) vive en
-  `c:/Users/Dell/repos/ei-research` — leer `LEEME-TRASPASO.md`.
+  `c:/Users/Dell/repos/Negocio/research` — leer su `README.md`.
