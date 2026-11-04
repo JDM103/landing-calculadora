@@ -1,0 +1,8 @@
+{
+  "name": "investorcr",
+  "private": true,
+  "description": "Sitio estático de investorcr.com. Sin build: este archivo solo existe para que Netlify instale las dependencias de las functions.",
+  "dependencies": {
+    "@netlify/blobs": "^11.1.7"
+  }
+}

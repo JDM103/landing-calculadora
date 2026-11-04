@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Carrusel · Empowered Investor</title>
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+/* Herramienta interna: armar carruseles de Instagram con la identidad de marca.
+   Flujo: pegar el guion (compu o celular) → elegir fondo y fotos (celular) → bajar las láminas a Fotos.
+   Los borradores y las fotos viven en /api/carrusel (Netlify Blobs). Si la API no responde
+   (localhost), todo se guarda en este navegador para poder revisar la página. */
+:root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#9aa3b2; --linea:#262b33; --input:#1d232b; --rojo:#ffb3a0; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+input,textarea,select{font:inherit;color:var(--crema);background:var(--input);border:1px solid var(--linea);border-radius:12px;padding:11px 13px;width:100%}
+input:focus-visible,textarea:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+textarea{resize:vertical;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 16px 100px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.top h1{font-size:20px;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--menta);font-weight:600}
+.muted{color:var(--gris)}
+.chip{font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--linea);color:var(--gris);white-space:nowrap}
+.chip.ok{border-color:rgba(99,252,175,.5);color:var(--menta)}
+.chip.warn{border-color:rgba(255,179,160,.5);color:var(--rojo)}
+.btn{background:var(--menta);color:#0b2416;font-weight:700;border:0;border-radius:999px;padding:12px 20px}
+.btn.sec{background:transparent;color:var(--crema);border:1px solid var(--linea)}
+.btn.peq{padding:8px 14px;font-size:14px}
+.btn:disabled{opacity:.5;cursor:default}
+.hidden{display:none !important}
+/* lista de proyectos */
+.lista{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;text-align:left;color:var(--crema);width:100%}
+.card b{display:block;font-size:17px;margin-bottom:4px}
+.card small{color:var(--gris)}
+.vacio{border:1px dashed var(--linea);border-radius:14px;padding:26px;text-align:center;color:var(--gris)}
+/* editor */
+.tabs{display:flex;gap:6px;margin:10px 0 12px;background:var(--tinta2);padding:4px;border-radius:999px}
+.tabs button{flex:1;background:transparent;border:0;color:var(--gris);padding:10px;border-radius:999px;font-weight:600}
+.tabs button.activa{background:var(--input);color:var(--crema)}
+.panel{display:none}
+.panel.activa{display:block}
+label.campo{display:block;font-size:13.5px;color:var(--gris);margin:12px 0 6px}
+.ayuda{background:var(--tinta2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--gris);margin-top:12px}
+.ayuda code{color:var(--menta);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+#guion{min-height:360px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14.5px}
+/* fotos */
+.galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:12px}
+.galeria button{position:relative;aspect-ratio:4/5;border:2px solid transparent;border-radius:10px;overflow:hidden;padding:0;background:var(--tinta2)}
+.galeria button img{width:100%;height:100%;object-fit:cover;display:block}
+.galeria button.sel{border-color:var(--menta)}
+.galeria .del{position:absolute;top:4px;right:4px;background:rgba(13,15,20,.8);color:var(--crema);border:0;border-radius:999px;width:26px;height:26px;font-size:14px;line-height:26px;aspect-ratio:auto}
+.subir{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.subir input{display:none}
+/* vista */
+.tira{display:flex;gap:12px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.tira .lam{flex:0 0 auto;width:min(78vw,300px);scroll-snap-align:center;border-radius:12px;overflow:hidden;border:3px solid transparent;padding:0;background:#000;position:relative}
+.tira .lam.sel{border-color:var(--menta)}
+.tira .lam canvas{width:100%;height:auto;display:block}
+.fondos{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.fondos .btn{padding:9px 14px;font-size:14px}
+.fondos .btn.on{outline:2px solid var(--menta)}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.caption{background:var(--tinta2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;white-space:pre-wrap;font-size:15px;margin-top:10px}
+.estado{font-size:13px;color:var(--gris);min-height:18px;margin-top:8px}
+.err{color:var(--rojo)}
+/* clave */
+.modal{position:fixed;inset:0;background:rgba(13,15,20,.85);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modal>div{background:var(--tinta2);border:1px solid var(--linea);border-radius:16px;padding:22px;max-width:380px;width:100%}
+.modal h2{margin:0 0 8px;font-size:20px}
+/* hoja de fotos para elegir fondo */
+.hoja{position:fixed;left:0;right:0;bottom:0;background:var(--tinta2);border-top:1px solid var(--linea);border-radius:18px 18px 0 0;padding:16px;max-height:70vh;overflow:auto;z-index:40;box-shadow:0 -10px 40px rgba(0,0,0,.5)}
+@media (min-width:960px){
+  .tabs{display:none}
+  .panel{display:block}
+  .editor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px;align-items:start}
+  .col-izq .panel+.panel{margin-top:22px}
+  .tira{flex-wrap:wrap;overflow:visible}
+  .tira .lam{width:calc(33.33% - 8px)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== Lista de proyectos ===== -->
+  <section id="vista-lista">
+    <div class="top">
+      <div style="flex:1;min-width:0">
+        <div class="eyebrow">Carruseles · Empowered Investor</div>
+        <h1 style="font-size:26px">Tus borradores</h1>
+      </div>
+      <span class="chip" id="chip-modo">…</span>
+      <button class="btn" id="btn-nuevo">+ Nuevo</button>
+    </div>
+    <div class="lista" id="lista"></div>
+    <p class="muted" style="font-size:14px;margin-top:18px">Desde el celular podés pedirle el guion a Claude (sesión <b>Negocio</b> en la app) y el borrador aparece acá solo. Después le ponés la foto y lo bajás a Fotos para publicarlo.</p>
+  </section>
+
+  <!-- ===== Editor ===== -->
+  <section id="vista-editor" class="hidden">
+    <div class="top">
+      <button class="btn sec peq" id="btn-volver">← Borradores</button>
+      <h1 id="titulo-editor">Carrusel</h1>
+      <span class="chip" id="chip-guardado">—</span>
+      <button class="btn sec peq" id="btn-borrar" title="Borrar este borrador">Borrar</button>
+    </div>
+
+    <div class="tabs">
+      <button data-tab="guion" class="activa">Guion</button>
+      <button data-tab="fotos">Fotos</button>
+      <button data-tab="vista">Vista</button>
+    </div>
+
+    <div class="editor">
+      <div class="col-izq">
+        <div class="panel activa" id="panel-guion">
+          <label class="campo" for="nombre">Nombre del proyecto</label>
+          <input id="nombre" placeholder="Ej. 5 miedos al empezar el plan de retiro" autocomplete="off">
+          <label class="campo" for="guion">Guion (una lámina por bloque)</label>
+          <textarea id="guion" spellcheck="false"></textarea>
+          <div class="ayuda">
+            <b style="color:var(--crema)">Formato:</b> cada lámina empieza con <code># Título</code>, debajo va el texto. Una línea que empiece con <code>&gt;</code> se pinta en verde. Separá láminas con <code>---</code>. Después de <code>===</code> va el caption del post.
+          </div>
+        </div>
+
+        <div class="panel" id="panel-fotos">
+          <label class="campo">Fotos para los fondos</label>
+          <div class="subir">
+            <label class="btn" for="archivo">Subir desde el celular</label>
+            <input type="file" id="archivo" accept="image/*" multiple>
+            <span class="muted" id="estado-fotos" style="font-size:13.5px"></span>
+          </div>
+          <div class="galeria" id="galeria"></div>
+          <p class="muted" style="font-size:13.5px;margin-top:12px">Las fotos se achican a 1600 px antes de subirse y quedan guardadas para usarlas en cualquier carrusel. Tocá una foto para ponerla en la lámina elegida en Vista.</p>
+        </div>
+      </div>
+
+      <div class="col-der">
+        <div class="panel" id="panel-vista">
+          <label class="campo">Vista previa · tocá una lámina para cambiarle el fondo</label>
+          <div class="tira" id="tira"></div>
+          <div class="fondos">
+            <span class="muted" id="sel-txt" style="font-size:13.5px;margin-right:4px">Lámina 1</span>
+            <button class="btn sec" data-fondo="tinta">Oscuro</button>
+            <button class="btn sec" data-fondo="crema">Claro</button>
+            <button class="btn sec" data-fondo="foto">Foto…</button>
+            <label class="muted" style="font-size:13.5px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="todas" style="width:auto;margin:0"> a todas</label>
+          </div>
+          <div class="acciones">
+            <button class="btn" id="btn-bajar">Guardar en el celular</button>
+            <button class="btn sec" id="btn-caption">Copiar caption</button>
+          </div>
+          <div class="estado" id="estado-bajar"></div>
+          <div class="caption" id="caption-txt"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- clave de acceso -->
+<div class="modal hidden" id="modal-clave">
+  <div>
+    <h2>Clave de la herramienta</h2>
+    <p class="muted" style="margin:0 0 12px;font-size:14.5px">Es la misma de Netlify (CARRUSEL_TOKEN). Queda guardada en este navegador.</p>
+    <input id="clave" type="password" autocomplete="current-password">
+    <p class="err hidden" id="clave-err" style="font-size:14px;margin:8px 0 0">Clave incorrecta.</p>
+    <div class="acciones">
+      <button class="btn" id="clave-ok">Entrar</button>
+      <button class="btn sec" id="clave-local">Seguir sin guardar en la nube</button>
+    </div>
+  </div>
+</div>
+
+<!-- hoja para elegir foto de fondo -->
+<div class="hoja hidden" id="hoja-fotos">
+  <div class="top" style="margin-bottom:6px"><b style="flex:1">Elegí la foto</b><button class="btn sec peq" id="hoja-cerrar">Cerrar</button></div>
+  <div class="galeria" id="hoja-galeria"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const W = 1080, H = 1350, M = 96;
+const API = "/api/carrusel";
+const LS_TOKEN = "carrusel.token", LS_BORR = "carrusel.borradores";
+
+// ---------- formato del guion
+const EJEMPLO = `# Los 5 miedos que frenan a un médico antes de empezar su plan de retiro
+Y por qué ninguno aguanta una conversación de 30 minutos.
+---
+# 1. "¿Y si pierdo la plata?"
+El miedo real no es perder: es no entender dónde está.
+> Un plan claro te dice qué pasa en el peor escenario antes de que pase.
+---
+# 2. "Después, cuando gane más"
+Cada año que esperás cuesta más que el aporte que no hiciste.
+---
+# ¿Querés ver tu número?
+Escribime "retiro" y te mando tu proyección sin costo.
+===
+Caption del post acá. Terminá con una pregunta o un llamado claro.
+#retiro #medicos #costarica`;
+
+function parsear(txt){
+  const i = txt.search(/^===\s*$/m);
+  const cuerpo = i >= 0 ? txt.slice(0, i) : txt;
+  const caption = i >= 0 ? txt.slice(i).replace(/^===\s*$/m, "").trim() : "";
+  const slides = cuerpo.split(/^---\s*$/m).map(s => s.trim()).filter(Boolean).map(s => {
+    const titulo = [], lineas = [];
+    s.split("\n").forEach(l => {
+      const t = l.trim();
+      if (t.startsWith("#")) titulo.push(t.replace(/^#+\s*/, ""));
+      else if (t.startsWith(">")) lineas.push({ t: t.replace(/^>\s*/, ""), hi: true });
+      else lineas.push({ t, hi: false });
+    });
+    while (lineas.length && !lineas[0].t) lineas.shift();
+    while (lineas.length && !lineas[lineas.length - 1].t) lineas.pop();
+    return { titulo: titulo.join(" "), lineas };
+  });
+  return { slides, caption };
+}
+
+// ---------- estado
+let modoLocal = false, token = "", borradores = [], actual = null, fotos = [], sel = 0;
+let timerGuardar = null, pngs = null, renderId = 0;
+const urls = new Map();   // id de foto → objectURL
+const imgs = new Map();   // id de foto → HTMLImageElement
+let logoOscuro = null, logoClaro = null;
+
+// ---------- almacenamiento (API con respaldo local)
+async function api(ruta, opt){
+  opt = opt || {};
+  const h = Object.assign({ "x-token": token }, opt.headers || {});
+  const r = await fetch(API + ruta, Object.assign({}, opt, { headers: h }));
+  if (r.status === 401) throw Object.assign(new Error("clave"), { clave: true });
+  if (!r.ok) { let m = ""; try { m = (await r.json()).error; } catch(e){} throw new Error(m || ("HTTP " + r.status)); }
+  return r;
+}
+const lsLeer = () => { try { return JSON.parse(localStorage.getItem(LS_BORR) || "{}") || {}; } catch(e){ return {}; } };
+const lsGuardar = d => { try { localStorage.setItem(LS_BORR, JSON.stringify(d)); } catch(e){} };
+
+// IndexedDB solo para las fotos en modo local
+function idb(){ return new Promise((res, rej) => { const q = indexedDB.open("carrusel", 1); q.onupgradeneeded = () => q.result.createObjectStore("fotos", { keyPath: "id" }); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function idbTodo(){ const db = await idb(); return new Promise((res, rej) => { const q = db.transaction("fotos").objectStore("fotos").getAll(); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function idbPoner(o){ const db = await idb(); return new Promise((res, rej) => { const t = db.transaction("fotos", "readwrite"); t.objectStore("fotos").put(o); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+async function idbBorrar(id){ const db = await idb(); return new Promise((res, rej) => { const t = db.transaction("fotos", "readwrite"); t.objectStore("fotos").delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+
+const store = {
+  async lista(){
+    if (modoLocal) return Object.values(lsLeer()).sort((a, b) => b.actualizado - a.actualizado).map(d => ({ id: d.id, nombre: d.nombre, slides: parsear(d.guion || "").slides.length, actualizado: d.actualizado }));
+    return (await api("/borradores")).json();
+  },
+  async leer(id){
+    if (modoLocal) return lsLeer()[id] || null;
+    return (await api("/borradores/" + id)).json();
+  },
+  async guardar(d){
+    d.actualizado = Date.now();
+    if (modoLocal) { const t = lsLeer(); t[d.id] = d; lsGuardar(t); return; }
+    await api("/borradores/" + d.id, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(d) });
+  },
+  async borrar(id){
+    if (modoLocal) { const t = lsLeer(); delete t[id]; lsGuardar(t); return; }
+    await api("/borradores/" + id, { method: "DELETE" });
+  },
+  async fotos(){
+    if (modoLocal) { const t = await idbTodo(); t.forEach(f => { if (!urls.has(f.id)) urls.set(f.id, URL.createObjectURL(f.blob)); }); return t.map(f => ({ id: f.id })).sort((a, b) => a.id < b.id ? 1 : -1); }
+    return (await api("/fotos")).json();
+  },
+  async fotoSubir(blob){
+    if (modoLocal) { const id = Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8); await idbPoner({ id, blob }); urls.set(id, URL.createObjectURL(blob)); return id; }
+    const r = await (await api("/fotos", { method: "POST", headers: { "Content-Type": blob.type }, body: blob })).json();
+    urls.set(r.id, URL.createObjectURL(blob));
+    return r.id;
+  },
+  async fotoURL(id){
+    if (urls.has(id)) return urls.get(id);
+    if (modoLocal) return null;
+    const b = await (await api("/fotos/" + id)).blob();
+    const u = URL.createObjectURL(b); urls.set(id, u); return u;
+  },
+  async fotoBorrar(id){
+    if (modoLocal) await idbBorrar(id); else await api("/fotos/" + id, { method: "DELETE" });
+    urls.delete(id); imgs.delete(id);
+  },
+};
+
+// ---------- arranque y clave
+async function conectar(){
+  token = localStorage.getItem(LS_TOKEN) || "";
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") { modoLocal = true; setModo("Localhost · guardando en este navegador", "warn"); await cargarLista(); return; }
+  try {
+    const r = await fetch(API + "/borradores", { headers: { "x-token": token } });
+    if (r.status === 401) { pedirClave(); return; }
+    if (r.status === 503) { modoLocal = true; setModo("Falta CARRUSEL_TOKEN en Netlify · guardando en este navegador", "warn"); }
+    else if (!r.ok) { modoLocal = true; setModo("Sin nube (localhost) · guardando en este navegador", "warn"); }
+    else setModo("Nube ✓", "ok");
+  } catch(e) { modoLocal = true; setModo("Sin conexión · guardando en este navegador", "warn"); }
+  await cargarLista();
+}
+function setModo(t, c){ const ch = $("#chip-modo"); ch.textContent = t; ch.className = "chip " + (c || ""); }
+function pedirClave(){ $("#modal-clave").classList.remove("hidden"); $("#clave").focus(); }
+$("#clave-ok").onclick = async () => {
+  token = $("#clave").value.trim(); localStorage.setItem(LS_TOKEN, token);
+  const r = await fetch(API + "/borradores", { headers: { "x-token": token } });
+  if (r.status === 401) { $("#clave-err").classList.remove("hidden"); return; }
+  $("#modal-clave").classList.add("hidden"); setModo("Nube ✓", "ok"); await cargarLista();
+};
+$("#clave-local").onclick = async () => { modoLocal = true; $("#modal-clave").classList.add("hidden"); setModo("Sin nube · guardando en este navegador", "warn"); await cargarLista(); };
+
+// ---------- lista
+async function cargarLista(){
+  const el = $("#lista"); el.innerHTML = "";
+  try { borradores = await store.lista(); } catch(e) { el.innerHTML = '<div class="vacio err">No pude leer los borradores: ' + e.message + "</div>"; return; }
+  if (!borradores.length) { el.innerHTML = '<div class="vacio">Todavía no hay borradores. Tocá <b>+ Nuevo</b> o pedile uno a Claude desde el celular.</div>'; return; }
+  borradores.forEach(b => {
+    const c = document.createElement("button"); c.className = "card";
+    c.innerHTML = "<b></b><small></small>";
+    c.querySelector("b").textContent = b.nombre || "Sin nombre";
+    c.querySelector("small").textContent = b.slides + " láminas · " + fecha(b.actualizado);
+    c.onclick = () => abrir(b.id);
+    el.appendChild(c);
+  });
+}
+const fecha = ts => ts ? new Date(ts).toLocaleString("es-CR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "";
+const slug = s => (s || "carrusel").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "carrusel";
+
+$("#btn-nuevo").onclick = async () => {
+  const d = { id: "c-" + Date.now().toString(36), nombre: "", guion: EJEMPLO, fondos: [], fondoGlobal: { fondo: "tinta", foto: null } };
+  await store.guardar(d).catch(e => alert("No pude crear el borrador: " + e.message));
+  abrir(d.id, d);
+};
+
+// ---------- editor
+async function abrir(id, d){
+  actual = d || await store.leer(id);
+  if (!actual) { alert("Ese borrador ya no existe"); cargarLista(); return; }
+  actual.fondos = actual.fondos || []; actual.fondoGlobal = actual.fondoGlobal || { fondo: "tinta", foto: null };
+  $("#nombre").value = actual.nombre || ""; $("#guion").value = actual.guion || "";
+  $("#titulo-editor").textContent = actual.nombre || "Carrusel";
+  $("#chip-guardado").textContent = modoLocal ? "Local" : "Guardado";
+  sel = 0; pngs = null;
+  $("#vista-lista").classList.add("hidden"); $("#vista-editor").classList.remove("hidden");
+  window.scrollTo(0, 0);
+  await cargarFotos();
+  render();
+}
+$("#btn-volver").onclick = async () => { await guardarYa(); $("#vista-editor").classList.add("hidden"); $("#vista-lista").classList.remove("hidden"); cargarLista(); };
+$("#btn-borrar").onclick = async () => {
+  if (!confirm("¿Borrar este borrador? No se puede deshacer.")) return;
+  clearTimeout(timerGuardar);
+  await store.borrar(actual.id).catch(e => alert(e.message));
+  actual = null; $("#vista-editor").classList.add("hidden"); $("#vista-lista").classList.remove("hidden"); cargarLista();
+};
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("activa", x === b));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("activa", p.id === "panel-" + b.dataset.tab));
+  if (b.dataset.tab === "vista") render();
+});
+function cambio(){
+  if (!actual) return;
+  actual.nombre = $("#nombre").value; actual.guion = $("#guion").value;
+  $("#titulo-editor").textContent = actual.nombre || "Carrusel";
+  $("#chip-guardado").textContent = "Guardando…"; pngs = null;
+  clearTimeout(timerGuardar); timerGuardar = setTimeout(guardarYa, 900);
+  if (window.innerWidth >= 960) render();
+}
+$("#nombre").addEventListener("input", cambio);
+$("#guion").addEventListener("input", cambio);
+async function guardarYa(){
+  clearTimeout(timerGuardar);
+  if (!actual) return;
+  try { await store.guardar(actual); $("#chip-guardado").textContent = modoLocal ? "Local" : "Guardado ✓"; }
+  catch(e) { $("#chip-guardado").textContent = "Sin guardar"; if (e.clave) pedirClave(); }
+}
+
+// ---------- fotos
+async function cargarFotos(){
+  try { fotos = await store.fotos(); } catch(e) { fotos = []; }
+  await pintarGaleria($("#galeria"), id => asignarFoto(id));
+}
+async function pintarGaleria(el, alTocar, conBorrar){
+  el.innerHTML = "";
+  if (!fotos.length) { el.innerHTML = '<div class="vacio" style="grid-column:1/-1">Todavía no hay fotos.</div>'; return; }
+  for (const f of fotos) {
+    const b = document.createElement("button");
+    const img = document.createElement("img"); img.alt = ""; img.loading = "lazy";
+    b.appendChild(img);
+    store.fotoURL(f.id).then(u => { if (u) img.src = u; });
+    b.onclick = () => alTocar(f.id);
+    if (conBorrar !== false && el.id === "galeria") {
+      const x = document.createElement("button"); x.className = "del"; x.textContent = "×"; x.title = "Borrar foto";
+      x.onclick = async ev => { ev.stopPropagation(); if (!confirm("¿Borrar esta foto?")) return; await store.fotoBorrar(f.id).catch(e => alert(e.message)); await cargarFotos(); render(); };
+      b.appendChild(x);
+    }
+    el.appendChild(b);
+  }
+}
+$("#archivo").addEventListener("change", async ev => {
+  const lista = Array.from(ev.target.files || []); ev.target.value = "";
+  if (!lista.length) return;
+  const est = $("#estado-fotos"); let n = 0, primero = null;
+  for (const f of lista) {
+    est.textContent = "Subiendo " + (n + 1) + " de " + lista.length + "…";
+    try { const blob = await achicar(f); const id = await store.fotoSubir(blob); if (!primero) primero = id; n++; }
+    catch(e) { est.textContent = "Error: " + e.message; if (e.clave) pedirClave(); return; }
+  }
+  est.textContent = n + (n === 1 ? " foto subida" : " fotos subidas");
+  await cargarFotos();
+  if (primero && actual) { asignarFoto(primero); }
+});
+async function achicar(file){
+  const bmp = await createImageBitmap(file).catch(() => null);
+  let src = bmp, w, h;
+  if (!bmp) { src = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(file); }); }
+  w = src.width; h = src.height;
+  const k = Math.min(1, 1600 / Math.max(w, h));
+  const c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+  return new Promise(res => c.toBlob(res, "image/jpeg", 0.86));
+}
+function asignarFoto(id){
+  if (!actual) return;
+  const todas = $("#todas").checked;
+  if (todas) { actual.fondoGlobal = { fondo: "foto", foto: id }; actual.fondos = []; }
+  else { actual.fondos[sel] = { fondo: "foto", foto: id }; }
+  $("#hoja-fotos").classList.add("hidden");
+  cambio();
+  if (window.innerWidth < 960) { document.querySelector('.tabs button[data-tab="vista"]').click(); } else render();
+}
+document.querySelectorAll(".fondos [data-fondo]").forEach(b => b.onclick = () => {
+  const f = b.dataset.fondo;
+  if (f === "foto") { pintarGaleria($("#hoja-galeria"), asignarFoto, false); $("#hoja-fotos").classList.remove("hidden"); return; }
+  if ($("#todas").checked) { actual.fondoGlobal = { fondo: f, foto: null }; actual.fondos = []; }
+  else actual.fondos[sel] = { fondo: f, foto: null };
+  cambio(); render();
+});
+$("#hoja-cerrar").onclick = () => $("#hoja-fotos").classList.add("hidden");
+
+// ---------- dibujo de láminas
+function fondoDe(i){ return (actual.fondos && actual.fondos[i]) || actual.fondoGlobal || { fondo: "tinta", foto: null }; }
+function cargarImg(src){ return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+async function imgFoto(id){
+  if (imgs.has(id)) return imgs.get(id);
+  const u = await store.fotoURL(id); if (!u) return null;
+  const i = await cargarImg(u).catch(() => null); if (i) imgs.set(id, i); return i;
+}
+async function fuentes(){
+  await Promise.all([document.fonts.load('700 80px "Bai Jamjuree"'), document.fonts.load('500 44px "Bai Jamjuree"'), document.fonts.load('600 30px "Bai Jamjuree"')]).catch(() => {});
+  if (!logoOscuro) logoOscuro = await cargarImg("/assets/logo-empowered.webp").catch(() => null);
+  if (!logoClaro) logoClaro = await cargarImg("/assets/logo-fondo-negro.png").catch(() => null);
+}
+function envolver(ctx, texto, ancho){
+  const out = [];
+  texto.split("\n").forEach(parr => {
+    const palabras = parr.split(/\s+/).filter(Boolean); let linea = "";
+    if (!palabras.length) { out.push(""); return; }
+    palabras.forEach(p => {
+      const prueba = linea ? linea + " " + p : p;
+      if (ctx.measureText(prueba).width > ancho && linea) { out.push(linea); linea = p; } else linea = prueba;
+    });
+    out.push(linea);
+  });
+  return out;
+}
+function dibujar(c, s, i, n, fondo, foto){
+  const ctx = c.getContext("2d");
+  const claro = fondo.fondo === "crema";
+  const conFoto = fondo.fondo === "foto" && foto;
+  // fondo
+  if (conFoto) {
+    const k = Math.max(W / foto.width, H / foto.height), fw = foto.width * k, fh = foto.height * k;
+    ctx.drawImage(foto, (W - fw) / 2, (H - fh) / 2, fw, fh);
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "rgba(13,15,20,.30)"); g.addColorStop(.45, "rgba(13,15,20,.55)"); g.addColorStop(1, "rgba(13,15,20,.92)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  } else if (claro) {
+    ctx.fillStyle = "#FEF9F3"; ctx.fillRect(0, 0, W, H);
+  } else {
+    const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#15191E"); g.addColorStop(1, "#0d0f14");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(85,109,251,.16)"; ctx.beginPath(); ctx.arc(W - 120, 180, 260, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "rgba(99,252,175,.10)"; ctx.beginPath(); ctx.arc(60, H - 160, 220, 0, Math.PI * 2); ctx.fill();
+  }
+  const texto = claro ? "#0d0f14" : "#FEF9F3", gris = claro ? "#5a6170" : "#b7bec9", acento = claro ? "#556DFB" : "#63FCAF";
+  // cabecera: logo + contador
+  const L = 92;
+  if (claro) { if (logoClaro) { ctx.save(); ctx.beginPath(); ctx.arc(M + L / 2, M + L / 2, L / 2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(logoClaro, M, M, L, L); ctx.restore(); } }
+  else if (logoOscuro) ctx.drawImage(logoOscuro, M - 8, M - 8, L + 16, L + 16);
+  ctx.fillStyle = gris; ctx.font = '600 30px "Bai Jamjuree"'; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  ctx.fillText((i + 1) + "/" + n, W - M, M + L / 2);
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  // bloque de texto: título ajustado + cuerpo
+  const ancho = W - 2 * M, topMin = M + L + 70, botMax = H - M - 80;
+  let tf = i === 0 ? 92 : 78, tl = [];
+  for (;;) { ctx.font = '700 ' + tf + 'px "Bai Jamjuree"'; tl = s.titulo ? envolver(ctx, s.titulo, ancho) : []; if (tl.length * tf * 1.12 <= (i === 0 ? 760 : 520) || tf <= 46) break; tf -= 4; }
+  const bf = 42, bl = [];
+  ctx.font = '500 ' + bf + 'px "Bai Jamjuree"';
+  s.lineas.forEach(l => { if (!l.t) { bl.push({ t: "", hi: false }); return; } envolver(ctx, l.t, ancho).forEach(x => bl.push({ t: x, hi: l.hi })); });
+  const hT = tl.length * tf * 1.12, hB = bl.length * bf * 1.42, sep = tl.length && bl.length ? 34 : 0, hTot = hT + sep + hB;
+  let y = conFoto ? Math.max(topMin, botMax - hTot) : Math.max(topMin, (topMin + botMax - hTot) / 2);
+  ctx.fillStyle = texto; ctx.font = '700 ' + tf + 'px "Bai Jamjuree"';
+  tl.forEach(l => { y += tf; ctx.fillText(l, M, y); y += tf * .12; });
+  y += sep;
+  ctx.font = '500 ' + bf + 'px "Bai Jamjuree"';
+  bl.forEach(l => { y += bf; ctx.fillStyle = l.hi ? acento : texto; if (l.hi) ctx.font = '600 ' + bf + 'px "Bai Jamjuree"'; else ctx.font = '500 ' + bf + 'px "Bai Jamjuree"'; ctx.fillText(l.t, M, y); y += bf * .42; });
+  // pie
+  ctx.font = '600 28px "Bai Jamjuree"'; ctx.fillStyle = gris; ctx.textBaseline = "alphabetic";
+  ctx.fillText("@joseinvestor.cr", M, H - M + 8);
+  ctx.textAlign = "right"; ctx.fillStyle = i < n - 1 ? acento : gris;
+  ctx.fillText(i < n - 1 ? "Deslizá  →" : "Guardalo para después", W - M, H - M + 8);
+  ctx.textAlign = "left";
+}
+async function render(){
+  if (!actual) return;
+  const id = ++renderId;
+  const { slides, caption } = parsear($("#guion").value);
+  $("#caption-txt").textContent = caption || "(sin caption: escribilo después de una línea ===)";
+  const tira = $("#tira"); tira.innerHTML = "";
+  if (!slides.length) { tira.innerHTML = '<div class="vacio" style="width:100%">Escribí el guion para ver las láminas.</div>'; return; }
+  if (sel >= slides.length) sel = 0;
+  await fuentes();
+  const canvases = [];
+  for (let i = 0; i < slides.length; i++) {
+    const lam = document.createElement("button"); lam.className = "lam" + (i === sel ? " sel" : "");
+    const c = document.createElement("canvas"); c.width = W; c.height = H; lam.appendChild(c);
+    lam.onclick = () => { sel = i; document.querySelectorAll(".tira .lam").forEach((x, j) => x.classList.toggle("sel", j === i)); $("#sel-txt").textContent = "Lámina " + (i + 1); };
+    tira.appendChild(lam); canvases.push(c);
+  }
+  $("#sel-txt").textContent = "Lámina " + (sel + 1);
+  for (let i = 0; i < slides.length; i++) {
+    const f = fondoDe(i); const foto = f.fondo === "foto" && f.foto ? await imgFoto(f.foto) : null;
+    if (id !== renderId) return;
+    dibujar(canvases[i], slides[i], i, slides.length, f, foto);
+  }
+  // PNGs listos para compartir (el botón tiene que llamar a share sin esperas)
+  const base = slug(actual.nombre);
+  const files = [];
+  for (let i = 0; i < canvases.length; i++) {
+    const blob = await new Promise(r => canvases[i].toBlob(r, "image/png"));
+    files.push(new File([blob], base + "-" + String(i + 1).padStart(2, "0") + ".png", { type: "image/png" }));
+  }
+  if (id === renderId) { pngs = files; $("#estado-bajar").textContent = files.length + " láminas listas"; }
+}
+
+// ---------- bajar al celular / compu
+$("#btn-bajar").onclick = async () => {
+  const est = $("#estado-bajar");
+  if (!pngs) { est.textContent = "Preparando láminas…"; await render(); }
+  if (!pngs || !pngs.length) return;
+  if (navigator.canShare && navigator.canShare({ files: pngs })) {
+    try { await navigator.share({ files: pngs, title: actual.nombre || "Carrusel" }); est.textContent = "Listo. En el celular: Guardar imágenes → quedan en Fotos."; }
+    catch(e) { if (e.name !== "AbortError") est.textContent = "No se pudo compartir: " + e.message; }
+    return;
+  }
+  const zip = new JSZip(); pngs.forEach(f => zip.file(f.name, f));
+  const blob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = slug(actual.nombre) + ".zip"; a.click();
+  est.textContent = "Bajado como ZIP con las " + pngs.length + " láminas.";
+};
+$("#btn-caption").onclick = async () => {
+  const t = parsear($("#guion").value).caption;
+  try { await navigator.clipboard.writeText(t); $("#estado-bajar").textContent = "Caption copiado."; } catch(e) { $("#estado-bajar").textContent = "No pude copiar; seleccionalo a mano."; }
+};
+window.addEventListener("beforeunload", () => { if (timerGuardar) guardarYa(); });
+
+conectar();
+})();
+</script>
+</body>
+</html>
