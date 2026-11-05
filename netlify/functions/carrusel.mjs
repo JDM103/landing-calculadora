@@ -5,9 +5,10 @@
  * La skill /carrusel (Claude Code por Remote Control) también deja borradores acá.
  *
  * Variables de entorno (Netlify → Site configuration → Environment variables):
- *   CARRUSEL_TOKEN · clave que manda la página y el script subir_borrador.py (cabecera x-token)
+ *   CARRUSEL_TOKEN · OPCIONAL. Hoy no está puesta: la herramienta queda abierta a quien tenga el link
+ *   (decisión de Jose, 5 nov 2026). Si se pone, todas las rutas piden la cabecera x-token.
  *
- * Rutas (todas piden la cabecera x-token):
+ * Rutas:
  *   GET    /api/carrusel/borradores          → [{id, nombre, slides, actualizado}]
  *   GET    /api/carrusel/borradores/:id      → el borrador completo (JSON)
  *   PUT    /api/carrusel/borradores/:id      → guarda el JSON del cuerpo
@@ -30,10 +31,10 @@ const ID_OK = /^[a-z0-9][a-z0-9-]{0,79}$/;
 const TIPOS = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export default async (req) => {
+  // Sin clave por decisión de Jose (5 nov 2026). Si algún día se pone CARRUSEL_TOKEN en Netlify,
+  // la clave vuelve a exigirse sola, sin tocar código.
   const esperado = process.env.CARRUSEL_TOKEN;
-  if (!esperado) return json(503, { error: "Falta CARRUSEL_TOKEN en Netlify" });
-  const token = req.headers.get("x-token") || "";
-  if (token !== esperado) return json(401, { error: "Clave incorrecta" });
+  if (esperado && (req.headers.get("x-token") || "") !== esperado) return json(401, { error: "Clave incorrecta" });
 
   const url = new URL(req.url);
   const partes = url.pathname.replace(/^\/api\/carrusel\/?/, "").split("/").filter(Boolean);
