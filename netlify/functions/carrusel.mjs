@@ -48,7 +48,10 @@ export default async (req) => {
         const lista = [];
         for (const b of blobs) {
           const d = await store.get(b.key, { type: "json" });
-          if (d) lista.push({ id: d.id, nombre: d.nombre || "Sin nombre", slides: (d.slides || []).length, actualizado: d.actualizado || 0 });
+          if (!d) continue;
+          // las láminas se cuentan del guion (bloques separados por --- antes del ===)
+          const nLam = String(d.guion || "").split(/\n===/)[0].split(/\n---[ \t]*(?:\n|$)/).filter(s => s.trim()).length;
+          lista.push({ id: d.id, nombre: d.nombre || "Sin nombre", slides: nLam, actualizado: d.actualizado || 0 });
         }
         lista.sort((a, b) => b.actualizado - a.actualizado);
         return json(200, lista);
