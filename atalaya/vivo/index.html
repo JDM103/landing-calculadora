@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Atalaya en vivo · Empowered Investor</title>
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="icon" type="image/png" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<style>
+/* Página interna (noindex): Atalaya Momentum sobre QQQ en tiempo real.
+   Precio tick a tick: WebSocket público de Yahoo Finance (sin keys). Niveles y cierres: /.netlify/functions/atalaya-vivo
+   (solo lectura de Alpaca). Si el WebSocket se cae, el precio se refresca cada 20 s con la función. */
+:root{--tinta:#0d0f14;--tinta2:#15191E;--tinta3:#1d2229;--borde:#2a3038;--crema:#FEF9F3;--crema2:#b9b4ae;--crema3:#7d7974;--menta:#63FCAF;--peri:#8B9BFF;--rojo:#ff7a59;--ambar:#ffc857}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{margin:0;background:var(--tinta);color:var(--crema);font:16px/1.5 "Bai Jamjuree",system-ui,sans-serif;padding:0 max(16px,env(safe-area-inset-left)) 56px max(16px,env(safe-area-inset-right));overflow-x:hidden}
+a{color:var(--menta)}
+.wrap{max-width:1100px;margin:0 auto}
+header{padding:30px 0 10px}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--crema3);font-weight:600}
+.eyebrow a{color:var(--crema3);text-decoration:none}.eyebrow a:hover{color:var(--menta)}
+h1{font-size:clamp(28px,4.4vw,40px);line-height:1.1;margin:8px 0 8px;font-weight:700;letter-spacing:-.01em}
+h1 em{color:var(--menta);font-style:normal}
+.lede{color:var(--crema2);max-width:72ch;margin:0;font-size:16px}
+.vivo{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin:14px 0 4px;font-size:14px;color:var(--crema2)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--menta);box-shadow:0 0 0 0 rgba(99,252,175,.6);animation:pulso 2s infinite;margin-right:7px;vertical-align:middle}
+.dot.off{background:var(--crema3);animation:none;box-shadow:none}.dot.warn{background:var(--ambar);animation:none;box-shadow:none}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(99,252,175,.55)}70%{box-shadow:0 0 0 9px rgba(99,252,175,0)}100%{box-shadow:0 0 0 0 rgba(99,252,175,0)}}
+.vivo b{color:var(--crema);font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0 16px}
+.tile{background:var(--tinta2);border:1px solid var(--borde);border-radius:14px;padding:14px 16px;border-top:3px solid var(--c,var(--borde));min-width:0}
+.tile .k{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--crema3);font-weight:600}
+.tile .v{font-size:30px;font-weight:700;margin:6px 0 2px;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1.1}
+.tile .v small{font-size:15px;font-weight:600;color:var(--crema2);margin-left:6px}
+.tile .s{font-size:13px;color:var(--crema2);margin-top:8px;line-height:1.45}
+.tile .s b{color:var(--crema);font-weight:600}
+.pos{color:var(--menta)}.neg{color:var(--rojo)}.amb{color:var(--ambar)}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid var(--borde);color:var(--crema2);margin-top:8px;letter-spacing:.04em}
+.pill.in{border-color:var(--menta);color:var(--menta)}.pill.out{border-color:var(--rojo);color:var(--rojo)}.pill.warn{border-color:var(--ambar);color:var(--ambar)}
+.card{background:var(--tinta2);border:1px solid var(--borde);border-radius:14px;padding:12px 14px 14px;margin-bottom:14px}
+h4{margin:2px 0 6px;font-size:15px;font-weight:600}
+h4 span{color:var(--crema3);font-weight:500;font-size:12px;margin-left:8px}
+canvas{display:block;width:100%;touch-action:pan-y}
+.leg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:var(--crema2);margin-top:8px}
+.leg span{display:inline-flex;align-items:center;gap:6px}
+.leg i{display:inline-block;width:14px;height:3px;border-radius:2px}
+.leg i.dash{background:repeating-linear-gradient(90deg,currentColor 0 4px,transparent 4px 7px)}
+.leg i.box{height:10px;width:12px;border-radius:2px}
+.others{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:0 0 16px}
+.oth{background:var(--tinta2);border:1px solid var(--borde);border-radius:12px;padding:10px 12px}
+.oth .k{font-size:12px;color:var(--crema3);font-weight:600}.oth .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.oth .v small{font-size:13px;margin-left:6px;font-weight:600}
+h2{font-size:21px;margin:26px 0 6px;font-weight:700}
+p.note{color:var(--crema2);font-size:14px;max-width:80ch;margin:4px 0 10px}
+.err{display:none;background:#2a1a17;border:1px solid var(--rojo);color:var(--crema);border-radius:12px;padding:12px 14px;margin:12px 0;font-size:14px}
+footer{margin-top:30px;font-size:13px;color:var(--crema3)}
+@media (max-width:480px){.tile .v{font-size:26px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow"><a href="/atalaya/">Atalaya Momentum</a> · Empowered Investor</div>
+  <h1>Atalaya <em>en vivo</em></h1>
+  <p class="lede">QQQ tick a tick contra las dos rayas de la regla: el promedio de 200 días (−3%) y el máximo de 39 semanas (−12%). La señal se decide al cierre; la orden se ejecuta al cierre del día siguiente.</p>
+  <div class="vivo">
+    <span><i class="dot off" id="dws"></i><b id="tws">conectando…</b></span>
+    <span>Hora NY <b id="hny">—</b></span>
+    <span id="merc">—</span>
+    <span>Último tick <b id="tick">—</b></span>
+  </div>
+</header>
+
+<div class="err" id="err"></div>
+
+<div class="tiles">
+  <div class="tile" style="--c:var(--crema)"><div class="k">QQQ ahora</div><div class="v" id="px">—</div><div class="s" id="pxs">cierre de ayer —</div></div>
+  <div class="tile" style="--c:var(--peri)"><div class="k">Señal Atalaya</div><div class="v" id="sig">—</div><div class="s" id="sigs">—</div></div>
+  <div class="tile" style="--c:var(--rojo)"><div class="k">Para salir hoy</div><div class="v" id="fal">—</div><div class="s" id="fals">—</div></div>
+  <div class="tile" style="--c:var(--ambar)"><div class="k">Regla del panel (M39 semanal)</div><div class="v" id="m39">—</div><div class="s" id="m39s">—</div></div>
+</div>
+
+<div class="card">
+  <h4>Hoy, minuto a minuto <span id="hoyNota">barras de 5 min + ticks del WebSocket</span></h4>
+  <canvas id="cIntra" height="260"></canvas>
+  <div class="leg"><span><i style="background:var(--crema)"></i>QQQ hoy</span><span><i style="background:var(--crema3)"></i>cierre de ayer</span><span><i class="dash" style="color:var(--rojo)"></i>salida por máximo (−12%)</span><span><i class="dash" style="color:var(--ambar)"></i>salida por SMA (−3%)</span></div>
+</div>
+
+<div class="card">
+  <h4>El último año con la regla encima <span>cierres diarios, Alpaca</span></h4>
+  <canvas id="cDia" height="340"></canvas>
+  <div class="leg"><span><i style="background:var(--crema)"></i>QQQ</span><span><i style="background:var(--peri)"></i>SMA 200</span><span><i style="background:var(--crema3)"></i>máximo 39 sem</span><span><i class="dash" style="color:var(--rojo)"></i>salida −12%</span><span><i class="dash" style="color:var(--ambar)"></i>SMA −3%</span><span><i class="dash" style="color:var(--menta)"></i>reentrada −6%</span><span><i class="box" style="background:rgba(255,122,89,.18)"></i>fuera del mercado</span></div>
+</div>
+
+<div class="others" id="others"></div>
+
+<h2>Cómo leerlo</h2>
+<p class="note">Atalaya está <b>dentro</b> solo si QQQ cierra por encima de su promedio de 200 días más 3% <b>y</b> a menos de 6% de su máximo de 39 semanas. Sale si cierra bajo el promedio menos 3% <b>o</b> más de 12% debajo del máximo. Lo que ves en los ticks es cuánto falta para que el <b>cierre de hoy</b> toque alguna de las dos rayas; si cierra debajo, la venta sería al cierre del día siguiente. La cuarta tarjeta muestra la regla vieja que todavía corre en el panel (máximo de 39 cierres semanales, salida a −18%, decidida con el cierre del viernes).</p>
+<p class="note">Datos: precio tick a tick del WebSocket público de Yahoo Finance; cierres diarios (ajustados por splits), barras de 5 minutos y respaldo del precio de Alpaca (solo lectura). Las diferencias de centavos entre fuentes son normales. Detalle de la regla y las 960 variantes en <a href="/atalaya/">/atalaya</a>; simulación con dinero de papel en <a href="/live/">/live</a>.</p>
+
+<footer>Empowered Investor · uso interno. No es recomendación de inversión.</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const URL_DATA='/.netlify/functions/atalaya-vivo';
+const C={ink:'#FEF9F3',ink2:'#b9b4ae',ink3:'#7d7974',peri:'#8B9BFF',menta:'#63FCAF',rojo:'#ff7a59',ambar:'#ffc857',rule:'#2a3038',paper:'#15191E',fuera:'rgba(255,122,89,.18)'};
+let D=null, px=null, pxT=null, chg=null, ticks=[], wsOk=false, otros={};
+const f2=x=>x==null?'—':x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const pct=(x,d)=>(x>0?'+':'')+(100*x).toFixed(d==null?2:d)+'%';
+const pabs=x=>(100*Math.abs(x)).toFixed(2)+'%';
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const nyAhora=()=>{const p={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit',weekday:'short',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);return {min:+p.hour*60+ +p.minute,dow:p.weekday,fecha:p.year+'-'+p.month+'-'+p.day};};
+const nyMin=ms=>{const p={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(ms)).forEach(x=>p[x.type]=x.value);return +p.hour*60+ +p.minute+ +p.second/60;};
+
+// ---------- cálculo de la regla con el precio en vivo
+function calc(){
+  if(!D||px==null) return null;
+  const P=D.params, cl=D.diario.map(x=>x[1]), fe=D.diario.map(x=>x[0]), n=cl.length;
+  if(n<P.sma+5) return null;
+  // series históricas (al cierre de cada día) para el gráfico y la histéresis
+  const sma=[],mx=[],est=[]; let sum=0,s1=1,s2=1;
+  for(let i=0;i<n;i++){ sum+=cl[i]; if(i>=P.sma) sum-=cl[i-P.sma]; sma.push(i>=P.sma-1?sum/P.sma:null);
+    let m=null; if(i>=P.dias-1){m=-Infinity;for(let j=i-P.dias+1;j<=i;j++) if(cl[j]>m)m=cl[j];} mx.push(m);
+    if(sma[i]!=null&&m!=null){const rel=cl[i]/sma[i]-1,lvl=cl[i]/m-1; if(s1&&rel<-P.banda)s1=0;else if(!s1&&rel>P.banda)s1=1; if(s2&&lvl<-P.x)s2=0;else if(!s2&&lvl>=-P.y)s2=1; est.push(s1&&s2?1:0);} else est.push(null); }
+  const estCierre=est[n-1];
+  // hoy, con el precio en vivo como si fuera el cierre
+  const smaHoy=(cl.slice(-(P.sma-1)).reduce((a,b)=>a+b,0)+px)/P.sma;
+  let iMax=n-(P.dias-1); for(let j=iMax+1;j<n;j++) if(cl[j]>cl[iMax]) iMax=j;
+  const maxHoy=Math.max(px,cl[iMax]); const fechaMax=px>=cl[iMax]?'hoy':fe[iMax];
+  const rel=px/smaHoy-1, lvl=px/maxHoy-1;
+  let t1=s1,t2=s2; if(t1&&rel<-P.banda)t1=0;else if(!t1&&rel>P.banda)t1=1; if(t2&&lvl<-P.x)t2=0;else if(!t2&&lvl>=-P.y)t2=1;
+  const estHoy=t1&&t2?1:0;
+  const salMax=maxHoy*(1-P.x), salSma=smaHoy*(1-P.banda), entMax=maxHoy*(1-P.y), entSma=smaHoy*(1+P.banda);
+  // M39 semanal: semanas completas (lunes como llave), máximo de 39 cierres semanales + el precio actual
+  const sem=new Map(); for(let i=0;i<n;i++){const d=new Date(fe[i]+'T12:00:00Z');const l=new Date(d);l.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));sem.set(l.toISOString().slice(0,10),cl[i]);}
+  const hoy=new Date(D.ahoraNY.fecha+'T12:00:00Z'); const lunHoy=new Date(hoy); lunHoy.setUTCDate(hoy.getUTCDate()-((hoy.getUTCDay()+6)%7)); const kHoy=lunHoy.toISOString().slice(0,10);
+  const semPrev=[...sem.keys()].filter(k=>k<kHoy).sort().slice(-P.m39.sem).map(k=>sem.get(k));
+  const max39w=Math.max(px,...semPrev), sal39=max39w*(1-P.m39.x);
+  return {cl,fe,sma,mx,est,estCierre,estHoy,smaHoy,maxHoy,fechaMax,rel,lvl,salMax,salSma,entMax,entSma,max39w,sal39,s1,s2};
+}
+
+// ---------- pintar tarjetas
+function pintar(){
+  const R=calc(); const prev=D&&D.snap&&D.snap.QQQ?D.snap.QQQ.prev:null;
+  if(px!=null){ const c=prev?px/prev-1:chg; $('px').innerHTML=f2(px)+(c!=null?'<small class="'+(c>=0?'pos':'neg')+'">'+pct(c)+'</small>':''); $('pxs').innerHTML='cierre de ayer <b>'+f2(prev)+'</b>'+(pxT?' · tick '+pxT:''); }
+  if(!R){ return; }
+  const s=$('sig'); s.textContent=R.estCierre?'DENTRO':'FUERA'; s.className='v '+(R.estCierre?'pos':'neg');
+  const cambia=R.estHoy!==R.estCierre;
+  $('sigs').innerHTML='al último cierre ('+R.fe[R.fe.length-1]+'). Si cierra hoy a este precio: <b class="'+(R.estHoy?'pos':'neg')+'">'+(R.estHoy?'DENTRO':'FUERA')+'</b>'+(cambia?' → orden al cierre del día siguiente':' (sin cambio)')+
+    '<br>vs SMA 200 ('+f2(R.smaHoy)+'): <b class="'+(R.rel>=0?'pos':'neg')+'">'+pct(R.rel)+'</b> · vs máx 39 sem ('+f2(R.maxHoy)+', '+R.fechaMax+'): <b class="'+(R.lvl>=-0.06?'pos':'neg')+'">'+pct(R.lvl)+'</b>';
+  if(R.estCierre){
+    const primero=Math.max(R.salMax,R.salSma), por=primero===R.salMax?'por el máximo (−12%)':'por la SMA (−3%)'; const d=primero/px-1;
+    $('fal').innerHTML=f2(primero)+'<small class="'+(d<0?'pos':'neg')+'">'+(d<0?'falta '+pabs(d):'ya cruzó · '+pabs(d)+' debajo')+'</small>';
+    $('fals').innerHTML='primera raya que toca: <b>'+por+'</b><br>salida por máximo <b>'+f2(R.salMax)+'</b> · salida por SMA <b>'+f2(R.salSma)+'</b>';
+  } else {
+    const d=Math.max(R.entMax,R.s1?0:R.entSma)/px-1;
+    $('fal').innerHTML=f2(R.entMax)+'<small class="amb">para reentrar</small>';
+    $('fals').innerHTML='reentra al cerrar a menos de 6% del máximo (<b>'+f2(R.entMax)+'</b>)'+(R.s1?'':' y sobre la SMA +3% (<b>'+f2(R.entSma)+'</b>)')+' · falta <b>'+pct(d)+'</b>';
+  }
+  const d39=R.sal39/px-1;
+  $('m39').innerHTML=f2(R.sal39)+'<small class="'+(d39<0?'pos':'neg')+'">'+(d39<0?'falta '+pabs(d39):'ya cruzó · '+pabs(d39)+' debajo')+'</small>';
+  $('m39s').innerHTML='máximo de 39 cierres semanales <b>'+f2(R.max39w)+'</b> · distancia hoy <b>'+pct(px/R.max39w-1)+'</b><br>sale a −18%, se decide con el cierre del <b>viernes</b>';
+  // otros tickers
+  const O=['TQQQ','QLD','SPY'].map(k=>{const o=otros[k]||{}; const sn=D.snap&&D.snap[k]||{}; const p=o.px!=null?o.px:sn.px; const c=o.chg!=null?o.chg:(sn.prev&&p?p/sn.prev-1:null);
+    return '<div class="oth"><div class="k">'+k+(k==='TQQQ'?' · ×3':k==='QLD'?' · ×2':' · S&P 500')+'</div><div class="v">'+f2(p)+(c!=null?'<small class="'+(c>=0?'pos':'neg')+'">'+pct(c)+'</small>':'')+'</div></div>';}).join('');
+  $('others').innerHTML=O;
+  dibujar(R);
+}
+
+// ---------- gráficos (canvas a mano)
+function lienzo(cv){ const dpr=window.devicePixelRatio||1, w=cv.clientWidth||cv.parentNode.clientWidth-28, h=+cv.getAttribute('height'); cv.width=w*dpr; cv.height=h*dpr; const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,w,h); return {g,w,h}; }
+function ejeY(g,w,h,y0,y1,pad){ g.font='11px Bai Jamjuree'; g.fillStyle=C.ink3; g.textAlign='right'; const paso=nice((y1-y0)/5); for(let v=Math.ceil(y0/paso)*paso; v<=y1; v+=paso){ const y=pad.t+(y1-v)/(y1-y0)*(h-pad.t-pad.b); g.strokeStyle=C.rule; g.beginPath(); g.moveTo(pad.l,y); g.lineTo(w-pad.r,y); g.stroke(); g.fillText(v.toFixed(0),pad.l-6,y+4);} }
+function nice(x){ const p=Math.pow(10,Math.floor(Math.log10(x))); const m=x/p; return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p; }
+function raya(g,x0,x1,y,col,dash,txt){ g.save(); g.strokeStyle=col; g.lineWidth=1.2; if(dash) g.setLineDash([5,4]); g.beginPath(); g.moveTo(x0,y); g.lineTo(x1,y); g.stroke(); g.restore(); if(txt){ g.font='600 11px Bai Jamjuree'; g.fillStyle=col; g.textAlign='left'; g.fillText(txt,x0+4,y-4);} }
+
+function dibujar(R){
+  // --- intradía
+  (function(){
+    const cv=$('cIntra'), {g,w,h}=lienzo(cv), pad={l:46,r:12,t:12,b:22}; const prev=D.snap&&D.snap.QQQ?D.snap.QQQ.prev:null;
+    const pts=D.intradia.map(b=>({m:b[0],p:b[1]})); ticks.forEach(t=>pts.push({m:t.m,p:t.p}));
+    const ys=pts.map(p=>p.p).concat([R.salMax,R.salSma],prev?[prev]:[]); if(px!=null) ys.push(px);
+    let y0=Math.min(...ys), y1=Math.max(...ys); const m=(y1-y0)*0.08||1; y0-=m; y1+=m;
+    const X=mn=>pad.l+(mn-570)/390*(w-pad.l-pad.r), Y=v=>pad.t+(y1-v)/(y1-y0)*(h-pad.t-pad.b);
+    ejeY(g,w,h,y0,y1,pad);
+    g.font='11px Bai Jamjuree'; g.fillStyle=C.ink3; g.textAlign='center'; [570,630,690,750,810,870,930,960].forEach(mn=>g.fillText(hhmm(mn),X(mn),h-6));
+    if(prev) raya(g,pad.l,w-pad.r,Y(prev),C.ink3,false,'cierre ayer '+f2(prev));
+    raya(g,pad.l,w-pad.r,Y(R.salMax),C.rojo,true,'salida −12% · '+f2(R.salMax));
+    raya(g,pad.l,w-pad.r,Y(R.salSma),C.ambar,true,'salida SMA −3% · '+f2(R.salSma));
+    if(pts.length){ g.strokeStyle=C.ink; g.lineWidth=1.8; g.beginPath(); pts.forEach((p,i)=>{ const x=X(p.m), y=Y(p.p); i?g.lineTo(x,y):g.moveTo(x,y); }); g.stroke();
+      const u=pts[pts.length-1]; g.fillStyle=wsOk?C.menta:C.ink; g.beginPath(); g.arc(X(u.m),Y(u.p),4,0,7); g.fill(); }
+    else { g.fillStyle=C.ink3; g.textAlign='center'; g.font='13px Bai Jamjuree'; g.fillText('todavía no hay barras de hoy',w/2,h/2); }
+  })();
+  // --- diario (últimos 260 días)
+  (function(){
+    const cv=$('cDia'), {g,w,h}=lienzo(cv), pad={l:46,r:12,t:12,b:22}; const N=Math.min(260,R.cl.length), i0=R.cl.length-N, M=N+1;
+    const cl=R.cl.slice(i0).concat([px]), sma=R.sma.slice(i0).concat([R.smaHoy]), mx=R.mx.slice(i0).concat([R.maxHoy]), est=R.est.slice(i0).concat([R.estHoy]), fe=R.fe.slice(i0).concat(['hoy']);
+    const ys=cl.concat(sma.filter(x=>x!=null),mx.filter(x=>x!=null).map(v=>v*(1-D.params.x)));
+    let y0=Math.min(...ys), y1=Math.max(...ys); const mg=(y1-y0)*0.06; y0-=mg; y1+=mg;
+    const X=i=>pad.l+i/(M-1)*(w-pad.l-pad.r), Y=v=>pad.t+(y1-v)/(y1-y0)*(h-pad.t-pad.b);
+    // sombra: días fuera
+    g.fillStyle=C.fuera; for(let i=0;i<M;i++) if(est[i]===0){ let j=i; while(j+1<M&&est[j+1]===0) j++; g.fillRect(X(i)-(w-pad.l-pad.r)/(M-1)/2,pad.t,X(j)-X(i)+(w-pad.l-pad.r)/(M-1),h-pad.t-pad.b); i=j; }
+    ejeY(g,w,h,y0,y1,pad);
+    g.font='11px Bai Jamjuree'; g.fillStyle=C.ink3; g.textAlign='center'; let ult=''; for(let i=0;i<N;i++){ const mes=fe[i].slice(0,7); if(mes!==ult){ ult=mes; if(i>3) g.fillText(fe[i].slice(5,7)+'/'+fe[i].slice(2,4),X(i),h-6); } }
+    const linea=(arr,col,lw,dash,fn)=>{ g.save(); g.strokeStyle=col; g.lineWidth=lw; if(dash) g.setLineDash([5,4]); g.beginPath(); let on=false; for(let i=0;i<M;i++){ const v=arr[i]==null?null:(fn?fn(arr[i]):arr[i]); if(v==null){on=false;continue;} const x=X(i),y=Y(v); on?g.lineTo(x,y):g.moveTo(x,y); on=true; } g.stroke(); g.restore(); };
+    linea(mx,C.ink3,1,false); linea(mx,C.rojo,1,true,v=>v*(1-D.params.x)); linea(mx,C.menta,1,true,v=>v*(1-D.params.y)); linea(sma,C.ambar,1,true,v=>v*(1-D.params.banda)); linea(sma,C.peri,1.6,false); linea(cl,C.ink,1.8,false);
+    g.fillStyle=wsOk?C.menta:C.ink; g.beginPath(); g.arc(X(M-1),Y(px),4.5,0,7); g.fill();
+    g.font='600 11px Bai Jamjuree'; g.fillStyle=C.ink; g.textAlign='right'; g.fillText('hoy '+f2(px),X(M-1)-8,Y(px)-8);
+  })();
+}
+
+// ---------- datos de Alpaca vía función (niveles, cierres, respaldo del precio)
+async function cargar(){
+  try{
+    const r=await fetch(URL_DATA,{cache:'no-store'}); const j=await r.json();
+    if(j.error){ $('err').style.display='block'; $('err').textContent='Sin datos de Alpaca: '+j.error+(location.hostname==='localhost'?'':' (en Netlify faltan APCA_API_KEY_ID / APCA_API_SECRET_KEY)'); return; }
+    $('err').style.display='none'; D=j;
+    $('hny').textContent=hhmm(j.ahoraNY.min)+' '+j.ahoraNY.fecha; $('merc').innerHTML=j.abierto?'<b class="pos">mercado abierto</b>':'<b class="amb">mercado cerrado</b> · se muestra el último precio';
+    if(!wsOk&&j.snap&&j.snap.QQQ&&j.snap.QQQ.px!=null){ px=j.snap.QQQ.px; pxT=j.snap.QQQ.t?hhmm(Math.floor(nyMin(Date.parse(j.snap.QQQ.t))))+' NY (Alpaca)':null; }
+    pintar();
+  }catch(e){ $('err').style.display='block'; $('err').textContent='No se pudo leer la función: '+e.message; }
+}
+
+// ---------- WebSocket público de Yahoo (sin keys): mensajes protobuf en base64
+function decodificar(b64){
+  const s=atob(b64), buf=new Uint8Array(s.length); for(let i=0;i<s.length;i++) buf[i]=s.charCodeAt(i);
+  const dv=new DataView(buf.buffer); let i=0; const out={};
+  const varint=()=>{ let r=0n,sh=0n; for(;;){ const b=buf[i++]; r|=BigInt(b&0x7f)<<sh; if(!(b&0x80)) break; sh+=7n; } return r; };
+  while(i<buf.length){ const k=Number(varint()), f=k>>3, w=k&7;
+    if(w===0) out[f]=varint(); else if(w===1){ i+=8; } else if(w===5){ out[f]=dv.getFloat32(i,true); i+=4; }
+    else if(w===2){ const l=Number(varint()); out[f]=new TextDecoder().decode(buf.slice(i,i+l)); i+=l; } else break; }
+  // campos: 1 símbolo, 2 precio, 3 hora (sint64 zigzag, ms), 7 sesión (0 pre, 1 regular, 2 post), 8 cambio %, 12 cambio $
+  const z=out[3]!=null?Number((out[3]>>1n)^-(out[3]&1n)):null;
+  return {id:out[1],p:out[2],t:z,ses:out[7]!=null?Number(out[7]):null,chg:out[8]!=null?out[8]/100:null};
+}
+let ws=null, reint=0, rafPend=false;
+function conectar(){
+  try{ ws=new WebSocket('wss://streamer.finance.yahoo.com/?version=2'); }catch(e){ estadoWs(false,'WebSocket no disponible'); return; }
+  ws.onopen=()=>{ reint=0; ws.send(JSON.stringify({subscribe:['QQQ','TQQQ','QLD','SPY']})); estadoWs(true,'WebSocket Yahoo conectado'); };
+  ws.onmessage=e=>{ let m; try{ const d=JSON.parse(e.data); if(d.type!=='pricing') return; m=decodificar(d.message); }catch(err){ return; }
+    if(!m.id||!(m.p>0)) return;
+    if(m.id==='QQQ'){ px=m.p; chg=m.chg; const ms=m.t&&m.t>1e12?m.t:Date.now(); const mn=nyMin(ms); pxT=hhmm(Math.floor(mn))+(m.ses===1?' NY':m.ses===0?' NY (pre)':m.ses===2?' NY (post)':' NY');
+      if(m.ses===1&&mn>=570&&mn<=960){ ticks.push({m:mn,p:m.p}); if(ticks.length>4000) ticks.splice(0,1000); }
+      $('tick').textContent=pxT; }
+    else otros[m.id]={px:m.p,chg:m.chg};
+    if(!rafPend){ rafPend=true; requestAnimationFrame(()=>{ rafPend=false; pintar(); }); } };
+  ws.onclose=()=>{ estadoWs(false,'WebSocket caído · precio cada 20 s por Alpaca'); const t=Math.min(60000,2000*Math.pow(2,reint++)); setTimeout(conectar,t); };
+  ws.onerror=()=>{ try{ ws.close(); }catch(e){} };
+}
+function estadoWs(ok,txt){ wsOk=ok; $('dws').className='dot '+(ok?'':'warn'); $('tws').textContent=txt; }
+
+conectar(); cargar(); setInterval(cargar,20000);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>pintar());   // repintar los canvas con Bai Jamjuree ya cargada
+let rz; window.addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(pintar,120); });
+})();
+</script>
+</body>
+</html>

@@ -123,3 +123,13 @@ de hora después de cerrar. Para verla en localhost sin función: `node "C:\User
 genera `live/data.json` (no se commitea) y la página lo lee cuando corre en localhost.
 
 Probar en vivo: `https://investorcr.com/.netlify/functions/live`.
+
+## atalaya-vivo.js · datos para /atalaya/vivo (Atalaya en tiempo real)
+
+Solo lectura de Alpaca (mismas variables `APCA_API_KEY_ID` / `APCA_API_SECRET_KEY` que `live.js`). Devuelve los cierres
+diarios de QQQ (~700 días, sin la barra de hoy mientras no cierre), las barras de 5 min de hoy (IEX) y el último precio
+de QQQ, TQQQ, QLD y SPY. La página calcula los niveles (SMA 200 ±3%, máximo 39 semanas −12/−6, M39 semanal −18%) y
+recibe el precio tick a tick por el WebSocket público de Yahoo Finance (sin keys). Caché: diario 10 min, resto 5 s.
+
+Probar en vivo: `https://investorcr.com/.netlify/functions/atalaya-vivo`.
+Probar en local con funciones: `node research/edges/live-sim/servidor_local.js` → `http://localhost:8812/atalaya/vivo/`.
