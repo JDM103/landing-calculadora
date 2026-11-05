@@ -529,6 +529,8 @@ async function render(){
   if (!slides.length) { tira.innerHTML = '<div class="vacio" style="width:100%">Escribí el guion para ver las láminas.</div>'; return; }
   if (sel >= slides.length) sel = 0;
   await fuentes();
+  if (id !== renderId) return; // otro render arrancó mientras cargaban las fuentes: no pegar láminas viejas
+  tira.innerHTML = "";
   const canvases = [];
   for (let i = 0; i < slides.length; i++) {
     const lam = document.createElement("button"); lam.className = "lam" + (i === sel ? " sel" : "");
