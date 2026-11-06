@@ -137,6 +137,9 @@
 
   .frase{ margin-top:16px; border-left:3px solid var(--menta); padding:10px 14px; background:var(--carta); border-radius:0 14px 14px 0; font-size:15px; line-height:1.55; color:var(--crema); }
   .frase small{ display:block; font-size:12px; color:var(--gris-sec); margin-top:6px; }
+  .parte{ display:flex; align-items:center; gap:10px; margin-top:30px; font-size:18px; font-weight:700; color:var(--crema); letter-spacing:-.01em; }
+  .parte span{ flex:0 0 30px; height:30px; border-radius:8px; background:var(--menta); color:var(--tinta); display:inline-flex; align-items:center; justify-content:center; font-size:14px; }
+  .tabla td.r.menta{ color:var(--menta); font-weight:700; }
 
   #tip{ position:fixed; z-index:60; pointer-events:none; display:none; background:#0b0d12; border:1px solid var(--bd); border-radius:10px; padding:8px 10px; font-size:12px; line-height:1.4; color:var(--gris); max-width:260px; box-shadow:0 6px 24px rgba(0,0,0,.4); }
   #tip b{ color:var(--crema); }
@@ -167,6 +170,7 @@
       <a href="#hacemos">Qué hacemos</a>
       <a href="#completa">La estrategia completa</a>
       <a href="#venda">Hasta que Atalaya venda</a>
+      <a href="#conclusion" style="border-color:var(--menta);color:var(--menta)">Conclusión</a>
     </nav>
   </div>
 
@@ -372,6 +376,95 @@
     </ul>
     <div class="frase">Quedarse hasta que Atalaya venda no es una mejor salida que los 63 días: es la misma calidad con menos operaciones y, con TQQQ, más retorno a cambio de más caída. Lo que la hace peligrosa es que no tiene salida propia: si el mercado nunca recupera, la pata se queda. A −8% la historia la salvó; a −10% no. Antes de llevarla a la simulación en vivo hay que darle una salida que no dependa de Atalaya ni del número: un tope de pérdida sobre la pata, que es la prueba que sigue.
       <small>Lo que queda sobre la mesa para /live sigue siendo la base de la sección 6. Esta versión se queda en estudio hasta tener ese tope.</small></div>
+  </section>
+
+  <!-- 8 · CONCLUSIÓN -->
+  <section id="conclusion">
+    <div class="num">8</div>
+    <h2>Conclusión: la caída sola, Atalaya sola y las dos juntas</h2>
+    <p class="lede">Todo lo de arriba en tres piezas, en este orden. Primero lo que dice la investigación de comprar caídas por sí sola. Después Atalaya por su cuenta. Y al final cómo funcionan pegadas, con TQQQ.</p>
+
+    <div class="parte"><span>A</span>Comprar la caída, sola</div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Seis meses después de −10%</div><div class="v menta">16%</div><div class="s">contra <b>10%</b> de comprar un día cualquiera, desde 2009</div></div>
+      <div class="kpi"><div class="l">Veces que salió positiva</div><div class="v menta">19 de 20</div><div class="s">episodios separados por 3 meses o más</div></div>
+      <div class="kpi"><div class="l">Como estrategia sola</div><div class="v">15.0%</div><div class="s">al año; una mezcla fija de igual riesgo da <b>14.4%</b></div></div>
+      <div class="kpi"><div class="l">2000 a 2008</div><div class="v rojo">−41%</div><div class="s">peor compra a seis meses; la caída era el inicio de otra</div></div>
+    </div>
+    <ul class="puntos">
+      <li><i>1</i><span><b>El momento existe.</b> Comprar cuando el Nasdaq cae entre 8% y 12% bajo su máximo de 39 semanas rindió más que comprar cualquier día. Caer 3% o 5% no es una caída: rinde igual que un día normal.</span></li>
+      <li><i>2</i><span><b>Se cosecha en meses, no en días.</b> Soltar antes de tres meses regala el rebote. Soltar cuando el precio vuelve a −6%, donde Atalaya volvería a comprar, es la peor salida del estudio.</span></li>
+      <li><i>3</i><span><b>Sola no es una ventaja.</b> Esperando la caída en efectivo pasa dos tercios del tiempo afuera, y una mezcla fija con el mismo riesgo le empata. En un bajista largo como 2000 o 2008 la caída sigue cayendo.</span></li>
+      <li><i>4</i><span><b>La plata nueva entra ya.</b> Esperar a que llegue la caída costó entre 0.4 y 1.0 puntos al año a cinco años. El −10% sirve para adelantar un aporte que ya tenías pensado, no para quedarte esperando.</span></li>
+    </ul>
+
+    <div class="parte"><span>B</span>Atalaya, sola</div>
+    <p class="lede"><b>Cuál Atalaya:</b> la misma de <a href="/atalaya/">/atalaya</a> y de todo este estudio, sobre QQQ. Estás dentro si el Nasdaq cierra más de 3% sobre su promedio de 200 días <b>y</b> a menos de 6% de su máximo de 39 semanas. Salís si cierra más de 3% bajo el promedio <b>o</b> más de 12% bajo el máximo. La señal se mira al cierre y la orden va al cierre del día siguiente.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="l">Retorno desde 2000</div><div class="v peri">11.2%</div><div class="s">al año; el Nasdaq solo, <b>8.7%</b></div></div>
+      <div class="kpi"><div class="l">Peor caída</div><div class="v peri">−26%</div><div class="s">el Nasdaq solo, <b>−83%</b></div></div>
+      <div class="kpi"><div class="l">Sharpe</div><div class="v peri">0.65</div><div class="s">el Nasdaq solo, <b>0.37</b></div></div>
+      <div class="kpi"><div class="l">Desde 2009</div><div class="v">13.6%</div><div class="s">al año; el Nasdaq solo, <b>19.9%</b></div></div>
+    </div>
+    <ul class="puntos">
+      <li><i>1</i><span><b>Es un seguro.</b> Gana en los bajistas largos (2000 a 2002, 2008) y cobra la prima en los años buenos. Desde 2009 rindió menos que el Nasdaq solo.</span></li>
+      <li><i>2</i><span><b>Su punto débil son los rebotes en V.</b> Sale a −12% y vuelve a entrar cuando el precio ya recuperó. Ese rebote se lo pierde: diciembre de 2018, marzo de 2020, los de 2022 y abril de 2025.</span></li>
+      <li><i>3</i><span><b>Apalancarla entera no conviene.</b> Atalaya completa en TQQQ da 22% al año con −61% de caída y peor Sharpe que en QQQ.</span></li>
+    </ul>
+
+    <div class="parte"><span>C</span>Las dos juntas, con TQQQ</div>
+    <p class="lede">La caída rellena justo el hueco donde Atalaya se pierde el rebote. Así funciona, paso a paso:</p>
+    <ul class="puntos">
+      <li><i>1</i><span><b>Todos los días al cierre se miran dos cosas:</b> la señal de Atalaya y cuánto está QQQ bajo su máximo de 39 semanas.</span></li>
+      <li><i>2</i><span><b>El día que QQQ cierra por primera vez 8% o más bajo ese máximo, arranca la pata de la caída.</b> Se compra al cierre siguiente y se mantiene 63 días hábiles, unos tres meses. No se espera n días para comprar: se compra de una vez y se sostiene n días.</span></li>
+      <li><i>3</i><span><b>Qué hace la pata depende de la versión.</b> En la base, la pata solo pesa cuando Atalaya está fuera y te mantiene en QQQ hasta que se cumplan los 63 días. En el refuerzo, un tercio del QQQ pasa a TQQQ por 63 días, esté Atalaya como esté. Si Atalaya sale, los otros dos tercios se van a efectivo y el tercio en TQQQ se queda hasta cumplir el plazo.</span></li>
+      <li><i>4</i><span><b>Para volver a disparar,</b> QQQ tiene que recuperar por encima de −8% y volver a caer.</span></li>
+    </ul>
+    <div class="scrollx">
+      <table class="tabla">
+        <thead><tr><th>Versión, desde 2000</th><th class="r">Retorno anual</th><th class="r">Sharpe</th><th class="r">Peor caída</th><th class="r">Peor año</th></tr></thead>
+        <tbody>
+          <tr><td>Atalaya sola, en QQQ</td><td class="r">11.2%</td><td class="r">0.65</td><td class="r">−26%</td><td class="r">−9.4%</td></tr>
+          <tr class="destacada"><td>Base: caída con todo a QQQ, 63 días</td><td class="r">15.3%</td><td class="r menta">0.77</td><td class="r">−29%</td><td class="r">−13.8%</td></tr>
+          <tr><td>Caída con un tercio a TQQQ, 63 días</td><td class="r">15.0%</td><td class="r">0.76</td><td class="r">−29%</td><td class="r">−13.8%</td></tr>
+          <tr class="destacada"><td>Refuerzo: un tercio a TQQQ, 63 días</td><td class="r">17.6%</td><td class="r">0.75</td><td class="r">−31%</td><td class="r">−17.3%</td></tr>
+          <tr><td>Un tercio a TQQQ hasta que Atalaya venda</td><td class="r">19.2%</td><td class="r">0.76</td><td class="r">−35%</td><td class="r">−16.5%</td></tr>
+          <tr><td>Caída con todo a TQQQ, 63 días</td><td class="r">19.5%</td><td class="r">0.64</td><td class="r rojo">−60%</td><td class="r">−40%</td></tr>
+          <tr><td>Atalaya entera en TQQQ, sin caída</td><td class="r">22.0%</td><td class="r">0.63</td><td class="r rojo">−61%</td><td class="r">−30%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="puntos">
+      <li><i>1</i><span><b>Pegarlas es lo único que mejoró a Atalaya con evidencia.</b> Con QQQ, 15.3% al año contra 11.2%, con casi la misma caída. Es la primera mejora de toda la serie de estudios cuyo intervalo de confianza queda entero sobre cero.</span></li>
+      <li><i>2</i><span><b>TQQQ no mejora la calidad, la agranda.</b> Un tercio en TQQQ es la misma exposición que todo en QQQ y da el mismo resultado.</span></li>
+      <li><i>3</i><span><b>Con TQQQ, la versión que vale es el refuerzo de un tercio.</b> Rinde 2 puntos más que la base con −31% de caída, y en 2000 a 2008 fue de lo mejor del mapa.</span></li>
+      <li><i>4</i><span><b>"Hasta que Atalaya venda" rinde más pero no tiene salida propia.</b> A −8% la historia la salvó. A −10% la caída habría sido −84%. Le falta un tope de pérdida.</span></li>
+      <li><i>5</i><span><b>Todo en TQQQ, no.</b> El retorno sube, pero las caídas de −60% a −70% casi nadie las aguanta.</span></li>
+    </ul>
+
+    <div class="card">
+      <h3>Ejemplo real: noviembre de 2026</h3>
+      <p class="q">Cierres de QQQ de Alpaca. Así se ve la mecánica en una semana de caída.</p>
+      <ul class="puntos">
+        <li><i>30</i><span><b>30 de octubre.</b> QQQ cierra en 690.49, 9.1% bajo su máximo de 39 semanas (759.66 del 6 de octubre). Arranca la pata de la caída: compra al cierre del 2 de noviembre y vence alrededor del 2 de febrero de 2027. Atalaya sigue dentro.</span></li>
+        <li><i>5</i><span><b>5 de noviembre.</b> QQQ cierra en 647.05, 14.8% bajo el máximo y 4.9% bajo su promedio de 200 días. Atalaya vende, con orden al cierre del 6 de noviembre.</span></li>
+      </ul>
+      <div class="scrollx">
+        <table class="tabla" style="min-width:0">
+          <thead><tr><th>Versión</th><th>Qué hace desde el 6 de noviembre</th></tr></thead>
+          <tbody>
+            <tr><td>Atalaya sola</td><td>Todo a efectivo hasta que vuelva a comprar.</td></tr>
+            <tr><td>Base, todo a QQQ</td><td>No vende. La pata lo mantiene en QQQ hasta cerca del 2 de febrero; después manda Atalaya.</td></tr>
+            <tr><td>Refuerzo, un tercio a TQQQ</td><td>Desde el 2 de noviembre tenía dos tercios en QQQ y uno en TQQQ. Vende el QQQ y el tercio en TQQQ se queda hasta cerca del 2 de febrero.</td></tr>
+            <tr><td>Un tercio a TQQQ hasta que Atalaya venda</td><td>Entra el 6 de noviembre, porque Atalaya vendió con QQQ más de 8% abajo. Se queda hasta la próxima venta de Atalaya.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="nota">Ejemplo para entender la mecánica. No es la regla que siguen hoy las cuentas de los clientes.</p>
+    </div>
+
+    <div class="frase">La caída sola sirve para saber cuándo adelantar un aporte, no para esperar con la plata quieta. Atalaya sola sigue siendo el seguro. Juntas, recuperan el rebote que Atalaya se pierde. Con QQQ la base da 15.3% al año con −29% de caída, y con TQQQ el refuerzo de un tercio da 17.6% con −31%.
+      <small>Ninguna de las dos reemplaza hoy la regla de los clientes. Primero van a la simulación en vivo.</small></div>
   </section>
 
 </div>
