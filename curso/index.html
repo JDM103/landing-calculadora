@@ -115,6 +115,9 @@
   .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; line-height:1.25; }
   .kpi .v{ font-size:clamp(19px,4.6vw,24px); font-weight:800; color:var(--crema); margin-top:2px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
   .kpi .v.men{ color:var(--menta); } .kpi .v.per{ color:var(--peri); }
+  .adv-btn{ display:block; width:100%; text-align:left; background:transparent; border:1px dashed var(--bd); color:var(--gris); border-radius:10px; font-family:inherit; font-size:14px; font-weight:700; padding:10px 12px; cursor:pointer; margin:0 0 12px; }
+  .adv-btn:hover{ border-color:var(--menta); color:var(--menta); } .adv-btn[aria-expanded="true"]{ border-style:solid; border-color:rgba(124,143,247,.6); color:var(--crema); }
+  #adv{ margin:0 0 12px; }
   .cfrase{ font-size:14.5px; color:var(--gris); margin:10px 0 0; } .cfrase b{ color:var(--crema); }
   .cnota{ font-size:12.5px; color:var(--gris-sec); margin:8px 0 0; line-height:1.4; }
   @media (max-width:560px){ .cgrid{ grid-template-columns:1fr 1fr; } .kpis{ grid-template-columns:1fr; } }
@@ -768,10 +771,20 @@
       <div class="kpi men"><div class="k">Aporte requerido al mes</div><div class="v men" id="r-ap">$0</div></div>
       <div class="kpi"><div class="k">De tu bolsillo, en total</div><div class="v" id="r-bol">$0</div></div>
     </div>
+    <button type="button" class="adv-btn" id="adv-btn" aria-expanded="false" aria-controls="adv">Ajuste avanzado: partir de mi ingreso <span aria-hidden="true">▾</span></button>
+    <div id="adv" hidden>
+      <div class="cgrid">
+        <div class="field"><label for="c-ing">Tu ingreso hoy ($/mes)</label><div class="row"><input id="c-ing" inputmode="numeric" value="8,000"><div class="steps"><button type="button" class="stp" data-k="ing" data-d="500" aria-label="Subir ingreso">▲</button><button type="button" class="stp" data-k="ing" data-d="-500" aria-label="Bajar ingreso">▼</button></div></div></div>
+        <div class="field"><label for="c-pct">Podés invertir (% del ingreso)</label><div class="row"><input id="c-pct" inputmode="numeric" value="20%"><div class="steps"><button type="button" class="stp" data-k="pct" data-d="1" aria-label="Subir porcentaje">▲</button><button type="button" class="stp" data-k="pct" data-d="-1" aria-label="Bajar porcentaje">▼</button></div></div></div>
+        <div class="field"><label for="c-gsal">Tu salario crece (%/año)</label><div class="row"><input id="c-gsal" inputmode="numeric" value="4%"><div class="steps"><button type="button" class="stp" data-k="gsal" data-d="1" aria-label="Subir crecimiento del salario">▲</button><button type="button" class="stp" data-k="gsal" data-d="-1" aria-label="Bajar crecimiento del salario">▼</button></div></div></div>
+      </div>
+      <p class="cfrase" id="r-adv"></p>
+      <p class="cnota" id="r-adv-n"></p>
+    </div>
     <div class="ln" id="gv"></div>
     <div class="lg" id="gv-l"></div>
     <p class="cfrase" id="r-frase"></p>
-    <p class="cnota">Todo en dólares de hoy, con una inflación de 3% ya descontada. Supone que retirás 4% al año y que en el retiro la plata crece 8%. Ninguna tasa está garantizada.</p>
+    <p class="cnota">Todo en dólares de hoy, con una inflación de 3% ya descontada. Supone que retirás 5% al año y que en el retiro la plata crece 8%. Ninguna tasa está garantizada.</p>
   </div>
 
   <h2>Qué mirar mientras la movés</h2>
@@ -847,7 +860,7 @@
   <ul class="l">
     <li>Apertura de la cuenta a tu nombre, el formulario W-8BEN y la plantilla de transferencia.</li>
     <li>La sesión de plan: tu número, tu fase y tu aporte.</li>
-    <li>La ejecución de todas las órdenes y la señal de cada semana.</li>
+    <li>La ejecución de todas las órdenes.</li>
     <li>El reporte de cierre de mes, tu panel con el avance y un grupo de WhatsApp para preguntar.</li>
   </ul>
   <p><b>Garantía de 30 días.</b> Abrimos tu cuenta, hacés la transferencia, tu plan queda creado y empezamos a invertir. Si en los primeros 30 días no estás satisfecho, te devolvemos el honorario completo.</p>
@@ -939,9 +952,10 @@
   barras("g6b", [ {l:"A 1 año", v:69.6, c:C.rojo, t:"70 de 100"}, {l:"A 5 años", v:81.4, c:C.nar, t:"81 de 100"}, {l:"A 10 años", v:89, c:C.peri, t:"89 de 100"}, {l:"A 15 años", v:95.6, c:C.menta, t:"96 de 100"}, {l:"A 20 años", v:99.9, c:C.menta, t:"99,9 de 100"} ], 100);
   // ===== Calculadora "Tu número" (misma cuenta de Tus datos: tasas reales = tasa − inflación; retiro 4%) =====
   (function(){
-    var V={edad:35, ret:60, mes:5000, cap:0, crec:10}, FIJO={infl:3, crecret:8, retiro:4};
-    var LIM={edad:[20,69], ret:[40,80], mes:[500,50000], cap:[0,5000000], crec:[4,20]};
+    var V={edad:35, ret:60, mes:5000, cap:0, crec:10, ing:8000, pct:20, gsal:4, adv:false}, FIJO={infl:3, crecret:8, retiro:5};
+    var LIM={edad:[20,69], ret:[40,80], mes:[500,50000], cap:[0,5000000], crec:[4,20], ing:[500,100000], pct:[1,80], gsal:[0,15]};
     function d(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+    function an(n){ return n+(n===1?" año":" años"); }
     function corto(v){ return v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1).replace(".0","")+" M" : v>=1000 ? "$"+Math.round(v/1000)+" mil" : "$"+Math.round(v); }
     function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0; var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f; if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
     function serie(){
@@ -950,11 +964,19 @@
       for(var y=0;y<=anios;y++){ var m=y*12, bal=V.cap*Math.pow(1+i,m)+(Math.abs(i)<1e-12?ap*m:ap*(Math.pow(1+i,m)-1)/i); ed.push(V.edad+y); sal.push(bal); apo.push(V.cap+ap*m); }
       var b2=sal[sal.length-1], tot=V.cap+ap*anios*12;
       for(var k=1;k<=30 && V.ret+k<=95;k++){ b2=b2*(1+g)-V.mes*12; ed.push(V.ret+k); sal.push(Math.max(0,b2)); apo.push(tot); if(b2<=0) break; }
-      return {ed:ed, sal:sal, apo:apo, meta:meta, ap:ap, anios:anios, tot:tot};
+      var av=null;
+      if(V.adv){ var gs=(V.gsal-FIJO.infl)/100, bal=V.cap, a0=V.ing*V.pct/100, sa=[bal], llega=(bal>=meta?V.edad:null), ult=a0;
+        for(var y2=1;y2<=anios;y2++){ var am=a0*Math.pow(1+gs,y2-1); ult=am; for(var mm=0;mm<12;mm++){ bal=bal*(1+i)+am; } sa.push(bal); if(llega===null && bal>=meta) llega=V.edad+y2; }
+        var alRet=bal;
+        if(llega===null){ var b3=bal; for(var y3=anios+1; V.edad+y3<=85; y3++){ var am3=a0*Math.pow(1+gs,y3-1); for(var m3=0;m3<12;m3++){ b3=b3*(1+i)+am3; } if(b3>=meta){ llega=V.edad+y3; break; } } }
+        var b4=alRet; for(var k2=1;k2<ed.length-anios;k2++){ b4=b4*(1+g)-V.mes*12; sa.push(Math.max(0,b4)); }
+        av={sal:sa, a0:a0, ult:ult, alRet:alRet, llega:llega};
+      }
+      return {ed:ed, sal:sal, apo:apo, meta:meta, ap:ap, anios:anios, tot:tot, av:av};
     }
     var S0=null;
     function dibujar(){
-      var s=S0, W=600, H=280, L=8, R=8, T=26, B=26, n=s.ed.length, ymax=Math.max.apply(null,s.sal)*1.06;
+      var s=S0, W=600, H=280, L=8, R=8, T=26, B=26, n=s.ed.length, ymax=Math.max(Math.max.apply(null,s.sal), s.av?Math.max.apply(null,s.av.sal):0)*1.06;
       function X(i){ return L+(W-L-R)*i/(n-1); } function Y(v){ return T+(H-T-B)*(1-v/ymax); }
       var iR=s.anios, xr=X(iR).toFixed(1);
       var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tu plata por edad: sube hasta el retiro y después la vas usando">';
@@ -963,6 +985,7 @@
       svg+='<polygon points="'+L+','+(H-B)+' '+pts+' '+(W-R)+','+(H-B)+'" fill="rgba(99,252,175,.14)"/>';
       svg+='<polyline points="'+s.apo.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); }).join(" ")+'" fill="none" stroke="#9AA1AB" stroke-width="2" stroke-dasharray="6 5"/>';
       svg+='<polyline points="'+pts+'" fill="none" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>';
+      if(s.av) svg+='<polyline points="'+s.av.sal.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); }).join(" ")+'" fill="none" stroke="#7C8FF7" stroke-width="3" stroke-linejoin="round"/>';
       svg+='<line x1="'+xr+'" x2="'+xr+'" y1="'+T+'" y2="'+(H-B)+'" stroke="#7C8FF7" stroke-width="2" stroke-dasharray="5 4"/>';
       var anc=iR/(n-1)>.8?"end":iR/(n-1)<.2?"start":"middle";
       svg+='<text x="'+xr+'" y="16" fill="#7C8FF7" font-size="13" font-weight="700" text-anchor="'+anc+'" font-family="inherit">Te retirás a los '+V.ret+'</text>';
@@ -971,7 +994,7 @@
       svg+='<text x="'+L+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" font-family="inherit">'+s.ed[0]+' años</text><text x="'+(W-R)+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" text-anchor="end" font-family="inherit">'+s.ed[n-1]+' años</text></svg>';
       var caja=el("gv"); caja.innerHTML=svg;
       var g=caja.querySelector("svg"), guia=g.querySelector(".guia"), pt=g.querySelector(".pt");
-      function leyenda(i){ el("gv-l").innerHTML='<span class="cuando">A los '+s.ed[i]+' años</span><span><i style="background:#63FCAF"></i>Lo que tenés: <b>'+d(s.sal[i])+'</b></span><span><i style="background:#9AA1AB"></i>Lo que aportaste: <b>'+d(s.apo[i])+'</b></span>'; }
+      function leyenda(i){ el("gv-l").innerHTML='<span class="cuando">A los '+s.ed[i]+' años</span><span><i style="background:#63FCAF"></i>Lo que tenés: <b>'+d(s.sal[i])+'</b></span><span><i style="background:#9AA1AB"></i>Lo que aportaste: <b>'+d(s.apo[i])+'</b></span>'+(s.av?'<span><i style="background:#7C8FF7"></i>Con tu '+V.pct+'%: <b>'+d(s.av.sal[i])+'</b></span>':''); }
       function mover(ev){ var r=g.getBoundingClientRect(); if(!r.width) return;
         var px=(ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX)-r.left, i=Math.max(0,Math.min(n-1,Math.round((px/r.width*W-L)/(W-L-R)*(n-1))));
         var x=X(i).toFixed(1); guia.style.display=""; guia.setAttribute("x1",x); guia.setAttribute("x2",x); pt.setAttribute("cx",x); pt.setAttribute("cy",Y(s.sal[i]).toFixed(1)); leyenda(i); }
@@ -985,6 +1008,11 @@
       el("c-edad").value=V.edad; el("c-ret").value=V.ret; el("c-mes").value=V.mes.toLocaleString("en-US"); el("c-cap").value=V.cap.toLocaleString("en-US"); el("c-crec").value=V.crec+"%";
       S0=serie(); el("r-anios").textContent=S0.anios;
       el("r-meta").textContent=d(S0.meta); el("r-ap").textContent=d(S0.ap)+"/mes"; el("r-bol").textContent=d(S0.tot);
+      el("c-ing").value=V.ing.toLocaleString("en-US"); el("c-pct").value=V.pct+"%"; el("c-gsal").value=V.gsal+"%";
+      if(S0.av){ var A=S0.av, real=V.gsal-FIJO.infl, pc=Math.round(A.alRet/S0.meta*100);
+        var fin = A.llega===null ? "A ese ritmo no llegás a tu número antes de los 85." : A.llega<=V.ret ? "Llegás a tu número a los <b>"+A.llega+"</b>"+(A.llega<V.ret?", "+an(V.ret-A.llega)+" antes de lo que querías.":".") : "A ese ritmo llegás a tu número a los <b>"+A.llega+"</b>, "+an(A.llega-V.ret)+" después de lo que querías.";
+        el("r-adv").innerHTML="Invirtiendo el "+V.pct+"% de "+d(V.ing)+" empezás con <b>"+d(A.a0)+" al mes</b> y terminás aportando "+d(A.ult)+". A los "+V.ret+" tendrías <b>"+corto(A.alRet)+"</b>, el "+pc+"% de tu número. "+fin;
+        el("r-adv-n").textContent="El "+V.gsal+"% de crecimiento del salario incluye la inflación. Quitándole el "+FIJO.infl+"% de inflación, es un crecimiento real de "+real+"% al año, y con ese "+real+"% sube tu aporte. La línea morada del gráfico es este escenario."; }
       el("r-frase").innerHTML = S0.ap>0
         ? "Aportando <b>"+d(S0.ap)+" al mes</b> durante "+S0.anios+" años llegás a <b>"+corto(S0.meta)+"</b> a los "+V.ret+". De ahí en adelante retirás "+d(V.mes)+" al mes."
         : "Con lo que ya tenés invertido llegás a tu número sin aportar más, si la plata crece a esa tasa.";
@@ -992,7 +1020,8 @@
     }
     function fijar(k, v){ v=Math.round(v); if(isNaN(v)) v=V[k]; V[k]=Math.max(LIM[k][0], Math.min(LIM[k][1], v)); pintar(); }
     todos("#calc .stp[data-k]", function(b){ b.addEventListener("click", function(){ var k=b.getAttribute("data-k"); fijar(k, V[k]+parseInt(b.getAttribute("data-d"),10)); track("curso_calc", k); }); });
-    [["c-edad","edad"],["c-ret","ret"],["c-mes","mes"],["c-cap","cap"],["c-crec","crec"]].forEach(function(x){ el(x[0]).addEventListener("change", function(){ fijar(x[1], parseFloat(String(this.value).replace(/[^0-9.]/g,""))); track("curso_calc", x[1]); }); });
+    el("adv-btn").addEventListener("click", function(){ V.adv=!V.adv; el("adv").hidden=!V.adv; this.setAttribute("aria-expanded", V.adv?"true":"false"); track("curso_calc", V.adv?"avanzado_on":"avanzado_off"); pintar(); });
+    [["c-edad","edad"],["c-ret","ret"],["c-mes","mes"],["c-cap","cap"],["c-crec","crec"],["c-ing","ing"],["c-pct","pct"],["c-gsal","gsal"]].forEach(function(x){ el(x[0]).addEventListener("change", function(){ fijar(x[1], parseFloat(String(this.value).replace(/[^0-9.]/g,""))); track("curso_calc", x[1]); }); });
     pintar();
   })();
 

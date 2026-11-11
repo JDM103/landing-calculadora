@@ -237,7 +237,7 @@
     <div class="kpi"><div class="k">Meta de capital · freedom point</div>
       <div style="display:flex; flex-wrap:nowrap; margin-top:3px; gap:3px; align-items:center">
         <b style="color:var(--peri); font-size:17px; font-weight:800; flex:0 0 auto">$</b>
-        <input id="k-meta" class="kpi-in" inputmode="numeric" value="3,000,000" aria-label="Meta de capital (editable)">
+        <input id="k-meta" class="kpi-in" inputmode="numeric" value="2,400,000" aria-label="Meta de capital (editable)">
         <div class="steps" style="flex:0 0 auto"><button class="stp" data-fp="1">▲</button><button class="stp" data-fp="-1">▼</button></div>
       </div>
     </div>
@@ -245,12 +245,29 @@
     <div class="kpi"><div class="k">De tu bolsillo (total)</div><div class="v" id="k-aportado">$0</div></div>
   </div>
 
+  <!-- ===== Ajuste avanzado: partir del ingreso ===== -->
+  <details id="adv" style="margin:10px 0 4px; border:1px dashed var(--bd); border-radius:12px; padding:10px 12px">
+    <summary style="cursor:pointer; font-weight:700; font-size:14px; color:var(--gris)">Ajuste avanzado: partir de mi ingreso</summary>
+    <p class="note" style="margin:8px 0">En vez de despejar el aporte requerido, se parte de lo que la persona gana: invierte un porcentaje de su ingreso y ese aporte sube con su salario.</p>
+    <div class="grid">
+      <div class="field"><label>Ingreso hoy ($/mes)</label><div class="row"><input id="adv-ing" inputmode="numeric" value="8,000"><div class="steps"><button class="stp" data-adv="ing" data-d="500">▲</button><button class="stp" data-adv="ing" data-d="-500">▼</button></div></div></div>
+      <div class="field"><label>Puede invertir (% del ingreso)</label><div class="row"><b class="big" id="adv-pct">20%</b><div class="steps"><button class="stp" data-adv="pct" data-d="1">▲</button><button class="stp" data-adv="pct" data-d="-1">▼</button></div></div></div>
+      <div class="field"><label>El salario crece (%/año)</label><div class="row"><b class="big" id="adv-g">4%</b><div class="steps"><button class="stp" data-adv="g" data-d="1">▲</button><button class="stp" data-adv="g" data-d="-1">▼</button></div></div></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Aporte inicial → final /mes</div><div class="v" id="adv-ap">$0</div></div>
+      <div class="kpi" style="border-color:rgba(99,252,175,.5)"><div class="k">Capital al retiro · % de la meta</div><div class="v men" id="adv-cap">$0</div></div>
+      <div class="kpi"><div class="k">Edad en que llega a la meta</div><div class="v per" id="adv-edad">—</div></div>
+    </div>
+    <p class="note" id="adv-nota" style="margin:6px 0 0"></p>
+  </details>
+
   <div class="tsub" style="font-size:16px;margin-top:16px">Tu portafolio, de hoy hasta el retiro y después</div>
   <p class="note">Con tu aporte y un crecimiento esperado, así se ve tu plata por edad (en plata de hoy): sube hasta el retiro 🏖️ y después la vas gastando. Movés cualquier variable y ves el efecto al instante — por ejemplo, adelantar la edad de retiro.</p>
   <div class="grid" style="margin-bottom:8px">
     <div class="field"><label>Crecimiento esperado (%/año)</label><div class="row"><b class="big" id="v-crec">12%</b><div class="steps"><button class="stp" data-s="crec" data-d="1">▲</button><button class="stp" data-s="crec" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Crecimiento en el retiro (%/año)</label><div class="row"><b class="big" id="v-crecret">8%</b><div class="steps"><button class="stp" data-s="crecret" data-d="1">▲</button><button class="stp" data-s="crecret" data-d="-1">▼</button></div></div></div>
-    <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">4%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
+    <div class="field"><label>Retirás al año (%)</label><div class="row"><b class="big" id="v-ret">5%</b><div class="steps"><button class="stp" data-s="ret" data-d="1">▲</button><button class="stp" data-s="ret" data-d="-1">▼</button></div></div></div>
     <div class="field"><label>Inflación (%/año)</label><div class="row"><b class="big" id="v-infl">3%</b><div class="steps"><button class="stp" data-s="infl" data-d="1">▲</button><button class="stp" data-s="infl" data-d="-1">▼</button></div></div></div>
   </div>
   <div class="card">
@@ -774,7 +791,7 @@ var ASSETCOL={ TQQQ:"224,82,90", UPRO:"214,96,140", QLD:"224,138,90", SSO:"205,1
 function assetRGB(k){ return ASSETCOL[k]||"154,161,171"; }
 
 // ===== estado =====
-var S={ edad:30, edadret:65, ret:4, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, pmin:70,
+var S={ edad:30, edadret:65, ret:5, sjc:8, f1:"TQQQ", f2:"SPY", f3:"SJC", p1:70, p2:100, ff:70, pmin:70,
   y0:1990, y1:2025, umbral:5000, freq:"umbral", filtro:"off", sinap:false, costos:true,
   crec:12, crecret:8, infl:3, income:10000 };
 // nombre corto de una fase (ETF o SJC con su tasa)
@@ -900,7 +917,28 @@ function sweepFW(N, opt){
 }
 
 // ===== KPIs de datos =====
+// ===== Ajuste avanzado: aporte = % del ingreso, que crece con el salario (real = crecimiento − inflación) =====
+var ADV={ ing:8000, pct:20, g:4 }, ADVLIM={ ing:[500,200000], pct:[1,80], g:[0,15] };
+function renderAdv(){
+  if(!byId("adv-ap")) return;
+  var n=anios(), meta=metaCapital(), i=(S.crec-S.infl)/100/12, gs=(ADV.g-S.infl)/100, bal=capH(), a0=ADV.ing*ADV.pct/100, ult=a0, llega=(bal>=meta?S.edad:null);
+  for(var y=1;y<=n;y++){ var am=a0*Math.pow(1+gs,y-1); ult=am; for(var m=0;m<12;m++){ bal=bal*(1+i)+am; } if(llega===null && bal>=meta) llega=S.edad+y; }
+  var alRet=bal;
+  if(llega===null){ var b=bal; for(var y2=n+1; S.edad+y2<=85; y2++){ var am2=a0*Math.pow(1+gs,y2-1); for(var m2=0;m2<12;m2++){ b=b*(1+i)+am2; } if(b>=meta){ llega=S.edad+y2; break; } } }
+  var ing=byId("adv-ing"); if(document.activeElement!==ing) ing.value=fmt(ADV.ing);
+  byId("adv-pct").textContent=ADV.pct+"%"; byId("adv-g").textContent=ADV.g+"%";
+  byId("adv-ap").textContent="$"+fmt(a0)+" → $"+fmt(ult);
+  byId("adv-cap").textContent=money(alRet)+" · "+(meta>0?Math.round(alRet/meta*100):0)+"%";
+  byId("adv-edad").textContent = llega===null ? "después de los 85" : llega+" años";
+  var real=ADV.g-S.infl;
+  byId("adv-nota").innerHTML="El <b>"+ADV.g+"%</b> de crecimiento del salario incluye la inflación: quitándole el "+S.infl+"% es un crecimiento <b>real de "+real+"%</b> al año, y con eso sube el aporte. Frente al aporte requerido de arriba ($"+fmt(aporte())+"/mes parejo), este escenario "+(alRet>=meta?"<b>llega</b> a la meta a la edad de retiro.":"<b>no llega</b> a la edad de retiro: falta "+money(meta-alRet)+".");
+}
+(function(){
+  Array.prototype.forEach.call(document.querySelectorAll(".stp[data-adv]"), function(b){ b.addEventListener("click", function(){ var k=b.getAttribute("data-adv"); ADV[k]=Math.max(ADVLIM[k][0], Math.min(ADVLIM[k][1], ADV[k]+parseInt(b.getAttribute("data-d"),10))); renderAdv(); }); });
+  var ing=document.getElementById("adv-ing"); if(ing) ing.addEventListener("change", function(){ var v=parseFloat(String(ing.value).replace(/[^0-9.]/g,"")); if(!isNaN(v)) ADV.ing=Math.max(ADVLIM.ing[0], Math.min(ADVLIM.ing[1], Math.round(v))); renderAdv(); });
+})();
 function refresh(){
+  try{ renderAdv(); }catch(e){}
   var vedad=byId("v-edad"); if(document.activeElement!==vedad) vedad.value=S.edad;
   var vedadret=byId("v-edadret"); if(document.activeElement!==vedadret) vedadret.value=S.edadret;
   byId("v-ret").textContent=S.ret+"%"; byId("v-sjc").textContent=S.sjc+"%";
