@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de finanzas · Empowered Investor</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Cinco preguntas, dos minutos. Las mismas que usan los economistas para medir cuánto entiende una persona de plata. Tu nota al final, y el curso si lo querés.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="¿Cuánto sabés de plata? Quiz de 5 preguntas">
+<meta property="og:description" content="Las cinco preguntas con las que los economistas miden la educación financiera. Dos minutos y tu nota.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script defer src="/js/pixel.js"></script>
+<script defer src="/js/clarity.js"></script>
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140; --input:#10141b;
+    --crema:#FEF9F3; --gris:#E2E2E2; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --rojo:#E0525A; --naranja:#F2A54A; }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif; line-height:1.45; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .wrap{ max-width:520px; margin:0 auto; padding:12px 16px 24px; min-height:100svh; display:flex; flex-direction:column; }
+  .top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+  .top img{ height:40px; }
+  .prog{ flex:1; max-width:200px; } .prog .t{ font-size:11px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px; }
+  .back{ background:rgba(99,252,175,.12); border:1px solid rgba(99,252,175,.45); border-radius:999px; color:var(--menta); font-family:inherit; font-size:18px; font-weight:700; line-height:1; padding:3px 10px; cursor:pointer; visibility:hidden; }
+  .back.on{ visibility:visible; }
+  .prog .b{ height:5px; background:var(--card2); border-radius:999px; overflow:hidden; } .prog .b i{ display:block; height:100%; width:0; background:var(--menta); border-radius:999px; transition:width .3s; }
+  .p{ display:none; flex:1; flex-direction:column; justify-content:center; animation:entra .3s ease both; } .p.on{ display:flex; }
+  @keyframes entra{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion:reduce){ .p{ animation:none; } }
+  .eyebrow{ font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); margin-bottom:4px; }
+  h1{ font-size:clamp(22px,6vw,28px); font-weight:800; color:var(--crema); line-height:1.15; margin:0 0 6px; text-wrap:balance; }
+  .sub{ font-size:14.5px; color:var(--gris-sec); margin:0 0 14px; } .sub b{ color:var(--crema); }
+  .ops{ display:flex; flex-direction:column; gap:8px; }
+  .op{ text-align:left; background:var(--card); border:1px solid var(--bd); color:var(--crema); cursor:pointer; border-radius:12px; font-family:inherit; font-size:16px; font-weight:600; padding:12px 15px; }
+  .op:hover{ border-color:var(--menta); } .op.sel{ background:rgba(99,252,175,.12); border-color:var(--menta); }
+  .op.bien{ background:rgba(99,252,175,.14); border-color:var(--menta); } .op.mal{ background:rgba(224,82,90,.12); border-color:var(--rojo); }
+  .op:disabled{ cursor:default; } .op:disabled:not(.bien):not(.mal){ opacity:.55; }
+  .fb{ display:none; margin-top:10px; line-height:1.36; background:var(--card2); border-left:3px solid var(--menta); border-radius:0 12px 12px 0; padding:9px 12px; font-size:14px; color:var(--gris); }
+  .fb.on{ display:block; } .fb.nar{ border-color:var(--rojo); } .fb b{ color:var(--crema); } .fb p{ margin:0 0 6px; } .fb p:last-child{ margin:0; }
+  .btn{ display:block; width:100%; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer; border-radius:999px; font-family:inherit; font-size:16px; font-weight:800; padding:14px 18px; text-decoration:none; margin-top:12px; }
+  .btn:disabled{ opacity:.5; cursor:default; } .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; margin-top:8px; }
+  .big{ font-size:clamp(44px,14vw,64px); font-weight:800; color:var(--crema); text-align:center; margin:6px 0 0; line-height:1; font-variant-numeric:tabular-nums; }
+  .big small{ font-size:20px; color:var(--gris-sec); font-weight:700; }
+  .big.men{ color:var(--menta); } .big.nar{ color:var(--naranja); } .big.roj{ color:var(--rojo); }
+  .tier{ text-align:center; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gris-sec); margin:4px 0 10px; }
+  .lista{ margin:8px 0 0; padding:0; list-style:none; } .lista li{ display:grid; grid-template-columns:12px 1fr; gap:8px; align-items:start; font-size:14px; padding:6px 0; border-bottom:1px solid var(--bd); }
+  .lista i{ width:12px; height:12px; border-radius:50%; margin-top:5px; } .v{ background:#2f7d5a; } .r{ background:var(--rojo); } .lista b{ color:var(--crema); }
+  .msg{ background:var(--card); border:1px solid var(--bd); border-radius:12px; padding:12px 14px; font-size:14.5px; margin-top:12px; } .msg b{ color:var(--crema); }
+  label.l{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.5px; color:var(--gris-sec); font-weight:700; margin:9px 0 4px; }
+  input[type=text], input[type=email], input[type=tel]{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema); font-family:inherit; font-size:16px; padding:11px 13px; }
+  input:focus{ outline:none; border-color:var(--menta); } .op:focus-visible,.btn:focus-visible,.back:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
+  .f2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .wa{ display:flex; align-items:center; gap:8px; } .wa span{ color:var(--gris-sec); font-weight:700; }
+  .cons{ display:flex; gap:8px; align-items:flex-start; font-size:12px; color:var(--gris-sec); margin:10px 0 0; } .cons input{ margin-top:2px; accent-color:var(--menta); width:16px; height:16px; flex:none; }
+  .err{ display:none; color:var(--rojo); font-size:13px; font-weight:600; margin-top:6px; }
+  .nota{ font-size:11.5px; color:var(--gris-sec); margin-top:10px; line-height:1.4; }
+  .hidden{ display:none !important; }
+  .cita{ font-size:12px; color:var(--gris-sec); margin-top:12px; line-height:1.4; border-top:1px solid var(--bd); padding-top:8px; } .cita b{ color:var(--gris); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+    <div class="prog"><div class="t"><button class="back" id="atras" type="button" aria-label="Pregunta anterior" title="Pregunta anterior">←</button><span id="pt">Quiz · 2 minutos</span></div><div class="b"><i id="pb"></i></div></div>
+  </div>
+
+  <!-- 0 · PORTADA -->
+  <section class="p on" id="q0">
+    <div class="eyebrow">Quiz de finanzas</div>
+    <h1>¿Cuánto sabés de plata?</h1>
+    <p class="sub">Cinco preguntas. Son las mismas que usan los economistas para medir si una persona entiende lo básico de finanzas, y en Estados Unidos <b>solo uno de cada tres adultos</b> responde bien las tres primeras. Nadie ve tu nota más que vos.</p>
+    <button class="btn" type="button" id="empezar">Empezar</button>
+    <p class="nota">Dos minutos. Sin registro para ver la nota.</p>
+  </section>
+
+  <!-- 1 · INTERÉS COMPUESTO -->
+  <section class="p" id="q1">
+    <h1>Tenés ₡100.000 en una cuenta que paga 2% al año. No tocás la plata. A los cinco años, ¿cuánto hay?</h1>
+    <div class="ops" data-q="1">
+      <button class="op" data-v="a">Más de ₡102.000</button>
+      <button class="op" data-v="b">Exactamente ₡102.000</button>
+      <button class="op" data-v="c">Menos de ₡102.000</button>
+      <button class="op" data-v="x">No sé</button>
+    </div>
+    <div class="fb" id="fb1"></div>
+    <button class="btn hidden" type="button" data-next="q2">Siguiente</button>
+  </section>
+
+  <!-- 2 · INFLACIÓN -->
+  <section class="p" id="q2">
+    <h1>Tu cuenta paga 1% al año y la inflación es 2% al año. Dentro de un año, con esa plata comprás…</h1>
+    <div class="ops" data-q="2">
+      <button class="op" data-v="a">Más que hoy</button>
+      <button class="op" data-v="b">Lo mismo que hoy</button>
+      <button class="op" data-v="c">Menos que hoy</button>
+      <button class="op" data-v="x">No sé</button>
+    </div>
+    <div class="fb" id="fb2"></div>
+    <button class="btn hidden" type="button" data-next="q3">Siguiente</button>
+  </section>
+
+  <!-- 3 · DIVERSIFICACIÓN -->
+  <section class="p" id="q3">
+    <h1>"Comprar la acción de una sola empresa suele dar un rendimiento más seguro que un fondo con muchas acciones."</h1>
+    <div class="ops" data-q="3">
+      <button class="op" data-v="a">Verdadero</button>
+      <button class="op" data-v="b">Falso</button>
+      <button class="op" data-v="x">No sé</button>
+    </div>
+    <div class="fb" id="fb3"></div>
+    <button class="btn hidden" type="button" data-next="q4">Siguiente</button>
+  </section>
+
+  <!-- 4 · PLAZO Y DEUDA -->
+  <section class="p" id="q4">
+    <h1>"Una hipoteca a 15 años tiene cuotas más altas que una a 30 años, pero al final se pagan menos intereses en total."</h1>
+    <div class="ops" data-q="4">
+      <button class="op" data-v="a">Verdadero</button>
+      <button class="op" data-v="b">Falso</button>
+      <button class="op" data-v="x">No sé</button>
+    </div>
+    <div class="fb" id="fb4"></div>
+    <button class="btn hidden" type="button" data-next="q5">Siguiente</button>
+  </section>
+
+  <!-- 5 · TASAS Y BONOS -->
+  <section class="p" id="q5">
+    <h1>Si las tasas de interés suben, ¿qué pasa con el precio de los bonos que ya existen?</h1>
+    <div class="ops" data-q="5">
+      <button class="op" data-v="a">Sube</button>
+      <button class="op" data-v="b">Baja</button>
+      <button class="op" data-v="c">Queda igual</button>
+      <button class="op" data-v="x">No sé</button>
+    </div>
+    <div class="fb" id="fb5"></div>
+    <button class="btn hidden" type="button" data-next="res">Ver mi nota</button>
+  </section>
+
+  <!-- 6 · RESULTADO -->
+  <section class="p" id="res">
+    <div class="eyebrow">Tu nota</div>
+    <div class="big" id="res-n">0<small> / 5</small></div>
+    <div class="tier" id="res-tier"></div>
+    <ul class="lista" id="res-l"></ul>
+    <div class="msg" id="res-msg"></div>
+    <button class="btn" type="button" id="cta-curso">Quiero el curso</button>
+    <a class="btn ghost" id="wa-directo" href="#" target="_blank" rel="noopener">Prefiero hablar directo con Jose</a>
+    <p class="cita">Las preguntas son las de <b>Lusardi y Mitchell</b> (Journal of Economic Literature, 2014; y su versión de cinco preguntas de 2011), adaptadas a colones. El curso se basa en ese trabajo: tres preguntas predicen quién planea, y quien planea llega al retiro con mucho más patrimonio.</p>
+  </section>
+
+  <!-- 7 · QUIERO EL CURSO -->
+  <section class="p" id="cap">
+    <div class="eyebrow">El curso</div>
+    <h1>Bienestar financiero</h1>
+    <p class="sub" id="cap-sub">Siete módulos de 10 minutos al día, en el idioma de la consulta: cómo funciona la plata, qué te paga la Caja, qué no firmar y cómo se invierte desde Costa Rica con una cuenta a tu nombre. <b>Gratis.</b> Te lo mando por WhatsApp, una lección por día.</p>
+    <form id="lead" novalidate>
+      <div class="f2">
+        <div><label class="l" for="l-nom">Nombre</label><input type="text" id="l-nom" autocomplete="given-name"></div>
+        <div><label class="l" for="l-ape">Apellidos</label><input type="text" id="l-ape" autocomplete="family-name"></div>
+      </div>
+      <label class="l" for="l-esp">Especialidad o profesión</label><input type="text" id="l-esp" list="esps" autocomplete="off" placeholder="Pediatría, anestesiología…">
+      <datalist id="esps"></datalist>
+      <label class="cons" style="margin-top:8px"><input type="checkbox" id="l-res"><span>Estoy en residencia</span></label>
+      <div class="f2">
+        <div><label class="l" for="l-wa">WhatsApp</label><div class="wa"><span>+506</span><input type="tel" id="l-wa" inputmode="numeric" maxlength="8"></div></div>
+        <div><label class="l" for="l-mail">Correo (opcional)</label><input type="email" id="l-mail" inputmode="email" autocomplete="email"></div>
+      </div>
+      <p class="err" id="l-err">Falta algo: nombre, apellidos, especialidad y WhatsApp de 8 dígitos.</p>
+      <button class="btn" type="submit" id="l-send">Anotarme al curso</button>
+    </form>
+    <p class="nota">Tu nota viaja con tu inscripción para que la primera lección sea la que te sirve. No es asesoría ni venta: el curso es educativo y la cuenta, si algún día abrís una, es tuya.</p>
+  </section>
+
+  <!-- 8 · LISTO -->
+  <section class="p" id="fin">
+    <div class="eyebrow">Anotado</div>
+    <h1 id="fin-t">Listo. Te escribo por WhatsApp.</h1>
+    <p class="sub" id="fin-sub">Jose te manda la primera lección por WhatsApp. Si querés adelantar, escribile vos primero y decile tu nota.</p>
+    <a class="btn" id="wa-link" href="#" target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
+    <a class="btn ghost" href="/tamizajefinanciero/">Mientras tanto: el tamizaje financiero (2 min)</a>
+    <p class="nota">Si tu nota fue 4 o 5, lo que te sirve no es el curso sino el plan con tu número: decíselo a Jose en el mensaje y se agenda la llamada directo.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  function byId(id){ return document.getElementById(id); }
+
+  // ===== Preguntas: respuesta correcta y explicación =====
+  var Q = {
+    1:{ ok:"a", tema:"Interés compuesto", bien:"<p><b>Correcto.</b> El 2% del segundo año se calcula sobre ₡102.000, no sobre ₡100.000. A los cinco años hay ₡110.408. Esa bola de nieve, a 20 o 30 años, es todo el juego.</p>", mal:"<p><b>Son más de ₡102.000.</b> El 2% del segundo año se calcula sobre ₡102.000, no sobre los ₡100.000 originales. A los cinco años hay ₡110.408. Esa bola de nieve, a 20 o 30 años, es todo el juego.</p>" },
+    2:{ ok:"c", tema:"Inflación", bien:"<p><b>Correcto.</b> El saldo sube 1% y los precios suben 2%: comprás menos. Es lo que le pasa a la plata \"segura\" en el banco: el número crece y el poder de compra baja.</p>", mal:"<p><b>Comprás menos.</b> El saldo sube 1% y los precios suben 2%. Es lo que le pasa a la plata \"segura\" en el banco: el número crece y el poder de compra baja.</p>" },
+    3:{ ok:"b", tema:"Diversificación", bien:"<p><b>Correcto, es falso.</b> Una empresa puede quebrar; 500 a la vez, no. Un fondo que copia un índice reparte el riesgo y por eso es más seguro que la acción favorita de tu cuñado.</p>", mal:"<p><b>Es falso.</b> Una empresa puede quebrar; 500 a la vez, no. Un fondo que copia un índice reparte el riesgo y por eso es más seguro que la acción favorita de tu cuñado.</p>" },
+    4:{ ok:"a", tema:"Plazo y deuda", bien:"<p><b>Correcto.</b> A más años, más meses pagando intereses. La cuota baja pero el total sube. Por eso el plazo de una deuda importa tanto como la tasa.</p>", mal:"<p><b>Es verdadero.</b> A más años, más meses pagando intereses. La cuota baja pero el total sube. Por eso el plazo de una deuda importa tanto como la tasa.</p>" },
+    5:{ ok:"b", tema:"Tasas y bonos", bien:"<p><b>Correcto.</b> Si los bonos nuevos pagan más, nadie quiere los viejos al mismo precio, así que bajan. Es la pregunta que menos gente acierta en el mundo; no te preocupés si la fallaste.</p>", mal:"<p><b>Baja.</b> Si los bonos nuevos pagan más, nadie quiere los viejos al mismo precio, así que bajan. Es la pregunta que menos gente acierta en el mundo; no te preocupés por esta.</p>" }
+  };
+  var S = { r:{}, nota:0 }; // respuestas y nota
+  var ORDEN = ["q0","q1","q2","q3","q4","q5","res","cap","fin"], actual="q0";
+
+  // ===== Tracking (igual que /tamizajefinanciero) =====
+  function track(ev, data){
+    try{ if(typeof gtag==="function") gtag("event", ev, data||{}); }catch(e){}
+    try{ if(typeof fbq==="function") fbq("trackCustom", ev, data||{}); }catch(e){}
+    try{ if(typeof clarity==="function"){ clarity("event", ev); clarity("set", ev, "si"); } }catch(e){}
+    var d=data||{}, valor = d.v!==undefined ? d.v : d.especialidad!==undefined ? d.especialidad : "";
+    registrar(ev, valor, ev==="pm_lead" || ev==="quiz_resultado");
+  }
+  var UTM = (function(){
+    var o={ utm_source:"quiz-finanzas", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
+    try{ var q=new URLSearchParams(location.search); Object.keys(o).forEach(function(k){ var v=q.get(k); if(v) o[k]=v; });
+      if(!q.get("utm_source") && q.get("fbclid")){ o.utm_source="meta"; o.utm_medium="paid"; } }catch(e){}
+    return o;
+  })();
+  var EVENTOS_URL = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+  var WEBHOOK_URL = EVENTOS_URL;
+  function idAleatorio(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function idGuardado(store, k){ try{ var v=store.getItem(k); if(!v){ v=idAleatorio(); store.setItem(k,v); } return v; }catch(e){ return idAleatorio(); } }
+  var UID = idGuardado(window.localStorage, "ei_uid"), SID = idGuardado(window.sessionStorage, "ei_sid"), T0 = Date.now();
+  var cola=[], seq=0, timerFlush=null;
+  function flush(){
+    if(!cola.length) return;
+    var lote=cola.splice(0, 60);
+    var body=JSON.stringify({ tipo:"eventos", uid:UID, sid:SID, pagina:location.pathname,
+      utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content, utm_term:UTM.utm_term,
+      referrer:(document.referrer||"").slice(0,120), ua:(navigator.userAgent||"").slice(0,200), ancho:screen.width, alto:screen.height, idioma:navigator.language||"", eventos:lote });
+    try{ fetch(EVENTOS_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:body, keepalive:true}).catch(function(){}); }catch(e){}
+  }
+  function registrar(ev, valor, urgente){
+    cola.push({ ts:new Date().toISOString(), seq:++seq, ev:ev, valor:(valor===undefined||valor===null)?"":String(valor).slice(0,200) });
+    if(urgente){ if(timerFlush){ clearTimeout(timerFlush); timerFlush=null; } flush(); return; }
+    if(!timerFlush){ timerFlush=setTimeout(function(){ timerFlush=null; flush(); }, 4000); }
+  }
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="hidden") flush(); });
+  window.addEventListener("pagehide", flush);
+  registrar("pm_vista", "");
+
+  // ===== Navegación =====
+  function ir(id){
+    var prev=actual; actual=id;
+    Array.prototype.forEach.call(document.querySelectorAll(".p"), function(s){ s.classList.toggle("on", s.id===id); });
+    var i=ORDEN.indexOf(id), n=i>=1 && i<=5 ? i : 0;
+    byId("pt").textContent = n ? "Pregunta "+n+" de 5" : id==="q0" ? "Quiz · 2 minutos" : id==="res" ? "Tu nota" : id==="cap" ? "El curso" : "Listo";
+    byId("pb").style.width = (id==="q0" ? 0 : n ? (n-1)*20 : 100)+"%";
+    byId("atras").classList.toggle("on", n>=1 || id==="cap");
+    window.scrollTo(0,0);
+    if(id!==prev) registrar("pm_paso", id);
+  }
+  byId("atras").addEventListener("click", function(){
+    if(actual==="cap"){ ir("res"); return; }
+    var i=ORDEN.indexOf(actual); if(i>1) ir(ORDEN[i-1]); else if(i===1) ir("q0");
+  });
+  byId("empezar").addEventListener("click", function(){ track("quiz_inicio", {}); ir("q1"); });
+
+  // ===== Respuestas =====
+  Array.prototype.forEach.call(document.querySelectorAll(".ops"), function(g){
+    var n=parseInt(g.getAttribute("data-q"),10), sec=g.closest(".p"), fb=byId("fb"+n), next=sec.querySelector(".btn[data-next]");
+    Array.prototype.forEach.call(g.querySelectorAll(".op"), function(b){
+      b.addEventListener("click", function(){
+        if(S.r[n]!==undefined) return;
+        var v=b.getAttribute("data-v"), ok=(v===Q[n].ok); S.r[n]=v;
+        Array.prototype.forEach.call(g.querySelectorAll(".op"), function(x){
+          x.disabled=true;
+          if(x.getAttribute("data-v")===Q[n].ok) x.classList.add("bien");
+          else if(x===b) x.classList.add("mal");
+        });
+        fb.innerHTML = ok ? Q[n].bien : Q[n].mal; fb.classList.toggle("nar", !ok); fb.classList.add("on");
+        next.classList.remove("hidden");
+        track("quiz_respuesta", {v:"p"+n+":"+v+(ok?":ok":":no")});
+        guardar();
+      });
+    });
+    next.addEventListener("click", function(){
+      var dest=next.getAttribute("data-next");
+      if(dest==="res"){ calcular(); pintarRes(); track("quiz_resultado", {v:S.nota}); }
+      ir(dest); guardar();
+    });
+  });
+
+  function calcular(){ var n=0; for(var k=1;k<=5;k++){ if(S.r[k]===Q[k].ok) n++; } S.nota=n; return n; }
+  function tier(n){ return n<=2 ? "bajo" : n===3 ? "medio" : "alto"; }
+  var MSG = {
+    bajo:"<b>Estás como dos de cada tres adultos.</b> Las tres básicas (interés compuesto, inflación y diversificación) todavía no están claras, y sin eso cualquier producto que te vendan suena bien. El curso completo es para vos: siete módulos, diez minutos al día, en el idioma de la consulta.",
+    medio:"<b>Las básicas las tenés.</b> Lo que falta es la parte de deuda y mercado, que es justo donde se pierde plata sin darse cuenta: el plazo de la hipoteca, el seguro con inversión, la tasa fija prometida. La ruta exprés de siete días te alcanza.",
+    alto:"<b>Esto lo tenés claro.</b> Tu problema no es saber, es ejecutar: la plata sigue en el CDP mientras sabés que no debería. El curso te va a aburrir. Lo que te sirve es el plan con tu número, en una llamada de 45 minutos, preferiblemente con tu pareja."
+  };
+  var TIER_T = { bajo:"Base por construir", medio:"Base sólida, faltan dos piezas", alto:"Lo sabés. Falta ejecutar" };
+  function pintarRes(){
+    var n=S.nota, t=tier(n), big=byId("res-n");
+    big.innerHTML = n+"<small> / 5</small>"; big.className="big "+(t==="alto"?"men":t==="medio"?"nar":"roj");
+    byId("res-tier").textContent = TIER_T[t];
+    var ul=byId("res-l"); ul.innerHTML="";
+    for(var k=1;k<=5;k++){ var ok=S.r[k]===Q[k].ok, li=document.createElement("li");
+      li.innerHTML="<i class=\""+(ok?"v":"r")+"\"></i><span><b>"+Q[k].tema+"</b> · "+(ok?"bien":S.r[k]==="x"?"no sabías":"mal")+"</span>"; ul.appendChild(li); }
+    byId("res-msg").innerHTML = MSG[t];
+    byId("cta-curso").textContent = t==="alto" ? "Quiero el curso igual" : t==="medio" ? "Quiero la ruta exprés" : "Quiero el curso";
+    byId("wa-directo").textContent = t==="alto" ? "Mejor agendar la llamada con Jose" : "Prefiero hablar directo con Jose";
+    var msg="Hola Jose, hice el quiz de finanzas y saqué "+n+" de 5. "+(t==="alto" ? "Quiero la llamada para armar mi plan." : "Quiero el curso.");
+    byId("wa-directo").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
+    byId("cap-sub").innerHTML = t==="medio"
+      ? "La <b>ruta exprés</b>: siete lecciones de 10 minutos, una por día, con lo que te faltó: deuda, qué no firmar, índices, cuánto podés perder y tu número. <b>Gratis.</b> Te la mando por WhatsApp."
+      : "Siete módulos de 10 minutos al día, en el idioma de la consulta: cómo funciona la plata, qué te paga la Caja, qué no firmar y cómo se invierte desde Costa Rica con una cuenta a tu nombre. <b>Gratis.</b> Te lo mando por WhatsApp, una lección por día.";
+  }
+  byId("cta-curso").addEventListener("click", function(){ track("click_curso", {v:S.nota}); ir("cap"); guardar(); });
+  byId("wa-directo").addEventListener("click", function(){ track("pm_whatsapp_abierto", {v:"directo"}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp quiz"}); }catch(err){} });
+
+  // ===== Captura =====
+  var WA_NUMERO="50670558296";
+  var ESPS=["Anestesiología","Cardiología","Cirugía general","Cirugía plástica","Dermatología","Emergencias","Endocrinología","Geriatría","Ginecología y obstetricia","Medicina familiar","Medicina general","Medicina interna","Neurología","Oftalmología","Oncología","Ortopedia","Otorrinolaringología","Pediatría","Psiquiatría","Radiología","Urología","Odontología","Enfermería","Farmacia","Psicología","Otra profesión"];
+  var dl=byId("esps"); ESPS.forEach(function(e){ var o=document.createElement("option"); o.value=e; dl.appendChild(o); });
+  byId("l-wa").addEventListener("input", function(){ this.value=this.value.replace(/[^0-9]/g,"").slice(0,8); });
+  byId("lead").addEventListener("submit", function(e){
+    e.preventDefault();
+    var nombre=byId("l-nom").value.trim(), ape=byId("l-ape").value.trim(), esp=byId("l-esp").value.trim(), mail=byId("l-mail").value.trim(), wa=byId("l-wa").value.replace(/[^0-9]/g,"");
+    var ok = nombre && ape && esp && wa.length===8 && (!mail || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail));
+    byId("l-err").style.display = ok ? "none" : "block"; if(!ok) return;
+    var btn=byId("l-send"); btn.disabled=true; btn.textContent="Guardando…";
+    var residente=byId("l-res").checked, t=tier(S.nota);
+    var resp=[]; for(var k=1;k<=5;k++) resp.push("p"+k+"="+(S.r[k]||"")+(S.r[k]===Q[k].ok?"✓":"✗"));
+    var payload = { timestamp:new Date().toISOString(), etapa:"quiz", nombre:nombre+" "+ape, apellidos:ape, correo:mail, whatsapp:"506"+wa,
+      especialidad:esp, residente: residente ? "si" : "no", nota:S.nota, nivel:t, respuestas:resp.join(" "), ruta: t==="alto" ? "llamada" : t==="medio" ? "expres" : "completo",
+      pagina:location.pathname, utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content,
+      sid:SID, uid:UID, seg_antes_lead:Math.round((Date.now()-T0)/1000) };
+    try{ fetch(WEBHOOK_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
+    track("pm_lead", {especialidad:esp, utm_source:UTM.utm_source, utm_campaign:UTM.utm_campaign});
+    try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"quiz finanzas", content_category:esp}); }catch(err){}
+    var msg="Hola Jose, soy "+nombre+", "+(residente ? "residente de " : "")+esp.toLowerCase()+". Hice el quiz, saqué "+S.nota+" de 5 y me anoté al curso.";
+    byId("wa-link").href = "https://wa.me/"+WA_NUMERO+"?text="+encodeURIComponent(msg);
+    if(t==="alto"){ byId("fin-t").textContent="Anotado. Pero a vos te sirve más la llamada."; byId("fin-sub").textContent="Con 4 o 5 el curso te queda corto. Escribile a Jose y agendá directo la llamada de 45 minutos para armar tu plan."; }
+    ENVIADO=true; guardar(); ir("fin");
+  });
+  byId("wa-link").addEventListener("click", function(){ track("pm_whatsapp_abierto", {v:"fin"}); try{ if(typeof fbq==="function") fbq("track","Contact",{content_name:"whatsapp quiz"}); }catch(err){} });
+
+  // ===== Progreso guardado en este teléfono =====
+  var CLAVE="ei_quiz", ENVIADO=false, VIGENCIA=30*24*3600*1000;
+  function guardar(){ try{ localStorage.setItem(CLAVE, JSON.stringify({ t:Date.now(), r:S.r, paso:actual, enviado:ENVIADO })); }catch(e){} }
+  function retomar(){
+    var g=null; try{ g=JSON.parse(localStorage.getItem(CLAVE)||"null"); }catch(e){}
+    if(!g || !g.r || Date.now()-g.t>VIGENCIA) return;
+    S.r=g.r; ENVIADO=!!g.enviado;
+    Object.keys(S.r).forEach(function(k){ var n=parseInt(k,10), g2=document.querySelector(".ops[data-q=\""+n+"\"]"); if(!g2) return;
+      var sec=g2.closest(".p"); Array.prototype.forEach.call(g2.querySelectorAll(".op"), function(x){ x.disabled=true; if(x.getAttribute("data-v")===Q[n].ok) x.classList.add("bien"); else if(x.getAttribute("data-v")===S.r[n]) x.classList.add("mal"); });
+      var ok=S.r[n]===Q[n].ok; byId("fb"+n).innerHTML= ok?Q[n].bien:Q[n].mal; byId("fb"+n).classList.toggle("nar",!ok); byId("fb"+n).classList.add("on"); sec.querySelector(".btn[data-next]").classList.remove("hidden"); });
+    if(Object.keys(S.r).length===5){ calcular(); pintarRes(); }
+    if(g.paso && g.paso!=="q0" && g.paso!=="fin" && g.paso!=="cap"){ ir(g.paso); }
+  }
+  retomar();
+})();
+</script>
+</body>
+</html>

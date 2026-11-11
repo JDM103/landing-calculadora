@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bienestar financiero · Empowered Investor</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Lo básico de la plata en siete capítulos cortos, contados con historias reales, gráficos y los mejores videos sobre cada tema.">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/assets/logo-fondo-negro.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bienestar financiero">
+<meta property="og:description" content="Lo básico de la plata en siete capítulos, con historias reales, gráficos y los mejores videos de cada tema.">
+<meta property="og:image" content="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script defer src="/js/pixel.js"></script>
+<script defer src="/js/clarity.js"></script>
+<style>
+  :root{ --tinta:#0d0f14; --card:#161a22; --card2:#1c212b; --bd:#2a3140;
+    --crema:#FEF9F3; --gris:#D9DCE1; --gris-sec:#9AA1AB; --menta:#63FCAF; --peri:#7C8FF7; --rojo:#E0525A; --naranja:#F2A54A; }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{ background:var(--tinta); color:var(--gris); font-family:'Bai Jamjuree',-apple-system,'Segoe UI',sans-serif; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  a{ color:var(--menta); }
+
+  .bar{ position:sticky; top:0; z-index:10; background:rgba(13,15,20,.94); backdrop-filter:blur(8px); border-bottom:1px solid var(--bd); }
+  .bar-in{ max-width:1080px; margin:0 auto; padding:8px 16px; display:flex; align-items:center; gap:14px; }
+  .bar img{ height:34px; display:block; }
+  .bar .where{ flex:1; min-width:0; font-size:13px; font-weight:700; color:var(--gris-sec); text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar .where b{ color:var(--crema); }
+  .pbar{ height:3px; background:var(--card2); } .pbar i{ display:block; height:100%; width:0; background:var(--menta); transition:width .3s; }
+
+  .chips{ display:flex; gap:6px; overflow-x:auto; padding:8px 16px; max-width:1080px; margin:0 auto; scrollbar-width:none; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{ flex:none; background:var(--card); border:1px solid var(--bd); color:var(--gris-sec); border-radius:999px; font-size:13px; font-weight:700; padding:6px 12px; white-space:nowrap; text-decoration:none; }
+  .chip.on{ background:var(--menta); border-color:var(--menta); color:var(--tinta); }
+  .chip.visto:not(.on){ color:var(--crema); border-color:rgba(99,252,175,.45); }
+
+  .lay{ max-width:1080px; margin:0 auto; padding:20px 16px 60px; display:grid; grid-template-columns:minmax(0,1fr); gap:32px; }
+  .side{ display:none; }
+  @media (min-width:900px){
+    .chips{ display:none; }
+    .lay{ grid-template-columns:250px minmax(0,1fr); gap:48px; padding-top:32px; }
+    .side{ display:block; position:sticky; top:70px; align-self:start; }
+  }
+  .side a{ display:grid; grid-template-columns:26px 1fr; gap:8px; align-items:baseline; padding:8px 10px; border-radius:10px; color:var(--gris-sec); text-decoration:none; font-size:14.5px; font-weight:600; line-height:1.3; }
+  .side a:hover{ background:var(--card); color:var(--crema); }
+  .side a.on{ background:var(--card2); color:var(--crema); }
+  .side a .n{ font-weight:800; color:var(--gris-sec); font-variant-numeric:tabular-nums; }
+  .side a.on .n{ color:var(--menta); }
+  .side a.visto .n::after{ content:" ✓"; color:var(--menta); font-size:11px; }
+  .side .sep{ height:1px; background:var(--bd); margin:8px 0; }
+  .side .quiz{ display:block; margin-top:10px; border:1px solid var(--bd); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--gris-sec); }
+  .side .quiz b{ color:var(--crema); display:block; }
+
+  main{ min-width:0; max-width:680px; }
+  .cap{ display:none; animation:entra .25s ease both; } .cap.on{ display:block; }
+  @keyframes entra{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+  @media (prefers-reduced-motion:reduce){ .cap{ animation:none; } }
+  .eyebrow{ font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--menta); margin-bottom:6px; }
+  h1{ font-size:clamp(28px,6.5vw,40px); font-weight:800; color:var(--crema); line-height:1.1; margin:0 0 10px; text-wrap:balance; }
+  h2{ font-size:21px; font-weight:700; color:var(--crema); line-height:1.25; margin:34px 0 8px; text-wrap:balance; }
+  p{ margin:0 0 14px; } p b, li b{ color:var(--crema); }
+  .frase{ font-size:19px; color:var(--crema); font-weight:600; line-height:1.4; border-left:3px solid var(--menta); padding:2px 0 2px 14px; margin:0 0 22px; }
+  ul.l{ margin:0 0 14px; padding-left:20px; } ul.l li{ margin-bottom:6px; }
+
+  /* esquema del inicio */
+  .ruta{ display:grid; gap:0; margin:18px 0 8px; }
+  .ruta a{ display:grid; grid-template-columns:44px 1fr; gap:12px; text-decoration:none; color:var(--gris); padding:0 0 18px; position:relative; }
+  .ruta a::before{ content:""; position:absolute; left:21px; top:44px; bottom:0; width:2px; background:var(--bd); }
+  .ruta a:last-child::before{ display:none; } .ruta a:last-child{ padding-bottom:0; }
+  .ruta .n{ width:44px; height:44px; border-radius:50%; background:var(--card2); border:2px solid var(--menta); color:var(--menta); font-weight:800; font-size:19px; display:flex; align-items:center; justify-content:center; }
+  .ruta a:hover .n{ background:var(--menta); color:var(--tinta); }
+  .ruta .t{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--peri); }
+  .ruta b{ display:block; color:var(--crema); font-size:18px; line-height:1.25; }
+  .ruta .q{ display:block; font-size:14.5px; color:var(--gris-sec); line-height:1.4; margin-top:2px; }
+  .ruta .q i{ color:var(--gris); font-style:normal; }
+  .hilo{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; font-size:15.5px; margin:0 0 6px; }
+
+  /* historia real */
+  .historia{ background:var(--card); border:1px solid var(--bd); border-top:3px solid var(--naranja); border-radius:0 0 14px 14px; padding:14px 16px 6px; margin:0 0 22px; }
+  .historia .k{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--naranja); margin-bottom:4px; }
+  .historia h3{ font-size:19px; color:var(--crema); margin:0 0 8px; line-height:1.25; font-weight:700; text-wrap:balance; }
+  .historia p{ font-size:16px; } .historia .f{ font-size:12.5px; color:var(--gris-sec); } .historia .f a{ color:var(--gris); }
+
+  /* gráficos */
+  figure.g{ margin:18px 0 22px; background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; }
+  figure.g .gt{ font-size:15.5px; font-weight:700; color:var(--crema); line-height:1.3; margin-bottom:10px; text-wrap:balance; }
+  figure.g figcaption{ font-size:12.5px; color:var(--gris-sec); margin-top:10px; line-height:1.4; }
+  .hb{ display:grid; gap:8px; }
+  .hb .r{ display:grid; grid-template-columns:minmax(92px,34%) 1fr; gap:10px; align-items:center; font-size:13.5px; }
+  .hb .lb{ color:var(--gris); line-height:1.25; } .hb .tr{ display:flex; align-items:center; gap:8px; min-width:0; }
+  .hb .b{ height:22px; border-radius:5px; min-width:3px; flex:none; } .hb .v{ font-weight:800; color:var(--crema); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  iframe.emb{ width:100%; height:340px; border:0; display:block; background:transparent; }
+  .bloques{ display:grid; gap:10px; margin:14px 0 6px; }
+  .bloques > div{ display:grid; grid-template-columns:34px 1fr; gap:12px; background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; font-size:15.5px; }
+  .bloques .bn{ width:34px; height:34px; border-radius:50%; border:2px solid var(--menta); color:var(--menta); font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .bloques .bp{ display:block; font-size:12.5px; color:var(--gris-sec); margin-top:6px; line-height:1.4; }
+  .pasos{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; } .pasos .chip{ cursor:pointer; font-family:inherit; }
+  .pcap{ font-size:14.5px; color:var(--gris); margin:0 0 10px; min-height:3em; } .pcap b{ color:var(--crema); }
+  .calc{ background:var(--card); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:14px; margin:16px 0 22px; }
+  .cgrid{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .field{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:9px 11px; min-width:0; }
+  .field label{ display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--gris-sec); margin-bottom:5px; line-height:1.25; }
+  .field .row{ display:flex; align-items:center; gap:6px; }
+  .field input{ flex:1; width:100%; min-width:0; background:transparent; border:1px solid transparent; border-radius:6px; padding:1px 4px; color:var(--crema); font-family:inherit; font-size:19px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .field input:hover{ border-color:var(--bd); } .field input:focus{ outline:none; border-color:var(--menta); background:#10141b; }
+  .field .big{ font-size:19px; font-weight:800; color:var(--crema); flex:1; padding:2px 4px; }
+  .steps{ display:flex; flex-direction:column; gap:2px; }
+  .stp{ width:30px; height:19px; background:#10141b; border:1px solid var(--bd); color:var(--gris-sec); border-radius:5px; font-size:9px; line-height:1; cursor:pointer; padding:0; font-family:inherit; }
+  .stp:hover{ border-color:var(--menta); color:var(--menta); }
+  .kpis{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:10px 0 12px; }
+  .kpi{ background:var(--card2); border:1px solid var(--bd); border-radius:12px; padding:11px 13px; min-width:0; }
+  .kpi.men{ border-color:rgba(99,252,175,.5); }
+  .kpi .k{ font-size:11px; text-transform:uppercase; color:var(--gris-sec); letter-spacing:.4px; line-height:1.25; }
+  .kpi .v{ font-size:clamp(19px,4.6vw,24px); font-weight:800; color:var(--crema); margin-top:2px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+  .kpi .v.men{ color:var(--menta); } .kpi .v.per{ color:var(--peri); }
+  .cfrase{ font-size:14.5px; color:var(--gris); margin:10px 0 0; } .cfrase b{ color:var(--crema); }
+  .cnota{ font-size:12.5px; color:var(--gris-sec); margin:8px 0 0; line-height:1.4; }
+  @media (max-width:560px){ .cgrid{ grid-template-columns:1fr 1fr; } .kpis{ grid-template-columns:1fr; } }
+  .dgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px; }
+  .reels{ display:grid; grid-template-columns:repeat(2,minmax(0,220px)); gap:14px; margin-top:6px; }
+  @media (max-width:640px){ .dgrid{ grid-template-columns:1fr; } }
+  .dvid{ margin:0; min-width:0; }
+  .dplayer{ position:relative; border-radius:14px; overflow:hidden; background:#000; border:1px solid var(--bd); aspect-ratio:16/9; }
+  .reel .dplayer{ aspect-ratio:9/16; }
+  .dplayer video{ width:100%; height:100%; display:block; object-fit:contain; background:#000; }
+  .dov{ position:absolute; inset:0; width:100%; border:0; cursor:pointer; font-family:inherit; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:7px; padding:14px 12px; text-align:center; background:linear-gradient(180deg, rgba(9,11,14,0) 38%, rgba(9,11,14,.94) 100%); }
+  .dov .dq{ font-size:14px; font-weight:700; color:var(--crema); line-height:1.3; text-shadow:0 1px 8px rgba(0,0,0,.7); text-wrap:balance; }
+  .dov .dt{ font-size:12.5px; font-weight:700; color:var(--tinta); background:var(--menta); border-radius:999px; padding:6px 13px; }
+  .dov.hidden{ display:none; }
+  .dvid figcaption{ margin-top:8px; font-size:13.5px; color:var(--gris-sec); text-align:center; } .dvid figcaption b{ color:var(--crema); }
+  .ln svg{ width:100%; height:auto; display:block; cursor:crosshair; touch-action:pan-y; }
+  .lg .cuando{ flex-basis:100%; font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--menta); }
+  .lg b{ font-variant-numeric:tabular-nums; }
+  .lg{ display:flex; flex-wrap:wrap; gap:4px 14px; font-size:13px; color:var(--gris); margin-top:8px; } .lg span{ white-space:nowrap; } .lg i{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; } .lg b{ color:var(--crema); }
+
+  /* videos */
+  .ver{ display:grid; gap:10px; margin:18px 0 22px; }
+  .vid{ display:grid; grid-template-columns:120px 1fr; gap:12px; align-items:center; background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:10px; text-decoration:none; color:var(--gris); }
+  .vid:hover{ border-color:var(--menta); }
+  .vid .th{ width:120px; aspect-ratio:16/9; border-radius:8px; background:var(--card2) center/cover no-repeat; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec); position:relative; overflow:hidden; }
+  .vid .th img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .vid .th::after{ content:"▶"; position:absolute; right:6px; bottom:5px; background:rgba(13,15,20,.8); color:var(--crema); border-radius:6px; font-size:10px; padding:2px 6px; letter-spacing:0; }
+  .vid .pl{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--peri); }
+  .vid b{ display:block; color:var(--crema); font-size:15.5px; line-height:1.25; } .vid span.d{ display:block; font-size:13.5px; color:var(--gris-sec); line-height:1.35; margin-top:2px; }
+  @media (max-width:420px){ .vid{ grid-template-columns:96px 1fr; } .vid .th{ width:96px; } }
+  .verk{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gris-sec); margin:26px 0 0; }
+
+  .caso{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; margin:22px 0; font-size:15.5px; }
+  .caso .k{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--peri); margin-bottom:4px; }
+  .tarea{ background:rgba(99,252,175,.08); border:1px solid rgba(99,252,175,.4); border-radius:14px; padding:14px 16px; margin:26px 0 0; font-size:15.5px; }
+  .tarea .k{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--menta); margin-bottom:4px; }
+  .tarea p:last-child,.caso p:last-child{ margin:0; }
+  .rojas{ display:grid; gap:8px; margin:14px 0; }
+  .rojas div{ display:grid; grid-template-columns:10px 1fr; gap:12px; background:rgba(224,82,90,.09); border:1px solid rgba(224,82,90,.35); border-radius:12px; padding:10px 14px; font-size:15.5px; }
+  .rojas div::before{ content:""; width:10px; height:10px; border-radius:50%; background:var(--rojo); margin-top:8px; }
+  .tbl{ overflow-x:auto; border:1px solid var(--bd); border-radius:12px; margin:14px 0; }
+  table{ border-collapse:collapse; width:100%; font-size:14.5px; min-width:440px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--bd); vertical-align:top; }
+  th{ font-size:11px; letter-spacing:.8px; text-transform:uppercase; color:var(--gris-sec); background:var(--card); }
+  tr:last-child td{ border-bottom:0; } td.n{ white-space:nowrap; color:var(--crema); font-weight:700; }
+  .paper{ font-size:13px; color:var(--gris-sec); border-top:1px solid var(--bd); margin-top:26px; padding-top:10px; line-height:1.45; } .paper b{ color:var(--gris); }
+  .nav{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:28px; }
+  .btn{ display:block; text-align:center; background:var(--menta); color:var(--tinta); border:none; cursor:pointer; border-radius:999px; font-family:inherit; font-size:16px; font-weight:800; padding:13px 16px; text-decoration:none; }
+  .btn.ghost{ background:transparent; border:1px solid var(--bd); color:var(--gris); font-weight:700; }
+  .btn.full{ grid-column:1/-1; }
+  a:focus-visible{ outline:2px solid var(--menta); outline-offset:2px; }
+  .nota{ font-size:12.5px; color:var(--gris-sec); line-height:1.45; margin-top:18px; }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <a href="/"><img src="/assets/logo-empowered.webp" alt="Empowered Investor"></a>
+    <div class="where" id="where"><b>Bienestar financiero</b></div>
+  </div>
+  <div class="pbar"><i id="pb"></i></div>
+</div>
+<nav class="chips" aria-label="Capítulos">
+  <a class="chip" href="#inicio" data-c="inicio">Inicio</a>
+  <a class="chip" href="#m1" data-c="m1">1 · Psicología</a>
+  <a class="chip" href="#m2" data-c="m2">2 · Presupuesto</a>
+  <a class="chip" href="#m3" data-c="m3">3 · El dinero</a>
+  <a class="chip" href="#m4" data-c="m4">4 · La Caja</a>
+  <a class="chip" href="#m5" data-c="m5">5 · Banderas rojas</a>
+  <a class="chip" href="#m6" data-c="m6">6 · Índices</a>
+  <a class="chip" href="#m7" data-c="m7">7 · Tu plan</a>
+</nav>
+
+<div class="lay">
+<aside class="side" aria-label="Capítulos">
+  <a href="#inicio" data-c="inicio"><span class="n">·</span><span>Inicio y esquema</span></a>
+  <div class="sep"></div>
+  <a href="#m1" data-c="m1"><span class="n">1</span><span>Psicología del dinero</span></a>
+  <a href="#m2" data-c="m2"><span class="n">2</span><span>Presupuesto</span></a>
+  <a href="#m3" data-c="m3"><span class="n">3</span><span>Cómo funciona el dinero</span></a>
+  <a href="#m4" data-c="m4"><span class="n">4</span><span>La Caja</span></a>
+  <a href="#m5" data-c="m5"><span class="n">5</span><span>Banderas rojas</span></a>
+  <a href="#m6" data-c="m6"><span class="n">6</span><span>Índices y cuenta propia</span></a>
+  <a href="#m7" data-c="m7"><span class="n">7</span><span>Tu plan</span></a>
+  <a class="quiz" href="/quiz-finanzas/"><b>¿Cuánto sabés ya?</b>Quiz de 5 preguntas, 2 minutos</a>
+</aside>
+
+<main>
+
+<!-- ============ INICIO ============ -->
+<section class="cap on" id="inicio">
+  <div class="eyebrow">Curso en texto · 7 capítulos · una hora en total</div>
+  <h1>Bienestar financiero</h1>
+  <p class="frase">Estudiaste quince años para ganar bien y nadie te dio una sola clase sobre qué hacer con lo que ganás. Esto es esa clase.</p>
+
+  <h2 style="margin-top:8px">El curso en un vistazo</h2>
+  <p class="hilo">Siete pasos, en este orden por una razón: primero <b>tu cabeza</b>, porque decide todo lo demás. Después <b>ordenar</b> lo que entra y sale. Después <b>entender</b> cómo funciona la plata. Después <b>tu realidad</b> en la Caja. Después <b>defenderte</b> de lo que te venden. Después <b>invertir</b>. Y al final, <b>tu plan</b>.</p>
+
+  <div class="ruta">
+    <a href="#m1"><span class="n">1</span><span><span class="t">Tu cabeza</span><b>Psicología del dinero</b><span class="q">¿Por qué gente brillante toma malas decisiones con plata? <i>Newton perdió una fortuna; un conserje dejó $8 millones.</i></span></span></a>
+    <a href="#m2"><span class="n">2</span><span><span class="t">Orden</span><b>Presupuesto</b><span class="q">¿Por qué gano bien y no veo nada? <i>Tres decisiones, cero hojas de Excel.</i></span></span></a>
+    <a href="#m3"><span class="n">3</span><span><span class="t">Entender</span><b>Cómo funciona el dinero</b><span class="q">¿Qué son la inflación, las tasas, los bancos y la bolsa? <i>El día que un banco de $200 mil millones cayó en 48 horas.</i></span></span></a>
+    <a href="#m4"><span class="n">4</span><span><span class="t">Tu realidad</span><b>La Caja</b><span class="q">¿Cuánto me va a pagar la pensión? <i>Menos de lo que creés, y hay un número exacto.</i></span></span></a>
+    <a href="#m5"><span class="n">5</span><span><span class="t">Defensa</span><b>Banderas rojas</b><span class="q">¿Cómo reconozco un mal producto? <i>El Ponzi más grande de la historia, y por qué "está regulado" no alcanza.</i></span></span></a>
+    <a href="#m6"><span class="n">6</span><span><span class="t">Invertir</span><b>Índices y cuenta propia</b><span class="q">¿En qué se invierte y dónde queda la plata? <i>La apuesta de un millón de dólares que ganó Warren Buffett.</i></span></span></a>
+    <a href="#m7"><span class="n">7</span><span><span class="t">Decidir</span><b>Tu plan</b><span class="q">¿Cuánto necesito y cuánto aporto? <i>Tu número, tu dosis y lo que cuesta esperar cinco años.</i></span></span></a>
+  </div>
+
+  <h2>Cómo está hecho cada capítulo</h2>
+  <ul class="l">
+    <li><b>Una historia real</b> para empezar: algo que pasó, con fecha y nombre.</li>
+    <li><b>Un gráfico</b> que muestra la idea antes de explicarla.</li>
+    <li><b>La idea en corto</b>, en el idioma de la consulta.</li>
+    <li><b>Para ver:</b> el mejor video o documental que existe sobre el tema. Están en inglés; casi todos tienen subtítulos en español.</li>
+    <li><b>Tu tarea</b> de cinco minutos, con tus números.</li>
+  </ul>
+  <p>En varios capítulos aparece la <b>Dra. Ana</b>: anestesióloga, 47 años, 18 en la Caja, ₡5,5 millones al mes con guardias. No es una persona real. Es un caso armado con lo que más se repite en médicos de Costa Rica.</p>
+
+  <div class="nav"><a class="btn full" href="#m1">Empezar por el capítulo 1</a><a class="btn ghost full" href="/quiz-finanzas/">Primero quiero medir cuánto sé (quiz de 2 minutos)</a></div>
+
+  <p class="paper"><b>En qué se basa.</b> Lusardi y Mitchell, <i>The Economic Importance of Financial Literacy: Theory and Evidence</i>, Journal of Economic Literature, 2014. Es el trabajo más citado sobre educación financiera. Su hallazgo: tres preguntas (interés compuesto, inflación y diversificación) predicen quién planea su retiro, y quien planea llega con mucho más patrimonio. Las tres se explican en los capítulos 3 y 6. La evidencia es de Estados Unidos y otros países; todavía no existe un estudio equivalente para médicos en Costa Rica.</p>
+</section>
+
+<!-- ============ 1 ============ -->
+<section class="cap" id="m1">
+  <div class="eyebrow">Capítulo 1 de 7 · Tu cabeza</div>
+  <h1>Psicología del dinero</h1>
+  <p class="frase">Con la plata, ser inteligente ayuda poco. Lo que más pesa es cómo te comportás.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · Londres, 1720</div>
+    <h3>El hombre más inteligente de Inglaterra perdió una fortuna</h3>
+    <p>Isaac Newton compró acciones de la Compañía del Mar del Sur, la inversión de moda. Vendió temprano y dobló su plata. Pero la acción siguió subiendo y sus amigos se seguían haciendo ricos. Newton no aguantó: volvió a entrar, esta vez con mucho más dinero y cerca del pico. Meses después la burbuja reventó y perdió unas £20.000, una fortuna de la época.</p>
+    <p>Se le atribuye esta frase: "Puedo calcular el movimiento de los cuerpos celestes, pero no la locura de la gente".</p>
+  </div>
+  <div class="historia">
+    <div class="k">Historia real · Vermont, 2014</div>
+    <h3>El conserje que dejó $8 millones</h3>
+    <p>Ronald Read trabajó toda su vida despachando gasolina y limpiando pisos en una tienda. Cuando murió, a los 92 años, su pueblo descubrió que tenía más de $8 millones. Nunca ganó mucho. Gastaba poco, compraba acciones de empresas sólidas y las dejó quietas durante décadas. Le dejó $6 millones al hospital y a la biblioteca del pueblo.</p>
+    <p>Un genio perdió una fortuna y un conserje hizo otra. La diferencia estuvo en la conducta.</p>
+    <p class="f">Leer la noticia: <a href="https://www.cnbc.com/id/102404530" target="_blank" rel="noopener">CNBC, febrero de 2015</a>.</p>
+  </div>
+
+  <h2>Perder duele el doble</h2>
+  <figure class="g">
+    <div class="gt">Cómo se siente ganar ₡1 millón y cómo se siente perderlo</div>
+    <div class="hb" id="g1"></div>
+    <figcaption>Ilustración del hallazgo de Kahneman y Tversky (1979): una pérdida pesa cerca del doble que una ganancia del mismo tamaño.</figcaption>
+  </figure>
+  <p>Daniel Kahneman ganó el Nobel por demostrar esto. Explica por qué tanta plata se queda quieta "por seguridad" en un certificado mientras la inflación se la come, y por qué la gente vende justo cuando el mercado cae. A Newton le pasó el sesgo vecino: el dolor de ver a otros ganar.</p>
+
+  <h2>El guion que heredaste</h2>
+  <p>Antes de los doce años ya habías oído cien veces las frases de tu casa: "la plata en el banco está segura", "la bolsa es un casino", "de plata no se habla en la mesa". Hoy ejecutás ese guion con un ingreso varias veces mayor al de tus papás.</p>
+  <p>Y el gremio suma lo suyo. Los médicos casi no hablan de plata entre ellos, por pena o por miedo a parecer presumidos. El que no habla de plata no aprende de plata.</p>
+
+  <h2>Tres sesgos que trae la bata</h2>
+  <ul class="l">
+    <li><b>Exceso de confianza.</b> No operarías sin imágenes, pero metiste plata en el negocio de un colega sin leer el contrato.</li>
+    <li><b>Recencia.</b> Si la bolsa cayó el mes pasado, parece que va a caer siempre.</li>
+    <li><b>Anclaje.</b> "Mi papá siempre dijo que…" sigue decidiendo veinte años después.</li>
+  </ul>
+  <p>Ninguno se cura. Se manejan como un factor de riesgo: sabiendo que están ahí y poniendo reglas antes de que aparezcan.</p>
+
+  <div class="verk">Para ver</div>
+  <div class="ver">
+    <a class="vid" href="https://www.youtube.com/watch?v=CjVQJdIrDJ0" target="_blank" rel="noopener"><span class="th"><img loading="lazy" src="https://i.ytimg.com/vi/CjVQJdIrDJ0/mqdefault.jpg" alt=""></span><span><span class="pl">YouTube · 1 h</span><b>Daniel Kahneman: Thinking, Fast and Slow</b><span class="d">El Nobel explica en Google por qué decidimos mal sin darnos cuenta. Con los primeros 20 minutos es suficiente.</span></span></a>
+    <a class="vid" href="https://www.netflix.com/title/81345769" target="_blank" rel="noopener"><span class="th">Netflix</span><span><span class="pl">Netflix · 5 episodios de 20 min</span><b>Money, Explained</b><span class="d">Tarjetas de crédito, estafas, retiro. Hecho por Vox, muy visual. Buen punto de entrada si nunca leíste de finanzas.</span></span></a>
+  </div>
+
+  <div class="caso"><div class="k">La Dra. Ana</div><p>Su papá decía que "la plata en el banco está segura y lo demás es casino". Ella tiene ₡28 millones en certificados "hasta decidir" desde 2019. Nunca decidió.</p></div>
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Escribí las tres frases sobre plata que más oíste en tu casa. Marcá la que hoy sigue tomando decisiones por vos.</p></div>
+
+  <p class="paper"><b>Sustento.</b> Kahneman y Tversky, <i>Prospect Theory</i>, Econometrica, 1979. La historia de Ronald Read abre <i>The Psychology of Money</i> de Morgan Housel (2020) y fue reportada por The Wall Street Journal y CNBC en 2015.</p>
+  <div class="nav"><a class="btn ghost" href="#inicio">← Inicio</a><a class="btn" href="#m2">Capítulo 2 →</a></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="cap" id="m2">
+  <div class="eyebrow">Capítulo 2 de 7 · Orden</div>
+  <h1>Presupuesto</h1>
+  <p class="frase">Ganar mucho y tener mucho son dos cosas distintas. Lo que las separa es lo que se gasta.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · Estados Unidos, 2009</div>
+    <h3>Millonarios a los 25, quebrados a los 35</h3>
+    <p>La revista Sports Illustrated investigó qué pasaba con los jugadores de la NFL al retirarse. Su estimación: cerca de 78% estaba en quiebra o con problemas serios de plata dos años después de dejar de jugar. Habían ganado millones.</p>
+    <p>El patrón se parece al de un médico más de lo que uno quisiera: muchos años de sacrificio, un salto brusco de ingreso, un estilo de vida que sube igual de rápido y una carrera que depende del cuerpo. En Estados Unidos, uno de cada cuatro médicos llega a los 60 sin un millón de dólares de patrimonio, después de treinta años de ingreso alto.</p>
+    <p class="f">La cifra de 78% es de Sports Illustrated, "How (and Why) Athletes Go Broke", 2009, y ha sido discutida: un estudio posterior encontró que cerca de 16% se había declarado formalmente en quiebra doce años después del retiro. Leer: <a href="https://www.npr.org/2009/03/24/102302881/for-ex-pro-athletes-big-bucks-often-fleeting" target="_blank" rel="noopener">NPR sobre el reportaje</a>. Médicos: Medscape Physician Wealth Report 2019.</p>
+  </div>
+
+  <h2>Decisión 1: tu ingreso son tres, no uno</h2>
+  <p>Recibís plata por tres vías: salario base, guardias y disponibilidades, y consulta privada. Todo cae en la misma cuenta y por eso cuesta saber cuánto es tuyo.</p>
+  <p>La regla: <b>el gasto fijo de la casa se paga solo con el ingreso base.</b> Lo variable no puede sostener lo fijo.</p>
+  <figure class="g">
+    <div class="gt">La Dra. Ana: su gasto fijo ya no cabe en su salario base</div>
+    <div class="hb" id="g2"></div>
+    <figcaption>Caso compuesto, en millones de colones al mes. Mientras el gasto fijo supere al base, las guardias dejan de ser opcionales.</figcaption>
+  </figure>
+  <p>Si te pasa lo mismo, ya sabés por qué bajar el ritmo a los 55 parece imposible.</p>
+
+  <h2>Decisión 2: pagarte primero</h2>
+  <p>Lo que sobra a fin de mes nunca se invierte, porque nunca sobra. Funciona al revés: el aporte sale el día que entra la plata, de forma automática, y se vive con el resto.</p>
+  <p>Un punto de partida simple es 50/30/20: la mitad para necesidades, 30% para gustos y 20% para tu futuro. Para un médico de la Caja ese 20% puede ser incluso lo que se gana de dispos y/o guardias.</p>
+
+  <h2>Decisión 3: la reserva y el triage de deudas</h2>
+  <p>Antes de invertir hace falta una reserva de tres a seis meses de gasto fijo, en una cuenta aparte y aburrida. Sirve para que una emergencia no te obligue a vender inversiones en mal momento.</p>
+  <ul class="l">
+    <li><b>Lo que mata primero:</b> tarjetas y préstamos personales arriba de 15% anual. Se pagan antes que todo.</li>
+    <li><b>Lo que estabiliza:</b> la reserva, y un seguro de vida simple si alguien depende de vos.</li>
+    <li><b>Lo electivo:</b> invertir. Una hipoteca a tasa razonable puede convivir con la inversión.</li>
+  </ul>
+
+  <h2>Cómo lo hacemos nosotros: seis meses acompañado</h2>
+  <p>Las tres decisiones se entienden en diez minutos. Lo difícil es sostenerlas, porque nadie tiene tiempo de anotar cada gasto. Por eso con nuestros clientes no lo dejamos en una hoja: lo acompañamos durante seis meses con una app propia que se llama <b>Neto</b>.</p>
+  <ul class="l">
+    <li><b>Se llena sola.</b> Neto lee los avisos que tu banco ya te manda por correo cada vez que pagás con la tarjeta y clasifica cada gasto. No hay que digitar nada.</li>
+    <li><b>Te avisa por WhatsApp.</b> Cada gasto te llega con su categoría y con cuánto llevás del presupuesto del mes. Si la categoría está mal, la corregís ahí mismo.</li>
+    <li><b>No estás solo con los números.</b> Durante esos seis meses revisamos con vos cómo va, qué ajustar y cuánto se puede mandar a tu plan.</li>
+  </ul>
+  <p>A los seis meses ya no es un presupuesto que hay que acordarse de hacer. Es un hábito que corre solo, y sabés con datos cuánto es tu 20%.</p>
+
+  <div class="verk">Para ver</div>
+  <div class="ver">
+    <a class="vid" href="https://www.netflix.com/title/81345769" target="_blank" rel="noopener"><span class="th">Netflix</span><span><span class="pl">Netflix · 20 min</span><b>Money, Explained: "Credit Cards"</b><span class="d">Cómo gana plata el banco con tu tarjeta y por qué el pago mínimo es la trampa. El episodio 2 de la serie.</span></span></a>
+  </div>
+
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Anotá dos números: tu ingreso base solo y tu gasto fijo del mes. Si el segundo es mayor, ya sabés por dónde empezar.</p></div>
+
+  <p class="paper"><b>Sustento.</b> Thaler y Benartzi, <i>Save More Tomorrow</i>, Journal of Political Economy, 2004: automatizar el ahorro antes de recibir la plata multiplica cuánto se ahorra. Thaler ganó el Nobel en 2017.</p>
+  <div class="nav"><a class="btn ghost" href="#m1">← Capítulo 1</a><a class="btn" href="#m3">Capítulo 3 →</a></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="cap" id="m3">
+  <div class="eyebrow">Capítulo 3 de 7 · Entender</div>
+  <h1>Cómo funciona el dinero</h1>
+  <p class="frase">El dinero circula como la sangre: alguien lo bombea, tiene presión y volumen, y hay órganos que lo usan. Si ves el circuito una vez, las noticias de economía empiezan a tener sentido.</p>
+
+  <div class="verk" style="margin-top:0">Empezá por aquí</div>
+  <div class="ver">
+    <a class="vid" href="https://www.youtube.com/watch?v=PHe0bXAIuk0" target="_blank" rel="noopener"><span class="th"><img loading="lazy" src="https://i.ytimg.com/vi/PHe0bXAIuk0/mqdefault.jpg" alt=""></span><span><span class="pl">YouTube · 31 min</span><b>Ray Dalio: How The Economic Machine Works</b><span class="d">La mejor explicación que existe de crédito, tasas y ciclos, en dibujos animados. Si solo vas a ver un video de todo el curso, que sea este.</span></span></a>
+  </div>
+
+  <div class="historia">
+    <div class="k">Historia real · Costa Rica, 2022</div>
+    <h3>El año en que todo subió 12%</h3>
+    <p>En agosto de 2022 la inflación de Costa Rica llegó a 12,1% interanual, la más alta en catorce años. El súper, la gasolina y el colegio subieron al mismo tiempo. Quien tenía ₡10 millones guardados perdió en doce meses el poder de compra de más de ₡1 millón, sin que el saldo cambiara.</p>
+    <p>El Banco Central reaccionó como reaccionan todos: subió su tasa de interés de 0,75% a 9% en menos de un año. Los préstamos se encarecieron, la gente gastó menos y la inflación bajó. En 2023 los precios incluso cayeron, y volvieron a caer en 2025. En octubre de 2026 la inflación va en 0,6%, todavía por debajo de la meta de 3% del Banco Central.</p>
+    <p class="f">Leer las noticias: <a href="https://delfino.cr/2026/01/indice-de-precios-al-consumidor-cerro-el-2025-en-123" target="_blank" rel="noopener">Delfino, cierre de 2025</a> · <a href="https://observador.cr/inflacion-sube-a-055-en-octubre-y-acumula-dos-meses-en-terreno-positivo/" target="_blank" rel="noopener">El Observador, octubre de 2026</a>.</p>
+  </div>
+  <figure class="g">
+    <div class="gt">Inflación de Costa Rica al cierre de cada año, 2021 a 2026</div>
+    <div class="hb" id="g3a"></div>
+    <figcaption>Variación de diciembre a diciembre del índice de precios al consumidor; 2026 es la variación interanual a octubre. En morado, los años en que los precios bajaron. Pico de 12,1% en agosto de 2022. Fuente: INEC y Banco Central de Costa Rica.</figcaption>
+  </figure>
+
+  <h2>Inflación: nominal contra real</h2>
+  <p>El rendimiento <b>nominal</b> es el que dice el banco. El <b>real</b> es el que queda después de restar la inflación. Un certificado al 5% con inflación de 4% rinde 1% real: el saldo sube y lo que podés comprar casi no se mueve. </p>
+  <figure class="g">
+    <div class="gt">$10.000 y ₡10.000 guardados sin invertir desde 1999: lo que les queda de poder de compra</div>
+    <iframe class="emb" id="fr-infl" data-src="/inflacion/?embed=1" title="Poder de compra del efectivo desde 1999" loading="lazy" scrolling="no"></iframe>
+    <figcaption>Gráfico propio. La plata no se tocó y el saldo es el mismo; lo que cambió es lo que compra.</figcaption>
+  </figure>
+
+  <h2>Tasas, bancos y crédito</h2>
+  <p>La tasa de interés es el precio de usar plata ajena. Cuando depositás, le prestás al banco y te paga entre 1% y 5%. Cuando pedís prestado, te cobra entre 8% y 40%. El banco vive de esa diferencia, y presta casi toda la plata que recibe.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · California, marzo de 2023</div>
+    <h3>Un banco de $200 mil millones cayó en 48 horas</h3>
+    <p>Silicon Valley Bank había puesto los depósitos de sus clientes en bonos del gobierno de Estados Unidos, lo más seguro que existe. Pero los compró cuando las tasas estaban cerca de cero. En 2022 la Reserva Federal subió las tasas por encima de 4% y esos bonos viejos, que pagaban poco, perdieron valor: nadie los quería al precio original.</p>
+    <p>Cuando se supo, los clientes pidieron $42 mil millones en un solo día. El banco no los tenía. El viernes 10 de marzo las autoridades lo cerraron.</p>
+    <p><b>Aquí entra el FDIC,</b> el seguro de depósitos de Estados Unidos. La regla es clara y está impresa en la puerta de cada banco: protege hasta <b>$250.000 por persona y por banco</b>. El problema era que cerca del 94% de la plata depositada en ese banco estaba por encima de ese límite. Miles de empresas pasaron el fin de semana sin saber si el lunes iban a poder pagar la planilla.</p>
+    <p>El domingo en la noche, el Tesoro, la Reserva Federal y el FDIC anunciaron algo fuera de la regla: <b>todos los depositantes recuperarían todo, también lo que pasaba de $250.000.</b> El costo lo cubrió el fondo que pagan los propios bancos y no los contribuyentes. Los que sí perdieron todo fueron los accionistas del banco y quienes le habían prestado.</p>
+    <p>Fijate en la diferencia: los $250.000 eran un derecho. El resto fue una decisión de emergencia para frenar el pánico, y nadie puede contar con que se repita. En Costa Rica existe una garantía parecida y mucho más pequeña: ₡6 millones por persona en cada entidad supervisada.</p>
+    <p>En esta historia están cuatro ideas del capítulo. Los bancos no guardan tu plata: la prestan o la invierten. Cuando las tasas suben, los bonos que ya existen bajan de precio. Tu depósito está protegido hasta un límite, y conviene saber cuál es. Y quien es dueño o prestamista de una empresa asume un riesgo que el depositante no asume.</p>
+    <p class="f">Leer las fuentes: <a href="https://www.fdic.gov/news/press-releases/2023/pr23017.html" target="_blank" rel="noopener">comunicado conjunto del Tesoro, la Reserva Federal y el FDIC, 12 de marzo de 2023</a> · <a href="https://www.federalreserve.gov/publications/review-of-the-federal-reserves-supervision-and-regulation-of-silicon-valley-bank.htm" target="_blank" rel="noopener">informe de la Reserva Federal sobre la quiebra</a> · <a href="https://www.fdic.gov/resources/deposit-insurance/" target="_blank" rel="noopener">qué cubre el FDIC</a>.</p>
+  </div>
+
+  <h2>Interés compuesto: la bola de nieve</h2>
+  <p>El interés se calcula sobre el saldo acumulado, no solo sobre lo que pusiste. ₡100.000 al 2% anual son ₡110.408 a los cinco años, no ₡110.000. En cinco años la diferencia es mínima. En treinta es casi todo el resultado.</p>
+  <figure class="g">
+    <div class="gt">₡200.000 al mes durante 30 años: guardados, al 5% y al 9%</div>
+    <div class="ln" id="g3b"></div>
+    <div class="lg" id="g3b-l"></div>
+    <figcaption>Pasá el mouse o el dedo por el gráfico para ver cuánto va en cada año. Cálculo propio, en millones de colones, sin descontar inflación. La plata aportada es la misma en las tres líneas: ₡72 millones.</figcaption>
+  </figure>
+
+  <h2>Bonos y acciones: prestamista o dueño</h2>
+  <ul class="l">
+    <li><b>Un bono</b> es un préstamo a un gobierno o a una empresa. Te pagan un interés fijo y el riesgo es que no paguen.</li>
+    <li><b>Una acción</b> es un pedazo de una empresa. Si gana más, tu pedazo vale más. Si le va mal, vale menos.</li>
+  </ul>
+  <p>El dueño asume más riesgo que el prestamista y, a largo plazo, gana más. La bolsa es el mercado donde esos pedazos cambian de manos. A corto plazo el precio sigue al miedo y a la euforia. A largo plazo sigue a las ganancias de las empresas.</p>
+
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Sumá lo que pagás en intereses al año (hipoteca, carro, tarjeta) y lo que te pagan tus ahorros. Hasta hoy, ¿de qué lado del crédito estás?</p></div>
+
+  <p class="paper"><b>Sustento.</b> Lusardi y Mitchell, Journal of Economic Literature, 2014: interés compuesto e inflación son dos de sus tres preguntas. Inflación y tasa de política monetaria: Banco Central de Costa Rica. Silicon Valley Bank: informe de la Reserva Federal, abril de 2023.</p>
+  <div class="nav"><a class="btn ghost" href="#m2">← Capítulo 2</a><a class="btn" href="#m4">Capítulo 4 →</a></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="cap" id="m4">
+  <div class="eyebrow">Capítulo 4 de 7 · Tu realidad</div>
+  <h1>La Caja</h1>
+  <p class="frase">Le das pronósticos a tus pacientes todos los días. Este es el tuyo.</p>
+  <p style="color:var(--gris-sec); font-size:15px; margin-top:-12px">(Si trabajás para la Caja. Si estás solo en privado, saltá al <a href="#m5">capítulo 5</a>: no tenés este piso y tu plan depende todavía más de lo que construyás vos.)</p>
+
+  <figure class="g" style="margin-top:0">
+    <div class="gt">Una especialista con ₡5,5 millones de salario: lo que gana hoy y lo que le pagará la pensión</div>
+    <div class="hb" id="g4"></div>
+    <figcaption>En millones de colones al mes. IVM con tope de ₡1.765.859 (SUPEN, 2025) más cerca de ₡140 mil del fondo de retiro de la Caja con 30 años de servicio.</figcaption>
+  </figure>
+  <p>Cuando se le pregunta a un grupo de médicos cuánto creen que les va a pagar la Caja, las respuestas van de ₡3 a ₡4 millones. El número real para casi todos los especialistas es <b>₡1,9 millones</b>.</p>
+
+  <div class="historia">
+    <div class="k">En las noticias · 2025 y 2026</div>
+    <h3>La Caja tocó la reserva por primera vez</h3>
+    <p>En 2025 el régimen de pensiones de la Caja tuvo que sacar ₡50 mil millones de su reserva para poder pagar las pensiones del año. Nunca había pasado. En mayo de 2026 la institución propuso bajar el porcentaje con que se calcula la pensión y subir de 300 a 360 las cuotas necesarias.</p>
+    <p>Nadie sabe cómo va a terminar esa discusión. Lo que sí se sabe es la dirección: el techo tiene más probabilidad de bajar que de subir.</p>
+    <p class="f">Leer la noticia: <a href="https://www.nacion.com/economia/ccss-propone-drastico-recorte-en-pensiones-del-ivm/NJRNRR7TTNC4FH3SNQTBQBJJUA/story/" target="_blank" rel="noopener">La Nación, mayo de 2026</a>.</p>
+  </div>
+
+  <h2>Por qué hay techo</h2>
+  <p>El IVM te devuelve entre 43% y 52% del promedio de tus mejores salarios, pero con un máximo de ₡1,77 millones. Un especialista que cotiza sobre ₡5 o ₡6 millones con guardias choca contra ese máximo. Cotiza sobre todo su salario y se pensiona como alguien que ganaba mucho menos.</p>
+
+  <h2>Las otras líneas de tu colilla</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Línea</th><th>¿Es tuya?</th><th>Qué esperar</th></tr></thead>
+    <tbody>
+      <tr><td><b>ROP</b></td><td class="n">Sí</td><td>Cuenta individual, 4,25% del salario. Te la llevás si salís de la Caja.</td></tr>
+      <tr><td><b>FRE</b> (fondo de retiro)</td><td class="n">No</td><td>Lo paga solo la institución. Tiene un faltante de 24% y un proyecto de ley para cerrarlo. Contalo casi en cero.</td></tr>
+      <tr><td><b>ASECCSS</b></td><td class="n">Sí</td><td>Por cada 5% que ahorrás, la Caja pone 2%. Es tuya y te la llevás al salir.</td></tr>
+      <tr><td><b>FAP</b></td><td class="n">Sí</td><td>Ahorro voluntario. Solo vale la pena si usás su crédito barato.</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Qué hacer con cada una</h2>
+  <ul class="l">
+    <li><b>ASECCSS al 5%: quedate ahí.</b> Por tu 5% la Caja pone 2% encima. Es 40% de retorno de una vez, y eso no lo da ningún mercado.</li>
+    <li><b>Si aportás más del 5%:</b> el 5% sí, lo de encima no. Lo que pasa del 5% no recibe ese 2%; solo gana los excedentes, 7% u 8% en colones, y rinde más invertido.</li>
+    <li><b>Si no estás afiliado o no sabés:</b> revisá la colilla. Si no dice ASECCSS, afiliate con el 5%.</li>
+    <li><b>Los excedentes de febrero no se gastan.</b> Hoy suelen irse en el marchamo o en un viaje. Ese depósito se invierte.</li>
+    <li><b>FRE: no contés con él.</b> No es plata tuya, da entre ₡71 mil y ₡140 mil al mes y hay un proyecto de ley para cerrarlo.</li>
+    <li><b>FAP: solo si vas a pedir crédito ahí.</b> Sale más barato que un préstamo personal del banco, que anda entre 15% y 20%. Si no, ese ahorro rinde más invertido.</li>
+    <li><b>Y una regla:</b> no tengás salario, pensión, asociación y ahorro colgando de la misma institución.</li>
+  </ul>
+
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Anotá tres números: lo que ganás hoy, lo que te pagaría la Caja (usá ₡1,9 millones si sos especialista con guardias) y la diferencia. Eso es lo que te va a faltar cada mes, y lo vas a usar en el capítulo 7.</p></div>
+
+  <p class="paper"><b>Fuentes.</b> SUPEN, topes de pensión del IVM, primer semestre de 2025. CCSS, Dirección Actuarial, valuación del FRE. Reglamento de ASECCSS. Las reglas pueden cambiar; verificá tu caso con tu estado de cuenta.</p>
+  <div class="nav"><a class="btn ghost" href="#m3">← Capítulo 3</a><a class="btn" href="#m5">Capítulo 5 →</a></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="cap" id="m5">
+  <div class="eyebrow">Capítulo 5 de 7 · Defensa</div>
+  <h1>Banderas rojas</h1>
+  <p class="frase">Antes de aprender qué comprar conviene aprender qué no firmar. Un mal producto te puede costar más que diez años sin invertir.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · Nueva York, diciembre de 2008</div>
+    <h3>El fondo que nunca tenía un mal mes: la estafa Ponzi más grande de la historia</h3>
+    <p>Bernie Madoff había sido presidente de la bolsa Nasdaq. Su fondo pagaba cerca de 1% al mes, todos los meses, subiera o bajara el mercado. Entrar era difícil: había que ser recomendado. Bancos, fundaciones y miles de familias le confiaron sus ahorros.</p>
+    <p>En 2008 se supo que no había inversiones. Era un esquema Ponzi: les pagaba a los clientes viejos con la plata de los nuevos. Los estados de cuenta sumaban $65 mil millones que no existían, y por eso se le conoce como el Ponzi más grande de la historia. Las señales estuvieron a la vista durante décadas. Un rendimiento demasiado parejo. La plata guardada por él mismo y no por un tercero. Un auditor de tres empleados que nadie conocía.</p>
+    <p>Las víctimas no eran ingenuas. Eran profesionales exitosos que confiaron porque otros profesionales exitosos ya estaban adentro.</p>
+    <p><b>Qué pasó después: el SIPC.</b> La firma de Madoff era una casa de bolsa registrada en Estados Unidos, y eso activó al SIPC, la protección que cubre a los clientes cuando un bróker quiebra o resulta ser un fraude. El SIPC adelantó hasta <b>$500.000 por cliente</b>, y un síndico nombrado por la corte lleva más de quince años persiguiendo la plata: ha recuperado más de $14 mil millones de los cerca de $17.500 millones que los clientes realmente habían puesto.</p>
+    <p>Dos detalles importan. El SIPC cubrió lo que cada cliente aportó de verdad, y no las ganancias inventadas que decía su estado de cuenta. Y solo cubrió a quienes tenían la cuenta a su nombre en la firma; los que entraron por medio de un fondo intermediario quedaron fuera. Por eso, en el capítulo 6, la cuenta va a tu nombre y en un bróker con SIPC.</p>
+    <p class="f">Leer las fuentes: <a href="https://www.sec.gov/news/press/2008/2008-293.htm" target="_blank" rel="noopener">comunicado de la SEC, 11 de diciembre de 2008</a> · <a href="https://www.madofftrustee.com/" target="_blank" rel="noopener">sitio del síndico de la liquidación, con las cifras recuperadas</a> · <a href="https://www.sipc.org/for-investors/what-sipc-protects" target="_blank" rel="noopener">qué protege el SIPC</a>.</p>
+  </div>
+
+  <h2>Banderas rojas, por tipo de producto</h2>
+  <p>Hay tres que sirven para cualquier inversión, y después cada tipo de producto tiene las suyas.</p>
+
+  <h2>1. En cualquier inversión</h2>
+  <div class="rojas">
+    <div><span><b>No te saben explicar de dónde sale la tasa.</b> Una tasa alta no es mala por sí sola, pero siempre paga un riesgo. Todo lo que rinda más que un bono del Tesoro de Estados Unidos tiene más riesgo que ese bono. Pedí que te digan cuál es y qué lo respalda.</span></div>
+    <div><span><b>No podés ver qué respalda tu plata.</b> Lo mínimo es saber qué propiedades o valores hay detrás, con nombre y registro, y qué documento prueba tu parte. En el fondo de Madoff no había nada detrás y nadie pidió verlo.</span></div>
+    <div><span><b>Te apuran para firmar.</b> "El cupo se cierra el viernes", "la tasa es solo por este mes". Una inversión seria sigue ahí la semana entrante, después de que leás el contrato.</span></div>
+  </div>
+
+  <h2>2. Planes de ahorro en dólares "con seguro", emitidos desde una isla</h2>
+  <p>Son los que se ofrecen en las salas de residentes: un aporte mensual en dólares a 20 o 25 años, con un seguro de vida pegado.</p>
+  <div class="rojas">
+    <div><span><b>Plazo de 10 a 25 años con castigo por salir.</b> En varios planes de este tipo, si te salís en los primeros dos años recuperás cero.</span></div>
+    <div><span><b>No te dicen cuánto gana quien te lo vende.</b> La comisión se paga por adelantado y crece con el plazo. Por eso te ofrecen 25 años.</span></div>
+    <div><span><b>La plata queda a nombre de una aseguradora en otro país.</b> Vos tenés un contrato, bajo las reglas de esa jurisdicción y sin a quién reclamarle aquí.</span></div>
+  </div>
+  <p><b>El costo que no se ve.</b> Estos planes cuestan entre 3% y 5% al año, sumando todo. Así pesa eso en 25 años.</p>
+  <figure class="g">
+    <div class="gt">$400 al mes durante 25 años: el mismo mercado, tres costos distintos</div>
+    <div class="ln" id="g5"></div>
+    <div class="lg" id="g5-l"></div>
+    <figcaption>Pasá el mouse o el dedo por el gráfico para ver cuánto va en cada año. Cálculo propio suponiendo 8% anual antes de costos. Un fondo índice cobra cerca de 0,1% al año; un asesor de honorario visible, cerca de 1%; un plan de ahorro con seguro suele costar entre 3% y 5%.</figcaption>
+  </figure>
+  <p>Todo costo pesa, y el gráfico no perdona a nadie. Pero hay dos clases muy distintas.</p>
+  <ul class="l">
+    <li><b>El costo escondido.</b> Va dentro del producto, no aparece en ningún recibo y le paga a quien te lo vendió. Es el de 3% a 5%. No lo escogiste y casi nunca te dijeron cuánto era.</li>
+    <li><b>El honorario visible.</b> Lo ves, sabés qué paga y lo podés dejar de pagar cuando querás. Ahí la pregunta que toca es qué recibís a cambio y si eso vale más que lo que cuesta. La respondemos con nuestro propio caso en el capítulo 7.</li>
+  </ul>
+
+  
+  <h2>3. Inversiones inmobiliarias agresivas, mercadeadas de forma masiva</h2>
+  <p>Se anuncian en todas partes, aceptan montos muy bajos y prometen una tasa fija por muchos años.</p>
+  <div class="rojas">
+    <div><span><b>Están basadas en proyectos a valor futuro.</b> Lo que respalda tu plata todavía no existe: hay que construirlo, permisarlo o venderlo.</span></div>
+    <div><span><b>Mezclan lo que existe con lo que no en un solo paquete.</b> Así no podés saber cuánto de tu inversión está respaldado por algo real.</span></div>
+    <div><span><b>La mejor tasa exige el plazo más largo.</b> Diez, quince o veinticinco años sin poder salir de un proyecto que nadie ha terminado.</span></div>
+  </div>
+  <div class="caso"><div class="k">Un ejemplo para verlo</div>
+    <p>Hay un lote que vale $1 millón. Encima se planea un hotel de una cadena internacional que costará $10 millones y que todavía no se ha construido. Y se proyecta lo que ese hotel va a ganar cada año cuando abra.</p>
+    <p>Con las tres cosas se arma un solo paquete de inversión: el lote, el hotel sin construir y los flujos de efectivo futuros del negocio. El paquete se presenta por un valor muy superior al del lote, y sobre ese número se calcula la tasa que te ofrecen.</p>
+    <p>Lo único que existe hoy es el lote de $1 millón. Todo lo demás es una promesa. Si el hotel se atrasa, cuesta más o se llena menos de lo previsto, la tasa se queda sin de dónde salir.</p>
+  </div>
+  <p><b>Invertir en bienes raíces no es una bandera roja.</b> Lo que cambia todo es de dónde sale el rendimiento que te prometen. Así se ven las dos formas, lado a lado.</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Basado en valor futuro</th><th>Basado en valor presente</th></tr></thead>
+    <tbody>
+      <tr><td><b>Qué respalda tu plata</b></td><td>Proyectos por desarrollar: terrenos, permisos, anteproyectos</td><td>Propiedades que ya existen y ya valen lo que dicen</td></tr>
+      <tr><td><b>De dónde sale la tasa</b></td><td>De lo que el proyecto valdrá si todo sale bien</td><td>De lo que el activo vale y produce hoy</td></tr>
+      <tr><td><b>Si el proyecto se atrasa o no se vende</b></td><td>La tasa prometida queda sin respaldo</td><td>El activo sigue ahí</td></tr>
+      <tr><td><b>A quién se le ofrece</b></td><td>A todo el público, desde montos muy bajos</td><td>A pocos inversionistas, con monto mínimo alto</td></tr>
+      <tr><td><b>Plazo</b></td><td>10 a 25 años para la mejor tasa</td><td>Pocos años</td></tr>
+    </tbody>
+  </table></div>
+  <p>Un ejemplo de la forma conservadora es <b>San José Capital</b>: inversión inmobiliaria para profesionales de ingresos altos, basada solo en el valor presente de las propiedades. Paga 8% anual en dólares, con un mínimo de $10.000 y un plazo mínimo de 3 años.</p>
+  <p>Ese 8% es más de lo que paga un bono del Tesoro, y por la regla de arriba eso quiere decir que tiene más riesgo que un bono del Tesoro. La diferencia con el otro modelo es que aquí el riesgo se puede ver: son propiedades que ya existen.</p>
+  <p>Aun así, aplicale las seis preguntas de abajo, igual que a cualquier otra. Y tené presente dos cosas: es plata que no vas a poder tocar durante el plazo, y por eso va después de la reserva y nunca en lugar de ella.</p>
+  <p class="nota" style="margin-top:0">Transparencia: San José Capital es aliado de Empowered Investor.</p>
+
+  
+  <h2>4. Bancos, cooperativas y financieras en Costa Rica</h2>
+  <div class="rojas">
+    <div><span><b>"Está regulado por la Sugef" como único argumento de seguridad.</b> Es mejor que no estar regulado, pero el historial muestra que no ha sido garantía.</span></div>
+    <div><span><b>Tener en una sola entidad más de lo que cubre el seguro.</b> En Costa Rica son ₡6 millones por persona y por entidad.</span></div>
+  </div>
+  <p>En Costa Rica hay cuatro supervisores. La <b>Sugef</b> vigila bancos, cooperativas y financieras. La <b>Sugeval</b>, puestos de bolsa y fondos de inversión. La <b>Supen</b>, las pensiones. La <b>Sugese</b>, los seguros.</p>
+  <div class="historia">
+    <div class="k">Historia real · Costa Rica, 1994 a 2026</div>
+    <h3>Una sacudida financiera cada dos años</h3>
+    <p>El Semanario Universidad contó las entidades intervenidas desde 1994: catorce en treinta años, casi una cada dos años. Todas estaban bajo supervisión y todas terminaron cerradas. Los afectados repiten la misma queja en casi todos los casos: había señales desde meses antes y el supervisor llegó tarde.</p>
+    <p>La lista empieza con el <b>Banco Anglo</b>, que además era un banco del Estado y el más antiguo del país.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Año</th><th>Entidad</th><th>Qué pasó</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1994</td><td><b>Banco Anglo</b></td><td>Banco estatal. Pérdidas de ₡16 mil millones por sobregiros sin garantía y negocios especulativos</td></tr>
+        <tr><td class="n">1997</td><td>Coopevan</td><td>Cooperativa de ahorro y crédito; se recomendó su disolución</td></tr>
+        <tr><td class="n">1998</td><td>Banco Federado</td><td>Banco de 40 cooperativas; corrida de fondos y quiebra</td></tr>
+        <tr><td class="n">1998</td><td>Bancoop</td><td>Arrastrado por la crisis del Banco Federado</td></tr>
+        <tr><td class="n">1998</td><td>Coovivienda</td><td>Problemas de liquidez e información poco confiable</td></tr>
+        <tr><td class="n">1999</td><td>Viviendacoop</td><td>No pudo pagar sus obligaciones</td></tr>
+        <tr><td class="n">2000</td><td>Banco Solidario</td><td>Falta de capital; su cartera no era lo que reportaba</td></tr>
+        <tr><td class="n">2003</td><td>Bantec</td><td>Mala gestión y negocios riesgosos</td></tr>
+        <tr><td class="n">2004</td><td>Banco Elca</td><td>Créditos irregulares; quiebra con 800 acreedores</td></tr>
+        <tr><td class="n">2010</td><td>Coopemex</td><td>Ocultó información; afectó los ahorros de 88 mil personas</td></tr>
+        <tr><td class="n">2015</td><td>Coopeaserrí</td><td>Insuficiencia de patrimonio</td></tr>
+        <tr><td class="n">2017</td><td>Bancrédito</td><td>Otro banco estatal; cerrado tras el deterioro de su cartera</td></tr>
+        <tr><td class="n">2021</td><td>Aldesa</td><td>Supervisada por la Sugeval; unos 600 inversionistas afectados y quiebra en 2022</td></tr>
+        <tr><td class="n">2024</td><td><b>Coopeservidores</b></td><td>Vigilada por la Sugef; 130 mil ahorrantes; en liquidación desde 2026</td></tr>
+        <tr><td class="n">2024</td><td><b>Desyfin</b></td><td>Financiera vigilada por la Sugef; en liquidación desde 2026</td></tr>
+      </tbody>
+    </table></div>
+    <p>A los ahorrantes de las dos últimas les respondió el Fondo de Garantía de Depósitos, que cubre hasta <b>₡6 millones por persona y por entidad</b>. Quien tenía menos recuperó todo. En Desyfin, quien tenía más recibió sus ₡6 millones y cerca de la mitad del resto.</p>
+    <p class="f">Leer las noticias: <a href="https://semanariouniversidad.com/pais/sistema-financiero-registra-14-intervenciones-en-3-decadas-casi-es-1-cada-2-anos/" target="_blank" rel="noopener">Semanario Universidad, 14 intervenciones en 3 décadas (su lista llega a Coopeservidores)</a> · <a href="https://semanariouniversidad.com/pais/juzgado-concursal-inicia-liquidacion-de-coopeservidores-y-financiera-desyfin/" target="_blank" rel="noopener">liquidación de Coopeservidores y Desyfin</a> · <a href="https://observador.cr/depositantes-de-desyfin-podran-retirar-los-6-millones-garantizados-a-partir-de-agosto-revise-las-fechas/" target="_blank" rel="noopener">El Observador, pagos de Desyfin</a> · <a href="https://www.bccr.fi.cr/cr/es/fondo-garantia-depositos/productos-garantizados.html" target="_blank" rel="noopener">Banco Central, qué cubre el fondo</a>.</p>
+  </div>
+  <div class="historia">
+    <div class="k">En las noticias · Paraguay, noviembre de 2026</div>
+    <h3>Tres millones de cuentas bloqueadas de un día para otro</h3>
+    <p>Pasa también fuera de Costa Rica. El 3 de noviembre de 2026 el Banco Central del Paraguay intervino Ueno Bank, uno de los bancos con más clientes del país, porque su solvencia había caído a menos de la mitad del mínimo legal. Cerca de tres millones de cuentas quedaron bloqueadas.</p>
+    <p>El primer pago del seguro de depósitos cubrió hasta 10 millones de guaraníes, unos $1.600 por persona. Quien tenía más que eso quedó esperando. Ese banco también estaba supervisado.</p>
+    <p class="f">Leer las noticias: <a href="https://www.infobae.com/economia/2026/11/06/una-por-una-las-claves-para-entender-el-escandalo-del-ueno-bank-en-paraguay-que-derivo-en-una-fuerte-crisis-politica/" target="_blank" rel="noopener">Infobae, las claves del caso Ueno Bank</a> · <a href="https://www.emol.com/noticias/Internacional/2026/11/04/1216093/paraguay-ueno-bank-crisis-ahorros.html" target="_blank" rel="noopener">Emol, la intervención</a>.</p>
+  </div>
+  <p>La supervisión baja el riesgo y no lo elimina. Cuando una entidad cae, lo que decide cuánto recuperás es el tamaño del seguro que te respalda.</p>
+  <figure class="g">
+    <div class="gt">Cuánto te protege el seguro si la entidad quiebra</div>
+    <div class="hb" id="g5b"></div>
+    <figcaption>Por persona y por entidad, en millones de colones a un tipo de cambio de ₡500 por dólar. El FDIC cubre depósitos en bancos de Estados Unidos y el SIPC, valores y efectivo en casas de bolsa. Ninguno protege contra las caídas del mercado.</figcaption>
+  </figure>
+  <p>Para montos por debajo de ₡6 millones, un banco o cooperativa supervisada en Costa Rica está cubierto. Por encima de esa cifra, que es donde está el retiro de un médico, la plata queda mejor en un lugar con un seguro más grande, como una cuenta a tu nombre en un bróker de Estados Unidos con SIPC. Las historias de Silicon Valley Bank y de Madoff mostraron que esos seguros respondieron cuando hizo falta.</p>
+
+  
+  <h2>Seis preguntas antes de firmar cualquier cosa</h2>
+  <ul class="l">
+    <li>¿Quién supervisa este producto, y cuánto me protege un seguro si la entidad cae?</li>
+    <li>¿A nombre de quién queda la plata y qué documento lo prueba?</li>
+    <li>¿Cuánto gana el asesor con mi contrato y quién se lo paga?</li>
+    <li>¿Cuál es el costo total por año, sumando todo?</li>
+    <li>¿Cuánto recibo si me salgo a los 2, 5 y 10 años? En números y por escrito.</li>
+    <li>¿Cuánto de mi patrimonio estoy poniendo en un solo lugar?</li>
+  </ul>
+  <p>Si quien te lo vende no puede responder alguna, esa es la respuesta.</p>
+
+  <div class="verk">Para ver</div>
+  <div class="ver">
+    <a class="vid" href="https://www.pbs.org/wgbh/frontline/documentary/retirement-gamble/" target="_blank" rel="noopener"><span class="th">PBS</span><span><span class="pl">PBS Frontline · 52 min</span><b>The Retirement Gamble</b><span class="d">El documental que mejor muestra cuánto se llevan las comisiones de un plan de retiro. Incluye la entrevista con Bogle.</span></span></a>
+    <a class="vid" href="https://www.netflix.com/title/81466159" target="_blank" rel="noopener"><span class="th">Netflix</span><span><span class="pl">Netflix · 4 episodios</span><b>Madoff: The Monster of Wall Street</b><span class="d">Cómo se sostuvo el fraude más grande de la historia y por qué nadie quiso ver las señales.</span></span></a>
+  </div>
+
+  <div class="caso"><div class="k">La Dra. Ana</div><p>En 2016 firmó en la sala de residentes un plan en dólares con seguro, a 25 años, de $400 al mes. Lleva $43.000 aportados y hoy le devolverían $31.000. Nunca le dijeron que casi todo lo que aportó el primer año se fue en la comisión.</p></div>
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Hacé la lista de todo lo que tenés: cuentas, certificados, seguros, planes. A la par de cada uno escribí quién te debe esa plata y cuántas banderas rojas tiene.</p></div>
+
+  <p class="paper"><b>Sustento.</b> Mullainathan, Noeth y Schoar, <i>The Market for Financial Advice: An Audit Study</i>, NBER, 2012: asesores pagados por comisión recomendaron productos más caros incluso a clientes que llegaban con un portafolio barato y bien armado. Caso Madoff: SEC y Departamento de Justicia de Estados Unidos, 2009. Las seis preguntas siguen las recomendaciones de la Oficina del Consumidor Financiero de Costa Rica.</p>
+  <div class="nav"><a class="btn ghost" href="#m4">← Capítulo 4</a><a class="btn" href="#m6">Capítulo 6 →</a></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="cap" id="m6">
+  <div class="eyebrow">Capítulo 6 de 7 · Invertir</div>
+  <h1>Índices y cuenta propia</h1>
+  <p class="frase">La respuesta aburrida es la que funciona: una cuenta a tu nombre y, adentro, un fondo con cientos de empresas.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · 2008 a 2017</div>
+    <h3>La apuesta de un millón de dólares</h3>
+    <p>En 2008 Warren Buffett apostó $1 millón, con destino a caridad, a que un simple fondo que copia las 500 empresas más grandes de Estados Unidos le ganaría en diez años a los mejores gestores de Wall Street. Una firma de Nueva York aceptó y escogió cinco fondos de fondos de cobertura, con cientos de expertos detrás.</p>
+    <p>Diez años después el resultado fue este.</p>
+    <p class="f">Leer la fuente: <a href="https://www.berkshirehathaway.com/letters/2017ltr.pdf" target="_blank" rel="noopener">carta de Buffett a los accionistas, páginas 11 a 13</a>.</p>
+  </div>
+  <figure class="g">
+    <div class="gt">La apuesta de Buffett: ganancia total en diez años</div>
+    <div class="hb" id="g6a"></div>
+    <figcaption>2008 a 2017. Fuente: carta de Warren Buffett a los accionistas de Berkshire Hathaway, febrero de 2018.</figcaption>
+  </figure>
+  <p>Los expertos no eran malos. Cobraban 2% al año más una quinta parte de las ganancias, con una segunda capa de comisiones encima, y eso se comió la ventaja. Buffett dejó escrito que, cuando muera, el 90% de lo que herede su esposa vaya a un fondo índice del S&amp;P 500.</p>
+  <p>La lección de la apuesta es que tratar de escoger acciones ganadoras, cobrando caro, pierde contra el índice. Por eso nosotros tampoco escogemos acciones. Usamos el mismo índice y le agregamos tres reglas, que están <a href="#edge">más abajo</a>.</p>
+
+  <h2>Acción, fondo, índice y ETF</h2>
+  <ul class="l">
+    <li><b>Acción:</b> un pedazo de una sola empresa. Si quiebra, perdés todo.</li>
+    <li><b>Fondo:</b> una canasta con muchas acciones. Si una quiebra, casi no se nota. Eso es <b>diversificar</b>.</li>
+    <li><b>Índice:</b> una lista. El S&amp;P 500 son las 500 empresas más grandes de Estados Unidos. El Nasdaq 100, las 100 más grandes de tecnología y afines.</li>
+    <li><b>ETF índice:</b> un fondo que copia esa lista sin que nadie escoja. Por eso cuesta entre 0,03% y 0,20% al año.</li>
+  </ul>
+
+  <h2>Cuánto podés perder, y por cuánto tiempo</h2>
+  <div class="historia">
+    <div class="k">Historia real · febrero a agosto de 2020</div>
+    <h3>34% abajo en 33 días</h3>
+    <p>Con la pandemia, el S&amp;P 500 cayó 34% entre el 19 de febrero y el 23 de marzo de 2020. Fue la caída más rápida de su historia. Quien vendió en marzo convirtió esa caída en una pérdida real. Quien no hizo nada había recuperado todo en agosto, cinco meses después.</p>
+    <p>No siempre es tan rápido. Quien invirtió todo en agosto de 2000 esperó seis años para volver a ver su plata. Por eso lo que importa es el plazo.</p>
+  </div>
+  <figure class="g">
+    <div class="gt">S&amp;P 500: de cada 100 momentos para empezar, en cuántos terminaste arriba de la inflación</div>
+    <div class="hb" id="g6b"></div>
+    <figcaption>Gráfico propio con datos mensuales de 1871 a 2026, dividendos incluidos e inflación descontada. Detalle en <a href="/horizonte/">investorcr.com/horizonte</a>. Rendimientos pasados no garantizan los futuros.</figcaption>
+  </figure>
+  <p>A un año la bolsa es casi una moneda cargada. A veinte, en 155 años de historia, prácticamente nunca perdió contra la inflación. Lo que define cuánto riesgo podés tomar es <b>cuántos años faltan para que necesités la plata</b>. Lo que vas a usar en tres años no debería estar en acciones.</p>
+
+  <h2 id="edge">Lo que nosotros le agregamos al índice</h2>
+  <p>Comprar el índice y no tocarlo funciona. Su problema es el camino: caídas de 50% o más que duran años, justo las que hacen que la gente venda en el peor momento. Nuestro trabajo es <b>quitarle al camino las caídas más abruptas y dejar el techo libre</b>. Son tres bloques, cada uno apoyado en un estudio publicado.</p>
+  <div class="bloques">
+    <div><span class="bn">1</span><div><b>Qué índice, según tu etapa.</b> Lejos de la meta, crecimiento: Nasdaq 100. Cerca de la meta, menos riesgo: índice sin acelerar y después renta fija. El riesgo se decide por cuánto de tu meta ya tenés.<span class="bp">Ayres y Nalebuff, Yale, <i>Lifecycle Investing</i>, 2008 · gestión por fondeo de los fondos de pensiones</span></div></div>
+    <div><span class="bn">2</span><div><b>Cuándo estar adentro: la regla Atalaya.</b> Una vez por semana se compara el Nasdaq 100 con su máximo de las últimas 39 semanas. Si cae más de un porcentaje fijo, se sale a efectivo. Cuando recupera, se vuelve a entrar. Sin intuición y sin noticias.<span class="bp">George y Hwang, <i>The 52-Week High and Momentum Investing</i>, Journal of Finance, 2004 · Gayed y Bilello, <i>Leverage for the Long Run</i>, 2016</span></div></div>
+    <div><span class="bn">3</span><div><b>Cuánto aportar y cuándo bajar el riesgo.</b> Tu número, tu dosis y las fases del plan. Es el capítulo 7.<span class="bp">Ameriks, Caplin y Leahy, Quarterly Journal of Economics, 2003</span></div></div>
+  </div>
+
+  <figure class="g">
+    <div class="gt">Miralo paso a paso: $10.000 desde 1999</div>
+    <div class="pasos" id="edge-btns">
+      <button type="button" class="chip on" data-i="0">1 · El índice solo</button>
+      <button type="button" class="chip" data-i="1">2 · Con la regla</button>
+      <button type="button" class="chip" data-i="2">3 · Con aportes</button>
+      <button type="button" class="chip" data-i="3">4 · El plan completo</button>
+    </div>
+    <p class="pcap" id="edge-cap"></p>
+    <iframe class="emb" id="fr-edge" data-src="/backtest/?embed=1&amp;anio=1999&amp;edad=30&amp;sel=cash,qqq&amp;inicial=10000&amp;aporte=0" title="Simulación paso a paso" scrolling="no" style="height:560px"></iframe>
+    <figcaption>Simulación propia con datos reales del Nasdaq 100 desde 1999. Se puede revisar completa en <a href="/backtest/">investorcr.com/backtest</a>. Rendimientos pasados no garantizan los futuros.</figcaption>
+  </figure>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Nasdaq 100, 2000 a 2026</th><th>Comprar y mantener</th><th>Con la regla</th></tr></thead>
+    <tbody>
+      <tr><td><b>Peor caída</b></td><td class="n">−81%</td><td class="n">−26%</td></tr>
+      <tr><td><b>Peor año</b></td><td class="n">−43% (2000)</td><td class="n">−9% (2022)</td></tr>
+      <tr><td><b>Órdenes al año</b></td><td class="n">0</td><td class="n">1,4</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>El contra, dicho de frente.</b> La regla no adivina. A veces sale y el mercado se recupera sin ella, y en esos tramos se queda atrás. En mercados que solo suben, comprar y mantener termina con algo más de plata. Lo que la regla cambia siempre es la profundidad de las caídas, y eso es lo que permite seguir en el plan, y usar más crecimiento en la primera etapa, sin jugarse el retiro en un mal año.</p>
+
+  <h2>Tu cuenta, a tu nombre</h2>
+  <p>Desde Costa Rica se puede abrir una cuenta en un bróker regulado de Estados Unidos con la cédula, en unos veinte minutos.</p>
+  <ul class="l">
+    <li><b>W-8BEN.</b> Formulario que informa al fisco de Estados Unidos que no sos residente allá. Se llena una vez.</li>
+    <li><b>SIPC.</b> Si el bróker quiebra o resulta ser un fraude, tus valores están protegidos hasta $500.000. Es la protección que les respondió a los clientes de Madoff. No protege contra las caídas del mercado.</li>
+    <li><b>SWIFT.</b> Mandar plata desde tu banco cuesta cerca de $60 por envío. Por eso conviene juntar y enviar $3.000 a $5.000 cada varios meses.</li>
+  </ul>
+  <h2>Si alguien te ayuda a manejarla: el caso de Empowered Investor</h2>
+  <p>Así funciona con nosotros, para que sirva de ejemplo. Cuando manejamos la cuenta de un cliente, la cuenta sigue abierta a nombre del cliente, en el bróker, y nosotros recibimos un solo permiso: <b>comprar y vender dentro de ella</b>.</p>
+  <ul class="l">
+    <li><b>Lo que sí podemos hacer:</b> comprar y vender los fondos del plan dentro de tu cuenta.</li>
+    <li><b>Lo que no podemos hacer, nunca:</b> retirar plata, transferirla a otra cuenta o cambiar a quién le pertenece. El bróker no nos da esa opción.</li>
+    <li><b>Lo que seguís pudiendo hacer vos, siempre:</b> entrar a tu cuenta, ver cada movimiento, retirar tu plata y quitarnos el permiso el día que querás, sin pedirnos nada.</li>
+  </ul>
+  <p>Es justo lo contrario de la segunda bandera roja del capítulo anterior. Esa bandera decía: <b>no podés ver qué respalda tu plata</b>, ni qué documento prueba que es tuya. En el fondo de Madoff los clientes le entregaban la plata a él, él la guardaba y él mismo les mandaba el estado de cuenta. No había nada detrás y nadie podía comprobarlo.</p>
+  <p>Aquí pasa al revés. La plata nunca pasa por nuestras manos, la guarda un tercero regulado, el estado de cuenta te lo da el bróker y no nosotros, y lo que hay adentro son fondos que cualquiera puede buscar por su nombre. Si mañana desapareciéramos, tu cuenta seguiría exactamente igual.</p>
+  <p>Hacele esta pregunta a cualquier asesor, incluidos nosotros: <b>¿podés sacar plata de mi cuenta?</b> La única respuesta aceptable es no.</p>
+
+  <div class="verk">Para ver</div>
+  <div class="ver">
+    <a class="vid" href="https://www.youtube.com/watch?v=ZCFkWDdmXG8" target="_blank" rel="noopener"><span class="th"><img loading="lazy" src="https://i.ytimg.com/vi/ZCFkWDdmXG8/mqdefault.jpg" alt=""></span><span><span class="pl">Netflix en YouTube · 17 min</span><b>Explained: The Stock Market</b><span class="d">Qué es la bolsa, de dónde salió y a quién le sirve. El episodio completo está gratis en YouTube.</span></span></a>
+    <a class="vid" href="https://www.hbo.com/movies/becoming-warren-buffett" target="_blank" rel="noopener"><span class="th">HBO</span><span><span class="pl">HBO Max · 1 h 28 min</span><b>Becoming Warren Buffett</b><span class="d">La vida del inversionista más famoso del mundo. Lo que más sorprende es lo poco que hace: compra, espera y vive en la misma casa desde 1958.</span></span></a>
+  </div>
+
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Escribí tu horizonte: la edad a la que querés bajar el ritmo menos tu edad de hoy. Buscá esa barra en el gráfico de arriba.</p></div>
+
+  <p class="paper"><b>Sustento.</b> Sharpe, <i>The Arithmetic of Active Management</i>, Financial Analysts Journal, 1991: por qué el gestor promedio pierde contra el índice después de costos. Barber y Odean, <i>Trading Is Hazardous to Your Wealth</i>, Journal of Finance, 2000: quien más compra y vende, menos gana. Diversificación es la tercera pregunta de Lusardi y Mitchell.</p>
+  <div class="nav"><a class="btn ghost" href="#m5">← Capítulo 5</a><a class="btn" href="#m7">Capítulo 7 →</a></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section class="cap" id="m7">
+  <div class="eyebrow">Capítulo 7 de 7 · Decidir</div>
+  <h1>Tu plan</h1>
+  <p class="frase">Un plan de retiro se arma como un plan de tratamiento: diagnóstico, dosis, controles y señales de alarma.</p>
+
+  <div class="historia">
+    <div class="k">Historia real · Omaha</div>
+    <h3>El secreto de Buffett es haber empezado a los once</h3>
+    <p>Warren Buffett compró su primera acción a los once años. A los 30 tenía cerca de $1 millón. Hoy su fortuna supera los $100 mil millones, y más del 95% de esa cifra llegó después de que cumplió 65.</p>
+    <p>Su rendimiento, cerca de 20% al año durante seis décadas, es extraordinario. Pero hay alguien con mejores números. Lo que nadie tiene es el tiempo de Buffett: más de ochenta años de interés compuesto sin interrupciones.</p>
+    <p class="f">Fuente: Morgan Housel, <i>The Psychology of Money</i>, capítulo 4.</p>
+  </div>
+  <div class="historia">
+    <div class="k">Historia real · Long Island, 1988 a 2018</div>
+    <h3>El matemático que le ganó a Buffett sin opinar sobre ninguna empresa</h3>
+    <p>Jim Simons era profesor de matemáticas y había descifrado códigos para el gobierno de Estados Unidos. En 1978 dejó la universidad para probar una idea: que los mercados dejan patrones en los datos y que una regla probada con esos datos decide mejor que una persona.</p>
+    <p>No contrató a nadie de Wall Street. Contrató matemáticos, físicos y estadísticos. Su fondo Medallion ganó cerca de <b>66% al año antes de comisiones</b>, y cerca de 39% después de ellas, durante treinta años. Es el mejor historial que se conoce, por encima del de Buffett.</p>
+    <p>Buffett estudia una empresa, se forma una opinión y espera décadas. Simons nunca opinó sobre una empresa: escribió reglas, las probó contra la historia y dejó que las reglas operaran. A eso se le llama <b>inversión cuantitativa</b>: decidir con datos y reglas escritas de antemano, y no con corazonadas ni con las noticias del día.</p>
+    <p class="f">Fuentes: Gregory Zuckerman, <i>The Man Who Solved the Market</i>, 2019 · <a href="https://www.simonsfoundation.org/2024/05/10/simons-foundation-co-founder-mathematician-and-investor-jim-simons-dies-at-86/" target="_blank" rel="noopener">Simons Foundation, 2024</a>.</p>
+  </div>
+  <p>De las dos historias sale el plan. De Buffett, <b>el tiempo</b>: empezar antes pesa más que cualquier otra cosa. De Simons, <b>las reglas</b>: lo que se decide con datos y por adelantado le gana a lo que se decide con miedo en el momento.</p>
+  <p>Hay que decir lo que no es. Medallion está cerrado al público desde 1993, opera miles de veces al día y nadie fuera de la firma conoce sus reglas. Nosotros no hacemos eso ni prometemos esos números. Lo que tomamos es el principio: nuestras reglas son pocas, están publicadas, se probaron contra más de veinte años de datos y se ejecutan igual suba o baje el mercado. Es inversión cuantitativa en su versión más sencilla, la que cabe en una página.</p>
+  <div class="ver">
+    <a class="vid" href="https://www.youtube.com/watch?v=U5kIdtMJGc8" target="_blank" rel="noopener"><span class="th"><img loading="lazy" src="https://i.ytimg.com/vi/U5kIdtMJGc8/mqdefault.jpg" alt=""></span><span><span class="pl">TED en YouTube · 23 min</span><b>Jim Simons: The mathematician who cracked Wall Street</b><span class="d">El propio Simons cuenta cómo pasó de las matemáticas a los mercados y por qué contrataba científicos y no financieros.</span></span></a>
+  </div>
+
+  <h2>Tu número, con tus datos</h2>
+  <p>Un plan de retiro empieza con tres datos tuyos: con cuánto querés vivir al mes, a qué edad y cuántos años faltan. De ahí sale <b>tu número</b>: el capital que te deja vivir de lo que rinde. Mové las flechas y mirá cómo cambian el aporte y el gráfico.</p>
+
+  <div class="calc" id="calc">
+    <div class="cgrid">
+      <div class="field"><label for="c-edad">Edad hoy</label><div class="row"><input id="c-edad" inputmode="numeric" value="35"><div class="steps"><button type="button" class="stp" data-k="edad" data-d="1" aria-label="Subir edad">▲</button><button type="button" class="stp" data-k="edad" data-d="-1" aria-label="Bajar edad">▼</button></div></div></div>
+      <div class="field"><label for="c-ret">Edad de retiro</label><div class="row"><input id="c-ret" inputmode="numeric" value="60"><div class="steps"><button type="button" class="stp" data-k="ret" data-d="1" aria-label="Subir edad de retiro">▲</button><button type="button" class="stp" data-k="ret" data-d="-1" aria-label="Bajar edad de retiro">▼</button></div></div></div>
+      <div class="field"><label for="c-mes">Querés vivir con ($/mes)</label><div class="row"><input id="c-mes" inputmode="numeric" value="5,000"><div class="steps"><button type="button" class="stp" data-k="mes" data-d="500" aria-label="Subir monto">▲</button><button type="button" class="stp" data-k="mes" data-d="-500" aria-label="Bajar monto">▼</button></div></div></div>
+      <div class="field"><label for="c-cap">Capital inicial ($)</label><div class="row"><input id="c-cap" inputmode="numeric" value="0"><div class="steps"><button type="button" class="stp" data-k="cap" data-d="5000" aria-label="Subir capital">▲</button><button type="button" class="stp" data-k="cap" data-d="-5000" aria-label="Bajar capital">▼</button></div></div></div>
+      <div class="field"><label for="c-crec">Crecimiento esperado (%/año)</label><div class="row"><input id="c-crec" inputmode="numeric" value="10%"><div class="steps"><button type="button" class="stp" data-k="crec" data-d="1" aria-label="Subir crecimiento">▲</button><button type="button" class="stp" data-k="crec" data-d="-1" aria-label="Bajar crecimiento">▼</button></div></div></div>
+      <div class="field"><label>Años para juntar</label><div class="row"><b class="big" id="r-anios">25</b></div></div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="k">Tu número · meta de capital</div><div class="v per" id="r-meta">$0</div></div>
+      <div class="kpi men"><div class="k">Aporte requerido al mes</div><div class="v men" id="r-ap">$0</div></div>
+      <div class="kpi"><div class="k">De tu bolsillo, en total</div><div class="v" id="r-bol">$0</div></div>
+    </div>
+    <div class="ln" id="gv"></div>
+    <div class="lg" id="gv-l"></div>
+    <p class="cfrase" id="r-frase"></p>
+    <p class="cnota">Todo en dólares de hoy, con una inflación de 3% ya descontada. Supone que retirás 4% al año y que en el retiro la plata crece 8%. Ninguna tasa está garantizada.</p>
+  </div>
+
+  <h2>Qué mirar mientras la movés</h2>
+  <ul class="l">
+    <li><b>La edad de retiro.</b> Adelantala o atrasala cinco años y mirá el aporte. Es el botón que más pesa.</li>
+    <li><b>El crecimiento esperado.</b> Entre 8% y 12% el aporte baja casi a la mitad. Esa tasa no se escoge por gusto: depende de en qué invertís, cuánto riesgo tomás y qué regla usás para las caídas.</li>
+    <li><b>La línea gris.</b> Es lo que sale de tu bolsillo. Todo lo que queda entre la gris y la verde lo puso el tiempo.</li>
+  </ul>
+
+  <h2>Lo que la calculadora no te puede decir</h2>
+  <p>Te da el tamaño del problema. Lo que falta es lo que cambia de una persona a otra, y eso se arma en una conversación con tus datos reales:</p>
+  <ul class="l">
+    <li>Qué tasa es realista <b>para vos</b>, con tus años y con lo que ya tenés en la Caja, la asociación y el banco.</li>
+    <li>Cuánto riesgo tomar al inicio y en qué momento bajarlo, según cuánto de tu número llevés.</li>
+    <li>Qué hacer el día que el mercado caiga 30%, escrito antes de que pase.</li>
+  </ul>
+  <div class="nav" style="margin-top:14px"><a class="btn full" id="cta-cal-0" href="https://calendly.com/empoweredinvestor/medicos?utm_source=curso&utm_content=calculadora" target="_blank" rel="noopener">Agendar la llamada con mis números</a></div>
+  <p class="nota" style="margin-top:8px; text-align:center">Gratis, 30 minutos. Si tenés pareja, es preferible que vengan los dos.</p>
+
+  <h2>Médicos que ya lo hicieron</h2>
+  <p>Ninguno habla de rendimientos. Hablan de por qué empezaron y de qué les dio confianza.</p>
+  <div class="dgrid">
+    <figure class="dvid" data-clip="william">
+      <div class="dplayer">
+        <video playsinline preload="none" poster="/medicos/clips/william.webp"><source src="/medicos/clips/william.mp4?v=3" type="video/mp4"></video>
+        <button type="button" class="dov" aria-label="Ver el video de William Solís"><span class="dq">“A los 55 años ya no quiero hacer disponibilidades”</span><span class="dt">▶ Ver video · 1:34</span></button>
+      </div>
+      <figcaption><b>Dr. William Solís</b> · Urólogo</figcaption>
+    </figure>
+    <figure class="dvid" data-clip="luis">
+      <div class="dplayer">
+        <video playsinline preload="none" poster="/medicos/clips/luis.webp"><source src="/medicos/clips/luis.mp4?v=3" type="video/mp4"></video>
+        <button type="button" class="dov" aria-label="Ver el video de Luis Aguilar"><span class="dq">“Desde un punto de vista es increíble, desde otro es esclavizante”</span><span class="dt">▶ Ver video · 1:13</span></button>
+      </div>
+      <figcaption><b>Dr. Luis Aguilar</b> · Anestesiólogo</figcaption>
+    </figure>
+    <figure class="dvid" data-clip="mariana-pena">
+      <div class="dplayer">
+        <video playsinline preload="none" poster="/medicos/clips/mariana.webp"><source src="/medicos/clips/mariana.mp4?v=3" type="video/mp4"></video>
+        <button type="button" class="dov" aria-label="Ver el video de Mariana Peña"><span class="dq">“Nadie busca hacer plata por hacer plata”</span><span class="dt">▶ Ver video · 1:38</span></button>
+      </div>
+      <figcaption><b>Dra. Mariana Peña</b> · Ginecóloga</figcaption>
+    </figure>
+  </div>
+  <p style="margin-top:18px">Y dos de los que publicamos en <a href="https://www.instagram.com/joseinvestor.cr/" target="_blank" rel="noopener">@joseinvestor.cr</a>, sobre la pregunta que más nos hacen: cómo saber que la plata está segura.</p>
+  <div class="reels">
+    <figure class="reel dvid" data-clip="pablo-mesen">
+      <div class="dplayer">
+        <video playsinline preload="none" poster="/assets/clips/pablo-mesen.webp"><source src="/assets/clips/pablo-mesen.mp4" type="video/mp4"></video>
+        <button type="button" class="dov" aria-label="Ver el video de Pablo Mesén"><span class="dq">“¿Por qué estás seguro de que no es una estafa?”</span><span class="dt">▶ Ver · 1:23</span></button>
+      </div>
+      <figcaption><b>Pablo Mesén</b> · cliente</figcaption>
+    </figure>
+    <figure class="reel dvid" data-clip="luis-entrevista">
+      <div class="dplayer">
+        <video playsinline preload="none" poster="/assets/clips/luis-todo-es-suyo.webp"><source src="/assets/clips/luis-todo-es-suyo.mp4" type="video/mp4"></video>
+        <button type="button" class="dov" aria-label="Ver el video de Luis Aguilar"><span class="dq">“Todo es suyo. Yo nada más lo asesoro.”</span><span class="dt">▶ Ver · 0:50</span></button>
+      </div>
+      <figcaption><b>Dr. Luis Aguilar</b> · Anestesiólogo · cliente</figcaption>
+    </figure>
+  </div>
+
+  <h2>Lo que cuesta, dicho de frente</h2>
+  <p>Sería raro hablar tanto de costos y no decir el nuestro. Es un honorario visible: no hay comisiones por producto y la cuenta es tuya.</p>
+  <div class="tbl"><table>
+    <tbody>
+      <tr><td class="n">$1.500 a $3.000<br><span style="font-weight:500; color:var(--gris-sec)">una sola vez</span></td><td>Depende de lo que necesités: si la cuenta es individual o corporativa, el tamaño del portafolio, o si hace falta dejar listo un testamento. Se define en la llamada, antes de que pagués nada.</td></tr>
+      <tr><td class="n">1% al año<br><span style="font-weight:500; color:var(--gris-sec)">desde el año 2</span></td><td>Sobre el saldo al cierre del año anterior. Con $30.000 son $300 al año. Si tu cuenta crece, nos va bien a los dos.</td></tr>
+      <tr><td class="n">$0</td><td>De comisión por operación en el bróker, y sin penalidad por retirar tu plata.</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>El pago inicial incluye el primer año completo de gestión:</b></p>
+  <ul class="l">
+    <li>Apertura de la cuenta a tu nombre, el formulario W-8BEN y la plantilla de transferencia.</li>
+    <li>La sesión de plan: tu número, tu fase y tu aporte.</li>
+    <li>La ejecución de todas las órdenes y la señal de cada semana.</li>
+    <li>El reporte de cierre de mes, tu panel con el avance y un grupo de WhatsApp para preguntar.</li>
+  </ul>
+  <p><b>Garantía de 30 días.</b> Abrimos tu cuenta, hacés la transferencia, tu plan queda creado y empezamos a invertir. Si en los primeros 30 días no estás satisfecho, te devolvemos el honorario completo.</p>
+  <p>En el gráfico del capítulo 5, ese 1% son cerca de $50 mil menos en 25 años frente a comprar el índice por tu cuenta, <b>si los dos hacen exactamente lo mismo</b>. Esa condición casi nunca se cumple. Lo que el honorario paga es lo que cambia el resultado: empezar de una vez, una regla escrita para las caídas y alguien que maneja tu plan y te acompaña en cada una.</p>
+  <p>La prueba es sencilla. Si sabés que vas a empezar este mes, aportar siempre y no vender cuando todo caiga, como le pasó a Newton, hacelo solo y ahorrate el 1%. Si llevás años sabiendo qué hacer y sin hacerlo, el honorario probablemente te sale barato.</p>
+
+  <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Poné tus datos en la calculadora y anotá dos resultados: tu número y tu aporte al mes. Después atrasá cinco años la edad de hoy y anotá el aporte otra vez. Llevá los tres a la llamada.</p></div>
+
+  <p class="paper"><b>Sustento.</b> Ameriks, Caplin y Leahy, <i>Wealth Accumulation and the Propensity to Plan</i>, Quarterly Journal of Economics, 2003: a igual ingreso, quienes planean acumulan más patrimonio. Lusardi, Michaud y Mitchell, Journal of Political Economy, 2017: entre 30% y 40% de la desigualdad en riqueza de retiro se explica por conocimiento financiero. La regla de retiro de 4% a 5% es una referencia general y no una garantía.</p>
+
+  <div class="caso" style="margin-top:28px"><div class="k">El siguiente paso</div><p>Te armamos este plan en una llamada gratuita de 30 minutos. Si tenés pareja, es preferible que vengan los dos.</p></div>
+  <div class="nav">
+    <a class="btn full" id="cta-cal" href="https://calendly.com/empoweredinvestor/medicos?utm_source=curso" target="_blank" rel="noopener">Agendar la llamada</a>
+    <a class="btn ghost full" id="cta-wa" href="https://wa.me/50670558296?text=Hola%20Jose%2C%20termin%C3%A9%20el%20curso%20y%20quiero%20armar%20mi%20plan." target="_blank" rel="noopener">Escribirle a Jose por WhatsApp</a>
+    <a class="btn ghost" href="#m6">← Capítulo 6</a><a class="btn ghost" href="/quiz-finanzas/">Hacer el quiz</a>
+  </div>
+  <p class="nota">Este curso es educativo y no es asesoría de inversión personalizada. Los ejemplos de la Dra. Ana son un caso compuesto. Los videos enlazados son de terceros. Empowered Investor no custodia plata de clientes: la cuenta siempre es del cliente.</p>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var C={menta:"#63FCAF", peri:"#7C8FF7", rojo:"#E0525A", nar:"#F2A54A", gris:"#5b6474"};
+  function el(id){ return document.getElementById(id); }
+  function todos(sel, fn){ Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+  function track(ev, v){
+    try{ if(typeof gtag==="function") gtag("event", ev, {v:v}); }catch(e){}
+    try{ if(typeof fbq==="function") fbq("trackCustom", ev, {v:v}); }catch(e){}
+    try{ if(typeof clarity==="function"){ clarity("event", ev); clarity("set", ev, String(v)); } }catch(e){}
+  }
+
+  // ===== Barras horizontales =====
+  function barras(id, filas, max){
+    var h=""; max = max || Math.max.apply(null, filas.map(function(f){ return Math.abs(f.v); }));
+    filas.forEach(function(f){
+      var w=Math.max(1, Math.abs(f.v)/max*100);
+      h+='<div class="r"><div class="lb">'+f.l+'</div><div class="tr"><div class="b" style="width:calc((100% - 104px) * '+(w/100).toFixed(3)+');background:'+f.c+'"></div><div class="v">'+f.t+'</div></div></div>';
+    });
+    el(id).innerHTML=h;
+  }
+  // ===== Líneas =====
+  function lineas(id, series, xmax, xlab, fmt){
+    var W=600, H=260, L=8, R=8, T=10, B=24, ymax=0, n=series[0].d.length;
+    series.forEach(function(s){ s.d.forEach(function(v){ if(v>ymax) ymax=v; }); });
+    function X(i){ return L+(W-L-R)*i/(n-1); } function Y(v){ return T+(H-T-B)*(1-v/ymax); }
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Gráfico de líneas. Pasá el dedo o el mouse para ver el monto de cada año.">';
+    for(var g=0; g<=4; g++){ var y=T+(H-T-B)*g/4; s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="#2a3140" stroke-width="1"/>'; }
+    s+='<line class="guia" x1="0" x2="0" y1="'+T+'" y2="'+(H-B)+'" stroke="#9AA1AB" stroke-width="1" stroke-dasharray="3 4"/>';
+    series.forEach(function(se){ var p=se.d.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); }).join(" ");
+      s+='<polyline points="'+p+'" fill="none" stroke="'+se.c+'" stroke-width="'+(se.w||3)+'" stroke-linejoin="round" stroke-linecap="round"'+(se.dash?' stroke-dasharray="6 6"':'')+'/>'; });
+    series.forEach(function(se){ s+='<circle class="pt" r="5" fill="'+se.c+'" stroke="#161a22" stroke-width="2"/>'; });
+    s+='<text x="'+L+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" font-family="inherit">Hoy</text><text x="'+(W-R)+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" text-anchor="end" font-family="inherit">'+xlab+'</text></svg>';
+    var caja=el(id), ley=el(id+"-l"); caja.innerHTML=s;
+    var svg=caja.querySelector("svg"), guia=svg.querySelector(".guia"), pts=svg.querySelectorAll(".pt");
+    function pintar(i){
+      var x=X(i).toFixed(1); guia.setAttribute("x1",x); guia.setAttribute("x2",x);
+      guia.style.display = i===n-1 ? "none" : "";
+      series.forEach(function(se,k){ pts[k].setAttribute("cx",x); pts[k].setAttribute("cy",Y(se.d[i]).toFixed(1)); });
+      var cuando = i===n-1 ? "Al final ("+xlab+")" : i===0 ? "Hoy" : "Año "+i;
+      ley.innerHTML='<span class="cuando">'+cuando+'</span>'+series.map(function(se){ return '<span><i style="background:'+se.c+'"></i>'+se.n+': <b>'+fmt(se.d[i])+'</b></span>'; }).join("");
+    }
+    function mover(ev){
+      var r=svg.getBoundingClientRect(); if(!r.width) return;
+      var px=(ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX)-r.left;
+      var i=Math.round((px/r.width*W-L)/(W-L-R)*(n-1)); pintar(Math.max(0, Math.min(n-1, i)));
+    }
+    svg.addEventListener("mousemove", mover);
+    svg.addEventListener("mouseleave", function(){ pintar(n-1); });
+    svg.addEventListener("touchstart", mover, {passive:true});
+    svg.addEventListener("touchmove", mover, {passive:true});
+    pintar(n-1);
+  }
+  function ahorro(mensual, anios, tasa){ var r=tasa/12, s=0, out=[0]; for(var m=1; m<=anios*12; m++){ s=s*(1+r)+mensual; if(m%12===0) out.push(s); } return out; }
+  function mill(v){ return "₡"+Math.round(v/1e6).toLocaleString("es-CR")+" M"; }
+  function usd(v){ return "$"+Math.round(v/1000).toLocaleString("es-CR")+" mil"; }
+
+  barras("g1", [ {l:"Ganar ₡1 millón", v:1, c:C.menta, t:"+1"}, {l:"Perder ₡1 millón", v:2, c:C.rojo, t:"−2"} ]);
+  barras("g2", [ {l:"Salario base", v:2.9, c:C.menta, t:"₡2,9 M"}, {l:"Gasto fijo", v:3.9, c:C.rojo, t:"₡3,9 M"}, {l:"Guardias y dispos", v:2.6, c:C.gris, t:"₡2,6 M"} ]);
+  barras("g3a", [ {l:"2021", v:3.3, c:C.nar, t:"3,3%"}, {l:"2022", v:7.9, c:C.rojo, t:"7,9%"}, {l:"2023", v:1.8, c:C.peri, t:"−1,8%"}, {l:"2024", v:0.8, c:C.nar, t:"0,8%"}, {l:"2025", v:1.2, c:C.peri, t:"−1,2%"}, {l:"2026 (a octubre)", v:0.55, c:C.nar, t:"0,6%"} ], 12.1);
+  (function(){ var a=ahorro(200000,30,0), b=ahorro(200000,30,.05), c=ahorro(200000,30,.09);
+    lineas("g3b", [ {n:"Guardados", d:a, c:C.gris, dash:true}, {n:"Al 5%", d:b, c:C.peri}, {n:"Al 9%", d:c, c:C.menta} ], 30, "30 años", mill); })();
+  barras("g4", [ {l:"Gana hoy", v:5.5, c:C.menta, t:"₡5,5 M"}, {l:"Gasta hoy", v:3.9, c:C.gris, t:"₡3,9 M"}, {l:"Pensión a los 65", v:1.9, c:C.rojo, t:"₡1,9 M"} ]);
+  (function(){ var a=ahorro(400,25,0), b=ahorro(400,25,.04), m=ahorro(400,25,.07), c=ahorro(400,25,.079);
+    lineas("g5", [ {n:"Lo que aportaste", d:a, c:C.gris, dash:true}, {n:"Con costo de 4% al año", d:b, c:C.rojo}, {n:"Con costo de 1%", d:m, c:C.peri}, {n:"Con costo de 0,1%", d:c, c:C.menta} ], 25, "25 años", usd); })();
+  barras("g5b", [ {l:"Fondo de Garantía de Depósitos (Costa Rica)", v:6, c:C.rojo, t:"₡6 M"}, {l:"FDIC (EE. UU.), $250.000", v:125, c:C.peri, t:"₡125 M"}, {l:"SIPC (EE. UU.), $500.000", v:250, c:C.menta, t:"₡250 M"} ]);
+  barras("g6a", [ {l:"Fondo índice S&P 500", v:125.8, c:C.menta, t:"+125,8%"}, {l:"Promedio de los 5 fondos de expertos", v:36.3, c:C.rojo, t:"+36%"} ]);
+  barras("g6b", [ {l:"A 1 año", v:69.6, c:C.rojo, t:"70 de 100"}, {l:"A 5 años", v:81.4, c:C.nar, t:"81 de 100"}, {l:"A 10 años", v:89, c:C.peri, t:"89 de 100"}, {l:"A 15 años", v:95.6, c:C.menta, t:"96 de 100"}, {l:"A 20 años", v:99.9, c:C.menta, t:"99,9 de 100"} ], 100);
+  // ===== Calculadora "Tu número" (misma cuenta de Tus datos: tasas reales = tasa − inflación; retiro 4%) =====
+  (function(){
+    var V={edad:35, ret:60, mes:5000, cap:0, crec:10}, FIJO={infl:3, crecret:8, retiro:4};
+    var LIM={edad:[20,69], ret:[40,80], mes:[500,50000], cap:[0,5000000], crec:[4,20]};
+    function d(v){ return "$"+Math.round(v).toLocaleString("en-US"); }
+    function corto(v){ return v>=1e6 ? "$"+(v/1e6).toFixed(v>=1e7?0:1).replace(".0","")+" M" : v>=1000 ? "$"+Math.round(v/1000)+" mil" : "$"+Math.round(v); }
+    function aporteReq(fv, pv, anualPct, meses){ if(meses<=0) return 0; var i=anualPct/100/12, f=Math.pow(1+i,meses), falta=fv-pv*f; if(falta<=0) return 0; if(Math.abs(i)<1e-12) return falta/meses; return falta*i/(f-1); }
+    function serie(){
+      var anios=V.ret-V.edad, meta=V.mes*12/(FIJO.retiro/100), ap=aporteReq(meta,V.cap,V.crec-FIJO.infl,anios*12);
+      var i=(V.crec-FIJO.infl)/100/12, g=(FIJO.crecret-FIJO.infl)/100, ed=[], sal=[], apo=[];
+      for(var y=0;y<=anios;y++){ var m=y*12, bal=V.cap*Math.pow(1+i,m)+(Math.abs(i)<1e-12?ap*m:ap*(Math.pow(1+i,m)-1)/i); ed.push(V.edad+y); sal.push(bal); apo.push(V.cap+ap*m); }
+      var b2=sal[sal.length-1], tot=V.cap+ap*anios*12;
+      for(var k=1;k<=30 && V.ret+k<=95;k++){ b2=b2*(1+g)-V.mes*12; ed.push(V.ret+k); sal.push(Math.max(0,b2)); apo.push(tot); if(b2<=0) break; }
+      return {ed:ed, sal:sal, apo:apo, meta:meta, ap:ap, anios:anios, tot:tot};
+    }
+    var S0=null;
+    function dibujar(){
+      var s=S0, W=600, H=280, L=8, R=8, T=26, B=26, n=s.ed.length, ymax=Math.max.apply(null,s.sal)*1.06;
+      function X(i){ return L+(W-L-R)*i/(n-1); } function Y(v){ return T+(H-T-B)*(1-v/ymax); }
+      var iR=s.anios, xr=X(iR).toFixed(1);
+      var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tu plata por edad: sube hasta el retiro y después la vas usando">';
+      for(var gI=0;gI<=4;gI++){ var y=T+(H-T-B)*gI/4; svg+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="#2a3140" stroke-width="1"/>'; }
+      var pts=s.sal.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); }).join(" ");
+      svg+='<polygon points="'+L+','+(H-B)+' '+pts+' '+(W-R)+','+(H-B)+'" fill="rgba(99,252,175,.14)"/>';
+      svg+='<polyline points="'+s.apo.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); }).join(" ")+'" fill="none" stroke="#9AA1AB" stroke-width="2" stroke-dasharray="6 5"/>';
+      svg+='<polyline points="'+pts+'" fill="none" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>';
+      svg+='<line x1="'+xr+'" x2="'+xr+'" y1="'+T+'" y2="'+(H-B)+'" stroke="#7C8FF7" stroke-width="2" stroke-dasharray="5 4"/>';
+      var anc=iR/(n-1)>.8?"end":iR/(n-1)<.2?"start":"middle";
+      svg+='<text x="'+xr+'" y="16" fill="#7C8FF7" font-size="13" font-weight="700" text-anchor="'+anc+'" font-family="inherit">Te retirás a los '+V.ret+'</text>';
+      svg+='<line class="guia" x1="0" x2="0" y1="'+T+'" y2="'+(H-B)+'" stroke="#9AA1AB" stroke-width="1" stroke-dasharray="3 4" style="display:none"/>';
+      svg+='<circle class="pt" r="5" fill="#63FCAF" stroke="#161a22" stroke-width="2" cx="'+xr+'" cy="'+Y(s.sal[iR]).toFixed(1)+'"/>';
+      svg+='<text x="'+L+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" font-family="inherit">'+s.ed[0]+' años</text><text x="'+(W-R)+'" y="'+(H-6)+'" fill="#9AA1AB" font-size="13" text-anchor="end" font-family="inherit">'+s.ed[n-1]+' años</text></svg>';
+      var caja=el("gv"); caja.innerHTML=svg;
+      var g=caja.querySelector("svg"), guia=g.querySelector(".guia"), pt=g.querySelector(".pt");
+      function leyenda(i){ el("gv-l").innerHTML='<span class="cuando">A los '+s.ed[i]+' años</span><span><i style="background:#63FCAF"></i>Lo que tenés: <b>'+d(s.sal[i])+'</b></span><span><i style="background:#9AA1AB"></i>Lo que aportaste: <b>'+d(s.apo[i])+'</b></span>'; }
+      function mover(ev){ var r=g.getBoundingClientRect(); if(!r.width) return;
+        var px=(ev.touches && ev.touches[0] ? ev.touches[0].clientX : ev.clientX)-r.left, i=Math.max(0,Math.min(n-1,Math.round((px/r.width*W-L)/(W-L-R)*(n-1))));
+        var x=X(i).toFixed(1); guia.style.display=""; guia.setAttribute("x1",x); guia.setAttribute("x2",x); pt.setAttribute("cx",x); pt.setAttribute("cy",Y(s.sal[i]).toFixed(1)); leyenda(i); }
+      function soltar(){ guia.style.display="none"; pt.setAttribute("cx",xr); pt.setAttribute("cy",Y(s.sal[iR]).toFixed(1)); leyenda(iR); }
+      g.addEventListener("mousemove", mover); g.addEventListener("mouseleave", soltar);
+      g.addEventListener("touchstart", mover, {passive:true}); g.addEventListener("touchmove", mover, {passive:true});
+      leyenda(iR);
+    }
+    function pintar(){
+      if(V.ret<=V.edad) V.ret=Math.min(LIM.ret[1], V.edad+1); if(V.ret<=V.edad) V.edad=V.ret-1;
+      el("c-edad").value=V.edad; el("c-ret").value=V.ret; el("c-mes").value=V.mes.toLocaleString("en-US"); el("c-cap").value=V.cap.toLocaleString("en-US"); el("c-crec").value=V.crec+"%";
+      S0=serie(); el("r-anios").textContent=S0.anios;
+      el("r-meta").textContent=d(S0.meta); el("r-ap").textContent=d(S0.ap)+"/mes"; el("r-bol").textContent=d(S0.tot);
+      el("r-frase").innerHTML = S0.ap>0
+        ? "Aportando <b>"+d(S0.ap)+" al mes</b> durante "+S0.anios+" años llegás a <b>"+corto(S0.meta)+"</b> a los "+V.ret+". De ahí en adelante retirás "+d(V.mes)+" al mes."
+        : "Con lo que ya tenés invertido llegás a tu número sin aportar más, si la plata crece a esa tasa.";
+      dibujar();
+    }
+    function fijar(k, v){ v=Math.round(v); if(isNaN(v)) v=V[k]; V[k]=Math.max(LIM[k][0], Math.min(LIM[k][1], v)); pintar(); }
+    todos("#calc .stp[data-k]", function(b){ b.addEventListener("click", function(){ var k=b.getAttribute("data-k"); fijar(k, V[k]+parseInt(b.getAttribute("data-d"),10)); track("curso_calc", k); }); });
+    [["c-edad","edad"],["c-ret","ret"],["c-mes","mes"],["c-cap","cap"],["c-crec","crec"]].forEach(function(x){ el(x[0]).addEventListener("change", function(){ fijar(x[1], parseFloat(String(this.value).replace(/[^0-9.]/g,""))); track("curso_calc", x[1]); }); });
+    pintar();
+  })();
+
+  // ===== Clips: cargan y suenan al tocar; solo uno a la vez =====
+  todos(".dvid", function(fig){
+    var v=fig.querySelector("video"), ov=fig.querySelector(".dov");
+    ov.addEventListener("click", function(){ todos(".dvid video", function(o){ if(o!==v) o.pause(); }); ov.classList.add("hidden"); v.controls=true; v.play(); track("curso_clip", fig.getAttribute("data-clip")); });
+  });
+
+  // ===== Navegación por capítulos =====
+  var CAPS=["inicio","m1","m2","m3","m4","m5","m6","m7"];
+  var NOMBRES={inicio:"Bienestar financiero", m1:"Psicología del dinero", m2:"Presupuesto", m3:"Cómo funciona el dinero", m4:"La Caja", m5:"Banderas rojas", m6:"Índices y cuenta propia", m7:"Tu plan"};
+  var CLAVE="ei_curso", vistos={};
+  try{ vistos=JSON.parse(localStorage.getItem(CLAVE)||"{}")||{}; }catch(e){ vistos={}; }
+  function mostrar(id, primera){
+    if(CAPS.indexOf(id)<0) id="inicio";
+    todos(".cap", function(s){ s.classList.toggle("on", s.id===id); });
+    var i=CAPS.indexOf(id);
+    if(i>0){ vistos[id]=1; try{ localStorage.setItem(CLAVE, JSON.stringify(vistos)); }catch(e){} }
+    todos("[data-c]", function(a){ var c=a.getAttribute("data-c"); a.classList.toggle("on", c===id); a.classList.toggle("visto", !!vistos[c]); });
+    el("where").innerHTML = i>0 ? "Capítulo "+i+" de 7 · <b>"+NOMBRES[id]+"</b>" : "<b>"+NOMBRES.inicio+"</b>";
+    el("pb").style.width = Math.round(Object.keys(vistos).length/7*100)+"%";
+    var chip=document.querySelector(".chip.on"); if(chip && chip.scrollIntoView){ try{ chip.scrollIntoView({inline:"center", block:"nearest"}); }catch(e){} }
+    todos("#"+id+" iframe[data-src]", function(f){ if(!f.getAttribute("src")){ f.addEventListener("load", function(){ ajustar(f); }); f.setAttribute("src", f.getAttribute("data-src")); } else ajustar(f); });
+    if(!primera) window.scrollTo(0,0);
+    track("curso_capitulo", id);
+  }
+  function medir(f){ try{ var d=f.contentDocument; if(d && d.body){ f.style.height="240px"; f.style.height=Math.max(240, d.documentElement.scrollHeight+4)+"px"; } }catch(e){} }
+  function ajustar(f){ medir(f); setTimeout(function(){ medir(f); }, 700); setTimeout(function(){ medir(f); }, 2600); }
+  // Secuencia del edge: cuatro vistas de /backtest con parámetros en la URL
+  (function(){
+    var base="/backtest/?embed=1&anio=1999&edad=30";
+    var PASOS=[
+      {q:"&sel=cash,qqq&inicial=10000&aporte=0", t:"<b>El índice solo.</b> $10.000 guardados contra los mismos $10.000 en el Nasdaq 100, comprando y manteniendo. Mirá las caídas de 2000 y de 2008: eso es lo que hay que aguantar."},
+      {q:"&sel=qqq,eqqq&inicial=10000&aporte=0", t:"<b>El mismo índice, con la regla.</b> Cuando la tendencia se rompe, la plata pasa a efectivo; cuando vuelve, se reentra. Fijate en lo que pasa con las caídas grandes."},
+      {q:"&sel=qqq,eqqq&inicial=10000&aporte=500", t:"<b>Con $500 al mes.</b> Así se ve un plan real: cada aporte entra con la regla trabajando. Compará cuánto se puso con cuánto hay."},
+      {q:"&mode=fp&inicial=10000&aporte=500&meta=5000", t:"<b>El plan completo.</b> Crecimiento al inicio y, conforme la plata se acerca a la meta, pasa al índice sin acelerar y después a renta fija. Meta de ejemplo: $5.000 al mes."}
+    ];
+    var fr=el("fr-edge"), cap=el("edge-cap"), btns=el("edge-btns");
+    cap.innerHTML=PASOS[0].t;
+    btns.addEventListener("click", function(e){
+      var b=e.target.closest ? e.target.closest("button") : null; if(!b) return;
+      var i=parseInt(b.getAttribute("data-i"),10);
+      todos("#edge-btns button", function(x){ x.classList.toggle("on", x===b); });
+      cap.innerHTML=PASOS[i].t; fr.setAttribute("src", base+PASOS[i].q); track("curso_edge_paso", i+1);
+    });
+  })();
+  window.addEventListener("resize", function(){ setTimeout(function(){ todos("iframe.emb[src]", ajustar); }, 250); });
+  function deHash(){ return (location.hash||"").replace("#","") || "inicio"; }
+  window.addEventListener("hashchange", function(){ mostrar(deHash(), false); });
+  mostrar(deHash(), true);
+  todos(".vid", function(a){ a.addEventListener("click", function(){ track("curso_video", a.getAttribute("href")); }); });
+  el("cta-cal").addEventListener("click", function(){ track("click_agendar", "curso"); });
+  el("cta-cal-0").addEventListener("click", function(){ track("click_agendar", "curso_calculadora"); });
+  el("cta-wa").addEventListener("click", function(){ track("pm_whatsapp_abierto", "curso"); });
+})();
+</script>
+</body>
+</html>
