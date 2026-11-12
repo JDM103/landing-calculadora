@@ -934,14 +934,24 @@ function repintarCuenta(alias){
   else if(MODO==="accion"){ if(ACC_ALIAS===alias){ irACuenta(alias); renderAccion(); } }
   else if(MODO==="ordenes") renderOrdenesGlob();
 }
-async function refrescarCuenta(alias, motivo){
+// rapido=true: la function solo pide cuenta y posiciones (lo que una orden mueve) y contesta en
+// una fracción del tiempo; aportes, TIR e YTD los recalcula la pasada completa del final.
+async function refrescarCuenta(alias, motivo, rapido){
   var c=((DATOS&&DATOS.clientes)||[]).filter(function(x){return x.alias===alias;})[0];
   if(!c || location.hash==="#demo") return;
   var n=(REFRESCO[alias]||0)+1; REFRESCO[alias]=n;
   ponRefrescoMsg('⏳ Actualizando esta cuenta en Alpaca…');
-  apiLog("req", "function 'cierre-mes' {alias} + 'ordenes' → Alpaca /v2/account · /v2/positions · /v2/orders SOLO de la cuenta "+alias+" · "+motivo, { alias:alias, sin_correo:true });
+  var cuerpo={ sin_correo:true, alias:alias }; if(rapido) cuerpo.rapido=true;
+  apiLog("req", "function 'cierre-mes' {alias"+(rapido?", rapido":"")+"} + 'ordenes' → Alpaca /v2/account · /v2/positions · /v2/orders SOLO de la cuenta "+alias+" · "+motivo, cuerpo);
   try{
-    var rr=await Promise.all([ llamar("cierre-mes",{sin_correo:true, alias:alias}), llamar("ordenes",{alias:alias}) ]);
+    // las órdenes casi siempre llegan antes que el snapshot: se pintan apenas llegan
+    var pOrd=llamar("ordenes",{alias:alias});
+    pOrd.then(function(o1){
+      if(REFRESCO[alias]!==n) return;
+      CACHE_ORD[alias]=o1; ponOrdGlob(alias, o1.abiertas);
+      if(MODO==="accion" && ACC_ALIAS===alias) cargarOrdenes(c); else if(MODO==="ordenes") renderOrdenesGlob();
+    }).catch(function(){ /* el error se reporta abajo, en el Promise.all */ });
+    var rr=await Promise.all([ llamar("cierre-mes",cuerpo), pOrd ]);
     if(REFRESCO[alias]!==n) return;   // ya corrió una pasada más nueva
     var r=rr[0], ord=rr[1], snap=r.snap;
     if(r.resultados && r.resultados[alias] && r.resultados[alias]!=="ok") throw new Error(r.resultados[alias]);
@@ -969,11 +979,31 @@ async function refrescarCuenta(alias, motivo){
     ponRefrescoMsg('⚠️ No se pudo actualizar la cuenta ('+escapa(String(e.message||e))+'). Dale a <b>Actualizar datos</b> arriba.');
   }
 }
-// Pasada 1 al segundo (Alpaca ya suele tener la ejecución) y pasada 2 a los 7 s (por si la
-// ejecución o la cancelación se confirmaron un poco después).
-function refrescarTrasAccion(c, motivo){
-  setTimeout(function(){ refrescarCuenta(c.alias, motivo); }, 1000);
-  setTimeout(function(){ refrescarCuenta(c.alias, motivo+" · segunda pasada"); }, 7000);
+// Orden cruda de Alpaca -> la forma que usa el panel (igual que `mapear` en la function `ordenes`).
+function ordenDeAlpaca(o){
+  return { id:o.id, fecha:String(o.filled_at||o.submitted_at||o.created_at||"").slice(0,16).replace("T"," "),
+    sym:o.symbol, lado:o.side, qty:parseFloat(o.filled_qty||"0")||parseFloat(o.qty||"0")||null,
+    notional:o.notional? parseFloat(o.notional):null, px:parseFloat(o.filled_avg_price||"0")||null,
+    lim:o.limit_price? parseFloat(o.limit_price):null, stop:o.stop_price? parseFloat(o.stop_price):null,
+    tif:o.time_in_force||null, tipo:o.type, estado:o.status };
+}
+// Lo que Alpaca ya contestó se pinta EN EL ACTO, sin esperar otra consulta: la orden nueva
+// aparece entre las abiertas y la cancelada o reemplazada se quita.
+function pintarYa(c, nueva, quitarId){
+  var co=CACHE_ORD[c.alias]; if(!co) return;
+  var ab=(co.abiertas||[]).filter(function(x){ return x.id!==quitarId && !(nueva && x.id===nueva.id); });
+  if(nueva && nueva.id && nueva.symbol) ab.unshift(ordenDeAlpaca(nueva));
+  co.abiertas=ab; ponOrdGlob(c.alias, ab);
+  if(MODO==="accion" && ACC_ALIAS===c.alias) cargarOrdenes(c);
+  else if(MODO==="ordenes") renderOrdenesGlob();
+}
+// Tres pasadas: dos rápidas (apenas Alpaca contesta y a los 2,5 s, cuando la ejecución ya suele
+// estar) y una completa a los 7 s que además recalcula aportes, TIR e YTD.
+function refrescarTrasAccion(c, motivo, nueva, quitarId){
+  pintarYa(c, nueva, quitarId);
+  setTimeout(function(){ refrescarCuenta(c.alias, motivo, true); }, 250);
+  setTimeout(function(){ refrescarCuenta(c.alias, motivo+" · segunda pasada", true); }, 2500);
+  setTimeout(function(){ refrescarCuenta(c.alias, motivo+" · pasada completa"); }, 7000);
 }
 
 /* ================= MODO ACCIÓN: llevar cada cuenta a lo establecido ================= */
@@ -1386,7 +1416,7 @@ function abrirConfirmCancelar(c, o){
       $("mo-cuerpo").innerHTML='<div class="enplan" style="margin-bottom:10px">🟢 <b>Orden cancelada en Alpaca.</b> '
         +'Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>'
         +'<div class="sub" id="mo-refresco"></div>';
-      refrescarTrasAccion(c, "tras cancelar "+o.sym);
+      refrescarTrasAccion(c, "tras cancelar "+o.sym, null, o.id);
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
     })
@@ -1839,7 +1869,7 @@ function abrirConfirmOrden(c, p){
         +'<br>Confirmada con tu clave de firma; quedó en la bitácora permanente de la base.</div>'
         +'<div class="sub">La respuesta cruda completa está en la terminal.</div>'
         +'<div class="sub" id="mo-refresco" style="margin-top:6px"></div>';
-      refrescarTrasAccion(c, (reempl? "tras reemplazar ":"tras enviar ")+(B.lado==="buy"?"compra ":"venta ")+B.sym);
+      refrescarTrasAccion(c, (reempl? "tras reemplazar ":"tras enviar ")+(B.lado==="buy"?"compra ":"venta ")+B.sym, o, reempl);
       $("mo-pie").innerHTML='<button class="no" id="mo-cerrar2">Listo</button>';
       $("mo-cerrar2").addEventListener("click", cerrarOrden);
     })
@@ -2118,8 +2148,9 @@ async function cargar(){
     if(mCli && (DATOS.clientes||[]).some(function(x){ return x.alias===mCli[1]; })) SELECC=mCli[1];
     renderLista(); renderDet();
     if(mCli && SELECC===mCli[1]){ var dd=$("det"); if(dd) dd.scrollIntoView({behavior:"smooth", block:"start"}); }
-    if(MODO==="accion") renderAccion();
-    cargarVivo().then(function(){ if(MODO==="accion" && DATOS) renderAccion(); });
+    // Modo acción: seguís en la MISMA persona aunque los datos nuevos cambien el orden o el filtro
+    if(MODO==="accion"){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); }
+    cargarVivo().then(function(){ if(MODO==="accion" && DATOS){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); } });
     cargarInbox();
     if(!ORD_GLOB) escanearOrdenes(true);   // llena la columna Órd. en segundo plano
   }catch(e){
@@ -2186,7 +2217,7 @@ $("refrescar").addEventListener("click", async function(){
   try{ var r=await llamar("cierre-mes",{sin_correo:true});
     var mal=Object.keys(r.resultados).filter(function(k){return r.resultados[k]!=="ok";});
     $("estado").textContent="Actualizado ("+r.mes+"): "+(Object.keys(r.resultados).length-mal.length)+" ok"+(mal.length?" · con error: "+mal.join(", "):"");
-    CACHE_HIST={};
+    CACHE_HIST={}; CACHE_ORD={};
     cargar();
   }catch(e){ $("estado").textContent="Error: "+(e.message||e); }
 });
