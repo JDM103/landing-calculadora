@@ -142,6 +142,7 @@
   .bloques > div{ display:grid; grid-template-columns:34px 1fr; gap:12px; background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; font-size:15.5px; }
   .bloques .bn{ width:34px; height:34px; border-radius:50%; border:2px solid var(--menta); color:var(--menta); font-weight:800; display:flex; align-items:center; justify-content:center; }
   .bloques .bp{ display:block; font-size:12.5px; color:var(--gris-sec); margin-top:6px; line-height:1.4; }
+  .enm{ display:block; margin-top:6px; } .enm b{ color:var(--menta); }
   .pasos{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px; } .pasos .chip{ cursor:pointer; font-family:inherit; }
   .pcap{ font-size:14.5px; color:var(--gris); margin:0 0 10px; min-height:3em; } .pcap b{ color:var(--crema); }
   .calc{ background:var(--card); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:14px; margin:16px 0 22px; }
@@ -313,16 +314,18 @@
   <p>Daniel Kahneman ganó el Nobel por demostrar esto. Explica por qué tanta plata se queda quieta "por seguridad" en un certificado mientras la inflación se la come, y por qué la gente vende justo cuando el mercado cae. A Newton le pasó el sesgo vecino: el dolor de ver a otros ganar.</p>
 
   <h2>El guión que heredaste</h2>
-  <p>Antes de los doce años ya habías oído cien veces las frases de tu casa: "la plata en el banco está segura", "la bolsa es un casino", "de plata no se habla en la mesa". Hoy ejecutás ese guión con un ingreso varias veces mayor al de tus papás.</p>
-  <p>Y el gremio suma lo suyo. Los médicos casi no hablan de plata entre ellos, por pena o por miedo a parecer presumidos. El que no habla de plata no aprende de plata.</p>
+  <p>Lo primero que aprendiste de plata no salió de un libro. Fueron las frases de tu casa, oídas cien veces antes de los doce años: "la plata en el banco está segura", "la bolsa es un casino", "de plata no se habla en la mesa".</p>
+  <p>Hoy ganás varias veces lo que ganaban tus papás y seguís decidiendo con esas mismas frases.</p>
+  <p>El gremio no ayuda. Entre médicos casi no se habla de plata, por pena o por miedo a parecer presumido, así que nadie le corrige el guión a nadie.</p>
 
-  <h2>Tres sesgos que trae la bata</h2>
-  <ul class="l">
-    <li><b>Exceso de confianza.</b> No operarías sin imágenes, pero metiste plata en el negocio de un colega sin leer el contrato.</li>
-    <li><b>Recencia</b> (tendencia a recordar más fácilmente lo más reciente). Si la bolsa cayó el mes pasado, parece que va a caer siempre.</li>
-    <li><b>Anclaje.</b> "Mi papá siempre dijo que…" sigue decidiendo veinte años después.</li>
-  </ul>
-  <p>Ninguno se cura. Se manejan como un factor de riesgo: sabiendo que están ahí y poniendo reglas antes de que aparezcan.</p>
+  <h2>Tres trampas de la mente</h2>
+  <p>No son cosa de médicos. Las tiene todo el mundo, están medidas en estudios y a todos nos cuestan plata.</p>
+  <div class="bloques">
+    <div><span class="bn">1</span><span><b>Exceso de confianza.</b> Creer que uno sabe más de lo que sabe.<span class="enm"><b>Con la plata:</b> comprar y vender seguido porque "esta vez sí la veo clara". Un estudio siguió las cuentas de más de 66.000 hogares en Estados Unidos: los que más compraban y vendían ganaron 11,4% al año, cuando el mercado dio 17,9%.</span></span></div>
+    <div><span class="bn">2</span><span><b>Recencia.</b> Darle más peso a lo último que pasó que a toda la historia.<span class="enm"><b>Con la plata:</b> si la bolsa cayó el mes pasado, parece que va a caer siempre; si lleva un año subiendo, parece que no puede bajar. Así es como la gente termina comprando caro y vendiendo barato.</span></span></div>
+    <div><span class="bn">3</span><span><b>Anclaje.</b> Aferrarse al primer número que uno oyó, aunque ya no aplique.<span class="enm"><b>Con la plata:</b> "la compré a 100, no vendo hasta que vuelva a 100". O el consejo de la casa, que sigue decidiendo veinte años después, con otro ingreso y en otra época.</span></span></div>
+  </div>
+  <p>Ninguna se cura, y saber que existen no te libra de ellas. Se manejan como un factor de riesgo: con reglas puestas antes de que aparezcan.</p>
 
   <div class="verk">Para ver</div>
   <div class="ver">
@@ -333,7 +336,7 @@
   <div class="caso"><div class="k">La Dra. Ana</div><p>Su papá decía que "la plata en el banco está segura y lo demás es casino". En 2019 metió ₡28 millones en certificados a plazo "mientras decidía qué hacer con ellos". Siete años después siguen ahí: cada vez que vencen, los renueva.</p></div>
   <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Escribí las tres frases sobre plata que más oíste en tu casa. Marcá la que hoy sigue tomando decisiones por vos.</p></div>
 
-  <p class="paper"><b>Sustento.</b> Kahneman y Tversky, <i>Prospect Theory</i>, Econometrica, 1979. La historia de Ronald Read abre <i>The Psychology of Money</i> de Morgan Housel (2020) y fue reportada por The Wall Street Journal y CNBC en 2015.</p>
+  <p class="paper"><b>Sustento.</b> Kahneman y Tversky, <i>Prospect Theory</i>, Econometrica, 1979. Barber y Odean, <i>Trading Is Hazardous to Your Wealth</i>, Journal of Finance, 2000, para el dato de los 66.000 hogares. La historia de Ronald Read abre <i>The Psychology of Money</i> de Morgan Housel (2020) y fue reportada por The Wall Street Journal y CNBC en 2015.</p>
   <div class="nav"><a class="btn ghost" href="#inicio">← Inicio</a><a class="btn" href="#m2">Capítulo 2 →</a></div>
 </section>
 
