@@ -64,17 +64,32 @@
   .frase{ font-size:19px; color:var(--crema); font-weight:600; line-height:1.4; border-left:3px solid var(--menta); padding:2px 0 2px 14px; margin:0 0 22px; }
   ul.l{ margin:0 0 14px; padding-left:20px; } ul.l li{ margin-bottom:6px; }
 
-  /* esquema del inicio */
-  .ruta{ display:grid; gap:0; margin:18px 0 8px; }
-  .ruta a{ display:grid; grid-template-columns:44px 1fr; gap:12px; text-decoration:none; color:var(--gris); padding:0 0 18px; position:relative; }
-  .ruta a::before{ content:""; position:absolute; left:21px; top:44px; bottom:0; width:2px; background:var(--bd); }
-  .ruta a:last-child::before{ display:none; } .ruta a:last-child{ padding-bottom:0; }
-  .ruta .n{ width:44px; height:44px; border-radius:50%; background:var(--card2); border:2px solid var(--menta); color:var(--menta); font-weight:800; font-size:19px; display:flex; align-items:center; justify-content:center; }
-  .ruta a:hover .n{ background:var(--menta); color:var(--tinta); }
-  .ruta .t{ font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--peri); }
-  .ruta b{ display:block; color:var(--crema); font-size:18px; line-height:1.25; }
-  .ruta .q{ display:block; font-size:14.5px; color:var(--gris-sec); line-height:1.4; margin-top:2px; }
-  .ruta .q i{ color:var(--gris); font-style:normal; }
+  /* portada visual */
+  .mapa{ display:grid; grid-template-columns:1fr; gap:12px; margin:14px 0 18px; }
+  .tj{ display:grid; grid-template-columns:118px 1fr; background:var(--card); border:1px solid var(--bd); border-radius:16px; overflow:hidden; text-decoration:none; color:var(--gris); transition:border-color .15s, transform .15s; }
+  .tj:hover{ border-color:var(--menta); transform:translateY(-2px); }
+  .tj .il{ position:relative; background:radial-gradient(circle at 50% 40%, #242c3b, #131720); display:flex; align-items:center; justify-content:center; padding:10px 8px; }
+  .tj .il svg{ width:100%; height:auto; display:block; }
+  .tj .n{ position:absolute; left:8px; top:8px; width:26px; height:26px; border-radius:50%; background:var(--menta); color:var(--tinta); font-weight:800; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .tj .tx{ padding:12px 14px; min-width:0; align-self:center; }
+  .tj .t{ display:block; font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--peri); }
+  .tj b{ display:block; color:var(--crema); font-size:18px; line-height:1.25; }
+  .tj .q{ display:block; font-size:14px; color:var(--gris-sec); line-height:1.4; margin-top:3px; }
+  .tj .trazo{ stroke-dasharray:1; stroke-dashoffset:1; animation:trazo 2.6s ease .2s forwards; }
+  @keyframes trazo{ to{ stroke-dashoffset:0; } }
+  @media (min-width:600px){
+    .mapa{ grid-template-columns:1fr 1fr; gap:14px; }
+    .tj{ grid-template-columns:1fr; }
+    .tj .il{ padding:14px 40px; }
+    .tj .n{ left:12px; top:12px; width:30px; height:30px; font-size:16px; }
+    .tj .tx{ align-self:start; padding:12px 16px 16px; }
+    .tj:last-child{ grid-column:1/-1; grid-template-columns:1fr 1fr; } .tj:last-child .tx{ align-self:center; }
+  }
+  .hero{ background:radial-gradient(circle at 50% 40%, #242c3b, #131720); border:1px solid var(--bd); border-radius:16px; padding:18px 16px; margin:0 0 18px; }
+  .hero svg{ display:block; width:100%; max-width:340px; height:auto; margin:0 auto; }
+  .hero .trazo{ stroke-dasharray:1; stroke-dashoffset:1; animation:trazo 2.6s ease .2s forwards; }
+  @media (prefers-reduced-motion:reduce){ .hero .trazo{ animation:none; stroke-dashoffset:0; } }
+  @media (prefers-reduced-motion:reduce){ .tj{ transition:none; } .tj .trazo{ animation:none; stroke-dashoffset:0; } }
   .hilo{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:14px 16px; font-size:15.5px; margin:0 0 6px; }
 
   /* historia real */
@@ -91,6 +106,34 @@
   .hb .r{ display:grid; grid-template-columns:minmax(92px,34%) 1fr; gap:10px; align-items:center; font-size:13.5px; }
   .hb .lb{ color:var(--gris); line-height:1.25; } .hb .tr{ display:flex; align-items:center; gap:8px; min-width:0; }
   .hb .b{ height:22px; border-radius:5px; min-width:3px; flex:none; } .hb .v{ font-weight:800; color:var(--crema); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .pie{ display:grid; grid-template-columns:minmax(130px,190px) 1fr; gap:18px; align-items:center; }
+  .pie svg{ width:100%; height:auto; display:block; }
+  .pie .pl{ display:grid; gap:10px; }
+  .pie .pl > div{ display:grid; grid-template-columns:12px 52px 1fr; gap:8px; align-items:baseline; font-size:14px; line-height:1.35; color:var(--gris-sec); }
+  .pie .pl i{ width:12px; height:12px; border-radius:3px; align-self:center; }
+  .pie .pl b{ font-size:22px; font-weight:800; color:var(--crema); font-variant-numeric:tabular-nums; }
+  .pie .pl strong{ display:block; color:var(--crema); font-size:15.5px; }
+  @media (max-width:480px){ .pie{ grid-template-columns:1fr; } .pie svg{ max-width:200px; margin:0 auto; } }
+  .pie .pl em{ font-style:normal; color:var(--menta); font-variant-numeric:tabular-nums; white-space:nowrap; margin-left:4px; }
+  .pin{ margin:0 0 14px; max-width:340px; }
+  .band{ width:45px; height:30px; vertical-align:-7px; margin-right:10px; border-radius:3px; box-shadow:0 0 0 1px var(--bd); }
+  .cien-w{ display:grid; grid-template-columns:minmax(150px,220px) 1fr; gap:18px; align-items:center; }
+  .cien{ display:grid; grid-template-columns:repeat(10,1fr); gap:3px; }
+  .cien i{ aspect-ratio:1; border-radius:3px; background:var(--rojo); opacity:.85; }
+  .cien i.v{ background:var(--menta); opacity:1; box-shadow:0 0 0 2px rgba(99,252,175,.35); }
+  .cien-t{ display:grid; gap:10px; }
+  .ct{ border-left:3px solid var(--bd); padding-left:10px; font-size:14px; line-height:1.35; color:var(--gris-sec); }
+  .ct b{ display:block; font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .ct.r{ border-color:var(--rojo); } .ct.r b{ color:var(--rojo); }
+  .ct.v{ border-color:var(--menta); } .ct.v b{ color:var(--menta); }
+  .ct.n{ border-color:var(--naranja); } .ct.n b{ color:var(--naranja); }
+  @media (max-width:480px){ .cien-w{ grid-template-columns:1fr; } .cien{ max-width:220px; margin:0 auto; } }
+  .puerta form{ background:var(--card); border:1px solid rgba(99,252,175,.4); border-radius:16px; padding:16px; margin:18px 0 10px; display:grid; gap:10px; }
+  .puerta label{ font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--gris-sec); }
+  .puerta input{ width:100%; background:#10141b; border:1px solid var(--bd); border-radius:10px; color:var(--crema); font-family:inherit; font-size:17px; padding:12px 13px; }
+  .puerta input:focus{ outline:none; border-color:var(--menta); }
+  .puerta .err{ display:none; color:var(--rojo); font-size:14px; margin:0; }
+  .puerta .volver{ display:inline-block; margin-top:6px; font-size:14.5px; color:var(--gris-sec); }
   iframe.emb{ width:100%; height:340px; border:0; display:block; background:transparent; }
   .bloques{ display:grid; gap:10px; margin:14px 0 6px; }
   .bloques > div{ display:grid; grid-template-columns:34px 1fr; gap:12px; background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:12px 14px; font-size:15.5px; }
@@ -212,17 +255,16 @@
   <p class="frase">Estudiaste quince años para ganar bien y nadie te dio una sola clase sobre qué hacer con lo que ganás. Esto es esa clase.</p>
 
   <h2 style="margin-top:8px">El curso en un vistazo</h2>
-  <p class="hilo">Siete pasos, en este orden por una razón: primero <b>tu cabeza</b>, porque decide todo lo demás. Después <b>ordenar</b> lo que entra y sale. Después <b>entender</b> cómo funciona la plata. Después <b>tu realidad</b> en la Caja. Después <b>defenderte</b> de lo que te venden. Después <b>invertir</b>. Y al final, <b>tu plan</b>.</p>
-
-  <div class="ruta">
-    <a href="#m1"><span class="n">1</span><span><span class="t">Tu cabeza</span><b>Psicología del dinero</b><span class="q">¿Por qué gente brillante toma malas decisiones con plata? <i>Newton perdió una fortuna; un conserje dejó $8 millones.</i></span></span></a>
-    <a href="#m2"><span class="n">2</span><span><span class="t">Orden</span><b>Presupuesto</b><span class="q">¿Por qué gano bien y no veo nada? <i>Tres decisiones, cero hojas de Excel.</i></span></span></a>
-    <a href="#m3"><span class="n">3</span><span><span class="t">Entender</span><b>Cómo funciona el dinero</b><span class="q">¿Qué son la inflación, las tasas, los bancos y la bolsa? <i>El día que un banco de $200 mil millones cayó en 48 horas.</i></span></span></a>
-    <a href="#m4"><span class="n">4</span><span><span class="t">Tu realidad</span><b>La Caja</b><span class="q">¿Cuánto me va a pagar la pensión? <i>Menos de lo que creés, y hay un número exacto.</i></span></span></a>
-    <a href="#m5"><span class="n">5</span><span><span class="t">Defensa</span><b>Banderas rojas</b><span class="q">¿Cómo reconozco un mal producto? <i>El Ponzi más grande de la historia, y por qué "está regulado" no alcanza.</i></span></span></a>
-    <a href="#m6"><span class="n">6</span><span><span class="t">Invertir</span><b>Índices y cuenta propia</b><span class="q">¿En qué se invierte y dónde queda la plata? <i>La apuesta de un millón de dólares que ganó Warren Buffett.</i></span></span></a>
-    <a href="#m7"><span class="n">7</span><span><span class="t">Decidir</span><b>Tu plan</b><span class="q">¿Cuánto necesito y cuánto aporto? <i>Tu número, tu dosis y lo que cuesta esperar cinco años.</i></span></span></a>
+  <div class="mapa">
+    <a class="tj" href="#m1"><span class="il"><span class="n">1</span><svg viewBox="0 0 160 100" aria-hidden="true"><g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path stroke="#7C8FF7" fill="rgba(124,143,247,.12)" d="M77 18 C62 10 46 18 44 31 C33 35 29 50 37 59 C33 72 46 84 59 80 C66 88 77 85 77 76 Z"/><path stroke="#63FCAF" fill="rgba(99,252,175,.12)" d="M83 18 C98 10 114 18 116 31 C127 35 131 50 123 59 C127 72 114 84 101 80 C94 88 83 85 83 76 Z"/><path stroke="#7C8FF7" opacity=".75" d="M58 30 C64 34 64 42 57 46 M48 56 C56 54 62 58 62 66 M77 40 C70 42 68 50 72 54"/><path stroke="#63FCAF" opacity=".75" d="M102 30 C96 34 96 42 103 46 M112 56 C104 54 98 58 98 66 M83 40 C90 42 92 50 88 54"/></g><circle cx="137" cy="22" r="11" fill="#F2A54A"/><text x="137" y="27" text-anchor="middle" font-size="14" font-weight="800" fill="#0d0f14" font-family="inherit">$</text><circle cx="24" cy="76" r="8" fill="#F2A54A" opacity=".7"/><text x="24" y="80" text-anchor="middle" font-size="10" font-weight="800" fill="#0d0f14" font-family="inherit">₡</text></svg></span><span class="tx"><span class="t">Tu cabeza</span><b>Psicología del dinero</b><span class="q">¿Por qué gente brillante toma malas decisiones con plata?</span></span></a>
+    <a class="tj" href="#m2"><span class="il"><span class="n">2</span><svg viewBox="0 0 160 100" aria-hidden="true"><g transform="rotate(-90 80 50)" fill="none" stroke-width="17"><circle cx="80" cy="50" r="30" stroke="#7C8FF7" stroke-dasharray="92.7 95.8" stroke-dashoffset="-0.8"/><circle cx="80" cy="50" r="30" stroke="#F2A54A" stroke-dasharray="55 133.5" stroke-dashoffset="-95"/><circle cx="80" cy="50" r="30" stroke="#63FCAF" stroke-dasharray="36.1 152.4" stroke-dashoffset="-151.6"/></g><g font-size="13" font-weight="800" font-family="inherit"><text x="128" y="55" fill="#7C8FF7">50</text><text x="16" y="82" fill="#F2A54A">30</text><text x="20" y="24" fill="#63FCAF">20</text></g></svg></span><span class="tx"><span class="t">Orden</span><b>Presupuesto</b><span class="q">¿Por qué gano bien y no veo nada? Tres decisiones, cero hojas de Excel.</span></span></a>
+    <a class="tj" href="#m3"><span class="il"><span class="n">3</span><svg viewBox="0 0 160 100" aria-hidden="true"><path id="fl-a" d="M44 40 Q80 2 116 40" fill="none" stroke="#3a4356" stroke-width="2" stroke-dasharray="3 4"/><path id="fl-b" d="M116 60 Q80 98 44 60" fill="none" stroke="#3a4356" stroke-width="2" stroke-dasharray="3 4"/><circle cx="28" cy="50" r="16" fill="#1c212b" stroke="#7C8FF7" stroke-width="3"/><circle cx="28" cy="45" r="4.5" fill="#7C8FF7"/><path d="M19 58 C20 50 36 50 37 58" fill="#7C8FF7"/><circle cx="132" cy="50" r="16" fill="#1c212b" stroke="#63FCAF" stroke-width="3"/><path d="M122 46 L132 39 L142 46 Z" fill="#63FCAF"/><path d="M125 48 v9 M132 48 v9 M139 48 v9 M122 59 h20" stroke="#63FCAF" stroke-width="2.4" fill="none"/><g><circle cx="80" cy="50" r="10" fill="none" stroke="#9AA1AB" stroke-width="5" stroke-dasharray="4.2 3.65"/><animateTransform attributeName="transform" type="rotate" from="0 80 50" to="360 80 50" dur="9s" repeatCount="indefinite"/></g><circle cx="80" cy="50" r="7.5" fill="#1c212b" stroke="#9AA1AB" stroke-width="2"/><text x="80" y="54" text-anchor="middle" font-size="10" font-weight="800" fill="#FEF9F3" font-family="inherit">$</text><g fill="#F2A54A"><circle r="5"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle><circle r="5"><animateMotion dur="3.2s" begin="-1.07s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle><circle r="5"><animateMotion dur="3.2s" begin="-2.13s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle></g><g fill="#63FCAF"><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-.5s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-1.57s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-2.63s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect></g></svg></span><span class="tx"><span class="t">Entender</span><b>Cómo funciona el dinero</b><span class="q">Inflación, tasas, bancos y bolsa: la máquina completa.</span></span></a>
+    <a class="tj" href="#m4"><span class="il"><span class="n">4</span><svg viewBox="0 0 160 100" aria-hidden="true"><defs><pattern id="vent" width="8" height="8" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="4.5" height="4" fill="#7C8FF7" opacity=".75"/></pattern></defs><rect x="26" y="52" width="32" height="38" fill="#1c212b" stroke="#5b6474" stroke-width="1.5"/><rect x="28" y="54" width="28" height="32" fill="url(#vent)"/><rect x="104" y="42" width="32" height="48" fill="#1c212b" stroke="#5b6474" stroke-width="1.5"/><rect x="106" y="44" width="28" height="40" fill="url(#vent)"/><rect x="56" y="16" width="48" height="74" fill="#232a38" stroke="#9AA1AB" stroke-width="1.5"/><rect x="60" y="20" width="40" height="56" fill="url(#vent)"/><rect x="64" y="6" width="32" height="10" rx="2" fill="#63FCAF"/><text x="80" y="14" text-anchor="middle" font-size="8" font-weight="800" fill="#0d0f14" font-family="inherit">CCSS</text><g fill="#F2A54A"><rect x="70" y="30" width="4.5" height="4"/><rect x="86" y="46" width="4.5" height="4"/><rect x="62" y="62" width="4.5" height="4"/><rect x="118" y="62" width="4.5" height="4"/><rect x="38" y="64" width="4.5" height="4"/></g><rect x="74" y="78" width="12" height="12" fill="#0d0f14" stroke="#9AA1AB" stroke-width="1"/><path d="M12 90 H148" stroke="#5b6474" stroke-width="2" stroke-linecap="round"/></svg></span><span class="tx"><span class="t">Tu realidad</span><b>La Caja</b><span class="q">¿Cuánto me va a pagar la pensión? Hay un número exacto.</span></span></a>
+    <a class="tj" href="#m5"><span class="il"><span class="n">5</span><svg viewBox="0 0 160 100" aria-hidden="true"><g stroke="#9AA1AB" stroke-width="3" stroke-linecap="round"><path d="M34 30 V90"/><path d="M76 14 V90"/><path d="M118 34 V90"/></g><path d="M35 30 C44 24 50 36 60 30 V48 C50 54 44 42 35 48 Z" fill="#E0525A" opacity=".8"/><path d="M77 14 C89 6 97 22 110 14 V38 C97 46 89 30 77 38 Z" fill="#E0525A"/><path d="M119 34 C127 29 132 39 141 34 V50 C132 55 127 45 119 50 Z" fill="#E0525A" opacity=".65"/><path d="M14 90 H146" stroke="#5b6474" stroke-width="2" stroke-linecap="round"/></svg></span><span class="tx"><span class="t">Defensa</span><b>Banderas rojas</b><span class="q">¿Cómo reconozco un mal producto antes de firmar?</span></span></a>
+    <a class="tj" href="#m6"><span class="il"><span class="n">6</span><svg viewBox="0 0 160 100" aria-hidden="true"><g stroke="#2a3140" stroke-width="1"><path d="M12 30 H150 M12 50 H150 M12 70 H150"/></g><path d="M12 8 V90 H150" fill="none" stroke="#5b6474" stroke-width="1.5"/><polygon points="12,82 30,74 46,78 62,60 78,64 96,44 112,48 130,26 148,14 148,90 12,90" fill="rgba(99,252,175,.13)"/><polyline class="trazo" pathLength="1" points="12,84 30,78 46,80 62,68 78,70 96,58 112,60 130,46 148,38" fill="none" stroke="#7C8FF7" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline class="trazo" pathLength="1" points="12,82 30,74 46,78 62,60 78,64 96,44 112,48 130,26 148,14" fill="none" stroke="#63FCAF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><g font-size="9" font-weight="800" font-family="inherit"><text x="118" y="14" text-anchor="end" fill="#63FCAF">Nasdaq 100</text><text x="148" y="80" text-anchor="end" fill="#7C8FF7">S&amp;P 500</text></g></svg></span><span class="tx"><span class="t">Invertir</span><b>Índices y cuenta propia</b><span class="q">¿En qué se invierte y dónde queda la plata?</span></span></a>
+    <a class="tj" href="#m7"><span class="il"><span class="n">7</span><svg viewBox="0 0 160 100" aria-hidden="true"><defs><clipPath id="playa"><rect width="160" height="100" rx="12"/></clipPath></defs><g clip-path="url(#playa)"><rect width="160" height="100" fill="#1a2233"/><circle cx="110" cy="44" r="18" fill="#F2A54A"/><rect x="0" y="56" width="160" height="22" fill="#3d4fb8"/><path d="M0 60 q10 -5 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#7C8FF7" stroke-width="2"/><path d="M96 66 h28 M102 72 h16" stroke="#F2A54A" stroke-width="2" stroke-linecap="round" opacity=".8"/><path d="M0 78 C40 70 110 74 160 82 V100 H0 Z" fill="#c9a36a"/><path d="M40 88 C40 68 44 52 52 38" fill="none" stroke="#8a6238" stroke-width="5" stroke-linecap="round"/><g fill="none" stroke="#63FCAF" stroke-width="4.5" stroke-linecap="round"><path d="M52 38 C40 28 28 30 20 38"/><path d="M52 38 C44 22 32 16 22 18"/><path d="M52 38 C56 22 68 16 80 20"/><path d="M52 38 C64 30 76 32 84 42"/><path d="M52 38 C52 26 56 18 62 12"/></g><path d="M118 84 L132 62 M118 62 C126 56 138 56 146 62 Z" stroke="#FEF9F3" stroke-width="2" fill="#E0525A" stroke-linejoin="round"/></g></svg></span><span class="tx"><span class="t">Decidir</span><b>Tu plan</b><span class="q">¿Cuánto necesito y cuánto aporto? Tu número, con tus datos.</span></span></a>
   </div>
+  <p class="hilo">Siete pasos, en este orden por una razón: primero <b>tu cabeza</b>, porque decide todo lo demás. Después <b>ordenar</b> lo que entra y sale. Después <b>entender</b> cómo funciona la plata. Después <b>tu realidad</b> en la Caja. Después <b>defenderte</b> de lo que te venden. Después <b>invertir</b>. Y al final, <b>tu plan</b>.</p>
 
   <h2>Cómo está hecho cada capítulo</h2>
   <ul class="l">
@@ -319,6 +361,30 @@
   <h2>Decisión 2: pagarte primero</h2>
   <p>Lo que sobra a fin de mes nunca se invierte, porque nunca sobra. Funciona al revés: el aporte sale el día que entra la plata, de forma automática, y se vive con el resto.</p>
   <p>Un punto de partida simple es 50/30/20: la mitad para necesidades, 30% para gustos y 20% para tu futuro. Para un médico de la Caja ese 20% puede ser incluso lo que se gana de dispos y/o guardias.</p>
+  <figure class="g">
+    <div class="gt">Cómo se reparte cada colón que entra</div>
+    <div class="field pin">
+      <label for="p-ing">Tu ingreso aproximado al mes, en colones</label>
+      <div class="row"><span class="big" style="flex:none">₡</span><input type="text" id="p-ing" inputmode="numeric" autocomplete="off" value="4.000.000"></div>
+    </div>
+    <div class="pie">
+      <svg viewBox="0 0 42 42" role="img" aria-label="Gráfico circular: 50% necesidades, 30% gustos, 20% tu futuro">
+        <g transform="rotate(-90 21 21)" fill="none" stroke-width="8">
+          <circle cx="21" cy="21" r="15.915" stroke="#7C8FF7" stroke-dasharray="49.4 50.6" stroke-dashoffset="-0.3"/>
+          <circle cx="21" cy="21" r="15.915" stroke="#F2A54A" stroke-dasharray="29.4 70.6" stroke-dashoffset="-50.3"/>
+          <circle cx="21" cy="21" r="15.915" stroke="#63FCAF" stroke-dasharray="19.4 80.6" stroke-dashoffset="-80.3"/>
+        </g>
+        <text x="21" y="20.2" text-anchor="middle" fill="#9AA1AB" font-size="2.6" font-weight="700" font-family="inherit">TU INGRESO</text>
+        <text x="21" y="24.6" text-anchor="middle" fill="#FEF9F3" font-size="4.4" font-weight="800" font-family="inherit">100%</text>
+      </svg>
+      <div class="pl">
+        <div><i style="background:#7C8FF7"></i><b>50%</b><span><strong>Necesidades <em id="p-nec"></em></strong>Casa, comida, carro, colegio, seguros y deudas.</span></div>
+        <div><i style="background:#F2A54A"></i><b>30%</b><span><strong>Gustos <em id="p-gus"></em></strong>Viajes, restaurantes, lo que te da la gana.</span></div>
+        <div><i style="background:#63FCAF"></i><b>20%</b><span><strong>Tu futuro <em id="p-fut"></em></strong>Reserva primero, después inversión. Sale el mismo día que entra la plata.</span></div>
+      </div>
+    </div>
+    <figcaption>Poné tu ingreso arriba y los montos se calculan solos. Si tu ingreso cambia de un mes a otro porque trabajás en privada, usá el promedio de los últimos seis meses.</figcaption>
+  </figure>
 
   <h2>Decisión 3: la reserva y el triage de deudas</h2>
   <p>Antes de invertir hace falta una reserva de tres a seis meses de gasto fijo, en una cuenta aparte y aburrida. Sirve para que una emergencia no te obligue a vender inversiones en mal momento.</p>
@@ -327,6 +393,17 @@
     <li><b>Lo que estabiliza:</b> la reserva, y un seguro de vida simple si alguien depende de vos.</li>
     <li><b>Lo electivo:</b> invertir. Una hipoteca a tasa razonable puede convivir con la inversión.</li>
   </ul>
+
+  <h2>Si el presupuesto es de dos</h2>
+  <p>Con pareja aparece una pregunta más: quién paga qué. Aquí la vemos solo desde el lado legal, que es el que menos se conversa.</p>
+  <ul class="l">
+    <li><b>Si están casados, un solo fondo.</b> El matrimonio es una unión muy fuerte en términos legales: salvo que hayan firmado capitulaciones, lo que cada uno gana y compra durante el matrimonio se reparte si la unión se termina. Por eso, en nuestra opinión, lo que más sentido tiene es que los dos ingresos entren al mismo fondo y que de ahí se paguen los gastos y salga el 20%.</li>
+    <li><b>El 50/50 casi nunca calza.</b> Pagar el alquiler mitad y mitad solo es parejo si los dos ganan exactamente lo mismo, y eso casi nunca pasa. Al que gana menos le queda poco o nada para su futuro.</li>
+    <li><b>Si son novios o viven juntos sin casarse, hay más matices.</b> La unión de hecho también puede generar derechos sobre los bienes, pero depende del tiempo de convivencia y de otros requisitos. Ahí sí se puede contemplar un ahorro separado y una cuenta común solo para los gastos compartidos.</li>
+  </ul>
+  <p>Cada pareja tiene sus detalles: ingresos muy distintos, hijos, una deuda de antes, una propiedad a nombre de uno solo. Para eso ofrecemos dos formas de acompañarlos: la asesoría de seis meses que explicamos abajo, o <b>una sola sesión de $100</b> para dejar armado el presupuesto de los dos.</p>
+  <div class="nav" style="margin-top:14px"><a class="btn ghost full" id="cta-pareja" href="https://wa.me/50670558296?text=Hola%20Jose%2C%20vi%20el%20curso%20y%20quiero%20la%20asesor%C3%ADa%20de%20presupuesto%20en%20pareja." target="_blank" rel="noopener">Quiero la asesoría de presupuesto en pareja</a></div>
+  <p class="cnota">Esto es una orientación general y no sustituye el consejo de un abogado de familia.</p>
 
   <h2>Cómo lo hacemos nosotros: seis meses acompañado</h2>
   <p>Las tres decisiones se entienden en diez minutos. Lo difícil es sostenerlas, porque nadie tiene tiempo de anotar cada gasto. Por eso con nuestros clientes no lo dejamos en una hoja: lo acompañamos durante seis meses con una app propia que se llama <b>Neto</b>.</p>
@@ -346,6 +423,21 @@
 
   <p class="paper"><b>Sustento.</b> Thaler y Benartzi, <i>Save More Tomorrow</i>, Journal of Political Economy, 2004: automatizar el ahorro antes de recibir la plata multiplica cuánto se ahorra. Thaler ganó el Nobel en 2017.</p>
   <div class="nav"><a class="btn ghost" href="#m1">← Capítulo 1</a><a class="btn" href="#m3">Capítulo 3 →</a></div>
+</section>
+
+<!-- ============ PUERTA DE CORREO ============ -->
+<section class="cap puerta" id="puerta">
+  <div class="eyebrow">Antes de seguir</div>
+  <h1>Dejá tu correo y seguí con el curso</h1>
+  <p class="frase">Ya llevás dos capítulos. Faltan cinco: cómo funciona el dinero, la Caja, las banderas rojas, los índices y tu plan.</p>
+  <form id="pt-form" novalidate>
+    <label for="pt-mail">Tu correo</label>
+    <input type="email" id="pt-mail" inputmode="email" autocomplete="email" placeholder="nombre@correo.com">
+    <p class="err" id="pt-err">Revisá el correo, parece que le falta algo.</p>
+    <button type="submit" class="btn" id="pt-btn">Seguir al capítulo 3 →</button>
+  </form>
+  <p class="cnota">Seguís aquí mismo, sin esperar ningún mensaje de confirmación. Tu avance queda guardado en este dispositivo. El correo lo usamos solo para escribirte sobre el curso.</p>
+  <a class="volver" href="#m2">← Volver al capítulo 2</a>
 </section>
 
 <!-- ============ 3 ============ -->
@@ -487,23 +579,101 @@
   </div>
 
   <h2>Banderas rojas, por tipo de producto</h2>
-  <p>Hay tres que sirven para cualquier inversión, y después cada tipo de producto tiene las suyas.</p>
+  <p>Hay dos que sirven para cualquier inversión, y después cada tipo de producto tiene las suyas.</p>
 
   <h2>1. En cualquier inversión</h2>
   <div class="rojas">
     <div><span><b>No te saben explicar de dónde sale la tasa.</b> Una tasa alta no es mala por sí sola, pero siempre paga un riesgo. Todo lo que rinda más que un bono del Tesoro de Estados Unidos tiene más riesgo que ese bono. Pedí que te digan cuál es y qué lo respalda.</span></div>
     <div><span><b>No podés ver qué respalda tu plata.</b> Lo mínimo es saber qué propiedades o valores hay detrás, con nombre y registro, y qué documento prueba tu parte. En el fondo de Madoff no había nada detrás y nadie pidió verlo.</span></div>
-    <div><span><b>Te apuran para firmar.</b> "El cupo se cierra el viernes", "la tasa es solo por este mes". Una inversión seria sigue ahí la semana entrante, después de que leás el contrato.</span></div>
   </div>
 
-  <h2>2. Planes de ahorro en dólares "con seguro", emitidos desde una isla</h2>
-  <p>Son los que se ofrecen en las salas de residentes: un aporte mensual en dólares a 20 o 25 años, con un seguro de vida pegado.</p>
+  <h2>2. Planes de ahorro en dólares a 20 o 25 años, emitidos fuera de Costa Rica</h2>
+  <p>Se ofrecen en las salas de residentes, o después de una asesoría gratuita de finanzas personales: un aporte mensual en dólares, cobrado a la tarjeta, durante 20 o 25 años. Hay dos modelos distintos. Leímos contratos reales de los dos, firmados por profesionales en Costa Rica, y esto es lo que dicen.</p>
+
+  <h2 style="font-size:19px"><svg class="band" viewBox="0 0 60 40" role="img" aria-label="Bandera de Guernsey"><rect width="60" height="40" fill="#fff"/><rect x="24" width="12" height="40" fill="#E8112D"/><rect y="14" width="60" height="12" fill="#E8112D"/><path fill="#F9DD16" d="M8 17.3 L11 18.7 L49 18.7 L52 17.3 L52 22.7 L49 21.3 L11 21.3 L8 22.7 Z M27.3 5 L28.7 8 L28.7 32 L27.3 35 L32.7 35 L31.3 32 L31.3 8 L32.7 5 Z"/></svg>Así suelen funcionar en Guernsey los contratos de inversión a largo plazo</h2>
+  <p>Guernsey es una isla del Canal de la Mancha. El contrato es una cuenta de inversión en una plataforma regulada allá, con fondos de la misma casa.</p>
+  <figure class="g">
+    <div class="gt">Si te salís, esto recuperás de lo que aportaste ($300 al mes, plan a 20 años)</div>
+    <div class="hb" id="g5d"></div>
+    <figcaption>Ilustración oficial de un contrato real, suponiendo que los fondos crecen 6% todos los años. Con menos crecimiento, tarda más.</figcaption>
+  </figure>
+  <figure class="g">
+    <div class="gt">Tu primer año: de cada $100 que aportás, $1 se invierte</div>
+    <div class="cien-w">
+      <div class="cien" id="g5f" role="img" aria-label="Cien cuadros: 99 rojos que no se invierten y 1 verde que sí"></div>
+      <div class="cien-t">
+        <div class="ct r"><b>$3.564</b><span>van a "unidades de establecimiento". No se invierten, no crecen y no te las devuelven si te salís.</span></div>
+        <div class="ct v"><b>$36</b><span>se invierten en fondos. Es lo único que es tuyo.</span></div>
+        <div class="ct n"><b>$37</b><span>es lo que te devuelven si te salís al cumplir el año: los $36 con lo que hayan ganado.</span></div>
+      </div>
+    </div>
+    <figcaption>Plan de $300 al mes: $3.600 aportados en el primer año. Cifras de la ilustración oficial de un contrato real, con fondos creciendo 6%.</figcaption>
+  </figure>
   <div class="rojas">
-    <div><span><b>Plazo de 10 a 25 años con castigo por salir.</b> En varios planes de este tipo, si te salís en los primeros dos años recuperás cero.</span></div>
-    <div><span><b>No te dicen cuánto gana quien te lo vende.</b> La comisión se paga por adelantado y crece con el plazo. Por eso te ofrecen 25 años.</span></div>
-    <div><span><b>La plata queda a nombre de una aseguradora en otro país.</b> Vos tenés un contrato, bajo las reglas de esa jurisdicción y sin a quién reclamarle aquí.</span></div>
+    <div><span><b>Casi todo el primer año no se invierte.</b> El 99% de los aportes del año 1 y la cuarta parte de los del año 2 van a unas "unidades de establecimiento" que valen $1 fijo, no crecen y no se pueden retirar. En un plan de $300 al mes son casi 15 meses de aportes.</span></div>
+    <div><span><b>Si te salís, perdés todas esas unidades.</b> Solo te llevás la parte que sí se invirtió, con lo que haya ganado o perdido en el mercado. El primer año aportás $3.600 y se invierten $36: eso, con su rendimiento, es lo que te devuelven. Por eso al año recuperás el 1%.</span></div>
+    <div><span><b>El estado de cuenta te muestra un número que no es tuyo.</b> El "valor de cuenta" suma esas unidades. En un caso real, con dos años y medio de aportes, el estado decía +4,87% de rendimiento y lo que se podía retirar era la mitad de lo aportado.</span></div>
+    <div><span><b>Subir el aporte te vuelve a cobrar el cargo inicial</b> sobre el aumento.</span></div>
+    <div><span><b>Firmás que nadie te lo vendió.</b> El formulario incluye una declaración de que "no hubo una venta activa del producto". También podés estar dándole al asesor poder para cambiar tus fondos sin consultarte, y la compañía aclara que no responde por él. Cualquier reclamo va a los tribunales de la isla.</span></div>
   </div>
-  <p><b>El costo que no se ve.</b> Estos planes cuestan entre 3% y 5% al año, sumando todo. Así pesa eso en 25 años.</p>
+  <p><b>El fondo "que sigue al S&amp;P 500" no rinde lo que el índice.</b> El contrato no dice cuánto cobran los fondos por dentro. Se puede estimar comparando: esto rindieron en los mismos tres años el índice y el fondo de la casa que dice seguirlo.</p>
+  <figure class="g">
+    <div class="gt">Tres años, a junio de 2026: el índice contra el fondo que lo "sigue"</div>
+    <div class="hb" id="g5g"></div>
+    <figcaption>Rendimiento acumulado. El del fondo es el que reporta el propio estado de cuenta; el del índice es el dato público. La diferencia es de unos 3,6 puntos al año, y se suma a los cargos del plan. Suponemos que el estado corta a fin de junio.</figcaption>
+  </figure>
+
+  <p><b>"Está regulado." ¿Por quién?</b> Es cierto que está regulado. Conviene saber por quién y qué pasa si algo sale mal.</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Plan emitido en Guernsey</th><th>Cuenta a tu nombre en un bróker de Estados Unidos</th></tr></thead>
+    <tbody>
+      <tr><td><b>Quién regula</b></td><td>La comisión de servicios financieros de Guernsey, una isla de menos de 70 mil habitantes que no es parte del Reino Unido ni de la Unión Europea</td><td>La SEC, el regulador federal de valores, y FINRA, que supervisa a cada casa de bolsa</td></tr>
+      <tr><td><b>A nombre de quién</b></td><td>De la compañía, que los guarda como fiduciaria. Vos sos el beneficiario</td><td>Tuyo</td></tr>
+      <tr><td><b>Si la compañía quiebra</b></td><td>Los fondos deberían quedar fuera de la quiebra, por el fideicomiso. No encontramos ningún fondo de compensación que cubra este tipo de cuenta</td><td>El SIPC responde hasta por $500.000 por cliente</td></tr>
+      <tr><td><b>Dónde reclamás</b></td><td>En los tribunales de Guernsey</td><td>En Estados Unidos, con el arbitraje de FINRA</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>"Tu plata está en BNY, protegida por el FDIC."</b> Es una frase común en la venta. Vale la pena desarmarla en cuatro partes.</p>
+  <div class="bloques">
+    <div><span class="bn">1</span><span><b>Es BNY Londres, no BNY Nueva York.</b> La propia plataforma dice que su custodio es la sucursal de Londres de Bank of New York Mellon.</span></div>
+    <div><span class="bn">2</span><span><b>No está en tu contrato.</b> El contrato que leímos no nombra a ningún custodio. El dato sale de la página web de la compañía, que lo puede cambiar.</span></div>
+    <div><span class="bn">3</span><span><b>El FDIC no aplica.</b> El FDIC asegura depósitos en bancos dentro de Estados Unidos, hasta $250.000. No cubre sucursales en el extranjero, y tampoco cubre fondos de inversión en ningún lado: lo tuyo son unidades de un fondo, no un depósito.</span></div>
+    <div><span class="bn">4</span><span><b>Los fondos no están a tu nombre.</b> Están en un fideicomiso a nombre de la compañía que te vendió el plan. Vos figurás como beneficiario.</span></div>
+  </div>
+  <p>Que haya un custodio grande es bueno: los títulos se guardan aparte. Pero el custodio no garantiza lo que valen ni responde por la plataforma.</p>
+  <p><b>Lo que tiene a favor:</b> está regulado, los fondos quedan en un fideicomiso a tu favor con un custodio grande, y del tercer año en adelante se invierte todo el aporte. El problema es el costo de entrada, lo que rinden de menos los fondos y lo caro que sale arrepentirse.</p>
+
+  <h2 style="font-size:19px"><svg class="band" viewBox="0 0 60 40" role="img" aria-label="Bandera de Puerto Rico"><rect width="60" height="40" fill="#fff"/><rect width="60" height="8" fill="#ED0000"/><rect y="16" width="60" height="8" fill="#ED0000"/><rect y="32" width="60" height="8" fill="#ED0000"/><path d="M0 0 L34.6 20 L0 40 Z" fill="#0050F0"/><polygon fill="#fff" points="11.50,13.80 12.91,18.06 17.40,18.08 13.78,20.74 15.14,25.02 11.50,22.40 7.86,25.02 9.22,20.74 5.60,18.08 10.09,18.06"/></svg>Así suelen funcionar en Puerto Rico los planes a 20 años ligados al S&amp;P 500 con capital garantizado</h2>
+  <p>Aquí el contrato es una póliza de una aseguradora internacional. La compra un fideicomiso del mismo grupo, y el dueño de la póliza es ese fideicomiso, no vos.</p>
+  <figure class="g">
+    <div class="gt">Si te salís, esto recuperás de lo que aportaste ($300 al mes, plan a 20 años)</div>
+    <div class="hb" id="g5e"></div>
+    <figcaption>Ilustración oficial de un contrato real, suponiendo que el índice crece 4% todos los años. Con 10% al año, lo aportado se recupera en el año 10.</figcaption>
+  </figure>
+  <div class="rojas">
+    <div><span><b>Dos años completos con valor de rescate cero.</b> En un caso real, a los 29 meses la cuenta decía casi $10.000 y el valor de rescate era $0.</span></div>
+    <div><span><b>Tres cargos encimados:</b> $10 al mes, 1,5% al año sobre el saldo y 1,1% al año sobre todo lo que has aportado. Con el índice rindiendo 10% al año, la ilustración oficial termina en $136.000. Sin costos serían $217.000.</span></div>
+    <div><span><b>La garantía tiene letra pequeña.</b> Garantiza 160% de lo aportado al final, que equivale a 4,5% al año. Se pierde con un solo pago atrasado, con bajar el aporte o con un retiro parcial, en 20 años. Y depende de que el banco que la respalda siga en pie: ese riesgo, dice el contrato, es tuyo.</span></div>
+    <div><span><b>El seguro te lo da la misma institución que tiene tu plata.</b> Aseguradora y fideicomiso son del mismo grupo. El "seguro de vida" es 1% adicional sobre el saldo.</span></div>
+    <div><span><b>Las reglas del pleito.</b> Solo la versión en inglés tiene validez legal, las disputas van a un arbitraje confidencial en Puerto Rico, y el contrato dice que el fiduciario puede decidir considerando sus propios intereses.</span></div>
+  </div>
+  <p><b>Lo que tiene a favor:</b> la garantía existe y está escrita, y para quien de verdad paga los 240 meses sin fallar es un piso razonable. La ilustración muestra los ceros de rescate sin esconderlos. El problema es que casi nadie lee esa tabla antes de firmar.</p>
+
+  <div class="rojas">
+    <div><span><b>En los dos modelos, no te dicen cuánto gana quien te lo vende.</b> Ninguno de los contratos que leímos lo menciona.</span></div>
+  </div>
+  <p><b>Por qué el SIPC es otra cosa.</b> En una cuenta de bróker en Estados Unidos, la protección no la da el bróker. La da un tercero.</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Plan con póliza de una aseguradora</th><th>Cuenta de bróker con SIPC</th></tr></thead>
+    <tbody>
+      <tr><td><b>Quién te protege</b></td><td>La misma aseguradora que tiene tu plata</td><td>El SIPC, una entidad aparte creada por ley en 1970</td></tr>
+      <tr><td><b>Cómo funciona</b></td><td>Es una cláusula de tu contrato</td><td>Las casas de bolsa son miembros por obligación y lo financian entre todas</td></tr>
+      <tr><td><b>Si la institución quiebra</b></td><td>La protección depende de la que quebró</td><td>Responde el SIPC: hasta $500.000 por cliente</td></tr>
+      <tr><td><b>A nombre de quién está la plata</b></td><td>De la aseguradora</td><td>Tuyo: los valores se custodian separados de los del bróker</td></tr>
+    </tbody>
+  </table></div>
+  <p>Algunas jurisdicciones tienen un fondo que protege a los asegurados y otras no. Por eso la pregunta que hay que hacer es: <b>si esta institución quiebra, ¿quién responde que no sea ella misma?</b></p>
+  <p><b>El costo que no se ve.</b> En los contratos que leímos, el costo le quita al rendimiento entre 1,4 y 4 puntos al año, según el modelo, y eso antes de lo que cobran los fondos por dentro. Así pesa un costo de 1% y uno de 4% en 25 años.</p>
   <figure class="g">
     <div class="gt">$400 al mes durante 25 años: el mismo mercado, tres costos distintos</div>
     <div class="ln" id="g5"></div>
@@ -525,9 +695,14 @@
     <div><span><b>La mejor tasa exige el plazo más largo.</b> Diez, quince o veinticinco años sin poder salir de un proyecto que nadie ha terminado.</span></div>
   </div>
   <div class="caso"><div class="k">Un ejemplo para verlo</div>
-    <p>Hay un lote que vale $1 millón. Encima se planea un hotel de una cadena internacional que costará $10 millones y que todavía no se ha construido. Y se proyecta lo que ese hotel va a ganar cada año cuando abra.</p>
-    <p>Con las tres cosas se arma un solo paquete de inversión: el lote, el hotel sin construir y los flujos de efectivo futuros del negocio. El paquete se presenta por un valor muy superior al del lote, y sobre ese número se calcula la tasa que te ofrecen.</p>
-    <p>Lo único que existe hoy es el lote de $1 millón. Todo lo demás es una promesa. Si el hotel se atrasa, cuesta más o se llena menos de lo previsto, la tasa se queda sin de dónde salir.</p>
+    <p>Los números son hipotéticos, para ver la mecánica. Hay un lote que hoy vale <b>$1 millón</b>. Encima se planea un hotel de una cadena internacional que costaría <b>$10 millones</b> y que todavía no se ha construido. Y se proyecta que el negocio, cuando abra, va a generar flujos de efectivo que valen otros <b>$3 millones</b>.</p>
+    <p>Con las tres cosas se arma un solo paquete de inversión de $14 millones, y sobre ese número se calcula la tasa que te ofrecen.</p>
+    <figure class="g" style="margin:10px 0 12px">
+      <div class="gt">Lo que te venden y lo que existe hoy</div>
+      <div class="hb" id="g5c"></div>
+      <figcaption>Ejemplo hipotético, en millones de dólares.</figcaption>
+    </figure>
+    <p>De esos $14 millones, a valor presente solo existe $1 millón. Los otros $13 millones todavía no existen. Es una forma muy arriesgada de apalancamiento basado en proyectos: si pasa la mínima cosa que no salga bien (un permiso, un atraso, un costo mayor, menos ocupación), lo que hay hoy para respaldar tu inversión es 1, no 14.</p>
   </div>
   <p><b>Invertir en bienes raíces no es una bandera roja.</b> Lo que cambia todo es de dónde sale el rendimiento que te prometen. Así se ven las dos formas, lado a lado.</p>
   <div class="tbl"><table>
@@ -537,10 +712,10 @@
       <tr><td><b>De dónde sale la tasa</b></td><td>De lo que el proyecto valdrá si todo sale bien</td><td>De lo que el activo vale y produce hoy</td></tr>
       <tr><td><b>Si el proyecto se atrasa o no se vende</b></td><td>La tasa prometida queda sin respaldo</td><td>El activo sigue ahí</td></tr>
       <tr><td><b>A quién se le ofrece</b></td><td>A todo el público, desde montos muy bajos</td><td>A pocos inversionistas, con monto mínimo alto</td></tr>
-      <tr><td><b>Plazo</b></td><td>10 a 25 años para la mejor tasa</td><td>Pocos años</td></tr>
+      <tr><td><b>Plazo</b></td><td>10 a 25 años para la mejor tasa</td><td>3 años (San José Capital)</td></tr>
     </tbody>
   </table></div>
-  <p>Un ejemplo de la forma conservadora es <b>San José Capital</b>: inversión inmobiliaria para profesionales de ingresos altos, basada solo en el valor presente de las propiedades. Paga 8% anual en dólares, con un mínimo de $10.000 y un plazo mínimo de 3 años.</p>
+  <p>Un ejemplo de la forma conservadora es <b><a href="https://sanjose.capital" target="_blank" rel="noopener">San José Capital</a></b>: inversión inmobiliaria para profesionales de ingresos altos, basada solo en el valor presente de las propiedades. Paga 8% anual en dólares, con un mínimo de $10.000 y un plazo mínimo de 3 años.</p>
   <p>Ese 8% es más de lo que paga un bono del Tesoro, y por la regla de arriba eso quiere decir que tiene más riesgo que un bono del Tesoro. La diferencia con el otro modelo es que aquí el riesgo se puede ver: son propiedades que ya existen.</p>
   <p>Aun así, aplicale las seis preguntas de abajo, igual que a cualquier otra. Y tené presente dos cosas: es plata que no vas a poder tocar durante el plazo, y por eso va después de la reserva y nunca en lugar de ella.</p>
   <p class="nota" style="margin-top:0">Transparencia: San José Capital es aliado de Empowered Investor.</p>
@@ -613,7 +788,7 @@
     <a class="vid" href="https://www.netflix.com/title/81466159" target="_blank" rel="noopener"><span class="th">Netflix</span><span><span class="pl">Netflix · 4 episodios</span><b>Madoff: The Monster of Wall Street</b><span class="d">Cómo se sostuvo el fraude más grande de la historia y por qué nadie quiso ver las señales.</span></span></a>
   </div>
 
-  <div class="caso"><div class="k">La Dra. Ana</div><p>En 2016 firmó en la sala de residentes un plan en dólares con seguro, a 25 años, de $400 al mes. Lleva $43.000 aportados y hoy le devolverían $31.000. Nunca le dijeron que casi todo lo que aportó el primer año se fue en la comisión.</p></div>
+  <div class="caso"><div class="k">La Dra. Ana</div><p>Firmó en la sala de residentes un plan en dólares a 20 años, de $300 al mes. Lleva dos años y medio y unos $9.000 aportados. Si se sale hoy le devuelven entre cero y la mitad, según cuál de los dos modelos haya firmado. Nadie le enseñó la tabla de rescate antes de firmar.</p></div>
   <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Hacé la lista de todo lo que tenés: cuentas, certificados, seguros, planes. A la par de cada uno escribí quién te debe esa plata y cuántas banderas rojas tiene.</p></div>
 
   <p class="paper"><b>Sustento.</b> Mullainathan, Noeth y Schoar, <i>The Market for Financial Advice: An Audit Study</i>, NBER, 2012: asesores pagados por comisión recomendaron productos más caros incluso a clientes que llegaban con un portafolio barato y bien armado. Caso Madoff: SEC y Departamento de Justicia de Estados Unidos, 2009. Las seis preguntas siguen las recomendaciones de la Oficina del Consumidor Financiero de Costa Rica.</p>
@@ -927,6 +1102,20 @@
   function usd(v){ return "$"+Math.round(v/1000).toLocaleString("es-CR")+" mil"; }
 
   barras("g1", [ {l:"Ganar ₡1 millón", v:1, c:C.menta, t:"+1"}, {l:"Perder ₡1 millón", v:2, c:C.rojo, t:"−2"} ]);
+  (function(){
+    var inp=el("p-ing");
+    function pts(v){ return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+    function calc(){
+      var n=parseInt(inp.value.replace(/[^0-9]/g,"").slice(0,10),10)||0;
+      inp.value = n ? pts(n) : "";
+      el("p-nec").textContent = n ? "₡"+pts(n*.5) : "";
+      el("p-gus").textContent = n ? "₡"+pts(n*.3) : "";
+      el("p-fut").textContent = n ? "₡"+pts(n*.2) : "";
+    }
+    inp.addEventListener("input", calc);
+    inp.addEventListener("change", function(){ track("curso_presupuesto_ingreso", inp.value); });
+    calc();
+  })();
   barras("g2", [ {l:"Salario base", v:2.9, c:C.menta, t:"₡2,9 M"}, {l:"Gasto fijo", v:3.9, c:C.rojo, t:"₡3,9 M"}, {l:"Guardias y dispos", v:2.6, c:C.gris, t:"₡2,6 M"} ]);
   barras("g3a", [ {l:"2021", v:3.3, c:C.nar, t:"3,3%"}, {l:"2022", v:7.9, c:C.rojo, t:"7,9%"}, {l:"2023", v:1.8, c:C.peri, t:"−1,8%"}, {l:"2024", v:0.8, c:C.nar, t:"0,8%"}, {l:"2025", v:1.2, c:C.peri, t:"−1,2%"}, {l:"2026 (a octubre)", v:0.55, c:C.nar, t:"0,6%"} ], 12.1);
   (function(){ var a=ahorro(200000,30,0), b=ahorro(200000,30,.05), c=ahorro(200000,30,.09);
@@ -934,6 +1123,11 @@
   barras("g4", [ {l:"Gana hoy", v:5.5, c:C.menta, t:"₡5,5 M"}, {l:"Gasta hoy", v:3.9, c:C.gris, t:"₡3,9 M"}, {l:"Pensión a los 65", v:1.9, c:C.rojo, t:"₡1,9 M"} ]);
   (function(){ var a=ahorro(400,25,0), b=ahorro(400,25,.04), m=ahorro(400,25,.07), c=ahorro(400,25,.079);
     lineas("g5", [ {n:"Lo que aportaste", d:a, c:C.gris, dash:true}, {n:"Con costo de 4% al año", d:b, c:C.rojo}, {n:"Con costo de 1%", d:m, c:C.peri}, {n:"Con costo de 0,1%", d:c, c:C.menta} ], 25, "25 años", usd); })();
+  barras("g5c", [ {l:"Lote (existe hoy)", v:1, c:C.menta, t:"$1 M"}, {l:"Hotel sin construir", v:10, c:C.rojo, t:"$10 M"}, {l:"Flujos futuros proyectados", v:3, c:C.nar, t:"$3 M"}, {l:"Paquete que se vende", v:14, c:C.gris, t:"$14 M"} ]);
+  (function(){ var h=""; for(var i=0;i<100;i++) h+='<i'+(i===99?' class="v"':'')+'></i>'; el("g5f").innerHTML=h; })();
+  barras("g5g", [ {l:"S&P 500 con dividendos", v:75.5, c:C.menta, t:"+75%"}, {l:"S&P 500 sin dividendos", v:68.5, c:C.peri, t:"+69%"}, {l:"El fondo que lo \"sigue\"", v:60.2, c:C.rojo, t:"+60%"} ], 82);
+  barras("g5d", [ {l:"Año 1", v:1, c:C.rojo, t:"1%"}, {l:"Año 2", v:39, c:C.rojo, t:"39%"}, {l:"Año 3", v:61, c:C.nar, t:"61%"}, {l:"Año 5", v:83, c:C.nar, t:"83%"}, {l:"Año 8", v:101, c:C.menta, t:"101%"} ], 110);
+  barras("g5e", [ {l:"Año 1", v:0, c:C.rojo, t:"0%"}, {l:"Año 2", v:0, c:C.rojo, t:"0%"}, {l:"Año 3", v:18, c:C.rojo, t:"18%"}, {l:"Año 5", v:49, c:C.rojo, t:"49%"}, {l:"Año 10", v:85, c:C.nar, t:"85%"}, {l:"Año 16", v:101, c:C.menta, t:"101%"} ], 110);
   barras("g5b", [ {l:"Fondo de Garantía de Depósitos (Costa Rica)", v:6, c:C.rojo, t:"₡6 M"}, {l:"FDIC (EE. UU.), $250.000", v:125, c:C.peri, t:"₡125 M"}, {l:"SIPC (EE. UU.), $500.000", v:250, c:C.menta, t:"₡250 M"} ]);
   barras("g6a", [ {l:"Fondo índice S&P 500", v:125.8, c:C.menta, t:"+125,8%"}, {l:"Promedio de los 5 fondos de expertos", v:36.3, c:C.rojo, t:"+36%"} ]);
   barras("g6b", [ {l:"A 1 año", v:69.6, c:C.rojo, t:"70 de 100"}, {l:"A 5 años", v:81.4, c:C.nar, t:"81 de 100"}, {l:"A 10 años", v:89, c:C.peri, t:"89 de 100"}, {l:"A 15 años", v:95.6, c:C.menta, t:"96 de 100"}, {l:"A 20 años", v:99.9, c:C.menta, t:"99,9 de 100"} ], 100);
@@ -1007,10 +1201,44 @@
   var NOMBRES={inicio:"Bienestar financiero", m1:"Psicología del dinero", m2:"Presupuesto", m3:"Cómo funciona el dinero", m4:"La Caja", m5:"Banderas rojas", m6:"Índices y cuenta propia", m7:"Tu plan"};
   var CLAVE="ei_curso", vistos={};
   try{ vistos=JSON.parse(localStorage.getItem(CLAVE)||"{}")||{}; }catch(e){ vistos={}; }
+  // Puerta de correo: del capítulo 3 en adelante
+  var LEAD_K="ei_curso_lead", lead="", destino="m3";
+  try{ lead=localStorage.getItem(LEAD_K)||""; }catch(e){ lead=""; }
+  var EVENTOS_URL="https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+  var UTM=(function(){
+    var o={ utm_source:"curso", utm_medium:"", utm_campaign:"", utm_content:"", utm_term:"" };
+    try{ var q=new URLSearchParams(location.search); Object.keys(o).forEach(function(k){ var v=q.get(k); if(v) o[k]=v; });
+      if(!q.get("utm_source") && q.get("fbclid")){ o.utm_source="meta"; o.utm_medium="paid"; } }catch(e){}
+    return o;
+  })();
+  el("pt-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var mail=el("pt-mail").value.trim(), ok=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail);
+    el("pt-err").style.display = ok ? "none" : "block"; if(!ok) return;
+    lead=mail; try{ localStorage.setItem(LEAD_K, mail); }catch(err){}
+    var uid=""; try{ uid=localStorage.getItem("ei_uid")||""; }catch(err){}
+    var payload={ timestamp:new Date().toISOString(), etapa:"curso", nombre:"", correo:mail, whatsapp:"",
+      capitulo:destino, vistos:Object.keys(vistos).join(" "), pagina:location.pathname,
+      utm_source:UTM.utm_source, utm_medium:UTM.utm_medium, utm_campaign:UTM.utm_campaign, utm_content:UTM.utm_content, uid:uid };
+    try{ fetch(EVENTOS_URL, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body:JSON.stringify(payload), keepalive:true}).catch(function(){}); }catch(err){}
+    track("pm_lead", "curso");
+    try{ if(typeof fbq==="function") fbq("track","Lead",{content_name:"curso bienestar financiero"}); }catch(err){}
+    mostrar(destino, false);
+  });
   function mostrar(id, primera){
     if(CAPS.indexOf(id)<0) id="inicio";
     todos(".cap", function(s){ s.classList.toggle("on", s.id===id); });
     var i=CAPS.indexOf(id);
+    if(i>=3 && !lead){
+      destino=id;
+      todos(".cap", function(s){ s.classList.toggle("on", s.id==="puerta"); });
+      todos("[data-c]", function(a){ a.classList.remove("on"); a.classList.toggle("visto", !!vistos[a.getAttribute("data-c")]); });
+      el("where").innerHTML="<b>Antes de seguir</b>";
+      el("pt-btn").textContent="Seguir al capítulo "+i+" →";
+      if(!primera) window.scrollTo(0,0);
+      track("curso_puerta_vista", id);
+      return;
+    }
     if(i>0){ vistos[id]=1; try{ localStorage.setItem(CLAVE, JSON.stringify(vistos)); }catch(e){} }
     todos("[data-c]", function(a){ var c=a.getAttribute("data-c"); a.classList.toggle("on", c===id); a.classList.toggle("visto", !!vistos[c]); });
     el("where").innerHTML = i>0 ? "Capítulo "+i+" de 7 · <b>"+NOMBRES[id]+"</b>" : "<b>"+NOMBRES.inicio+"</b>";
@@ -1040,6 +1268,14 @@
       cap.innerHTML=PASOS[i].t; fr.setAttribute("src", base+PASOS[i].q); track("curso_edge_paso", i+1);
     });
   })();
+  // Cada capítulo abre con la ilustración de su tarjeta en la portada
+  todos(".mapa .tj", function(a){
+    var sec=el((a.getAttribute("href")||"").replace("#","")), svg=a.querySelector("svg"); if(!sec || !svg) return;
+    var d=document.createElement("div"); d.className="hero";
+    d.innerHTML=svg.outerHTML.replace(/(id="|href="#|url\(#)(fl-a|fl-b|vent|playa)/g, "$1$2-h");
+    sec.insertBefore(d, sec.firstChild);
+  });
+  try{ if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) todos(".tj svg, .hero svg", function(s){ if(s.pauseAnimations) s.pauseAnimations(); }); }catch(e){}
   window.addEventListener("resize", function(){ setTimeout(function(){ todos("iframe.emb[src]", ajustar); }, 250); });
   function deHash(){ return (location.hash||"").replace("#","") || "inicio"; }
   window.addEventListener("hashchange", function(){ mostrar(deHash(), false); });
@@ -1047,6 +1283,7 @@
   todos(".vid", function(a){ a.addEventListener("click", function(){ track("curso_video", a.getAttribute("href")); }); });
   el("cta-cal").addEventListener("click", function(){ track("click_agendar", "curso"); });
   el("cta-cal-0").addEventListener("click", function(){ track("click_agendar", "curso_calculadora"); });
+  el("cta-pareja").addEventListener("click", function(){ track("pm_whatsapp_abierto", "curso_pareja"); });
   el("cta-wa").addEventListener("click", function(){ track("pm_whatsapp_abierto", "curso"); });
 })();
 </script>
