@@ -49,6 +49,9 @@
   .side a .n{ font-weight:800; color:var(--gris-sec); font-variant-numeric:tabular-nums; }
   .side a.on .n{ color:var(--menta); }
   .side a.visto .n::after{ content:" ✓"; color:var(--menta); font-size:11px; }
+  .casa{ width:17px; height:17px; display:inline-block; vertical-align:-3px; }
+  .side a .n.ic{ color:var(--menta); }
+  .chip .casa{ width:14px; height:14px; margin-right:5px; vertical-align:-2px; }
   .side .sep{ height:1px; background:var(--bd); margin:8px 0; }
   .side .quiz{ display:block; margin-top:10px; border:1px solid var(--bd); border-radius:10px; padding:10px 12px; font-size:13px; color:var(--gris-sec); }
   .side .quiz b{ color:var(--crema); display:block; }
@@ -222,7 +225,7 @@
   <div class="pbar"><i id="pb"></i></div>
 </div>
 <nav class="chips" aria-label="Capítulos">
-  <a class="chip" href="#inicio" data-c="inicio">Inicio</a>
+  <a class="chip" href="#inicio" data-c="inicio"><svg class="casa" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 9.5 L10 3 L17 9.5 M5 8.5 V17 H8.5 V12.5 H11.5 V17 H15 V8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Inicio</a>
   <a class="chip" href="#m1" data-c="m1">1 · Psicología</a>
   <a class="chip" href="#m2" data-c="m2">2 · Presupuesto</a>
   <a class="chip" href="#m3" data-c="m3">3 · El dinero</a>
@@ -234,7 +237,7 @@
 
 <div class="lay">
 <aside class="side" aria-label="Capítulos">
-  <a href="#inicio" data-c="inicio"><span class="n">·</span><span>Inicio y esquema</span></a>
+  <a href="#inicio" data-c="inicio"><span class="n ic"><svg class="casa" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 9.5 L10 3 L17 9.5 M5 8.5 V17 H8.5 V12.5 H11.5 V17 H15 V8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Inicio y esquema</span></a>
   <div class="sep"></div>
   <a href="#m1" data-c="m1"><span class="n">1</span><span>Psicología del dinero</span></a>
   <a href="#m2" data-c="m2"><span class="n">2</span><span>Presupuesto</span></a>
@@ -327,7 +330,7 @@
     <a class="vid" href="https://www.netflix.com/title/81345769" target="_blank" rel="noopener"><span class="th">Netflix</span><span><span class="pl">Netflix · 5 episodios de 20 min</span><b>Money, Explained</b><span class="d">Tarjetas de crédito, estafas, retiro. Hecho por Vox, muy visual. Buen punto de entrada si nunca leíste de finanzas.</span></span></a>
   </div>
 
-  <div class="caso"><div class="k">La Dra. Ana</div><p>Su papá decía que "la plata en el banco está segura y lo demás es casino". Ella tiene ₡28 millones en certificados "hasta decidir" desde 2019. Nunca decidió.</p></div>
+  <div class="caso"><div class="k">La Dra. Ana</div><p>Su papá decía que "la plata en el banco está segura y lo demás es casino". En 2019 metió ₡28 millones en certificados a plazo "mientras decidía qué hacer con ellos". Siete años después siguen ahí: cada vez que vencen, los renueva.</p></div>
   <div class="tarea"><div class="k">Tu tarea · 5 minutos</div><p>Escribí las tres frases sobre plata que más oíste en tu casa. Marcá la que hoy sigue tomando decisiones por vos.</p></div>
 
   <p class="paper"><b>Sustento.</b> Kahneman y Tversky, <i>Prospect Theory</i>, Econometrica, 1979. La historia de Ronald Read abre <i>The Psychology of Money</i> de Morgan Housel (2020) y fue reportada por The Wall Street Journal y CNBC en 2015.</p>
@@ -882,8 +885,14 @@
     <li><b>Lo que no podemos hacer, nunca:</b> retirar plata, transferirla a otra cuenta o cambiar a quién le pertenece. El bróker no nos da esa opción.</li>
     <li><b>Lo que seguís pudiendo hacer vos, siempre:</b> entrar a tu cuenta, ver cada movimiento, retirar tu plata y quitarnos el permiso el día que querás, sin pedirnos nada.</li>
   </ul>
-  <p>Es justo lo contrario de la segunda bandera roja del capítulo anterior. Esa bandera decía: <b>no podés ver qué respalda tu plata</b>, ni qué documento prueba que es tuya. En el fondo de Madoff los clientes le entregaban la plata a él, él la guardaba y él mismo les mandaba el estado de cuenta. No había nada detrás y nadie podía comprobarlo.</p>
-  <p>Aquí pasa al revés. La plata nunca pasa por nuestras manos, la guarda un tercero regulado, el estado de cuenta te lo da el bróker y no nosotros, y lo que hay adentro son fondos que cualquiera puede buscar por su nombre. Si mañana desapareciéramos, tu cuenta seguiría exactamente igual.</p>
+  <p><b>Lo que eso te deja a vos:</b></p>
+  <div class="bloques">
+    <div><span class="bn">1</span><span><b>Tu plata nunca pasa por nuestras manos.</b> La transferís vos, de tu banco a tu cuenta.</span></div>
+    <div><span class="bn">2</span><span><b>La guarda un tercero regulado.</b> Un bróker de Estados Unidos, con la protección del SIPC.</span></div>
+    <div><span class="bn">3</span><span><b>El estado de cuenta te lo da el bróker.</b> Lo ves vos directo, sin pasar por nosotros.</span></div>
+    <div><span class="bn">4</span><span><b>Sabés qué hay adentro.</b> Son fondos que cualquiera puede buscar por su nombre.</span></div>
+  </div>
+  <p class="frase">Si mañana desapareciéramos, tu cuenta seguiría exactamente igual.</p>
   <p>Hacele esta pregunta a cualquier asesor, incluidos nosotros: <b>¿podés sacar plata de mi cuenta?</b> La única respuesta aceptable es no.</p>
 
   <div class="verk">Para ver</div>
