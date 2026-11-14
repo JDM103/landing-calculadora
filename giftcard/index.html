@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gift card de Navidad · Empowered Investor</title>
+<meta property="og:title" content="Gift card de Navidad · Empowered Investor">
+<meta property="og:description" content="Una asesoría para ver tu plan de retiro y el curso Bienestar financiero para médicos.">
+<meta property="og:image" content="https://investorcr.com/assets/logo-fondo-negro.png">
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<style>
+/* Una sola página con dos vistas:
+   - Cliente (sin ?para): deja hasta 3 personas y recibe los links de las tarjetas para reenviar.
+   - Colega (?para=Nombre&de=Cliente): ve su tarjeta de regalo y agenda por WhatsApp.
+   El lead cae al mismo webhook/Sheet de /medicos con etapa "giftcard" y el cliente en utm_campaign. */
+:root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#9aa3b2; --linea:#262b33; --input:#1d232b; --rojo:#E0525A; --oro:#F2A54A; --pino:#17352a; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(90% 50% at 50% 0%,#12241d 0%,var(--tinta) 70%) no-repeat var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:17px;line-height:1.55}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:54px 20px 90px}
+
+/* Navidad: luces arriba, nieve de fondo, moño y arbolito en la tarjeta */
+.luces{position:absolute;top:0;left:0;right:0;height:26px;overflow:hidden;pointer-events:none;z-index:2;border-top:2px solid #2a3a33}
+.luces::before,.luces::after{content:"";position:absolute;inset:0;background-repeat:repeat-x;background-size:144px 26px}
+.luces::before{background-image:radial-gradient(circle at 18px 9px,var(--rojo) 0 5px,transparent 6px),radial-gradient(circle at 90px 12px,var(--menta) 0 5px,transparent 6px);animation:titila 2.4s ease-in-out infinite}
+.luces::after{background-image:radial-gradient(circle at 54px 13px,var(--oro) 0 5px,transparent 6px),radial-gradient(circle at 126px 8px,#7C8FF7 0 5px,transparent 6px);animation:titila 2.4s ease-in-out -1.2s infinite}
+@keyframes titila{0%,100%{opacity:1}50%{opacity:.35}}
+.nieve{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.nieve i{position:absolute;top:-10px;border-radius:50%;background:var(--crema);animation:caer linear infinite}
+@keyframes caer{to{transform:translate3d(24px,105vh,0)}}
+.mono{position:absolute;top:-24px;left:50%;width:76px;height:50px;margin-left:-38px;z-index:2}
+.card-medio{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:20px}
+.card-medio .card-valor{margin-top:0}
+.card-sub{margin-top:8px;font-size:15px;font-weight:600;color:var(--crema)}
+.arbol{flex:none;width:clamp(70px,22vw,96px);height:auto;display:block}
+.arbol .b{animation:titila 2s ease-in-out infinite}
+.arbol .b2{animation-delay:-.7s}.arbol .b3{animation-delay:-1.3s}
+.hero-svg{display:block;width:100%;height:auto;margin:4px 0 18px;border-radius:18px}
+.hero-svg .b{animation:titila 2s ease-in-out infinite}
+.hero-svg .b2{animation-delay:-.7s}.hero-svg .b3{animation-delay:-1.3s}
+/* Los 7 módulos del curso, con las mismas ilustraciones de la portada de /curso */
+.mods{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mod{display:block;min-width:0;background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--gris)}
+.mod:hover{border-color:var(--menta)}
+.mod .il{position:relative;display:flex;align-items:center;justify-content:center;padding:12px 18px;background:radial-gradient(circle at 50% 40%,#242c3b,#131720)}
+.mod .il svg{width:100%;height:auto;display:block}
+.mod .n{position:absolute;left:8px;top:8px;width:24px;height:24px;border-radius:50%;background:var(--menta);color:var(--tinta);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.mod .tx{display:block;padding:10px 12px 12px}
+.mod .t{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7C8FF7}
+.mod b{display:block;color:var(--crema);font-size:15.5px;line-height:1.25}
+.mod:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;align-items:center}
+.mod .trazo{stroke-dasharray:1;stroke-dashoffset:1;animation:trazo 2.6s ease .2s forwards}
+@keyframes trazo{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.mod .trazo{animation:none;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.luces::before,.luces::after,.arbol .b,.hero-svg .b{animation:none}}
+h1{font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0 0 12px;text-wrap:balance}
+h1 em{color:var(--menta);font-style:italic}
+h2{font-size:19px;margin:30px 0 12px}
+p{margin:0 0 14px}
+.muted{color:var(--gris)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--menta);font-weight:600;margin-bottom:10px}
+.hidden{display:none !important}
+
+/* La tarjeta */
+.card{position:relative;border-radius:22px;padding:2px;background:linear-gradient(135deg,var(--menta),var(--oro) 60%,var(--rojo));margin:34px 0 8px}
+.card-in{border-radius:20px;background:radial-gradient(120% 90% at 100% 0%,var(--pino) 0%,#131c1a 55%,#101418 100%);padding:28px 22px 22px}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--menta)}
+.card-top img{height:26px;width:auto;display:block}
+.card-para{margin-top:26px;font-size:14px;color:var(--gris)}
+.card-nombre{font-size:clamp(24px,6.4vw,32px);font-weight:700;line-height:1.15;overflow-wrap:anywhere}
+.card-valor{margin-top:22px;font-size:clamp(40px,12vw,58px);font-weight:700;line-height:1;color:var(--menta);font-variant-numeric:tabular-nums}
+.card-pie{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-top:22px;font-size:14px;color:var(--gris)}
+.card-pie b{color:var(--crema);font-weight:600;display:block;font-size:15.5px;overflow-wrap:anywhere}
+
+.lista{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.lista li{display:flex;gap:14px;align-items:flex-start;background:var(--tinta2);border:1px solid var(--linea);border-radius:14px;padding:14px 16px}
+.lista .n{flex:none;width:28px;height:28px;border-radius:50%;background:rgba(99,252,175,.14);color:var(--menta);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.lista b{display:block}
+/* Cada pieza es un regalo: caja con globo (asesoría), billete saludable con cruz y pulso (curso), celular con moño (app) */
+.lista .pulso{stroke-dasharray:1;stroke-dashoffset:1;animation:trazo 2.2s ease .3s forwards}
+@media (prefers-reduced-motion:reduce){.lista .pulso{animation:none;stroke-dashoffset:0}}
+.lista .g{position:relative;flex:none;width:54px}
+.lista .g svg{display:block;width:100%;height:auto}
+.lista .g .n{position:absolute;left:-6px;top:-6px;width:20px;height:20px;margin:0;font-size:12px;background:var(--menta);color:var(--tinta)}
+.lista span.d{color:var(--gris);font-size:15px;display:block}
+.lista li > div{min-width:0}
+/* La ecuación del plan, en fichas */
+.ecu{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:start;gap:4px;margin:12px 0 10px}
+.ecu .f{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0;text-align:center}
+.ecu .f svg{width:100%;max-width:56px;height:auto;display:block;padding:6px;border-radius:14px;background:radial-gradient(circle at 50% 40%,#242c3b,#131720);border:1px solid var(--linea)}
+.ecu .f b{display:block;font-size:11.5px;line-height:1.2;font-weight:600;color:var(--crema)}
+.ecu .f.r svg{border-color:var(--menta)}
+.ecu .f.r b{color:var(--menta)}
+.ecu u{text-decoration:none;color:var(--oro);font-weight:700;font-size:16px;margin-top:18px}
+
+.btn{display:block;width:100%;text-align:center;text-decoration:none;background:var(--menta);color:#0b2416;font:inherit;font-weight:700;font-size:18px;padding:15px 24px;border:0;border-radius:999px;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:default}
+.btn.sec{background:transparent;color:var(--crema);border:1px solid var(--linea);font-size:16px;font-weight:600;padding:12px 20px}
+a:focus-visible,input:focus-visible,button:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+.jose{display:flex;gap:14px;align-items:center;margin-top:30px}
+.jose img{width:56px;height:56px;border-radius:50%;object-fit:cover;flex:none}
+.jose p{margin:0;font-size:15px;color:var(--gris)}
+.jose b{color:var(--crema)}
+.nota{font-size:14.5px;color:var(--gris);margin-top:14px;text-align:center}
+
+/* Formulario del cliente */
+form{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gris)}
+input[type=text],input[type=tel]{background:var(--input);border:1px solid var(--linea);color:var(--crema);font:inherit;font-size:17px;padding:13px 14px;border-radius:12px;width:100%}
+.tel{display:flex;align-items:center;background:var(--input);border:1px solid var(--linea);border-radius:12px}
+.tel span{padding:13px 0 13px 14px;color:var(--gris)}
+.tel input{border:0;background:transparent;flex:1;min-width:0}
+fieldset{border:1px solid var(--linea);border-radius:16px;padding:14px 16px 16px;margin:0;display:flex;flex-direction:column;gap:12px;min-width:0}
+legend{padding:0 8px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--menta);font-weight:600}
+.err{color:#ffb3a0;font-size:14.5px;margin:0}
+.paso{background:var(--tinta2);border:1px solid var(--linea);border-radius:16px;padding:18px 18px 16px;margin-bottom:14px}
+.paso h3{margin:0 0 8px;font-size:17px}
+.paso h3 span{color:var(--menta)}
+.sinpe{font-size:26px;font-weight:700;color:var(--menta);font-variant-numeric:tabular-nums}
+.envio{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.envio + .envio{margin-top:18px;padding-top:16px;border-top:1px solid var(--linea)}
+.envio .quien{font-weight:600}
+</style>
+</head>
+<body>
+<div class="luces" aria-hidden="true"></div>
+<div class="nieve" id="nieve" aria-hidden="true"></div>
+<div class="wrap">
+
+  <!-- ============ Vista del colega: la tarjeta ============ -->
+  <section id="v-colega" class="hidden">
+    <div class="eyebrow">Te hicieron un regalo de Navidad</div>
+    <h1 id="c-titulo">Esta gift card es <em>tuya</em></h1>
+
+    <div class="card">
+      <svg class="mono" viewBox="0 0 76 50" aria-hidden="true">
+        <path d="M38 26 C26 6 6 4 6 18 C6 32 26 30 38 26Z" fill="#E0525A" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M38 26 C50 6 70 4 70 18 C70 32 50 30 38 26Z" fill="#E0525A" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M34 28 L24 47 L32 43 L36 49 L40 30Z" fill="#c9414a" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M42 28 L52 47 L44 43 L40 49 L36 30Z" fill="#c9414a" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/>
+        <rect x="31" y="19" width="14" height="14" rx="4" fill="#F2A54A" stroke="#a8323b" stroke-width="2"/>
+      </svg>
+      <div class="card-in">
+        <div class="card-top"><span>Navidad 2026</span><img src="/assets/logo-fondo-negro.webp" alt="Empowered Investor"></div>
+        <div class="card-para">Para</div>
+        <div class="card-nombre" id="c-para"></div>
+        <div class="card-medio">
+          <div>
+            <div class="card-valor">₡90,000</div>
+            <div class="card-sub">Asesoría + curso</div>
+          </div>
+          <svg class="arbol" viewBox="0 0 90 100" aria-hidden="true">
+            <rect x="39" y="82" width="12" height="13" rx="2" fill="#7a5230"/>
+            <path d="M45 14 L68 44 H22Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M45 32 L74 64 H16Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M45 50 L80 84 H10Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M45 2 l3.2 6.6 7.2 1 -5.2 5 1.2 7.2 -6.4-3.4 -6.4 3.4 1.2-7.2 -5.2-5 7.2-1Z" fill="#F2A54A"/>
+            <circle class="b" cx="38" cy="38" r="3.4" fill="#E0525A"/>
+            <circle class="b b2" cx="55" cy="55" r="3.4" fill="#F2A54A"/>
+            <circle class="b b3" cx="33" cy="58" r="3.4" fill="#7C8FF7"/>
+            <circle class="b b2" cx="27" cy="76" r="3.4" fill="#F2A54A"/>
+            <circle class="b" cx="47" cy="73" r="3.4" fill="#E0525A"/>
+            <circle class="b b3" cx="64" cy="76" r="3.4" fill="#FEF9F3"/>
+          </svg>
+        </div>
+        <div class="card-pie">
+          <div id="c-de-box">De parte de<b id="c-de"></b></div>
+          <div>Válida hasta<b>31 de enero de 2027</b></div>
+        </div>
+      </div>
+    </div>
+    <p class="nota" id="c-pagada">Es un regalo. No tenés que pagar nada.</p>
+
+    <div id="c-vigente">
+      <h2>Qué incluye</h2>
+      <ul class="lista">
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="9" y="24" width="38" height="27" rx="4" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><rect x="6" y="17" width="44" height="10" rx="3" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><path d="M18 31 h20 a4 4 0 0 1 4 4 v5 a4 4 0 0 1 -4 4 h-9 l-5 4 v-4 h-6 a4 4 0 0 1 -4 -4 v-5 a4 4 0 0 1 4 -4Z" fill="#FEF9F3"/><g fill="#0d0f14"><circle cx="22" cy="37.5" r="1.7"/><circle cx="28" cy="37.5" r="1.7"/><circle cx="34" cy="37.5" r="1.7"/></g><path d="M28 17 C21 4 10 8 14 14 C17 18 24 17 28 17Z M28 17 C35 4 46 8 42 14 C39 18 32 17 28 17Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="16" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg><span class="n">1</span></span><div><b>Una asesoría conmigo de 45 minutos</b><span class="d">Según tu contexto personal, vemos cómo se vería un plan de retiro con nosotros.</span>
+          <span class="ecu" role="img" aria-label="Capital inicial más aporte al mes, por el tiempo, da el ingreso al retiro"><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="#F2A54A" stroke="#b97824" stroke-width="2"><path d="M10 34 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="34" rx="14" ry="4.5"/><path d="M10 26 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="26" rx="14" ry="4.5"/><path d="M10 18 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="18" rx="14" ry="4.5"/></g><text x="24" y="21.5" text-anchor="middle" font-size="8" font-weight="700" fill="#0d0f14" font-family="inherit">$</text></svg><b>Capital inicial</b></span><u>+</u><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="13" width="34" height="29" rx="5" fill="rgba(124,143,247,.14)" stroke="#7C8FF7" stroke-width="3"/><path d="M7 22 H41" stroke="#7C8FF7" stroke-width="3"/><path d="M16 8 V16 M32 8 V16" stroke="#7C8FF7" stroke-width="3" stroke-linecap="round"/><g><circle cx="24" cy="32" r="6.5" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/><path d="M24 28.5 V35.5 M20.5 32 H27.5" stroke="#0d0f14" stroke-width="2" stroke-linecap="round"/><animateTransform attributeName="transform" type="translate" values="0 -3;0 0;0 0;0 -3" keyTimes="0;.35;.8;1" dur="2.4s" repeatCount="indefinite"/></g></svg><b>Aporte al mes</b></span><u>×</u><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="25" r="16" fill="rgba(124,143,247,.14)" stroke="#7C8FF7" stroke-width="3"/><path d="M24 12 v3 M24 35 v3 M11 25 h3 M34 25 h3" stroke="#7C8FF7" stroke-width="2" stroke-linecap="round"/><path d="M24 25 L31 29" stroke="#FEF9F3" stroke-width="3" stroke-linecap="round"/><g><path d="M24 25 V14.5" stroke="#F2A54A" stroke-width="3" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" from="0 24 25" to="360 24 25" dur="8s" repeatCount="indefinite"/></g><circle cx="24" cy="25" r="2.4" fill="#FEF9F3"/></svg><b>Tiempo</b></span><u>=</u><span class="f r"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="33" cy="16" r="7" fill="#F2A54A"/><path d="M4 30 q5 -4 10 0 t10 0 t10 0 t10 0" fill="none" stroke="#7C8FF7" stroke-width="2.5" stroke-linecap="round"/><path d="M3 44 C12 35 34 35 45 44 Z" fill="#c9a36a"/><path d="M17 40 C17 30 18 23 21 17" fill="none" stroke="#8a6238" stroke-width="3.5" stroke-linecap="round"/><g fill="none" stroke="#63FCAF" stroke-width="3.2" stroke-linecap="round"><path d="M21 17 C15 12 9 13 6 17"/><path d="M21 17 C18 9 12 6 8 7"/><path d="M21 17 C23 9 28 7 33 9"/><path d="M21 17 C26 14 31 16 34 21"/></g></svg><b>Ingreso al retiro</b></span></span>
+          <span class="d">Vos ponés el ingreso que querés y en cuántos años. De ahí sale cuánto aportar al mes.</span></div></li>
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="4" y="19" width="48" height="30" rx="5" fill="#1f5a44" stroke="#63FCAF" stroke-width="2.5"/><rect x="8" y="23" width="40" height="22" rx="3" fill="none" stroke="#63FCAF" stroke-width="1" opacity=".45"/><path class="pulso" pathLength="1" d="M7 34 h4 l2 -6 l3 11 l2 -5 h2 M34 34 h2 l2 -6 l3 11 l2 -5 h4" fill="none" stroke="#63FCAF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="34" r="8.5" fill="#FEF9F3"/><path d="M26 28.5 h4 v3.5 h3.5 v4 h-3.5 v3.5 h-4 v-3.5 h-3.5 v-4 h3.5Z" fill="#E0525A"/><path d="M28 18 C21 5 10 9 14 15 C17 19 24 18 28 18Z M28 18 C35 5 46 9 42 15 C39 19 32 18 28 18Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="17" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg><span class="n">2</span></span><div><b>El curso Bienestar financiero</b><span class="d">La materia que le faltó a la carrera de medicina. Siete módulos cortos: lo leés a tu ritmo y podés empezar hoy.</span></div></li>
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="15" y="13" width="26" height="40" rx="6" fill="#131720" stroke="#63FCAF" stroke-width="2.5"/><rect x="15" y="22" width="26" height="5" fill="#E0525A"/><rect x="20.5" y="39" width="4" height="8" rx="1" fill="#F2A54A"/><rect x="26" y="35" width="4" height="12" rx="1" fill="#7C8FF7"/><rect x="31.5" y="31" width="4" height="16" rx="1" fill="#63FCAF"/><path d="M28 14 C21 1 10 5 14 11 C17 15 24 14 28 14Z M28 14 C35 1 46 5 42 11 C39 15 32 14 28 14Z" fill="#E0525A" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="13" r="3" fill="#E0525A" stroke="#a8323b" stroke-width="1.5"/></svg><span class="n">3</span></span><div><b>App de gastos por 6 meses</b><span class="d">Registra tus gastos por categoría automáticamente.</span></div></li>
+      </ul>
+
+      <h2>El curso, módulo por módulo</h2>
+      <div class="aqui-curso"></div>
+
+      <h2>Cómo usarla</h2>
+      <p class="muted">Escribime por WhatsApp y escogemos el día. Si tu pareja decide con vos, invitala a la asesoría. El curso lo podés abrir desde ya.</p>
+      <a class="btn" id="c-wa" href="#" target="_blank" rel="noopener">Agendar mi asesoría por WhatsApp</a>
+      <a class="btn sec" href="/curso/" target="_blank" rel="noopener" style="margin-top:10px">Empezar el curso</a>
+      <p class="nota">Si querés que te manejemos el plan y arrancás en los 30 días después de tu asesoría, estos ₡90,000 se rebajan de tu factura.</p>
+    </div>
+
+    <div id="c-vencida" class="hidden">
+      <p class="muted" style="margin-top:22px">Esta gift card venció el 31 de enero de 2027. Si todavía te interesa, escribime y lo vemos.</p>
+      <a class="btn sec" id="c-wa2" href="#" target="_blank" rel="noopener">Escribirle a Jose</a>
+    </div>
+
+    <div class="jose">
+      <img src="/assets/jose-montero.webp" alt="Jose Montero" width="56" height="56">
+      <p><b>Jose Montero</b> · Empowered Investor<br>11 años gestionando portafolios en la bolsa de Estados Unidos.</p>
+    </div>
+  </section>
+
+  <!-- ============ Vista del cliente: regalar ============ -->
+  <section id="v-cliente" class="hidden">
+    <div class="eyebrow">Navidad entre colegas · Empowered Investor</div>
+    <h1>Esta Navidad regalale a tres personas <em>su primer paso al retiro y el bienestar financiero</em></h1>
+    <svg class="hero-svg" viewBox="0 0 320 150" role="img" aria-label="Un arbolito de Navidad con tres regalos: la asesoría, el curso y la app de gastos">
+      <defs><radialGradient id="hg" cx="50%" cy="0%" r="100%"><stop offset="0" stop-color="#1c4334"/><stop offset="1" stop-color="#12171c"/></radialGradient></defs>
+      <rect width="320" height="150" rx="18" fill="url(#hg)"/>
+      <ellipse cx="160" cy="136" rx="146" ry="9" fill="#FEF9F3" opacity=".08"/>
+      <g transform="translate(-104 0)">
+        <rect x="153" y="118" width="14" height="16" rx="2" fill="#7a5230"/>
+        <path d="M160 30 L186 64 H134Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M160 50 L194 90 H126Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M160 72 L202 120 H118Z" fill="#1f5a44" stroke="#63FCAF" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M160 14 l3.6 7.4 8.1 1.1 -5.9 5.6 1.4 8.1 -7.2-3.8 -7.2 3.8 1.4-8.1 -5.9-5.6 8.1-1.1Z" fill="#F2A54A"/>
+        <circle class="b" cx="152" cy="58" r="3.6" fill="#E0525A"/><circle class="b b2" cx="171" cy="80" r="3.6" fill="#F2A54A"/>
+        <circle class="b b3" cx="145" cy="84" r="3.6" fill="#7C8FF7"/><circle class="b b2" cx="138" cy="110" r="3.6" fill="#F2A54A"/>
+        <circle class="b" cx="162" cy="106" r="3.6" fill="#E0525A"/><circle class="b b3" cx="184" cy="110" r="3.6" fill="#FEF9F3"/>
+      </g>
+      <svg x="115" y="74" width="62" height="62" viewBox="0 0 56 56"><rect x="9" y="24" width="38" height="27" rx="4" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><rect x="6" y="17" width="44" height="10" rx="3" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><path d="M18 31 h20 a4 4 0 0 1 4 4 v5 a4 4 0 0 1 -4 4 h-9 l-5 4 v-4 h-6 a4 4 0 0 1 -4 -4 v-5 a4 4 0 0 1 4 -4Z" fill="#FEF9F3"/><g fill="#0d0f14"><circle cx="22" cy="37.5" r="1.7"/><circle cx="28" cy="37.5" r="1.7"/><circle cx="34" cy="37.5" r="1.7"/></g><path d="M28 17 C21 4 10 8 14 14 C17 18 24 17 28 17Z M28 17 C35 4 46 8 42 14 C39 18 32 17 28 17Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="16" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg>
+      <text x="146" y="147" text-anchor="middle" font-family="Bai Jamjuree,sans-serif" font-size="11" font-weight="600" fill="#FEF9F3">Asesoría</text>
+      <svg x="181" y="74" width="62" height="62" viewBox="0 0 56 56"><rect x="4" y="19" width="48" height="30" rx="5" fill="#1f5a44" stroke="#63FCAF" stroke-width="2.5"/><rect x="8" y="23" width="40" height="22" rx="3" fill="none" stroke="#63FCAF" stroke-width="1" opacity=".45"/><path class="pulso" pathLength="1" d="M7 34 h4 l2 -6 l3 11 l2 -5 h2 M34 34 h2 l2 -6 l3 11 l2 -5 h4" fill="none" stroke="#63FCAF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="34" r="8.5" fill="#FEF9F3"/><path d="M26 28.5 h4 v3.5 h3.5 v4 h-3.5 v3.5 h-4 v-3.5 h-3.5 v-4 h3.5Z" fill="#E0525A"/><path d="M28 18 C21 5 10 9 14 15 C17 19 24 18 28 18Z M28 18 C35 5 46 9 42 15 C39 19 32 18 28 18Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="17" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg>
+      <text x="212" y="147" text-anchor="middle" font-family="Bai Jamjuree,sans-serif" font-size="11" font-weight="600" fill="#FEF9F3">Curso</text>
+      <svg x="247" y="74" width="62" height="62" viewBox="0 0 56 56"><rect x="15" y="13" width="26" height="40" rx="6" fill="#131720" stroke="#63FCAF" stroke-width="2.5"/><rect x="15" y="22" width="26" height="5" fill="#E0525A"/><rect x="20.5" y="39" width="4" height="8" rx="1" fill="#F2A54A"/><rect x="26" y="35" width="4" height="12" rx="1" fill="#7C8FF7"/><rect x="31.5" y="31" width="4" height="16" rx="1" fill="#63FCAF"/><path d="M28 14 C21 1 10 5 14 11 C17 15 24 14 28 14Z M28 14 C35 1 46 5 42 11 C39 15 32 14 28 14Z" fill="#E0525A" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="13" r="3" fill="#E0525A" stroke="#a8323b" stroke-width="1.5"/></svg>
+      <text x="278" y="147" text-anchor="middle" font-family="Bai Jamjuree,sans-serif" font-size="11" font-weight="600" fill="#FEF9F3">App</text>
+    </svg>
+    <p>Cada gift card trae <b>asesoría, curso y app de gastos</b> y vale <b>₡90,000</b>. Tres personas que elijás la reciben <b>gratis</b>. Valen hasta el 31 de enero.</p>
+    <p class="muted">Y si quieren que les manejemos el plan y arrancan en los 30 días después de su asesoría, esos ₡90,000 se les rebajan de la factura.</p>
+
+    <div id="f-box">
+      <h2>Qué recibe cada persona</h2>
+      <ul class="lista">
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="9" y="24" width="38" height="27" rx="4" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><rect x="6" y="17" width="44" height="10" rx="3" fill="#E0525A" stroke="#a8323b" stroke-width="2.5"/><path d="M18 31 h20 a4 4 0 0 1 4 4 v5 a4 4 0 0 1 -4 4 h-9 l-5 4 v-4 h-6 a4 4 0 0 1 -4 -4 v-5 a4 4 0 0 1 4 -4Z" fill="#FEF9F3"/><g fill="#0d0f14"><circle cx="22" cy="37.5" r="1.7"/><circle cx="28" cy="37.5" r="1.7"/><circle cx="34" cy="37.5" r="1.7"/></g><path d="M28 17 C21 4 10 8 14 14 C17 18 24 17 28 17Z M28 17 C35 4 46 8 42 14 C39 18 32 17 28 17Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="16" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg><span class="n">1</span></span><div><b>Una asesoría conmigo de 45 minutos</b><span class="d">Según su contexto personal, ve cómo se vería un plan de retiro con nosotros.</span>
+          <span class="ecu" role="img" aria-label="Capital inicial más aporte al mes, por el tiempo, da el ingreso al retiro"><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><g fill="#F2A54A" stroke="#b97824" stroke-width="2"><path d="M10 34 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="34" rx="14" ry="4.5"/><path d="M10 26 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="26" rx="14" ry="4.5"/><path d="M10 18 v5 c0 3 28 3 28 0 v-5"/><ellipse cx="24" cy="18" rx="14" ry="4.5"/></g><text x="24" y="21.5" text-anchor="middle" font-size="8" font-weight="700" fill="#0d0f14" font-family="inherit">$</text></svg><b>Capital inicial</b></span><u>+</u><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="13" width="34" height="29" rx="5" fill="rgba(124,143,247,.14)" stroke="#7C8FF7" stroke-width="3"/><path d="M7 22 H41" stroke="#7C8FF7" stroke-width="3"/><path d="M16 8 V16 M32 8 V16" stroke="#7C8FF7" stroke-width="3" stroke-linecap="round"/><g><circle cx="24" cy="32" r="6.5" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/><path d="M24 28.5 V35.5 M20.5 32 H27.5" stroke="#0d0f14" stroke-width="2" stroke-linecap="round"/><animateTransform attributeName="transform" type="translate" values="0 -3;0 0;0 0;0 -3" keyTimes="0;.35;.8;1" dur="2.4s" repeatCount="indefinite"/></g></svg><b>Aporte al mes</b></span><u>×</u><span class="f"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="25" r="16" fill="rgba(124,143,247,.14)" stroke="#7C8FF7" stroke-width="3"/><path d="M24 12 v3 M24 35 v3 M11 25 h3 M34 25 h3" stroke="#7C8FF7" stroke-width="2" stroke-linecap="round"/><path d="M24 25 L31 29" stroke="#FEF9F3" stroke-width="3" stroke-linecap="round"/><g><path d="M24 25 V14.5" stroke="#F2A54A" stroke-width="3" stroke-linecap="round"/><animateTransform attributeName="transform" type="rotate" from="0 24 25" to="360 24 25" dur="8s" repeatCount="indefinite"/></g><circle cx="24" cy="25" r="2.4" fill="#FEF9F3"/></svg><b>Tiempo</b></span><u>=</u><span class="f r"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="33" cy="16" r="7" fill="#F2A54A"/><path d="M4 30 q5 -4 10 0 t10 0 t10 0 t10 0" fill="none" stroke="#7C8FF7" stroke-width="2.5" stroke-linecap="round"/><path d="M3 44 C12 35 34 35 45 44 Z" fill="#c9a36a"/><path d="M17 40 C17 30 18 23 21 17" fill="none" stroke="#8a6238" stroke-width="3.5" stroke-linecap="round"/><g fill="none" stroke="#63FCAF" stroke-width="3.2" stroke-linecap="round"><path d="M21 17 C15 12 9 13 6 17"/><path d="M21 17 C18 9 12 6 8 7"/><path d="M21 17 C23 9 28 7 33 9"/><path d="M21 17 C26 14 31 16 34 21"/></g></svg><b>Ingreso al retiro</b></span></span>
+          <span class="d">Pone el ingreso que quiere y en cuántos años. De ahí sale cuánto aportar al mes.</span></div></li>
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="4" y="19" width="48" height="30" rx="5" fill="#1f5a44" stroke="#63FCAF" stroke-width="2.5"/><rect x="8" y="23" width="40" height="22" rx="3" fill="none" stroke="#63FCAF" stroke-width="1" opacity=".45"/><path class="pulso" pathLength="1" d="M7 34 h4 l2 -6 l3 11 l2 -5 h2 M34 34 h2 l2 -6 l3 11 l2 -5 h4" fill="none" stroke="#63FCAF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="34" r="8.5" fill="#FEF9F3"/><path d="M26 28.5 h4 v3.5 h3.5 v4 h-3.5 v3.5 h-4 v-3.5 h-3.5 v-4 h3.5Z" fill="#E0525A"/><path d="M28 18 C21 5 10 9 14 15 C17 19 24 18 28 18Z M28 18 C35 5 46 9 42 15 C39 19 32 18 28 18Z" fill="#F2A54A" stroke="#b97824" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="17" r="3" fill="#F2A54A" stroke="#b97824" stroke-width="1.5"/></svg><span class="n">2</span></span><div><b>El curso Bienestar financiero</b><span class="d">La materia que le faltó a la carrera de medicina. Siete módulos cortos.</span></div></li>
+        <li><span class="g"><svg viewBox="0 0 56 56" aria-hidden="true"><rect x="15" y="13" width="26" height="40" rx="6" fill="#131720" stroke="#63FCAF" stroke-width="2.5"/><rect x="15" y="22" width="26" height="5" fill="#E0525A"/><rect x="20.5" y="39" width="4" height="8" rx="1" fill="#F2A54A"/><rect x="26" y="35" width="4" height="12" rx="1" fill="#7C8FF7"/><rect x="31.5" y="31" width="4" height="16" rx="1" fill="#63FCAF"/><path d="M28 14 C21 1 10 5 14 11 C17 15 24 14 28 14Z M28 14 C35 1 46 5 42 11 C39 15 32 14 28 14Z" fill="#E0525A" stroke="#a8323b" stroke-width="2" stroke-linejoin="round"/><circle cx="28" cy="13" r="3" fill="#E0525A" stroke="#a8323b" stroke-width="1.5"/></svg><span class="n">3</span></span><div><b>App de gastos por 6 meses</b><span class="d">Registra los gastos por categoría automáticamente.</span></div></li>
+      </ul>
+
+      <h2>El curso, módulo por módulo</h2>
+      <div class="aqui-curso"></div>
+
+      <h2>¿A quién se las regalás?</h2>
+      <form id="f" novalidate>
+        <label>Tu nombre
+          <input type="text" id="de" autocomplete="name" placeholder="Tu nombre">
+        </label>
+        <fieldset>
+          <legend>Gift card 1</legend>
+          <label>Su nombre
+            <input type="text" id="n1" placeholder="Dra. / Dr. …">
+          </label>
+          <label>Su WhatsApp
+            <span class="tel"><span>+506</span><input type="tel" id="w1" inputmode="numeric" maxlength="9" placeholder="8888 8888"></span>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Gift card 2 (opcional)</legend>
+          <label>Su nombre
+            <input type="text" id="n2" placeholder="Dra. / Dr. …">
+          </label>
+          <label>Su WhatsApp
+            <span class="tel"><span>+506</span><input type="tel" id="w2" inputmode="numeric" maxlength="9" placeholder="8888 8888"></span>
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Gift card 3 (opcional)</legend>
+          <label>Su nombre
+            <input type="text" id="n3" placeholder="Dra. / Dr. …">
+          </label>
+          <label>Su WhatsApp
+            <span class="tel"><span>+506</span><input type="tel" id="w3" inputmode="numeric" maxlength="9" placeholder="8888 8888"></span>
+          </label>
+        </fieldset>
+        <p class="err hidden" id="err"></p>
+        <button type="submit" class="btn" id="send">Crear las gift cards</button>
+      </form>
+    </div>
+
+    <div id="ok" class="hidden">
+      <h2 id="ok-titulo">Listas. Solo falta mandarlas</h2>
+      <div class="paso">
+        <h3>Mandá cada tarjeta</h3>
+        <p class="muted" style="margin:0">Se abre tu WhatsApp con el mensaje escrito. Cambialo si querés.</p>
+        <div id="ok-envios"></div>
+      </div>
+      <p class="muted">Yo les escribo en las próximas 24 horas para coordinar la asesoría, y te aviso cuando la tengan.</p>
+    </div>
+  </section>
+
+</div>
+
+<template id="tpl-curso">
+  <div class="mods">
+    <a class="mod" href="/curso/#m1" target="_blank" rel="noopener"><span class="il"><span class="n">1</span><svg viewBox="0 0 160 100" aria-hidden="true"><g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path stroke="#7C8FF7" fill="rgba(124,143,247,.12)" d="M77 18 C62 10 46 18 44 31 C33 35 29 50 37 59 C33 72 46 84 59 80 C66 88 77 85 77 76 Z"/><path stroke="#63FCAF" fill="rgba(99,252,175,.12)" d="M83 18 C98 10 114 18 116 31 C127 35 131 50 123 59 C127 72 114 84 101 80 C94 88 83 85 83 76 Z"/><path stroke="#7C8FF7" opacity=".75" d="M58 30 C64 34 64 42 57 46 M48 56 C56 54 62 58 62 66 M77 40 C70 42 68 50 72 54"/><path stroke="#63FCAF" opacity=".75" d="M102 30 C96 34 96 42 103 46 M112 56 C104 54 98 58 98 66 M83 40 C90 42 92 50 88 54"/></g><circle cx="137" cy="22" r="11" fill="#F2A54A"/><text x="137" y="27" text-anchor="middle" font-size="14" font-weight="800" fill="#0d0f14" font-family="inherit">$</text><circle cx="24" cy="76" r="8" fill="#F2A54A" opacity=".7"/><text x="24" y="80" text-anchor="middle" font-size="10" font-weight="800" fill="#0d0f14" font-family="inherit">₡</text></svg></span><span class="tx"><span class="t">Tu cabeza</span><b>Psicología del dinero</b></span></a>
+    <a class="mod" href="/curso/#m2" target="_blank" rel="noopener"><span class="il"><span class="n">2</span><svg viewBox="0 0 160 100" aria-hidden="true"><g transform="rotate(-90 80 50)" fill="none" stroke-width="17"><circle cx="80" cy="50" r="30" stroke="#7C8FF7" stroke-dasharray="92.7 95.8" stroke-dashoffset="-0.8"/><circle cx="80" cy="50" r="30" stroke="#F2A54A" stroke-dasharray="55 133.5" stroke-dashoffset="-95"/><circle cx="80" cy="50" r="30" stroke="#63FCAF" stroke-dasharray="36.1 152.4" stroke-dashoffset="-151.6"/></g><g font-size="13" font-weight="800" font-family="inherit"><text x="128" y="55" fill="#7C8FF7">50</text><text x="16" y="82" fill="#F2A54A">30</text><text x="20" y="24" fill="#63FCAF">20</text></g></svg></span><span class="tx"><span class="t">Orden</span><b>Presupuesto</b></span></a>
+    <a class="mod" href="/curso/#m3" target="_blank" rel="noopener"><span class="il"><span class="n">3</span><svg viewBox="0 0 160 100" aria-hidden="true"><path id="fl-a" d="M44 40 Q80 2 116 40" fill="none" stroke="#3a4356" stroke-width="2" stroke-dasharray="3 4"/><path id="fl-b" d="M116 60 Q80 98 44 60" fill="none" stroke="#3a4356" stroke-width="2" stroke-dasharray="3 4"/><circle cx="28" cy="50" r="16" fill="#1c212b" stroke="#7C8FF7" stroke-width="3"/><circle cx="28" cy="45" r="4.5" fill="#7C8FF7"/><path d="M19 58 C20 50 36 50 37 58" fill="#7C8FF7"/><circle cx="132" cy="50" r="16" fill="#1c212b" stroke="#63FCAF" stroke-width="3"/><path d="M122 46 L132 39 L142 46 Z" fill="#63FCAF"/><path d="M125 48 v9 M132 48 v9 M139 48 v9 M122 59 h20" stroke="#63FCAF" stroke-width="2.4" fill="none"/><g><circle cx="80" cy="50" r="10" fill="none" stroke="#9AA1AB" stroke-width="5" stroke-dasharray="4.2 3.65"/><animateTransform attributeName="transform" type="rotate" from="0 80 50" to="360 80 50" dur="9s" repeatCount="indefinite"/></g><circle cx="80" cy="50" r="7.5" fill="#1c212b" stroke="#9AA1AB" stroke-width="2"/><text x="80" y="54" text-anchor="middle" font-size="10" font-weight="800" fill="#FEF9F3" font-family="inherit">$</text><g fill="#F2A54A"><circle r="5"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle><circle r="5"><animateMotion dur="3.2s" begin="-1.07s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle><circle r="5"><animateMotion dur="3.2s" begin="-2.13s" repeatCount="indefinite"><mpath href="#fl-a"/></animateMotion></circle></g><g fill="#63FCAF"><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-.5s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-1.57s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect><rect x="-6" y="-3.5" width="12" height="7" rx="1.5"><animateMotion dur="3.2s" begin="-2.63s" repeatCount="indefinite"><mpath href="#fl-b"/></animateMotion></rect></g></svg></span><span class="tx"><span class="t">Entender</span><b>Cómo funciona el dinero</b></span></a>
+    <a class="mod" href="/curso/#m4" target="_blank" rel="noopener"><span class="il"><span class="n">4</span><svg viewBox="0 0 160 100" aria-hidden="true"><defs><pattern id="vent" width="8" height="8" patternUnits="userSpaceOnUse"><rect x="2" y="2" width="4.5" height="4" fill="#7C8FF7" opacity=".75"/></pattern></defs><rect x="26" y="52" width="32" height="38" fill="#1c212b" stroke="#5b6474" stroke-width="1.5"/><rect x="28" y="54" width="28" height="32" fill="url(#vent)"/><rect x="104" y="42" width="32" height="48" fill="#1c212b" stroke="#5b6474" stroke-width="1.5"/><rect x="106" y="44" width="28" height="40" fill="url(#vent)"/><rect x="56" y="16" width="48" height="74" fill="#232a38" stroke="#9AA1AB" stroke-width="1.5"/><rect x="60" y="20" width="40" height="56" fill="url(#vent)"/><rect x="64" y="6" width="32" height="10" rx="2" fill="#63FCAF"/><text x="80" y="14" text-anchor="middle" font-size="8" font-weight="800" fill="#0d0f14" font-family="inherit">CCSS</text><g fill="#F2A54A"><rect x="70" y="30" width="4.5" height="4"/><rect x="86" y="46" width="4.5" height="4"/><rect x="62" y="62" width="4.5" height="4"/><rect x="118" y="62" width="4.5" height="4"/><rect x="38" y="64" width="4.5" height="4"/></g><rect x="74" y="78" width="12" height="12" fill="#0d0f14" stroke="#9AA1AB" stroke-width="1"/><path d="M12 90 H148" stroke="#5b6474" stroke-width="2" stroke-linecap="round"/></svg></span><span class="tx"><span class="t">Tu realidad</span><b>La Caja</b></span></a>
+    <a class="mod" href="/curso/#m5" target="_blank" rel="noopener"><span class="il"><span class="n">5</span><svg viewBox="0 0 160 100" aria-hidden="true"><g stroke="#9AA1AB" stroke-width="3" stroke-linecap="round"><path d="M34 30 V90"/><path d="M76 14 V90"/><path d="M118 34 V90"/></g><path d="M35 30 C44 24 50 36 60 30 V48 C50 54 44 42 35 48 Z" fill="#E0525A" opacity=".8"/><path d="M77 14 C89 6 97 22 110 14 V38 C97 46 89 30 77 38 Z" fill="#E0525A"/><path d="M119 34 C127 29 132 39 141 34 V50 C132 55 127 45 119 50 Z" fill="#E0525A" opacity=".65"/><path d="M14 90 H146" stroke="#5b6474" stroke-width="2" stroke-linecap="round"/></svg></span><span class="tx"><span class="t">Defensa</span><b>Banderas rojas</b></span></a>
+    <a class="mod" href="/curso/#m6" target="_blank" rel="noopener"><span class="il"><span class="n">6</span><svg viewBox="0 0 160 100" aria-hidden="true"><g stroke="#2a3140" stroke-width="1"><path d="M12 30 H150 M12 50 H150 M12 70 H150"/></g><path d="M12 8 V90 H150" fill="none" stroke="#5b6474" stroke-width="1.5"/><polygon points="12,82 30,74 46,78 62,60 78,64 96,44 112,48 130,26 148,14 148,90 12,90" fill="rgba(99,252,175,.13)"/><polyline class="trazo" pathLength="1" points="12,84 30,78 46,80 62,68 78,70 96,58 112,60 130,46 148,38" fill="none" stroke="#7C8FF7" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline class="trazo" pathLength="1" points="12,82 30,74 46,78 62,60 78,64 96,44 112,48 130,26 148,14" fill="none" stroke="#63FCAF" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><g font-size="9" font-weight="800" font-family="inherit"><text x="118" y="14" text-anchor="end" fill="#63FCAF">Nasdaq 100</text><text x="148" y="80" text-anchor="end" fill="#7C8FF7">S&amp;P 500</text></g></svg></span><span class="tx"><span class="t">Invertir</span><b>Índices y cuenta propia</b></span></a>
+    <a class="mod" href="/curso/#m7" target="_blank" rel="noopener"><span class="il"><span class="n">7</span><svg viewBox="0 0 160 100" aria-hidden="true"><defs><clipPath id="playa"><rect width="160" height="100" rx="12"/></clipPath></defs><g clip-path="url(#playa)"><rect width="160" height="100" fill="#1a2233"/><circle cx="110" cy="44" r="18" fill="#F2A54A"/><rect x="0" y="56" width="160" height="22" fill="#3d4fb8"/><path d="M0 60 q10 -5 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#7C8FF7" stroke-width="2"/><path d="M96 66 h28 M102 72 h16" stroke="#F2A54A" stroke-width="2" stroke-linecap="round" opacity=".8"/><path d="M0 78 C40 70 110 74 160 82 V100 H0 Z" fill="#c9a36a"/><path d="M40 88 C40 68 44 52 52 38" fill="none" stroke="#8a6238" stroke-width="5" stroke-linecap="round"/><g fill="none" stroke="#63FCAF" stroke-width="4.5" stroke-linecap="round"><path d="M52 38 C40 28 28 30 20 38"/><path d="M52 38 C44 22 32 16 22 18"/><path d="M52 38 C56 22 68 16 80 20"/><path d="M52 38 C64 30 76 32 84 42"/><path d="M52 38 C52 26 56 18 62 12"/></g><path d="M118 84 L132 62 M118 62 C126 56 138 56 146 62 Z" stroke="#FEF9F3" stroke-width="2" fill="#E0525A" stroke-linejoin="round"/></g></svg></span><span class="tx"><span class="t">Decidir</span><b>Tu plan</b></span></a>
+  </div>
+</template>
+
+<script>
+var WEBHOOK = "https://script.google.com/macros/s/AKfycbzpRcZk_r8ZR7Q6QrTc_mzlO4JSziwP3yzBivdgNAw6KWtUd4T5lwGt98uOSYIrtLzI/exec";
+var WA_JOSE = "50670558296";
+var VENCE   = new Date(2027, 1, 1);      /* válida hasta el 31 ene 2027 inclusive */
+
+function $(id){ return document.getElementById(id); }
+function nombreLindo(s){ return (s||"").replace(/[-_]+/g," ").replace(/\s+/g," ").trim().slice(0,60); }
+function capital(s){ return s.replace(/(^|\s)([a-záéíóúñ])/g, function(m,a,b){ return a+b.toUpperCase(); }); }
+function colones(n){ return "₡" + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+function wa(num, texto){ return "https://wa.me/" + num + "?text=" + encodeURIComponent(texto); }
+
+/* Nieve: copos livianos, solo si el visitante no pidió menos movimiento */
+(function(){
+  if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var caja = $("nieve");
+  for(var k = 0; k < 26; k++){
+    var c = document.createElement("i"), t = 2 + Math.random()*4, dur = 9 + Math.random()*10;
+    c.style.left = (Math.random()*96) + "%";
+    c.style.width = c.style.height = t.toFixed(1) + "px";
+    c.style.opacity = (0.15 + Math.random()*0.4).toFixed(2);
+    c.style.animationDuration = dur.toFixed(1) + "s";
+    c.style.animationDelay = (-Math.random()*dur).toFixed(1) + "s";
+    caja.appendChild(c);
+  }
+})();
+
+var q = new URLSearchParams(location.search);
+var PARA = nombreLindo(q.get("para"));
+var DE   = nombreLindo(q.get("de"));
+if(DE && DE === DE.toLowerCase()) DE = capital(DE);
+
+/* Los módulos se pintan una sola vez, en la vista que toca, para no repetir los id de los SVG */
+(function(){
+  var hueco = $(PARA ? "v-colega" : "v-cliente").querySelector(".aqui-curso");
+  if(!hueco) return;
+  hueco.appendChild($("tpl-curso").content.cloneNode(true));
+  try{ if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)
+    Array.prototype.forEach.call(document.querySelectorAll("svg"), function(s){ if(s.pauseAnimations) s.pauseAnimations(); }); }catch(e){}
+})();
+
+if(PARA){
+  /* ---- Vista del colega ---- */
+  $("v-colega").classList.remove("hidden");
+  $("c-para").textContent = PARA;
+  if(DE){ $("c-de").textContent = DE; $("c-titulo").innerHTML = "";
+    $("c-titulo").appendChild(document.createTextNode(DE + " te regaló "));
+    var em = document.createElement("em"); em.textContent = "esta gift card"; $("c-titulo").appendChild(em);
+  } else { $("c-de-box").classList.add("hidden"); }
+  var msj = "Hola Jose, soy " + PARA + ". " + (DE ? DE + " me regaló una gift card. " : "Me regalaron una gift card. ") + "Quiero agendar mi asesoría.";
+  $("c-wa").href = wa(WA_JOSE, msj); $("c-wa2").href = wa(WA_JOSE, msj);
+  if(new Date() >= VENCE){ $("c-vigente").classList.add("hidden"); $("c-pagada").classList.add("hidden"); $("c-vencida").classList.remove("hidden"); }
+} else {
+  /* ---- Vista del cliente ---- */
+  $("v-cliente").classList.remove("hidden");
+  if(DE) $("de").value = DE;
+
+  $("f").addEventListener("submit", function(e){
+    e.preventDefault();
+    var de = $("de").value.trim(), err = $("err");
+    var col = [], falta = [];
+    [1,2,3].forEach(function(i){
+      var n = $("n"+i).value.trim(), w = $("w"+i).value.replace(/\D/g,"");
+      if(i > 1 && !n && !w) return;
+      if(!n) falta.push("el nombre de la persona " + i);
+      if(w.length !== 8) falta.push("un WhatsApp de 8 dígitos para la persona " + i);
+      col.push({ nombre:n, wa:w });
+    });
+    if(!de) falta.unshift("tu nombre");
+    var vistos = {}, repetido = false; col.forEach(function(c){ if(c.wa.length === 8){ if(vistos[c.wa]) repetido = true; vistos[c.wa] = 1; } });
+    if(repetido) falta.push("que los WhatsApp sean de personas distintas");
+    if(falta.length){ err.textContent = "Falta: " + falta.join(", ") + "."; err.classList.remove("hidden"); return; }
+    err.classList.add("hidden");
+    $("send").disabled = true;
+
+    var alias = de.toLowerCase().replace(/\s+/g,"-");
+    var envios = $("ok-envios");
+    col.forEach(function(c, i){
+      var payload = { timestamp:new Date().toISOString(), etapa:"giftcard", nombre:c.nombre, whatsapp:"506"+c.wa,
+        especialidad:"(gift card)", nota:"Gift card " + (i+1) + " de " + col.length + " regalada por " + de + ". Gratis.",
+        pagina:"/giftcard", utm_source:"giftcard", utm_medium:"cliente", utm_campaign:alias, utm_content:"navidad-2026" };
+      try{ fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e2){}
+
+      var link = location.origin + "/giftcard/?para=" + encodeURIComponent(c.nombre) + "&de=" + encodeURIComponent(de);
+      var primer = c.nombre.replace(/^(dra?\.?|doctora?)\s+/i,"").split(" ")[0];
+      var texto = primer + ", te regalo esto por Navidad: una asesoría con Jose Montero, el que me lleva el plan de retiro, y su curso de finanzas para médicos. Es un regalo, no tenés que pagar nada. Acá está tu tarjeta: " + link;
+
+      var box = document.createElement("div"); box.className = "envio";
+      var quien = document.createElement("div"); quien.className = "quien"; quien.textContent = c.nombre;
+      var a = document.createElement("a"); a.className = "btn"; a.target = "_blank"; a.rel = "noopener";
+      a.href = wa("506"+c.wa, texto); a.textContent = "Enviar por WhatsApp";
+      var b = document.createElement("button"); b.type = "button"; b.className = "btn sec"; b.textContent = "Copiar el link";
+      b.addEventListener("click", function(){
+        var listo = function(){ b.textContent = "Link copiado"; setTimeout(function(){ b.textContent = "Copiar el link"; }, 2000); };
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(link).then(listo, function(){ prompt("Copiá el link:", link); }); }
+        else { prompt("Copiá el link:", link); }
+      });
+      box.appendChild(quien); box.appendChild(a); box.appendChild(b); envios.appendChild(box);
+    });
+
+    if(col.length === 1){ $("ok-titulo").textContent = "Lista. Solo falta mandarla"; }
+    $("f-box").classList.add("hidden"); $("ok").classList.remove("hidden");
+    $("ok").scrollIntoView({ block:"start" });
+  });
+}
+</script>
+</body>
+</html>
