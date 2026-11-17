@@ -489,8 +489,8 @@ async function fuentes(){
 // Parte el texto en renglones que se lean de corrido: no deja una palabra sola al final, no separa
 // un número de lo que cuenta ("5 puntos", "20 años"), no termina renglón en "de", "a", "el"…, y prefiere
 // cortar después de una coma, dos puntos o punto. Reparte el largo entre los renglones.
-const PEGA = /^(a|al|de|del|el|la|los|las|en|y|o|e|u|un|una|unos|unas|por|con|sin|que|se|su|sus|tu|tus|te|es|no|si|ni|lo|le|mi|mis|más|cada|este|esta|ese|esa|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|mil|primer|primera|primeros|primeras|S&P|["“¿¡(]*\d[\d.,]*)$/i;
-function envolver(ctx, texto, ancho){
+const PEGA = /^(a|al|de|del|el|la|los|las|en|y|o|e|u|un|una|unos|unas|por|para|con|sin|que|se|su|sus|tu|tus|te|es|no|si|ni|lo|le|mi|mis|más|cada|este|esta|ese|esa|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|mil|primer|primera|primeros|primeras|S&P|["“¿¡(]*\d[\d.,]*)$/i;
+function envolver(ctx, texto, ancho, esTitulo){
   const out = [];
   const w = s => ctx.measureText(s.replace(/\*/g, "")).width;
   texto.split("\n").forEach(parr => {
@@ -501,7 +501,7 @@ function envolver(ctx, texto, ancho){
     palabras.forEach((p, k) => {
       const junto = cur ? cur + " " + p : p;
       if (cur && w(junto) > ancho) { trozos.push(cur); cur = p; } else cur = junto;
-      if (!PEGA.test(p) || k === palabras.length - 1) { trozos.push(cur); cur = ""; }
+      if (esTitulo || !PEGA.test(p) || k === palabras.length - 1) { trozos.push(cur); cur = ""; }
     });
     if (cur) trozos.push(cur);
     const n = trozos.length, esp = w(" ");
@@ -510,7 +510,7 @@ function envolver(ctx, texto, ancho){
     let minR = 1, x = 0;
     trozos.forEach((tz, k) => { const add = w(tz) + (x ? esp : 0); if (x && x + add > ancho) { minR++; x = w(tz); } else x += add; });
     let mejor = null;
-    for (let R = minR; R <= Math.min(n, minR + 1); R++) {
+    for (let R = minR; R <= Math.min(n, minR + (esTitulo ? 0 : 1)); R++) {
       // costo[r][j]: mejor costo de acomodar los primeros j trozos en r renglones
       const C = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(Infinity)), P = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(-1));
       C[0][0] = 0;
@@ -518,8 +518,10 @@ function envolver(ctx, texto, ancho){
         if (C[r - 1][i] === Infinity) continue;
         const L = largo(i, j); if (L > ancho && j - i > 1) continue;
         const h = Math.max(0, (ancho - L) / ancho); let c = h * h;
+        if (esTitulo && j === n) c *= 0.15;   // en el título el último renglón puede quedar corto: los de arriba llenan el ancho
         if (j < n && /[,;:.?!]["”)]?$/.test(trozos[j - 1])) c -= 0.3;
-        if (j === n && j - i === 1 && R > 1 && L < ancho * 0.3) c += 0.6;   // palabra sola al final
+        if (j === n && j - i === 1 && R > 1 && L < ancho * 0.3 && !trozos[j - 1].includes("*")) c += 0.6;   // palabra sola al final
+        if (esTitulo && j < n && PEGA.test(trozos[j - 1].replace(/\*/g, ""))) c += 0.3;   // renglón de título que termina en "de", "el", un número…
         if (C[r - 1][i] + c < C[r][j]) { C[r][j] = C[r - 1][i] + c; P[r][j] = i; }
       }
       const total = C[R][n] + (R - minR) * 0.08;
@@ -532,6 +534,19 @@ function envolver(ctx, texto, ancho){
 }
 function dibujar(c, s, i, n, fondo, foto){
   const ctx = c.getContext("2d");
+  if (s.lineas.some(l => l.t.trim().toLowerCase() === "[imagen]")) {
+    ctx.fillStyle = "#FFF9F2"; ctx.fillRect(0, 0, W, H);
+    if (fondo.fondo === "foto" && foto) {
+      const k = Math.max(W / foto.width, H / foto.height), fw = foto.width * k, fh = foto.height * k;
+      ctx.drawImage(foto, (W - fw) / 2, (H - fh) / 2, fw, fh);
+    } else {
+      ctx.fillStyle = "#5a6170"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+      ctx.font = '600 44px "Bai Jamjuree"'; ctx.fillText("Lámina de imagen", W / 2, H / 2 - 16);
+      ctx.font = '400 34px "Bai Jamjuree"'; ctx.fillText("Elegila y tocá «Foto…» para ponerla", W / 2, H / 2 + 44);
+      ctx.textAlign = "left";
+    }
+    return;
+  }
   const claro = fondo.fondo === "crema";
   const conFoto = fondo.fondo === "foto" && foto;
   // fondo
@@ -561,12 +576,21 @@ function dibujar(c, s, i, n, fondo, foto){
   ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
   // bloque de texto: título ajustado + cuerpo
   const ancho = W - 2 * M, topMin = M + L + 70, botMax = H - M - 80;
-  let tf = i === 0 ? 92 : 78, tl = [];
-  for (;;) { ctx.font = '700 ' + tf + 'px "Bai Jamjuree"'; tl = s.titulo ? envolver(ctx, s.titulo, ancho) : []; if (tl.length * tf * 1.12 <= (i === 0 ? 760 : 520) || tf <= 46) break; tf -= 4; }
+  const lhT = claro ? 1.42 : 1.12;   // interlineado del título: más aire en la plantilla clara
+  const anchoT = claro ? 800 : ancho; // en claro el título va en una caja más angosta, como en la plantilla
   const bf = claro ? 46 : 42, bl = [], pesoB = claro ? "400" : "500", pesoHi = claro ? "700" : "600";
   ctx.font = pesoB + ' ' + bf + 'px "Bai Jamjuree"';
   s.lineas.forEach(l => { if (!l.t) { bl.push({ t: "", hi: false }); return; } envolver(ctx, l.t, ancho).forEach(x => bl.push({ t: x, hi: l.hi })); });
-  const hT = tl.length * tf * 1.12, hB = bl.length * bf * 1.42, sep = tl.length && bl.length ? 34 : 0, hTot = hT + sep + hB;
+  const hB = bl.length * bf * 1.42 + (claro ? 18 : 0);
+  // el título se achica hasta que quepa en su tope Y hasta que todo el bloque quepa entre el logo y el pie
+  let tf = i === 0 ? (claro ? 76 : 92) : (claro ? 70 : 78), tl = [];
+  for (;;) {
+    ctx.font = '700 ' + tf + 'px "Bai Jamjuree"'; tl = s.titulo ? envolver(ctx, s.titulo, anchoT, true) : [];
+    const alto = tl.length * tf * lhT;
+    if ((alto <= (i === 0 ? 760 : 520) && alto + (tl.length && bl.length ? 34 : 0) + hB <= botMax - topMin) || tf <= 46) break;
+    tf -= 4;
+  }
+  const hT = tl.length * tf * lhT, sep = tl.length && bl.length ? 34 : 0, hTot = hT + sep + hB;
   let y = conFoto ? Math.max(topMin, botMax - hTot) : Math.max(topMin, (topMin + botMax - hTot) / 2);
   ctx.fillStyle = texto; ctx.font = '700 ' + tf + 'px "Bai Jamjuree"';
   // Título palabra por palabra: lo que va entre *asteriscos* sale en el color de realce (rojo en claro).
@@ -580,7 +604,7 @@ function dibujar(c, s, i, n, fondo, foto){
       x += ctx.measureText(limpio + " ").width;
       if (p.endsWith("*") || /\*[.,;:!?"”)]*$/.test(p)) enRealce = false;
     });
-    y += tf * .12;
+    y += tf * (lhT - 1);
   });
   y += sep;
   bl.forEach((l, k) => { if (claro && l.hi && k > 0 && !bl[k - 1].hi) y += 18; y += bf; ctx.fillStyle = l.hi ? acento : texto; ctx.font = (l.hi ? pesoHi : pesoB) + ' ' + bf + 'px "Bai Jamjuree"'; ctx.fillText(l.t, M, y); y += bf * .42; });
