@@ -156,6 +156,7 @@ label.campo{display:block;font-size:13.5px;color:var(--gris);margin:12px 0 6px}
           </div>
           <div class="acciones">
             <button class="btn" id="btn-bajar">Guardar en el celular</button>
+            <button class="btn sec" id="btn-zip">Descargar en la compu (ZIP)</button>
             <button class="btn sec" id="btn-caption">Copiar caption</button>
           </div>
           <div class="estado" id="estado-bajar"></div>
@@ -588,10 +589,21 @@ $("#btn-bajar").onclick = async () => {
     catch(e) { if (e.name !== "AbortError") est.textContent = "No se pudo compartir: " + e.message; }
     return;
   }
+  await bajarZip();
+};
+async function bajarZip(){
+  const est = $("#estado-bajar");
   const zip = new JSZip(); pngs.forEach(f => zip.file(f.name, f));
   const blob = await zip.generateAsync({ type: "blob" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = slug(actual.nombre) + ".zip"; a.click();
-  est.textContent = "Bajado como ZIP con las " + pngs.length + " láminas.";
+  est.textContent = "Bajado como ZIP con las " + pngs.length + " láminas. Está en la carpeta Descargas.";
+}
+// En la compu el botón de compartir abre el panel de Windows; este baja siempre el ZIP.
+$("#btn-zip").onclick = async () => {
+  const est = $("#estado-bajar");
+  if (!pngs) { est.textContent = "Preparando láminas…"; await render(); }
+  if (!pngs || !pngs.length) return;
+  await bajarZip();
 };
 $("#btn-caption").onclick = async () => {
   const t = parsear($("#guion").value).caption;
