@@ -133,3 +133,69 @@ recibe el precio tick a tick por el WebSocket público de Yahoo Finance (sin key
 
 Probar en vivo: `https://investorcr.com/.netlify/functions/atalaya-vivo`.
 Probar en local con funciones: `node research/edges/live-sim/servidor_local.js` → `http://localhost:8812/atalaya/vivo/`.
+
+# Instagram: palabra clave (reemplaza a ManyChat)
+
+`instagram-dm.mjs`: cuando alguien manda un DM o responde una story de @joseinvestor.cr con la
+palabra **CURSO**, la función contesta con el link de /curso (con UTM `instagram / dm / curso`,
+que /curso ya guarda en el Sheet) y una pregunta. Texto fijo, sin modelo. Las palabras y sus
+mensajes están en el objeto `PALABRAS` al inicio del archivo: agregar otra es agregar una línea.
+
+`instagram-token.mjs`: tarea semanal que renueva el token (vence a los 60 días) y lo guarda en
+Netlify Blobs.
+
+## Puesta en marcha (una sola vez)
+
+### 1 · App de Meta
+developers.facebook.com → la app (sirve la del tracker de ads o una nueva tipo Business) →
+agregar el producto **Instagram** → *API setup with Instagram login*. Ahí:
+- Copiar el **Instagram app secret**.
+- *Generate access token* para @joseinvestor.cr aceptando los permisos `instagram_business_basic`
+  e `instagram_business_manage_messages`. Ese es el token de larga duración.
+- En la app de Instagram del celular: Configuración → Mensajes y respuestas a historias →
+  Herramientas conectadas → **Permitir acceso a los mensajes**. Sin eso Meta no manda los DMs.
+
+### 2 · Variables de entorno en Netlify
+
+| Variable | Valor |
+|---|---|
+| `IG_VERIFY_TOKEN` | una frase inventada cualquiera |
+| `IG_APP_SECRET` | el Instagram app secret del paso 1 |
+| `IG_ACCESS_TOKEN` | el token del paso 1 |
+| `META_APP_SECRET` | opcional: App settings → Basic → App secret, solo si la firma falla con el otro |
+
+### 3 · Publicar
+La función se despliega con el sitio y queda en
+`https://investorcr.com/.netlify/functions/instagram-dm`.
+
+### 4 · Dar de alta el webhook en Meta
+En la misma pantalla de *API setup with Instagram login* → Configure webhooks: Callback URL la de
+arriba, Verify token la frase de `IG_VERIFY_TOKEN`, y suscribir el campo **messages** (y
+**comments** si algún día hay Advanced Access). Luego activar la suscripción de la cuenta:
+
+```bash
+curl -X POST "https://graph.instagram.com/v27.0/me/subscribed_apps?subscribed_fields=messages&access_token=EL_TOKEN"
+```
+
+Tiene que responder `{"success": true}`. Por último, pasar la app a **Live** (Meta solo manda
+avisos de gente real con la app publicada).
+
+### 5 · Comprobar
+Desde una cuenta que NO sea la de Jose ni tenga rol en la app, mandar "curso" por DM. Tiene que
+llegar el link en segundos. Los logs quedan en Netlify → Functions → `instagram-dm`:
+- "Firma inválida": probar poniendo también `META_APP_SECRET`.
+- "Meta rechazó la respuesta": el JSON del error dice si es el token o un permiso.
+- No aparece nada en los logs: el aviso no está llegando; revisar paso 1 (acceso a mensajes),
+  paso 4 (suscripción) y que la app esté Live. Si con todo eso solo llegan los mensajes de
+  cuentas con rol en la app, Meta está pidiendo Advanced Access (revisión de app) para el
+  público, y ahí se decide si se pide la revisión.
+
+## Detalles que importan
+- Solo contesta a quien escribió primero y una vez por mensaje; ignora los mensajes propios.
+- "concurso" o "cursos" no disparan; "Quiero el curso" sí.
+- Los comentarios en publicaciones están programados (respuesta privada al comentario) pero
+  Meta solo manda ese aviso con Advanced Access, que requiere revisión de app y verificación
+  del negocio.
+- Siempre responde 200 a Meta para que no reintente y el mensaje no salga repetido.
+- Antes de cancelar ManyChat: desconectarlo de la cuenta de Instagram, para que no contesten
+  los dos a la vez.
