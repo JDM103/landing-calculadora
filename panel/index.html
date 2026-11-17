@@ -36,7 +36,17 @@
   .toolbar button:hover{ border-color:var(--menta); }
   .toolbar .tot{ font-size:12.5px; color:var(--gris-sec); margin-left:auto; }
   .toolbar .tot b{ color:var(--crema); }
-  #estado{ font-size:12px; color:var(--gris-sec); margin:0 0 8px; }
+  #estado{ margin:0 0 12px; min-height:38px; }
+  .fresc{ display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px 9px; max-width:100%; border:1px solid currentColor;
+    border-radius:14px; padding:8px 14px; font-size:14.5px; font-weight:800; line-height:1.3; }
+  .fresc .pto{ width:10px; height:10px; border-radius:50%; background:currentColor; flex:none; }
+  .fresc small{ font-size:12px; font-weight:500; color:var(--gris-sec); }
+  .fresc.ok{ color:var(--menta); background:rgba(99,252,175,.08); }
+  .fresc.viejo{ color:var(--ambar); background:rgba(224,176,122,.10); }
+  .fresc.muy{ color:var(--rojo); background:rgba(224,82,90,.12); }
+  .fresc.cargando{ color:#8fa0ff; background:rgba(85,109,251,.12); }
+  .fresc.cargando .pto{ animation:frescPulso 1s ease-in-out infinite; }
+  @keyframes frescPulso{ 50%{ opacity:.25; } }
   .layout{ display:grid; grid-template-columns:minmax(470px,600px) 1fr; gap:14px; align-items:start; }
   .lista{ background:var(--card); border:1px solid var(--bd); border-radius:14px; overflow:hidden;
     max-height:calc(100vh - 150px); overflow-y:auto; overscroll-behavior:contain; }
@@ -106,7 +116,7 @@
   .accion.calma{ background:rgba(154,161,171,.07); border-color:var(--bd); color:var(--gris-sec); }
   .notas{ margin-top:8px; font-size:12px; color:var(--ambar); }
   /* ===== pestañas y modo acción ===== */
-  .tabs{ display:flex; gap:8px; margin:4px 0 12px; }
+  .tabs{ display:flex; gap:8px; margin:4px 0 12px; flex-wrap:wrap; }
   .tabs button{ background:var(--card); border:1px solid var(--bd); color:var(--gris-sec); border-radius:10px;
     padding:9px 18px; font-family:inherit; font-size:13.5px; font-weight:800; cursor:pointer; }
   .tabs button.on{ background:var(--card2); color:var(--menta); border-color:rgba(99,252,175,.5); }
@@ -972,7 +982,6 @@ async function refrescarCuenta(alias, motivo, rapido){
     ponRefrescoMsg('✅ Cuenta actualizada a las '+new Date().toTimeString().slice(0,5)
       +(c.snap? ' · efectivo <b>'+fmt(c.snap.cash)+'</b> · '+pos.length+' posición'+(pos.length===1?'':'es'):'')
       +' · '+nAb+' orden'+(nAb===1?'':'es')+' abierta'+(nAb===1?'':'s'));
-    var est=$("estado"); if(est) est.textContent="Cuenta "+(PRIV?"••••":alias)+" actualizada "+new Date().toTimeString().slice(0,5);
   }catch(e){
     if(REFRESCO[alias]!==n) return;
     apiLog("res", "ERROR actualizando la cuenta "+alias+": "+(e.message||e), null);
@@ -2153,6 +2162,10 @@ async function cargar(){
     cargarVivo().then(function(){ if(MODO==="accion" && DATOS){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); } });
     cargarInbox();
     if(!ORD_GLOB) escanearOrdenes(true);   // llena la columna Órd. en segundo plano
+    pintarFresc();
+    // al entrar al panel se piden los datos frescos a Alpaca sin esperar el botón (una vez por carga de página)
+    if(!AUTO_ACT){ AUTO_ACT=true; var u0=ultAct();
+      if(location.hash!=="#demo" && !(u0 && Date.now()-u0.t<60000)) actualizarTodo(); }
   }catch(e){
     sessionStorage.removeItem("panel_tok");
     $("login").style.display=""; $("app").style.display="none";
@@ -2212,15 +2225,52 @@ $("n-guardar").addEventListener("click", async function(){
   }catch(e){ msg.style.color="var(--rojo)"; msg.textContent="❌ "+(e.message||e); }
   btn.disabled=false;
 });
-$("refrescar").addEventListener("click", async function(){
-  $("estado").textContent="Consultando Alpaca…";
+// ===== frescura de los datos: cuándo fue la última actualización completa contra Alpaca =====
+// Se guarda en este navegador (localStorage). El aviso cambia de color con la edad:
+// verde < 10 min · ámbar < 1 hora · rojo de ahí en adelante o si nunca se actualizó.
+var AUTO_ACT=false, ACTUALIZANDO=false, FRESC_ERR="";
+function ultAct(){ try{ var u=JSON.parse(localStorage.getItem("panel_ult_act")||"null"); return (u && u.t)? u : null; }catch(e){ return null; } }
+function haceTxt(ms){
+  var m=Math.floor(ms/60000);
+  if(m<1) return "hace menos de 1 minuto";
+  if(m<60) return "hace "+m+" min";
+  var h=Math.floor(m/60);
+  if(h<24) return "hace "+h+" h"+(m%60? " "+(m%60)+" min":"");
+  var d=Math.floor(h/24);
+  return "hace "+d+" día"+(d===1?"":"s");
+}
+function cuandoTxt(t){
+  var f=new Date(t), hora=f.toTimeString().slice(0,5);
+  if(f.toDateString()===new Date().toDateString()) return "hoy a las "+hora;
+  return "el "+f.getDate()+" "+["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][f.getMonth()]+" a las "+hora;
+}
+function pintarFresc(){
+  var el=$("estado"); if(!el) return;
+  if(location.hash==="#demo"){ el.innerHTML='<span class="fresc viejo"><span class="pto"></span>Maqueta: datos de ejemplo, no vienen de Alpaca</span>'; return; }
+  var u=ultAct(), viejo=u? '<small>los datos en pantalla son de '+haceTxt(Date.now()-u.t)+' ('+cuandoTxt(u.t)+')</small>'
+                          : '<small>no hay registro de la última actualización en este navegador</small>';
+  if(ACTUALIZANDO){ el.innerHTML='<span class="fresc cargando"><span class="pto"></span>Actualizando datos desde Alpaca… '+viejo+'</span>'; return; }
+  var err=FRESC_ERR? ' <small style="color:var(--rojo)">· falló el último intento: '+escapa(FRESC_ERR)+'</small>':'';
+  if(!u){ el.innerHTML='<span class="fresc muy"><span class="pto"></span>Datos sin actualizar '+viejo+err+'</span>'; return; }
+  var edad=Date.now()-u.t, cls= edad<600000? "ok" : edad<3600000? "viejo" : "muy";
+  el.innerHTML='<span class="fresc '+cls+'"><span class="pto"></span>Datos actualizados '+haceTxt(edad)
+    +' <small>'+cuandoTxt(u.t)+' · '+u.ok+' cuenta'+(u.ok===1?'':'s')+' ok'
+    +(u.mal&&u.mal.length? ' · <span style="color:var(--rojo)">con error: '+escapa(u.mal.join(", "))+'</span>':'')+'</small>'+err+'</span>';
+}
+setInterval(pintarFresc, 20000);
+async function actualizarTodo(){
+  if(ACTUALIZANDO || location.hash==="#demo") return;
+  ACTUALIZANDO=true; FRESC_ERR=""; $("refrescar").disabled=true; pintarFresc();
   try{ var r=await llamar("cierre-mes",{sin_correo:true});
     var mal=Object.keys(r.resultados).filter(function(k){return r.resultados[k]!=="ok";});
-    $("estado").textContent="Actualizado ("+r.mes+"): "+(Object.keys(r.resultados).length-mal.length)+" ok"+(mal.length?" · con error: "+mal.join(", "):"");
+    try{ localStorage.setItem("panel_ult_act", JSON.stringify({ t:Date.now(), ok:Object.keys(r.resultados).length-mal.length, mal:mal, mes:r.mes })); }
+    catch(e){ /* sin localStorage no se recuerda la hora entre visitas */ }
     CACHE_HIST={}; CACHE_ORD={};
-    cargar();
-  }catch(e){ $("estado").textContent="Error: "+(e.message||e); }
-});
+    await cargar();
+  }catch(e){ FRESC_ERR=String(e.message||e); }
+  ACTUALIZANDO=false; $("refrescar").disabled=false; pintarFresc();
+}
+$("refrescar").addEventListener("click", actualizarTodo);
 if(sessionStorage.getItem("panel_tok") || location.hash==="#demo") cargar();
 
 // ===== maqueta (#demo) =====
