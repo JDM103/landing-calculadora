@@ -456,9 +456,9 @@ async function imgFoto(id){
   const i = await cargarImg(u).catch(() => null); if (i) imgs.set(id, i); return i;
 }
 async function fuentes(){
-  await Promise.all([document.fonts.load('700 80px "Bai Jamjuree"'), document.fonts.load('500 44px "Bai Jamjuree"'), document.fonts.load('600 30px "Bai Jamjuree"')]).catch(() => {});
+  await Promise.all([document.fonts.load('700 80px "Bai Jamjuree"'), document.fonts.load('500 44px "Bai Jamjuree"'), document.fonts.load('600 30px "Bai Jamjuree"'), document.fonts.load('400 46px "Bai Jamjuree"')]).catch(() => {});
   if (!logoOscuro) logoOscuro = await cargarImg("/assets/logo-empowered.webp").catch(() => null);
-  if (!logoClaro) logoClaro = await cargarImg("/assets/logo-fondo-negro.png").catch(() => null);
+  if (!logoClaro) logoClaro = await cargarImg("/assets/logo-empowered-tinta.webp").catch(() => null);
 }
 function envolver(ctx, texto, ancho){
   const out = [];
@@ -467,7 +467,7 @@ function envolver(ctx, texto, ancho){
     if (!palabras.length) { out.push(""); return; }
     palabras.forEach(p => {
       const prueba = linea ? linea + " " + p : p;
-      if (ctx.measureText(prueba).width > ancho && linea) { out.push(linea); linea = p; } else linea = prueba;
+      if (ctx.measureText(prueba.replace(/\*/g, "")).width > ancho && linea) { out.push(linea); linea = p; } else linea = prueba;
     });
     out.push(linea);
   });
@@ -484,40 +484,64 @@ function dibujar(c, s, i, n, fondo, foto){
     const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "rgba(13,15,20,.30)"); g.addColorStop(.45, "rgba(13,15,20,.55)"); g.addColorStop(1, "rgba(13,15,20,.92)");
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   } else if (claro) {
-    ctx.fillStyle = "#FEF9F3"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#FFF9F2"; ctx.fillRect(0, 0, W, H);
   } else {
     const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#15191E"); g.addColorStop(1, "#0d0f14");
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = "rgba(85,109,251,.16)"; ctx.beginPath(); ctx.arc(W - 120, 180, 260, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "rgba(99,252,175,.10)"; ctx.beginPath(); ctx.arc(60, H - 160, 220, 0, Math.PI * 2); ctx.fill();
   }
-  const texto = claro ? "#0d0f14" : "#FEF9F3", gris = claro ? "#5a6170" : "#b7bec9", acento = claro ? "#556DFB" : "#63FCAF";
+  const texto = claro ? "#0d0f14" : "#FEF9F3", gris = claro ? "#5a6170" : "#b7bec9", acento = claro ? "#5B6EF5" : "#63FCAF";
   // cabecera: logo + contador
-  const L = 92;
-  if (claro) { if (logoClaro) { ctx.save(); ctx.beginPath(); ctx.arc(M + L / 2, M + L / 2, L / 2, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(logoClaro, M, M, L, L); ctx.restore(); } }
+  // En claro (plantilla de marca): logo de letras oscuras arriba a la izquierda, sin contador.
+  const L = claro ? 150 : 92;
+  if (claro) { if (logoClaro) ctx.drawImage(logoClaro, M - 14, M - 20, L, L); }
   else if (logoOscuro) ctx.drawImage(logoOscuro, M - 8, M - 8, L + 16, L + 16);
-  ctx.fillStyle = gris; ctx.font = '600 30px "Bai Jamjuree"'; ctx.textAlign = "right"; ctx.textBaseline = "middle";
-  ctx.fillText((i + 1) + "/" + n, W - M, M + L / 2);
+  if (!claro) {
+    ctx.fillStyle = gris; ctx.font = '600 30px "Bai Jamjuree"'; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    ctx.fillText((i + 1) + "/" + n, W - M, M + L / 2);
+  }
   ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
   // bloque de texto: título ajustado + cuerpo
   const ancho = W - 2 * M, topMin = M + L + 70, botMax = H - M - 80;
   let tf = i === 0 ? 92 : 78, tl = [];
   for (;;) { ctx.font = '700 ' + tf + 'px "Bai Jamjuree"'; tl = s.titulo ? envolver(ctx, s.titulo, ancho) : []; if (tl.length * tf * 1.12 <= (i === 0 ? 760 : 520) || tf <= 46) break; tf -= 4; }
-  const bf = 42, bl = [];
-  ctx.font = '500 ' + bf + 'px "Bai Jamjuree"';
+  const bf = claro ? 46 : 42, bl = [], pesoB = claro ? "400" : "500", pesoHi = claro ? "700" : "600";
+  ctx.font = pesoB + ' ' + bf + 'px "Bai Jamjuree"';
   s.lineas.forEach(l => { if (!l.t) { bl.push({ t: "", hi: false }); return; } envolver(ctx, l.t, ancho).forEach(x => bl.push({ t: x, hi: l.hi })); });
   const hT = tl.length * tf * 1.12, hB = bl.length * bf * 1.42, sep = tl.length && bl.length ? 34 : 0, hTot = hT + sep + hB;
   let y = conFoto ? Math.max(topMin, botMax - hTot) : Math.max(topMin, (topMin + botMax - hTot) / 2);
   ctx.fillStyle = texto; ctx.font = '700 ' + tf + 'px "Bai Jamjuree"';
-  tl.forEach(l => { y += tf; ctx.fillText(l, M, y); y += tf * .12; });
+  // Título palabra por palabra: lo que va entre *asteriscos* sale en el color de realce (rojo en claro).
+  const realce = claro ? "#FF3131" : acento; let enRealce = false;
+  tl.forEach(l => {
+    y += tf; let x = M;
+    l.split(" ").forEach(p => {
+      if (p.startsWith("*")) enRealce = true;
+      const limpio = p.replace(/\*/g, "");
+      ctx.fillStyle = enRealce ? realce : texto; ctx.fillText(limpio, x, y);
+      x += ctx.measureText(limpio + " ").width;
+      if (p.endsWith("*") || /\*[.,;:!?"”)]*$/.test(p)) enRealce = false;
+    });
+    y += tf * .12;
+  });
   y += sep;
-  ctx.font = '500 ' + bf + 'px "Bai Jamjuree"';
-  bl.forEach(l => { y += bf; ctx.fillStyle = l.hi ? acento : texto; if (l.hi) ctx.font = '600 ' + bf + 'px "Bai Jamjuree"'; else ctx.font = '500 ' + bf + 'px "Bai Jamjuree"'; ctx.fillText(l.t, M, y); y += bf * .42; });
+  bl.forEach((l, k) => { if (claro && l.hi && k > 0 && !bl[k - 1].hi) y += 18; y += bf; ctx.fillStyle = l.hi ? acento : texto; ctx.font = (l.hi ? pesoHi : pesoB) + ' ' + bf + 'px "Bai Jamjuree"'; ctx.fillText(l.t, M, y); y += bf * .42; });
   // pie
   ctx.font = '600 28px "Bai Jamjuree"'; ctx.fillStyle = gris; ctx.textBaseline = "alphabetic";
   ctx.fillText("@joseinvestor.cr", M, H - M + 8);
-  ctx.textAlign = "right"; ctx.fillStyle = i < n - 1 ? acento : gris;
-  ctx.fillText(i < n - 1 ? "Deslizá  →" : "Guardalo para después", W - M, H - M + 8);
+  if (claro) {
+    // flecha de trazo a mano, como en la plantilla de marca; la última lámina no lleva
+    if (i < n - 1) {
+      const x1 = W - M, y1 = H - M - 6, x0 = x1 - 210;
+      ctx.strokeStyle = acento; ctx.lineWidth = 6; ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.beginPath(); ctx.moveTo(x0, y1 + 10); ctx.bezierCurveTo(x0 + 70, y1 + 16, x0 + 150, y1 + 4, x1, y1 - 8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x1 - 34, y1 - 30); ctx.lineTo(x1, y1 - 8); ctx.lineTo(x1 - 22, y1 + 22); ctx.stroke();
+    }
+  } else {
+    ctx.textAlign = "right"; ctx.fillStyle = i < n - 1 ? acento : gris;
+    ctx.fillText(i < n - 1 ? "Deslizá  →" : "Guardalo para después", W - M, H - M + 8);
+  }
   ctx.textAlign = "left";
 }
 async function render(){
