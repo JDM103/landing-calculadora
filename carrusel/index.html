@@ -68,6 +68,13 @@ label.campo{display:block;font-size:13.5px;color:var(--gris);margin:12px 0 6px}
 .fondos .btn{padding:9px 14px;font-size:14px}
 .fondos .btn.on{outline:2px solid var(--menta)}
 .acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.zoom{position:fixed;inset:0;z-index:60;background:rgba(8,10,14,.94);display:flex;align-items:center;justify-content:center;gap:10px;padding:14px}
+.zoom.hidden{display:none}
+.zoom img{max-height:calc(100vh - 28px);max-width:calc(100vw - 150px);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.zoom button{background:rgba(255,255,255,.08);color:var(--crema);border:1px solid var(--linea);border-radius:999px;width:46px;height:46px;font-size:24px;line-height:1;flex:none}
+.zoom .zx{position:absolute;top:14px;right:14px}
+.zoom .zn{position:absolute;top:22px;left:18px;color:var(--gris);font-size:14px}
+@media (max-width:560px){ .zoom{gap:4px;padding:8px} .zoom img{max-width:calc(100vw - 16px)} .zoom .zp,.zoom .zs{position:absolute;bottom:14px} .zoom .zp{left:14px} .zoom .zs{right:14px} }
 .caption{background:var(--tinta2);border:1px solid var(--linea);border-radius:12px;padding:12px 14px;white-space:pre-wrap;font-size:15px;margin-top:10px}
 .estado{font-size:13px;color:var(--gris);min-height:18px;margin-top:8px}
 .err{color:var(--rojo)}
@@ -88,6 +95,13 @@ label.campo{display:block;font-size:13.5px;color:var(--gris);margin:12px 0 6px}
 </style>
 </head>
 <body>
+<div class="zoom hidden" id="zoom" role="dialog" aria-label="Lámina en grande">
+  <span class="zn" id="zoom-n"></span>
+  <button class="zx" id="zoom-x" aria-label="Cerrar">×</button>
+  <button class="zp" id="zoom-prev" aria-label="Lámina anterior">‹</button>
+  <img id="zoom-img" alt="">
+  <button class="zs" id="zoom-next" aria-label="Lámina siguiente">›</button>
+</div>
 <div class="wrap">
 
   <!-- ===== Lista de proyectos ===== -->
@@ -152,6 +166,7 @@ label.campo{display:block;font-size:13.5px;color:var(--gris);margin:12px 0 6px}
             <button class="btn sec" data-fondo="tinta">Oscuro</button>
             <button class="btn sec" data-fondo="crema">Claro</button>
             <button class="btn sec" data-fondo="foto">Foto…</button>
+            <button class="btn sec" id="btn-zoom">Ver grande</button>
             <label class="muted" style="font-size:13.5px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="todas" style="width:auto;margin:0"> a todas</label>
           </div>
           <div class="acciones">
@@ -461,16 +476,47 @@ async function fuentes(){
   if (!logoOscuro) logoOscuro = await cargarImg("/assets/logo-empowered.webp").catch(() => null);
   if (!logoClaro) logoClaro = await cargarImg("/assets/logo-empowered-tinta.webp").catch(() => null);
 }
+// Parte el texto en renglones que se lean de corrido: no deja una palabra sola al final, no separa
+// un número de lo que cuenta ("5 puntos", "20 años"), no termina renglón en "de", "a", "el"…, y prefiere
+// cortar después de una coma, dos puntos o punto. Reparte el largo entre los renglones.
+const PEGA = /^(a|al|de|del|el|la|los|las|en|y|o|e|u|un|una|unos|unas|por|con|sin|que|se|su|sus|tu|tus|te|es|no|si|ni|lo|le|mi|mis|más|cada|este|esta|ese|esa|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|mil|primer|primera|primeros|primeras|S&P|["“¿¡(]*\d[\d.,]*)$/i;
 function envolver(ctx, texto, ancho){
   const out = [];
+  const w = s => ctx.measureText(s.replace(/\*/g, "")).width;
   texto.split("\n").forEach(parr => {
-    const palabras = parr.split(/\s+/).filter(Boolean); let linea = "";
+    const palabras = parr.split(/\s+/).filter(Boolean);
     if (!palabras.length) { out.push(""); return; }
-    palabras.forEach(p => {
-      const prueba = linea ? linea + " " + p : p;
-      if (ctx.measureText(prueba.replace(/\*/g, "")).width > ancho && linea) { out.push(linea); linea = p; } else linea = prueba;
+    // trozos que no se separan
+    const trozos = []; let cur = "";
+    palabras.forEach((p, k) => {
+      const junto = cur ? cur + " " + p : p;
+      if (cur && w(junto) > ancho) { trozos.push(cur); cur = p; } else cur = junto;
+      if (!PEGA.test(p) || k === palabras.length - 1) { trozos.push(cur); cur = ""; }
     });
-    out.push(linea);
+    if (cur) trozos.push(cur);
+    const n = trozos.length, esp = w(" ");
+    const largo = (i, j) => { let x = 0; for (let k = i; k < j; k++) x += w(trozos[k]) + (k > i ? esp : 0); return x; };
+    // mínimo de renglones con corte simple
+    let minR = 1, x = 0;
+    trozos.forEach((tz, k) => { const add = w(tz) + (x ? esp : 0); if (x && x + add > ancho) { minR++; x = w(tz); } else x += add; });
+    let mejor = null;
+    for (let R = minR; R <= Math.min(n, minR + 1); R++) {
+      // costo[r][j]: mejor costo de acomodar los primeros j trozos en r renglones
+      const C = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(Infinity)), P = Array.from({ length: R + 1 }, () => new Array(n + 1).fill(-1));
+      C[0][0] = 0;
+      for (let r = 1; r <= R; r++) for (let j = r; j <= n; j++) for (let i = r - 1; i < j; i++) {
+        if (C[r - 1][i] === Infinity) continue;
+        const L = largo(i, j); if (L > ancho && j - i > 1) continue;
+        const h = Math.max(0, (ancho - L) / ancho); let c = h * h;
+        if (j < n && /[,;:.?!]["”)]?$/.test(trozos[j - 1])) c -= 0.3;
+        if (j === n && j - i === 1 && R > 1 && L < ancho * 0.3) c += 0.6;   // palabra sola al final
+        if (C[r - 1][i] + c < C[r][j]) { C[r][j] = C[r - 1][i] + c; P[r][j] = i; }
+      }
+      const total = C[R][n] + (R - minR) * 0.08;
+      if (C[R][n] < Infinity && (!mejor || total < mejor.total)) { const cortes = []; let j = n; for (let r = R; r >= 1; r--) { const i = P[r][j]; cortes.unshift([i, j]); j = i; } mejor = { total, cortes }; }
+    }
+    if (!mejor) { out.push(parr); return; }
+    mejor.cortes.forEach(([i, j]) => out.push(trozos.slice(i, j).join(" ")));
   });
   return out;
 }
@@ -561,6 +607,7 @@ async function render(){
     const lam = document.createElement("button"); lam.className = "lam" + (i === sel ? " sel" : "");
     const c = document.createElement("canvas"); c.width = W; c.height = H; lam.appendChild(c);
     lam.onclick = () => { sel = i; document.querySelectorAll(".tira .lam").forEach((x, j) => x.classList.toggle("sel", j === i)); $("#sel-txt").textContent = "Lámina " + (i + 1); };
+    lam.ondblclick = () => abrirZoom(i);
     tira.appendChild(lam); canvases.push(c);
   }
   $("#sel-txt").textContent = "Lámina " + (sel + 1);
@@ -605,6 +652,25 @@ $("#btn-zip").onclick = async () => {
   if (!pngs || !pngs.length) return;
   await bajarZip();
 };
+// ---------- ver una lámina en grande (botón, doble clic en la lámina, flechas del teclado)
+let zoomI = 0;
+function abrirZoom(i){
+  const cs = document.querySelectorAll(".tira .lam canvas"); if (!cs.length) return;
+  zoomI = (i + cs.length) % cs.length;
+  $("#zoom-img").src = cs[zoomI].toDataURL("image/png");
+  $("#zoom-n").textContent = "Lámina " + (zoomI + 1) + " de " + cs.length;
+  $("#zoom").classList.remove("hidden");
+}
+function cerrarZoom(){ $("#zoom").classList.add("hidden"); }
+$("#btn-zoom").onclick = () => abrirZoom(sel);
+$("#zoom-x").onclick = cerrarZoom;
+$("#zoom-prev").onclick = e => { e.stopPropagation(); abrirZoom(zoomI - 1); };
+$("#zoom-next").onclick = e => { e.stopPropagation(); abrirZoom(zoomI + 1); };
+$("#zoom").onclick = e => { if (e.target.id === "zoom") cerrarZoom(); };
+document.addEventListener("keydown", e => {
+  if ($("#zoom").classList.contains("hidden")) return;
+  if (e.key === "Escape") cerrarZoom(); else if (e.key === "ArrowLeft") abrirZoom(zoomI - 1); else if (e.key === "ArrowRight") abrirZoom(zoomI + 1);
+});
 $("#btn-caption").onclick = async () => {
   const t = parsear($("#guion").value).caption;
   try { await navigator.clipboard.writeText(t); $("#estado-bajar").textContent = "Caption copiado."; } catch(e) { $("#estado-bajar").textContent = "No pude copiar; seleccionalo a mano."; }
