@@ -2,8 +2,8 @@
  *
  * Qué hace: cuando alguien le escribe a @joseinvestor.cr un DM (o responde una story) con una
  * palabra clave, Meta le avisa a esta función y la función contesta con el mensaje fijo de esa
- * palabra. Hoy solo existe CURSO, que manda el link de /curso. No usa ningún modelo: es texto
- * fijo escrito por Jose, así sale igual siempre y no cuesta nada.
+ * palabra. Hoy solo existe CURSO, que manda un botón al /curso y una pregunta. No usa ningún
+ * modelo: es texto fijo escrito por Jose, así sale igual siempre y no cuesta nada.
  *
  * Reglas de Meta que esto respeta: solo se le contesta a quien escribió primero, dentro de las
  * 24 horas, y una vez por mensaje. Los comentarios en publicaciones también están soportados
@@ -22,15 +22,36 @@ import crypto from "node:crypto";
 const GRAPH = "https://graph.instagram.com/v27.0";
 
 /* Palabras clave. La clave va en minúscula y sin tildes; se busca como palabra suelta dentro
- * del mensaje, así entran "CURSO", "curso", "quiero el curso" y no entra "concurso". */
+ * del mensaje, así entran "CURSO", "curso", "quiero el curso" y no entra "concurso".
+ * Cada palabra tiene: texto (lo que va arriba del botón), boton + url (el botón que abre el
+ * link, título de 20 caracteres como máximo) y despues (un segundo mensaje, opcional).
+ * Copy en voseo tico. */
 export const PALABRAS = {
-  curso: [
-    "Hola, buenas. Aquí está el curso de Bienestar financiero, son 7 capítulos cortos:",
-    "https://investorcr.com/curso/?utm_source=instagram&utm_medium=dm&utm_campaign=curso",
-    "Usted es médico o de otra área?",
-    "Gracias, Jose.",
-  ].join("\n\n"),
+  curso: {
+    texto: "Hola, buenas. Aquí te dejo el curso de Bienestar financiero, son 7 capítulos cortos.",
+    boton: "Ver el curso",
+    url: "https://investorcr.com/curso/?utm_source=instagram&utm_medium=dm&utm_campaign=curso",
+    despues: "Sos médico o de otra área?\n\nGracias, Jose.",
+  },
 };
+
+/* Versión en texto plano: para los comentarios (Meta solo deja una respuesta privada y sin
+ * botones) y como respaldo si Meta rechaza el botón. */
+export function textoPlano(palabra) {
+  const p = PALABRAS[palabra];
+  return [p.texto, p.url, p.despues].filter(Boolean).join("\n\n");
+}
+
+/* Los mensajes que salen por un DM: uno con botón y, si hay, el de la pregunta. */
+export function mensajesDm(palabra) {
+  const p = PALABRAS[palabra];
+  const lista = [{ attachment: { type: "template", payload: {
+    template_type: "button", text: p.texto,
+    buttons: [{ type: "web_url", url: p.url, title: p.boton }],
+  } } }];
+  if (p.despues) lista.push({ text: p.despues });
+  return lista;
+}
 
 const limpio = (t) => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
@@ -100,20 +121,40 @@ export async function leerToken() {
  * mensaje mientras la función siga caliente; no sobrevive a un arranque en frío. */
 const vistos = new Set();
 
-export async function responder(p, token, fetchFn = fetch) {
-  if (p.id && vistos.has(p.id)) return { enviado: false, motivo: "repetido" };
-  if (p.id) { vistos.add(p.id); if (vistos.size > 500) vistos.clear(); }
+async function enviar(destino, message, token, fetchFn) {
   const r = await fetchFn(`${GRAPH}/me/messages`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ recipient: p.destino, message: { text: PALABRAS[p.palabra] } }),
+    body: JSON.stringify({ recipient: destino, message }),
   });
   const res = await r.json().catch(() => ({}));
-  if (!r.ok) {
-    console.error("Meta rechazó la respuesta:", p.tipo, p.palabra, JSON.stringify(res));
-    return { enviado: false, motivo: "meta", meta: res };
+  return { ok: r.ok, res };
+}
+
+export async function responder(p, token, fetchFn = fetch) {
+  if (p.id && vistos.has(p.id)) return { enviado: false, motivo: "repetido" };
+  if (p.id) { vistos.add(p.id); if (vistos.size > 500) vistos.clear(); }
+
+  if (p.tipo === "dm") {
+    const [conBoton, ...resto] = mensajesDm(p.palabra);
+    const r1 = await enviar(p.destino, conBoton, token, fetchFn);
+    if (r1.ok) {
+      for (const m of resto) {
+        const r = await enviar(p.destino, m, token, fetchFn);
+        if (!r.ok) console.error("Meta rechazó el segundo mensaje:", p.palabra, JSON.stringify(r.res));
+      }
+      console.log("Respuesta enviada:", p.tipo, p.palabra, "con botón");
+      return { enviado: true };
+    }
+    console.error("Meta rechazó el botón, se manda en texto:", p.palabra, JSON.stringify(r1.res));
   }
-  console.log("Respuesta enviada:", p.tipo, p.palabra);
+
+  const r = await enviar(p.destino, { text: textoPlano(p.palabra) }, token, fetchFn);
+  if (!r.ok) {
+    console.error("Meta rechazó la respuesta:", p.tipo, p.palabra, JSON.stringify(r.res));
+    return { enviado: false, motivo: "meta", meta: r.res };
+  }
+  console.log("Respuesta enviada:", p.tipo, p.palabra, "en texto");
   return { enviado: true };
 }
 

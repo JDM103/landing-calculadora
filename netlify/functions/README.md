@@ -137,8 +137,8 @@ Probar en local con funciones: `node research/edges/live-sim/servidor_local.js` 
 # Instagram: palabra clave (reemplaza a ManyChat)
 
 `instagram-dm.mjs`: cuando alguien manda un DM o responde una story de @joseinvestor.cr con la
-palabra **CURSO**, la función contesta con el link de /curso (con UTM `instagram / dm / curso`,
-que /curso ya guarda en el Sheet) y una pregunta. Texto fijo, sin modelo. Las palabras y sus
+palabra **CURSO**, la función contesta con un botón que abre /curso (con UTM `instagram / dm / curso`,
+que /curso ya guarda en el Sheet) y una pregunta, en voseo. Si Meta rechaza el botón, sale en texto con el link. Texto fijo, sin modelo. Las palabras y sus
 mensajes están en el objeto `PALABRAS` al inicio del archivo: agregar otra es agregar una línea.
 
 `instagram-token.mjs`: tarea semanal que renueva el token (vence a los 60 días) y lo guarda en
