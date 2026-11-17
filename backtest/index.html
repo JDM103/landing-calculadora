@@ -274,6 +274,8 @@ MODES.cust={ lab:"", nom:"A mi gusto", get lines(){ var L=CAT.filter(function(c)
   if(!L.length) L=[{k:"qqq", nom:"QQQ comprar y mantener", tip:"QQQ B&H", col:"#ffffff", w:2.1}]; return L; } };
 
 // ---- estado
+// Incrustado (?embed=1) no hay control de edad a la vista: el contador muestra años invirtiendo, no edad.
+var EMB=/[?&]embed=/.test(location.search);
 var mode="ata", anio=1987, edad=25, aporte=500, inicial=0, escala="lin", ingreso=5000;
 function aporteTxt(){ return "$"+fmtAporte(aporte)+" al mes"+(inicial>0?" + $"+fmtAporte(inicial)+" al inicio":""); }
 var S=0, E=0, PATH={}, INV=[], DD={}, CASHPCT=0, FPIDX=[], FPALLOC=[], FPREACH=-1;
@@ -447,7 +449,7 @@ function draw(p){
       var xr=X(DEC[S+FPREACH]); ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle="rgba(99,252,175,0.6)";
       ctx.beginPath(); ctx.moveTo(xr,mT); ctx.lineTo(xr,mT+ph); ctx.stroke(); ctx.restore();
       ctx.fillStyle="#63FCAF"; ctx.textAlign=xr>mL+pw*0.6?"right":"left"; ctx.font="700 "+(small?"11px":"12.5px")+" 'Bai Jamjuree'";
-      ctx.fillText("Freedom point · "+Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+" años", xr+(xr>mL+pw*0.6?-6:6), mT+8);
+      ctx.fillText("Freedom point · "+(EMB ? "año "+Math.max(1,Math.ceil(DEC[S+FPREACH]-DEC[S]-1e-6)) : Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+" años"), xr+(xr>mL+pw*0.6?-6:6), mT+8);
     }
   }
 
@@ -513,7 +515,8 @@ var elEdad=document.getElementById("l-edad"), elFecha=document.getElementById("l
 function live(f, tCur, vNow, invNow){
   var i=Math.min(E,S+Math.floor(f)); var o=ymd(i);
   var age=Math.floor(edad+(DEC[i]-DEC[S])+1e-6);
-  elEdad.textContent=age+" años"; elFecha.textContent=MESES[o.m-1]+" "+o.y;
+  if(EMB){ var inv=Math.floor((DEC[i]-DEC[S])+1e-6); elEdad.textContent=(inv===1?"1 año":inv+" años")+" invirtiendo"; } else elEdad.textContent=age+" años";
+  elFecha.textContent=MESES[o.m-1]+" "+o.y;
   var b0=bandOf(MODES[mode].lines[0].k), st0=b0?estado(i,b0):1;
   pill.style.display=conEdge()?"":"none";
   pill.className="pill"+(st0===2?" dip":st0===1?"":" out"); pillT.textContent=st0===2?"Comprando la caída":st0===1?"Adentro del mercado":"Afuera, en efectivo";
@@ -529,7 +532,7 @@ function kpis(vNow, invNow, done){
   }else if(mode==="fp"){
     var reach=FPREACH>=0;
     h+='<div class="kpi hi"><div class="k">Freedom Point · con nosotros</div><div class="v">'+fmtM(vNow[0])+'</div><div class="s">'+fmtX(vNow[0],invNow)+' lo que pusiste</div></div>';
-    h+='<div class="kpi"><div class="k">Tu meta</div><div class="v'+(reach&&done?' men':'')+'">'+fmtM(meta())+'</div><div class="s">'+(reach?'alcanzada a los '+Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+' años ('+ymd(S+FPREACH).y+')':'para vivir con $'+fmtAporte(ingreso)+' al mes')+'</div></div>';
+    h+='<div class="kpi"><div class="k">Tu meta</div><div class="v'+(reach&&done?' men':'')+'">'+fmtM(meta())+'</div><div class="s">'+(reach?(EMB?'alcanzada en '+ymd(S+FPREACH).y+', tras '+Math.max(1,Math.ceil(DEC[S+FPREACH]-DEC[S]-1e-6))+' años invirtiendo':'alcanzada a los '+Math.floor(edad+DEC[S+FPREACH]-DEC[S]+1e-6)+' años ('+ymd(S+FPREACH).y+')'):'para vivir con $'+fmtAporte(ingreso)+' al mes')+'</div></div>';
     h+='<div class="kpi"><div class="k">Pusiste de tu bolsillo</div><div class="v">'+fmtM(invNow)+'</div><div class="s">'+aporteTxt()+'</div></div>';
     h+='<div class="kpi"><div class="k">Comprar y mantener · QQQ</div><div class="v">'+fmtM(vNow[1])+'</div><div class="s">'+fmtX(vNow[1],invNow)+' lo que pusiste</div></div>';
     h+='<div class="kpi"><div class="k">S&amp;P 500 · SPY</div><div class="v per">'+fmtM(vNow[2])+'</div><div class="s">'+fmtX(vNow[2],invNow)+' lo que pusiste</div></div>';
