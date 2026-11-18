@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Instagram hoy · Empowered Investor</title>
+<link rel="icon" href="/assets/logo-fondo-negro.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap">
+<style>
+/* Página interna de Jose. Los datos los sube el script local seguidores.py a /api/ig (Netlify Blobs)
+   y piden clave: llega una vez en el link (#k=...) y queda guardada en este navegador. */
+:root{ --tinta:#0d0f14; --tinta2:#15191E; --menta:#63FCAF; --peri:#556DFB; --crema:#FEF9F3; --gris:#9aa3b2; --linea:#262b33; --input:#1d232b; }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--tinta);color:var(--crema);font-family:"Bai Jamjuree",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer}
+a{color:var(--menta)}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 90px}
+h1{font-size:20px;margin:0 0 2px}
+.muted{color:var(--gris);font-size:14px}
+.tabs{display:flex;gap:8px;margin:16px 0 14px}
+.tabs button{flex:1;background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:10px 12px;font-weight:600;min-width:0}
+.tabs button[aria-selected="true"]{background:var(--menta);color:var(--tinta2);border-color:var(--menta)}
+h2{font-size:15px;margin:22px 0 10px;letter-spacing:.02em}
+.t{background:var(--tinta2);border-radius:14px;padding:14px;margin-bottom:12px;border-left:5px solid var(--linea)}
+.t.g0{border-color:var(--menta)}
+.t.g1{border-color:var(--peri)}
+.t p{margin:0 0 6px;font-size:14px;overflow-wrap:anywhere}
+.t .quien{font-size:16px;font-weight:600}
+.t .m{color:var(--gris)}
+.tag{display:inline-block;font-size:12px;border:1px solid var(--linea);border-radius:999px;padding:1px 8px;color:var(--gris);margin-left:6px;font-weight:400}
+textarea{width:100%;margin-top:6px;background:var(--input);color:var(--crema);border:1px solid var(--linea);border-radius:10px;padding:10px;font:inherit;font-size:15px;line-height:1.45;resize:vertical}
+.b{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.b button{background:var(--menta);color:var(--tinta2);border:0;border-radius:999px;padding:11px 18px;font-weight:700}
+.b label{font-size:14px;display:flex;align-items:center;gap:6px}
+.b input{width:20px;height:20px;accent-color:var(--menta)}
+details{margin-top:20px}
+summary{cursor:pointer;font-weight:600;font-size:15px;margin-bottom:10px}
+.lista{font-size:14px;color:var(--gris);overflow-wrap:anywhere}
+.pie{margin-top:28px;display:flex;gap:10px;flex-wrap:wrap}
+.pie button{background:none;color:var(--gris);border:1px solid var(--linea);border-radius:999px;padding:8px 14px;font-size:14px}
+.aviso{background:var(--tinta2);border-radius:14px;padding:16px;margin-top:16px}
+.aviso input{width:100%;margin:10px 0;background:var(--input);color:var(--crema);border:1px solid var(--linea);border-radius:10px;padding:11px;font:inherit}
+.aviso button{background:var(--menta);color:var(--tinta2);border:0;border-radius:999px;padding:10px 18px;font-weight:700}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--peri);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Instagram hoy</h1>
+  <div class="muted" id="estado">Cargando…</div>
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-b" aria-selected="true">Escribirles</button>
+    <button role="tab" id="tab-s" aria-selected="false">Seguir</button>
+  </div>
+  <div id="vista"></div>
+  <div class="pie">
+    <button id="copiar-link">Copiar link para el celular</button>
+    <button id="salir">Quitar la clave de este navegador</button>
+  </div>
+</div>
+<script>
+const K = "ig-clave";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const guardado = { get: () => { try { return localStorage.getItem(K) || ""; } catch (e) { return ""; } },
+                   set: (v) => { try { v ? localStorage.setItem(K, v) : localStorage.removeItem(K); } catch (e) {} } };
+
+let clave = guardado.get();
+const enLink = new URLSearchParams(location.hash.slice(1)).get("k");
+if (enLink) { clave = enLink; guardado.set(clave); history.replaceState(null, "", location.pathname); }
+
+let datos = null, marcas = { escrito: {}, seguido: {} }, pestana = "b";
+
+async function api(ruta, opciones = {}) {
+  const r = await fetch("/api/ig/" + ruta, { ...opciones, headers: { "x-clave": clave, "Content-Type": "application/json" } });
+  if (r.status === 401) throw new Error("clave");
+  if (!r.ok) throw new Error("La página no pudo leer los datos (" + r.status + ")");
+  return r.json();
+}
+
+function pedirClave(mensaje) {
+  $("#estado").textContent = "";
+  $("#vista").innerHTML = '<div class="aviso"><b>' + esc(mensaje) + '</b><p class="muted">Abrí el ícono "Instagram hoy" del escritorio, o pegá la clave acá.</p>' +
+    '<input id="clave" type="password" autocomplete="off" aria-label="Clave"><button id="entrar">Entrar</button></div>';
+  $("#entrar").onclick = () => { clave = $("#clave").value.trim(); guardado.set(clave); cargar(); };
+}
+
+async function cargar() {
+  if (!clave) return pedirClave("Esta página pide clave");
+  try {
+    const r = await api("datos");
+    datos = r.datos; marcas = { escrito: {}, seguido: {}, ...(r.marcas || {}) };
+    pintar();
+  } catch (e) {
+    if (e.message === "clave") return pedirClave("La clave no calza");
+    $("#estado").textContent = e.message;
+  }
+}
+
+const esMedico = (p) => p.clase === "medico" || p.clase === "probable";
+const grupo = (p) => !esMedico(p) ? 2 : (p.medicos_clientes > 0 ? 0 : 1);
+const yaEscrito = (p) => !!(p.chat || marcas.escrito[p.usuario]);
+
+function tarjetaEscribir(p) {
+  const esp = p.especialidad ? esc(p.especialidad) + (p.especialidad_de ? ' <span class="m">(' + esc(p.especialidad_de) + ")</span>" : "") : "sin pista";
+  return '<div class="t g' + grupo(p) + '" data-u="' + esc(p.usuario) + '">' +
+    '<p class="quien"><a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a> · " + esc(p.nombre) +
+    (p.antiguo ? '<span class="tag">seguidor de antes</span>' : "") + (p.privada ? '<span class="tag">privada</span>' : "") + "</p>" +
+    "<p><b>" + esc(p.clase) + "</b>" + (p.motivo ? " · " + esc(p.motivo) : "") + "</p>" +
+    "<p>Especialidad: " + esp + "</p>" +
+    (p.clientes ? '<p class="m">Clientes en común: ' + esc(p.clientes) + "</p>" : "") +
+    '<textarea rows="5" aria-label="Mensaje para ' + esc(p.usuario) + '">' + esc(p.mensaje) + "</textarea>" +
+    '<div class="b"><button data-accion="mandar">Copiar y abrir perfil</button>' +
+    '<label><input type="checkbox" data-accion="escrito"> ya le escribí</label></div></div>';
+}
+
+function tarjetaSeguir(p) {
+  return '<div class="t g0" data-u="' + esc(p.usuario) + '">' +
+    '<p class="quien"><a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a> · " + esc(p.nombre) + "</p>" +
+    "<p><b>" + esc(p.clase) + "</b>" + (p.motivo ? " · " + esc(p.motivo) : "") + "</p>" +
+    "<p>Especialidad: " + esc(p.especialidad || "sin pista") + "</p>" +
+    (p.clientes ? '<p class="m">Clientes en común: ' + esc(p.clientes) + "</p>" : "") +
+    '<div class="b"><button data-accion="abrir">Abrir perfil para seguir</button>' +
+    '<label><input type="checkbox" data-accion="seguido"> ya lo seguí</label></div></div>';
+}
+
+const enlaces = (lista) => lista.map((p) => '<a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a>").join(" · ");
+
+function pintar() {
+  $("#tab-b").setAttribute("aria-selected", pestana === "b");
+  $("#tab-s").setAttribute("aria-selected", pestana === "s");
+  if (!datos) { $("#estado").textContent = "Todavía no hay datos. Se llenan con la corrida diaria de la compu."; $("#vista").innerHTML = ""; return; }
+  $("#estado").textContent = "Última lectura de Instagram: " + (datos.actualizado || "sin fecha");
+  let h = "";
+  if (pestana === "b") {
+    const orden = (a, b) => grupo(a) - grupo(b) || (a.visto_el < b.visto_el ? 1 : a.visto_el > b.visto_el ? -1 : b.medicos - a.medicos);
+    const faltan = datos.seguidores.filter((p) => !yaEscrito(p)).sort(orden);
+    const hechos = datos.seguidores.filter(yaEscrito);
+    const titulos = ["Primero: médicos con médicos clientes en común", "Otros médicos"];
+    h += '<p class="muted">Médicos por escribirles: <b>' + faltan.filter(esMedico).length + "</b> · ya con chat: " + hechos.length +
+         " · seguidores leídos: " + datos.seguidores.length + "</p>";
+    for (const g of [0, 1]) {
+      const lote = faltan.filter((p) => grupo(p) === g);
+      if (lote.length) h += "<h2>" + titulos[g] + " (" + lote.length + ")</h2>" + lote.map(tarjetaEscribir).join("");
+    }
+    const resto = faltan.filter((p) => grupo(p) === 2);
+    if (!faltan.filter(esMedico).length) h += '<div class="aviso">Ya les escribiste a todos los médicos leídos hasta hoy. Mañana la corrida trae más.</div>';
+    if (resto.length) h += "<details><summary>El resto, sin señal de médico (" + resto.length + ")</summary>" + resto.map(tarjetaEscribir).join("") + "</details>";
+    if (hechos.length) h += "<details><summary>Ya con chat (" + hechos.length + ')</summary><p class="lista">' + enlaces(hechos) + "</p></details>";
+  } else {
+    const faltan = datos.sugeridos.filter((p) => esMedico(p) && !p.seguido_el && !marcas.seguido[p.usuario])
+      .sort((a, b) => (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : (a.clase !== "medico") - (b.clase !== "medico") || b.medicos - a.medicos));
+    const m = datos.medicion || {};
+    h += '<p class="muted">Médicos sugeridos por seguir: <b>' + faltan.length + "</b> · seguidos: " + (m.seguidos || 0) +
+         " · te siguen de vuelta: " + (m.vuelta || 0) + (m.seguidos ? " (" + Math.round(100 * m.vuelta / m.seguidos) + "%)" : "") + "</p>";
+    h += faltan.map(tarjetaSeguir).join("") || '<div class="aviso">No quedan sugeridos por seguir. Mañana la corrida trae más.</div>';
+  }
+  $("#vista").innerHTML = h;
+}
+
+async function marcar(caja, tipo) {
+  const t = caja.closest(".t"), u = t.dataset.u;
+  if (caja.checked) marcas[tipo][u] = "hoy"; else delete marcas[tipo][u];
+  t.style.opacity = caja.checked ? ".35" : "";
+  try { await api("marca", { method: "POST", body: JSON.stringify({ usuario: u, tipo, valor: caja.checked }) }); }
+  catch (e) { caja.checked = !caja.checked; t.style.opacity = ""; if (caja.checked) marcas[tipo][u] = "hoy"; else delete marcas[tipo][u]; $("#estado").textContent = "No se pudo guardar la marca. Probá de nuevo."; }
+}
+
+function copiar(texto) {
+  if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(texto).catch(() => {});
+  return Promise.resolve();
+}
+
+$("#vista").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-accion]");
+  if (!b) return;
+  const t = b.closest(".t"), perfil = "https://www.instagram.com/" + t.dataset.u + "/";
+  if (b.dataset.accion === "mandar") {
+    const a = t.querySelector("textarea");
+    a.select();
+    try { document.execCommand("copy"); } catch (err) {}
+    copiar(a.value);
+  }
+  window.open(perfil, "_blank", "noopener");
+});
+$("#vista").addEventListener("change", (e) => {
+  const c = e.target.closest("input[data-accion]");
+  if (c) marcar(c, c.dataset.accion);
+});
+$("#tab-b").onclick = () => { pestana = "b"; pintar(); };
+$("#tab-s").onclick = () => { pestana = "s"; pintar(); };
+$("#copiar-link").onclick = async (e) => {
+  await copiar(location.origin + location.pathname + "#k=" + encodeURIComponent(clave));
+  e.target.textContent = "Link copiado. Mandátelo solo a vos";
+};
+$("#salir").onclick = () => { guardado.set(""); clave = ""; datos = null; pedirClave("Clave quitada de este navegador"); };
+
+cargar();
+</script>
+</body>
+</html>
