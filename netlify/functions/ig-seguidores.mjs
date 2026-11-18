@@ -21,7 +21,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { getStore } from "@netlify/blobs";
 import { leerToken } from "./instagram-dm.mjs";
 
-const HUELLA = "46dc6b2d2511fa898f7ec0e3a49c5a455906d1031a8331764638941dc28ad945";
+const HUELLA = "c7cee7bf7c8de248168bad54174689be3a65c668f4416f6a24cf21df9a76706c";
 const GRAPH = "https://graph.instagram.com/v27.0";
 const USUARIO_OK = /^[a-z0-9._]{1,40}$/;
 
