@@ -49,7 +49,8 @@ export default async (req) => {
   if (!claveValida(req.headers.get("x-clave"))) return json(401, { error: "Clave incorrecta" });
   const url = new URL(req.url);
   const ruta = url.pathname.replace(/^\/api\/ig\/?/, "").replace(/\/$/, "");
-  const store = getStore("ig-seguidores");
+  // lectura "strong": al marcar varios seguidos, cada marca lee la anterior ya guardada y no la pisa
+  const store = getStore({ name: "ig-seguidores", consistency: "strong" });
 
   try {
     if (ruta === "datos" && req.method === "GET") {
