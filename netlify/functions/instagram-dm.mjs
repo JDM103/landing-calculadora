@@ -36,7 +36,7 @@ export const PALABRAS = {
   /* Oferta de noviembre (stories y ad): sin link. Un solo mensaje corto con una pregunta y de
    * ahí sigue Jose a mano. Una palabra sin "url" sale como texto, sin botón. */
   noviembre: {
-    texto: "Hola! Qué dicha que escribiste. Con gusto te cuento cómo sería en tu caso. Antes una pregunta rápida, sos médico o trabajás en otra área?",
+    texto: "Hola! Qué bueno que escribiste. Ya invertís en algo o sería tu primera vez?",
   },
 };
 
