@@ -33,6 +33,11 @@ export const PALABRAS = {
     url: "https://investorcr.com/curso/?utm_source=instagram&utm_medium=dm&utm_campaign=curso",
     despues: "Sos médico o de otra área?\n\nGracias, Jose.",
   },
+  /* Oferta de noviembre (stories y ad): sin link. Un solo mensaje corto con una pregunta y de
+   * ahí sigue Jose a mano. Una palabra sin "url" sale como texto, sin botón. */
+  noviembre: {
+    texto: "Hola! Qué dicha que escribiste. Con gusto te cuento cómo sería en tu caso. Antes una pregunta rápida, sos médico o trabajás en otra área?",
+  },
 };
 
 /* Versión en texto plano: para los comentarios (Meta solo deja una respuesta privada y sin
@@ -45,6 +50,7 @@ export function textoPlano(palabra) {
 /* Los mensajes que salen por un DM: uno con botón y, si hay, el de la pregunta. */
 export function mensajesDm(palabra) {
   const p = PALABRAS[palabra];
+  if (!p.url) return [p.texto, p.despues].filter(Boolean).map((text) => ({ text }));
   const lista = [{ attachment: { type: "template", payload: {
     template_type: "button", text: p.texto,
     buttons: [{ type: "web_url", url: p.url, title: p.boton }],
