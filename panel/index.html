@@ -134,6 +134,8 @@
   .sal-firma input{ width:170px; background:var(--input); border:1px solid var(--bd); border-radius:9px; color:var(--crema);
     font-family:inherit; font-size:16px; font-weight:800; padding:9px; text-align:center; }
   .sal-firma input:focus{ outline:none; border-color:var(--menta); }
+  /* tapado como contraseña sin ser type=password (para que el autollenador de Chrome no se meta) */
+  #sal-firma{ -webkit-text-security:disc; text-security:disc; }
   .sal-orden{ background:var(--card2); border:1px solid rgba(224,82,90,.5); border-radius:12px; padding:13px 14px; margin-top:12px; }
   .sal-orden .big{ font-size:17px; font-weight:800; color:var(--crema); }
   .sal-btns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
@@ -2046,7 +2048,7 @@ function renderSalida(){
       +' · cada venta es de TODA la posición, a mercado, vigencia DAY.</div>'
     +vivoBanner()
     +(vivo? '<div class="sal-firma"><span>Clave de firma para esta tanda</span>'
-        +'<input id="sal-firma" type="password" autocomplete="off" value="'+escapa(SAL.firma)+'">'
+        +'<input id="sal-firma" type="text" name="tanda-'+Date.now()+'" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="'+escapa(SAL.firma)+'">'
         +'<span>Se escribe una vez, se manda con cada orden que aprobés y se borra al salir de esta pestaña.</span></div>' : '')
     +'</div>';
 
@@ -2117,6 +2119,7 @@ async function salAprobar(f, sym){
     SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+f.v) });
     SAL.hechas[k]={ estado:"sim", q:f.q, v:f.v, txt:hora+" · no se envió" }; SAL.cur=null; renderSalida(); return;
   }
+  var fi0=$("sal-firma"); if(fi0 && fi0.value) SAL.firma=fi0.value;   // por si el navegador la llenó sin avisar
   if(!SAL.firma){ SAL.err[k]="falta la clave de firma (arriba)"; renderSalida(); var fi=$("sal-firma"); if(fi) fi.focus(); return; }
   SAL.enviando=true; renderSalida();
   apiLog("req", "SACAR A TODOS · ENVÍO EN VIVO (aprobado con un clic, firma de la tanda) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
