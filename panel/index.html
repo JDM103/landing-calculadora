@@ -121,7 +121,31 @@
   .tabs button{ background:var(--card); border:1px solid var(--bd); color:var(--gris-sec); border-radius:10px;
     padding:9px 18px; font-family:inherit; font-size:13.5px; font-weight:800; cursor:pointer; }
   .tabs button.on{ background:var(--card2); color:var(--menta); border-color:rgba(99,252,175,.5); }
-  #vista-accion{ max-width:920px; margin:0 auto; }
+  #vista-accion, #vista-salida{ max-width:920px; margin:0 auto; }
+  /* ===== sacar a todos ===== */
+  .tabs button#tab-salida.on{ color:#ff9ea4; border-color:rgba(224,82,90,.6); }
+  .sal-top{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .sal-top h2{ margin:0; font-size:19px; color:var(--crema); }
+  .sal-top select{ background:var(--input); border:1px solid var(--bd); border-radius:10px; color:var(--crema);
+    font-family:inherit; font-size:15px; font-weight:800; padding:9px 10px; max-width:100%; }
+  .sal-cont{ font-size:12.5px; color:var(--gris-sec); margin-top:8px; }
+  .sal-cont b{ color:var(--crema); }
+  .sal-firma{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; font-size:12.5px; color:var(--gris-sec); }
+  .sal-firma input{ width:170px; background:var(--input); border:1px solid var(--bd); border-radius:9px; color:var(--crema);
+    font-family:inherit; font-size:16px; font-weight:800; padding:9px; text-align:center; }
+  .sal-firma input:focus{ outline:none; border-color:var(--menta); }
+  .sal-orden{ background:var(--card2); border:1px solid rgba(224,82,90,.5); border-radius:12px; padding:13px 14px; margin-top:12px; }
+  .sal-orden .big{ font-size:17px; font-weight:800; color:var(--crema); }
+  .sal-btns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .sal-btns button{ border-radius:999px; padding:11px 20px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer;
+    border:1px solid var(--bd); background:transparent; color:var(--gris); }
+  .sal-btns .ok{ background:var(--rojo); border-color:var(--rojo); color:#fff; flex:1; min-width:210px; }
+  .sal-btns button:disabled{ opacity:.45; cursor:not-allowed; }
+  .sal-err{ color:#ff9ea4; font-size:13px; margin-top:8px; }
+  .sal-fila{ cursor:pointer; } .sal-fila.cur td{ background:rgba(224,82,90,.08); }
+  .sal-est{ font-size:11px; font-weight:800; border-radius:999px; padding:2px 9px; white-space:nowrap; }
+  .sal-mini{ background:transparent; border:1px solid var(--bd); color:var(--gris-sec); border-radius:999px; padding:2px 10px;
+    font-family:inherit; font-size:11px; font-weight:700; cursor:pointer; margin-left:6px; }
   .acard{ background:var(--card); border:1px solid var(--bd); border-radius:14px; padding:16px; margin-bottom:12px; }
   .acc-nav{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:2px 0 12px; }
   .acc-nav button{ background:var(--card2); border:1px solid var(--bd); color:var(--crema); border-radius:10px;
@@ -291,10 +315,12 @@
   <div class="tabs">
     <button id="tab-cuentas" class="on">📊 Cuentas</button>
     <button id="tab-accion">⚡ Modo acción</button>
+    <button id="tab-salida">🚪 Sacar a todos</button>
     <button id="tab-ordenes">🧾 Órdenes abiertas</button>
     <button id="tab-term">🖥️ Terminal</button>
   </div>
   <div id="vista-accion" style="display:none"></div>
+  <div id="vista-salida" style="display:none"></div>
   <div id="vista-ordenes" style="display:none"></div>
   <div id="vista-term" style="display:none"></div>
   <div class="layout" id="vista-cuentas">
@@ -436,11 +462,27 @@ async function cargarTWRDet(c){
 function diaDe(c){ if(!c.snap||!c.snap.cuenta||!c.snap.cuenta.last_equity) return null;
   var d=c.snap.equity-c.snap.cuenta.last_equity;
   return {usd:d, pct:c.snap.cuenta.last_equity>0? d/c.snap.cuenta.last_equity*100:0}; }
+// Desfase entre lo que dice la estrategia y cómo está la cuenta (solo cuentas con timing):
+// "salir"  = la estrategia dice FUERA y la cuenta todavía tiene su parte de mercado;
+// "entrar" = la estrategia dice DENTRO y la cuenta está sin nada de mercado.
+// El piso (renta fija) no cuenta: ese no se toca con la señal.
+function desfaseSenal(c, senal){
+  if(!senal || !c.snap || !c.activo) return null;
+  var p=planAccion(c, senal); if(!p || !p.plan.timing) return null;
+  var tiene=0, toca=0, f3=p.plan.f3;
+  Object.keys(p.hoy).forEach(function(s){ if(s!==f3) tiene+=p.hoy[s]; });
+  Object.keys(p.tgt).forEach(function(s){ if(s!==f3) toca+=p.tgt[s]; });
+  if(senal.estado==="fuera") return tiene>p.umbral? "salir" : null;
+  return (tiene<=p.umbral && toca>p.umbral)? "entrar" : null;
+}
 function accionDe(c, senal){
   if(!c.snap) return {t:"Sin datos todavía.", calma:true, n:0};
-  var plan=c.meta&&c.meta.plan, acc=[];
-  if(senal && senal.estado==="fuera" && plan && plan.timing) acc.push("🔴 Señal FUERA: la parte de mercado va a efectivo.");
-  if(c.snap.cash>1000) acc.push("Hay "+fmt(c.snap.cash)+" en efectivo para invertir según su fase.");
+  var plan=c.meta&&c.meta.plan, acc=[], df=desfaseSenal(c, senal);
+  var fueraSen=senal && senal.estado==="fuera" && plan && plan.timing;
+  if(df==="salir") acc.push("🔴 Está DENTRO y debería estar AFUERA: la parte de mercado va a efectivo.");
+  if(df==="entrar") acc.push("🟢 Está AFUERA y debería estar ADENTRO: toca reentrar.");
+  // con la señal FUERA el efectivo es lo esperado, no un pendiente
+  if(c.snap.cash>1000 && !fueraSen && df!=="entrar") acc.push("Hay "+fmt(c.snap.cash)+" en efectivo para invertir según su fase.");
   var pact=c.meta&&c.meta.aporte_pactado||0;
   var delMes=(c.snap.transferencias_mes||[]).reduce(function(s,t){return s+(t.monto||0);},0);
   if(pact>0 && delMes<pact*0.9) acc.push("Aporte del mes: "+fmt(delMes)+" de "+fmt(pact)+" pactados.");
@@ -476,7 +518,21 @@ function renderLista(){
   var d=DATOS, act=d.clientes.filter(function(c){return c.activo;});
   var s=d.senal, sd=$("senal");
   if(s){ sd.className="senal "+(s.estado==="dentro"?"dentro":"fuera");
-    sd.innerHTML='<div class="pto"></div><div><b>Señal: '+(s.estado==="dentro"?"DENTRO":"FUERA")+'</b> · semana del '+s.semana+' · distancia al máx. 39 sem: '+(+s.distancia).toFixed(1)+'%</div>'; }
+    // `hoy` llega en cada carga con el último cierre del Nasdaq contra las líneas. Si el
+    // servidor aún no lo manda, queda la fila del viernes como antes.
+    var h=s.hoy, pts=function(v){ return Math.round(v).toLocaleString("en-US"); };
+    // lo que más importa para ejecutar: cuentas que no están como dice la estrategia
+    var salir=0, entrar=0;
+    act.forEach(function(c){ var df=desfaseSenal(c, s); if(df==="salir") salir++; else if(df==="entrar") entrar++; });
+    sd.innerHTML='<div class="pto"></div><div><b>Estrategia: '+(s.estado==="dentro"?"DENTRO":"FUERA")+'</b>'
+      +(h? ' · último cierre '+h.fecha+': <b class="num">'+pts(h.cierre)+'</b> ('+(+h.distancia).toFixed(1)+'% del máx. 39 sem)'
+          +(s.estado==="dentro"? ' · línea roja <b class="num" style="color:var(--rojo)">'+pts(h.salida)+'</b>'+(h.cierre<h.salida? ' <b style="color:var(--ambar)">(va debajo, se chequea el viernes)</b>':'')
+            : ' · línea azul <b class="num">'+pts(h.reentrada)+'</b>')
+          +' · próximo chequeo: viernes '+h.proximo_viernes
+        : ' · semana del '+s.semana+' · distancia al máx. 39 sem: '+(+s.distancia).toFixed(1)+'%')
+      +(salir? '<div style="margin-top:4px;color:var(--rojo);font-weight:700">⚠ '+salir+(salir===1?' cuenta está':' cuentas están')+' DENTRO y '+(salir===1?'debería':'deberían')+' estar AFUERA. Se ejecuta el lunes, desde la pestaña Sacar a todos.</div>':'')
+      +(entrar? '<div style="margin-top:4px;color:var(--menta);font-weight:700">⚠ '+entrar+(entrar===1?' cuenta está':' cuentas están')+' AFUERA y '+(entrar===1?'debería':'deberían')+' estar ADENTRO. Se ejecuta el lunes, desde Modo acción.</div>':'')
+      +'</div>'; }
   var eq=0, cash=0; act.forEach(function(c){ if(c.snap){ eq+=+c.snap.equity; cash+=+c.snap.cash; } });
   $("tots").innerHTML='<b>'+act.length+'</b> clientes · capital <b class="num">'+money(eq)+'</b> · efectivo <b class="num">'+money(cash)+'</b>';
   // valores por fila (el Total ya incluye el capital inicial manual)
@@ -944,6 +1000,7 @@ function repintarCuenta(alias){
   if(MODO==="cuentas"){ renderLista(); if(SELECC===alias) renderDet(); }
   else if(MODO==="accion"){ if(ACC_ALIAS===alias){ irACuenta(alias); renderAccion(); } }
   else if(MODO==="ordenes") renderOrdenesGlob();
+  else if(MODO==="salida" && !SAL.enviando) renderSalida();
 }
 // rapido=true: la function solo pide cuenta y posiciones (lo que una orden mueve) y contesta en
 // una fracción del tiempo; aportes, TIR e YTD los recalcula la pasada completa del final.
@@ -1473,7 +1530,7 @@ function abrirEncender(){
       var j=await llamar("ordenes-vivo",{accion:"switch", encendido:true, firma:fi.value});
       VIVO.activas=!!j.activas;
       apiLog("res","KILL SWITCH ENCENDIDO: el envío de órdenes está EN VIVO.", null);
-      cerrarOrden(); renderAccion();
+      cerrarOrden(); if(MODO==="salida") renderSalida(); else renderAccion();
     }catch(e){
       $("mo-err").textContent=String(e.message||e);
       sw.disabled=false; sw.textContent="Encender";
@@ -1487,6 +1544,7 @@ async function apagarVivo(){
     apiLog("res","KILL SWITCH APAGADO: se volvió a simulación.", null);
   }catch(e){ apiLog("res","ERROR apagando el switch: "+(e.message||e), null); }
   if(MODO==="accion" && DATOS) renderAccion();
+  if(MODO==="salida" && DATOS) renderSalida();
 }
 
 /* ===== la boleta: experiencia completa de plataforma (envío real detrás del kill switch) ===== */
@@ -1905,7 +1963,8 @@ function renderSimLog(){
 
 function ponerModo(modo){
   MODO=modo;
-  ["cuentas","accion","ordenes","term"].forEach(function(m){
+  if(modo!=="salida") SAL.firma="";   // la clave de la tanda no sobrevive a salir de la pestaña
+  ["cuentas","accion","salida","ordenes","term"].forEach(function(m){
     document.getElementById("tab-"+m).classList.toggle("on", modo===m);
     $("vista-"+m).style.display= modo===m? "":"none";
   });
@@ -1918,12 +1977,170 @@ function ponerModo(modo){
     if(modo==="cuentas" && DATOS){ renderLista(); renderDet(); }
     if(modo==="ordenes") renderOrdenesGlob();
     if(modo==="term") renderTermGlob();
+    if(modo==="salida" && DATOS) renderSalida();
   }
 }
 document.getElementById("tab-cuentas").addEventListener("click", function(){ ponerModo("cuentas"); });
 document.getElementById("tab-accion").addEventListener("click", function(){ ponerModo("accion"); });
+document.getElementById("tab-salida").addEventListener("click", function(){ ponerModo("salida"); });
 document.getElementById("tab-ordenes").addEventListener("click", function(){ ponerModo("ordenes"); });
 document.getElementById("tab-term").addEventListener("click", function(){ ponerModo("term"); });
+
+/* ================= SACAR A TODOS: vender un símbolo completo, cuenta por cuenta ================= */
+// Para el lunes en que la estrategia dice FUERA. Arma la venta de TODA la posición de un
+// símbolo (TQQQ por defecto; se cambia a QQQ o al que haya) en cada cuenta que lo tenga y
+// las pasa en fila. Ninguna orden sale sola: cada una la aprobás vos con un clic.
+// Va por el mismo camino que la boleta (function ordenes-vivo): kill switch, clave de firma
+// y revisión de la posición real en el servidor antes de tocar Alpaca. La clave se escribe
+// una vez por tanda, vive solo en memoria y se borra al salir de la pestaña.
+var SAL={ sym:"TQQQ", cur:null, hechas:{}, err:{}, enviando:false, firma:"" };
+function salSyms(){
+  var m={};
+  (DATOS.clientes||[]).forEach(function(c){ if(!c.activo || !c.snap) return;
+    (c.snap.posiciones||[]).forEach(function(po){ if(!(+po.q>0)) return;
+      var x=m[po.s]||(m[po.s]={s:po.s, n:0, v:0}); x.n++; x.v+=+po.v||0; }); });
+  return Object.keys(m).map(function(k){ return m[k]; }).sort(function(a,b){ return b.v-a.v; });
+}
+// ¿ya hay una venta abierta de ese símbolo en la cuenta? (no se ofrece dos veces)
+function salVentaAbierta(alias, sym){
+  var l=[], co=CACHE_ORD[alias];
+  if(co && co.abiertas) l=l.concat(co.abiertas);
+  if(ORD_GLOB && ORD_GLOB.datos) (ORD_GLOB.datos.cuentas||[]).forEach(function(x){ if(x.alias===alias && x.ordenes) l=l.concat(x.ordenes); });
+  return l.some(function(o){ return o.sym===sym && o.lado==="sell" && !ordPendiente(o); });
+}
+// Filas de la tanda: quien tiene el símbolo hoy + quien ya se sacó en esta sesión
+function salFilas(sym){
+  var filas=[];
+  (DATOS.clientes||[]).forEach(function(c){ if(!c.activo || !c.snap) return;
+    var po=pxDe(c, sym), h=SAL.hechas[c.alias+"|"+sym];
+    if(!(po.q>0) && !h) return;
+    var est= h? h.estado : salVentaAbierta(c.alias, sym)? "abierta" : "pendiente";
+    filas.push({ c:c, q: po.q>0? po.q : h.q, px:po.px, v: po.q>0? po.v : h.v, est:est, h:h||null,
+      timing: !!(c.meta && c.meta.plan && c.meta.plan.timing) });
+  });
+  filas.sort(function(a,b){ return b.v-a.v; });
+  return filas;
+}
+function salUnidades(q){ return (+q).toLocaleString("en-US", {maximumFractionDigits:6}); }
+function renderSalida(){
+  var box=$("vista-salida"); if(!box || !DATOS) return;
+  var syms=salSyms(), sym=SAL.sym, filas=salFilas(sym);
+  var pend=filas.filter(function(f){ return f.est==="pendiente"; });
+  var cur=pend.filter(function(f){ return f.c.alias===SAL.cur; })[0] || pend[0] || null;
+  SAL.cur= cur? cur.c.alias : null;
+  var nEnv=filas.filter(function(f){ return f.est==="enviada"||f.est==="sim"||f.est==="abierta"; }).length;
+  var nSal=filas.filter(function(f){ return f.est==="saltada"; }).length;
+  var totV=0; pend.forEach(function(f){ totV+=f.v; });
+  var vivo=esVivo(), opts=syms.slice();
+  if(!opts.some(function(x){ return x.s===sym; })) opts.unshift({s:sym, n:0, v:0});
+  var ESTADO={ pendiente:['pendiente','var(--ambar)','rgba(224,176,122,.14)'], enviada:['✓ enviada','var(--menta)','rgba(99,252,175,.12)'],
+    sim:['✓ simulada','var(--gris-sec)','rgba(154,161,171,.14)'], abierta:['venta ya abierta','var(--menta)','rgba(99,252,175,.12)'],
+    saltada:['saltada','var(--gris-sec)','rgba(154,161,171,.14)'] };
+
+  var html='<div class="acard">'
+    +'<div class="sal-top"><h2>Sacar a todos de</h2>'
+      +'<select id="sal-sym">'+opts.map(function(x){
+        return '<option value="'+escapa(x.s)+'"'+(x.s===sym?' selected':'')+'>'+escapa(x.s)+' · '+x.n+(x.n===1?' cuenta':' cuentas')+' · '+money(x.v)+'</option>'; }).join("")+'</select>'
+    +'</div>'
+    +'<div class="sal-cont"><b>'+pend.length+'</b> por aprobar ('+fmt(totV)+') · <b>'+nEnv+'</b> '+(nEnv===1?'lista':'listas')+' · <b>'+nSal+'</b> '+(nSal===1?'saltada':'saltadas')
+      +' · cada venta es de TODA la posición, a mercado, vigencia DAY.</div>'
+    +vivoBanner()
+    +(vivo? '<div class="sal-firma"><span>Clave de firma para esta tanda</span>'
+        +'<input id="sal-firma" type="password" autocomplete="off" value="'+escapa(SAL.firma)+'">'
+        +'<span>Se escribe una vez, se manda con cada orden que aprobés y se borra al salir de esta pestaña.</span></div>' : '')
+    +'</div>';
+
+  if(cur){
+    var c=cur.c, e=SAL.err[c.alias+"|"+sym];
+    html+='<div class="acard">'
+      +'<div class="sec" style="margin-top:0">Cuenta '+(filas.length-pend.length+1)+' de '+filas.length+'</div>'
+      +'<h2 style="margin:0;font-size:19px;color:var(--crema)">'+nomDe(c)
+        +(cur.timing? '':'<span class="chip" style="background:rgba(224,176,122,.16);color:var(--ambar)">plan SIN timing</span>')+'</h2>'
+      +'<div class="sub">'+(PRIV?'••••':c.alias)+' · capital '+fmt(+c.snap.equity)+' · efectivo '+fmt(+c.snap.cash)+' · dato al '+c.snap.mes+'</div>'
+      +(cur.timing? '':'<div class="candado2">Este plan no usa la señal de timing. Si no le toca salir, saltala.</div>')
+      +'<div class="sal-orden"><span class="down" style="font-weight:800;letter-spacing:.5px">VENDER</span> '
+        +'<span class="big">'+escapa(sym)+'</span> · <span class="big num">'+salUnidades(cur.q)+'</span> unidades (toda la posición)'
+        +'<div class="sub" style="margin-top:4px">≈ <b class="num" style="color:var(--crema)">'+fmt(cur.v)+'</b> al último precio ($'+(+cur.px).toFixed(2)+') · Mercado · DAY'
+        +' · efectivo después ≈ <b class="num" style="color:var(--menta)">'+fmt(+c.snap.cash+cur.v)+'</b></div></div>'
+      +(e? '<div class="sal-err">No salió: '+escapa(e)+'</div>':'')
+      +'<div class="sal-btns">'
+        +'<button class="ok" id="sal-ok"'+(SAL.enviando?' disabled':'')+'>'+(SAL.enviando? 'Enviando…' : vivo? 'Aprobar y vender EN VIVO' : 'Aprobar (simulación, no se envía)')+'</button>'
+        +'<button id="sal-skip"'+(SAL.enviando?' disabled':'')+'>Saltar esta cuenta</button>'
+      +'</div></div>';
+  } else {
+    html+='<div class="enplan">'+(filas.length
+      ? '✅ <b>No queda nadie por aprobar en '+escapa(sym)+'.</b> '+nEnv+(nEnv===1?' venta lista':' ventas listas')+(nSal? ' y '+nSal+(nSal===1?' cuenta saltada':' cuentas saltadas'):'')+'. Cambiá el símbolo arriba para seguir con otro.'
+      : 'Ninguna cuenta activa tiene <b>'+escapa(sym)+'</b>.')+'</div>';
+  }
+
+  if(filas.length){
+    html+='<div class="acard"><div class="sec" style="margin-top:0">Todas las cuentas con '+escapa(sym)+'</div>'
+      +'<div style="overflow-x:auto"><table><thead><tr><th style="text-align:left">Cuenta</th><th>Unidades</th><th>Valor</th><th>Estado</th></tr></thead><tbody>'
+      +filas.map(function(f){
+        var E=ESTADO[f.est], k=f.c.alias+"|"+sym;
+        return '<tr class="sal-fila'+(cur && f.c.alias===cur.c.alias?' cur':'')+'" data-sal="'+escapa(f.c.alias)+'">'
+          +'<td style="text-align:left">'+nomDe(f.c)+(f.timing?'':' <span style="color:var(--ambar);font-size:10.5px">sin timing</span>')+'</td>'
+          +'<td class="num">'+salUnidades(f.q)+'</td><td class="num">'+fmt(f.v)+'</td>'
+          +'<td><span class="sal-est" style="color:'+E[1]+';background:'+E[2]+'">'+E[0]+'</span>'
+            +(f.h && f.h.txt? ' <span style="color:var(--gris-sec);font-size:11px">'+escapa(f.h.txt)+'</span>':'')
+            +(f.est==="saltada"? '<button class="sal-mini" data-retomar="'+escapa(k)+'">retomar</button>':'')
+          +'</td></tr>';
+      }).join("")+'</tbody></table></div>'
+      +'<div class="sub" style="margin-top:8px">Las unidades salen de la última actualización de datos; antes de mandar cada venta el servidor revisa la posición real en Alpaca y la rechaza si no calza. Tocá una fila pendiente para atenderla primero.</div>'
+      +'</div>';
+  }
+  box.innerHTML=html;
+
+  $("sal-sym").addEventListener("change", function(){ SAL.sym=this.value; SAL.cur=null; renderSalida(); });
+  var fi=$("sal-firma"); if(fi) fi.addEventListener("input", function(){ SAL.firma=fi.value; });
+  var von=$("vivo-on"); if(von) von.addEventListener("click", abrirEncender);
+  var voff=$("vivo-off"); if(voff) voff.addEventListener("click", apagarVivo);
+  Array.prototype.forEach.call(box.querySelectorAll("[data-retomar]"), function(b){
+    b.addEventListener("click", function(ev){ ev.stopPropagation(); delete SAL.hechas[b.getAttribute("data-retomar")]; renderSalida(); }); });
+  Array.prototype.forEach.call(box.querySelectorAll("[data-sal]"), function(tr){
+    tr.addEventListener("click", function(){ if(SAL.enviando) return; SAL.cur=tr.getAttribute("data-sal"); renderSalida(); }); });
+  if(cur){
+    $("sal-skip").addEventListener("click", function(){
+      SAL.hechas[cur.c.alias+"|"+sym]={ estado:"saltada", q:cur.q, v:cur.v }; SAL.cur=null; renderSalida(); });
+    $("sal-ok").addEventListener("click", function(){ salAprobar(cur, sym); });
+  }
+}
+async function salAprobar(f, sym){
+  if(SAL.enviando) return;
+  var c=f.c, k=c.alias+"|"+sym, hora=new Date().toTimeString().slice(0,5);
+  var body={ symbol:sym, side:"sell", type:"market", time_in_force:"day", qty:String(f.q) };
+  var desc="VENDER "+sym+" · "+salUnidades(f.q)+" u. (toda la posición) · Mercado · DAY";
+  delete SAL.err[k];
+  if(!esVivo()){
+    // kill switch apagado (o maqueta): se registra como simulación y NO sale nada a Alpaca
+    apiLog("req", "SACAR A TODOS (simulado) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
+    SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+f.v) });
+    SAL.hechas[k]={ estado:"sim", q:f.q, v:f.v, txt:hora+" · no se envió" }; SAL.cur=null; renderSalida(); return;
+  }
+  if(!SAL.firma){ SAL.err[k]="falta la clave de firma (arriba)"; renderSalida(); var fi=$("sal-firma"); if(fi) fi.focus(); return; }
+  SAL.enviando=true; renderSalida();
+  apiLog("req", "SACAR A TODOS · ENVÍO EN VIVO (aprobado con un clic, firma de la tanda) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
+  try{
+    var j=await llamar("ordenes-vivo", { accion:"enviar", alias:c.alias, orden:Object.assign({ _precio_ref:f.px||0 }, body), firma:SAL.firma });
+    apiLog("res", "respuesta cruda de Alpaca ("+(j.status||"?")+")", j.respuesta);
+    var o=j.respuesta||{};
+    if(!j.ok){
+      SAL.err[k]="Alpaca la rechazó ("+(j.status||"?")+"): "+((o && (o.message||o.error)) || "sin detalle");
+    } else {
+      SAL.hechas[k]={ estado:"enviada", q:f.q, v:f.v, txt:hora+" · "+(o.status||"?") };
+      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+f.v), v:1 });
+      SAL.cur=null;
+      refrescarTrasAccion(c, "tras sacar "+sym, o, null);
+    }
+  }catch(e){
+    var m=String(e.message||e);
+    apiLog("res", "ERROR del envío EN VIVO: "+m, null);
+    SAL.err[k]=m;
+    if(/firma/i.test(m)) SAL.firma="";       // clave mala: se pide de nuevo
+    if(/kill switch/i.test(m)) await cargarVivo();
+  }
+  SAL.enviando=false; renderSalida();
+}
 
 /* ===== órdenes abiertas de TODAS las cuentas (vigilancia de límites y sobregiro) ===== */
 var ORD_GLOB=null, ORD_SCANEANDO=false;
@@ -1965,6 +2182,7 @@ async function escanearOrdenes(silencioso){
   if(MODO==="ordenes") renderOrdenesGlob();
   if(MODO==="cuentas" && DATOS) renderLista();       // llena la columna Órd.
   if(MODO==="accion" && DATOS) renderAccion();
+  if(MODO==="salida" && DATOS && !SAL.enviando) renderSalida();
 }
 function renderOrdenesGlob(){
   var box=$("vista-ordenes"); if(!box) return;
@@ -2160,7 +2378,9 @@ async function cargar(){
     if(mCli && SELECC===mCli[1]){ var dd=$("det"); if(dd) dd.scrollIntoView({behavior:"smooth", block:"start"}); }
     // Modo acción: seguís en la MISMA persona aunque los datos nuevos cambien el orden o el filtro
     if(MODO==="accion"){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); }
-    cargarVivo().then(function(){ if(MODO==="accion" && DATOS){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); } });
+    if(MODO==="salida" && !SAL.enviando) renderSalida();
+    cargarVivo().then(function(){ if(MODO==="accion" && DATOS){ if(ACC_ALIAS) irACuenta(ACC_ALIAS); renderAccion(); }
+      if(MODO==="salida" && DATOS && !SAL.enviando) renderSalida(); });
     cargarInbox();
     if(!ORD_GLOB) escanearOrdenes(true);   // llena la columna Órd. en segundo plano
     pintarFresc();
@@ -2180,7 +2400,7 @@ $("tok").addEventListener("keydown", function(e){ if(e.key==="Enter") $("entrar"
 $("salir").addEventListener("click", function(){ sessionStorage.removeItem("panel_tok"); location.reload(); });
 function pintarPriv(){ $("priv").style.borderColor=PRIV?"var(--menta)":"var(--bd)"; $("priv").style.color=PRIV?"var(--menta)":"var(--crema)"; }
 $("priv").addEventListener("click", function(){ PRIV=!PRIV; sessionStorage.setItem("panel_priv", PRIV?"1":"0");
-  pintarPriv(); if(DATOS){ renderLista(); renderDet(); if(MODO==="accion"){ renderAccion(); renderSimLog(); } } });
+  pintarPriv(); if(DATOS){ renderLista(); renderDet(); if(MODO==="accion"){ renderAccion(); renderSimLog(); } if(MODO==="salida") renderSalida(); } });
 pintarPriv();
 // ===== alta de cliente desde el panel =====
 function aliasDesde(nombre){
@@ -2284,7 +2504,8 @@ function demoSerie(per){
   return {t:t, eq:eq, perf:perf};
 }
 function demo(){
-  return { senal:{estado:"dentro",semana:"2026-08-06",distancia:-3.4},
+  return { senal:{estado:"dentro",semana:"2026-08-07",distancia:-3.4,
+      hoy:{fecha:"2026-08-12",cierre:23860,max39:24700,distancia:-3.4,salida:20254,reentrada:23218,proximo_viernes:"2026-08-14"}},
     clientes:[
       {alias:"mv-07",activo:true,nombre:"María Vargas",correo:"maria.vargas@gmail.com",notas:"Quiere subir aporte en enero.",nota_cliente:"Ya ejecuté tu cambio a 30% QQQ. Quedaste al día.",
         meta:{ingreso:10000,tasa:4,aporte_pactado:1000,capital_inicial:15000,sjc_capital:20000,
@@ -2301,6 +2522,13 @@ function demo(){
           cuenta:{last_equity:1131200,tir:11.8,inicio:"2019-06-02",ytd_pnl:-10480,ytd_pct:-0.9,multiplier:4},
           posiciones:[{s:"SPY",q:1220,px:571.1,entrada:389.9,v:696742,pnl:221064,pnlp:46.5,hoy:-0.61},
                       {s:"QLD",q:3100,px:136.5,entrada:98.2,v:423150,pnl:118730,pnlp:39.0,hoy:-1.44}],
+          transferencias_mes:[]}},
+      {alias:"ap-11",activo:true,nombre:"Andrea Porras",correo:"andrea.porras@gmail.com",notas:"",
+        meta:{ingreso:4000,tasa:4,aporte_pactado:500,plan:{f1:"TQQQ",f2:"QQQ",f3:"SJC",p1:70,p2:100,ff:70,timing:true}},
+        snap:{mes:"2026-08-01",equity:42380,cash:310,aportado_total:36000,phi:0.035,
+          cuenta:{last_equity:42010,tir:9.4,inicio:"2025-02-18",ytd_pnl:3120,ytd_pct:7.9,multiplier:2},
+          posiciones:[{s:"TQQQ",q:310.5,px:92.4,entrada:84.0,v:28690,pnl:2608,pnlp:10.0,hoy:1.37},
+                      {s:"QQQ",q:23,px:581.7,entrada:560.1,v:13379,pnl:497,pnlp:3.9,hoy:0.45}],
           transferencias_mes:[]}}
     ]};
 }
