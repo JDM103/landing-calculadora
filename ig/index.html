@@ -22,12 +22,16 @@ a{color:var(--menta)}
 h1{font-size:20px;margin:0 0 2px}
 .muted{color:var(--gris);font-size:14px}
 .tabs{display:flex;gap:8px;margin:16px 0 14px}
-.tabs button{flex:1;background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:10px 12px;font-weight:600;min-width:0}
+.tabs button{flex:1;font-size:15px;background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:10px 12px;font-weight:600;min-width:0}
 .tabs button[aria-selected="true"]{background:var(--menta);color:var(--tinta2);border-color:var(--menta)}
 h2{font-size:15px;margin:22px 0 10px;letter-spacing:.02em}
 .t{background:var(--tinta2);border-radius:14px;padding:14px;margin-bottom:12px;border-left:5px solid var(--linea)}
 .t.g0{border-color:var(--menta)}
 .t.g1{border-color:var(--peri)}
+.chat{margin:8px 0 4px;padding:8px 10px;background:var(--input);border-radius:10px}
+.chat p{margin:0 0 4px;font-size:14px}
+.chat p:last-child{margin:0}
+.chat .yo{color:var(--gris)}
 .t p{margin:0 0 6px;font-size:14px;overflow-wrap:anywhere}
 .t .quien{font-size:16px;font-weight:600}
 .t .m{color:var(--gris)}
@@ -55,6 +59,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
   <div class="tabs" role="tablist">
     <button role="tab" id="tab-b" aria-selected="true">Escribirles</button>
     <button role="tab" id="tab-s" aria-selected="false">Seguir</button>
+    <button role="tab" id="tab-g" aria-selected="false">Seguimientos</button>
   </div>
   <div id="vista"></div>
   <div class="pie">
@@ -73,7 +78,9 @@ let clave = guardado.get();
 const enLink = new URLSearchParams(location.hash.slice(1)).get("k");
 if (enLink) { clave = enLink; guardado.set(clave); history.replaceState(null, "", location.pathname); }
 
-let datos = null, marcas = { escrito: {}, seguido: {} }, pestana = "b", cola = Promise.resolve();
+let datos = null, marcas = { escrito: {}, seguido: {}, cerrado: {} }, pestana = "b", cola = Promise.resolve();
+let chats = null, cargandoChats = false, errorChats = "";
+const DIAS_CHATS = 90, DIAS_ESPERA = 3;
 
 async function api(ruta, opciones = {}) {
   const r = await fetch("/api/ig/" + ruta, { ...opciones, headers: { "x-clave": clave, "Content-Type": "application/json" } });
@@ -93,7 +100,7 @@ async function cargar() {
   if (!clave) return pedirClave("Esta página pide clave");
   try {
     const r = await api("datos");
-    datos = r.datos; marcas = { escrito: {}, seguido: {}, ...(r.marcas || {}) };
+    datos = r.datos; marcas = { escrito: {}, seguido: {}, cerrado: {}, ...(r.marcas || {}) };
     pintar();
   } catch (e) {
     if (e.message === "clave") return pedirClave("La clave no calza");
@@ -128,11 +135,141 @@ function tarjetaSeguir(p) {
     '<label><input type="checkbox" data-accion="seguido"> ya lo seguí</label></div></div>';
 }
 
+/* ---------- Seguimientos: chats de los últimos 90 días ---------- */
+async function cargarChats() {
+  if (cargandoChats) return;
+  cargandoChats = true; errorChats = ""; chats = []; pintar();
+  const limite = new Date(Date.now() - DIAS_CHATS * 864e5).toISOString();
+  try {
+    let after = "";
+    for (let i = 0; i < 40; i++) {
+      const r = await api("chats" + (after ? "?after=" + encodeURIComponent(after) : ""));
+      chats = chats.concat(r.chats.filter((c) => c.t >= limite));
+      pintar();
+      after = r.after;
+      // Instagram los da del más reciente al más viejo: al pasar los 90 días ya no hace falta seguir
+      if (!after || r.chats.some((c) => c.t && c.t < limite)) break;
+    }
+  } catch (e) {
+    if (e.message === "clave") { cargandoChats = false; return pedirClave("La clave no calza"); }
+    errorChats = "No se pudieron leer los chats de Instagram. " + e.message;
+  }
+  cargandoChats = false; pintar();
+}
+
+function fichas() {
+  const m = {};
+  for (const p of (datos && datos.sugeridos) || []) m[p.usuario] = p;
+  for (const p of (datos && datos.seguidores) || []) m[p.usuario] = p;
+  return m;
+}
+const diasDesde = (t) => Math.floor((Date.now() - new Date(t).getTime()) / 864e5);
+const hace = (t) => { const d = diasDesde(t); return d <= 0 ? "hoy" : d === 1 ? "ayer" : "hace " + d + " días"; };
+
+/* En qué está cada chat, mirando los últimos mensajes (vienen del más nuevo al más viejo):
+   debes = lo último lo escribió la otra persona · espera = le escribiste hace poco ·
+   frio = contestó alguna vez y se quedó callado · sinrespuesta = nunca contestó ·
+   insistido = ya le escribiste en dos días distintos sin respuesta. */
+function estadoChat(c) {
+  const ms = c.mensajes || [];
+  if (!ms.length) return "vacio";
+  if (!ms[0].yo) return "debes";
+  if (diasDesde(ms[0].t) < DIAS_ESPERA) return "espera";
+  const dias = new Set();
+  for (const m of ms) { if (!m.yo) break; dias.add(m.t.slice(0, 10)); }
+  if (dias.size >= 2) return "insistido";
+  return ms.some((m) => !m.yo) ? "frio" : "sinrespuesta";
+}
+
+function primerNombre(nombre) {
+  const w = String(nombre || "").trim().split(/\s+/).filter((x) => !/^(dr|dra|doc|lic|ing)\.?$/i.test(x))[0] || "";
+  if (!/^[A-Za-zÁÉÍÓÚÑáéíóúñ]{3,}$/.test(w)) return "";
+  return w[0].toUpperCase() + w.slice(1).toLowerCase();
+}
+
+function sugerencia(c, p, medico, estado) {
+  const n = primerNombre(p && p.nombre), hola = "Hola" + (n ? " " + n : "") + "!";
+  const texto = (c.mensajes || []).map((m) => m.texto.toLowerCase()).join(" ");
+  if (estado === "sinrespuesta") {
+    return hola + " Por si te sirve, armé un curso corto de " + (medico ? "finanzas para médicos" : "bienestar financiero") + ", es gratis. Te lo paso?";
+  }
+  if (/noviembre/.test(texto) && new Date() < new Date("2026-12-01T06:00:00Z")) {
+    return hola + " Te cuento que la oferta de noviembre cierra el 30. Querés que veamos tu caso en una llamada corta antes de eso?";
+  }
+  if (/curso/.test(texto)) return hola + " Pudiste ver el curso? Contame qué te pareció";
+  return hola + " Cómo vas? Si te quedó alguna duda de lo que hablamos, con gusto la vemos";
+}
+
+function tarjetaChat(x) {
+  const { c, p, medico, cliente, estado } = x;
+  const hilo = (c.mensajes || []).slice(0, 3).reverse().map((m) =>
+    '<p class="' + (m.yo ? "yo" : "") + '"><b>' + (m.yo ? "Vos" : "@" + esc(c.u)) + ":</b> " + esc(m.texto || "(foto, audio o publicación compartida)") + "</p>").join("");
+  const quien = cliente ? "cliente" : medico ? "médico" + (p && p.especialidad ? " · " + esc(p.especialidad) : "") : "sin señal de médico";
+  const conMensaje = estado === "frio" || estado === "sinrespuesta";
+  return '<div class="t g' + (cliente ? 2 : medico ? 0 : 1) + '" data-u="' + esc(c.u) + '">' +
+    '<p class="quien"><a href="https://www.instagram.com/' + esc(c.u) + '/" target="_blank" rel="noopener">@' + esc(c.u) + "</a>" +
+    (p && p.nombre ? " · " + esc(p.nombre) : cliente ? " · " + esc(cliente) : "") + '<span class="tag">' + quien + "</span></p>" +
+    '<p class="m">Último mensaje ' + hace(c.mensajes[0].t) + "</p>" +
+    '<div class="chat">' + hilo + "</div>" +
+    (conMensaje ? '<textarea rows="3" aria-label="Seguimiento para ' + esc(c.u) + '">' + esc(sugerencia(c, p, medico, estado)) + "</textarea>" : "") +
+    '<div class="b"><button data-accion="' + (conMensaje ? "mandar" : "abrir") + '">' + (conMensaje ? "Copiar y abrir perfil" : "Abrir perfil") + "</button>" +
+    '<label><input type="checkbox" data-accion="cerrado"' + (estado === "cerrado" ? " checked" : "") + "> listo, no hace falta</label></div></div>";
+}
+
+function pintarSeguimientos() {
+  if (chats === null) { cargarChats(); return ""; }
+  const f = fichas(), clientes = (datos && datos.clientes_ig) || {}, conocidos = new Set((datos && datos.medicos_ig) || []);
+  const filas = chats.filter((c) => (c.mensajes || []).length).map((c) => {
+    const p = f[c.u], cliente = clientes[c.u] || "";
+    const cerrado = marcas.cerrado[c.u];
+    return { c, p, cliente, medico: !cliente && (conocidos.has(c.u) || (!!p && esMedico(p))),
+      // la marca "listo" vale hasta que haya un mensaje más nuevo que el día en que se marcó
+      estado: cerrado && (cerrado === "hoy" || c.t.slice(0, 10) <= cerrado) ? "cerrado" : estadoChat(c) };
+  });
+  const orden = (a, b) => (b.medico - a.medico) || (a.c.t < b.c.t ? 1 : -1);
+  const de = (estados, quien) => filas.filter((x) => estados.includes(x.estado) && quien(x)).sort(orden);
+  const prospecto = (x) => !x.cliente, esCliente = (x) => !!x.cliente;
+  const bloque = (titulo, lote, abierto) => {
+    if (!lote.length) return "";
+    const med = lote.filter((x) => x.medico), resto = lote.filter((x) => !x.medico);
+    if (!abierto) return "<details><summary>" + titulo + " (" + lote.length + ")</summary>" + lote.map(tarjetaChat).join("") + "</details>";
+    return "<h2>" + titulo + " (" + lote.length + ")</h2>" + med.map(tarjetaChat).join("") +
+      (resto.length ? "<details" + (med.length ? "" : " open") + "><summary>" + titulo + ", sin señal de médico (" + resto.length + ")</summary>" + resto.map(tarjetaChat).join("") + "</details>" : "");
+  };
+  const debes = de(["debes"], prospecto), seguir = de(["frio", "sinrespuesta"], prospecto);
+  let h = '<p class="muted">Chats de los últimos ' + DIAS_CHATS + " días: <b>" + filas.length + "</b>" + (cargandoChats ? " (leyendo…)" : "") +
+    " · médicos: " + filas.filter((x) => x.medico).length + " · clientes: " + filas.filter(esCliente).length +
+    " · te toca contestar: " + debes.length + " · para seguimiento: " + seguir.length + "</p>";
+  if (errorChats) h += '<div class="aviso">' + esc(errorChats) + "</div>";
+  h += bloque("Te toca contestar", debes, true);
+  h += bloque("Darles seguimiento", seguir, true);
+  if (!cargandoChats && !errorChats && !debes.length && !seguir.length) h += '<div class="aviso">No hay chats pendientes.</div>';
+  h += bloque("Esperando respuesta, les escribiste hace poco", de(["espera"], prospecto), false);
+  h += bloque("Ya les insististe una vez", de(["insistido"], prospecto), false);
+  h += bloque("Clientes", filas.filter(esCliente).sort(orden), false);
+  h += bloque("Marcados como listos", de(["cerrado"], prospecto), false);
+  if (!cargandoChats) h += '<div class="pie"><button id="releer">Volver a leer los chats</button></div>';
+  return h;
+}
+
 const enlaces = (lista) => lista.map((p) => '<a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a>").join(" · ");
 
 function pintar() {
   $("#tab-b").setAttribute("aria-selected", pestana === "b");
   $("#tab-s").setAttribute("aria-selected", pestana === "s");
+  $("#tab-g").setAttribute("aria-selected", pestana === "g");
+  if (pestana === "g") {
+    // la lista se repinta mientras llegan las páginas: se conservan los textos editados y los bloques abiertos
+    const sinCuenta = (s) => s.textContent.replace(/ \(\d+\)$/, "");
+    const abiertos = [...document.querySelectorAll("#vista details[open] > summary")].map(sinCuenta);
+    const escritos = {};
+    document.querySelectorAll("#vista .t textarea").forEach((a) => { if (a.value !== a.defaultValue) escritos[a.closest(".t").dataset.u] = a.value; });
+    $("#estado").textContent = "Chats leídos en vivo de Instagram. Los mensajes no se guardan en la página.";
+    $("#vista").innerHTML = pintarSeguimientos();
+    document.querySelectorAll("#vista details > summary").forEach((s) => { if (abiertos.includes(sinCuenta(s))) s.parentNode.open = true; });
+    document.querySelectorAll("#vista .t textarea").forEach((a) => { const v = escritos[a.closest(".t").dataset.u]; if (v != null) a.value = v; });
+    return;
+  }
   if (!datos) { $("#estado").textContent = "Todavía no hay datos. Se llenan con la corrida diaria de la compu."; $("#vista").innerHTML = ""; return; }
   $("#estado").textContent = "Última lectura de Instagram: " + (datos.actualizado || "sin fecha");
   let h = "";
@@ -179,6 +316,7 @@ function copiar(texto) {
 }
 
 $("#vista").addEventListener("click", (e) => {
+  if (e.target.id === "releer") { chats = null; pintar(); return; }
   const b = e.target.closest("button[data-accion]");
   if (!b) return;
   const t = b.closest(".t"), perfil = "https://www.instagram.com/" + t.dataset.u + "/";
@@ -196,6 +334,7 @@ $("#vista").addEventListener("change", (e) => {
 });
 $("#tab-b").onclick = () => { pestana = "b"; pintar(); };
 $("#tab-s").onclick = () => { pestana = "s"; pintar(); };
+$("#tab-g").onclick = () => { pestana = "g"; pintar(); };
 $("#copiar-link").onclick = async (e) => {
   await copiar(location.origin + location.pathname + "#k=" + encodeURIComponent(clave));
   e.target.textContent = "Link copiado. Mandátelo solo a vos";
