@@ -1995,7 +1995,10 @@ document.getElementById("tab-term").addEventListener("click", function(){ ponerM
 // Va por el mismo camino que la boleta (function ordenes-vivo): kill switch, clave de firma
 // y revisión de la posición real en el servidor antes de tocar Alpaca. La clave se escribe
 // una vez por tanda, vive solo en memoria y se borra al salir de la pestaña.
-var SAL={ sym:"TQQQ", cur:null, hechas:{}, err:{}, enviando:false, firma:"" };
+var SAL={ sym:"TQQQ", cur:null, hechas:{}, err:{}, enviando:false, firma:"",
+  modo:"mercado",     // "mercado" (venta a mercado DAY) | "stop" (stop de venta DAY en un precio)
+  stop:{},            // precio stop por símbolo, el que escribe Jose (ej. el cierre del viernes)
+  cancelando:null };  // progreso de "cancelar todas"
 function salSyms(){
   var m={};
   (DATOS.clientes||[]).forEach(function(c){ if(!c.activo || !c.snap) return;
@@ -2003,73 +2006,107 @@ function salSyms(){
       var x=m[po.s]||(m[po.s]={s:po.s, n:0, v:0}); x.n++; x.v+=+po.v||0; }); });
   return Object.keys(m).map(function(k){ return m[k]; }).sort(function(a,b){ return b.v-a.v; });
 }
-// Unidades de ese símbolo que ya están en ventas abiertas en Alpaca (según la última lectura
-// de órdenes abiertas). null = todavía no se han leído las órdenes de esa cuenta.
-function salEnCola(alias, sym){
-  var co=CACHE_ORD[alias], l=null;
-  if(co && co.abiertas) l=co.abiertas;                       // lo más fresco: la lectura de ESA cuenta
-  else if(ORD_GLOB && ORD_GLOB.datos){ l=[];
-    (ORD_GLOB.datos.cuentas||[]).forEach(function(x){ if(x.alias===alias && x.ordenes) l=x.ordenes; }); }
-  if(l===null) return null;
-  var t=0, vistos={};
-  l.forEach(function(o){ if(o.sym!==sym || o.lado!=="sell" || ordPendiente(o) || vistos[o.id]) return;
-    if(o.id) vistos[o.id]=1; t+=+o.qty||0; });
-  return t;
+function salStopPx(sym){ var v=parseFloat(String(SAL.stop[sym]||"").replace(",", ".")); return (isFinite(v) && v>0)? Math.round(v*100)/100 : 0; }
+// Todas las órdenes abiertas de la cuenta según la última lectura de Alpaca (la de ESA cuenta
+// si existe, que es la más fresca; si no, el escaneo global). null = todavía no se han leído.
+function salOrdsCuenta(alias){
+  var co=CACHE_ORD[alias];
+  if(co && co.abiertas) return co.abiertas;
+  if(ORD_GLOB && ORD_GLOB.datos){ var l=[];
+    (ORD_GLOB.datos.cuentas||[]).forEach(function(x){ if(x.alias===alias && x.ordenes) l=x.ordenes; });
+    return l; }
+  return null;
+}
+// Ventas vivas de ese símbolo en la cuenta
+function salVentas(alias, sym){
+  var l=salOrdsCuenta(alias); if(l===null) return null;
+  var vistos={};
+  return l.filter(function(o){ if(o.sym!==sym || o.lado!=="sell" || ordPendiente(o) || (o.id && vistos[o.id])) return false;
+    if(o.id) vistos[o.id]=1; return true; });
+}
+// ¿esa orden ya es del tipo de salida elegido? (a mercado, o stop en el precio escrito)
+function salCalza(o, sym){
+  if(SAL.modo==="stop") return o.tipo==="stop" && String(o.tif).toLowerCase()==="gtc" && Math.abs((+o.stop||0)-salStopPx(sym))<0.005;
+  return o.tipo==="market";
 }
 // Filas de la tanda: quien tiene el símbolo hoy + quien ya se sacó en esta sesión.
-// Estados: pendiente | parcial (hay venta en cola pero NO cubre toda la posición: falta `q`)
-//          completa (la cola cubre todo, comprobado contra Alpaca) | enviada (mandada, sin
-//          comprobar todavía) | sim | saltada
+// Estados: pendiente | parcial (la venta en cola es del tipo elegido pero NO cubre toda la
+//          posición: falta `q`) | cambiar (tiene ventas en cola de OTRO tipo o precio: se
+//          cancelan y se manda una sola por toda la posición) | completa (comprobado contra
+//          Alpaca) | enviada (mandada, sin comprobar todavía) | vendida | sim | saltada
 function salFilas(sym){
   var filas=[];
   (DATOS.clientes||[]).forEach(function(c){ if(!c.activo || !c.snap) return;
     var po=pxDe(c, sym), h=SAL.hechas[c.alias+"|"+sym];
     if(!(po.q>0) && !h) return;
     var tot= po.q>0? po.q : h.q, vTot= po.q>0? po.v : h.v;
-    var cola= po.q>0? salEnCola(c.alias, sym) : null;
-    var resto= cola===null? null : Math.max(0, tot-cola), est;
+    var ventas= po.q>0? salVentas(c.alias, sym) : null, ok=0, otras=0;
+    (ventas||[]).forEach(function(o){ if(salCalza(o, sym)) ok+=+o.qty||0; else otras+=+o.qty||0; });
+    // meta de la orden: a mercado, TODA la posición; con stop, solo las acciones enteras
+    // (Alpaca no acepta stops GTC fraccionados) y la fracción queda sin orden
+    var meta= SAL.modo==="stop"? Math.floor(tot+1e-9) : tot, frac=Math.round((tot-Math.floor(tot+1e-9))*1e9)/1e9;
+    var resto=Math.max(0, meta-ok), est;
     if(!(po.q>0)) est= h.estado==="enviada"? "vendida" : h.estado;        // ya no está en posiciones
-    else if(cola>0 && resto<=tot*1e-6) est="completa";
-    else if(cola>0) est="parcial";
+    else if(otras>0) est= meta>0? "cambiar" : "ajena";                    // sin enteras no hay stop que poner: se avisa y ya
+    else if(!(meta>0)) est="fraccion";                                    // solo tiene fracción: en modo stop no lleva orden
+    else if(ok>0 && resto<=meta*1e-6) est="completa";
+    else if(ok>0) est="parcial";
     else if(h) est=h.estado;
     else est="pendiente";
     var plan=c.meta && c.meta.plan;
-    filas.push({ c:c, tot:tot, vTot:vTot, cola:cola||0, px:po.px, est:est, h:h||null,
-      q: est==="parcial"? Math.round(resto*1e9)/1e9 : tot,              // lo que falta vender
-      v: est==="parcial"? vTot*(resto/tot) : vTot,
+    filas.push({ c:c, tot:tot, vTot:vTot, cola:ok+otras, px:po.px, est:est, h:h||null, ventas:ventas||[], meta:meta, frac:frac,
+      q: est==="parcial"? Math.round(resto*1e9)/1e9 : meta,             // lo que se manda: el resto o toda la meta
+      v: vTot*((est==="parcial"? resto : meta)/tot),
       timing: plan? !!plan.timing : true });                             // sin plan guardado = con timing (igual que Modo acción)
   });
   filas.sort(function(a,b){ return b.vTot-a.vTot; });
   return filas;
 }
-function salUnidades(q){ return (+q).toLocaleString("en-US", {maximumFractionDigits:6}); }
+function salUnidades(q){ return (+q).toLocaleString("en-US", {maximumFractionDigits:9}); }
+function salTipoTxt(o){ return o.tipo==="stop"? "stop $"+o.stop+" "+String(o.tif||"").toUpperCase() : o.tipo==="market"? "a mercado" : o.tipo+(o.lim? " $"+o.lim:""); }
 function renderSalida(){
   var box=$("vista-salida"); if(!box || !DATOS) return;
-  var syms=salSyms(), sym=SAL.sym, filas=salFilas(sym);
-  var pend=filas.filter(function(f){ return f.est==="pendiente" || f.est==="parcial"; });
+  var syms=salSyms(), sym=SAL.sym, filas=salFilas(sym), esStop=SAL.modo==="stop", spx=salStopPx(sym);
+  var falta= esStop && !(spx>0);                      // en modo stop no se aprueba nada sin precio
+  var pend=filas.filter(function(f){ return f.est==="pendiente" || f.est==="parcial" || f.est==="cambiar"; });
   var cur=pend.filter(function(f){ return f.c.alias===SAL.cur; })[0] || pend[0] || null;
   SAL.cur= cur? cur.c.alias : null;
   var nEnv=filas.filter(function(f){ return f.est==="enviada"||f.est==="sim"||f.est==="completa"||f.est==="vendida"; }).length;
   var nSinVer=filas.filter(function(f){ return f.est==="enviada"; }).length;
   var nSal=filas.filter(function(f){ return f.est==="saltada"; }).length;
   var totV=0; pend.forEach(function(f){ totV+=f.v; });
-  var vivo=esVivo(), opts=syms.slice();
+  var nCola=0, nCtasCola=0; filas.forEach(function(f){ if(f.ventas.length){ nCola+=f.ventas.length; nCtasCola++; } });
+  var vivo=esVivo(), opts=syms.slice(), ocupado=SAL.enviando || !!SAL.cancelando;
   if(!opts.some(function(x){ return x.s===sym; })) opts.unshift({s:sym, n:0, v:0});
   var ESTADO={ pendiente:['pendiente','var(--ambar)','rgba(224,176,122,.14)'],
     parcial:['⚠ en cola solo una parte','#ff9ea4','rgba(224,82,90,.16)'],
-    completa:['✓ en cola: toda la posición','var(--menta)','rgba(99,252,175,.12)'],
+    cambiar:['por cambiar','var(--ambar)','rgba(224,176,122,.14)'],
+    fraccion:['solo fracción · sin stop','var(--gris-sec)','rgba(154,161,171,.14)'],
+    ajena:['⚠ solo fracción, con otra venta en cola','#ff9ea4','rgba(224,82,90,.16)'],
+    completa:[esStop?'✓ stop puesto: todo lo entero':'✓ en cola: toda la posición','var(--menta)','rgba(99,252,175,.12)'],
     vendida:['✓ vendida','var(--menta)','rgba(99,252,175,.12)'],
     enviada:['enviada · sin comprobar','var(--ambar)','rgba(224,176,122,.14)'],
     sim:['✓ simulada','var(--gris-sec)','rgba(154,161,171,.14)'],
     saltada:['saltada','var(--gris-sec)','rgba(154,161,171,.14)'] };
+  var tipoTxt= esStop? 'Stop de venta en <b>'+(spx>0? '$'+spx.toFixed(2):'—')+'</b> · GTC (hasta cancelar)' : 'Mercado · DAY';
+  var nFrac=0, uFrac=0; if(esStop) filas.forEach(function(f){ if(f.frac>0 && f.est!=="vendida"){ nFrac++; uFrac+=f.frac; } });
 
   var html='<div class="acard">'
     +'<div class="sal-top"><h2>Sacar a todos de</h2>'
       +'<select id="sal-sym">'+opts.map(function(x){
         return '<option value="'+escapa(x.s)+'"'+(x.s===sym?' selected':'')+'>'+escapa(x.s)+' · '+x.n+(x.n===1?' cuenta':' cuentas')+' · '+money(x.v)+'</option>'; }).join("")+'</select>'
+      +'<span class="hbtns"><button data-smodo="mercado"'+(esStop?'':' class="on"')+'>A mercado</button><button data-smodo="stop"'+(esStop?' class="on"':'')+'>Con stop</button></span>'
+      +(esStop? '<span class="sal-firma" style="margin:0"><span>Precio stop de '+escapa(sym)+' $</span>'
+          +'<input id="sal-stop" type="text" inputmode="decimal" autocomplete="off" placeholder="cierre del viernes" style="width:150px;-webkit-text-security:none" value="'+escapa(SAL.stop[sym]||"")+'"></span>' : '')
     +'</div>'
+    +(esStop? '<div class="candado2" style="margin-top:10px">Cada cuenta queda con UN stop de venta por <b>todas sus acciones enteras</b> de '+escapa(sym)+': si en horario normal el precio toca '
+        +(spx>0?'<b>$'+spx.toFixed(2)+'</b>':'el precio que escribás')+' o menos, se venden a mercado; si no lo toca, no se vende. '
+        +'Es <b>GTC</b>: queda puesto día tras día hasta que se dispare o lo cancelés. '
+        +'<b>Las fracciones quedan por fuera</b>, sin orden (Alpaca no acepta stops GTC fraccionados)'
+        +(nFrac? ': '+nFrac+(nFrac===1?' cuenta':' cuentas')+', '+salUnidades(uFrac)+' u. en total (≈ '+fmt(uFrac*((filas[0]&&filas[0].px)||0))+')':'')+'. '
+        +'Alpaca rechaza el stop si el precio ya va por debajo.</div>' : '')
     +'<div class="sal-cont"><b>'+pend.length+'</b> por aprobar ('+fmt(totV)+') · <b>'+nEnv+'</b> '+(nEnv===1?'lista':'listas')+' · <b>'+nSal+'</b> '+(nSal===1?'saltada':'saltadas')
-      +' · cada venta es de TODA la posición, a mercado, vigencia DAY.'
+      +(esStop? ' · cada orden es un stop GTC por las acciones ENTERAS de la posición.' : ' · cada orden es por TODA la posición (a mercado, vigencia DAY).')
       +' <button class="sal-mini" id="sal-verif">'+(ORD_SCANEANDO?'comprobando…':'↻ comprobar contra Alpaca')+'</button>'
       +(ORD_GLOB && ORD_GLOB.t? ' <span>órdenes leídas a las '+ORD_GLOB.t.toTimeString().slice(0,5)+'</span>':'')
       +(nSinVer? ' <span style="color:var(--ambar)">· '+nSinVer+' sin comprobar todavía</span>':'')+'</div>'
@@ -2077,61 +2114,84 @@ function renderSalida(){
     +(vivo? '<div class="sal-firma"><span>Clave de firma para esta tanda</span>'
         +'<input id="sal-firma" type="text" name="tanda-'+Date.now()+'" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-form-type="other" value="'+escapa(SAL.firma)+'">'
         +'<span>Se escribe una vez, se manda con cada orden que aprobés y se borra al salir de esta pestaña.</span></div>' : '')
+    +(nCola? '<div class="sal-cont" style="margin-top:10px">Hay <b>'+nCola+'</b> '+(nCola===1?'venta':'ventas')+' de '+escapa(sym)+' en cola en <b>'+nCtasCola+'</b> '+(nCtasCola===1?'cuenta':'cuentas')+'. '
+        +(SAL.cancelando? '<b style="color:var(--ambar)">Cancelando '+SAL.cancelando.hechas+' de '+SAL.cancelando.total+'…</b>'
+          : '<button class="sal-mini" id="sal-canc" style="border-color:var(--rojo);color:#ff9ea4"'+(ocupado?' disabled':'')+'>Cancelar todas las ventas de '+escapa(sym)+' en cola…</button>'
+            +'<span id="sal-canc2" style="display:none"> ¿Seguro? Las cuentas quedan sin orden hasta que aprobés las nuevas. '
+            +'<button class="sal-mini" id="sal-canc-si" style="border-color:var(--rojo);color:#fff;background:var(--rojo)">Sí, cancelar las '+nCola+'</button>'
+            +'<button class="sal-mini" id="sal-canc-no">No</button></span>')
+        +(SAL.cancelMsg? ' <span style="color:var(--gris-sec)">'+escapa(SAL.cancelMsg)+'</span>':'')+'</div>' : (SAL.cancelMsg? '<div class="sal-cont" style="margin-top:10px">'+escapa(SAL.cancelMsg)+'</div>':''))
     +'</div>';
 
   if(cur){
     var c=cur.c, e=SAL.err[c.alias+"|"+sym];
+    var bajo= esStop && spx>0 && cur.px>0 && spx>=cur.px;
     html+='<div class="acard">'
       +'<div class="sec" style="margin-top:0">Cuenta '+(filas.length-pend.length+1)+' de '+filas.length+'</div>'
       +'<h2 style="margin:0;font-size:19px;color:var(--crema)">'+nomDe(c)
         +(cur.timing? '':'<span class="chip" style="background:rgba(224,176,122,.16);color:var(--ambar)">plan SIN timing</span>')+'</h2>'
       +'<div class="sub">'+(PRIV?'••••':c.alias)+' · capital '+fmt(+c.snap.equity)+' · efectivo '+fmt(+c.snap.cash)+' · dato al '+c.snap.mes+'</div>'
       +(cur.timing? '':'<div class="candado2">Este plan no usa la señal de timing. Si no le toca salir, saltala.</div>')
-      +'<div class="sal-orden"><span class="down" style="font-weight:800;letter-spacing:.5px">VENDER</span> '
+      +(cur.est==="cambiar"? '<div class="candado2">Ya tiene en cola: '+cur.ventas.map(function(o){ return salUnidades(o.qty)+' u. '+salTipoTxt(o); }).join(" · ")
+          +'. Al aprobar se <b>cancela'+(cur.ventas.length===1?'':'n')+'</b> y se manda una sola orden nueva'+(esStop? ' por las acciones enteras.':' por toda la posición.')+'</div>' : '')
+      +'<div class="sal-orden"><span class="down" style="font-weight:800;letter-spacing:.5px">'+(esStop?'STOP DE VENTA':'VENDER')+'</span> '
         +'<span class="big">'+escapa(sym)+'</span> · <span class="big num">'+salUnidades(cur.q)+'</span> unidades '
-        +(cur.est==="parcial"? '<b style="color:#ff9ea4">(el resto: ya hay '+salUnidades(cur.cola)+' de '+salUnidades(cur.tot)+' en cola)</b>' : '(toda la posición)')
-        +'<div class="sub" style="margin-top:4px">≈ <b class="num" style="color:var(--crema)">'+fmt(cur.v)+'</b> al último precio ($'+(+cur.px).toFixed(2)+') · Mercado · DAY'
-        +' · efectivo después ≈ <b class="num" style="color:var(--menta)">'+fmt(+c.snap.cash+cur.v)+'</b></div></div>'
+        +(cur.est==="parcial"? '<b style="color:#ff9ea4">(el resto: ya hay '+salUnidades(cur.meta-cur.q)+' de '+salUnidades(cur.meta)+' en cola)</b>'
+          : esStop? '(todo lo entero de '+salUnidades(cur.tot)+(cur.frac>0? '; quedan <b>'+salUnidades(cur.frac)+'</b> fraccionadas sin orden':'')+')' : '(toda la posición)')
+        +'<div class="sub" style="margin-top:4px">≈ <b class="num" style="color:var(--crema)">'+fmt(cur.v)+'</b> al último precio ($'+(+cur.px).toFixed(2)+') · '+tipoTxt
+        +(esStop? '' : ' · efectivo después ≈ <b class="num" style="color:var(--menta)">'+fmt(+c.snap.cash+cur.v)+'</b>')+'</div></div>'
+      +(falta? '<div class="sal-err">Escribí arriba el precio stop de '+escapa(sym)+' para poder aprobar.</div>':'')
+      +(bajo? '<div class="sal-err">El último precio del panel ($'+(+cur.px).toFixed(2)+') no está por encima del stop: Alpaca lo va a rechazar. Actualizá datos o salí a mercado.</div>':'')
       +(e? '<div class="sal-err">No salió: '+escapa(e)+'</div>':'')
       +'<div class="sal-btns">'
-        +'<button class="ok" id="sal-ok"'+(SAL.enviando?' disabled':'')+'>'+(SAL.enviando? 'Enviando…' : vivo? 'Aprobar y vender EN VIVO' : 'Aprobar (simulación, no se envía)')+'</button>'
-        +'<button id="sal-skip"'+(SAL.enviando?' disabled':'')+'>Saltar esta cuenta</button>'
+        +'<button class="ok" id="sal-ok"'+((ocupado||falta)?' disabled':'')+'>'+(SAL.enviando? 'Enviando…'
+          : (cur.est==="cambiar"? 'Aprobar: cancelar y poner ' : 'Aprobar ')+(esStop? 'el stop':'la venta')+(vivo? ' EN VIVO':' (simulación, no se envía)'))+'</button>'
+        +'<button id="sal-skip"'+(ocupado?' disabled':'')+'>Saltar esta cuenta</button>'
       +'</div></div>';
   } else {
     html+='<div class="enplan">'+(filas.length
-      ? '✅ <b>No queda nadie por aprobar en '+escapa(sym)+'.</b> '+nEnv+(nEnv===1?' venta lista':' ventas listas')+(nSal? ' y '+nSal+(nSal===1?' cuenta saltada':' cuentas saltadas'):'')+'. Cambiá el símbolo arriba para seguir con otro.'
+      ? '✅ <b>No queda nadie por aprobar en '+escapa(sym)+'.</b> '+nEnv+(nEnv===1?' orden lista':' órdenes listas')+(nSal? ' y '+nSal+(nSal===1?' cuenta saltada':' cuentas saltadas'):'')+'. Cambiá el símbolo arriba para seguir con otro.'
       : 'Ninguna cuenta activa tiene <b>'+escapa(sym)+'</b>.')+'</div>';
   }
 
   if(filas.length){
     html+='<div class="acard"><div class="sec" style="margin-top:0">Todas las cuentas con '+escapa(sym)+'</div>'
-      +'<div style="overflow-x:auto"><table><thead><tr><th style="text-align:left">Cuenta</th><th>Tiene</th><th>En cola</th><th>Valor</th><th>Estado</th></tr></thead><tbody>'
+      +'<div style="overflow-x:auto"><table><thead><tr><th style="text-align:left">Cuenta</th><th>Tiene</th><th>En cola</th><th>Orden en cola</th><th>Valor</th><th>Estado</th></tr></thead><tbody>'
       +filas.map(function(f){
         var E=ESTADO[f.est], k=f.c.alias+"|"+sym;
         return '<tr class="sal-fila'+(cur && f.c.alias===cur.c.alias?' cur':'')+'" data-sal="'+escapa(f.c.alias)+'">'
           +'<td style="text-align:left">'+nomDe(f.c)+(f.timing?'':' <span style="color:var(--ambar);font-size:10.5px">sin timing</span>')+'</td>'
-          +'<td class="num">'+salUnidades(f.tot)+'</td>'
-          +'<td class="num" style="color:'+(f.est==="parcial"?'#ff9ea4':f.cola>0?'var(--menta)':'var(--gris-sec)')+'">'+(f.cola>0? salUnidades(f.cola) : '—')+'</td>'
+          +'<td class="num">'+salUnidades(f.tot)+(esStop && f.frac>0? '<div style="font-size:10.5px;color:var(--gris-sec)">'+salUnidades(f.meta)+' enteras + '+salUnidades(f.frac)+'</div>':'')+'</td>'
+          +'<td class="num" style="color:'+(f.est==="parcial"?'#ff9ea4':f.est==="completa"?'var(--menta)':'var(--gris-sec)')+'">'+(f.cola>0? salUnidades(f.cola) : '—')+'</td>'
+          +'<td style="text-align:right;font-size:12px">'+(f.ventas.length? f.ventas.map(function(o){ return escapa(salTipoTxt(o)); }).join(" + ") : '—')+'</td>'
           +'<td class="num">'+fmt(f.vTot)+'</td>'
           +'<td><span class="sal-est" style="color:'+E[1]+';background:'+E[2]+'">'+E[0]+'</span>'
             +(f.h && f.h.txt? ' <span style="color:var(--gris-sec);font-size:11px">'+escapa(f.h.txt)+'</span>':'')
             +(f.est==="saltada"? '<button class="sal-mini" data-retomar="'+escapa(k)+'">retomar</button>':'')
           +'</td></tr>';
       }).join("")+'</tbody></table></div>'
-      +'<div class="sub" style="margin-top:8px">"Tiene" sale de la última actualización de datos y "En cola" de las órdenes abiertas leídas en Alpaca: el verde de toda la posición solo aparece cuando las dos cantidades calzan. Si la cola cubre menos, la cuenta vuelve a quedar pendiente por el resto. Tocá una fila pendiente para atenderla primero.</div>'
+      +'<div class="sub" style="margin-top:8px">"Tiene" sale de la última actualización de datos y "En cola" de las órdenes abiertas leídas en Alpaca: el verde solo aparece cuando la orden en cola es del tipo elegido arriba y cubre toda la posición (con stop: todas las acciones enteras). Tocá una fila pendiente para atenderla primero.</div>'
       +'</div>';
   }
+  var foco=document.activeElement && document.activeElement.id, selIni=document.activeElement && document.activeElement.selectionStart;
   box.innerHTML=html;
+  if(foco==="sal-stop" || foco==="sal-firma"){ var fe=$(foco); if(fe){ fe.focus(); try{ fe.setSelectionRange(selIni, selIni); }catch(e0){} } }
 
-  $("sal-sym").addEventListener("change", function(){ SAL.sym=this.value; SAL.cur=null; renderSalida(); });
+  $("sal-sym").addEventListener("change", function(){ SAL.sym=this.value; SAL.cur=null; SAL.cancelMsg=""; renderSalida(); });
   $("sal-verif").addEventListener("click", function(){ salComprobar(); });
+  Array.prototype.forEach.call(box.querySelectorAll("[data-smodo]"), function(b){
+    b.addEventListener("click", function(){ if(ocupado) return; SAL.modo=b.getAttribute("data-smodo"); SAL.cur=null; SAL.hechas={}; SAL.err={}; renderSalida(); }); });
+  var sp=$("sal-stop"); if(sp) sp.addEventListener("input", function(){ SAL.stop[sym]=sp.value; SAL.hechas={}; SAL.err={}; renderSalida(); });
   var fi=$("sal-firma"); if(fi) fi.addEventListener("input", function(){ SAL.firma=fi.value; });
   var von=$("vivo-on"); if(von) von.addEventListener("click", abrirEncender);
   var voff=$("vivo-off"); if(voff) voff.addEventListener("click", apagarVivo);
+  var cb=$("sal-canc"); if(cb) cb.addEventListener("click", function(){ cb.style.display="none"; $("sal-canc2").style.display=""; });
+  var cn=$("sal-canc-no"); if(cn) cn.addEventListener("click", function(){ renderSalida(); });
+  var cs=$("sal-canc-si"); if(cs) cs.addEventListener("click", function(){ salCancelarTodas(sym); });
   Array.prototype.forEach.call(box.querySelectorAll("[data-retomar]"), function(b){
     b.addEventListener("click", function(ev){ ev.stopPropagation(); delete SAL.hechas[b.getAttribute("data-retomar")]; renderSalida(); }); });
   Array.prototype.forEach.call(box.querySelectorAll("[data-sal]"), function(tr){
-    tr.addEventListener("click", function(){ if(SAL.enviando) return; SAL.cur=tr.getAttribute("data-sal"); renderSalida(); }); });
+    tr.addEventListener("click", function(){ if(ocupado) return; SAL.cur=tr.getAttribute("data-sal"); renderSalida(); }); });
   if(cur){
     $("sal-skip").addEventListener("click", function(){
       SAL.hechas[cur.c.alias+"|"+sym]={ estado:"saltada", q:cur.q, v:cur.v }; SAL.cur=null; renderSalida(); });
@@ -2141,49 +2201,132 @@ function renderSalida(){
 // Vuelve a leer las órdenes abiertas de TODAS las cuentas en Alpaca (y bota las lecturas por
 // cuenta guardadas, para que mande la más nueva) y repinta la comprobación.
 async function salComprobar(){
-  if(ORD_SCANEANDO || SAL.enviando) return;
+  if(ORD_SCANEANDO || SAL.enviando || SAL.cancelando) return;
   var p=escanearOrdenes(true);            // marca ORD_SCANEANDO de una vez
   renderSalida();
   await p;
   if(ORD_GLOB) CACHE_ORD={};
   if(MODO==="salida") renderSalida();
 }
+function salEspera(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+// Lo que el panel sabe de las órdenes de una cuenta, después de cancelar o mandar: se quita lo
+// cancelado y se agrega lo nuevo, sin esperar otra lectura (que igual llega después).
+function salPonOrdenes(alias, quitarIds, nueva){
+  var l=(salOrdsCuenta(alias)||[]).filter(function(o){ return quitarIds.indexOf(o.id)<0; });
+  if(nueva && nueva.id) l=[ordenDeAlpaca(nueva)].concat(l);
+  delete CACHE_ORD[alias];
+  if(!ORD_GLOB) ORD_GLOB={ t:new Date(), datos:{ total:0, cuentas:[] } };
+  ponOrdGlob(alias, l);
+}
+// Cancela en Alpaca las ventas dadas de UNA cuenta. Devuelve los ids cancelados; lanza si alguna falla.
+async function salCancelarVentas(c, ventas){
+  var ids=[];
+  for(var i=0;i<ventas.length;i++){
+    var o=ventas[i];
+    apiLog("req", "SACAR A TODOS · CANCELAR venta en cola · DELETE /v2/orders/"+o.id+" · cuenta "+c.alias, { sym:o.sym, qty:o.qty, tipo:o.tipo, stop:o.stop||null });
+    var j=await llamar("ordenes-vivo", { accion:"cancelar", alias:c.alias, orden_id:o.id, firma:SAL.firma });
+    apiLog("res", "respuesta de Alpaca a la cancelación ("+(j.status||"?")+")", j.respuesta);
+    // 404/422 = la orden ya no estaba abierta (se llenó o ya estaba cancelada): se sigue
+    if(!j.ok && j.status!==404 && j.status!==422) throw new Error("no se pudo cancelar la venta en cola (Alpaca "+(j.status||"?")+")");
+    ids.push(o.id);
+  }
+  return ids;
+}
 async function salAprobar(f, sym){
-  if(SAL.enviando) return;
-  var c=f.c, k=c.alias+"|"+sym, hora=new Date().toTimeString().slice(0,5);
-  var body={ symbol:sym, side:"sell", type:"market", time_in_force:"day", qty:String(f.q) };
-  var desc="VENDER "+sym+" · "+salUnidades(f.q)+" u. ("+(f.est==="parcial"?"el resto":"toda la posición")+") · Mercado · DAY";
+  if(SAL.enviando || SAL.cancelando) return;
+  var c=f.c, k=c.alias+"|"+sym, hora=new Date().toTimeString().slice(0,5), esStop=SAL.modo==="stop", spx=salStopPx(sym);
+  if(esStop && !(spx>0)) return;
+  // SIEMPRE por cantidad exacta de la posición (nunca más): el servidor además rechaza todo lo
+  // que pase de lo disponible, así que no hay forma de quedar en corto.
+  if(esStop && (!(f.q>0) || Math.abs(f.q-Math.round(f.q))>1e-9)) return;   // con stop jamás sale una cantidad fraccionada
+  var body={ symbol:sym, side:"sell", type: esStop? "stop":"market", time_in_force: esStop? "gtc":"day", qty:String(esStop? Math.round(f.q) : f.q) };
+  if(esStop) body.stop_price=spx.toFixed(2);
+  var cambiar= f.est==="cambiar";
+  var desc=(esStop? "STOP DE VENTA "+sym+" en $"+spx.toFixed(2) : "VENDER "+sym)+" · "+salUnidades(f.q)+" u. ("+(f.est==="parcial"?"el resto": esStop? "lo entero":"toda la posición")+") · "+(esStop?"Stop · GTC":"Mercado · DAY")
+    +(cambiar? " · reemplaza "+f.ventas.length+" en cola":"");
   delete SAL.err[k];
   if(!esVivo()){
     // kill switch apagado (o maqueta): se registra como simulación y NO sale nada a Alpaca
     apiLog("req", "SACAR A TODOS (simulado) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
-    SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+f.v) });
-    SAL.hechas[k]={ estado:"sim", q:f.q, v:f.v, txt:hora+" · no se envió" }; SAL.cur=null; renderSalida(); return;
+    SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+(esStop?0:f.v)) });
+    SAL.hechas[k]={ estado:"sim", q:f.q, v:f.v, txt:hora+" · no se envió" };
+    if(cambiar) salPonOrdenes(c.alias, f.ventas.map(function(o){ return o.id; }), null);
+    SAL.cur=null; renderSalida(); return;
   }
   var fi0=$("sal-firma"); if(fi0 && fi0.value) SAL.firma=fi0.value;   // por si el navegador la llenó sin avisar
   if(!SAL.firma){ SAL.err[k]="falta la clave de firma (arriba)"; renderSalida(); var fi=$("sal-firma"); if(fi) fi.focus(); return; }
   SAL.enviando=true; renderSalida();
-  apiLog("req", "SACAR A TODOS · ENVÍO EN VIVO (aprobado con un clic, firma de la tanda) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
+  var canceladas=[];
   try{
-    var j=await llamar("ordenes-vivo", { accion:"enviar", alias:c.alias, orden:Object.assign({ _precio_ref:f.px||0 }, body), firma:SAL.firma });
+    if(cambiar){
+      canceladas=await salCancelarVentas(c, f.ventas);
+      salPonOrdenes(c.alias, canceladas, null);
+    }
+    apiLog("req", "SACAR A TODOS · ENVÍO EN VIVO (aprobado con un clic, firma de la tanda) · POST https://api.alpaca.markets/v2/orders · cuenta "+c.alias, body);
+    // tras cancelar, Alpaca tarda un instante en soltar las acciones retenidas: si el servidor
+    // dice que no hay disponible, se reintenta unas veces antes de darse por vencido
+    var j=null, intento=0;
+    for(;;){
+      try{
+        j=await llamar("ordenes-vivo", { accion:"enviar", alias:c.alias, orden:Object.assign({ _precio_ref:f.px||0 }, body), firma:SAL.firma });
+        var m0=j.ok? "" : String((j.respuesta && (j.respuesta.message||j.respuesta.error))||"");
+        if(j.ok || !cambiar || intento>=6 || !/insufficient|available|held/i.test(m0)) break;
+      }catch(e1){
+        if(!cambiar || intento>=6 || !/disponible/i.test(String(e1.message||e1))) throw e1;
+      }
+      intento++; await salEspera(900);
+    }
     apiLog("res", "respuesta cruda de Alpaca ("+(j.status||"?")+")", j.respuesta);
     var o=j.respuesta||{};
     if(!j.ok){
-      SAL.err[k]="Alpaca la rechazó ("+(j.status||"?")+"): "+((o && (o.message||o.error)) || "sin detalle");
+      SAL.err[k]="Alpaca la rechazó ("+(j.status||"?")+"): "+((o && (o.message||o.error)) || "sin detalle")
+        +(canceladas.length? " · OJO: la venta que tenía en cola YA se canceló; esta cuenta quedó sin orden":"");
     } else {
       SAL.hechas[k]={ estado:"enviada", q:f.q, v:f.v, txt:hora+" · "+(o.status||"?") };
-      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+f.v), v:1 });
+      SIM_LOG.unshift({ h:new Date().toTimeString().slice(0,8), n:c.nombre, a:c.alias, d:desc, cash:fmt(+c.snap.cash+(esStop?0:f.v)), v:1 });
       SAL.cur=null;
-      refrescarTrasAccion(c, "tras sacar "+sym, o, null);
+      salPonOrdenes(c.alias, [], o);
+      refrescarTrasAccion(c, "tras "+(esStop?"poner stop de ":"sacar ")+sym, o, null);
     }
   }catch(e){
     var m=String(e.message||e);
     apiLog("res", "ERROR del envío EN VIVO: "+m, null);
-    SAL.err[k]=m;
+    SAL.err[k]=m+(canceladas.length? " · OJO: la venta que tenía en cola YA se canceló; esta cuenta quedó sin orden":"");
     if(/firma/i.test(m)) SAL.firma="";       // clave mala: se pide de nuevo
     if(/kill switch/i.test(m)) await cargarVivo();
   }
   SAL.enviando=false; renderSalida();
+}
+// Cancela TODAS las ventas en cola de ese símbolo, cuenta por cuenta, con una sola confirmación.
+// Cancelar no vende nada: solo quita órdenes. Las cuentas quedan sin orden hasta aprobar las nuevas.
+async function salCancelarTodas(sym){
+  if(SAL.enviando || SAL.cancelando) return;
+  var filas=salFilas(sym).filter(function(f){ return f.ventas.length; }), total=0, ok=0, mal=[];
+  filas.forEach(function(f){ total+=f.ventas.length; });
+  if(!total) return;
+  SAL.cancelMsg="";
+  if(!esVivo()){
+    filas.forEach(function(f){ salPonOrdenes(f.c.alias, f.ventas.map(function(o){ return o.id; }), null); });
+    SAL.hechas={}; SAL.cancelMsg="Simulación: "+total+" ventas quitadas de la vista; en Alpaca no se canceló nada."; renderSalida(); return;
+  }
+  var fi0=$("sal-firma"); if(fi0 && fi0.value) SAL.firma=fi0.value;
+  if(!SAL.firma){ SAL.cancelMsg="Falta la clave de firma."; renderSalida(); return; }
+  SAL.cancelando={ hechas:0, total:total }; renderSalida();
+  for(var i=0;i<filas.length;i++){
+    var f=filas[i];
+    try{
+      var ids=await salCancelarVentas(f.c, f.ventas);
+      salPonOrdenes(f.c.alias, ids, null); ok+=ids.length;
+    }catch(e){
+      var m=String(e.message||e); mal.push((PRIV? f.c.alias : f.c.nombre)+": "+m);
+      if(/firma|kill switch/i.test(m)){ if(/firma/i.test(m)) SAL.firma=""; break; }   // no tiene sentido seguir
+    }
+    SAL.cancelando.hechas=ok; renderSalida();
+  }
+  SAL.cancelando=null; SAL.hechas={}; SAL.err={};
+  SAL.cancelMsg=ok+" de "+total+" ventas canceladas a las "+new Date().toTimeString().slice(0,5)+"."+(mal.length? " Con error: "+mal.join(" · "):"");
+  renderSalida();
+  await salComprobar();
 }
 
 /* ===== órdenes abiertas de TODAS las cuentas (vigilancia de límites y sobregiro) ===== */
@@ -2242,7 +2385,7 @@ function renderOrdenesGlob(){
   var A=auditoria(), d=ORD_GLOB.datos;
   var porAlias={}; (DATOS&&DATOS.clientes||[]).forEach(function(c){ porAlias[c.alias]=c; });
   var errs=d.cuentas.filter(function(c){ return c.error; });
-  var CHK={ toda:['✓ toda la posición','var(--menta)'], parte:['⚠ solo una parte','#ff9ea4'], mas:['⚠ más de lo que hay','#ff9ea4'],
+  var CHK={ toda:['✓ toda la posición','var(--menta)'], entera:['✓ stop por todo lo entero','var(--menta)'], parte:['⚠ solo una parte','#ff9ea4'], mas:['⚠ más de lo que hay','#ff9ea4'],
     sinpos:['⚠ sin posición en el panel','var(--ambar)'], dup:['⚠ repetida','#ff9ea4'] };
   var html='';
   A.cuentas.filter(function(x){ return x.ordenes.length; }).forEach(function(x){
@@ -2285,7 +2428,7 @@ function renderOrdenesGlob(){
     +'</div>'
     // por símbolo: cuánto se está vendiendo y si cubre a todos los que lo tienen
     +'<div class="acard"><div class="sec" style="margin-top:0">Ventas en cola, por símbolo</div>'
-      +(A.simbolos.length? '<div style="overflow-x:auto"><table><thead><tr><th style="text-align:left">Símbolo</th><th>Cuentas que lo tienen</th><th>Con venta por TODA la posición</th><th>Con venta parcial</th><th>Sin venta</th><th>Unidades en venta</th><th>Valor est.</th></tr></thead><tbody>'
+      +(A.simbolos.length? '<div style="overflow-x:auto"><table><thead><tr><th style="text-align:left">Símbolo</th><th>Cuentas que lo tienen</th><th>Con venta completa (o stop por lo entero)</th><th>Con venta parcial</th><th>Sin venta</th><th>Unidades en venta</th><th>Valor est.</th></tr></thead><tbody>'
         +A.simbolos.map(function(y){
           return '<tr><td style="text-align:left;color:var(--crema);font-weight:800">'+escapa(y.sym)+'</td><td class="num">'+y.tienen+'</td>'
             +'<td class="num" style="color:var(--menta)">'+y.completas+'</td>'
@@ -2297,7 +2440,7 @@ function renderOrdenesGlob(){
         }).join("")+'</tbody></table></div>' : '<div class="sub">No hay ventas en cola.</div>')
       +'<div class="sub" style="margin-top:8px">'+(A.hallazgos.length
         ? '<b style="color:#ff9ea4">Revisar ('+A.hallazgos.length+'):</b><br>'+A.hallazgos.map(function(h){ return '• '+escapa(PRIV? h.replace(/^[^:]+:/,"···:") : h); }).join("<br>")
-        : '<b style="color:var(--menta)">✓ Revisión automática sin hallazgos:</b> toda venta en cola es por la posición completa, a mercado y DAY, sin repetidas.')+'</div>'
+        : '<b style="color:var(--menta)">✓ Revisión automática sin hallazgos:</b> toda venta en cola es por la posición completa (o un stop por todas las acciones enteras), sin repetidas.')+'</div>'
       +'<div class="sub" style="margin-top:6px">"Tiene" y el valor salen de la última actualización de datos ('+(ultAct()? cuandoTxt(ultAct().t):'sin dato')+'); las órdenes, de la lectura de Alpaca de arriba. "Sin venta" es informativo: no todas las cuentas tienen que salir de todo símbolo.</div>'
     +'</div>'
     +(R.ordenes? html : '<div class="acard"><div class="enplan">✅ No hay órdenes abiertas en ninguna cuenta.</div></div>')
@@ -2310,15 +2453,15 @@ function renderOrdenesGlob(){
 function auditoria(){
   var d=(ORD_GLOB&&ORD_GLOB.datos)||{cuentas:[]}, ordDe={};
   (d.cuentas||[]).forEach(function(x){ if(x.ordenes) ordDe[x.alias]=x.ordenes; });
-  var cuentas=[], hall=[], sims={}, nOrd=0, sobre=0;
+  var cuentas=[], hall=[], sims={}, nOrd=0, sobre=0, stopsSym={};
   (DATOS&&DATOS.clientes||[]).filter(function(c){ return c.activo; }).forEach(function(c){
     var pos=(c.snap&&c.snap.posiciones)||[], ords=ordDe[c.alias]||[], cash=c.snap? +c.snap.cash:0;
-    var comp=0, ventas=0, colaSym={}, nSym={};
+    var comp=0, ventas=0, colaSym={}, nSym={}, noStop={};
     var filas=ords.map(function(o){
       var po=pxDe(c.snap? c : {snap:{posiciones:[]}}, o.sym), vivo=!ordPendiente(o);
       var qty=+o.qty||0, valor= qty>0? qty*((+o.lim)||(+o.stop)||po.px||0) : (+o.notional||0);
       if(o.lado==="buy" && vivo) comp+=montoOrden(o);
-      if(o.lado==="sell" && vivo){ ventas+=valor; colaSym[o.sym]=(colaSym[o.sym]||0)+qty; nSym[o.sym]=(nSym[o.sym]||0)+1; }
+      if(o.lado==="sell" && vivo){ ventas+=valor; colaSym[o.sym]=(colaSym[o.sym]||0)+qty; nSym[o.sym]=(nSym[o.sym]||0)+1; if(o.tipo!=="stop") noStop[o.sym]=(noStop[o.sym]||0)+1; }
       var hl=""; try{ var dt=new Date(String(o.fecha).replace(" ","T")+":00Z"); hl=dt.toLocaleDateString("es-CR",{day:"2-digit",month:"short"})+" "+dt.toTimeString().slice(0,5); }catch(e){ hl=o.fecha; }
       return { id:o.id||null, enviada_utc:o.fecha, hora_local:hl, sym:o.sym, lado:o.lado, qty:qty||null, notional:o.notional||null,
         tiene:po.q||0, pct: (o.lado==="sell" && po.q>0 && qty>0)? qty/po.q*100 : null, valor:valor,
@@ -2328,20 +2471,25 @@ function auditoria(){
     filas.forEach(function(f){
       if(f.lado!=="sell") return;
       var cola=colaSym[f.sym]||0;
-      f.chequeo= !(f.tiene>0)? "sinpos" : cola>f.tiene*(1+1e-6)? "mas" : nSym[f.sym]>1? "dup" : cola>=f.tiene*(1-1e-6)? "toda" : "parte";
-      if(f.tipo!=="market" || f.tif!=="day") hall.push(nom+": la venta de "+f.sym+" no es mercado + DAY ("+f.tipo+" "+String(f.tif).toUpperCase()+")");
+      var ent=Math.floor(f.tiene+1e-9), soloStops=(noStop[f.sym]||0)===0;
+      f.chequeo= !(f.tiene>0)? "sinpos" : cola>f.tiene*(1+1e-6)? "mas" : nSym[f.sym]>1? "dup" : cola>=f.tiene*(1-1e-6)? "toda"
+        : (soloStops && ent>0 && cola>=ent-1e-9)? "entera" : "parte";
+      if(!((f.tipo==="market" && f.tif==="day") || (f.tipo==="stop" && (f.tif==="gtc" || f.tif==="day")))) hall.push(nom+": la venta de "+f.sym+" no es mercado DAY ni stop ("+f.tipo+" "+String(f.tif).toUpperCase()+")");
+      if(f.tipo==="stop" && f.stop){ var ks=f.sym; (stopsSym[ks]||(stopsSym[ks]={}))[f.stop]=((stopsSym[ks]||{})[f.stop]||0)+1; }
     });
     Object.keys(colaSym).forEach(function(sy){
       var t=pxDe(c.snap? c : {snap:{posiciones:[]}}, sy).q, q=colaSym[sy];
       if(!(t>0)) hall.push(nom+": hay venta de "+sy+" ("+q+" u.) y el panel no le ve esa posición; actualizá datos");
       else if(q>t*(1+1e-6)) hall.push(nom+": las ventas de "+sy+" suman "+q+" u. y tiene "+t);
+      else if(!noStop[sy] && Math.floor(t+1e-9)>0 && q>=Math.floor(t+1e-9)-1e-9){ /* stop por todo lo entero: bien */ }
       else if(q<t*(1-1e-6)) hall.push(nom+": la venta de "+sy+" es por "+q+" de "+t+" u. ("+(q/t*100).toFixed(1)+"%); faltan "+(Math.round((t-q)*1e9)/1e9));
       if(nSym[sy]>1) hall.push(nom+": tiene "+nSym[sy]+" ventas abiertas de "+sy);
     });
     pos.forEach(function(po){ if(!(+po.q>0)) return;
       var y=sims[po.s]||(sims[po.s]={sym:po.s, tienen:0, completas:0, parciales:0, sin_venta:[], unidades:0, valor:0});
       var q=colaSym[po.s]||0; y.tienen++; y.unidades+=q; y.valor+=q*(+po.px||0);
-      if(q>=po.q*(1-1e-6)) y.completas++; else if(q>0) y.parciales++; else y.sin_venta.push(c.alias);
+      var entP=Math.floor(po.q+1e-9);
+      if(q>=po.q*(1-1e-6) || (q>0 && !noStop[po.s] && entP>0 && q>=entP-1e-9)) y.completas++; else if(q>0) y.parciales++; else y.sin_venta.push(c.alias);
     });
     var sob= comp>cash+1; if(sob){ sobre++; hall.push(nom+": riesgo de sobregiro (compras abiertas "+fmt(comp)+" vs efectivo "+fmt(cash)+")"); }
     nOrd+=filas.length;
@@ -2349,6 +2497,8 @@ function auditoria(){
       timing: (c.meta&&c.meta.plan)? !!c.meta.plan.timing : true, comprometido:comp, ventas:ventas, sobregiro:sob,
       posiciones:pos.map(function(po){ return {s:po.s, q:+po.q, px:+po.px, v:+po.v}; }), ordenes:filas });
   });
+  Object.keys(stopsSym).forEach(function(sy){ var ps=Object.keys(stopsSym[sy]);
+    if(ps.length>1) hall.push("Los stops de "+sy+" no están todos en el mismo precio: "+ps.map(function(x){ return "$"+x+" ("+stopsSym[sy][x]+")"; }).join(", ")); });
   // solo símbolos con alguna venta en cola (lo demás no es parte de la salida)
   var simbolos=Object.keys(sims).map(function(k){ return sims[k]; }).filter(function(y){ return y.unidades>0; })
     .sort(function(a,b){ return b.valor-a.valor; });
