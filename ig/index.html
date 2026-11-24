@@ -295,6 +295,41 @@ function tarjetaChat(x) {
     (cliente ? "" : '<label><input type="checkbox" data-accion="fuera"' + (marcas.fuera[c.u] ? " checked" : "") + "> no es prospecto</label>") + "</div></div>";
 }
 
+/* ---------- Leads de la hoja (formularios, calculadora, gift cards, Calendly) que quedaron en el aire ---------- */
+function mensajeLead(l) {
+  const n = primerNombre(l.nombre), hola = "Hola" + (n ? " " + n : "") + ", le saluda Jose Montero de Empowered Investor.";
+  if (l.regalo) return hola + "\n\n" + l.regalo + " le regaló una asesoría conmigo para ver su plan de retiro. Le sirve que la agendemos esta semana?\n\nGracias, Jose.";
+  if (l.grupo === "llamada") return hola + "\n\nQuería retomar lo que hablamos en la llamada. Le sigue interesando arrancar, o prefiere que lo dejemos para más adelante?\n\nGracias, Jose.";
+  if (l.grupo === "agendado") return hola + "\n\nLe confirmo nuestra llamada. Cualquier cambio me avisa por aquí.\n\nGracias, Jose.";
+  return hola + "\n\nUsted nos dejó sus datos para ver su plan de retiro y no llegamos a hablar. Le sirve una llamada corta esta semana?\n\nGracias, Jose.";
+}
+function tarjetaLead(l) {
+  const hecho = !!marcas.cerrado[l.id];
+  const ig = l.ig ? ' · <a href="https://www.instagram.com/' + esc(l.ig) + '/" target="_blank" rel="noopener">@' + esc(l.ig) + "</a>" + (l.ig_duda ? " (por confirmar)" : "") : "";
+  const texto = mensajeLead(l);
+  const boton = l.wa ? '<button data-accion="mandar" data-url="https://wa.me/' + esc(l.wa) + '">Copiar y abrir WhatsApp</button>'
+    : '<button data-accion="mandar" data-url="mailto:' + esc(l.correo || "") + '">Copiar y abrir correo</button>';
+  return '<div class="t g' + (l.grupo === "no_medico" ? 1 : 0) + '" data-u="' + esc(l.id) + '"' + (hecho ? ' style="opacity:.35"' : "") + ">" +
+    '<p class="quien">' + esc(l.nombre) + (l.dato ? '<span class="tag">' + esc(l.dato) + "</span>" : "") + '<span class="tag">' + esc(l.origen) + "</span></p>" +
+    '<p class="m">' + esc(l.estado) + (l.grupo === "agendado" ? "" : " · " + hace(l.fecha + "T12:00:00Z")) + "</p>" +
+    '<p class="m">' + [l.wa ? "WhatsApp +" + esc(l.wa) : "", esc(l.correo || "")].filter(Boolean).join(" · ") + ig + "</p>" +
+    '<textarea rows="5" aria-label="Mensaje para ' + esc(l.nombre) + '">' + esc(texto) + "</textarea>" +
+    '<div class="b">' + boton + '<label><input type="checkbox" data-accion="cerrado"' + (hecho ? " checked" : "") + "> ya le di seguimiento</label></div></div>";
+}
+function pintarLeads() {
+  const d = (datos && datos.leads_abiertos) || {}, todos = d.leads || [];
+  if (!todos.length) return "";
+  const de = (g) => todos.filter((l) => l.grupo === g).sort((a, b) => (a.fecha < b.fecha ? 1 : -1));
+  const faltan = todos.filter((l) => l.grupo !== "agendado" && !marcas.cerrado[l.id]).length;
+  const parte = (titulo, lote) => lote.length ? '<p class="muted" style="margin:14px 0 8px"><b>' + titulo + " (" + lote.length + ")</b></p>" + lote.map(tarjetaLead).join("") : "";
+  return "<details" + (faltan ? " open" : "") + "><summary>Leads de la hoja sin cerrar (" + faltan + " sin seguimiento)</summary>" +
+    '<p class="muted">Formularios, calculadora, gift cards y llamadas de Calendly cruzados con Instagram. Corte del ' + esc(d.corte || "") + ".</p>" +
+    parte("Ya hubo llamada y no hay resultado", de("llamada")) +
+    parte("Dejaron sus datos y nunca agendaron", de("sin_agenda")) +
+    parte("Dejaron sus datos, no son médicos", de("no_medico")) +
+    parte("Ya agendaron: confirmar la llamada", de("agendado")) + "</details>";
+}
+
 function pintarSeguimientos() {
   if (chats === null) { cargarChats(); return ""; }
   const fueraFijo = (datos && datos.fuera_ig) || {};
@@ -341,6 +376,7 @@ function pintarSeguimientos() {
   h += bloque("Te toca contestar", debes, true);
   h += bloque("Darles seguimiento", seguir, true);
   if (!cargandoChats && !errorChats && !debes.length && !seguir.length) h += '<div class="aviso">' + (filtroSeg === "todos" ? "No hay chats pendientes." : "Con este filtro no hay chats pendientes arriba; mirá los bloques de abajo.") + "</div>";
+  h += pintarLeads();
   h += bloque("Esperando respuesta, les escribiste hace poco", de(["espera"], prospecto), false);
   h += bloque("Ya les insististe una vez", de(["insistido"], prospecto), false);
   h += bloque("Clientes", filas.filter(esCliente).sort(fecha), false);
@@ -445,7 +481,7 @@ $("#vista").addEventListener("click", (e) => {
     try { document.execCommand("copy"); } catch (err) {}
     copiar(a.value);
   }
-  window.open(perfil, "_blank", "noopener");
+  window.open(b.dataset.url ? b.dataset.url + (/^https:\/\/wa\.me/.test(b.dataset.url) ? "?text=" + encodeURIComponent(t.querySelector("textarea").value) : "") : perfil, "_blank", "noopener");
 });
 $("#vista").addEventListener("change", (e) => {
   const c = e.target.closest("input[data-accion]");
