@@ -129,7 +129,7 @@ function tarjetaSeguir(p) {
   return '<div class="t g0" data-u="' + esc(p.usuario) + '">' +
     '<p class="quien"><a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a> · " + esc(p.nombre) + "</p>" +
     "<p><b>" + esc(p.clase) + "</b>" + (p.motivo ? " · " + esc(p.motivo) : "") + "</p>" +
-    "<p>Especialidad: " + esc(p.especialidad || "sin pista") + "</p>" +
+    "<p>Especialidad: " + esc(p.especialidad || "sin pista") + (p.especialidad_de ? ' <span class="m">(' + esc(p.especialidad_de) + ")</span>" : "") + "</p>" +
     (p.clientes ? '<p class="m">Clientes en común: ' + esc(p.clientes) + "</p>" : "") +
     '<div class="b"><button data-accion="abrir">Abrir perfil para seguir</button>' +
     '<label><input type="checkbox" data-accion="seguido"> ya lo seguí</label></div></div>';
@@ -290,11 +290,26 @@ function pintar() {
     if (hechos.length) h += "<details><summary>Ya con chat (" + hechos.length + ')</summary><p class="lista">' + enlaces(hechos) + "</p></details>";
   } else {
     const faltan = datos.sugeridos.filter((p) => esMedico(p) && !p.seguido_el && !marcas.seguido[p.usuario])
-      .sort((a, b) => (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : (a.clase !== "medico") - (b.clase !== "medico") || b.medicos - a.medicos));
+      // el script ya los manda ordenados (campo orden): especialidades de alta capacidad y con más clientes primero
+      .sort((a, b) => (a.orden != null && b.orden != null) ? a.orden - b.orden
+        : (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : (a.clase !== "medico") - (b.clase !== "medico") || b.medicos - a.medicos));
     const m = datos.medicion || {};
     h += '<p class="muted">Médicos sugeridos por seguir: <b>' + faltan.length + "</b> · seguidos: " + (m.seguidos || 0) +
          " · te siguen de vuelta: " + (m.vuelta || 0) + (m.seguidos ? " (" + Math.round(100 * m.vuelta / m.seguidos) + "%)" : "") + "</p>";
-    h += faltan.map(tarjetaSeguir).join("") || '<div class="aviso">No quedan sugeridos por seguir. Mañana la corrida trae más.</div>';
+    const altas = faltan.filter((p) => p.alta), otras = faltan.filter((p) => !p.alta);
+    let antes = null;
+    for (const p of altas) {
+      if (p.especialidad !== antes) {
+        antes = p.especialidad;
+        const n = altas.filter((x) => x.especialidad === antes).length;
+        h += "<h2>" + esc(antes[0].toUpperCase() + antes.slice(1)) + " (" + n + ")" +
+          (p.clientes_esp ? ' <span class="tag">' + p.clientes_esp + (p.clientes_esp === 1 ? " cliente" : " clientes") + " de esta especialidad</span>" : "") + "</h2>";
+      }
+      h += tarjetaSeguir(p);
+    }
+    if (altas.length && otras.length) h += "<details><summary>Otras especialidades o sin pista (" + otras.length + ")</summary>" + otras.map(tarjetaSeguir).join("") + "</details>";
+    else h += otras.map(tarjetaSeguir).join("");
+    h += faltan.length ? "" : '<div class="aviso">No quedan sugeridos por seguir. Mañana la corrida trae más.</div>';
   }
   $("#vista").innerHTML = h;
 }
