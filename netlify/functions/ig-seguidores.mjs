@@ -109,9 +109,12 @@ export default async (req) => {
     if (ruta === "chats" && req.method === "GET") {
       const token = await leerToken();
       if (!token) return json(500, { error: "Falta el token de Instagram" });
+      /* ?n= mensajes por chat (6 por defecto, tope 30): con más se alcanza a ver el primer mensaje,
+       * que es el que dice de dónde vino la persona (palabra NOVIEMBRE, CURSO o DM de bienvenida). */
+      const n = Math.min(30, Math.max(1, parseInt(url.searchParams.get("n"), 10) || 6));
       const q = new URLSearchParams({
-        platform: "instagram", limit: "20", access_token: token,
-        fields: "participants,updated_time,messages.limit(6){created_time,from,message}",
+        platform: "instagram", limit: n > 6 ? "10" : "20", access_token: token,
+        fields: `participants,updated_time,messages.limit(${n}){created_time,from,message}`,
       });
       const after = url.searchParams.get("after");
       if (after) q.set("after", after);
