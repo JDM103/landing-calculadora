@@ -224,6 +224,30 @@ function intencion(c) {
   const agenda = ms.some((m) => m.yo && AGENDA.test(m.texto));
   return suyos.length >= 3 || agenda || suyos.some((m) => /\?/.test(m.texto)) ? "alta" : "media";
 }
+/* Llamada ya agendada: Jose mandó el enlace de la videollamada (o el lead de la hoja con esa cuenta ya agendó).
+   Devuelve el día "AAAA-MM-DD" ("" si no se pudo leer la fecha) o null. Deja de contar al día siguiente de la
+   llamada, o a los 10 días del enlace si no se leyó la fecha, y si la persona preguntó algo después. */
+const MESES = { january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
+  enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6, julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10, noviembre: 11, diciembre: 12 };
+const ENLACE_LLAMADA = /meet\.google\.com\/|zoom\.us\/j\/|teams\.microsoft\.com\//i;
+function llamada(c) {
+  const hoy = new Date(Date.now() - 6 * 36e5).toISOString().slice(0, 10);   // día en Costa Rica
+  const lead = (((datos && datos.leads_abiertos) || {}).leads || []).find((l) => l.grupo === "agendado" && l.ig === c.u && !l.ig_duda);
+  if (lead && lead.fecha >= hoy) return lead.fecha;
+  const ms = c.mensajes || [], i = ms.findIndex((m) => m.yo && ENLACE_LLAMADA.test(m.texto));
+  if (i < 0) return null;
+  if (ms.slice(0, i).some((m) => !m.yo && /\?/.test(m.texto))) return null;
+  const tx = ms[i].texto.toLowerCase();
+  const a = tx.match(/\b(january|february|march|april|may|june|july|august|september|october|november|december) (\d{1,2})\b/) ;
+  const b = tx.match(/\b(\d{1,2}) de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)\b/);
+  const mes = a ? MESES[a[1]] : b ? MESES[b[2]] : 0, dia = a ? +a[2] : b ? +b[1] : 0;
+  if (!mes) return diasDesde(ms[i].t) < 10 ? "" : null;
+  const enviado = new Date(ms[i].t), anio = enviado.getUTCFullYear() + (mes < enviado.getUTCMonth() + 1 ? 1 : 0);
+  const fecha = anio + "-" + String(mes).padStart(2, "0") + "-" + String(dia).padStart(2, "0");
+  return fecha >= hoy ? fecha : null;
+}
+const diaCorto = (f) => f ? +f.slice(8) + " " + ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"][+f.slice(5, 7) - 1] : "";
+
 /* De dónde vino, por las palabras del chat. NOVIEMBRE es el anuncio de noviembre (o su historia). */
 function origen(c) {
   const ms = c.mensajes || [];
@@ -280,6 +304,7 @@ function tarjetaChat(x) {
   const quien = cliente ? "cliente" : x.fuera ? esc(x.fuera) : medico ? "médico" + (p && p.especialidad ? " · " + esc(p.especialidad) : "") : p ? "sin señal de médico" : "perfil sin leer";
   const mas = cliente || x.social ? "" :
     (x.intencion ? '<span class="tag ' + x.intencion + '">intención ' + x.intencion + "</span>" : "") +
+    (estado === "agendado" ? '<span class="tag alta">llamada' + (x.llamada ? " " + diaCorto(x.llamada) : " agendada") + "</span>" : "") +
     (x.origen ? '<span class="tag">' + x.origen + "</span>" : "") +
     '<span class="tag" title="Puntos: médico, especialidad de alta capacidad, médicos clientes en común, responde, anuncio de noviembre">éxito ' + x.exito + "</span>";
   const conMensaje = estado === "frio" || estado === "sinrespuesta";
@@ -342,6 +367,9 @@ function pintarSeguimientos() {
       intencion: intencion(c), origen: origen(c),
       // la marca "listo" vale hasta que haya un mensaje más nuevo que el día en que se marcó
       estado: cerrado && (cerrado === "hoy" || c.t.slice(0, 10) <= cerrado) ? "cerrado" : estadoChat(c) };
+    // con la llamada ya puesta no hay seguimiento que dar: se espera al día
+    x.llamada = cliente || x.estado === "cerrado" ? null : llamada(c);
+    if (x.llamada !== null) x.estado = "agendado";
     x.fuera = cliente ? "" : tipo || (marcas.fuera[c.u] ? "no es prospecto" : "");
     // un médico nunca sale solo por la regla automática: solo si está en la lista o Jose lo marca
     x.social = !cliente && (!!x.fuera || (!x.medico && social(c, x.origen)));
@@ -369,7 +397,7 @@ function pintarSeguimientos() {
   const debes = de(["debes"], prospecto), seguir = de(["frio", "sinrespuesta"], prospecto);
   let h = '<p class="muted">Chats de los últimos ' + DIAS_CHATS + " días: <b>" + filas.length + "</b>" + (cargandoChats ? " (leyendo…)" : "") +
     " · en el pipeline: " + filas.filter(prospecto).length + " · médicos: " + filas.filter((x) => x.medico).length + " · clientes: " + filas.filter(esCliente).length +
-    " · te toca contestar: " + debes.length + " · para seguimiento: " + seguir.length + "</p>";
+    " · con llamada agendada: " + filas.filter((x) => x.estado === "agendado").length + " · te toca contestar: " + debes.length + " · para seguimiento: " + seguir.length + "</p>";
   h += fila("Ordenar", "orden", ordenSeg, [["exito", "Probabilidad de éxito"], ["intencion", "Intención"], ["fecha", "Fecha"]]) +
        fila("Ver", "filtro", filtroSeg, [["todos", "Todos"], ["medicos", "Médicos"], ["alta", "Intención alta"], ["respondio", "Respondieron"], ["noviembre", "Anuncio NOVIEMBRE"]]);
   if (errorChats) h += '<div class="aviso">' + esc(errorChats) + "</div>";
@@ -377,6 +405,7 @@ function pintarSeguimientos() {
   h += bloque("Darles seguimiento", seguir, true);
   if (!cargandoChats && !errorChats && !debes.length && !seguir.length) h += '<div class="aviso">' + (filtroSeg === "todos" ? "No hay chats pendientes." : "Con este filtro no hay chats pendientes arriba; mirá los bloques de abajo.") + "</div>";
   h += pintarLeads();
+  h += bloque("Llamada agendada: no hay que escribirles, solo esperar el día", filas.filter((x) => x.estado === "agendado" && prospecto(x) && pasa(x)).sort((a, b) => ((a.llamada || "9") < (b.llamada || "9") ? -1 : 1)), false);
   h += bloque("Esperando respuesta, les escribiste hace poco", de(["espera"], prospecto), false);
   h += bloque("Ya les insististe una vez", de(["insistido"], prospecto), false);
   h += bloque("Clientes", filas.filter(esCliente).sort(fecha), false);
