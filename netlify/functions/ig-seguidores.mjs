@@ -12,7 +12,7 @@
  * Rutas:
  *   GET  /api/ig/datos                → { datos, marcas }
  *   PUT  /api/ig/datos                → guarda lo que manda el script
- *   POST /api/ig/marca                → { usuario, tipo: "escrito"|"seguido"|"cerrado", valor: true|false }
+ *   POST /api/ig/marca                → { usuario, tipo: "escrito"|"seguido"|"cerrado"|"fuera", valor: true|false }
  *   GET  /api/ig/conversaciones?after → una página de chats: { usuarios: [{u, t}], after }
  *   GET  /api/ig/chats?after          → una página de chats con sus últimos 6 mensajes, para Seguimientos
  *
@@ -40,8 +40,8 @@ export function claveValida(clave, huella = HUELLA) {
 
 export function aplicarMarca(marcas, { usuario, tipo, valor }, hoy) {
   const u = String(usuario || "").toLowerCase();
-  if (!USUARIO_OK.test(u) || !["escrito", "seguido", "cerrado"].includes(tipo)) return null;
-  const m = { escrito: {}, seguido: {}, cerrado: {}, ...(marcas || {}) };
+  if (!USUARIO_OK.test(u) || !["escrito", "seguido", "cerrado", "fuera"].includes(tipo)) return null;
+  const m = { escrito: {}, seguido: {}, cerrado: {}, fuera: {}, ...(marcas || {}) };
   m[tipo] = { ...m[tipo] };
   if (valor) m[tipo][u] = hoy; else delete m[tipo][u];
   return m;
@@ -113,7 +113,7 @@ export default async (req) => {
        * que es el que dice de dónde vino la persona (palabra NOVIEMBRE, CURSO o DM de bienvenida). */
       const n = Math.min(30, Math.max(1, parseInt(url.searchParams.get("n"), 10) || 6));
       const q = new URLSearchParams({
-        platform: "instagram", limit: n > 6 ? "10" : "20", access_token: token,
+        platform: "instagram", limit: n > 12 ? "10" : "20", access_token: token,
         fields: `participants,updated_time,messages.limit(${n}){created_time,from,message}`,
       });
       const after = url.searchParams.get("after");

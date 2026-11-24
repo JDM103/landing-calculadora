@@ -35,6 +35,12 @@ h2{font-size:15px;margin:22px 0 10px;letter-spacing:.02em}
 .t p{margin:0 0 6px;font-size:14px;overflow-wrap:anywhere}
 .t .quien{font-size:16px;font-weight:600}
 .t .m{color:var(--gris)}
+.tag.alta{border-color:var(--menta);color:var(--menta)}
+.tag.media{border-color:var(--peri);color:var(--crema)}
+.ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 0}
+.ctl span{font-size:13px;color:var(--gris);min-width:62px}
+.ctl button{background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:6px 12px;font-size:14px}
+.ctl button[aria-pressed="true"]{background:var(--peri);border-color:var(--peri);color:#fff;font-weight:600}
 .tag{display:inline-block;font-size:12px;border:1px solid var(--linea);border-radius:999px;padding:1px 8px;color:var(--gris);margin-left:6px;font-weight:400}
 textarea{width:100%;margin-top:6px;background:var(--input);color:var(--crema);border:1px solid var(--linea);border-radius:10px;padding:10px;font:inherit;font-size:15px;line-height:1.45;resize:vertical}
 .b{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}
@@ -78,9 +84,12 @@ let clave = guardado.get();
 const enLink = new URLSearchParams(location.hash.slice(1)).get("k");
 if (enLink) { clave = enLink; guardado.set(clave); history.replaceState(null, "", location.pathname); }
 
-let datos = null, marcas = { escrito: {}, seguido: {}, cerrado: {} }, pestana = "b", cola = Promise.resolve();
-let chats = null, cargandoChats = false, errorChats = "";
+let datos = null, marcas = { escrito: {}, seguido: {}, cerrado: {}, fuera: {} }, pestana = "b", cola = Promise.resolve();
+let chats = null, cargandoChats = false, errorChats = "", mensajesPorChat = 12;
 const DIAS_CHATS = 90, DIAS_ESPERA = 3;
+const prefs = { get: (k, d) => { try { return localStorage.getItem("ig-" + k) || d; } catch (e) { return d; } },
+                set: (k, v) => { try { localStorage.setItem("ig-" + k, v); } catch (e) {} } };
+let ordenSeg = prefs.get("orden", "exito"), filtroSeg = prefs.get("filtro", "todos");
 
 async function api(ruta, opciones = {}) {
   const r = await fetch("/api/ig/" + ruta, { ...opciones, headers: { "x-clave": clave, "Content-Type": "application/json" } });
@@ -100,7 +109,7 @@ async function cargar() {
   if (!clave) return pedirClave("Esta página pide clave");
   try {
     const r = await api("datos");
-    datos = r.datos; marcas = { escrito: {}, seguido: {}, cerrado: {}, ...(r.marcas || {}) };
+    datos = r.datos; marcas = { escrito: {}, seguido: {}, cerrado: {}, fuera: {}, ...(r.marcas || {}) };
     pintar();
   } catch (e) {
     if (e.message === "clave") return pedirClave("La clave no calza");
@@ -163,7 +172,11 @@ async function cargarChats() {
   try {
     let after = "";
     for (let i = 0; i < 40; i++) {
-      const r = await api("chats" + (after ? "?after=" + encodeURIComponent(after) : ""));
+      const q = (n) => "chats?n=" + n + (after ? "&after=" + encodeURIComponent(after) : "");
+      let r;
+      // 12 mensajes por chat dejan ver cómo empezó (palabra del anuncio o DM); si Instagram no los da, van 6
+      try { r = await api(q(mensajesPorChat)); }
+      catch (e) { if (e.message === "clave" || mensajesPorChat === 6) throw e; mensajesPorChat = 6; r = await api(q(6)); }
       chats = chats.concat(r.chats.filter((c) => c.t >= limite));
       pintar();
       after = r.after;
@@ -179,6 +192,7 @@ async function cargarChats() {
 
 function fichas() {
   const m = {};
+  for (const p of (datos && datos.chats_ig) || []) m[p.usuario] = p;
   for (const p of (datos && datos.sugeridos) || []) m[p.usuario] = p;
   for (const p of (datos && datos.seguidores) || []) m[p.usuario] = p;
   return m;
@@ -199,6 +213,45 @@ function estadoChat(c) {
   for (const m of ms) { if (!m.yo) break; dias.add(m.t.slice(0, 10)); }
   if (dias.size >= 2) return "insistido";
   return ms.some((m) => !m.yo) ? "frio" : "sinrespuesta";
+}
+
+/* Intención, con la regla de Jose: alta = varios mensajes, hizo preguntas o ya se le mandó agenda u horarios;
+   media = solo respondió; "" = nunca ha contestado. Los adjuntos sueltos (historias, reels) no cuentan. */
+const AGENDA = /calendly|meet\.google|google meet|agend|videollamada|video llamada|\b\d{1,2} ?(pm|am)\b/i;
+function intencion(c) {
+  const ms = c.mensajes || [], suyos = ms.filter((m) => !m.yo && m.texto);
+  if (!suyos.length) return "";
+  const agenda = ms.some((m) => m.yo && AGENDA.test(m.texto));
+  return suyos.length >= 3 || agenda || suyos.some((m) => /\?/.test(m.texto)) ? "alta" : "media";
+}
+/* De dónde vino, por las palabras del chat. NOVIEMBRE es el anuncio de noviembre (o su historia). */
+function origen(c) {
+  const ms = c.mensajes || [];
+  const dijo = (re) => ms.some((m) => !m.yo && re.test(m.texto.trim()));
+  if (dijo(/^noviembre\b/i) || ms.some((m) => m.yo && /Qué bueno que escribiste\. Ya invertís/.test(m.texto))) return "anuncio NOVIEMBRE";
+  if (dijo(/^curso\b/i) || ms.some((m) => m.yo && /Sos médico o de otra área\?/.test(m.texto))) return "palabra CURSO";
+  if (dijo(/^(tiempo|sistema|agenda)$/i)) return "anuncio anterior";
+  if (ms.some((m) => m.yo && /gracias por seguirme/i.test(m.texto))) return "DM de bienvenida";
+  return "";
+}
+/* ¿Se habló de algo del negocio? Si no, y la persona no es médico, es un amigo reaccionando a una historia,
+   un reel compartido o una cuenta automática: sale del pipeline. */
+const NEGOCIO = /invert|inversi|retiro|pensi[oó]n|asesor|alpaca|calendly|agend|llamada|reuni[oó]n|interes|informaci[oó]n|c[oó]mo funciona|investorcr|plan de|mercado|plata|\$|cobr|whatsapp|correo|@|nos vemos|confirm|transfer|empez|ahorr|fondo|m[eé]dico|\bdocs?\b|\b\d{1,2} ?(pm|am)\b/i;
+const AUTOMATICO = /let us know how we can help|gracias por (tu mensaje|escribirnos)|appointment setter|representante de|agente de IA|quiero darte la bienvenida/i;
+const USUARIO_MEDICO = /(^|[._])(dr|dra|doc|doctor|doctora|md)([._]|$)/;
+/* Regla conservadora: solo sale sola una conversación de puras reacciones (adjuntos, emojis, frases cortas)
+   donde nadie habló de nada del negocio. Lo demás lo saca Jose con la casilla "no es prospecto". */
+function social(c, og) {
+  const ms = c.mensajes || [];
+  if (ms.some((m) => !m.yo && AUTOMATICO.test(m.texto))) return true;
+  return !og && !ms.some((m) => NEGOCIO.test(m.texto) || m.texto.length > 80 || (!m.yo && /\?/.test(m.texto)));
+}
+/* Probabilidad de éxito, en puntos: médico, especialidad de alta capacidad (más si ya hay clientes de esa
+   especialidad), médicos clientes en común, que responda, y que venga del anuncio de noviembre. */
+function exito(x) {
+  const p = x.p || {}, pr = ((datos && datos.prioridad) || {})[p.especialidad || ""];
+  return (x.medico ? 2 : 0) + (pr ? 2 + Math.min(pr[1], 2) : 0) + Math.min(p.medicos_clientes || 0, 4) +
+    (x.intencion === "alta" ? 4 : x.intencion === "media" ? 2 : 0) + (x.origen === "anuncio NOVIEMBRE" ? 1 : 0);
 }
 
 function primerNombre(nombre) {
@@ -224,49 +277,74 @@ function tarjetaChat(x) {
   const { c, p, medico, cliente, estado } = x;
   const hilo = (c.mensajes || []).slice(0, 3).reverse().map((m) =>
     '<p class="' + (m.yo ? "yo" : "") + '"><b>' + (m.yo ? "Vos" : "@" + esc(c.u)) + ":</b> " + esc(m.texto || "(foto, audio o publicación compartida)") + "</p>").join("");
-  const quien = cliente ? "cliente" : medico ? "médico" + (p && p.especialidad ? " · " + esc(p.especialidad) : "") : "sin señal de médico";
+  const quien = cliente ? "cliente" : x.fuera ? esc(x.fuera) : medico ? "médico" + (p && p.especialidad ? " · " + esc(p.especialidad) : "") : p ? "sin señal de médico" : "perfil sin leer";
+  const mas = cliente || x.social ? "" :
+    (x.intencion ? '<span class="tag ' + x.intencion + '">intención ' + x.intencion + "</span>" : "") +
+    (x.origen ? '<span class="tag">' + x.origen + "</span>" : "") +
+    '<span class="tag" title="Puntos: médico, especialidad de alta capacidad, médicos clientes en común, responde, anuncio de noviembre">éxito ' + x.exito + "</span>";
   const conMensaje = estado === "frio" || estado === "sinrespuesta";
   return '<div class="t g' + (cliente ? 2 : medico ? 0 : 1) + '" data-u="' + esc(c.u) + '">' +
     '<p class="quien"><a href="https://www.instagram.com/' + esc(c.u) + '/" target="_blank" rel="noopener">@' + esc(c.u) + "</a>" +
-    (p && p.nombre ? " · " + esc(p.nombre) : cliente ? " · " + esc(cliente) : "") + '<span class="tag">' + quien + "</span></p>" +
-    '<p class="m">Último mensaje ' + hace(c.mensajes[0].t) + "</p>" +
+    (p && p.nombre ? " · " + esc(p.nombre) : cliente ? " · " + esc(cliente) : "") + '<span class="tag">' + quien + "</span>" + mas + "</p>" +
+    '<p class="m">Último mensaje ' + hace(c.mensajes[0].t) + (p && p.motivo && medico ? " · " + esc(p.motivo) : "") + "</p>" +
+    (p && p.clientes && !cliente ? '<p class="m">Clientes en común: ' + esc(p.clientes) + "</p>" : "") +
     '<div class="chat">' + hilo + "</div>" +
     (conMensaje ? '<textarea rows="3" aria-label="Seguimiento para ' + esc(c.u) + '">' + esc(sugerencia(c, p, medico, estado)) + "</textarea>" : "") +
     '<div class="b"><button data-accion="' + (conMensaje ? "mandar" : "abrir") + '">' + (conMensaje ? "Copiar y abrir perfil" : "Abrir perfil") + "</button>" +
-    '<label><input type="checkbox" data-accion="cerrado"' + (estado === "cerrado" ? " checked" : "") + "> listo, no hace falta</label></div></div>";
+    '<label><input type="checkbox" data-accion="cerrado"' + (estado === "cerrado" ? " checked" : "") + "> listo, no hace falta</label>" +
+    (cliente ? "" : '<label><input type="checkbox" data-accion="fuera"' + (marcas.fuera[c.u] ? " checked" : "") + "> no es prospecto</label>") + "</div></div>";
 }
 
 function pintarSeguimientos() {
   if (chats === null) { cargarChats(); return ""; }
+  const fueraFijo = (datos && datos.fuera_ig) || {};
   const f = fichas(), clientes = (datos && datos.clientes_ig) || {}, conocidos = new Set((datos && datos.medicos_ig) || []);
   const filas = chats.filter((c) => (c.mensajes || []).length).map((c) => {
-    const p = f[c.u], cliente = clientes[c.u] || "";
+    // fuera_ig: lista fija del script (familia, amigos, cuentas automáticas, clientes que no se nombran)
+    const p = f[c.u], tipo = fueraFijo[c.u] || "", cliente = clientes[c.u] || (tipo === "cliente" ? "cliente" : "");
     const cerrado = marcas.cerrado[c.u];
-    return { c, p, cliente, medico: !cliente && (conocidos.has(c.u) || (!!p && esMedico(p))),
+    const x = { c, p, cliente, medico: !cliente && !tipo && (conocidos.has(c.u) || (!!p && esMedico(p)) || USUARIO_MEDICO.test(c.u)),
+      intencion: intencion(c), origen: origen(c),
       // la marca "listo" vale hasta que haya un mensaje más nuevo que el día en que se marcó
       estado: cerrado && (cerrado === "hoy" || c.t.slice(0, 10) <= cerrado) ? "cerrado" : estadoChat(c) };
+    x.fuera = cliente ? "" : tipo || (marcas.fuera[c.u] ? "no es prospecto" : "");
+    // un médico nunca sale solo por la regla automática: solo si está en la lista o Jose lo marca
+    x.social = !cliente && (!!x.fuera || (!x.medico && social(c, x.origen)));
+    x.exito = exito(x);
+    return x;
   });
-  const orden = (a, b) => (b.medico - a.medico) || porPrioridad(a.p, b.p) || (a.c.t < b.c.t ? 1 : -1);
-  const de = (estados, quien) => filas.filter((x) => estados.includes(x.estado) && quien(x)).sort(orden);
-  const prospecto = (x) => !x.cliente, esCliente = (x) => !!x.cliente;
+  const fecha = (a, b) => (a.c.t < b.c.t ? 1 : a.c.t > b.c.t ? -1 : 0);
+  const nivel = { alta: 2, media: 1, "": 0 };
+  const orden = {
+    exito: (a, b) => b.exito - a.exito || fecha(a, b),
+    intencion: (a, b) => nivel[b.intencion] - nivel[a.intencion] || b.exito - a.exito || fecha(a, b),
+    fecha,
+  }[ordenSeg] || fecha;
+  const pasa = { todos: () => true, medicos: (x) => x.medico, alta: (x) => x.intencion === "alta",
+    respondio: (x) => !!x.intencion, noviembre: (x) => x.origen === "anuncio NOVIEMBRE" }[filtroSeg] || (() => true);
+  const de = (estados, quien) => filas.filter((x) => estados.includes(x.estado) && quien(x) && pasa(x)).sort(orden);
+  const prospecto = (x) => !x.cliente && !x.social, esCliente = (x) => !!x.cliente;
+  const fila = (nombre, clave, actual, opciones) => '<div class="ctl"><span>' + nombre + "</span>" + opciones.map(([v, txt]) =>
+    '<button data-' + clave + '="' + v + '" aria-pressed="' + (actual === v) + '">' + txt + "</button>").join("") + "</div>";
   const bloque = (titulo, lote, abierto) => {
     if (!lote.length) return "";
-    const med = lote.filter((x) => x.medico), resto = lote.filter((x) => !x.medico);
-    if (!abierto) return "<details><summary>" + titulo + " (" + lote.length + ")</summary>" + lote.map(tarjetaChat).join("") + "</details>";
-    return "<h2>" + titulo + " (" + lote.length + ")</h2>" + med.map(tarjetaChat).join("") +
-      (resto.length ? "<details" + (med.length ? "" : " open") + "><summary>" + titulo + ", sin señal de médico (" + resto.length + ")</summary>" + resto.map(tarjetaChat).join("") + "</details>" : "");
+    if (abierto) return "<h2>" + titulo + " (" + lote.length + ")</h2>" + lote.map(tarjetaChat).join("");
+    return "<details><summary>" + titulo + " (" + lote.length + ")</summary>" + lote.map(tarjetaChat).join("") + "</details>";
   };
   const debes = de(["debes"], prospecto), seguir = de(["frio", "sinrespuesta"], prospecto);
   let h = '<p class="muted">Chats de los últimos ' + DIAS_CHATS + " días: <b>" + filas.length + "</b>" + (cargandoChats ? " (leyendo…)" : "") +
-    " · médicos: " + filas.filter((x) => x.medico).length + " · clientes: " + filas.filter(esCliente).length +
+    " · en el pipeline: " + filas.filter(prospecto).length + " · médicos: " + filas.filter((x) => x.medico).length + " · clientes: " + filas.filter(esCliente).length +
     " · te toca contestar: " + debes.length + " · para seguimiento: " + seguir.length + "</p>";
+  h += fila("Ordenar", "orden", ordenSeg, [["exito", "Probabilidad de éxito"], ["intencion", "Intención"], ["fecha", "Fecha"]]) +
+       fila("Ver", "filtro", filtroSeg, [["todos", "Todos"], ["medicos", "Médicos"], ["alta", "Intención alta"], ["respondio", "Respondieron"], ["noviembre", "Anuncio NOVIEMBRE"]]);
   if (errorChats) h += '<div class="aviso">' + esc(errorChats) + "</div>";
   h += bloque("Te toca contestar", debes, true);
   h += bloque("Darles seguimiento", seguir, true);
-  if (!cargandoChats && !errorChats && !debes.length && !seguir.length) h += '<div class="aviso">No hay chats pendientes.</div>';
+  if (!cargandoChats && !errorChats && !debes.length && !seguir.length) h += '<div class="aviso">' + (filtroSeg === "todos" ? "No hay chats pendientes." : "Con este filtro no hay chats pendientes arriba; mirá los bloques de abajo.") + "</div>";
   h += bloque("Esperando respuesta, les escribiste hace poco", de(["espera"], prospecto), false);
   h += bloque("Ya les insististe una vez", de(["insistido"], prospecto), false);
-  h += bloque("Clientes", filas.filter(esCliente).sort(orden), false);
+  h += bloque("Clientes", filas.filter(esCliente).sort(fecha), false);
+  h += bloque("Fuera del pipeline: familia, amigos, reacciones a historias y cuentas automáticas", filas.filter((x) => x.social).sort(fecha), false);
   h += bloque("Marcados como listos", de(["cerrado"], prospecto), false);
   if (!cargandoChats) h += '<div class="pie"><button id="releer">Volver a leer los chats</button></div>';
   return h;
@@ -352,6 +430,12 @@ function copiar(texto) {
 
 $("#vista").addEventListener("click", (e) => {
   if (e.target.id === "releer") { chats = null; pintar(); return; }
+  const ctl = e.target.closest(".ctl button");
+  if (ctl) {
+    if (ctl.dataset.orden) { ordenSeg = ctl.dataset.orden; prefs.set("orden", ordenSeg); }
+    if (ctl.dataset.filtro) { filtroSeg = ctl.dataset.filtro; prefs.set("filtro", filtroSeg); }
+    pintar(); return;
+  }
   const b = e.target.closest("button[data-accion]");
   if (!b) return;
   const t = b.closest(".t"), perfil = "https://www.instagram.com/" + t.dataset.u + "/";
