@@ -84,7 +84,7 @@ export default async (req) => {
       return json(200, { ok: true, seguidores: d.seguidores.length, sugeridos: d.sugeridos.length });
     }
     if (ruta === "marca" && req.method === "POST") {
-      const hoy = new Date().toISOString().slice(0, 10);
+      const hoy = new Date(Date.now() - 6 * 36e5).toISOString().slice(0, 10);   // día en Costa Rica
       const m = aplicarMarca(await store.get("marcas", { type: "json" }), await req.json(), hoy);
       if (!m) return json(400, { error: "Marca inválida" });
       await store.setJSON("marcas", m);
