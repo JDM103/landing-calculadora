@@ -112,8 +112,18 @@ const esMedico = (p) => p.clase === "medico" || p.clase === "probable";
 const grupo = (p) => !esMedico(p) ? 2 : (p.medicos_clientes > 0 ? 0 : 1);
 const yaEscrito = (p) => !!(p.chat || marcas.escrito[p.usuario]);
 
+/* De dónde salió la especialidad, en una palabra: Bio (lo dice su perfil), Padrón (su nombre calza con el
+   padrón de especialistas) o Conocidos · N (lo siguen N médicos conocidos de esa especialidad). El detalle
+   completo queda al pasar el mouse. */
+function pista(p) {
+  const de = p.especialidad_de || "", n = (de.match(/lo siguen (\d+) de/) || [])[1];
+  const por = p.especialidad_por || (/perfil/.test(de) ? "bio" : /^padr/.test(de) ? "padron" : n ? "mutuos" : "");
+  const t = { bio: "Bio", padron: "Padrón", mutuos: "Conocidos" + (n ? " · " + n : "") }[por];
+  return t ? '<span class="tag" title="' + esc(de) + '">' + t + "</span>" : "";
+}
+
 function tarjetaEscribir(p) {
-  const esp = p.especialidad ? esc(p.especialidad) + (p.especialidad_de ? ' <span class="m">(' + esc(p.especialidad_de) + ")</span>" : "") : "sin pista";
+  const esp = p.especialidad ? esc(p.especialidad) + pista(p) : "sin pista";
   return '<div class="t g' + grupo(p) + '" data-u="' + esc(p.usuario) + '">' +
     '<p class="quien"><a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a> · " + esc(p.nombre) +
     (p.antiguo ? '<span class="tag">seguidor de antes</span>' : "") + (p.privada ? '<span class="tag">privada</span>' : "") + "</p>" +
@@ -129,7 +139,7 @@ function tarjetaSeguir(p) {
   return '<div class="t g0" data-u="' + esc(p.usuario) + '">' +
     '<p class="quien"><a href="https://www.instagram.com/' + esc(p.usuario) + '/" target="_blank" rel="noopener">@' + esc(p.usuario) + "</a> · " + esc(p.nombre) + "</p>" +
     "<p><b>" + esc(p.clase) + "</b>" + (p.motivo ? " · " + esc(p.motivo) : "") + "</p>" +
-    "<p>Especialidad: " + esc(p.especialidad || "sin pista") + (p.especialidad_de ? ' <span class="m">(' + esc(p.especialidad_de) + ")</span>" : "") + "</p>" +
+    "<p>Especialidad: " + esc(p.especialidad || "sin pista") + (p.especialidad ? pista(p) : "") + "</p>" +
     (p.clientes ? '<p class="m">Clientes en común: ' + esc(p.clientes) + "</p>" : "") +
     '<div class="b"><button data-accion="abrir">Abrir perfil para seguir</button>' +
     '<label><input type="checkbox" data-accion="seguido"> ya lo seguí</label></div></div>';
