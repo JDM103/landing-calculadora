@@ -110,6 +110,16 @@ async function cargar() {
 
 const esMedico = (p) => p.clase === "medico" || p.clase === "probable";
 const grupo = (p) => !esMedico(p) ? 2 : (p.medicos_clientes > 0 ? 0 : 1);
+/* Misma prioridad que en Seguir (especialidades-prioridad.txt): primero las especialidades de alta capacidad
+   y con más clientes; a igual especialidad, quien tiene más médicos clientes en común. */
+function rango(p) {
+  const pr = ((datos && datos.prioridad) || {})[(p && p.especialidad) || ""];
+  return pr ? [0, -pr[1], pr[0]] : [1, 0, 0];
+}
+function porPrioridad(a, b) {
+  const x = rango(a), y = rango(b);
+  return x[0] - y[0] || x[1] - y[1] || x[2] - y[2] || ((b && b.medicos_clientes) || 0) - ((a && a.medicos_clientes) || 0);
+}
 const yaEscrito = (p) => !!(p.chat || marcas.escrito[p.usuario]);
 
 /* De dónde salió la especialidad, en una palabra: Bio (lo dice su perfil), Padrón (su nombre calza con el
@@ -236,7 +246,7 @@ function pintarSeguimientos() {
       // la marca "listo" vale hasta que haya un mensaje más nuevo que el día en que se marcó
       estado: cerrado && (cerrado === "hoy" || c.t.slice(0, 10) <= cerrado) ? "cerrado" : estadoChat(c) };
   });
-  const orden = (a, b) => (b.medico - a.medico) || (a.c.t < b.c.t ? 1 : -1);
+  const orden = (a, b) => (b.medico - a.medico) || porPrioridad(a.p, b.p) || (a.c.t < b.c.t ? 1 : -1);
   const de = (estados, quien) => filas.filter((x) => estados.includes(x.estado) && quien(x)).sort(orden);
   const prospecto = (x) => !x.cliente, esCliente = (x) => !!x.cliente;
   const bloque = (titulo, lote, abierto) => {
@@ -284,14 +294,14 @@ function pintar() {
   $("#estado").textContent = "Última lectura de Instagram: " + (datos.actualizado || "sin fecha");
   let h = "";
   if (pestana === "b") {
-    const orden = (a, b) => grupo(a) - grupo(b) || (a.visto_el < b.visto_el ? 1 : a.visto_el > b.visto_el ? -1 : b.medicos - a.medicos);
+    const orden = (a, b) => (grupo(a) === 2) - (grupo(b) === 2) || porPrioridad(a, b) || (a.visto_el < b.visto_el ? 1 : a.visto_el > b.visto_el ? -1 : b.medicos - a.medicos);
     const faltan = datos.seguidores.filter((p) => !yaEscrito(p)).sort(orden);
     const hechos = datos.seguidores.filter(yaEscrito);
-    const titulos = ["Primero: médicos con médicos clientes en común", "Otros médicos"];
+    const titulos = ["Primero: especialidades prioritarias, con más médicos clientes en común arriba", "Otros médicos"];
     h += '<p class="muted">Médicos por escribirles: <b>' + faltan.filter(esMedico).length + "</b> · ya con chat: " + hechos.length +
          " · seguidores leídos: " + datos.seguidores.length + "</p>";
     for (const g of [0, 1]) {
-      const lote = faltan.filter((p) => grupo(p) === g);
+      const lote = faltan.filter((p) => esMedico(p) && rango(p)[0] === g);
       if (lote.length) h += "<h2>" + titulos[g] + " (" + lote.length + ")</h2>" + lote.map(tarjetaEscribir).join("");
     }
     const resto = faltan.filter((p) => grupo(p) === 2);
