@@ -21,8 +21,8 @@ a{color:var(--menta)}
 .wrap{max-width:760px;margin:0 auto;padding:16px 16px 90px}
 h1{font-size:20px;margin:0 0 2px}
 .muted{color:var(--gris);font-size:14px}
-.tabs{display:flex;gap:8px;margin:16px 0 14px}
-.tabs button{flex:1;font-size:15px;background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:10px 12px;font-weight:600;min-width:0}
+.tabs{display:flex;gap:8px;margin:16px 0 14px;flex-wrap:wrap}
+.tabs button{flex:1 1 auto;font-size:15px;background:var(--tinta2);color:var(--crema);border:1px solid var(--linea);border-radius:999px;padding:10px 12px;font-weight:600;min-width:0}
 .tabs button[aria-selected="true"]{background:var(--menta);color:var(--tinta2);border-color:var(--menta)}
 h2{font-size:15px;margin:22px 0 10px;letter-spacing:.02em}
 @media (max-width:480px){ .tabs{gap:5px} .tabs button{font-size:13px;padding:9px 4px} }
@@ -88,6 +88,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
     <button role="tab" id="tab-b" aria-selected="false">Escribirles</button>
     <button role="tab" id="tab-s" aria-selected="false">Seguir</button>
     <button role="tab" id="tab-g" aria-selected="false">Seguimientos</button>
+    <button role="tab" id="tab-c" aria-selected="false">Confirmar</button>
   </div>
   <div id="vista"></div>
   <div class="pie">
@@ -456,6 +457,41 @@ function tarjetaLead(l) {
     '<textarea rows="5" aria-label="Mensaje para ' + esc(l.nombre) + '">' + esc(texto) + "</textarea>" +
     '<div class="b">' + boton + '<label><input type="checkbox" data-accion="cerrado"' + (hecho ? " checked" : "") + "> ya le di seguimiento</label></div></div>";
 }
+/* ---------- Confirmar: las reuniones de hoy según el calendario, con el mensaje listo para mandar temprano ---------- */
+const horaDec = (h) => +h.slice(0, 2) + +h.slice(3) / 60;
+const aLas = (h) => (/^1($|:| )/.test(horaTxt(horaDec(h))) ? "a la " : "a las ") + horaTxt(horaDec(h));
+function mensajeConfirmar(r) {
+  const n = r.saludo || primerNombre(r.nombre);   // saludo: cuando se le dice por dos nombres (Luis Diego)
+  return "Hola" + (n ? " " + n : "") + "! Nos vemos hoy " + aLas(r.hora) + " 😀" + (r.meet ? "\n\nTe dejo el enlace de la videollamada: " + r.meet : "");
+}
+const reunionesDe = (dia) => (((datos && datos.reuniones) || {}).reuniones || []).filter((r) => r.fecha === dia).sort((a, b) => (a.hora < b.hora ? -1 : 1));
+const porConfirmarHoy = () => reunionesDe(hoyCR()).filter((r) => !marcas.cerrado[r.id]).length;
+function contactoReunion(r) {
+  return [r.ig ? '<a href="https://www.instagram.com/' + esc(r.ig) + '/" target="_blank" rel="noopener">@' + esc(r.ig) + "</a>" + (r.ig_duda ? " (por confirmar que sea esa cuenta)" : "") : "",
+    r.wa ? "WhatsApp +" + esc(r.wa) : "", esc(r.correo || "")].filter(Boolean).join(" · ") || "Sin contacto: no calzó con ninguna cuenta ni teléfono";
+}
+function tarjetaConfirmar(r) {
+  const hecho = !!marcas.cerrado[r.id];
+  const botones = [r.ig ? '<button data-accion="mandar" data-url="https://ig.me/m/' + esc(r.ig) + '">Copiar y abrir Instagram</button>' : "",
+    r.wa ? '<button data-accion="mandar" data-url="https://wa.me/' + esc(r.wa) + '">Copiar y abrir WhatsApp</button>' : "",
+    !r.ig && !r.wa && r.correo ? '<button data-accion="mandar" data-url="mailto:' + esc(r.correo) + '">Copiar y abrir correo</button>' : ""].join("");
+  return '<div class="t g0" data-u="' + esc(r.id) + '"' + (hecho ? ' style="opacity:.35"' : "") + ">" +
+    '<p class="quien">' + esc(horaTxt(horaDec(r.hora))) + " · " + esc(r.nombre) + "</p>" +
+    '<p class="m">' + contactoReunion(r) + "</p>" +
+    '<textarea rows="5" aria-label="Mensaje para ' + esc(r.nombre) + '">' + esc(mensajeConfirmar(r)) + "</textarea>" +
+    '<div class="b">' + botones + '<label><input type="checkbox" data-accion="cerrado" data-auto' + (hecho ? " checked" : "") + "> ya le confirmé</label></div></div>";
+}
+function pintarConfirmar() {
+  const d = (datos && datos.reuniones) || {}, hoy = hoyCR(), deHoy = reunionesDe(hoy);
+  const dias = [...new Set((d.reuniones || []).map((r) => r.fecha).filter((f) => f > hoy))].sort();
+  const nombreDia = (f) => ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"][new Date(f + "T12:00:00Z").getUTCDay()] + " " + diaCorto(f);
+  let h = '<p class="muted">Reuniones de hoy según tu calendario. Calendario leído el ' + esc(d.corte || "sin fecha") +
+    ": lo que se agende después de ese día no sale hasta la próxima lectura.</p>";
+  h += deHoy.length ? deHoy.map(tarjetaConfirmar).join("") : '<div class="aviso">Hoy no hay reuniones para confirmar.</div>';
+  if (dias.length) h += "<h2>Próximos días</h2>" + dias.map((f) => '<p class="lista"><b>' + nombreDia(f) + ":</b> " +
+    reunionesDe(f).map((r) => esc(horaTxt(horaDec(r.hora))) + " " + esc(r.nombre) + (r.ig || r.wa ? "" : " (sin IG ni WhatsApp)")).join(" · ") + "</p>").join("");
+  return h;
+}
 function pintarLeads() {
   const d = (datos && datos.leads_abiertos) || {}, todos = d.leads || [];
   if (!todos.length) return "";
@@ -579,6 +615,13 @@ function pintar() {
   $("#tab-b").setAttribute("aria-selected", pestana === "b");
   $("#tab-s").setAttribute("aria-selected", pestana === "s");
   $("#tab-g").setAttribute("aria-selected", pestana === "g");
+  $("#tab-c").setAttribute("aria-selected", pestana === "c");
+  $("#tab-c").textContent = "Confirmar" + (datos && porConfirmarHoy() ? " (" + porConfirmarHoy() + ")" : "");
+  if (pestana === "c") {
+    if (!datos) { $("#estado").textContent = "Todavía no hay datos."; $("#vista").innerHTML = ""; return; }
+    $("#estado").textContent = "Mensajes de confirmación para mandar temprano.";
+    $("#vista").innerHTML = pintarConfirmar(); return;
+  }
   if (pestana === "h" && !datos) { $("#estado").textContent = "Todavía no hay datos. Se llenan con la corrida diaria de la compu."; $("#vista").innerHTML = ""; return; }
   if (pestana === "g" || pestana === "h") {
     // la lista se repinta mientras llegan las páginas: se conservan los textos editados y los bloques abiertos
@@ -639,6 +682,7 @@ async function marcar(caja, tipo) {
   t.style.opacity = caja.checked ? ".35" : "";
   if (caja.checked && PLAN.porHora[tipo]) momentos.sumar(tipo);
   refrescarRitmo();
+  $("#tab-c").textContent = "Confirmar" + (porConfirmarHoy() ? " (" + porConfirmarHoy() + ")" : "");
   // las marcas salen de una en una, en orden, para que ninguna pise a la anterior
   const envio = cola.then(() => api("marca", { method: "POST", body: JSON.stringify({ usuario: u, tipo, valor: caja.checked }) }));
   cola = envio.catch(() => {});
@@ -675,8 +719,9 @@ $("#vista").addEventListener("click", (e) => {
   // abrir el perfil para seguir ya lo deja marcado como seguido; si al final no lo siguió, desmarca la casilla.
   // lo mismo al copiar el mensaje y abrir el perfil para escribirle: queda marcado "ya le escribí"
   const tipo = b.dataset.accion === "abrir" ? "seguido" : "escrito";
-  const caja = t.querySelector('input[data-accion="' + tipo + '"]');
-  if (caja && !caja.checked) { caja.checked = true; marcar(caja, tipo); }
+  // en Confirmar la casilla es "ya le confirmé" (data-auto) y también se marca sola
+  const caja = t.querySelector('input[data-accion="' + tipo + '"]') || (b.dataset.accion === "mandar" && t.querySelector("input[data-auto]"));
+  if (caja && !caja.checked) { caja.checked = true; marcar(caja, caja.dataset.accion); }
   window.open(b.dataset.url ? b.dataset.url + (/^https:\/\/wa\.me/.test(b.dataset.url) ? "?text=" + encodeURIComponent(t.querySelector("textarea").value) : "") : perfil, "_blank", "noopener");
 });
 $("#vista").addEventListener("change", (e) => {
@@ -687,6 +732,7 @@ $("#tab-h").onclick = () => { pestana = "h"; pintar(); };
 $("#tab-b").onclick = () => { pestana = "b"; pintar(); };
 $("#tab-s").onclick = () => { pestana = "s"; pintar(); };
 $("#tab-g").onclick = () => { pestana = "g"; pintar(); };
+$("#tab-c").onclick = () => { pestana = "c"; pintar(); };
 $("#copiar-link").onclick = async (e) => {
   await copiar(location.origin + location.pathname + "#k=" + encodeURIComponent(clave));
   e.target.textContent = "Link copiado. Mandátelo solo a vos";
