@@ -415,11 +415,11 @@ function tarjetaChat(x) {
 
 /* ---------- Leads de la hoja (formularios, calculadora, gift cards, Calendly) que quedaron en el aire ---------- */
 function mensajeLead(l) {
-  const n = primerNombre(l.nombre), hola = "Hola" + (n ? " " + n : "") + ", le saluda Jose Montero de Empowered Investor.";
-  if (l.regalo) return hola + "\n\n" + l.regalo + " le regaló una asesoría conmigo para ver su plan de retiro. Le sirve que la agendemos esta semana?\n\nGracias, Jose.";
-  if (l.grupo === "llamada") return hola + "\n\nQuería retomar lo que hablamos en la llamada. Le sigue interesando arrancar, o prefiere que lo dejemos para más adelante?\n\nGracias, Jose.";
-  if (l.grupo === "agendado") return hola + "\n\nLe confirmo nuestra llamada. Cualquier cambio me avisa por aquí.\n\nGracias, Jose.";
-  return hola + "\n\nUsted nos dejó sus datos para ver su plan de retiro y no llegamos a hablar. Le sirve una llamada corta esta semana?\n\nGracias, Jose.";
+  const n = primerNombre(l.nombre), hola = "Hola" + (n ? " " + n : "") + ", soy Jose Montero de Empowered Investor.";
+  if (l.regalo) return hola + "\n\n" + l.regalo + " te regaló una asesoría conmigo para ver tu plan de retiro. Te sirve que la agendemos esta semana?";
+  if (l.grupo === "llamada") return hola + "\n\nQuería retomar lo que hablamos en la llamada. Te sigue interesando arrancar, o preferís que lo dejemos para más adelante?";
+  if (l.grupo === "agendado") return hola + "\n\nTe confirmo nuestra llamada. Cualquier cambio me avisás por aquí.";
+  return hola + "\n\nNos dejaste tus datos para ver tu plan de retiro y no llegamos a hablar. Te sirve una llamada corta esta semana?";
 }
 function tarjetaLead(l) {
   const hecho = !!marcas.cerrado[l.id];
