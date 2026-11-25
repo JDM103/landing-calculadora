@@ -265,7 +265,7 @@
   .modal .caja2{ background:var(--card); border:1px solid var(--bd); border-radius:16px; padding:20px 20px 18px;
     max-width:580px; width:100%; margin:auto; }
   .modal h3{ margin:0 0 2px; font-size:18px; color:var(--crema); }
-  .modal .ayuda{ font-size:12px; color:var(--gris-sec); margin-bottom:12px; }
+  .modal .intro{ font-size:12px; color:var(--gris-sec); margin-bottom:12px; line-height:1.45; }
   .modal label{ display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px;
     color:var(--gris-sec); font-weight:800; margin:10px 0 4px; }
   .modal input, .modal textarea{ width:100%; background:var(--input); border:1px solid var(--bd); border-radius:9px;
@@ -347,7 +347,7 @@
   <div class="modal" id="modal-alta">
     <div class="caja2">
       <h3>Nuevo cliente</h3>
-      <div class="ayuda">Todo viaja y se guarda cifrado; solo vos, con tu token, podés verlo. Después de guardar, dale a <b>Actualizar datos</b> para traer su cuenta.</div>
+      <div class="intro">Todo viaja y se guarda cifrado; solo vos, con tu token, podés verlo. Después de guardar, dale a <b>Actualizar datos</b> para traer su cuenta.</div>
       <div class="f2">
         <div><label for="n-nombre">Nombre completo</label><input id="n-nombre" placeholder="María Vargas"></div>
         <div><label for="n-alias">Alias (público, sale en su URL)</label><input id="n-alias" placeholder="se genera solo"></div>
@@ -2694,11 +2694,17 @@ function abrirAlta(){
   ["n-nombre","n-alias","n-correo","n-clave","n-akey","n-asec","n-capini","n-notas"].forEach(function(id){ $(id).value=""; });
   $("n-ingreso").value="10000"; $("n-tasa").value="4"; $("n-aporte").value="1000";
   $("n-plan").value="TQQQ,SPY,SJC,70,100,70,si"; $("n-msg").textContent="";
+  claveManual=false;
   $("modal-alta").classList.add("on"); $("n-nombre").focus();
 }
 $("nuevo").addEventListener("click", abrirAlta);
+// El alta solo se cierra con Cancelar (o al guardar). Un click afuera NO la cierra: se perdía lo escrito,
+// y al seleccionar texto de un campo y soltar el mouse fuera de la caja el navegador lo contaba como click afuera.
 $("n-cerrar").addEventListener("click", function(){ $("modal-alta").classList.remove("on"); });
-$("modal-alta").addEventListener("click", function(e){ if(e.target===$("modal-alta")) $("modal-alta").classList.remove("on"); });
+// La clave del reporte sale sola de lo que va antes de la @ del correo, hasta que Jose escriba otra a mano.
+var claveManual=false;
+$("n-clave").addEventListener("input", function(){ claveManual=!!$("n-clave").value.trim(); });
+$("n-correo").addEventListener("input", function(){ if(!claveManual) $("n-clave").value=$("n-correo").value.split("@")[0].trim(); });
 $("n-nombre").addEventListener("blur", function(){ if(!$("n-alias").value.trim()) $("n-alias").value=aliasDesde($("n-nombre").value); });
 $("n-guardar").addEventListener("click", async function(){
   var g=function(id){ return $(id).value.trim(); };
