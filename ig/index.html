@@ -672,9 +672,11 @@ $("#vista").addEventListener("click", (e) => {
     try { document.execCommand("copy"); } catch (err) {}
     copiar(a.value);
   }
-  // abrir el perfil para seguir ya lo deja marcado como seguido; si al final no lo siguió, desmarca la casilla
-  const caja = b.dataset.accion === "abrir" && t.querySelector('input[data-accion="seguido"]');
-  if (caja && !caja.checked) { caja.checked = true; marcar(caja, "seguido"); }
+  // abrir el perfil para seguir ya lo deja marcado como seguido; si al final no lo siguió, desmarca la casilla.
+  // lo mismo al copiar el mensaje y abrir el perfil para escribirle: queda marcado "ya le escribí"
+  const tipo = b.dataset.accion === "abrir" ? "seguido" : "escrito";
+  const caja = t.querySelector('input[data-accion="' + tipo + '"]');
+  if (caja && !caja.checked) { caja.checked = true; marcar(caja, tipo); }
   window.open(b.dataset.url ? b.dataset.url + (/^https:\/\/wa\.me/.test(b.dataset.url) ? "?text=" + encodeURIComponent(t.querySelector("textarea").value) : "") : perfil, "_blank", "noopener");
 });
 $("#vista").addEventListener("change", (e) => {
