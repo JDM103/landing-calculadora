@@ -36,6 +36,15 @@ h2{font-size:15px;margin:22px 0 10px;letter-spacing:.02em}
 .ahora.ok{border-color:var(--linea)}
 .ahora.alto{border-color:#ffb454}
 .ritmo .luego{margin:8px 0 0;color:var(--gris);font-size:13px}
+.agenda{list-style:none;margin:10px 0 0;padding:0}
+.agenda li{display:flex;gap:10px;align-items:baseline;padding:7px 8px;border-left:3px solid var(--linea);font-size:14px;color:var(--gris)}
+.agenda .hora{min-width:46px;font-weight:600}
+.agenda em{margin-left:auto;white-space:nowrap;font-style:normal;font-size:12px}
+.agenda .ahora{border:0;border-left:3px solid var(--menta);border-radius:0;margin:0;padding:7px 8px;font-size:14px;color:var(--crema);background:var(--input)}
+.agenda .ahora em{color:var(--menta);font-weight:600}
+.agenda .atrasada{border-color:#ffb454;color:var(--crema)}
+.agenda .atrasada em{color:#ffb454}
+.agenda .lista span{text-decoration:line-through}
 .sub{color:var(--gris);font-size:13px;font-weight:400;margin-left:6px}
 .t{background:var(--tinta2);border-radius:14px;padding:14px;margin-bottom:12px;border-left:5px solid var(--linea)}
 .t.g0{border-color:var(--menta)}
@@ -102,7 +111,7 @@ let chats = null, cargandoChats = false, errorChats = "", mensajesPorChat = 12;
 const DIAS_CHATS = 90, DIAS_ESPERA = 3;
 const prefs = { get: (k, d) => { try { return localStorage.getItem("ig-" + k) || d; } catch (e) { return d; } },
                 set: (k, v) => { try { localStorage.setItem("ig-" + k, v); } catch (e) {} } };
-let ordenSeg = prefs.get("orden", "exito"), filtroSeg = prefs.get("filtro", "todos");
+let ordenSeg = prefs.get("orden", "exito"), filtroSeg = prefs.get("filtro", "todos"), ordenHoy = prefs.get("hoy", "prioridad");
 
 async function api(ruta, opciones = {}) {
   const r = await fetch("/api/ig/" + ruta, { ...opciones, headers: { "x-clave": clave, "Content-Type": "application/json" } });
@@ -203,10 +212,19 @@ function ritmo() {
     const antes = luego.reduce((x, y) => [x[0] + y[1], x[1] + y[2]], [0, 0]);
     if (ns - antes[0] > 0 || ne - antes[1] > 0) luego.push([PLAN.tandas[i], Math.max(0, ns - antes[0]), Math.max(0, ne - antes[1])]);
   }
-  const lista = luego.map((x) => horaTxt(x[0]) + ": " + [x[1] ? "seguir " + x[1] : "", x[2] ? "escribir " + x[2] : ""].filter(Boolean).join(" y ")).join(" · ");
-  return barra(s, "Seguidos hoy") + barra(e, "DMs de bienvenida hoy") +
+  // agenda del día: una fila por tanda, con lo que toca en cada una y cuánto de eso ya está hecho
+  const agenda = PLAN.tandas.map((hora, i) => {
+    const parte = (x, tipo) => { const antes = Math.min(x.meta, acumulado(PLAN[tipo], i)), cuota = Math.min(x.meta, acumulado(PLAN[tipo], i + 1)) - antes;
+      return { cuota, hechos: Math.max(0, Math.min(cuota, x.hechos - antes)) }; };
+    const ps = parte(s, "seguido"), pe = parte(e, "escrito"), lista = ps.hechos >= ps.cuota && pe.hechos >= pe.cuota;
+    const estado = lista ? "lista" : i === a.k - 1 ? "ahora" : i < a.k ? "atrasada" : "luego";
+    const cuenta = (p) => estado === "luego" || estado === "lista" || !p.cuota ? p.cuota : p.hechos + " de " + p.cuota;
+    return '<li class="' + estado + '"><span class="hora">' + horaTxt(hora) + "</span><span>Tanda " + (i + 1) + ": seguir " + cuenta(ps) + " y escribir " + cuenta(pe) + "</span>" +
+      "<em>" + { lista: "lista", ahora: "ahora", atrasada: "atrasada", luego: "" }[estado] + "</em></li>";
+  }).join("");
+  return barra(s, "Seguidos hoy") + barra(e, "DMs de apertura hoy") +
     '<div class="ahora ' + clase + '" role="status">' + texto + "</div>" +
-    (lista && !tope ? '<p class="luego">Luego · ' + lista + "</p>" : "") +
+    '<ol class="agenda" aria-label="Tandas de hoy">' + agenda + "</ol>" +
     '<p class="luego">Tope por hora: ' + PLAN.porHora.seguido + " seguidos y " + PLAN.porHora.escrito + " DMs. En esta hora van " + s.hora + " y " + e.hora + ".</p>";
 }
 
@@ -490,12 +508,19 @@ function pintarHoy() {
   let h = '<div class="ritmo" id="ritmo">' + ritmo() + "</div>" +
     '<p class="muted" style="margin-top:10px">Te toca contestar: <b>' + contestar.length + "</b> · chats que tocaste hoy: " + tocados + (cargandoChats ? " · leyendo chats…" : "") + "</p>";
   if (errorChats) h += '<div class="aviso">' + esc(errorChats) + "</div>";
+  h += '<div class="ctl"><span>Ordenar</span>' + [["prioridad", "Lo más importante"], ["prospeccion", "Prospección primero"]].map(([v, txt]) =>
+    '<button data-hoy="' + v + '" aria-pressed="' + (ordenHoy === v) + '">' + txt + "</button>").join("") + "</div>";
+  const partes = {
+    contestar: ["Contestá primero: te escribieron y no has respondido", contestar.length, Math.min(contestar.length, 6), () => contestar.slice(0, 6).map(tarjetaChat).join("")],
+    leads: ["Leads que dejaron sus datos y no agendaron", leads.length, Math.min(leads.length, 3), () => leads.slice(0, 3).map(tarjetaLead).join("")],
+    claros: ["Seguimientos claros: médicos que ya contestaron, o del anuncio de noviembre, y se quedaron callados", claros.length, Math.min(claros.length, 5), () => claros.slice(0, 5).map(tarjetaChat).join("")],
+    escribir: ["DM de apertura a estos médicos que ya te siguen", escribir.length, nE, () => escribir.slice(0, nE).map(tarjetaEscribir).join("")],
+    seguir: ["Seguí a estos médicos", seguir.length, nS, () => seguir.slice(0, nS).map(tarjetaSeguir).join("")],
+  };
+  // prospección primero: seguir y abrir conversación arriba; lo que es contestar y dar seguimiento queda abajo
+  const ordenPartes = ordenHoy === "prospeccion" ? ["seguir", "escribir", "contestar", "leads", "claros"] : ["contestar", "leads", "claros", "escribir", "seguir"];
   let n = 0;
-  h += seccion(++n, "Contestá primero: te escribieron y no has respondido", contestar.length, Math.min(contestar.length, 6), contestar.slice(0, 6).map(tarjetaChat).join("")) || (n--, "");
-  h += seccion(++n, "Leads que dejaron sus datos y no agendaron", leads.length, Math.min(leads.length, 3), leads.slice(0, 3).map(tarjetaLead).join("")) || (n--, "");
-  h += seccion(++n, "Seguimientos claros: médicos que ya contestaron, o del anuncio de noviembre, y se quedaron callados", claros.length, Math.min(claros.length, 5), claros.slice(0, 5).map(tarjetaChat).join("")) || (n--, "");
-  h += seccion(++n, "Escribiles a estos médicos que ya te siguen", escribir.length, nE, escribir.slice(0, nE).map(tarjetaEscribir).join("")) || (n--, "");
-  h += seccion(++n, "Seguí a estos médicos", seguir.length, nS, seguir.slice(0, nS).map(tarjetaSeguir).join("")) || (n--, "");
+  for (const k of ordenPartes) { const [titulo, total, mostrados, cuerpo] = partes[k]; if (mostrados) h += seccion(++n, titulo, total, mostrados, cuerpo()); }
   if (!n && !cargandoChats) h += '<div class="aviso">No hay nada pendiente por ahora. Mañana la corrida trae más.</div>';
   if (!cargandoChats) h += '<div class="pie"><button id="releer">Volver a leer los chats y armar la siguiente tanda</button></div>';
   return h;
@@ -630,6 +655,7 @@ $("#vista").addEventListener("click", (e) => {
   const ctl = e.target.closest(".ctl button");
   if (ctl) {
     if (ctl.dataset.orden) { ordenSeg = ctl.dataset.orden; prefs.set("orden", ordenSeg); }
+    if (ctl.dataset.hoy) { ordenHoy = ctl.dataset.hoy; prefs.set("hoy", ordenHoy); }
     if (ctl.dataset.filtro) { filtroSeg = ctl.dataset.filtro; prefs.set("filtro", filtroSeg); }
     pintar(); return;
   }
