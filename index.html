@@ -281,6 +281,44 @@
   .mini .carta b{display:block; font-size:26px; font-weight:700; line-height:1; margin-bottom:6px; color:var(--crema);}
   .mini .carta p{margin-top:0;}
 
+  /* índices: qué hay adentro */
+  .col.eq h3{color:var(--peri-claro);}
+  .col.eq li::before{content:"●"; color:var(--peri-claro); font-size:10px; top:12px;}
+  .indice{margin-top:14px; border-radius:16px; border:1px solid var(--bd); background:var(--carta); padding:18px; text-align:center;}
+  .indice .emps{display:grid; grid-template-columns:repeat(7,1fr); gap:8px;}
+  .indice .emp{display:flex; flex-direction:column; align-items:center; gap:6px; padding:14px 4px 11px; border-radius:12px; border:1px solid var(--bd); background:var(--tinta2); min-width:0;}
+  .indice .emp img{width:30px; height:30px;}
+  .indice .emp span{font-size:12px; color:var(--gris); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;}
+  .indice .emp.mas{grid-column:1/-1; flex-direction:row; justify-content:center; gap:8px; padding:10px; border-color:rgba(99,252,175,.45);}
+  .indice .emp.mas b{font-size:18px; color:var(--menta);}
+  .indice .emp.mas span{font-size:13px;}
+  .indice .flecha{color:var(--gris-sec); font-size:14px; margin:10px 0;}
+  .indice .etf{display:inline-block; border-radius:14px; border:1px solid rgba(99,252,175,.6); background:rgba(99,252,175,.08); padding:12px 22px;}
+  .indice .etf b{display:block; font-size:28px; color:var(--menta); letter-spacing:-.01em;}
+  .indice .etf small{font-size:12px; color:var(--gris);}
+  .aviso-menta{margin-top:14px; border-radius:14px; padding:16px 18px; background:rgba(99,252,175,.06); border:1px solid rgba(99,252,175,.4); font-size:14.5px; line-height:1.55; color:var(--gris);}
+  .aviso-menta b{color:var(--menta);}
+
+  /* dashboard del cliente */
+  .vistas{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:24px;}
+  .vista{border-radius:18px; border:1px solid var(--bd); background:var(--carta); padding:20px 18px 16px; min-width:0;}
+  .vista.ancha{grid-column:1/-1;}
+  .vista h3{font-size:21px; line-height:1.2; letter-spacing:-.01em;}
+  .vista p{font-size:14.5px; line-height:1.5; color:var(--gris); margin:6px 0 14px;}
+  .vista p b{color:var(--crema);}
+  .vista a{display:block;}
+  .vista img{border-radius:10px; border:1px solid var(--bd); width:100%; height:auto;}
+  .expect{margin-top:14px; border-radius:20px; border:1px solid rgba(245,194,107,.45); background:linear-gradient(180deg,rgba(245,194,107,.07),rgba(245,194,107,0) 70%), var(--carta); padding:24px 22px 20px;}
+  .expect h3{font-size:clamp(20px,2.4vw,26px); line-height:1.2; letter-spacing:-.01em;}
+  .expect > p{font-size:15px; line-height:1.55; color:var(--gris); margin-top:10px; max-width:760px;}
+  .expect > p b{color:var(--crema);}
+  .expect .orden{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px;}
+  .expect .orden > div{position:relative; border-radius:14px; border:1px solid var(--bd); background:var(--tinta2); padding:14px 14px 14px 52px; font-size:13.5px; line-height:1.45; color:var(--gris); min-width:0;}
+  .expect .orden span{position:absolute; left:14px; top:14px; width:26px; height:26px; border-radius:50%; background:var(--menta); color:var(--tinta); font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center;}
+  .expect .orden b{display:block; color:var(--crema); font-size:15px; margin-bottom:2px;}
+  .expect .alineado{margin-top:12px; border-radius:14px; padding:12px 14px; background:rgba(99,252,175,.07); border:1px solid rgba(99,252,175,.35); font-size:14px; line-height:1.5; color:var(--gris);}
+  .expect .alineado b{color:var(--menta);}
+
   .final .wrap{max-width:820px;}
 
   footer{background:#090b0f; color:var(--gris-sec); padding:56px 0 32px; border-top:1px solid var(--bd);}
@@ -296,7 +334,7 @@
     .hero-grid{grid-template-columns:1fr; gap:36px;}
     .hero img.retrato{max-width:280px; margin:0 auto;}
     .g3,.tiles,.fases,.capturas,.roles,.pila,.dgrid,.reels{grid-template-columns:1fr 1fr;}
-    .papers,.sino,.alianzas,.precio,.equipo,.mini{grid-template-columns:1fr;}
+    .papers,.sino,.alianzas,.precio,.equipo,.mini,.vistas{grid-template-columns:1fr;}
     .testis{columns:2;}
     .fgrid{grid-template-columns:1fr 1fr;}
   }
@@ -307,7 +345,9 @@
     .hero h1{font-size:clamp(28px,8.4vw,40px);}
     .hero-datos{margin-top:40px; gap:14px;} .hero-datos b{font-size:19px;} .hero-datos span{font-size:12px;}
     .hero .cta-row{gap:16px;} .hero-link{width:100%; text-align:center;}
-    .g2,.g3,.tiles,.fases,.capturas,.roles,.pila,.dgrid{grid-template-columns:1fr;}
+    .g2,.g3,.tiles,.fases,.capturas,.roles,.pila,.dgrid,.expect .orden{grid-template-columns:1fr;}
+    .indice{padding:14px;} .indice .emps{grid-template-columns:repeat(3,1fr);}
+    .expect{padding:20px 16px 16px;}
     .reels{display:flex; overflow-x:auto; gap:12px; scroll-snap-type:x mandatory; padding-bottom:8px; scrollbar-width:none; margin-left:-20px; margin-right:-20px; padding-left:20px; padding-right:20px;}
     .reels::-webkit-scrollbar{display:none;}
     .reel{flex:0 0 76%; scroll-snap-align:center;}
@@ -430,8 +470,51 @@
   </div>
 </section>
 
+<!-- ===== ÍNDICES: QUÉ HAY ADENTRO ===== -->
+<section id="indices" class="suave">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--menta)">La pregunta que más nos hacen</div>
+    <h2>¿Cómo eligen las acciones?</h2>
+    <p class="lede">No elegimos empresas una por una. Compramos índices enteros con ETFs, y el trabajo lo ponemos en <b>cuándo</b> estar adentro.</p>
+
+    <div class="grid g2" style="margin-top:26px">
+      <div class="carta"><div class="k">1</div><h3>Qué es un índice</h3><p>Una lista de empresas que se mide como un solo número. El <b>Nasdaq 100</b> son las 100 empresas no financieras más grandes de la bolsa Nasdaq.</p></div>
+      <div class="carta"><div class="k">2</div><h3>Qué es un ETF de un índice</h3><p>Un fondo que se compra y se vende como una acción y que copia el índice. Con una sola compra de <b>QQQ</b> tenés las 100 empresas, en la misma proporción que el índice.</p></div>
+    </div>
+
+    <div class="indice">
+      <div class="emps"><div class="emp"><img src="/info/img/logos/apple.svg" alt="Apple" width="30" height="30" loading="lazy"><span>Apple</span></div><div class="emp"><img src="/info/img/logos/microsoft.svg" alt="Microsoft" width="30" height="30" loading="lazy"><span>Microsoft</span></div><div class="emp"><img src="/info/img/logos/nvidia.svg" alt="Nvidia" width="30" height="30" loading="lazy"><span>Nvidia</span></div><div class="emp"><img src="/info/img/logos/amazon.svg" alt="Amazon" width="30" height="30" loading="lazy"><span>Amazon</span></div><div class="emp"><img src="/info/img/logos/google.svg" alt="Google" width="30" height="30" loading="lazy"><span>Google</span></div><div class="emp"><img src="/info/img/logos/meta.svg" alt="Meta" width="30" height="30" loading="lazy"><span>Meta</span></div><div class="emp"><img src="/info/img/logos/broadcom.svg" alt="Broadcom" width="30" height="30" loading="lazy"><span>Broadcom</span></div><div class="emp"><img src="/info/img/logos/tesla.svg" alt="Tesla" width="30" height="30" loading="lazy"><span>Tesla</span></div><div class="emp"><img src="/info/img/logos/netflix.svg" alt="Netflix" width="30" height="30" loading="lazy"><span>Netflix</span></div><div class="emp"><img src="/info/img/logos/amd.svg" alt="AMD" width="30" height="30" loading="lazy"><span>AMD</span></div><div class="emp"><img src="/info/img/logos/adobe.svg" alt="Adobe" width="30" height="30" loading="lazy"><span>Adobe</span></div><div class="emp"><img src="/info/img/logos/palantir.svg" alt="Palantir" width="30" height="30" loading="lazy"><span>Palantir</span></div><div class="emp"><img src="/info/img/logos/pepsi.svg" alt="PepsiCo" width="30" height="30" loading="lazy"><span>PepsiCo</span></div><div class="emp"><img src="/info/img/logos/cisco.svg" alt="Cisco" width="30" height="30" loading="lazy"><span>Cisco</span></div><div class="emp"><img src="/info/img/logos/tmobile.svg" alt="T-Mobile" width="30" height="30" loading="lazy"><span>T-Mobile</span></div><div class="emp"><img src="/info/img/logos/starbucks.svg" alt="Starbucks" width="30" height="30" loading="lazy"><span>Starbucks</span></div><div class="emp"><img src="/info/img/logos/paypal.svg" alt="PayPal" width="30" height="30" loading="lazy"><span>PayPal</span></div><div class="emp"><img src="/info/img/logos/airbnb.svg" alt="Airbnb" width="30" height="30" loading="lazy"><span>Airbnb</span></div><div class="emp"><img src="/info/img/logos/intel.svg" alt="Intel" width="30" height="30" loading="lazy"><span>Intel</span></div><div class="emp"><img src="/info/img/logos/qualcomm.svg" alt="Qualcomm" width="30" height="30" loading="lazy"><span>Qualcomm</span></div><div class="emp"><img src="/info/img/logos/doordash.svg" alt="DoorDash" width="30" height="30" loading="lazy"><span>DoorDash</span></div><div class="emp mas"><b>+79</b><span>empresas más</span></div></div>
+      <div class="flecha" aria-hidden="true">▼</div>
+      <div class="etf"><b>QQQ</b><small>1 ETF · las 100 empresas del Nasdaq 100</small></div>
+    </div>
+
+    <div class="sino" style="margin-top:14px">
+      <div class="col si"><h3>Diversificado</h3><ul>
+        <li>100 empresas: ninguna te hunde sola</li>
+        <li>El índice se renueva solo: la que se achica sale y la que crece entra</li>
+      </ul></div>
+      <div class="col eq"><h3>Concentrado en crecimiento</h3><ul>
+        <li>Son las empresas que más crecen del mundo</li>
+        <li>Es lo que le da el crecimiento al portafolio</li>
+      </ul></div>
+    </div>
+
+    <div class="sino" style="margin-top:14px">
+      <div class="col si"><h3>Nasdaq 100 · nuestra especialidad</h3><ul>
+        <li>Las 100 de crecimiento: el motor del plan</li>
+        <li>Donde aplicamos el timing de entrar y salir</li>
+      </ul></div>
+      <div class="col eq"><h3>S&amp;P 500 · también lo usamos</h3><ul>
+        <li>Las 500 empresas más grandes de EE.&nbsp;UU.</li>
+        <li>Más estable, entra conforme te acercás a la meta</li>
+      </ul></div>
+    </div>
+    <div class="aviso-menta"><b>Casi todo lo que manejamos está entre esos dos índices.</b> La diferencia no está en adivinar qué empresa va a ganar. Está en el timing y en metodologías basadas en research: una metodología de retiro, que decide cuánto riesgo llevás según tu avance a la meta, y una metodología para entrar y salir del Nasdaq.</div>
+  </div>
+</section>
+
 <!-- ===== METODOLOGÍA ===== -->
-<section id="metodo" class="suave">
+<section id="metodo">
   <div class="wrap">
     <div class="eyebrow">Metodología</div>
     <h2>El retiro se planea <em>desde la meta</em>, como lo hace un fondo de pensiones</h2>
@@ -494,7 +577,7 @@
 </section>
 
 <!-- ===== EDGE ===== -->
-<section id="edge">
+<section id="edge" class="suave">
   <div class="wrap">
     <div class="eyebrow">Nuestro edge</div>
     <h2>Salirse <em>antes de que duela</em>, y volver cuando recupera</h2>
@@ -524,7 +607,7 @@
 </section>
 
 <!-- ===== SEGURIDAD ===== -->
-<section id="seguridad" class="suave">
+<section id="seguridad">
   <div class="wrap">
     <div class="eyebrow">Seguridad</div>
     <h2>La cuenta es tuya. <em>Nosotros solo compramos y vendemos.</em></h2>
@@ -564,6 +647,37 @@
       <div class="capa"><div class="v">$0</div><div class="t">de penalidad por retirar, parcial o total. Sin aportes obligatorios.</div></div>
     </div>
     <p class="nota">Fuentes: <a href="https://alpaca.markets/learn/customer-asset-protection-at-alpaca" target="_blank" rel="noopener">Alpaca, Customer Asset Protection</a>; regla SEC 15c3-3. El SIPC no protege contra pérdidas de mercado: ese riesgo existe siempre y se maneja con el plan, no con un seguro. Más detalle en <a href="/info">/info</a>.</p>
+  </div>
+</section>
+
+<!-- ===== DASHBOARD DEL CLIENTE ===== -->
+<section id="dashboard" class="suave">
+  <div class="wrap">
+    <div class="eyebrow">Tu dashboard</div>
+    <h2>Lo ves todo, <em>cuando querás</em></h2>
+    <p class="lede">Dos ventanas a tu plata. La de <b>Alpaca</b>, con tu usuario, donde está la cuenta. Y tu <b>dashboard</b> en investorcr.com, donde está el plan: cuánto te falta, en qué fase vas, qué hizo la señal y qué puso el mercado.</p>
+
+    <div class="vistas">
+      <div class="vista"><h3>Tu camino al Freedom Point</h3><p>Qué porcentaje de tu meta llevás, en qué fase vas, cuánto puso tu bolsillo y cuánto puso el mercado, y tu rendimiento anual real.</p><a href="/info/img/mfp-camino.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-camino.webp?v=2" width="1071" height="803" alt="Dashboard: tu camino al Freedom Point" loading="lazy"></a></div>
+      <div class="vista"><h3>La mezcla: el riesgo baja solo</h3><p>Tu avance a la meta decide la mezcla, no el ánimo ni las noticias. Y el riesgo del plan solo baja: aunque el mercado te devuelva, la mezcla se queda en la de tu mejor momento.</p><a href="/info/img/mfp-mezcla.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-mezcla.webp?v=2" width="1066" height="792" alt="Dashboard: la mezcla por avance a la meta" loading="lazy"></a></div>
+      <div class="vista"><h3>Cómo está repartida tu plata</h3><p>Lo que hay hoy en tu cuenta de Alpaca, pieza por pieza. Si querés un porcentaje fijo en algún ETF, lo pedís ahí mismo y nosotros lo ejecutamos.</p><a href="/info/img/mfp-reparto.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-reparto.webp?v=2" width="1086" height="579" alt="Dashboard: reparto de la cuenta" loading="lazy"></a></div>
+      <div class="vista"><h3>Tu capital en el tiempo</h3><p>Con aportes o solo el rendimiento de los activos, desde el primer día de la cuenta. <b>Este es el resultado real de uno de nuestros clientes, no una proyección ni un retorno que prometamos.</b></p><a href="/info/img/mfp-capital.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-capital.webp?v=2" width="1080" height="522" alt="Dashboard: capital en el tiempo" loading="lazy"></a></div>
+      <div class="vista ancha"><h3>Tus aportes del año</h3><p>Tu compromiso anual y cuánto llevás, sin regaños. Aportás en bloques cuando podés.</p><a href="/info/img/mfp-aportes.webp?v=2" target="_blank" rel="noopener"><img src="/info/img/mfp-aportes.webp?v=2" width="1070" height="199" alt="Dashboard: aportes del año" loading="lazy"></a></div>
+    </div>
+
+    <div class="expect">
+      <div class="eyebrow" style="color:var(--ambar)">Sobre los retornos</div>
+      <h3>No te vendemos un retorno. Te ofrecemos las mejores probabilidades.</h3>
+      <p>El rendimiento histórico en las cuentas de nuestros clientes ha estado <b>por encima del 12%</b>. Aun así, nunca te vamos a prometer un número: el mercado sube y baja, y quien te garantice un retorno te está vendiendo humo.</p>
+      <p>Lo que sí te ofrecemos, en este orden:</p>
+      <div class="orden">
+        <div><span>1</span><b>Seguridad</b>Tu cuenta a tu nombre, en una jurisdicción robusta como la de Estados Unidos.</div>
+        <div><span>2</span><b>Acompañamiento profesional</b>Alguien que maneja tu plan y te acompaña en cada caída.</div>
+        <div><span>3</span><b>Metodologías superiores</b>Basadas en research, para ponerte en las mejores probabilidades de tener buenas sorpresas con los retornos.</div>
+      </div>
+      <div class="alineado"><b>Nuestro interés es el tuyo.</b> Desde el año 2 cobramos el 1% de lo que administramos: si tu cuenta crece, nos va bien a los dos.</div>
+    </div>
+    <p class="nota">Pantallazos del dashboard de un cliente real, con sus datos personales ocultos. Lo abrís en investorcr.com/mifreedompoint con tu correo y tu clave. Se actualiza con cada cierre de mes y cada viernes con la señal.</p>
   </div>
 </section>
 
